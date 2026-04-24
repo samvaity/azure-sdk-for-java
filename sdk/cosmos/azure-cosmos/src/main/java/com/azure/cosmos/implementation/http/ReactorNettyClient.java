@@ -2,22 +2,29 @@
 // Licensed under the MIT License.
 package com.azure.cosmos.implementation.http;
 
+import com.azure.cosmos.Http2ConnectionConfig;
 import com.azure.cosmos.implementation.Configs;
+import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelId;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.logging.LogLevel;
 import io.netty.resolver.DefaultAddressResolverGroup;
+import io.netty.util.ReferenceCountUtil;
+import io.netty.util.ResourceLeakDetector;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufFlux;
 import reactor.netty.Connection;
 import reactor.netty.ConnectionObserver;
 import reactor.netty.NettyOutbound;
+import reactor.netty.http.HttpProtocol;
 import reactor.netty.http.client.HttpClientRequest;
 import reactor.netty.http.client.HttpClientResponse;
 import reactor.netty.http.client.HttpClientState;
@@ -25,46 +32,32 @@ import reactor.netty.resources.ConnectionProvider;
 import reactor.netty.transport.ProxyProvider;
 import reactor.util.context.Context;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.lang.invoke.WrongMethodTypeException;
-import java.nio.charset.Charset;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
-import static com.azure.cosmos.implementation.http.HttpClientConfig.REACTOR_NETWORK_LOG_CATEGORY;
-
 /**
  * HttpClient that is implemented using reactor-netty.
  */
 public class ReactorNettyClient implements HttpClient {
+    private static ImplementationBridgeHelpers.Http2ConnectionConfigHelper.Http2ConnectionConfigAccessor httpCfgAccessor() {
+        return ImplementationBridgeHelpers.Http2ConnectionConfigHelper.getHttp2ConnectionConfigAccessor();
+    }
 
+    private static final boolean leakDetectionDebuggingEnabled = ResourceLeakDetector.getLevel().ordinal() >=
+        ResourceLeakDetector.Level.ADVANCED.ordinal();
     private static final String REACTOR_NETTY_REQUEST_RECORD_KEY = "reactorNettyRequestRecordKey";
 
     private static final Logger logger = LoggerFactory.getLogger(ReactorNettyClient.class.getSimpleName());
 
-    private static final MethodHandle HTTP_CLIENT_WARMUP;
-
-    static {
-        MethodHandle httpClientWarmup = null;
-        try {
-            httpClientWarmup = MethodHandles.publicLookup()
-                .findVirtual(reactor.netty.http.client.HttpClient.class, "warmup", MethodType.methodType(Mono.class));
-        } catch (IllegalAccessException | NoSuchMethodException ex) {
-            // Version of Reactor Netty doesn't have the warmup API on HttpClient.
-            // So warmup won't be performed and this error is ignored.
-        }
-
-        HTTP_CLIENT_WARMUP = httpClientWarmup;
-    }
-
     private HttpClientConfig httpClientConfig;
     private reactor.netty.http.client.HttpClient httpClient;
     private ConnectionProvider connectionProvider;
+    private String reactorNetworkLogCategory;
+    private Logger wireTapLogger;
 
     private ReactorNettyClient() {}
 
@@ -74,6 +67,8 @@ public class ReactorNettyClient implements HttpClient {
     public static ReactorNettyClient create(HttpClientConfig httpClientConfig) {
         ReactorNettyClient reactorNettyClient = new ReactorNettyClient();
         reactorNettyClient.httpClientConfig = httpClientConfig;
+        reactorNettyClient.reactorNetworkLogCategory = httpClientConfig.getReactorNetworkLogCategory();
+        reactorNettyClient.wireTapLogger = LoggerFactory.getLogger(reactorNettyClient.reactorNetworkLogCategory);
         reactorNettyClient.httpClient = reactor.netty.http.client.HttpClient
             .newConnection()
             .observe(getConnectionObserver())
@@ -90,6 +85,8 @@ public class ReactorNettyClient implements HttpClient {
         ReactorNettyClient reactorNettyClient = new ReactorNettyClient();
         reactorNettyClient.connectionProvider = connectionProvider;
         reactorNettyClient.httpClientConfig = httpClientConfig;
+        reactorNettyClient.reactorNetworkLogCategory = httpClientConfig.getReactorNetworkLogCategory();
+        reactorNettyClient.wireTapLogger = LoggerFactory.getLogger(reactorNettyClient.reactorNetworkLogCategory);
         reactorNettyClient.httpClient = reactor.netty.http.client.HttpClient
             .create(connectionProvider)
             .observe(getConnectionObserver())
@@ -103,13 +100,8 @@ public class ReactorNettyClient implements HttpClient {
      * This enables fast warm up of HttpClient
      */
     private static void attemptToWarmupHttpClient(ReactorNettyClient reactorNettyClient) {
-        // Warmup wasn't found, so don't attempt it.
-        if (HTTP_CLIENT_WARMUP == null) {
-            return;
-        }
-
         try {
-            ((Mono<?>) HTTP_CLIENT_WARMUP.invoke(reactorNettyClient.httpClient)).block();
+            reactorNettyClient.httpClient.warmup().block();
         } catch (ClassCastException | WrongMethodTypeException throwable) {
             // Invocation failed.
             logger.debug("Invoking HttpClient.warmup failed.", throwable);
@@ -124,29 +116,63 @@ public class ReactorNettyClient implements HttpClient {
 
         if (this.httpClientConfig.getProxy() != null) {
             this.httpClient = this.httpClient.proxy(typeSpec -> typeSpec.type(ProxyProvider.Proxy.HTTP)
-                .address(this.httpClientConfig.getProxy().getAddress())
-                .username(this.httpClientConfig.getProxy().getUsername())
-                .password(userName -> this.httpClientConfig.getProxy().getPassword())
+                                                                        .address(this.httpClientConfig.getProxy().getAddress())
+                                                                        .username(this.httpClientConfig.getProxy().getUsername())
+                                                                        .password(userName -> this.httpClientConfig.getProxy().getPassword())
             );
         }
 
-        if (LoggerFactory.getLogger(REACTOR_NETWORK_LOG_CATEGORY).isTraceEnabled()) {
-            this.httpClient = this.httpClient.wiretap(REACTOR_NETWORK_LOG_CATEGORY, LogLevel.INFO);
+        if (this.wireTapLogger != null && this.wireTapLogger.isTraceEnabled()) {
+            this.httpClient = this.httpClient.wiretap(reactorNetworkLogCategory, LogLevel.INFO);
         }
 
-        this.httpClient = this.httpClient.secure(sslContextSpec -> sslContextSpec.sslContext(configs.getSslContext()))
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int) configs.getConnectionAcquireTimeout().toMillis())
-            .httpResponseDecoder(httpResponseDecoderSpec ->
-                httpResponseDecoderSpec.maxInitialLineLength(configs.getMaxHttpInitialLineLength())
-                    .maxHeaderSize(configs.getMaxHttpHeaderSize())
-                    .maxChunkSize(configs.getMaxHttpChunkSize())
-                    .validateHeaders(true));
+        this.httpClient =
+            this.httpClient
+                .secure(sslContextSpec ->
+                    sslContextSpec.sslContext(
+                        configs.getSslContext(
+                            httpClientConfig.isServerCertValidationDisabled(),
+                            false)))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int) this.httpClientConfig.getConnectionAcquireTimeout().toMillis())
+                .httpResponseDecoder(httpResponseDecoderSpec ->
+                    httpResponseDecoderSpec.maxInitialLineLength(this.httpClientConfig.getMaxInitialLineLength())
+                                           .maxHeaderSize(this.httpClientConfig.getMaxHeaderSize())
+                                           .maxChunkSize(this.httpClientConfig.getMaxChunkSize())
+                                           .validateHeaders(true));
+
+        Http2ConnectionConfig http2Cfg = httpClientConfig.getHttp2ConnectionConfig();
+        if (httpCfgAccessor().isEffectivelyEnabled(http2Cfg)) {
+            this.httpClient = this.httpClient
+                .secure(sslContextSpec ->
+                    sslContextSpec.sslContext(
+                        configs.getSslContext(
+                            httpClientConfig.isServerCertValidationDisabled(),
+                            true
+                        )))
+                .protocol(HttpProtocol.H2, HttpProtocol.HTTP11)
+                .http2Settings(settings -> settings
+                    .initialWindowSize(1024 * 1024) // 1MB initial window size
+                    .maxFrameSize(64 * 1024)        // 64KB max frame size
+                    .maxConcurrentStreams(httpCfgAccessor().getEffectiveMaxConcurrentStreams(http2Cfg))  // Increased from default 30
+                )
+                .doOnConnected((connection -> {
+                    // The response header clean up pipeline is being added due to an error getting when calling gateway:
+                    // java.lang.IllegalArgumentException: a header value contains prohibited character 0x20 at index 0 for 'x-ms-serviceversion', there is whitespace in the front of the value.
+                    // validateHeaders(false) does not work for http2
+                    ChannelPipeline channelPipeline = connection.channel().pipeline();
+                    if (channelPipeline.get("reactor.left.httpCodec") != null) {
+                        channelPipeline.addAfter(
+                            "reactor.left.httpCodec",
+                            "customHeaderCleaner",
+                            new Http2ResponseHeaderCleanerHandler());
+                    }
+                }));
+        }
     }
 
     @Override
     public Mono<HttpResponse> send(HttpRequest request) {
-        //  By default, Configs.getHttpsResponseTimeoutInSeconds default value is used as response timeout
-        return send(request, Duration.ofSeconds(Configs.getHttpResponseTimeoutInSeconds()));
+        return send(request, this.httpClientConfig.getNetworkRequestTimeout());
     }
 
     @Override
@@ -162,9 +188,20 @@ public class ReactorNettyClient implements HttpClient {
 
         final AtomicReference<ReactorNettyHttpResponse> responseReference = new AtomicReference<>();
 
+        // Per-request CONNECT_TIMEOUT_MILLIS via reactor-netty's immutable HttpClient.
+        // .option() returns a new config snapshot — does NOT mutate the shared httpClient.
+        // Thin client requests (isThinClientRequest=true): connect timeout is configured via
+        // HttpClientConfig.getThinClientConnectTimeoutMs() (default 5s) to fail fast.
+        // Standard gateway requests: 45s (default).
+        // Note: CONNECT_TIMEOUT_MILLIS controls TCP SYN→SYN-ACK timeout for NEW connections.
+        // For H2, once a TCP connection exists, stream acquisition is near-instant (~sub-ms)
+        // so pendingAcquireTimeout (pool-level 45s) is effectively never hit.
+        int connectTimeoutMs = this.resolveConnectTimeoutMs(request);
+
         return this.httpClient
             .keepAlive(this.httpClientConfig.isConnectionKeepAlive())
             .port(request.port())
+            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeoutMs)
             .responseTimeout(responseTimeout)
             .request(HttpMethod.valueOf(request.httpMethod().toString()))
             .uri(request.uri().toASCIIString())
@@ -218,31 +255,63 @@ public class ReactorNettyClient implements HttpClient {
         }
     }
 
+    /**
+     * Resolves the TCP connect timeout (CONNECT_TIMEOUT_MILLIS) based on the request type.
+     *
+     * Thin client requests (identified by {@link HttpRequest#isThinClientRequest()}) use the thin
+     * client connection timeout configured via {@link Configs#getThinClientConnectionTimeoutInMs()}
+     * (default 5s) to fail fast when the thin client proxy is unreachable.
+     * Standard gateway requests use the configured connection acquire timeout (default 45s).
+     *
+     * The thin client timeout is eagerly cached in {@link HttpClientConfig} at construction time
+     * to avoid per-request System.getProperty/getenv overhead.
+     *
+     * @param request the HTTP request
+     * @return the connect timeout in milliseconds
+     */
+    private int resolveConnectTimeoutMs(HttpRequest request) {
+        if (request.isThinClientRequest()) {
+            return this.httpClientConfig.getThinClientConnectTimeoutMs();
+        }
+        return (int) this.httpClientConfig.getConnectionAcquireTimeout().toMillis();
+    }
+
     private static ConnectionObserver getConnectionObserver() {
         return (conn, state) -> {
             Instant time = Instant.now();
 
+            logger.trace("STATE {}, Connection {}, Time {}", state, conn, time);
+
             if (state.equals(HttpClientState.CONNECTED)) {
-                if (conn instanceof ConnectionObserver) {
-                    ConnectionObserver observer = (ConnectionObserver) conn;
-                    ReactorNettyRequestRecord requestRecord =
-                        observer.currentContext().getOrDefault(REACTOR_NETTY_REQUEST_RECORD_KEY, null);
-                    if (requestRecord == null) {
-                        throw new IllegalStateException("ReactorNettyRequestRecord not found in context");
-                    }
-                    requestRecord.setTimeConnected(time);
+                ReactorNettyRequestRecord requestRecord = getRequestRecordFromConnection(conn);
+                if (requestRecord == null) {
+                    throw new IllegalStateException("ReactorNettyRequestRecord not found in context");
                 }
-            }else if (state.equals(HttpClientState.ACQUIRED)) {
-                if (conn instanceof ConnectionObserver) {
-                    ConnectionObserver observer = (ConnectionObserver) conn;
+                requestRecord.setTimeConnected(time);
+                captureChannelIds(conn.channel(), requestRecord, true);
+            } else if (state.equals(HttpClientState.ACQUIRED)) {
+                ReactorNettyRequestRecord requestRecord = getRequestRecordFromConnection(conn);
+                if (requestRecord == null) {
+                    throw new IllegalStateException("ReactorNettyRequestRecord not found in context");
+                }
+                requestRecord.setTimeAcquired(time);
+                captureChannelIds(conn.channel(), requestRecord, false);
+            } else if (state.equals(HttpClientState.STREAM_CONFIGURED)) {
+                // STREAM_CONFIGURED fires for HTTP/2 streams on every request (unlike CONNECTED
+                // which only fires once when the TCP connection is established).
+                // For H2, conn.channel() here is the stream channel; conn.channel().parent() is the TCP connection.
+                if (conn instanceof HttpClientRequest) {
+                    HttpClientRequest httpClientRequest = (HttpClientRequest) conn;
                     ReactorNettyRequestRecord requestRecord =
-                        observer.currentContext().getOrDefault(REACTOR_NETTY_REQUEST_RECORD_KEY, null);
+                        httpClientRequest.currentContextView().getOrDefault(REACTOR_NETTY_REQUEST_RECORD_KEY, null);
                     if (requestRecord == null) {
                         throw new IllegalStateException("ReactorNettyRequestRecord not found in context");
                     }
                     requestRecord.setTimeAcquired(time);
+                    requestRecord.setHttp2(true);
+                    captureChannelIds(conn.channel(), requestRecord, true);
                 }
-            } else if (state.equals(HttpClientState.CONFIGURED)) {
+            } else if (state.equals(HttpClientState.CONFIGURED) || state.equals(HttpClientState.REQUEST_PREPARED)) {
                 if (conn instanceof HttpClientRequest) {
                     HttpClientRequest httpClientRequest = (HttpClientRequest) conn;
                     ReactorNettyRequestRecord requestRecord =
@@ -272,8 +341,50 @@ public class ReactorNettyClient implements HttpClient {
                     }
                     requestRecord.setTimeReceived(time);
                 }
+            } else if (state.equals(HttpClientState.DISCONNECTING)
+                || state.equals(HttpClientState.RESPONSE_COMPLETED)
+                || state.equals(HttpClientState.RESPONSE_INCOMPLETE)
+                || state.equals(HttpClientState.RELEASED)) {
+
+                // No-op
+            } else {
+                logger.debug("IGNORED STATE {}, Connection {}, Time {}", state, conn, time);
             }
         };
+    }
+
+    /**
+     * Extracts the ReactorNettyRequestRecord from the connection's context.
+     * Returns null if the connection is not a ConnectionObserver or if the record is not in context.
+     */
+    private static ReactorNettyRequestRecord getRequestRecordFromConnection(Connection conn) {
+        if (conn instanceof ConnectionObserver) {
+            return ((ConnectionObserver) conn)
+                .currentContext().getOrDefault(REACTOR_NETTY_REQUEST_RECORD_KEY, null);
+        }
+        return null;
+    }
+
+    /**
+     * Captures channelId and parentChannelId from the given channel onto the request record.
+     * For HTTP/2, channel.parent() is the TCP connection; for HTTP/1.1, parent is null.
+     *
+     * @param channel the netty channel (stream channel for H2, connection channel for H1)
+     * @param requestRecord the record to populate
+     * @param overwrite if true, always writes channel IDs; if false, only writes when not already set
+     */
+    private static void captureChannelIds(Channel channel, ReactorNettyRequestRecord requestRecord, boolean overwrite) {
+        ChannelId id = channel.id();
+        String channelId = id.asShortText();
+        Channel parent = channel.parent();
+        String parentChannelId = parent != null
+            ? parent.id().asShortText()
+            : channelId;
+
+        if (overwrite || requestRecord.getParentChannelId() == null) {
+            requestRecord.setChannelId(channelId);
+            requestRecord.setParentChannelId(parentChannelId);
+        }
     }
 
     private static class ReactorNettyHttpResponse extends HttpResponse {
@@ -306,29 +417,33 @@ public class ReactorNettyClient implements HttpClient {
         }
 
         @Override
-        public Flux<ByteBuf> body() {
-            return bodyIntern()
-                .doOnSubscribe(this::updateSubscriptionState);
-        }
-
-        @Override
-        public Mono<byte[]> bodyAsByteArray() {
-            return bodyIntern().aggregate()
-                .asByteArray()
+        public Mono<ByteBuf> body() {
+            return ByteBufFlux
+                .fromInbound(
+                    bodyIntern().doOnDiscard(
+                        ByteBuf.class,
+                        buf -> {
+                            if (buf.refCnt() > 0) {
+                                if (leakDetectionDebuggingEnabled) {
+                                    buf.touch("ReactorNettyHttpResponse.body - onDiscard - refCnt: " + buf.refCnt());
+                                    logger.debug("ReactorNettyHttpResponse.body - onDiscard - refCnt: {}", buf.refCnt());
+                                }
+                                ReferenceCountUtil.safeRelease(buf);
+                            }
+                        })
+                )
+                .aggregate()
                 .doOnSubscribe(this::updateSubscriptionState);
         }
 
         @Override
         public Mono<String> bodyAsString() {
-            return bodyIntern().aggregate()
+            return  ByteBufFlux
+                .fromInbound(
+                   bodyIntern().doOnDiscard(ByteBuf.class, io.netty.util.ReferenceCountUtil::safeRelease)
+                )
+                .aggregate()
                 .asString()
-                .doOnSubscribe(this::updateSubscriptionState);
-        }
-
-        @Override
-        public Mono<String> bodyAsString(Charset charset) {
-            return bodyIntern().aggregate()
-                .asString(charset)
                 .doOnSubscribe(this::updateSubscriptionState);
         }
 
@@ -367,9 +482,20 @@ public class ReactorNettyClient implements HttpClient {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Releasing body, not yet subscribed");
                 }
-                this.bodyIntern()
-                    .doOnNext(byteBuf -> {})
-                    .subscribe(byteBuf -> {}, ex -> {});
+
+                body()
+                    .map(buf -> {
+                        if (buf.refCnt() > 0) {
+                            if (leakDetectionDebuggingEnabled) {
+                                buf.touch("ReactorNettyHttpResponse.releaseOnNotSubscribedResponse - refCnt: " + buf.refCnt());
+                                logger.debug("ReactorNettyHttpResponse.releaseOnNotSubscribedResponse - refCnt: {}", buf.refCnt());
+                            }
+                            ReferenceCountUtil.safeRelease(buf);
+                        }
+
+                        return buf;
+                    })
+                    .subscribe(v -> {}, ex -> {}, () -> {});
             }
         }
     }
@@ -390,17 +516,17 @@ public class ReactorNettyClient implements HttpClient {
      * This changes the logging level of Reactor Netty Http Client.
      */
     public void enableNetworkLogging() {
-        Logger logger = LoggerFactory.getLogger(REACTOR_NETWORK_LOG_CATEGORY);
+        Logger logger = LoggerFactory.getLogger(this.reactorNetworkLogCategory);
         if (logger.isTraceEnabled()) {
-            this.httpClient = this.httpClient.wiretap(REACTOR_NETWORK_LOG_CATEGORY, LogLevel.TRACE);
+            this.httpClient = this.httpClient.wiretap(this.reactorNetworkLogCategory, LogLevel.TRACE);
         } else if (logger.isDebugEnabled()) {
-            this.httpClient = this.httpClient.wiretap(REACTOR_NETWORK_LOG_CATEGORY, LogLevel.DEBUG);
+            this.httpClient = this.httpClient.wiretap(this.reactorNetworkLogCategory, LogLevel.DEBUG);
         } else if (logger.isInfoEnabled()) {
-            this.httpClient = this.httpClient.wiretap(REACTOR_NETWORK_LOG_CATEGORY, LogLevel.INFO);
+            this.httpClient = this.httpClient.wiretap(this.reactorNetworkLogCategory, LogLevel.INFO);
         } else if (logger.isWarnEnabled()) {
-            this.httpClient = this.httpClient.wiretap(REACTOR_NETWORK_LOG_CATEGORY, LogLevel.WARN);
+            this.httpClient = this.httpClient.wiretap(this.reactorNetworkLogCategory, LogLevel.WARN);
         } else if (logger.isErrorEnabled()) {
-            this.httpClient = this.httpClient.wiretap(REACTOR_NETWORK_LOG_CATEGORY, LogLevel.ERROR);
+            this.httpClient = this.httpClient.wiretap(this.reactorNetworkLogCategory, LogLevel.ERROR);
         }
     }
 }

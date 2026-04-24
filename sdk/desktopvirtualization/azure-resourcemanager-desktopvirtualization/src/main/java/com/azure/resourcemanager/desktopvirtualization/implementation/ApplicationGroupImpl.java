@@ -104,6 +104,10 @@ public final class ApplicationGroupImpl
         return this.innerModel().cloudPcResource();
     }
 
+    public Boolean showInFeed() {
+        return this.innerModel().showInFeed();
+    }
+
     public Region region() {
         return Region.fromName(this.regionName());
     }
@@ -136,27 +140,23 @@ public final class ApplicationGroupImpl
     }
 
     public ApplicationGroup create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getApplicationGroups()
-                .createOrUpdateWithResponse(resourceGroupName, applicationGroupName, this.innerModel(), Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getApplicationGroups()
+            .createOrUpdateWithResponse(resourceGroupName, applicationGroupName, this.innerModel(), Context.NONE)
+            .getValue();
         return this;
     }
 
     public ApplicationGroup create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getApplicationGroups()
-                .createOrUpdateWithResponse(resourceGroupName, applicationGroupName, this.innerModel(), context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getApplicationGroups()
+            .createOrUpdateWithResponse(resourceGroupName, applicationGroupName, this.innerModel(), context)
+            .getValue();
         return this;
     }
 
-    ApplicationGroupImpl(
-        String name, com.azure.resourcemanager.desktopvirtualization.DesktopVirtualizationManager serviceManager) {
+    ApplicationGroupImpl(String name,
+        com.azure.resourcemanager.desktopvirtualization.DesktopVirtualizationManager serviceManager) {
         this.innerObject = new ApplicationGroupInner();
         this.serviceManager = serviceManager;
         this.applicationGroupName = name;
@@ -168,51 +168,42 @@ public final class ApplicationGroupImpl
     }
 
     public ApplicationGroup apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getApplicationGroups()
-                .updateWithResponse(resourceGroupName, applicationGroupName, updateApplicationGroup, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getApplicationGroups()
+            .updateWithResponse(resourceGroupName, applicationGroupName, updateApplicationGroup, Context.NONE)
+            .getValue();
         return this;
     }
 
     public ApplicationGroup apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getApplicationGroups()
-                .updateWithResponse(resourceGroupName, applicationGroupName, updateApplicationGroup, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getApplicationGroups()
+            .updateWithResponse(resourceGroupName, applicationGroupName, updateApplicationGroup, context)
+            .getValue();
         return this;
     }
 
-    ApplicationGroupImpl(
-        ApplicationGroupInner innerObject,
+    ApplicationGroupImpl(ApplicationGroupInner innerObject,
         com.azure.resourcemanager.desktopvirtualization.DesktopVirtualizationManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.applicationGroupName = Utils.getValueFromIdByName(innerObject.id(), "applicationGroups");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.applicationGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "applicationGroups");
     }
 
     public ApplicationGroup refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getApplicationGroups()
-                .getByResourceGroupWithResponse(resourceGroupName, applicationGroupName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getApplicationGroups()
+            .getByResourceGroupWithResponse(resourceGroupName, applicationGroupName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public ApplicationGroup refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getApplicationGroups()
-                .getByResourceGroupWithResponse(resourceGroupName, applicationGroupName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getApplicationGroups()
+            .getByResourceGroupWithResponse(resourceGroupName, applicationGroupName, context)
+            .getValue();
         return this;
     }
 
@@ -287,6 +278,16 @@ public final class ApplicationGroupImpl
             return this;
         } else {
             this.updateApplicationGroup.withFriendlyName(friendlyName);
+            return this;
+        }
+    }
+
+    public ApplicationGroupImpl withShowInFeed(Boolean showInFeed) {
+        if (isInCreateMode()) {
+            this.innerModel().withShowInFeed(showInFeed);
+            return this;
+        } else {
+            this.updateApplicationGroup.withShowInFeed(showInFeed);
             return this;
         }
     }

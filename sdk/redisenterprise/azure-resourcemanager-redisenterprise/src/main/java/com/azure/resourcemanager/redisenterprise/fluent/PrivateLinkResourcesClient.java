@@ -10,35 +10,39 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.redisenterprise.fluent.models.PrivateLinkResourceInner;
 
-/** An instance of this class provides access to all the operations defined in PrivateLinkResourcesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in PrivateLinkResourcesClient.
+ */
 public interface PrivateLinkResourcesClient {
     /**
-     * Gets the private link resources that need to be created for a RedisEnterprise cluster.
-     *
+     * Gets the private link resources that need to be created for a Redis Enterprise cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param clusterName The name of the RedisEnterprise cluster.
+     * @param clusterName The name of the Redis Enterprise cluster. Name must be 1-60 characters long. Allowed
+     * characters(A-Z, a-z, 0-9) and hyphen(-). There can be no leading nor trailing nor consecutive hyphens.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the private link resources that need to be created for a RedisEnterprise cluster as paginated response
-     *     with {@link PagedIterable}.
+     * @return the private link resources that need to be created for a Redis Enterprise cluster as paginated response
+     * with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     PagedIterable<PrivateLinkResourceInner> listByCluster(String resourceGroupName, String clusterName);
 
     /**
-     * Gets the private link resources that need to be created for a RedisEnterprise cluster.
-     *
+     * Gets the private link resources that need to be created for a Redis Enterprise cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param clusterName The name of the RedisEnterprise cluster.
+     * @param clusterName The name of the Redis Enterprise cluster. Name must be 1-60 characters long. Allowed
+     * characters(A-Z, a-z, 0-9) and hyphen(-). There can be no leading nor trailing nor consecutive hyphens.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the private link resources that need to be created for a RedisEnterprise cluster as paginated response
-     *     with {@link PagedIterable}.
+     * @return the private link resources that need to be created for a Redis Enterprise cluster as paginated response
+     * with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<PrivateLinkResourceInner> listByCluster(
-        String resourceGroupName, String clusterName, Context context);
+    PagedIterable<PrivateLinkResourceInner> listByCluster(String resourceGroupName, String clusterName,
+        Context context);
 }

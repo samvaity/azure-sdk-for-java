@@ -4,76 +4,37 @@
 
 package com.azure.resourcemanager.subscription.models;
 
-import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.resourcemanager.subscription.fluent.models.OperationInner;
 
-/** REST API operation. */
-@Fluent
-public final class Operation {
-    /*
-     * Operation name: {provider}/{resource}/{operation}
-     */
-    @JsonProperty(value = "name")
-    private String name;
-
-    /*
-     * The object that represents the operation.
-     */
-    @JsonProperty(value = "display")
-    private OperationDisplay display;
-
-    /** Creates an instance of Operation class. */
-    public Operation() {
-    }
-
+/**
+ * An immutable client-side representation of Operation.
+ */
+public interface Operation {
     /**
-     * Get the name property: Operation name: {provider}/{resource}/{operation}.
-     *
+     * Gets the name property: Operation name: {provider}/{resource}/{operation}.
+     * 
      * @return the name value.
      */
-    public String name() {
-        return this.name;
-    }
+    String name();
 
     /**
-     * Set the name property: Operation name: {provider}/{resource}/{operation}.
-     *
-     * @param name the name value to set.
-     * @return the Operation object itself.
+     * Gets the isDataAction property: Indicates whether the operation is a data action.
+     * 
+     * @return the isDataAction value.
      */
-    public Operation withName(String name) {
-        this.name = name;
-        return this;
-    }
+    Boolean isDataAction();
 
     /**
-     * Get the display property: The object that represents the operation.
-     *
+     * Gets the display property: The object that represents the operation.
+     * 
      * @return the display value.
      */
-    public OperationDisplay display() {
-        return this.display;
-    }
+    OperationDisplay display();
 
     /**
-     * Set the display property: The object that represents the operation.
-     *
-     * @param display the display value to set.
-     * @return the Operation object itself.
+     * Gets the inner com.azure.resourcemanager.subscription.fluent.models.OperationInner object.
+     * 
+     * @return the inner object.
      */
-    public Operation withDisplay(OperationDisplay display) {
-        this.display = display;
-        return this;
-    }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {
-        if (display() != null) {
-            display().validate();
-        }
-    }
+    OperationInner innerModel();
 }

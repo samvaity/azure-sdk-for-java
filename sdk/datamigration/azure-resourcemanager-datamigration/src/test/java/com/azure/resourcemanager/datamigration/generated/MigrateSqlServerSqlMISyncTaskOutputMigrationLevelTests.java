@@ -10,17 +10,15 @@ import com.azure.resourcemanager.datamigration.models.MigrateSqlServerSqlMISyncT
 public final class MigrateSqlServerSqlMISyncTaskOutputMigrationLevelTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlMISyncTaskOutputMigrationLevel model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"MigrationLevelOutput\",\"databaseCount\":316735321,\"state\":\"Skipped\",\"startedOn\":\"2021-07-27T23:48:23Z\",\"endedOn\":\"2021-05-11T04:04:50Z\",\"sourceServerName\":\"nbixxrti\",\"sourceServerVersion\":\"cpwpg\",\"sourceServerBrandVersion\":\"rc\",\"targetServerName\":\"tso\",\"targetServerVersion\":\"rkenx\",\"targetServerBrandVersion\":\"yyefrpmpdnqqs\",\"databaseErrorCount\":2132020384,\"id\":\"oqvm\"}")
-                .toObject(MigrateSqlServerSqlMISyncTaskOutputMigrationLevel.class);
+        MigrateSqlServerSqlMISyncTaskOutputMigrationLevel model = BinaryData.fromString(
+            "{\"resultType\":\"MigrationLevelOutput\",\"databaseCount\":1586709963,\"state\":\"None\",\"startedOn\":\"2021-10-07T16:47:53Z\",\"endedOn\":\"2021-02-12T10:55:06Z\",\"sourceServerName\":\"gjfbpkuwxeoi\",\"sourceServerVersion\":\"fiz\",\"sourceServerBrandVersion\":\"vkjzwfbcyaykm\",\"targetServerName\":\"zs\",\"targetServerVersion\":\"wxrzxmdewsrsxkrp\",\"targetServerBrandVersion\":\"jazejwwviyoyp\",\"databaseErrorCount\":2055673505,\"id\":\"rnnhjxs\"}")
+            .toObject(MigrateSqlServerSqlMISyncTaskOutputMigrationLevel.class);
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MigrateSqlServerSqlMISyncTaskOutputMigrationLevel model =
-            new MigrateSqlServerSqlMISyncTaskOutputMigrationLevel();
+        MigrateSqlServerSqlMISyncTaskOutputMigrationLevel model
+            = new MigrateSqlServerSqlMISyncTaskOutputMigrationLevel();
         model = BinaryData.fromObject(model).toObject(MigrateSqlServerSqlMISyncTaskOutputMigrationLevel.class);
     }
 }

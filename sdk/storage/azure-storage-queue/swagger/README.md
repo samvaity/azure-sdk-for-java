@@ -14,26 +14,21 @@ autorest
 
 ### Code generation settings
 ``` yaml
-use: '@autorest/java@4.1.16'
-input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/storage/data-plane/Microsoft.QueueStorage/preview/2018-03-28/queue.json
+use: '@autorest/java@4.1.63'
+input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/be46becafeb29aa993898709e35759d3643b2809/specification/storage/data-plane/Microsoft.QueueStorage/stable/2026-04-06/queue.json
 java: true
 output-folder: ../
 namespace: com.azure.storage.queue
-enable-xml: true
 generate-client-as-impl: true
-generate-client-interfaces: false
-service-interface-as-public: true
 license-header: MICROSOFT_MIT_SMALL
 enable-sync-stack: true
-context-client-method-parameter: true
-default-http-exception-type: com.azure.storage.queue.models.QueueStorageException
+default-http-exception-type: com.azure.storage.queue.implementation.models.QueueStorageExceptionInternal
 models-subpackage: implementation.models
-custom-types: QueueErrorCode,QueueSignedIdentifier,SendMessageResult,QueueMessageItem,PeekedMessageItem,QueueItem,QueueServiceProperties,QueueServiceStatistics,QueueCorsRule,QueueAccessPolicy,QueueAnalyticsLogging,QueueMetrics,QueueRetentionPolicy,GeoReplicationStatus,GeoReplicationStatusType,GeoReplication
+custom-types: QueueErrorCode,QueueSignedIdentifier,SendMessageResult,QueueMessageItem,PeekedMessageItem,QueueItem,QueueServiceProperties,QueueServiceStatistics,QueueCorsRule,QueueAccessPolicy,QueueAnalyticsLogging,QueueMetrics,QueueRetentionPolicy,GeoReplicationStatus,GeoReplicationStatusType,GeoReplication,UserDelegationKey
 custom-types-subpackage: models
 customization-class: src/main/java/QueueStorageCustomization.java
-generic-response-type: true
 use-input-stream-for-binary: true
-no-custom-headers: true
+disable-client-builder: true
 ```
 
 ### Rename MessageItems
@@ -146,4 +141,24 @@ directive:
     $["x-ms-pageable"].itemName = "QueueItems";
 ```
 
-![Impressions](https://azure-sdk-impressions.azurewebsites.net/api/impressions/azure-sdk-for-java%2Fsdk%2Fstorage%2Fazure-storage-queue%2Fswagger%2FREADME.png)
+### Rename UserDelegationKey SignedOid and SignedTid
+``` yaml
+directive:
+- from: swagger-document
+  where: $.definitions.UserDelegationKey
+  transform: >
+    $.properties.SignedOid["x-ms-client-name"] = "signedObjectId";
+    $.properties.SignedTid["x-ms-client-name"] = "signedTenantId";
+    $.properties.SignedDelegatedUserTid["x-ms-client-name"] = "signedDelegatedUserTenantId";
+```
+
+### Rename KeyInfo DelegatedUserTid
+``` yaml
+directive:
+- from: swagger-document
+  where: $.definitions.KeyInfo
+  transform: >
+    $.properties.DelegatedUserTid["x-ms-client-name"] = "delegatedUserTenantId";
+```
+
+

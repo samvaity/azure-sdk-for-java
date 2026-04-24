@@ -8,26 +8,20 @@ import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.policyinsights.models.CheckRestrictionsResultContentEvaluationResult;
 import com.azure.resourcemanager.policyinsights.models.PolicyEvaluationResult;
 import java.util.Arrays;
-import org.junit.jupiter.api.Test;
 
 public final class CheckRestrictionsResultContentEvaluationResultTests {
-    @Test
-    public void testDeserialize() {
-        CheckRestrictionsResultContentEvaluationResult model =
-            BinaryData
-                .fromString(
-                    "{\"policyEvaluations\":[{\"policyInfo\":{\"policyDefinitionId\":\"mpsbzkfzbeyv\",\"policySetDefinitionId\":\"qi\",\"policyDefinitionReferenceId\":\"invkjjxdxrbuu\",\"policyAssignmentId\":\"clewyhm\"},\"evaluationResult\":\"paztzpofncck\",\"evaluationDetails\":{\"evaluatedExpressions\":[]}},{\"policyInfo\":{\"policyDefinitionId\":\"hxx\",\"policySetDefinitionId\":\"yq\",\"policyDefinitionReferenceId\":\"zfeqztppri\",\"policyAssignmentId\":\"xorjaltolmncwsob\"},\"evaluationResult\":\"csdbnwdcfhuc\",\"evaluationDetails\":{\"evaluatedExpressions\":[]}},{\"policyInfo\":{\"policyDefinitionId\":\"glsbjjc\",\"policySetDefinitionId\":\"vxb\",\"policyDefinitionReferenceId\":\"vudutncor\",\"policyAssignmentId\":\"lxqtvcofudfl\"},\"evaluationResult\":\"gj\",\"evaluationDetails\":{\"evaluatedExpressions\":[]}}]}")
-                .toObject(CheckRestrictionsResultContentEvaluationResult.class);
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        CheckRestrictionsResultContentEvaluationResult model = BinaryData.fromString(
+            "{\"policyEvaluations\":[{\"policyInfo\":{\"policyDefinitionId\":\"xrx\",\"policySetDefinitionId\":\"njdxvglnkvxl\",\"policyDefinitionReferenceId\":\"aglqivbgkcvkh\",\"policyAssignmentId\":\"vuqd\"},\"evaluationResult\":\"voniypfp\",\"evaluationDetails\":{\"evaluatedExpressions\":[{\"result\":\"g\",\"expression\":\"tivhjknidibgqjx\",\"expressionKind\":\"n\",\"path\":\"govfgpikqmhhaow\",\"expressionValue\":\"datamzvupor\",\"targetValue\":\"datadfuyd\",\"operator\":\"kfvxcnq\"},{\"result\":\"qpswokmvkhlggdhb\",\"expression\":\"zqkzszuwi\",\"expressionKind\":\"glxxhljfpgpic\",\"path\":\"nzhrgmqgjsxvpqcb\",\"expressionValue\":\"datambodthsqqgvri\",\"targetValue\":\"dataa\",\"operator\":\"lacjfrnxo\"},{\"result\":\"xauzlwvsgmwohqfz\",\"expression\":\"vux\",\"expressionKind\":\"kjsvthnwpzteko\",\"path\":\"ribi\",\"expressionValue\":\"datatgplucfota\",\"targetValue\":\"datac\",\"operator\":\"nykzcugswvxwlm\"}],\"ifNotExistsDetails\":{\"resourceId\":\"m\",\"totalResources\":1608101442},\"reason\":\"jmxmcuqud\"},\"effectDetails\":{\"policyEffect\":\"clxyn\"}},{\"policyInfo\":{\"policyDefinitionId\":\"vgfab\",\"policySetDefinitionId\":\"yjibuzphdugne\",\"policyDefinitionReferenceId\":\"n\",\"policyAssignmentId\":\"oxgjiuqhibt\"},\"evaluationResult\":\"ipq\",\"evaluationDetails\":{\"evaluatedExpressions\":[{\"result\":\"urrxxgewpktv\",\"expression\":\"lkm\",\"expressionKind\":\"zoyhlfbcgwg\",\"path\":\"oxoebqi\",\"expressionValue\":\"dataipnwj\",\"targetValue\":\"datajqlafcbahhpzp\",\"operator\":\"o\"}],\"ifNotExistsDetails\":{\"resourceId\":\"w\",\"totalResources\":1217605698},\"reason\":\"kmkkholvdnd\"},\"effectDetails\":{\"policyEffect\":\"uogphuartvtiuky\"}},{\"policyInfo\":{\"policyDefinitionId\":\"hnmnahmnx\",\"policySetDefinitionId\":\"xjqirwrweoox\",\"policyDefinitionReferenceId\":\"i\",\"policyAssignmentId\":\"xwrsnew\"},\"evaluationResult\":\"zqvbubqm\",\"evaluationDetails\":{\"evaluatedExpressions\":[{\"result\":\"cx\",\"expression\":\"zgaz\",\"expressionKind\":\"abo\",\"path\":\"vmfqhppubo\",\"expressionValue\":\"dataepdfgkmtdherng\",\"targetValue\":\"datac\",\"operator\":\"ahokqtobkauxofsh\"},{\"result\":\"hwpnulaiywzejywh\",\"expression\":\"wkojpllndnpd\",\"expressionKind\":\"pqafgfugsnnfhy\",\"path\":\"efy\",\"expressionValue\":\"datacoc\",\"targetValue\":\"datajgtixr\",\"operator\":\"zuyt\"},{\"result\":\"mlmuowol\",\"expression\":\"uir\",\"expressionKind\":\"ionszonwp\",\"path\":\"ajinnixjawrtmjfj\",\"expressionValue\":\"dataccxlzhcoxovnek\",\"targetValue\":\"datanlusfnrd\",\"operator\":\"xtxrdcqtjvidt\"}],\"ifNotExistsDetails\":{\"resourceId\":\"puslvyj\",\"totalResources\":1896192461},\"reason\":\"wkasiziesf\"},\"effectDetails\":{\"policyEffect\":\"htuqfecjxe\"}}]}")
+            .toObject(CheckRestrictionsResultContentEvaluationResult.class);
     }
 
-    @Test
-    public void testSerialize() {
-        CheckRestrictionsResultContentEvaluationResult model =
-            new CheckRestrictionsResultContentEvaluationResult()
-                .withPolicyEvaluations(
-                    Arrays
-                        .asList(
-                            new PolicyEvaluationResult(), new PolicyEvaluationResult(), new PolicyEvaluationResult()));
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
+        CheckRestrictionsResultContentEvaluationResult model
+            = new CheckRestrictionsResultContentEvaluationResult().withPolicyEvaluations(Arrays
+                .asList(new PolicyEvaluationResult(), new PolicyEvaluationResult(), new PolicyEvaluationResult()));
         model = BinaryData.fromObject(model).toObject(CheckRestrictionsResultContentEvaluationResult.class);
     }
 }

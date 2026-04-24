@@ -3,13 +3,12 @@
 
 package com.azure.cosmos.implementation;
 
-import com.azure.cosmos.BridgeInternal;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.azure.cosmos.implementation.apachecommons.lang.ObjectUtils;
 import com.azure.cosmos.implementation.apachecommons.lang.StringUtils;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public final class DatabaseAccount extends Resource {
      * @param objectNode the {@link ObjectNode} that represent the
      * {@link JsonSerializable}
      */
-    DatabaseAccount(ObjectNode objectNode) {
+    public DatabaseAccount(ObjectNode objectNode) {
         super(objectNode);
     }
 
@@ -39,7 +38,7 @@ public final class DatabaseAccount extends Resource {
      * Constructor.
      */
     public DatabaseAccount() {
-        BridgeInternal.setResourceSelfLink(this, "");
+        this.setSelfLink("");
     }
 
     /**
@@ -66,7 +65,7 @@ public final class DatabaseAccount extends Resource {
      * @param databasesLink the databases link.
      */
     void setDatabasesLink(String databasesLink) {
-        BridgeInternal.setProperty(this, Constants.Properties.DATABASES_LINK, databasesLink);
+        this.set(Constants.Properties.DATABASES_LINK, databasesLink);
     }
 
     /**
@@ -84,7 +83,7 @@ public final class DatabaseAccount extends Resource {
      * @param medialink the media link.
      */
     void setMediaLink(String medialink) {
-        BridgeInternal.setProperty(this, Constants.Properties.MEDIA_LINK, medialink);
+        this.set(Constants.Properties.MEDIA_LINK, medialink);
     }
 
     /**
@@ -102,7 +101,7 @@ public final class DatabaseAccount extends Resource {
      * @param addresseslink the addresses link.
      */
     void setAddressesLink(String addresseslink) {
-        BridgeInternal.setProperty(this, Constants.Properties.ADDRESS_LINK, addresseslink);
+        this.set(Constants.Properties.ADDRESS_LINK, addresseslink);
     }
 
     /**
@@ -197,11 +196,10 @@ public final class DatabaseAccount extends Resource {
             String queryEngineConfigurationJsonString = super.getObject(Constants.Properties.QUERY_ENGINE_CONFIGURATION,
                 String.class);
             if (StringUtils.isNotEmpty(queryEngineConfigurationJsonString)) {
-                TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
-                };
                 try {
-                    this.queryEngineConfiguration = Utils.getSimpleObjectMapper()
-                                                        .readValue(queryEngineConfigurationJsonString, typeRef);
+                    this.queryEngineConfiguration = Utils
+                        .getSimpleObjectMapper()
+                        .readValue(queryEngineConfigurationJsonString, ObjectNodeMap.JACKSON_MAP_TYPE);
                 } catch (IOException e) {
                     throw new IllegalArgumentException(e);
                 }
@@ -231,7 +229,7 @@ public final class DatabaseAccount extends Resource {
      * @param locations the list of writable locations.
      */
     public void setWritableLocations(Iterable<DatabaseAccountLocation> locations) {
-        BridgeInternal.setProperty(this, Constants.Properties.WRITABLE_LOCATIONS, locations);
+        this.set(Constants.Properties.WRITABLE_LOCATIONS, locations);
     }
 
     /**
@@ -251,7 +249,25 @@ public final class DatabaseAccount extends Resource {
      * @param locations the list of readable locations.
      */
     public void setReadableLocations(Iterable<DatabaseAccountLocation> locations) {
-        BridgeInternal.setProperty(this, Constants.Properties.READABLE_LOCATIONS, locations);
+        this.set(Constants.Properties.READABLE_LOCATIONS, locations);
+    }
+
+    /**
+     * Gets the list of thin client readable locations for this database account.
+     *
+     * @return the list of thin client readable locations.
+     */
+    public Collection<DatabaseAccountLocation> getThinClientReadableLocations() {
+        return super.getCollection(Constants.Properties.THINCLIENT_READABLE_LOCATIONS, DatabaseAccountLocation.class);
+    }
+
+    /**
+     * Gets the list of thin client writable locations for this database account.
+     *
+     * @return the list of thin client writable locations.
+     */
+    public Collection<DatabaseAccountLocation> getThinClientWritableLocations() {
+        return super.getCollection(Constants.Properties.THINCLIENT_WRITABLE_LOCATIONS, DatabaseAccountLocation.class);
     }
 
     /**
@@ -264,14 +280,55 @@ public final class DatabaseAccount extends Resource {
     }
 
     public void setEnableMultipleWriteLocations(boolean value) {
-        BridgeInternal.setProperty(this, Constants.Properties.ENABLE_MULTIPLE_WRITE_LOCATIONS, value);
+        this.set(Constants.Properties.ENABLE_MULTIPLE_WRITE_LOCATIONS, value);
+    }
+
+    /**
+     * Returns true if the account supports per partition failover behavior,
+     * false if enablePerPartitionFailoverBehavior evaluates to null or false.
+     * <p>
+     * If enablePerPartitionFailoverBehavior property does not exist in account metadata JSON payload, null is returned.
+     *
+     * @return true if the account supports per partition failover behavior, false otherwise.
+     */
+    public Boolean isPerPartitionFailoverBehaviorEnabled() {
+
+        if (super.has(Constants.Properties.ENABLE_PER_PARTITION_FAILOVER_BEHAVIOR)) {
+            return ObjectUtils.defaultIfNull(super.getBoolean(Constants.Properties.ENABLE_PER_PARTITION_FAILOVER_BEHAVIOR), false);
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns true if the account supports N region synchronous commit,
+     * false otherwise
+     * <p>
+     * If enableNRegionSynchronousCommit property does not exist in account metadata JSON payload, false is returned
+     *
+     * @return true if the account supports N region synchronous commit, false otherwise.
+     */
+    public boolean isNRegionSynchronousCommitEnabled() {
+
+        if (super.has(Constants.Properties.ENABLE_N_REGION_SYNCHRONOUS_COMMIT)) {
+            return ObjectUtils.defaultIfNull(super.getBoolean(Constants.Properties.ENABLE_N_REGION_SYNCHRONOUS_COMMIT), false);
+        }
+
+        return false;
+    }
+
+    public void setIsPerPartitionFailoverBehaviorEnabled(boolean value) {
+        this.set(Constants.Properties.ENABLE_PER_PARTITION_FAILOVER_BEHAVIOR, value);
     }
 
     public void populatePropertyBag() {
         super.populatePropertyBag();
         if (this.consistencyPolicy != null) {
             this.consistencyPolicy.populatePropertyBag();
-            BridgeInternal.setProperty(this, Constants.Properties.USER_CONSISTENCY_POLICY, this.consistencyPolicy);
+            this.set(
+                Constants.Properties.USER_CONSISTENCY_POLICY,
+                this.consistencyPolicy
+            );
         }
     }
 

@@ -5,87 +5,101 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Dynamics linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("Dynamics")
-@JsonFlatten
+/**
+ * Dynamics linked service.
+ */
 @Fluent
 public class DynamicsLinkedService extends LinkedService {
+    /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "Dynamics";
+
     /*
      * The deployment type of the Dynamics instance. 'Online' for Dynamics Online and 'OnPremisesWithIfd' for Dynamics
      * on-premises with Ifd. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.deploymentType", required = true)
+    @Generated
     private Object deploymentType;
 
     /*
      * The host name of the on-premises Dynamics server. The property is required for on-prem and not allowed for
      * online. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.hostName")
+    @Generated
     private Object hostName;
 
     /*
-     * The port of on-premises Dynamics server. The property is required for on-prem and not allowed for online.
-     * Default is 443. Type: integer (or Expression with resultType integer), minimum: 0.
+     * The port of on-premises Dynamics server. The property is required for on-prem and not allowed for online. Default
+     * is 443. Type: integer (or Expression with resultType integer), minimum: 0.
      */
-    @JsonProperty(value = "typeProperties.port")
+    @Generated
     private Object port;
 
     /*
-     * The URL to the Microsoft Dynamics server. The property is required for on-line and not allowed for on-prem.
-     * Type: string (or Expression with resultType string).
+     * The URL to the Microsoft Dynamics server. The property is required for on-line and not allowed for on-prem. Type:
+     * string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.serviceUri")
+    @Generated
     private Object serviceUri;
 
     /*
-     * The organization name of the Dynamics instance. The property is required for on-prem and required for online
-     * when there are more than one Dynamics instances associated with the user. Type: string (or Expression with
-     * resultType string).
+     * The organization name of the Dynamics instance. The property is required for on-prem and required for online when
+     * there are more than one Dynamics instances associated with the user. Type: string (or Expression with resultType
+     * string).
      */
-    @JsonProperty(value = "typeProperties.organizationName")
+    @Generated
     private Object organizationName;
 
     /*
      * The authentication type to connect to Dynamics server. 'Office365' for online scenario, 'Ifd' for on-premises
-     * with Ifd scenario, 'AADServicePrincipal' for Server-To-Server authentication in online scenario. Type: string
-     * (or Expression with resultType string).
+     * with Ifd scenario, 'AADServicePrincipal' for Server-To-Server authentication in online scenario, 'Active
+     * Directory' for Dynamics on-premises with IFD. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.authenticationType", required = true)
+    @Generated
     private Object authenticationType;
+
+    /*
+     * The Active Directory domain that will verify user credentials. Type: string (or Expression with resultType
+     * string).
+     */
+    @Generated
+    private Object domain;
 
     /*
      * User name to access the Dynamics instance. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.username")
+    @Generated
     private Object username;
 
     /*
      * Password to access the Dynamics instance.
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private SecretBase password;
 
     /*
-     * The client ID of the application in Azure Active Directory used for Server-To-Server authentication. Type:
-     * string (or Expression with resultType string).
+     * The client ID of the application in Azure Active Directory used for Server-To-Server authentication. Type: string
+     * (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.servicePrincipalId")
+    @Generated
     private Object servicePrincipalId;
 
     /*
      * The service principal credential type to use in Server-To-Server authentication. 'ServicePrincipalKey' for
      * key/secret, 'ServicePrincipalCert' for certificate. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.servicePrincipalCredentialType")
+    @Generated
     private Object servicePrincipalCredentialType;
 
     /*
@@ -94,31 +108,47 @@ public class DynamicsLinkedService extends LinkedService {
      * servicePrincipalCredentialType is 'ServicePrincipalCert', servicePrincipalCredential can only be
      * AzureKeyVaultSecretReference.
      */
-    @JsonProperty(value = "typeProperties.servicePrincipalCredential")
+    @Generated
     private SecretBase servicePrincipalCredential;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
     /*
      * The credential reference containing authentication information.
      */
-    @JsonProperty(value = "typeProperties.credential")
+    @Generated
     private CredentialReference credential;
 
-    /** Creates an instance of DynamicsLinkedService class. */
-    public DynamicsLinkedService() {}
+    /**
+     * Creates an instance of DynamicsLinkedService class.
+     */
+    @Generated
+    public DynamicsLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the deploymentType property: The deployment type of the Dynamics instance. 'Online' for Dynamics Online and
      * 'OnPremisesWithIfd' for Dynamics on-premises with Ifd. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the deploymentType value.
      */
+    @Generated
     public Object getDeploymentType() {
         return this.deploymentType;
     }
@@ -126,10 +156,11 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Set the deploymentType property: The deployment type of the Dynamics instance. 'Online' for Dynamics Online and
      * 'OnPremisesWithIfd' for Dynamics on-premises with Ifd. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param deploymentType the deploymentType value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setDeploymentType(Object deploymentType) {
         this.deploymentType = deploymentType;
         return this;
@@ -138,9 +169,10 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Get the hostName property: The host name of the on-premises Dynamics server. The property is required for on-prem
      * and not allowed for online. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the hostName value.
      */
+    @Generated
     public Object getHostName() {
         return this.hostName;
     }
@@ -148,10 +180,11 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Set the hostName property: The host name of the on-premises Dynamics server. The property is required for on-prem
      * and not allowed for online. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param hostName the hostName value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setHostName(Object hostName) {
         this.hostName = hostName;
         return this;
@@ -160,9 +193,10 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Get the port property: The port of on-premises Dynamics server. The property is required for on-prem and not
      * allowed for online. Default is 443. Type: integer (or Expression with resultType integer), minimum: 0.
-     *
+     * 
      * @return the port value.
      */
+    @Generated
     public Object getPort() {
         return this.port;
     }
@@ -170,10 +204,11 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Set the port property: The port of on-premises Dynamics server. The property is required for on-prem and not
      * allowed for online. Default is 443. Type: integer (or Expression with resultType integer), minimum: 0.
-     *
+     * 
      * @param port the port value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setPort(Object port) {
         this.port = port;
         return this;
@@ -182,9 +217,10 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Get the serviceUri property: The URL to the Microsoft Dynamics server. The property is required for on-line and
      * not allowed for on-prem. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the serviceUri value.
      */
+    @Generated
     public Object getServiceUri() {
         return this.serviceUri;
     }
@@ -192,10 +228,11 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Set the serviceUri property: The URL to the Microsoft Dynamics server. The property is required for on-line and
      * not allowed for on-prem. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param serviceUri the serviceUri value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setServiceUri(Object serviceUri) {
         this.serviceUri = serviceUri;
         return this;
@@ -205,9 +242,10 @@ public class DynamicsLinkedService extends LinkedService {
      * Get the organizationName property: The organization name of the Dynamics instance. The property is required for
      * on-prem and required for online when there are more than one Dynamics instances associated with the user. Type:
      * string (or Expression with resultType string).
-     *
+     * 
      * @return the organizationName value.
      */
+    @Generated
     public Object getOrganizationName() {
         return this.organizationName;
     }
@@ -216,10 +254,11 @@ public class DynamicsLinkedService extends LinkedService {
      * Set the organizationName property: The organization name of the Dynamics instance. The property is required for
      * on-prem and required for online when there are more than one Dynamics instances associated with the user. Type:
      * string (or Expression with resultType string).
-     *
+     * 
      * @param organizationName the organizationName value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setOrganizationName(Object organizationName) {
         this.organizationName = organizationName;
         return this;
@@ -228,10 +267,12 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Get the authenticationType property: The authentication type to connect to Dynamics server. 'Office365' for
      * online scenario, 'Ifd' for on-premises with Ifd scenario, 'AADServicePrincipal' for Server-To-Server
-     * authentication in online scenario. Type: string (or Expression with resultType string).
-     *
+     * authentication in online scenario, 'Active Directory' for Dynamics on-premises with IFD. Type: string (or
+     * Expression with resultType string).
+     * 
      * @return the authenticationType value.
      */
+    @Generated
     public Object getAuthenticationType() {
         return this.authenticationType;
     }
@@ -239,22 +280,49 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Set the authenticationType property: The authentication type to connect to Dynamics server. 'Office365' for
      * online scenario, 'Ifd' for on-premises with Ifd scenario, 'AADServicePrincipal' for Server-To-Server
-     * authentication in online scenario. Type: string (or Expression with resultType string).
-     *
+     * authentication in online scenario, 'Active Directory' for Dynamics on-premises with IFD. Type: string (or
+     * Expression with resultType string).
+     * 
      * @param authenticationType the authenticationType value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setAuthenticationType(Object authenticationType) {
         this.authenticationType = authenticationType;
         return this;
     }
 
     /**
+     * Get the domain property: The Active Directory domain that will verify user credentials. Type: string (or
+     * Expression with resultType string).
+     * 
+     * @return the domain value.
+     */
+    @Generated
+    public Object getDomain() {
+        return this.domain;
+    }
+
+    /**
+     * Set the domain property: The Active Directory domain that will verify user credentials. Type: string (or
+     * Expression with resultType string).
+     * 
+     * @param domain the domain value to set.
+     * @return the DynamicsLinkedService object itself.
+     */
+    @Generated
+    public DynamicsLinkedService setDomain(Object domain) {
+        this.domain = domain;
+        return this;
+    }
+
+    /**
      * Get the username property: User name to access the Dynamics instance. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the username value.
      */
+    @Generated
     public Object getUsername() {
         return this.username;
     }
@@ -262,10 +330,11 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Set the username property: User name to access the Dynamics instance. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param username the username value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setUsername(Object username) {
         this.username = username;
         return this;
@@ -273,19 +342,21 @@ public class DynamicsLinkedService extends LinkedService {
 
     /**
      * Get the password property: Password to access the Dynamics instance.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: Password to access the Dynamics instance.
-     *
+     * 
      * @param password the password value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -294,9 +365,10 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Get the servicePrincipalId property: The client ID of the application in Azure Active Directory used for
      * Server-To-Server authentication. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the servicePrincipalId value.
      */
+    @Generated
     public Object getServicePrincipalId() {
         return this.servicePrincipalId;
     }
@@ -304,10 +376,11 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Set the servicePrincipalId property: The client ID of the application in Azure Active Directory used for
      * Server-To-Server authentication. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param servicePrincipalId the servicePrincipalId value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setServicePrincipalId(Object servicePrincipalId) {
         this.servicePrincipalId = servicePrincipalId;
         return this;
@@ -317,9 +390,10 @@ public class DynamicsLinkedService extends LinkedService {
      * Get the servicePrincipalCredentialType property: The service principal credential type to use in Server-To-Server
      * authentication. 'ServicePrincipalKey' for key/secret, 'ServicePrincipalCert' for certificate. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @return the servicePrincipalCredentialType value.
      */
+    @Generated
     public Object getServicePrincipalCredentialType() {
         return this.servicePrincipalCredentialType;
     }
@@ -328,10 +402,11 @@ public class DynamicsLinkedService extends LinkedService {
      * Set the servicePrincipalCredentialType property: The service principal credential type to use in Server-To-Server
      * authentication. 'ServicePrincipalKey' for key/secret, 'ServicePrincipalCert' for certificate. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @param servicePrincipalCredentialType the servicePrincipalCredentialType value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setServicePrincipalCredentialType(Object servicePrincipalCredentialType) {
         this.servicePrincipalCredentialType = servicePrincipalCredentialType;
         return this;
@@ -342,9 +417,10 @@ public class DynamicsLinkedService extends LinkedService {
      * Directory. If servicePrincipalCredentialType is 'ServicePrincipalKey', servicePrincipalCredential can be
      * SecureString or AzureKeyVaultSecretReference. If servicePrincipalCredentialType is 'ServicePrincipalCert',
      * servicePrincipalCredential can only be AzureKeyVaultSecretReference.
-     *
+     * 
      * @return the servicePrincipalCredential value.
      */
+    @Generated
     public SecretBase getServicePrincipalCredential() {
         return this.servicePrincipalCredential;
     }
@@ -354,10 +430,11 @@ public class DynamicsLinkedService extends LinkedService {
      * Directory. If servicePrincipalCredentialType is 'ServicePrincipalKey', servicePrincipalCredential can be
      * SecureString or AzureKeyVaultSecretReference. If servicePrincipalCredentialType is 'ServicePrincipalCert',
      * servicePrincipalCredential can only be AzureKeyVaultSecretReference.
-     *
+     * 
      * @param servicePrincipalCredential the servicePrincipalCredential value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setServicePrincipalCredential(SecretBase servicePrincipalCredential) {
         this.servicePrincipalCredential = servicePrincipalCredential;
         return this;
@@ -366,9 +443,10 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -376,10 +454,11 @@ public class DynamicsLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
@@ -387,49 +466,227 @@ public class DynamicsLinkedService extends LinkedService {
 
     /**
      * Get the credential property: The credential reference containing authentication information.
-     *
+     * 
      * @return the credential value.
      */
+    @Generated
     public CredentialReference getCredential() {
         return this.credential;
     }
 
     /**
      * Set the credential property: The credential reference containing authentication information.
-     *
+     * 
      * @param credential the credential value to set.
      * @return the DynamicsLinkedService object itself.
      */
+    @Generated
     public DynamicsLinkedService setCredential(CredentialReference credential) {
         this.credential = credential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public DynamicsLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DynamicsLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DynamicsLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DynamicsLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DynamicsLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (deploymentType != null
+            || hostName != null
+            || port != null
+            || serviceUri != null
+            || organizationName != null
+            || authenticationType != null
+            || domain != null
+            || username != null
+            || password != null
+            || servicePrincipalId != null
+            || servicePrincipalCredentialType != null
+            || servicePrincipalCredential != null
+            || encryptedCredential != null
+            || credential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("deploymentType", this.deploymentType);
+            if (this.hostName != null) {
+                jsonWriter.writeUntypedField("hostName", this.hostName);
+            }
+            if (this.port != null) {
+                jsonWriter.writeUntypedField("port", this.port);
+            }
+            if (this.serviceUri != null) {
+                jsonWriter.writeUntypedField("serviceUri", this.serviceUri);
+            }
+            if (this.organizationName != null) {
+                jsonWriter.writeUntypedField("organizationName", this.organizationName);
+            }
+            jsonWriter.writeUntypedField("authenticationType", this.authenticationType);
+            if (this.domain != null) {
+                jsonWriter.writeUntypedField("domain", this.domain);
+            }
+            if (this.username != null) {
+                jsonWriter.writeUntypedField("username", this.username);
+            }
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.servicePrincipalId != null) {
+                jsonWriter.writeUntypedField("servicePrincipalId", this.servicePrincipalId);
+            }
+            if (this.servicePrincipalCredentialType != null) {
+                jsonWriter.writeUntypedField("servicePrincipalCredentialType", this.servicePrincipalCredentialType);
+            }
+            jsonWriter.writeJsonField("servicePrincipalCredential", this.servicePrincipalCredential);
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeJsonField("credential", this.credential);
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DynamicsLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DynamicsLinkedService if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DynamicsLinkedService.
+     */
+    @Generated
+    public static DynamicsLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DynamicsLinkedService deserializedDynamicsLinkedService = new DynamicsLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedDynamicsLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedDynamicsLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedDynamicsLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedDynamicsLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedDynamicsLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedDynamicsLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("deploymentType".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.deploymentType = reader.readUntyped();
+                        } else if ("hostName".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.hostName = reader.readUntyped();
+                        } else if ("port".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.port = reader.readUntyped();
+                        } else if ("serviceUri".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.serviceUri = reader.readUntyped();
+                        } else if ("organizationName".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.organizationName = reader.readUntyped();
+                        } else if ("authenticationType".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.authenticationType = reader.readUntyped();
+                        } else if ("domain".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.domain = reader.readUntyped();
+                        } else if ("username".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.username = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("servicePrincipalId".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.servicePrincipalId = reader.readUntyped();
+                        } else if ("servicePrincipalCredentialType".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.servicePrincipalCredentialType = reader.readUntyped();
+                        } else if ("servicePrincipalCredential".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.servicePrincipalCredential = SecretBase.fromJson(reader);
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.encryptedCredential = reader.readUntyped();
+                        } else if ("credential".equals(fieldName)) {
+                            deserializedDynamicsLinkedService.credential = CredentialReference.fromJson(reader);
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedDynamicsLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedDynamicsLinkedService;
+        });
     }
 }

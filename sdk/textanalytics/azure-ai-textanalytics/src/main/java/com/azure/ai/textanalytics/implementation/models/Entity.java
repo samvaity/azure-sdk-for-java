@@ -5,65 +5,78 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The Entity model. */
+/**
+ * The Entity model.
+ */
 @Fluent
-public final class Entity {
+public final class Entity implements JsonSerializable<Entity> {
     /*
      * Entity text as appears in the request.
      */
-    @JsonProperty(value = "text", required = true)
+    @Generated
     private String text;
 
     /*
      * Entity type.
      */
-    @JsonProperty(value = "category", required = true)
+    @Generated
     private String category;
 
     /*
      * (Optional) Entity sub type.
      */
-    @JsonProperty(value = "subcategory")
+    @Generated
     private String subcategory;
 
     /*
      * Start position for the entity text. Use of different 'stringIndexType' values can affect the offset returned.
      */
-    @JsonProperty(value = "offset", required = true)
+    @Generated
     private int offset;
 
     /*
      * Length for the entity text. Use of different 'stringIndexType' values can affect the length returned.
      */
-    @JsonProperty(value = "length", required = true)
+    @Generated
     private int length;
 
     /*
      * Confidence score between 0 and 1 of the extracted entity.
      */
-    @JsonProperty(value = "confidenceScore", required = true)
+    @Generated
     private double confidenceScore;
 
-    /** Creates an instance of Entity class. */
-    public Entity() {}
+    /**
+     * Creates an instance of Entity class.
+     */
+    @Generated
+    public Entity() {
+    }
 
     /**
      * Get the text property: Entity text as appears in the request.
-     *
+     * 
      * @return the text value.
      */
+    @Generated
     public String getText() {
         return this.text;
     }
 
     /**
      * Set the text property: Entity text as appears in the request.
-     *
+     * 
      * @param text the text value to set.
      * @return the Entity object itself.
      */
+    @Generated
     public Entity setText(String text) {
         this.text = text;
         return this;
@@ -71,19 +84,21 @@ public final class Entity {
 
     /**
      * Get the category property: Entity type.
-     *
+     * 
      * @return the category value.
      */
+    @Generated
     public String getCategory() {
         return this.category;
     }
 
     /**
      * Set the category property: Entity type.
-     *
+     * 
      * @param category the category value to set.
      * @return the Entity object itself.
      */
+    @Generated
     public Entity setCategory(String category) {
         this.category = category;
         return this;
@@ -91,19 +106,21 @@ public final class Entity {
 
     /**
      * Get the subcategory property: (Optional) Entity sub type.
-     *
+     * 
      * @return the subcategory value.
      */
+    @Generated
     public String getSubcategory() {
         return this.subcategory;
     }
 
     /**
      * Set the subcategory property: (Optional) Entity sub type.
-     *
+     * 
      * @param subcategory the subcategory value to set.
      * @return the Entity object itself.
      */
+    @Generated
     public Entity setSubcategory(String subcategory) {
         this.subcategory = subcategory;
         return this;
@@ -112,9 +129,10 @@ public final class Entity {
     /**
      * Get the offset property: Start position for the entity text. Use of different 'stringIndexType' values can affect
      * the offset returned.
-     *
+     * 
      * @return the offset value.
      */
+    @Generated
     public int getOffset() {
         return this.offset;
     }
@@ -122,10 +140,11 @@ public final class Entity {
     /**
      * Set the offset property: Start position for the entity text. Use of different 'stringIndexType' values can affect
      * the offset returned.
-     *
+     * 
      * @param offset the offset value to set.
      * @return the Entity object itself.
      */
+    @Generated
     public Entity setOffset(int offset) {
         this.offset = offset;
         return this;
@@ -134,9 +153,10 @@ public final class Entity {
     /**
      * Get the length property: Length for the entity text. Use of different 'stringIndexType' values can affect the
      * length returned.
-     *
+     * 
      * @return the length value.
      */
+    @Generated
     public int getLength() {
         return this.length;
     }
@@ -144,10 +164,11 @@ public final class Entity {
     /**
      * Set the length property: Length for the entity text. Use of different 'stringIndexType' values can affect the
      * length returned.
-     *
+     * 
      * @param length the length value to set.
      * @return the Entity object itself.
      */
+    @Generated
     public Entity setLength(int length) {
         this.length = length;
         return this;
@@ -155,21 +176,77 @@ public final class Entity {
 
     /**
      * Get the confidenceScore property: Confidence score between 0 and 1 of the extracted entity.
-     *
+     * 
      * @return the confidenceScore value.
      */
+    @Generated
     public double getConfidenceScore() {
         return this.confidenceScore;
     }
 
     /**
      * Set the confidenceScore property: Confidence score between 0 and 1 of the extracted entity.
-     *
+     * 
      * @param confidenceScore the confidenceScore value to set.
      * @return the Entity object itself.
      */
+    @Generated
     public Entity setConfidenceScore(double confidenceScore) {
         this.confidenceScore = confidenceScore;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("text", this.text);
+        jsonWriter.writeStringField("category", this.category);
+        jsonWriter.writeIntField("offset", this.offset);
+        jsonWriter.writeIntField("length", this.length);
+        jsonWriter.writeDoubleField("confidenceScore", this.confidenceScore);
+        jsonWriter.writeStringField("subcategory", this.subcategory);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of Entity from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of Entity if the JsonReader was pointing to an instance of it, or null if it was pointing to
+     * JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the Entity.
+     */
+    @Generated
+    public static Entity fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            Entity deserializedEntity = new Entity();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("text".equals(fieldName)) {
+                    deserializedEntity.text = reader.getString();
+                } else if ("category".equals(fieldName)) {
+                    deserializedEntity.category = reader.getString();
+                } else if ("offset".equals(fieldName)) {
+                    deserializedEntity.offset = reader.getInt();
+                } else if ("length".equals(fieldName)) {
+                    deserializedEntity.length = reader.getInt();
+                } else if ("confidenceScore".equals(fieldName)) {
+                    deserializedEntity.confidenceScore = reader.getDouble();
+                } else if ("subcategory".equals(fieldName)) {
+                    deserializedEntity.subcategory = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedEntity;
+        });
     }
 }

@@ -7,6 +7,7 @@ import static com.azure.spring.cloud.appconfiguration.config.implementation.AppC
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,24 +15,31 @@ import static org.mockito.Mockito.when;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.MockitoSession;
+import org.mockito.quality.Strictness;
 
+import com.azure.core.util.Context;
 import com.azure.data.appconfiguration.models.ConfigurationSetting;
 import com.azure.data.appconfiguration.models.FeatureFlagConfigurationSetting;
 import com.azure.data.appconfiguration.models.SettingSelector;
 import com.azure.spring.cloud.appconfiguration.config.implementation.AppConfigurationRefreshUtil.RefreshEventData;
+import com.azure.spring.cloud.appconfiguration.config.implementation.autofailover.ReplicaLookUp;
+import com.azure.spring.cloud.appconfiguration.config.implementation.configuration.WatchedConfigurationSettings;
+import com.azure.spring.cloud.appconfiguration.config.implementation.feature.FeatureFlagState;
 import com.azure.spring.cloud.appconfiguration.config.implementation.properties.AppConfigurationStoreMonitoring;
+import com.azure.spring.cloud.appconfiguration.config.implementation.properties.AppConfigurationStoreMonitoring.AccessToken;
+import com.azure.spring.cloud.appconfiguration.config.implementation.properties.AppConfigurationStoreMonitoring.PushNotification;
 import com.azure.spring.cloud.appconfiguration.config.implementation.properties.ConfigStore;
 import com.azure.spring.cloud.appconfiguration.config.implementation.properties.FeatureFlagKeyValueSelector;
 import com.azure.spring.cloud.appconfiguration.config.implementation.properties.FeatureFlagStore;
@@ -47,9 +55,6 @@ public class AppConfigurationRefreshUtilTest {
     private AppConfigurationReplicaClientFactory clientFactoryMock;
 
     @Mock
-    private List<ConfigurationSetting> watchKeyListMock;
-
-    @Mock
     private AppConfigurationReplicaClient clientOriginMock;
 
     @Mock
@@ -58,15 +63,17 @@ public class AppConfigurationRefreshUtilTest {
     @Mock
     private ConnectionManager connectionManagerMock;
 
+    @Mock
+    private ReplicaLookUp replicaLookUpMock;
+
+    @Mock
+    private Context contextMock;
+
     private ConfigStore configStore;
 
     private String endpoint;
 
-    private RefreshEventData eventData = new RefreshEventData();
-
-    private final List<AppConfigurationReplicaClient> clients = new ArrayList<>();
-
-    private final List<ConfigurationSetting> watchKeys = generateWatchKeys();
+    private AppConfigurationRefreshUtil refreshUtil;
 
     private final List<ConfigurationSetting> watchKeysFeatureFlags = generateFeatureFlagWatchKeys();
 
@@ -74,37 +81,41 @@ public class AppConfigurationRefreshUtilTest {
 
     private final FeatureFlagStore featureStore = new FeatureFlagStore();
 
+    private MockitoSession session;
+
     @BeforeEach
     public void setup() {
+        session = Mockito.mockitoSession().initMocks(this).strictness(Strictness.STRICT_STUBS).startMocking();
         MockitoAnnotations.openMocks(this);
         configStore = new ConfigStore();
 
         featureStore.setEnabled(true);
 
-        List<FeatureFlagKeyValueSelector> ffSelects = new ArrayList<>();
         FeatureFlagKeyValueSelector ffSelect = new FeatureFlagKeyValueSelector().setKeyFilter(FEATURE_FLAG_PREFIX)
             .setLabelFilter(EMPTY_LABEL);
-        ffSelects.add(ffSelect);
-        featureStore.setSelects(ffSelects);
+        featureStore.setSelects(List.of(ffSelect));
         configStore.setFeatureFlags(featureStore);
 
         monitoring.setEnabled(true);
         featureStore.setEnabled(true);
+
+        refreshUtil = new AppConfigurationRefreshUtil(currentStateMock);
+    }
+
+    @AfterEach
+    public void cleanup() throws Exception {
+        MockitoAnnotations.openMocks(this).close();
+        session.finishMocking();
     }
 
     @Test
     public void refreshWithoutTimeWatchKeyConfigStoreNotLoaded(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
         when(clientMock.getEndpoint()).thenReturn(endpoint);
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(false);
 
-        when(clientMock.getWatchKey(Mockito.eq(KEY_FILTER), Mockito.eq(EMPTY_LABEL))).thenReturn(watchKeys.get(0));
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadState(endpoint)).thenReturn(false);
-
-            assertFalse(
-                AppConfigurationRefreshUtil.checkStoreAfterRefreshFailed(clientMock, clientFactoryMock, featureStore,
-                    new ArrayList<>()));
-        }
+        assertFalse(AppConfigurationRefreshUtil.refreshStoreCheck(clientMock, endpoint, contextMock, currentStateMock));
+        assertFalse(refreshUtil.refreshStoreFeatureFlagCheck(true, clientMock, contextMock));
     }
 
     @Test
@@ -112,19 +123,17 @@ public class AppConfigurationRefreshUtilTest {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
         when(clientMock.getEndpoint()).thenReturn(endpoint);
 
+        List<ConfigurationSetting> watchKeys = generateWatchKeys();
         State newState = new State(watchKeys, Math.toIntExact(Duration.ofMinutes(10).getSeconds()), endpoint);
 
         // Config Store doesn't return a watch key change.
-        when(clientMock.getWatchKey(Mockito.eq(KEY_FILTER), Mockito.eq(EMPTY_LABEL))).thenReturn(watchKeys.get(0));
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadState(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getState(endpoint)).thenReturn(newState);
+        when(clientMock.getWatchKey(Mockito.eq(KEY_FILTER), Mockito.eq(EMPTY_LABEL), Mockito.any(Context.class)))
+            .thenReturn(watchKeys.get(0));
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(newState);
 
-            assertFalse(
-                AppConfigurationRefreshUtil.checkStoreAfterRefreshFailed(clientMock, clientFactoryMock, featureStore,
-                    new ArrayList<>()));
-
-        }
+        assertFalse(AppConfigurationRefreshUtil.refreshStoreCheck(clientMock, endpoint, contextMock, currentStateMock));
+        assertFalse(refreshUtil.refreshStoreFeatureFlagCheck(true, clientMock, contextMock));
     }
 
     @Test
@@ -132,27 +141,18 @@ public class AppConfigurationRefreshUtilTest {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
         when(clientMock.getEndpoint()).thenReturn(endpoint);
 
-        ConfigurationSetting updatedWatchKey = new ConfigurationSetting().setKey(KEY_FILTER).setLabel(EMPTY_LABEL)
-            .setETag("updated");
-
-        State newState = new State(watchKeys, Math.toIntExact(Duration.ofMinutes(10).getSeconds()), endpoint);
-
-        List<ConfigurationSetting> listedKeys = new ArrayList<>();
-        listedKeys.add(watchKeysFeatureFlags.get(0));
+        FeatureFlagState newState = new FeatureFlagState(
+            List.of(new WatchedConfigurationSettings(
+                new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL), null)),
+            Math.toIntExact(Duration.ofMinutes(10).getSeconds()), endpoint);
 
         // Config Store does return a watch key change.
-        when(clientMock.getWatchKey(Mockito.eq(KEY_FILTER), Mockito.eq(EMPTY_LABEL))).thenReturn(updatedWatchKey);
-        when(clientMock.listSettings(Mockito.any(SettingSelector.class))).thenReturn(watchKeyListMock);
-        when(watchKeyListMock.iterator()).thenReturn(listedKeys.iterator());
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getStateFeatureFlag(endpoint)).thenReturn(newState);
+        when(clientMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(false);
+        when(currentStateMock.getStateFeatureFlag(endpoint)).thenReturn(newState);
 
-            assertFalse(
-                AppConfigurationRefreshUtil.checkStoreAfterRefreshFailed(clientMock, clientFactoryMock, featureStore,
-                    new ArrayList<>()));
-
-        }
+        assertFalse(AppConfigurationRefreshUtil.refreshStoreCheck(clientMock, endpoint, contextMock, currentStateMock));
+        assertFalse(refreshUtil.refreshStoreFeatureFlagCheck(true, clientMock, contextMock));
     }
 
     @Test
@@ -162,14 +162,9 @@ public class AppConfigurationRefreshUtilTest {
 
         configStore.getFeatureFlags().setEnabled(false);
 
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(false);
-
-            assertFalse(
-                AppConfigurationRefreshUtil.checkStoreAfterRefreshFailed(clientMock, clientFactoryMock, featureStore,
-                    new ArrayList<>()));
-
-        }
+        assertFalse(AppConfigurationRefreshUtil.refreshStoreCheck(clientMock, endpoint, contextMock, currentStateMock));
+        assertFalse(refreshUtil.refreshStoreFeatureFlagCheck(true, clientMock, contextMock));
+        verify(currentStateMock, times(1)).getLoadState(Mockito.anyString());
     }
 
     @Test
@@ -179,14 +174,9 @@ public class AppConfigurationRefreshUtilTest {
 
         configStore.getFeatureFlags().setEnabled(true);
 
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(false);
-
-            assertFalse(
-                AppConfigurationRefreshUtil.checkStoreAfterRefreshFailed(clientMock, clientFactoryMock, featureStore,
-                    new ArrayList<>()));
-
-        }
+        assertFalse(AppConfigurationRefreshUtil.refreshStoreCheck(clientMock, endpoint, contextMock, currentStateMock));
+        assertFalse(refreshUtil.refreshStoreFeatureFlagCheck(true, clientMock, contextMock));
+        verify(currentStateMock, times(1)).getLoadState(Mockito.anyString());
     }
 
     @Test
@@ -194,470 +184,375 @@ public class AppConfigurationRefreshUtilTest {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
         when(clientMock.getEndpoint()).thenReturn(endpoint);
 
-        State newState = new State(watchKeysFeatureFlags, Math.toIntExact(Duration.ofMinutes(10).getSeconds()),
-            endpoint);
-
-        List<ConfigurationSetting> listedKeys = new ArrayList<>();
-        listedKeys.add(watchKeysFeatureFlags.get(0));
+        FeatureFlagState newState = new FeatureFlagState(
+            List.of(new WatchedConfigurationSettings(
+                new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL), null)),
+            Math.toIntExact(Duration.ofMinutes(10).getSeconds()), endpoint);
 
         // Config Store doesn't return a watch key change.
-        when(clientMock.listSettings(Mockito.any(SettingSelector.class))).thenReturn(watchKeyListMock);
-        when(watchKeyListMock.iterator()).thenReturn(listedKeys.iterator());
+        when(clientMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(false);
+        when(currentStateMock.getStateFeatureFlag(endpoint)).thenReturn(newState);
 
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getStateFeatureFlag(endpoint)).thenReturn(newState);
-
-            assertFalse(
-                AppConfigurationRefreshUtil.checkStoreAfterRefreshFailed(clientMock, clientFactoryMock, featureStore,
-                    new ArrayList<>()));
-
-        }
-
+        assertFalse(AppConfigurationRefreshUtil.refreshStoreCheck(clientMock, endpoint, contextMock, currentStateMock));
+        assertFalse(refreshUtil.refreshStoreFeatureFlagCheck(true, clientMock, contextMock));
     }
 
     @Test
-    public void refreshWithoutTimeFeatureFlagNoWatchKeyReturned(TestInfo testInfo) {
+    public void refreshWithoutTimeFeatureFlagEtagChanged(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
         when(clientMock.getEndpoint()).thenReturn(endpoint);
 
-        ConfigurationSetting updatedWatchKey = new FeatureFlagConfigurationSetting("Alpha", false)
-            .setETag("updated").setLabel(EMPTY_LABEL);
-
-        List<ConfigurationSetting> listedKeys = new ArrayList<>();
-        listedKeys.add(updatedWatchKey);
-
-        State newState = new State(watchKeysFeatureFlags, Math.toIntExact(Duration.ofMinutes(10).getSeconds()),
-            endpoint);
+        WatchedConfigurationSettings featureFlags = new WatchedConfigurationSettings(new SettingSelector(),
+            watchKeysFeatureFlags);
+        FeatureFlagState newState = new FeatureFlagState(List.of(featureFlags),
+            Math.toIntExact(Duration.ofMinutes(10).getSeconds()), endpoint);
 
         // Config Store does return a watch key change.
-        when(clientMock.listSettings(Mockito.any(SettingSelector.class))).thenReturn(watchKeyListMock);
-        when(watchKeyListMock.iterator()).thenReturn(listedKeys.iterator());
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getStateFeatureFlag(endpoint)).thenReturn(newState);
+        when(clientMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(true);
+        when(currentStateMock.getStateFeatureFlag(endpoint)).thenReturn(newState);
 
-            assertTrue(
-                AppConfigurationRefreshUtil.checkStoreAfterRefreshFailed(clientMock, clientFactoryMock, featureStore,
-                    new ArrayList<>()));
-
-        }
-    }
-
-    @Test
-    public void refreshWithoutTimeFeatureFlagWasDeleted(TestInfo testInfo) {
-        endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
-
-        // Config Store doesn't return a value, Feature Flag was deleted
-        when(clientMock.listSettings(Mockito.any(SettingSelector.class))).thenReturn(watchKeyListMock);
-        when(watchKeyListMock.iterator()).thenReturn(Collections.emptyIterator());
-
-        State newState = new State(watchKeysFeatureFlags, Math.toIntExact(Duration.ofMinutes(10).getSeconds()),
-            endpoint);
-
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getStateFeatureFlag(endpoint)).thenReturn(newState);
-
-            assertTrue(
-                AppConfigurationRefreshUtil.checkStoreAfterRefreshFailed(clientMock, clientFactoryMock, featureStore,
-                    new ArrayList<>()));
-
-        }
-    }
-
-    @Test
-    public void refreshWithoutTimeFeatureFlagWasAdded(TestInfo testInfo) {
-        endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
-
-        ConfigurationSetting extraFeatureFlag = new FeatureFlagConfigurationSetting("Beta", false)
-            .setETag("new");
-
-        List<ConfigurationSetting> listedKeys = generateFeatureFlagWatchKeys();
-        listedKeys.add(extraFeatureFlag);
-        State newState = new State(watchKeysFeatureFlags, Math.toIntExact(Duration.ofMinutes(10).getSeconds()),
-            endpoint);
-
-        // Config Store returns a new feature flag
-        when(clientMock.listSettings(Mockito.any(SettingSelector.class))).thenReturn(watchKeyListMock);
-        when(watchKeyListMock.iterator()).thenReturn(listedKeys.iterator());
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getStateFeatureFlag(endpoint)).thenReturn(newState);
-
-            assertTrue(
-                AppConfigurationRefreshUtil.checkStoreAfterRefreshFailed(clientMock, clientFactoryMock, featureStore,
-                    new ArrayList<>()));
-
-        }
+        assertFalse(AppConfigurationRefreshUtil.refreshStoreCheck(clientMock, endpoint, contextMock, currentStateMock));
+        assertTrue(refreshUtil.refreshStoreFeatureFlagCheck(true, clientMock, contextMock));
     }
 
     @Test
     public void refreshStoresCheckSettingsTestNotEnabled(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
-
-        clients.add(clientOriginMock);
-
-        Map<String, ConnectionManager> connections = new HashMap<>();
-        connections.put(endpoint, connectionManagerMock);
 
         when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
         when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
-        when(clientFactoryMock.getConnections()).thenReturn(connections);
+        when(clientFactoryMock.getConnections()).thenReturn(Map.of(endpoint, connectionManagerMock));
 
-        when(clientFactoryMock.getAvailableClients(Mockito.eq(endpoint))).thenReturn(clients);
-
-        State newState = new State(generateWatchKeys(), Math.toIntExact(Duration.ofMinutes(10).getSeconds()), endpoint);
-
-        // Config Store doesn't return a watch key change.
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadState(endpoint)).thenReturn(false);
-            stateHolderMock.when(() -> StateHolder.getState(endpoint)).thenReturn(newState);
-
-            // Monitor is disabled
-            eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock, Duration.ofMinutes(10),
-                new ArrayList<>(), (long) 60);
-            assertFalse(eventData.getDoRefresh());
-            verify(clientFactoryMock, times(1)).setCurrentConfigStoreClient(Mockito.eq(endpoint), Mockito.eq(endpoint));
-            verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString());
-        }
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10),
+            (long) 60, replicaLookUpMock);
+        assertFalse(eventData.getDoRefresh());
+        verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString(),
+            Mockito.any(Context.class));
     }
 
     @Test
     public void refreshStoresCheckSettingsTestNotLoaded(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
-
-        clients.add(clientOriginMock);
-
-        Map<String, ConnectionManager> connections = new HashMap<>();
-        connections.put(endpoint, connectionManagerMock);
 
         when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
         when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
-        when(clientFactoryMock.getConnections()).thenReturn(connections);
+        when(clientFactoryMock.getConnections()).thenReturn(Map.of(endpoint, connectionManagerMock));
 
-        when(clientFactoryMock.getAvailableClients(Mockito.eq(endpoint))).thenReturn(clients);
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(false);
 
-        State newState = new State(generateWatchKeys(), Math.toIntExact(Duration.ofMinutes(10).getSeconds()), endpoint);
 
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadState(endpoint)).thenReturn(false);
-            stateHolderMock.when(() -> StateHolder.getState(endpoint)).thenReturn(newState);
-
-            eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock, Duration.ofMinutes(10),
-                new ArrayList<>(), (long) 60);
-            assertFalse(eventData.getDoRefresh());
-            verify(clientFactoryMock, times(1)).setCurrentConfigStoreClient(Mockito.eq(endpoint), Mockito.eq(endpoint));
-            verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString());
-        }
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10), (long) 60, replicaLookUpMock);
+        assertFalse(eventData.getDoRefresh());
+        verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString(),
+            Mockito.any(Context.class));
     }
 
     @Test
     public void refreshStoresCheckSettingsTestNotRefreshTime(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
+        setupFeatureFlagLoadBasic();
 
-        clients.add(clientOriginMock);
+        // Set up state with WatchedConfigurationSettings and a future refresh time (not expired)
+        WatchedConfigurationSettings watchedConfigurationSettings = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL),
+            generateWatchKeys());
+        // Use a positive duration so the refresh time is in the future
+        State state = new State(null, List.of(watchedConfigurationSettings),
+            Math.toIntExact(Duration.ofMinutes(10).getSeconds()), endpoint);
 
-        Map<String, ConnectionManager> connections = new HashMap<>();
-        connections.put(endpoint, connectionManagerMock);
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(state);
+        when(clientFactoryMock.getNextActiveClient(Mockito.eq(endpoint), Mockito.booleanThat(value -> true)))
+            .thenReturn(clientOriginMock);
 
-        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
-        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
-        when(clientFactoryMock.getConnections()).thenReturn(connections);
-
-        // Not Refresh Time
-        when(clientFactoryMock.getAvailableClients(Mockito.eq(endpoint))).thenReturn(clients);
-
-        State newState = new State(generateWatchKeys(), Math.toIntExact(Duration.ofMinutes(10).getSeconds()), endpoint);
-
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadState(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getState(endpoint)).thenReturn(newState);
-
-            eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock, Duration.ofMinutes(10),
-                new ArrayList<>(), (long) 60);
-            assertFalse(eventData.getDoRefresh());
-            verify(clientFactoryMock, times(1)).setCurrentConfigStoreClient(Mockito.eq(endpoint), Mockito.eq(endpoint));
-            verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString());
-        }
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10),
+            (long) 60, replicaLookUpMock);
+        assertFalse(eventData.getDoRefresh());
+        // Verify that checkWatchKeys is NOT called because refresh time hasn't arrived
+        verify(clientOriginMock, times(0)).checkWatchKeys(Mockito.any(SettingSelector.class),
+            Mockito.any(Context.class));
+        verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString(),
+            Mockito.any(Context.class));
     }
 
     @Test
-    public void refreshStoresCheckSettingsTestFailedRequest(TestInfo testInfo) {
+    public void refreshStoresCheckSettingsTestNoChangeDetected(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
+        setupFeatureFlagLoad();
 
-        clients.add(clientOriginMock);
+        // Set up state with WatchedConfigurationSettings
+        WatchedConfigurationSettings watchedConfigurationSettings = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL),
+            generateWatchKeys());
+        State state = new State(null, List.of(watchedConfigurationSettings),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
 
-        Map<String, ConnectionManager> connections = new HashMap<>();
-        connections.put(endpoint, connectionManagerMock);
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(state);
 
-        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
-        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
-        when(clientFactoryMock.getConnections()).thenReturn(connections);
+        when(clientOriginMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(false);
 
-        // Refresh Time, but failed watch request
-        when(clientFactoryMock.getAvailableClients(Mockito.eq(endpoint))).thenReturn(clients);
-
-        State newState = new State(generateWatchKeys(), Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
-
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadState(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getState(endpoint)).thenReturn(newState);
-            StateHolder updatedStateHolder = new StateHolder();
-            stateHolderMock.when(() -> StateHolder.getCurrentState()).thenReturn(updatedStateHolder);
-
-            eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock, Duration.ofMinutes(10),
-                new ArrayList<>(), (long) 60);
-            assertFalse(eventData.getDoRefresh());
-            verify(clientFactoryMock, times(1)).setCurrentConfigStoreClient(Mockito.eq(endpoint), Mockito.eq(endpoint));
-            verify(clientOriginMock, times(1)).getWatchKey(Mockito.anyString(), Mockito.anyString());
-            assertEquals(newState, StateHolder.getState(endpoint));
-        }
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10),
+            (long) 60, replicaLookUpMock);
+        assertFalse(eventData.getDoRefresh());
+        ArgumentCaptor<Context> captorParam = ArgumentCaptor.forClass(Context.class);
+        verify(clientOriginMock, times(1)).checkWatchKeys(Mockito.any(SettingSelector.class),
+            captorParam.capture());
+        Context testContext = captorParam.getValue();
+        assertTrue((Boolean) testContext.getData("refresh").get());
+        assertFalse((Boolean) testContext.getData("PushRefresh").get());
     }
 
     @Test
     public void refreshStoresCheckSettingsTestRefreshTimeNoChange(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
+        setupFeatureFlagLoad();
 
-        clients.add(clientOriginMock);
+        // Set up state with WatchedConfigurationSettings
+        WatchedConfigurationSettings watchedConfigurationSettings = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL),
+            generateWatchKeys());
+        State state = new State(null, List.of(watchedConfigurationSettings),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
 
-        Map<String, ConnectionManager> connections = new HashMap<>();
-        connections.put(endpoint, connectionManagerMock);
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(state);
 
+        when(clientOriginMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(false);
+
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10), (long) 60, replicaLookUpMock);
+        assertFalse(eventData.getDoRefresh());
+        verify(clientOriginMock, times(1)).checkWatchKeys(Mockito.any(SettingSelector.class),
+            Mockito.any(Context.class));
+    }
+
+    @Test
+    public void refreshStoresPushRefreshEnabledPrimary(TestInfo testInfo) {
+        endpoint = testInfo.getDisplayName() + ".azconfig.io";
+        setupFeatureFlagLoad();
+        PushNotification pushNotificaiton = new PushNotification();
+        AccessToken p1 = new AccessToken();
+        p1.setName("fake name");
+        p1.setSecret("value");
+        pushNotificaiton.setPrimaryToken(p1);
+        monitoring.setPushNotification(pushNotificaiton);
         when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
-        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
-        when(clientFactoryMock.getConnections()).thenReturn(connections);
 
-        // Refresh Time, but no change
-        when(clientFactoryMock.getAvailableClients(Mockito.eq(endpoint))).thenReturn(clients);
-        when(clientOriginMock.getWatchKey(Mockito.anyString(), Mockito.anyString()))
-            .thenReturn(generateWatchKeys().get(0));
+        // Set up state with WatchedConfigurationSettings
+        WatchedConfigurationSettings watchedConfigurationSettings = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL),
+            generateWatchKeys());
+        State state = new State(null, List.of(watchedConfigurationSettings),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
 
-        State newState = new State(generateWatchKeys(), Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(state);
 
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadState(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getState(Mockito.any())).thenReturn(newState);
-            StateHolder updatedStateHolder = new StateHolder();
-            stateHolderMock.when(() -> StateHolder.getCurrentState()).thenReturn(updatedStateHolder);
+        when(clientOriginMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(false);
 
-            eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock, Duration.ofMinutes(10),
-                new ArrayList<>(), (long) 60);
-            assertEquals(newState, StateHolder.getState(endpoint));
-            assertFalse(eventData.getDoRefresh());
-            verify(clientFactoryMock, times(1)).setCurrentConfigStoreClient(Mockito.eq(endpoint), Mockito.eq(endpoint));
-            verify(clientOriginMock, times(1)).getWatchKey(Mockito.anyString(), Mockito.anyString());
-        }
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10), (long) 60, replicaLookUpMock);
+        assertFalse(eventData.getDoRefresh());
+        ArgumentCaptor<Context> captorParam = ArgumentCaptor.forClass(Context.class);
+        verify(clientOriginMock, times(1)).checkWatchKeys(Mockito.any(SettingSelector.class),
+            captorParam.capture());
+        Context testContext = captorParam.getValue();
+        assertTrue((Boolean) testContext.getData("refresh").get());
+        assertTrue((Boolean) testContext.getData("PushRefresh").get());
+    }
+
+    @Test
+    public void refreshStoresPushRefreshEnabledSecondary(TestInfo testInfo) {
+        endpoint = testInfo.getDisplayName() + ".azconfig.io";
+        setupFeatureFlagLoad();
+        PushNotification pushNotificaiton = new PushNotification();
+        AccessToken p2 = new AccessToken();
+        p2.setName("fake name");
+        p2.setSecret("value");
+        pushNotificaiton.setSecondaryToken(p2);
+        monitoring.setPushNotification(pushNotificaiton);
+        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
+
+        // Set up state with WatchedConfigurationSettings
+        WatchedConfigurationSettings watchedConfigurationSettings = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL),
+            generateWatchKeys());
+        State state = new State(null, List.of(watchedConfigurationSettings),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
+
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(state);
+
+        when(clientOriginMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(false);
+
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10), (long) 60, replicaLookUpMock);
+        assertFalse(eventData.getDoRefresh());
+        ArgumentCaptor<Context> captorParam = ArgumentCaptor.forClass(Context.class);
+        verify(clientOriginMock, times(1)).checkWatchKeys(Mockito.any(SettingSelector.class),
+            captorParam.capture());
+        Context testContext = captorParam.getValue();
+        assertTrue((Boolean) testContext.getData("refresh").get());
+        assertTrue((Boolean) testContext.getData("PushRefresh").get());
     }
 
     @Test
     public void refreshStoresCheckSettingsTestTriggerRefresh(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
-
-        clients.add(clientOriginMock);
-
-        Map<String, ConnectionManager> connections = new HashMap<>();
-        connections.put(endpoint, connectionManagerMock);
-
         when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
-        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
-        when(clientFactoryMock.getConnections()).thenReturn(connections);
+        FeatureFlagStore disabledFeatureStore = new FeatureFlagStore();
+        disabledFeatureStore.setEnabled(false);
+        lenient().when(connectionManagerMock.getFeatureFlagStore()).thenReturn(disabledFeatureStore);
+        when(clientFactoryMock.getConnections()).thenReturn(Map.of(endpoint, connectionManagerMock));
 
         // Refresh Time, trigger refresh
-        when(clientFactoryMock.getAvailableClients(Mockito.eq(endpoint))).thenReturn(clients);
+        when(clientFactoryMock.getNextActiveClient(Mockito.eq(endpoint), Mockito.booleanThat(value -> true)))
+            .thenReturn(clientOriginMock);
 
-        ConfigurationSetting refreshKey = new ConfigurationSetting().setKey(KEY_FILTER).setLabel(EMPTY_LABEL)
-            .setETag("new");
+        // Set up state with WatchedConfigurationSettings
+        WatchedConfigurationSettings watchedConfigurationSettings = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL),
+            generateWatchKeys());
+        State state = new State(null, List.of(watchedConfigurationSettings),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
 
-        when(clientOriginMock.getWatchKey(Mockito.anyString(), Mockito.anyString())).thenReturn(refreshKey);
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(state);
 
-        State newState = new State(generateWatchKeys(), Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
+        when(clientOriginMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(true);
 
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadState(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getState(endpoint)).thenReturn(newState);
-            stateHolderMock.when(StateHolder::getCurrentState).thenReturn(currentStateMock);
-
-            eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock, Duration.ofMinutes(10),
-                new ArrayList<>(), (long) 60);
-            assertTrue(eventData.getDoRefresh());
-            verify(clientFactoryMock, times(1)).setCurrentConfigStoreClient(Mockito.eq(endpoint), Mockito.eq(endpoint));
-            verify(clientOriginMock, times(1)).getWatchKey(Mockito.anyString(), Mockito.anyString());
-            verify(currentStateMock, times(1)).updateStateRefresh(Mockito.any(), Mockito.any());
-        }
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10),
+            (long) 60, replicaLookUpMock);
+        assertTrue(eventData.getDoRefresh());
+        verify(clientOriginMock, times(1)).checkWatchKeys(Mockito.any(SettingSelector.class),
+            Mockito.any(Context.class));
+        verify(currentStateMock, times(1)).updateStateRefresh(Mockito.any(), Mockito.any());
     }
 
     @Test
     public void refreshStoresCheckFeatureFlagTestNotLoaded(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
+        setupFeatureFlagLoadBasic();
 
-        clients.add(clientOriginMock);
+        // Feature flag state is not loaded (null)
+        when(currentStateMock.getStateFeatureFlag(endpoint)).thenReturn(null);
 
-        Map<String, ConnectionManager> connections = new HashMap<>();
-        connections.put(endpoint, connectionManagerMock);
-
-        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
-        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
-        when(clientFactoryMock.getConnections()).thenReturn(connections);
-
-        when(clientFactoryMock.getAvailableClients(Mockito.eq(endpoint))).thenReturn(clients);
-
-        State newState = new State(generateFeatureFlagWatchKeys(), Math.toIntExact(Duration.ofMinutes(10).getSeconds()),
-            endpoint);
-
-        // Config Store doesn't return a watch key change.
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(false);
-            stateHolderMock.when(() -> StateHolder.getStateFeatureFlag(endpoint)).thenReturn(newState);
-
-            // Monitor is disabled
-            eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock, Duration.ofMinutes(10),
-                new ArrayList<>(), (long) 60);
-            assertFalse(eventData.getDoRefresh());
-            verify(clientFactoryMock, times(1)).setCurrentConfigStoreClient(Mockito.eq(endpoint), Mockito.eq(endpoint));
-            verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString());
-        }
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10),
+            (long) 60, replicaLookUpMock);
+        assertFalse(eventData.getDoRefresh());
+        // Verify that checkWatchKeys is NOT called because feature flag state is not loaded
+        verify(clientOriginMock, times(0)).checkWatchKeys(Mockito.any(SettingSelector.class),
+            Mockito.any(Context.class));
+        verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString(),
+            Mockito.any(Context.class));
     }
 
     @Test
     public void refreshStoresCheckFeatureFlagTestNotRefreshTime(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
+        setupFeatureFlagLoadBasic();
 
-        clients.add(clientOriginMock);
+        // Set up feature flag state with a future refresh time (not expired)
+        WatchedConfigurationSettings featureFlags = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(FEATURE_FLAG_PREFIX).setLabelFilter(EMPTY_LABEL),
+            watchKeysFeatureFlags);
+        // Use a positive duration so the refresh time is in the future
+        FeatureFlagState ffState = new FeatureFlagState(List.of(featureFlags),
+            Math.toIntExact(Duration.ofMinutes(10).getSeconds()), endpoint);
 
-        Map<String, ConnectionManager> connections = new HashMap<>();
-        connections.put(endpoint, connectionManagerMock);
+        when(currentStateMock.getStateFeatureFlag(endpoint)).thenReturn(ffState);
+        when(clientFactoryMock.getNextActiveClient(Mockito.eq(endpoint), Mockito.booleanThat(value -> true)))
+            .thenReturn(clientOriginMock);
 
-        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
-        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
-        when(clientFactoryMock.getConnections()).thenReturn(connections);
-
-        when(clientFactoryMock.getAvailableClients(Mockito.eq(endpoint))).thenReturn(clients);
-
-        State newState = new State(generateFeatureFlagWatchKeys(), Math.toIntExact(Duration.ofMinutes(10).getSeconds()),
-            endpoint);
-
-        // Config Store doesn't return a watch key change.
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getStateFeatureFlag(endpoint)).thenReturn(newState);
-
-            // Monitor is disabled
-            eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock, Duration.ofMinutes(10),
-                new ArrayList<>(), (long) 60);
-            assertFalse(eventData.getDoRefresh());
-            verify(clientFactoryMock, times(1)).setCurrentConfigStoreClient(Mockito.eq(endpoint), Mockito.eq(endpoint));
-            verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString());
-        }
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10),
+            (long) 60, replicaLookUpMock);
+        assertFalse(eventData.getDoRefresh());
+        // Verify that checkWatchKeys is NOT called because refresh time hasn't arrived
+        verify(clientOriginMock, times(0)).checkWatchKeys(Mockito.any(SettingSelector.class),
+            Mockito.any(Context.class));
+        verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString(),
+            Mockito.any(Context.class));
     }
 
     @Test
     public void refreshStoresCheckFeatureFlagTestNoChange(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
+        setupFeatureFlagLoad();
 
-        clients.add(clientOriginMock);
-        configStore.setEndpoint(endpoint);
-        configStore.setFeatureFlags(featureStore);
-        configStore.setMonitoring(monitoring);
+        // Set up feature flag state so it can be checked
+        WatchedConfigurationSettings featureFlags = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(FEATURE_FLAG_PREFIX).setLabelFilter(EMPTY_LABEL),
+            watchKeysFeatureFlags);
+        FeatureFlagState ffState = new FeatureFlagState(List.of(featureFlags),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
 
-        List<ConfigurationSetting> listedKeys = new ArrayList<>();
-        listedKeys.add(watchKeysFeatureFlags.get(0));
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getStateFeatureFlag(endpoint)).thenReturn(ffState);
+        when(clientOriginMock.checkWatchKeys(Mockito.any(), Mockito.any(Context.class))).thenReturn(false);
 
-        Map<String, ConnectionManager> connections = new HashMap<>();
-        connections.put(endpoint, connectionManagerMock);
-
-        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
-        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
-        when(clientFactoryMock.getConnections()).thenReturn(connections);
-
-        when(clientFactoryMock.getAvailableClients(Mockito.eq(endpoint))).thenReturn(clients);
-        when(clientOriginMock.listSettings(Mockito.any())).thenReturn(watchKeyListMock);
-        when(watchKeyListMock.iterator()).thenReturn(listedKeys.iterator());
-
-        State newState = new State(generateFeatureFlagWatchKeys(), Math.toIntExact(Duration.ofMinutes(-1).getSeconds()),
-            endpoint);
-
-        // Config Store doesn't return a watch key change.
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getStateFeatureFlag(endpoint)).thenReturn(newState);
-            stateHolderMock.when(StateHolder::getCurrentState).thenReturn(currentStateMock);
-
-            // Monitor is disabled
-            eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock, Duration.ofMinutes(10),
-                new ArrayList<>(), (long) 60);
-            assertFalse(eventData.getDoRefresh());
-            verify(clientFactoryMock, times(1)).setCurrentConfigStoreClient(Mockito.eq(endpoint), Mockito.eq(endpoint));
-            verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString());
-            verify(currentStateMock, times(1)).updateStateRefresh(Mockito.any(), Mockito.any());
-
-        }
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10), (long) 60, replicaLookUpMock);
+        assertFalse(eventData.getDoRefresh());
+        verify(currentStateMock, times(1)).updateFeatureFlagStateRefresh(Mockito.any(), Mockito.any());
     }
 
     @Test
     public void refreshStoresCheckFeatureFlagTestTriggerRefresh(TestInfo testInfo) {
         endpoint = testInfo.getDisplayName() + ".azconfig.io";
-        when(clientMock.getEndpoint()).thenReturn(endpoint);
+        setupFeatureFlagLoad();
 
-        clients.add(clientOriginMock);
+        // Set up feature flag state so it can be checked
+        WatchedConfigurationSettings featureFlags = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(FEATURE_FLAG_PREFIX).setLabelFilter(EMPTY_LABEL),
+            watchKeysFeatureFlags);
+        FeatureFlagState ffState = new FeatureFlagState(List.of(featureFlags),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
 
-        Map<String, ConnectionManager> connections = new HashMap<>();
-        connections.put(endpoint, connectionManagerMock);
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getStateFeatureFlag(endpoint)).thenReturn(ffState);
+        when(clientOriginMock.checkWatchKeys(Mockito.any(), Mockito.any(Context.class))).thenReturn(true);
 
-        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
-        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
-        when(clientFactoryMock.getConnections()).thenReturn(connections);
-
-        List<ConfigurationSetting> listedKeys = new ArrayList<>();
-
-        FeatureFlagConfigurationSetting updated = (FeatureFlagConfigurationSetting) watchKeysFeatureFlags.get(0);
-        updated.setETag("new");
-
-        listedKeys.add(updated);
-
-        when(clientFactoryMock.getAvailableClients(Mockito.eq(endpoint))).thenReturn(clients);
-        when(clientOriginMock.listSettings(Mockito.any())).thenReturn(watchKeyListMock);
-        when(watchKeyListMock.iterator()).thenReturn(listedKeys.iterator());
-
-        State newState = new State(generateFeatureFlagWatchKeys(), Math.toIntExact(Duration.ofMinutes(-1).getSeconds()),
-            endpoint);
-
-        // Config Store doesn't return a watch key change.
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getLoadStateFeatureFlag(endpoint)).thenReturn(true);
-            stateHolderMock.when(() -> StateHolder.getStateFeatureFlag(endpoint)).thenReturn(newState);
-            stateHolderMock.when(StateHolder::getCurrentState).thenReturn(currentStateMock);
-
-            // Monitor is disabled
-            eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock, Duration.ofMinutes(10),
-                new ArrayList<>(), (long) 60);
-            assertTrue(eventData.getDoRefresh());
-            verify(clientFactoryMock, times(1)).setCurrentConfigStoreClient(Mockito.eq(endpoint), Mockito.eq(endpoint));
-            verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString());
-            verify(currentStateMock, times(1)).updateStateRefresh(Mockito.any(), Mockito.any());
-        }
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(10), (long) 60, replicaLookUpMock);
+        assertTrue(eventData.getDoRefresh());
+        verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString(),
+            Mockito.any(Context.class));
     }
 
     @Test
     public void minRefreshPeriodTest() {
-        try (MockedStatic<StateHolder> stateHolderMock = Mockito.mockStatic(StateHolder.class)) {
-            stateHolderMock.when(() -> StateHolder.getNextForcedRefresh()).thenReturn(Instant.now().minusSeconds(600));
-            RefreshEventData eventData = AppConfigurationRefreshUtil.refreshStoresCheck(clientFactoryMock,
-                Duration.ofMinutes(1), new ArrayList<String>(), (long) 0);
-            assertTrue(eventData.getDoRefresh());
-            assertEquals("Minimum refresh period reached. Refreshing configurations.", eventData.getMessage());
-        }
+        when(currentStateMock.getNextForcedRefresh()).thenReturn(Instant.now().minusSeconds(600));
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(clientFactoryMock,
+            Duration.ofMinutes(1), (long) 0, replicaLookUpMock);
+        assertTrue(eventData.getDoRefresh());
+        assertEquals("Minimum refresh period reached. Refreshing configurations.", eventData.getMessage());
+    }
+
+    private void setupFeatureFlagLoad() {
+        setupFeatureFlagLoadBasic();
+        when(clientFactoryMock.getNextActiveClient(Mockito.eq(endpoint), Mockito.booleanThat(value -> true)))
+            .thenReturn(clientOriginMock);
+    }
+
+    private void setupFeatureFlagLoadBasic() {
+        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
+        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(featureStore);
+        when(clientFactoryMock.getConnections()).thenReturn(Map.of(endpoint, connectionManagerMock));
     }
 
     private List<ConfigurationSetting> generateWatchKeys() {
@@ -677,5 +572,140 @@ public class AppConfigurationRefreshUtilTest {
             .setETag("current").setLabel(EMPTY_LABEL);
         watchKeys.add(currentWatchKey);
         return watchKeys;
+    }
+
+    @Test
+    public void refreshAllWithWatchedConfigurationSettingsTest(TestInfo testInfo) {
+        // Test that when refreshAll is enabled, watched configuration settings are used instead of watch keys
+        endpoint = testInfo.getDisplayName() + ".azconfig.io";
+
+        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
+        FeatureFlagStore disabledFeatureStore = new FeatureFlagStore();
+        disabledFeatureStore.setEnabled(false);
+        lenient().when(connectionManagerMock.getFeatureFlagStore()).thenReturn(disabledFeatureStore);
+        when(clientFactoryMock.getConnections()).thenReturn(Map.of(endpoint, connectionManagerMock));
+        when(clientFactoryMock.getNextActiveClient(Mockito.eq(endpoint), Mockito.booleanThat(value -> true)))
+            .thenReturn(clientOriginMock);
+
+        // Set up state with WatchedConfigurationSettings
+        WatchedConfigurationSettings watchedConfigurationSettings = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL),
+            generateWatchKeys());
+        State state = new State(null, List.of(watchedConfigurationSettings),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
+
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(state);
+        when(clientOriginMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(true);
+
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(
+            clientFactoryMock, Duration.ofMinutes(10), (long) 60, replicaLookUpMock);
+
+        assertTrue(eventData.getDoRefresh());
+        // Verify checkWatchKeys is called (watched configuration settings path)
+        verify(clientOriginMock, times(1)).checkWatchKeys(Mockito.any(SettingSelector.class),
+            Mockito.any(Context.class));
+        // Verify getWatchKey is NOT called (traditional watch key path)
+        verify(clientOriginMock, times(0)).getWatchKey(Mockito.anyString(), Mockito.anyString(),
+            Mockito.any(Context.class));
+    }
+
+    @Test
+    public void refreshAllWithNullWatchKeysTest(TestInfo testInfo) {
+        // Test that when refreshAll is enabled with null watchKeys, watched configuration settings are still used
+        endpoint = testInfo.getDisplayName() + ".azconfig.io";
+
+        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
+        FeatureFlagStore disabledFeatureStore = new FeatureFlagStore();
+        disabledFeatureStore.setEnabled(false);
+        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(disabledFeatureStore);
+        when(clientFactoryMock.getConnections()).thenReturn(Map.of(endpoint, connectionManagerMock));
+        when(clientFactoryMock.getNextActiveClient(Mockito.eq(endpoint), Mockito.booleanThat(value -> true)))
+            .thenReturn(clientOriginMock);
+
+        // Set up state with null watch keys but valid watched configuration settings
+        WatchedConfigurationSettings watchedConfigurationSettings = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL), null);
+        State state = new State(null, List.of(watchedConfigurationSettings),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
+
+        when(clientOriginMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(false);
+
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(state);
+
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(
+            clientFactoryMock, Duration.ofMinutes(10), (long) 60, replicaLookUpMock);
+
+        // No change detected, so should not refresh
+        assertFalse(eventData.getDoRefresh());
+        verify(clientOriginMock, times(1)).checkWatchKeys(Mockito.any(SettingSelector.class),
+            Mockito.any(Context.class));
+    }
+
+    @Test
+    public void watchedConfigurationSettingsNoChangeTest(TestInfo testInfo) {
+        // Test that watched configuration settings correctly detect no change
+        endpoint = testInfo.getDisplayName() + ".azconfig.io";
+
+        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
+        FeatureFlagStore disabledFeatureStore = new FeatureFlagStore();
+        disabledFeatureStore.setEnabled(false);
+        when(connectionManagerMock.getFeatureFlagStore()).thenReturn(disabledFeatureStore);
+        when(clientFactoryMock.getConnections()).thenReturn(Map.of(endpoint, connectionManagerMock));
+        when(clientFactoryMock.getNextActiveClient(Mockito.eq(endpoint), Mockito.booleanThat(value -> true)))
+            .thenReturn(clientOriginMock);
+
+        WatchedConfigurationSettings watchedConfigurationSettings = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL),
+            generateWatchKeys());
+        State state = new State(null, List.of(watchedConfigurationSettings),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
+
+        // Return false indicating no changes detected
+        when(clientOriginMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(false);
+
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(state);
+
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(
+            clientFactoryMock, Duration.ofMinutes(10), (long) 60, replicaLookUpMock);
+
+        assertFalse(eventData.getDoRefresh());
+        verify(currentStateMock, times(1)).updateStateRefresh(Mockito.any(), Mockito.any());
+    }
+
+    @Test
+    public void watchedConfigurationSettingsWithChangeDetectedTest(TestInfo testInfo) {
+        // Test that watched configuration settings correctly detect changes
+        endpoint = testInfo.getDisplayName() + ".azconfig.io";
+
+        when(connectionManagerMock.getMonitoring()).thenReturn(monitoring);
+        FeatureFlagStore disabledFeatureStore = new FeatureFlagStore();
+        disabledFeatureStore.setEnabled(false);
+        when(clientFactoryMock.getConnections()).thenReturn(Map.of(endpoint, connectionManagerMock));
+        when(clientFactoryMock.getNextActiveClient(Mockito.eq(endpoint), Mockito.booleanThat(value -> true)))
+            .thenReturn(clientOriginMock);
+
+        WatchedConfigurationSettings watchedConfigurationSettings = new WatchedConfigurationSettings(
+            new SettingSelector().setKeyFilter(KEY_FILTER).setLabelFilter(EMPTY_LABEL),
+            generateWatchKeys());
+        State state = new State(null, List.of(watchedConfigurationSettings),
+            Math.toIntExact(Duration.ofMinutes(-1).getSeconds()), endpoint);
+
+        // Return true indicating changes detected
+        when(clientOriginMock.checkWatchKeys(Mockito.any(SettingSelector.class), Mockito.any(Context.class)))
+            .thenReturn(true);
+
+        when(currentStateMock.getLoadState(endpoint)).thenReturn(true);
+        when(currentStateMock.getState(endpoint)).thenReturn(state);
+
+        RefreshEventData eventData = refreshUtil.refreshStoresCheck(
+            clientFactoryMock, Duration.ofMinutes(10), (long) 60, replicaLookUpMock);
+
+        assertTrue(eventData.getDoRefresh());
     }
 }

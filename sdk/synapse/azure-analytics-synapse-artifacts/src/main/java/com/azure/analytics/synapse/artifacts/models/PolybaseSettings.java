@@ -5,66 +5,77 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.HashMap;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** PolyBase settings. */
+/**
+ * PolyBase settings.
+ */
 @Fluent
-public final class PolybaseSettings {
+public final class PolybaseSettings implements JsonSerializable<PolybaseSettings> {
     /*
      * Reject type.
      */
-    @JsonProperty(value = "rejectType")
+    @Generated
     private PolybaseSettingsRejectType rejectType;
 
     /*
      * Specifies the value or the percentage of rows that can be rejected before the query fails. Type: number (or
      * Expression with resultType number), minimum: 0.
      */
-    @JsonProperty(value = "rejectValue")
+    @Generated
     private Object rejectValue;
 
     /*
      * Determines the number of rows to attempt to retrieve before the PolyBase recalculates the percentage of rejected
      * rows. Type: integer (or Expression with resultType integer), minimum: 0.
      */
-    @JsonProperty(value = "rejectSampleValue")
+    @Generated
     private Object rejectSampleValue;
 
     /*
      * Specifies how to handle missing values in delimited text files when PolyBase retrieves data from the text file.
      * Type: boolean (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "useTypeDefault")
+    @Generated
     private Object useTypeDefault;
 
     /*
      * PolyBase settings.
      */
-    @JsonIgnore private Map<String, Object> additionalProperties;
+    @Generated
+    private Map<String, Object> additionalProperties;
 
-    /** Creates an instance of PolybaseSettings class. */
-    public PolybaseSettings() {}
+    /**
+     * Creates an instance of PolybaseSettings class.
+     */
+    @Generated
+    public PolybaseSettings() {
+    }
 
     /**
      * Get the rejectType property: Reject type.
-     *
+     * 
      * @return the rejectType value.
      */
+    @Generated
     public PolybaseSettingsRejectType getRejectType() {
         return this.rejectType;
     }
 
     /**
      * Set the rejectType property: Reject type.
-     *
+     * 
      * @param rejectType the rejectType value to set.
      * @return the PolybaseSettings object itself.
      */
+    @Generated
     public PolybaseSettings setRejectType(PolybaseSettingsRejectType rejectType) {
         this.rejectType = rejectType;
         return this;
@@ -73,9 +84,10 @@ public final class PolybaseSettings {
     /**
      * Get the rejectValue property: Specifies the value or the percentage of rows that can be rejected before the query
      * fails. Type: number (or Expression with resultType number), minimum: 0.
-     *
+     * 
      * @return the rejectValue value.
      */
+    @Generated
     public Object getRejectValue() {
         return this.rejectValue;
     }
@@ -83,10 +95,11 @@ public final class PolybaseSettings {
     /**
      * Set the rejectValue property: Specifies the value or the percentage of rows that can be rejected before the query
      * fails. Type: number (or Expression with resultType number), minimum: 0.
-     *
+     * 
      * @param rejectValue the rejectValue value to set.
      * @return the PolybaseSettings object itself.
      */
+    @Generated
     public PolybaseSettings setRejectValue(Object rejectValue) {
         this.rejectValue = rejectValue;
         return this;
@@ -95,9 +108,10 @@ public final class PolybaseSettings {
     /**
      * Get the rejectSampleValue property: Determines the number of rows to attempt to retrieve before the PolyBase
      * recalculates the percentage of rejected rows. Type: integer (or Expression with resultType integer), minimum: 0.
-     *
+     * 
      * @return the rejectSampleValue value.
      */
+    @Generated
     public Object getRejectSampleValue() {
         return this.rejectSampleValue;
     }
@@ -105,10 +119,11 @@ public final class PolybaseSettings {
     /**
      * Set the rejectSampleValue property: Determines the number of rows to attempt to retrieve before the PolyBase
      * recalculates the percentage of rejected rows. Type: integer (or Expression with resultType integer), minimum: 0.
-     *
+     * 
      * @param rejectSampleValue the rejectSampleValue value to set.
      * @return the PolybaseSettings object itself.
      */
+    @Generated
     public PolybaseSettings setRejectSampleValue(Object rejectSampleValue) {
         this.rejectSampleValue = rejectSampleValue;
         return this;
@@ -117,9 +132,10 @@ public final class PolybaseSettings {
     /**
      * Get the useTypeDefault property: Specifies how to handle missing values in delimited text files when PolyBase
      * retrieves data from the text file. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the useTypeDefault value.
      */
+    @Generated
     public Object getUseTypeDefault() {
         return this.useTypeDefault;
     }
@@ -127,10 +143,11 @@ public final class PolybaseSettings {
     /**
      * Set the useTypeDefault property: Specifies how to handle missing values in delimited text files when PolyBase
      * retrieves data from the text file. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param useTypeDefault the useTypeDefault value to set.
      * @return the PolybaseSettings object itself.
      */
+    @Generated
     public PolybaseSettings setUseTypeDefault(Object useTypeDefault) {
         this.useTypeDefault = useTypeDefault;
         return this;
@@ -138,30 +155,87 @@ public final class PolybaseSettings {
 
     /**
      * Get the additionalProperties property: PolyBase settings.
-     *
+     * 
      * @return the additionalProperties value.
      */
-    @JsonAnyGetter
+    @Generated
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     /**
      * Set the additionalProperties property: PolyBase settings.
-     *
+     * 
      * @param additionalProperties the additionalProperties value to set.
      * @return the PolybaseSettings object itself.
      */
+    @Generated
     public PolybaseSettings setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
         return this;
     }
 
-    @JsonAnySetter
-    void setAdditionalProperties(String key, Object value) {
-        if (additionalProperties == null) {
-            additionalProperties = new HashMap<>();
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("rejectType", this.rejectType == null ? null : this.rejectType.toString());
+        if (this.rejectValue != null) {
+            jsonWriter.writeUntypedField("rejectValue", this.rejectValue);
         }
-        additionalProperties.put(key, value);
+        if (this.rejectSampleValue != null) {
+            jsonWriter.writeUntypedField("rejectSampleValue", this.rejectSampleValue);
+        }
+        if (this.useTypeDefault != null) {
+            jsonWriter.writeUntypedField("useTypeDefault", this.useTypeDefault);
+        }
+        if (additionalProperties != null) {
+            for (Map.Entry<String, Object> additionalProperty : additionalProperties.entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PolybaseSettings from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PolybaseSettings if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the PolybaseSettings.
+     */
+    @Generated
+    public static PolybaseSettings fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PolybaseSettings deserializedPolybaseSettings = new PolybaseSettings();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("rejectType".equals(fieldName)) {
+                    deserializedPolybaseSettings.rejectType = PolybaseSettingsRejectType.fromString(reader.getString());
+                } else if ("rejectValue".equals(fieldName)) {
+                    deserializedPolybaseSettings.rejectValue = reader.readUntyped();
+                } else if ("rejectSampleValue".equals(fieldName)) {
+                    deserializedPolybaseSettings.rejectSampleValue = reader.readUntyped();
+                } else if ("useTypeDefault".equals(fieldName)) {
+                    deserializedPolybaseSettings.useTypeDefault = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedPolybaseSettings.additionalProperties = additionalProperties;
+
+            return deserializedPolybaseSettings;
+        });
     }
 }

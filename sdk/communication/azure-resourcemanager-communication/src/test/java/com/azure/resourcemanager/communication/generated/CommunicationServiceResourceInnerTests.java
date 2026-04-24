@@ -6,6 +6,10 @@ package com.azure.resourcemanager.communication.generated;
 
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.communication.fluent.models.CommunicationServiceResourceInner;
+import com.azure.resourcemanager.communication.models.ManagedServiceIdentity;
+import com.azure.resourcemanager.communication.models.ManagedServiceIdentityType;
+import com.azure.resourcemanager.communication.models.PublicNetworkAccess;
+import com.azure.resourcemanager.communication.models.UserAssignedIdentity;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,32 +18,41 @@ import org.junit.jupiter.api.Assertions;
 public final class CommunicationServiceResourceInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CommunicationServiceResourceInner model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"provisioningState\":\"Moving\",\"hostName\":\"xxwr\",\"dataLocation\":\"jdous\",\"notificationHubId\":\"qvkoc\",\"version\":\"jdkwtnhxbnjb\",\"immutableResourceId\":\"sqrglssainq\",\"linkedDomains\":[\"nzl\",\"jfm\",\"pee\",\"vmgxsab\"]},\"location\":\"qduujitcjczdz\",\"tags\":{\"wrwjfeu\":\"dhkrwpdappdsbdk\",\"zdatqxhocdg\":\"nhutjeltmrldhugj\"},\"id\":\"ablgphuticndvk\",\"name\":\"ozwyiftyhxhuro\",\"type\":\"ftyxolniw\"}")
-                .toObject(CommunicationServiceResourceInner.class);
-        Assertions.assertEquals("qduujitcjczdz", model.location());
-        Assertions.assertEquals("dhkrwpdappdsbdk", model.tags().get("wrwjfeu"));
-        Assertions.assertEquals("jdous", model.dataLocation());
-        Assertions.assertEquals("nzl", model.linkedDomains().get(0));
+        CommunicationServiceResourceInner model = BinaryData.fromString(
+            "{\"properties\":{\"provisioningState\":\"Unknown\",\"hostName\":\"krwpdap\",\"dataLocation\":\"dsbdkvwrwjf\",\"notificationHubId\":\"snhu\",\"version\":\"eltmrldhugjzzdat\",\"immutableResourceId\":\"hocdgeab\",\"linkedDomains\":[\"huticndvkao\"],\"publicNetworkAccess\":\"SecuredByPerimeter\",\"disableLocalAuth\":true},\"identity\":{\"principalId\":\"ee3d173b-0ffe-42c5-a519-46b4cd1835a1\",\"tenantId\":\"af92ca37-58a9-46a3-b14c-d3e899653a80\",\"type\":\"SystemAssigned\",\"userAssignedIdentities\":{\"k\":{\"principalId\":\"ad1c96d7-8ce3-4ec1-8e64-013ca474b5d9\",\"clientId\":\"66f33b4a-5547-43fe-815c-e11e2ffe3789\"},\"xolniwpwcukjfk\":{\"principalId\":\"dcd2ddf5-f3c1-438f-a5be-2e8f8c84ce35\",\"clientId\":\"9e3fce2b-4859-4c20-83e7-805cda745885\"}}},\"location\":\"awxklr\",\"tags\":{\"hsgcbacphejkot\":\"wckbasyypnd\",\"wyqkgfgibm\":\"nqgoulzndli\",\"qsrxybzqqed\":\"dgak\",\"iqfouflmmnkz\":\"ytb\"},\"id\":\"modmglougpb\",\"name\":\"wtmutduq\",\"type\":\"ta\"}")
+            .toObject(CommunicationServiceResourceInner.class);
+        Assertions.assertEquals("awxklr", model.location());
+        Assertions.assertEquals("wckbasyypnd", model.tags().get("hsgcbacphejkot"));
+        Assertions.assertEquals(ManagedServiceIdentityType.SYSTEM_ASSIGNED, model.identity().type());
+        Assertions.assertEquals("dsbdkvwrwjf", model.dataLocation());
+        Assertions.assertEquals("huticndvkao", model.linkedDomains().get(0));
+        Assertions.assertEquals(PublicNetworkAccess.SECURED_BY_PERIMETER, model.publicNetworkAccess());
+        Assertions.assertTrue(model.disableLocalAuth());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CommunicationServiceResourceInner model =
-            new CommunicationServiceResourceInner()
-                .withLocation("qduujitcjczdz")
-                .withTags(mapOf("wrwjfeu", "dhkrwpdappdsbdk", "zdatqxhocdg", "nhutjeltmrldhugj"))
-                .withDataLocation("jdous")
-                .withLinkedDomains(Arrays.asList("nzl", "jfm", "pee", "vmgxsab"));
+        CommunicationServiceResourceInner model = new CommunicationServiceResourceInner().withLocation("awxklr")
+            .withTags(mapOf("hsgcbacphejkot", "wckbasyypnd", "wyqkgfgibm", "nqgoulzndli", "qsrxybzqqed", "dgak",
+                "iqfouflmmnkz", "ytb"))
+            .withIdentity(new ManagedServiceIdentity().withType(ManagedServiceIdentityType.SYSTEM_ASSIGNED)
+                .withUserAssignedIdentities(
+                    mapOf("k", new UserAssignedIdentity(), "xolniwpwcukjfk", new UserAssignedIdentity())))
+            .withDataLocation("dsbdkvwrwjf")
+            .withLinkedDomains(Arrays.asList("huticndvkao"))
+            .withPublicNetworkAccess(PublicNetworkAccess.SECURED_BY_PERIMETER)
+            .withDisableLocalAuth(true);
         model = BinaryData.fromObject(model).toObject(CommunicationServiceResourceInner.class);
-        Assertions.assertEquals("qduujitcjczdz", model.location());
-        Assertions.assertEquals("dhkrwpdappdsbdk", model.tags().get("wrwjfeu"));
-        Assertions.assertEquals("jdous", model.dataLocation());
-        Assertions.assertEquals("nzl", model.linkedDomains().get(0));
+        Assertions.assertEquals("awxklr", model.location());
+        Assertions.assertEquals("wckbasyypnd", model.tags().get("hsgcbacphejkot"));
+        Assertions.assertEquals(ManagedServiceIdentityType.SYSTEM_ASSIGNED, model.identity().type());
+        Assertions.assertEquals("dsbdkvwrwjf", model.dataLocation());
+        Assertions.assertEquals("huticndvkao", model.linkedDomains().get(0));
+        Assertions.assertEquals(PublicNetworkAccess.SECURED_BY_PERIMETER, model.publicNetworkAccess());
+        Assertions.assertTrue(model.disableLocalAuth());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

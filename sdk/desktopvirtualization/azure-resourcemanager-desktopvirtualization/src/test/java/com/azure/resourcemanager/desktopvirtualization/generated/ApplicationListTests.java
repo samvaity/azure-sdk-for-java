@@ -15,78 +15,69 @@ import org.junit.jupiter.api.Assertions;
 public final class ApplicationListTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ApplicationList model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"properties\":{\"objectId\":\"o\",\"description\":\"bnxknalaulppg\",\"friendlyName\":\"tpnapnyiropuhpig\",\"filePath\":\"gylgqgitxmedjvcs\",\"msixPackageFamilyName\":\"n\",\"msixPackageApplicationId\":\"wncwzzhxgktrmg\",\"applicationType\":\"MsixApplication\",\"commandLineSetting\":\"DoNotAllow\",\"commandLineArguments\":\"kteo\",\"showInPortal\":false,\"iconPath\":\"pt\",\"iconIndex\":1401142659,\"iconHash\":\"pfqbuaceopzf\"},\"id\":\"hhuao\",\"name\":\"ppcqeqxolz\",\"type\":\"ahzxctobgbk\"},{\"properties\":{\"objectId\":\"izpost\",\"description\":\"rcfbunrm\",\"friendlyName\":\"jhhkxbp\",\"filePath\":\"ymjhxxjyngudivkr\",\"msixPackageFamilyName\":\"wbxqzvszjfau\",\"msixPackageApplicationId\":\"fdxxivetvtcqaqtd\",\"applicationType\":\"MsixApplication\",\"commandLineSetting\":\"Allow\",\"commandLineArguments\":\"xv\",\"showInPortal\":false,\"iconPath\":\"slqb\",\"iconIndex\":92665469,\"iconHash\":\"obl\"},\"id\":\"k\",\"name\":\"lmpewwwfbkr\",\"type\":\"rn\"},{\"properties\":{\"objectId\":\"hqjohxcrsbfova\",\"description\":\"ruvw\",\"friendlyName\":\"sqfsubcgjbirxb\",\"filePath\":\"bsrfbj\",\"msixPackageFamilyName\":\"twss\",\"msixPackageApplicationId\":\"ftpvjzbexil\",\"applicationType\":\"InBuilt\",\"commandLineSetting\":\"DoNotAllow\",\"commandLineArguments\":\"q\",\"showInPortal\":false,\"iconPath\":\"mqtaruoujmkcjh\",\"iconIndex\":1420775781,\"iconHash\":\"jrybnwjewgdrjer\"},\"id\":\"aen\",\"name\":\"pehindoygm\",\"type\":\"fthnzdn\"}],\"nextLink\":\"l\"}")
-                .toObject(ApplicationList.class);
-        Assertions.assertEquals("bnxknalaulppg", model.value().get(0).description());
-        Assertions.assertEquals("tpnapnyiropuhpig", model.value().get(0).friendlyName());
-        Assertions.assertEquals("gylgqgitxmedjvcs", model.value().get(0).filePath());
-        Assertions.assertEquals("n", model.value().get(0).msixPackageFamilyName());
-        Assertions.assertEquals("wncwzzhxgktrmg", model.value().get(0).msixPackageApplicationId());
-        Assertions.assertEquals(RemoteApplicationType.MSIX_APPLICATION, model.value().get(0).applicationType());
-        Assertions.assertEquals(CommandLineSetting.DO_NOT_ALLOW, model.value().get(0).commandLineSetting());
-        Assertions.assertEquals("kteo", model.value().get(0).commandLineArguments());
-        Assertions.assertEquals(false, model.value().get(0).showInPortal());
-        Assertions.assertEquals("pt", model.value().get(0).iconPath());
-        Assertions.assertEquals(1401142659, model.value().get(0).iconIndex());
+        ApplicationList model = BinaryData.fromString(
+            "{\"value\":[{\"properties\":{\"objectId\":\"qugjhkycube\",\"description\":\"gssofwq\",\"friendlyName\":\"qal\",\"filePath\":\"mnjijpxacqqudf\",\"msixPackageFamilyName\":\"yxbaaabjyvayf\",\"msixPackageApplicationId\":\"m\",\"applicationType\":\"InBuilt\",\"commandLineSetting\":\"Require\",\"commandLineArguments\":\"zqogse\",\"showInPortal\":true,\"iconPath\":\"fdnw\",\"iconIndex\":2059840008,\"iconHash\":\"wzsyyceuzs\"},\"id\":\"judpfrxt\",\"name\":\"thzvaytdwkqbrqu\",\"type\":\"paxh\"},{\"properties\":{\"objectId\":\"iilivpdtiirqtd\",\"description\":\"axoruzfgsquy\",\"friendlyName\":\"rxxle\",\"filePath\":\"ramxjezwlwnw\",\"msixPackageFamilyName\":\"qlcvydy\",\"msixPackageApplicationId\":\"tdooaoj\",\"applicationType\":\"MsixApplication\",\"commandLineSetting\":\"Require\",\"commandLineArguments\":\"kooebwnu\",\"showInPortal\":true,\"iconPath\":\"msbvdkcrodtjinf\",\"iconIndex\":1492452539,\"iconHash\":\"lt\"},\"id\":\"jvefkdlfoakggkfp\",\"name\":\"gaowpulpqblylsyx\",\"type\":\"qjnsjervtia\"},{\"properties\":{\"objectId\":\"sdszue\",\"description\":\"sbzkf\",\"friendlyName\":\"eyvpnqicvinvkj\",\"filePath\":\"dxrbuukzcle\",\"msixPackageFamilyName\":\"hmlwpaztzpo\",\"msixPackageApplicationId\":\"cckwyfzqwhxxbu\",\"applicationType\":\"InBuilt\",\"commandLineSetting\":\"Require\",\"commandLineArguments\":\"feqztppriol\",\"showInPortal\":true,\"iconPath\":\"altol\",\"iconIndex\":136991246,\"iconHash\":\"sobqw\"},\"id\":\"bnwdcfh\",\"name\":\"cqdpfuv\",\"type\":\"lsbjjcanvxbv\"}],\"nextLink\":\"udutnco\"}")
+            .toObject(ApplicationList.class);
+        Assertions.assertEquals("gssofwq", model.value().get(0).description());
+        Assertions.assertEquals("qal", model.value().get(0).friendlyName());
+        Assertions.assertEquals("mnjijpxacqqudf", model.value().get(0).filePath());
+        Assertions.assertEquals("yxbaaabjyvayf", model.value().get(0).msixPackageFamilyName());
+        Assertions.assertEquals("m", model.value().get(0).msixPackageApplicationId());
+        Assertions.assertEquals(RemoteApplicationType.IN_BUILT, model.value().get(0).applicationType());
+        Assertions.assertEquals(CommandLineSetting.REQUIRE, model.value().get(0).commandLineSetting());
+        Assertions.assertEquals("zqogse", model.value().get(0).commandLineArguments());
+        Assertions.assertEquals(true, model.value().get(0).showInPortal());
+        Assertions.assertEquals("fdnw", model.value().get(0).iconPath());
+        Assertions.assertEquals(2059840008, model.value().get(0).iconIndex());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ApplicationList model =
-            new ApplicationList()
-                .withValue(
-                    Arrays
-                        .asList(
-                            new ApplicationInner()
-                                .withDescription("bnxknalaulppg")
-                                .withFriendlyName("tpnapnyiropuhpig")
-                                .withFilePath("gylgqgitxmedjvcs")
-                                .withMsixPackageFamilyName("n")
-                                .withMsixPackageApplicationId("wncwzzhxgktrmg")
-                                .withApplicationType(RemoteApplicationType.MSIX_APPLICATION)
-                                .withCommandLineSetting(CommandLineSetting.DO_NOT_ALLOW)
-                                .withCommandLineArguments("kteo")
-                                .withShowInPortal(false)
-                                .withIconPath("pt")
-                                .withIconIndex(1401142659),
-                            new ApplicationInner()
-                                .withDescription("rcfbunrm")
-                                .withFriendlyName("jhhkxbp")
-                                .withFilePath("ymjhxxjyngudivkr")
-                                .withMsixPackageFamilyName("wbxqzvszjfau")
-                                .withMsixPackageApplicationId("fdxxivetvtcqaqtd")
-                                .withApplicationType(RemoteApplicationType.MSIX_APPLICATION)
-                                .withCommandLineSetting(CommandLineSetting.ALLOW)
-                                .withCommandLineArguments("xv")
-                                .withShowInPortal(false)
-                                .withIconPath("slqb")
-                                .withIconIndex(92665469),
-                            new ApplicationInner()
-                                .withDescription("ruvw")
-                                .withFriendlyName("sqfsubcgjbirxb")
-                                .withFilePath("bsrfbj")
-                                .withMsixPackageFamilyName("twss")
-                                .withMsixPackageApplicationId("ftpvjzbexil")
-                                .withApplicationType(RemoteApplicationType.IN_BUILT)
-                                .withCommandLineSetting(CommandLineSetting.DO_NOT_ALLOW)
-                                .withCommandLineArguments("q")
-                                .withShowInPortal(false)
-                                .withIconPath("mqtaruoujmkcjh")
-                                .withIconIndex(1420775781)));
+        ApplicationList model = new ApplicationList().withValue(Arrays.asList(
+            new ApplicationInner().withDescription("gssofwq")
+                .withFriendlyName("qal")
+                .withFilePath("mnjijpxacqqudf")
+                .withMsixPackageFamilyName("yxbaaabjyvayf")
+                .withMsixPackageApplicationId("m")
+                .withApplicationType(RemoteApplicationType.IN_BUILT)
+                .withCommandLineSetting(CommandLineSetting.REQUIRE)
+                .withCommandLineArguments("zqogse")
+                .withShowInPortal(true)
+                .withIconPath("fdnw")
+                .withIconIndex(2059840008),
+            new ApplicationInner().withDescription("axoruzfgsquy")
+                .withFriendlyName("rxxle")
+                .withFilePath("ramxjezwlwnw")
+                .withMsixPackageFamilyName("qlcvydy")
+                .withMsixPackageApplicationId("tdooaoj")
+                .withApplicationType(RemoteApplicationType.MSIX_APPLICATION)
+                .withCommandLineSetting(CommandLineSetting.REQUIRE)
+                .withCommandLineArguments("kooebwnu")
+                .withShowInPortal(true)
+                .withIconPath("msbvdkcrodtjinf")
+                .withIconIndex(1492452539),
+            new ApplicationInner().withDescription("sbzkf")
+                .withFriendlyName("eyvpnqicvinvkj")
+                .withFilePath("dxrbuukzcle")
+                .withMsixPackageFamilyName("hmlwpaztzpo")
+                .withMsixPackageApplicationId("cckwyfzqwhxxbu")
+                .withApplicationType(RemoteApplicationType.IN_BUILT)
+                .withCommandLineSetting(CommandLineSetting.REQUIRE)
+                .withCommandLineArguments("feqztppriol")
+                .withShowInPortal(true)
+                .withIconPath("altol")
+                .withIconIndex(136991246)));
         model = BinaryData.fromObject(model).toObject(ApplicationList.class);
-        Assertions.assertEquals("bnxknalaulppg", model.value().get(0).description());
-        Assertions.assertEquals("tpnapnyiropuhpig", model.value().get(0).friendlyName());
-        Assertions.assertEquals("gylgqgitxmedjvcs", model.value().get(0).filePath());
-        Assertions.assertEquals("n", model.value().get(0).msixPackageFamilyName());
-        Assertions.assertEquals("wncwzzhxgktrmg", model.value().get(0).msixPackageApplicationId());
-        Assertions.assertEquals(RemoteApplicationType.MSIX_APPLICATION, model.value().get(0).applicationType());
-        Assertions.assertEquals(CommandLineSetting.DO_NOT_ALLOW, model.value().get(0).commandLineSetting());
-        Assertions.assertEquals("kteo", model.value().get(0).commandLineArguments());
-        Assertions.assertEquals(false, model.value().get(0).showInPortal());
-        Assertions.assertEquals("pt", model.value().get(0).iconPath());
-        Assertions.assertEquals(1401142659, model.value().get(0).iconIndex());
+        Assertions.assertEquals("gssofwq", model.value().get(0).description());
+        Assertions.assertEquals("qal", model.value().get(0).friendlyName());
+        Assertions.assertEquals("mnjijpxacqqudf", model.value().get(0).filePath());
+        Assertions.assertEquals("yxbaaabjyvayf", model.value().get(0).msixPackageFamilyName());
+        Assertions.assertEquals("m", model.value().get(0).msixPackageApplicationId());
+        Assertions.assertEquals(RemoteApplicationType.IN_BUILT, model.value().get(0).applicationType());
+        Assertions.assertEquals(CommandLineSetting.REQUIRE, model.value().get(0).commandLineSetting());
+        Assertions.assertEquals("zqogse", model.value().get(0).commandLineArguments());
+        Assertions.assertEquals(true, model.value().get(0).showInPortal());
+        Assertions.assertEquals("fdnw", model.value().get(0).iconPath());
+        Assertions.assertEquals(2059840008, model.value().get(0).iconIndex());
     }
 }

@@ -4,45 +4,59 @@
 
 package com.azure.ai.metricsadvisor.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for AnomalyValue. */
+/**
+ * Defines values for AnomalyValue.
+ */
 public final class AnomalyValue extends ExpandableStringEnum<AnomalyValue> {
-    /** Static value AutoDetect for AnomalyValue. */
+    /**
+     * Static value AutoDetect for AnomalyValue.
+     */
+    @Generated
     public static final AnomalyValue AUTO_DETECT = fromString("AutoDetect");
 
-    /** Static value Anomaly for AnomalyValue. */
+    /**
+     * Static value Anomaly for AnomalyValue.
+     */
+    @Generated
     public static final AnomalyValue ANOMALY = fromString("Anomaly");
 
-    /** Static value NotAnomaly for AnomalyValue. */
+    /**
+     * Static value NotAnomaly for AnomalyValue.
+     */
+    @Generated
     public static final AnomalyValue NOT_ANOMALY = fromString("NotAnomaly");
 
     /**
      * Creates a new instance of AnomalyValue value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public AnomalyValue() {}
+    public AnomalyValue() {
+    }
 
     /**
      * Creates or finds a AnomalyValue from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding AnomalyValue.
      */
-    @JsonCreator
+    @Generated
     public static AnomalyValue fromString(String name) {
         return fromString(name, AnomalyValue.class);
     }
 
     /**
      * Gets known AnomalyValue values.
-     *
+     * 
      * @return known AnomalyValue values.
      */
+    @Generated
     public static Collection<AnomalyValue> values() {
         return values(AnomalyValue.class);
     }

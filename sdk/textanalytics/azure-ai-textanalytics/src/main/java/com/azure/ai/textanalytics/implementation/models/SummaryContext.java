@@ -5,32 +5,44 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The context of the summary. */
+/**
+ * The context of the summary.
+ */
 @Fluent
-public final class SummaryContext {
+public final class SummaryContext implements JsonSerializable<SummaryContext> {
     /*
      * Start position for the context. Use of different 'stringIndexType' values can affect the offset returned.
      */
-    @JsonProperty(value = "offset", required = true)
+    @Generated
     private int offset;
 
     /*
      * The length of the context. Use of different 'stringIndexType' values can affect the length returned.
      */
-    @JsonProperty(value = "length", required = true)
+    @Generated
     private int length;
 
-    /** Creates an instance of SummaryContext class. */
-    public SummaryContext() {}
+    /**
+     * Creates an instance of SummaryContext class.
+     */
+    @Generated
+    public SummaryContext() {
+    }
 
     /**
      * Get the offset property: Start position for the context. Use of different 'stringIndexType' values can affect the
      * offset returned.
-     *
+     * 
      * @return the offset value.
      */
+    @Generated
     public int getOffset() {
         return this.offset;
     }
@@ -38,10 +50,11 @@ public final class SummaryContext {
     /**
      * Set the offset property: Start position for the context. Use of different 'stringIndexType' values can affect the
      * offset returned.
-     *
+     * 
      * @param offset the offset value to set.
      * @return the SummaryContext object itself.
      */
+    @Generated
     public SummaryContext setOffset(int offset) {
         this.offset = offset;
         return this;
@@ -50,9 +63,10 @@ public final class SummaryContext {
     /**
      * Get the length property: The length of the context. Use of different 'stringIndexType' values can affect the
      * length returned.
-     *
+     * 
      * @return the length value.
      */
+    @Generated
     public int getLength() {
         return this.length;
     }
@@ -60,12 +74,55 @@ public final class SummaryContext {
     /**
      * Set the length property: The length of the context. Use of different 'stringIndexType' values can affect the
      * length returned.
-     *
+     * 
      * @param length the length value to set.
      * @return the SummaryContext object itself.
      */
+    @Generated
     public SummaryContext setLength(int length) {
         this.length = length;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeIntField("offset", this.offset);
+        jsonWriter.writeIntField("length", this.length);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SummaryContext from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SummaryContext if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SummaryContext.
+     */
+    @Generated
+    public static SummaryContext fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SummaryContext deserializedSummaryContext = new SummaryContext();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("offset".equals(fieldName)) {
+                    deserializedSummaryContext.offset = reader.getInt();
+                } else if ("length".equals(fieldName)) {
+                    deserializedSummaryContext.length = reader.getInt();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSummaryContext;
+        });
     }
 }

@@ -10,17 +10,15 @@ import com.azure.resourcemanager.datamigration.models.ValidateMigrationInputSqlS
 public final class ValidateMigrationInputSqlServerSqlMISyncTaskOutputTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ValidateMigrationInputSqlServerSqlMISyncTaskOutput model =
-            BinaryData
-                .fromString(
-                    "{\"id\":\"xgvelfclduccbird\",\"name\":\"uwc\",\"validationErrors\":[{\"message\":\"gstmninwjizciln\",\"actionableMessage\":\"gshejjtbxqmulux\",\"filePath\":\"qzvnersbycucr\",\"lineNumber\":\"amikzebrqbsm\",\"hResult\":1700673148,\"stackTrace\":\"qgfuhokzru\"},{\"message\":\"hvhcz\",\"actionableMessage\":\"vfbyc\",\"filePath\":\"xjww\",\"lineNumber\":\"z\",\"hResult\":1659306080,\"stackTrace\":\"mxqhndvnoamldse\"}]}")
-                .toObject(ValidateMigrationInputSqlServerSqlMISyncTaskOutput.class);
+        ValidateMigrationInputSqlServerSqlMISyncTaskOutput model = BinaryData.fromString(
+            "{\"id\":\"kp\",\"name\":\"wuntobuiz\",\"validationErrors\":[{\"message\":\"lw\",\"actionableMessage\":\"ydjufbnklbl\",\"filePath\":\"peg\",\"lineNumber\":\"dabalfdxaglzfytl\",\"hResult\":906910902,\"stackTrace\":\"h\"},{\"message\":\"xouvmrs\",\"actionableMessage\":\"likyypzkgxfxfmyr\",\"filePath\":\"db\",\"lineNumber\":\"kszanmhwgpte\",\"hResult\":1261925947,\"stackTrace\":\"wki\"},{\"message\":\"skw\",\"actionableMessage\":\"sdetjygowifcqpol\",\"filePath\":\"gysdgzyyb\",\"lineNumber\":\"xlvocptvdx\",\"hResult\":1624511474,\"stackTrace\":\"gmlilwzghjhjvmab\"},{\"message\":\"bwayb\",\"actionableMessage\":\"d\",\"filePath\":\"bgymqt\",\"lineNumber\":\"preojxrjnbsconxa\",\"hResult\":1058884441,\"stackTrace\":\"eychbji\"}]}")
+            .toObject(ValidateMigrationInputSqlServerSqlMISyncTaskOutput.class);
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ValidateMigrationInputSqlServerSqlMISyncTaskOutput model =
-            new ValidateMigrationInputSqlServerSqlMISyncTaskOutput();
+        ValidateMigrationInputSqlServerSqlMISyncTaskOutput model
+            = new ValidateMigrationInputSqlServerSqlMISyncTaskOutput();
         model = BinaryData.fromObject(model).toObject(ValidateMigrationInputSqlServerSqlMISyncTaskOutput.class);
     }
 }

@@ -7,6 +7,9 @@ package com.azure.resourcemanager.eventgrid.fluent.models;
 import com.azure.core.annotation.Fluent;
 import com.azure.core.management.Resource;
 import com.azure.core.management.SystemData;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.eventgrid.models.DataResidencyBoundary;
 import com.azure.resourcemanager.eventgrid.models.DomainProvisioningState;
 import com.azure.resourcemanager.eventgrid.models.EventTypeInfo;
@@ -17,44 +20,59 @@ import com.azure.resourcemanager.eventgrid.models.InputSchemaMapping;
 import com.azure.resourcemanager.eventgrid.models.PublicNetworkAccess;
 import com.azure.resourcemanager.eventgrid.models.ResourceSku;
 import com.azure.resourcemanager.eventgrid.models.TlsVersion;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/** EventGrid Domain. */
+/**
+ * EventGrid Domain.
+ */
 @Fluent
 public final class DomainInner extends Resource {
     /*
      * Properties of the Event Grid Domain resource.
      */
-    @JsonProperty(value = "properties")
     private DomainProperties innerProperties;
 
     /*
      * The Sku pricing tier for the Event Grid Domain resource.
      */
-    @JsonProperty(value = "sku")
     private ResourceSku sku;
 
     /*
      * Identity information for the Event Grid Domain resource.
      */
-    @JsonProperty(value = "identity")
     private IdentityInfo identity;
 
     /*
-     * The system metadata relating to the Event Grid Domain resource.
+     * The system metadata relating to the Event Grid resource.
      */
-    @JsonProperty(value = "systemData", access = JsonProperty.Access.WRITE_ONLY)
     private SystemData systemData;
 
-    /** Creates an instance of DomainInner class. */
+    /*
+     * The type of the resource.
+     */
+    private String type;
+
+    /*
+     * The name of the resource.
+     */
+    private String name;
+
+    /*
+     * Fully qualified resource Id for the resource.
+     */
+    private String id;
+
+    /**
+     * Creates an instance of DomainInner class.
+     */
     public DomainInner() {
     }
 
     /**
      * Get the innerProperties property: Properties of the Event Grid Domain resource.
-     *
+     * 
      * @return the innerProperties value.
      */
     private DomainProperties innerProperties() {
@@ -63,7 +81,7 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the sku property: The Sku pricing tier for the Event Grid Domain resource.
-     *
+     * 
      * @return the sku value.
      */
     public ResourceSku sku() {
@@ -72,7 +90,7 @@ public final class DomainInner extends Resource {
 
     /**
      * Set the sku property: The Sku pricing tier for the Event Grid Domain resource.
-     *
+     * 
      * @param sku the sku value to set.
      * @return the DomainInner object itself.
      */
@@ -83,7 +101,7 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the identity property: Identity information for the Event Grid Domain resource.
-     *
+     * 
      * @return the identity value.
      */
     public IdentityInfo identity() {
@@ -92,7 +110,7 @@ public final class DomainInner extends Resource {
 
     /**
      * Set the identity property: Identity information for the Event Grid Domain resource.
-     *
+     * 
      * @param identity the identity value to set.
      * @return the DomainInner object itself.
      */
@@ -102,22 +120,56 @@ public final class DomainInner extends Resource {
     }
 
     /**
-     * Get the systemData property: The system metadata relating to the Event Grid Domain resource.
-     *
+     * Get the systemData property: The system metadata relating to the Event Grid resource.
+     * 
      * @return the systemData value.
      */
     public SystemData systemData() {
         return this.systemData;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Get the type property: The type of the resource.
+     * 
+     * @return the type value.
+     */
+    @Override
+    public String type() {
+        return this.type;
+    }
+
+    /**
+     * Get the name property: The name of the resource.
+     * 
+     * @return the name value.
+     */
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    /**
+     * Get the id property: Fully qualified resource Id for the resource.
+     * 
+     * @return the id value.
+     */
+    @Override
+    public String id() {
+        return this.id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DomainInner withLocation(String location) {
         super.withLocation(location);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DomainInner withTags(Map<String, String> tags) {
         super.withTags(tags);
@@ -125,8 +177,8 @@ public final class DomainInner extends Resource {
     }
 
     /**
-     * Get the privateEndpointConnections property: The privateEndpointConnections property.
-     *
+     * Get the privateEndpointConnections property: List of private endpoint connections.
+     * 
      * @return the privateEndpointConnections value.
      */
     public List<PrivateEndpointConnectionInner> privateEndpointConnections() {
@@ -135,7 +187,7 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the provisioningState property: Provisioning state of the Event Grid Domain Resource.
-     *
+     * 
      * @return the provisioningState value.
      */
     public DomainProvisioningState provisioningState() {
@@ -145,7 +197,7 @@ public final class DomainInner extends Resource {
     /**
      * Get the minimumTlsVersionAllowed property: Minimum TLS version of the publisher allowed to publish to this
      * domain.
-     *
+     * 
      * @return the minimumTlsVersionAllowed value.
      */
     public TlsVersion minimumTlsVersionAllowed() {
@@ -155,7 +207,7 @@ public final class DomainInner extends Resource {
     /**
      * Set the minimumTlsVersionAllowed property: Minimum TLS version of the publisher allowed to publish to this
      * domain.
-     *
+     * 
      * @param minimumTlsVersionAllowed the minimumTlsVersionAllowed value to set.
      * @return the DomainInner object itself.
      */
@@ -169,7 +221,7 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the endpoint property: Endpoint for the Event Grid Domain Resource which is used for publishing the events.
-     *
+     * 
      * @return the endpoint value.
      */
     public String endpoint() {
@@ -179,7 +231,7 @@ public final class DomainInner extends Resource {
     /**
      * Get the inputSchema property: This determines the format that Event Grid should expect for incoming events
      * published to the Event Grid Domain Resource.
-     *
+     * 
      * @return the inputSchema value.
      */
     public InputSchema inputSchema() {
@@ -189,7 +241,7 @@ public final class DomainInner extends Resource {
     /**
      * Set the inputSchema property: This determines the format that Event Grid should expect for incoming events
      * published to the Event Grid Domain Resource.
-     *
+     * 
      * @param inputSchema the inputSchema value to set.
      * @return the DomainInner object itself.
      */
@@ -203,8 +255,9 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the eventTypeInfo property: Event Type Information for the domain. This information is provided by the
-     * publisher and can be used by the subscriber to view different types of events that are published.
-     *
+     * publisher and can be used by the
+     * subscriber to view different types of events that are published.
+     * 
      * @return the eventTypeInfo value.
      */
     public EventTypeInfo eventTypeInfo() {
@@ -213,8 +266,9 @@ public final class DomainInner extends Resource {
 
     /**
      * Set the eventTypeInfo property: Event Type Information for the domain. This information is provided by the
-     * publisher and can be used by the subscriber to view different types of events that are published.
-     *
+     * publisher and can be used by the
+     * subscriber to view different types of events that are published.
+     * 
      * @param eventTypeInfo the eventTypeInfo value to set.
      * @return the DomainInner object itself.
      */
@@ -229,7 +283,7 @@ public final class DomainInner extends Resource {
     /**
      * Get the inputSchemaMapping property: Information about the InputSchemaMapping which specified the info about
      * mapping event payload.
-     *
+     * 
      * @return the inputSchemaMapping value.
      */
     public InputSchemaMapping inputSchemaMapping() {
@@ -239,7 +293,7 @@ public final class DomainInner extends Resource {
     /**
      * Set the inputSchemaMapping property: Information about the InputSchemaMapping which specified the info about
      * mapping event payload.
-     *
+     * 
      * @param inputSchemaMapping the inputSchemaMapping value to set.
      * @return the DomainInner object itself.
      */
@@ -253,7 +307,7 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the metricResourceId property: Metric resource id for the Event Grid Domain Resource.
-     *
+     * 
      * @return the metricResourceId value.
      */
     public String metricResourceId() {
@@ -262,9 +316,10 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the publicNetworkAccess property: This determines if traffic is allowed over public network. By default it is
-     * enabled. You can further restrict to specific IPs by configuring &lt;seealso
+     * enabled.
+     * You can further restrict to specific IPs by configuring &lt;seealso
      * cref="P:Microsoft.Azure.Events.ResourceProvider.Common.Contracts.DomainProperties.InboundIpRules" /&gt;.
-     *
+     * 
      * @return the publicNetworkAccess value.
      */
     public PublicNetworkAccess publicNetworkAccess() {
@@ -273,9 +328,10 @@ public final class DomainInner extends Resource {
 
     /**
      * Set the publicNetworkAccess property: This determines if traffic is allowed over public network. By default it is
-     * enabled. You can further restrict to specific IPs by configuring &lt;seealso
+     * enabled.
+     * You can further restrict to specific IPs by configuring &lt;seealso
      * cref="P:Microsoft.Azure.Events.ResourceProvider.Common.Contracts.DomainProperties.InboundIpRules" /&gt;.
-     *
+     * 
      * @param publicNetworkAccess the publicNetworkAccess value to set.
      * @return the DomainInner object itself.
      */
@@ -290,7 +346,7 @@ public final class DomainInner extends Resource {
     /**
      * Get the inboundIpRules property: This can be used to restrict traffic from specific IPs instead of all IPs. Note:
      * These are considered only if PublicNetworkAccess is enabled.
-     *
+     * 
      * @return the inboundIpRules value.
      */
     public List<InboundIpRule> inboundIpRules() {
@@ -300,7 +356,7 @@ public final class DomainInner extends Resource {
     /**
      * Set the inboundIpRules property: This can be used to restrict traffic from specific IPs instead of all IPs. Note:
      * These are considered only if PublicNetworkAccess is enabled.
-     *
+     * 
      * @param inboundIpRules the inboundIpRules value to set.
      * @return the DomainInner object itself.
      */
@@ -314,9 +370,9 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the disableLocalAuth property: This boolean is used to enable or disable local auth. Default value is false.
-     * When the property is set to true, only AAD token will be used to authenticate if user is allowed to publish to
-     * the domain.
-     *
+     * When the property is set to true, only Microsoft Entra ID token will be used to authenticate if user is allowed
+     * to publish to the domain.
+     * 
      * @return the disableLocalAuth value.
      */
     public Boolean disableLocalAuth() {
@@ -325,9 +381,9 @@ public final class DomainInner extends Resource {
 
     /**
      * Set the disableLocalAuth property: This boolean is used to enable or disable local auth. Default value is false.
-     * When the property is set to true, only AAD token will be used to authenticate if user is allowed to publish to
-     * the domain.
-     *
+     * When the property is set to true, only Microsoft Entra ID token will be used to authenticate if user is allowed
+     * to publish to the domain.
+     * 
      * @param disableLocalAuth the disableLocalAuth value to set.
      * @return the DomainInner object itself.
      */
@@ -341,15 +397,19 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the autoCreateTopicWithFirstSubscription property: This Boolean is used to specify the creation mechanism for
-     * 'all' the Event Grid Domain Topics associated with this Event Grid Domain resource. In this context, creation of
-     * domain topic can be auto-managed (when true) or self-managed (when false). The default value for this property is
-     * true. When this property is null or set to true, Event Grid is responsible of automatically creating the domain
-     * topic when the first event subscription is created at the scope of the domain topic. If this property is set to
-     * false, then creating the first event subscription will require creating a domain topic by the user. The
-     * self-management mode can be used if the user wants full control of when the domain topic is created, while
-     * auto-managed mode provides the flexibility to perform less operations and manage fewer resources by the user.
-     * Also, note that in auto-managed creation mode, user is allowed to create the domain topic on demand if needed.
-     *
+     * 'all' the Event Grid Domain Topics associated with this Event Grid Domain resource.
+     * In this context, creation of domain topic can be auto-managed (when true) or self-managed (when false). The
+     * default value for this property is true.
+     * When this property is null or set to true, Event Grid is responsible of automatically creating the domain topic
+     * when the first event subscription is
+     * created at the scope of the domain topic. If this property is set to false, then creating the first event
+     * subscription will require creating a domain topic
+     * by the user. The self-management mode can be used if the user wants full control of when the domain topic is
+     * created, while auto-managed mode provides the
+     * flexibility to perform less operations and manage fewer resources by the user. Also, note that in auto-managed
+     * creation mode, user is allowed to create the
+     * domain topic on demand if needed.
+     * 
      * @return the autoCreateTopicWithFirstSubscription value.
      */
     public Boolean autoCreateTopicWithFirstSubscription() {
@@ -358,15 +418,19 @@ public final class DomainInner extends Resource {
 
     /**
      * Set the autoCreateTopicWithFirstSubscription property: This Boolean is used to specify the creation mechanism for
-     * 'all' the Event Grid Domain Topics associated with this Event Grid Domain resource. In this context, creation of
-     * domain topic can be auto-managed (when true) or self-managed (when false). The default value for this property is
-     * true. When this property is null or set to true, Event Grid is responsible of automatically creating the domain
-     * topic when the first event subscription is created at the scope of the domain topic. If this property is set to
-     * false, then creating the first event subscription will require creating a domain topic by the user. The
-     * self-management mode can be used if the user wants full control of when the domain topic is created, while
-     * auto-managed mode provides the flexibility to perform less operations and manage fewer resources by the user.
-     * Also, note that in auto-managed creation mode, user is allowed to create the domain topic on demand if needed.
-     *
+     * 'all' the Event Grid Domain Topics associated with this Event Grid Domain resource.
+     * In this context, creation of domain topic can be auto-managed (when true) or self-managed (when false). The
+     * default value for this property is true.
+     * When this property is null or set to true, Event Grid is responsible of automatically creating the domain topic
+     * when the first event subscription is
+     * created at the scope of the domain topic. If this property is set to false, then creating the first event
+     * subscription will require creating a domain topic
+     * by the user. The self-management mode can be used if the user wants full control of when the domain topic is
+     * created, while auto-managed mode provides the
+     * flexibility to perform less operations and manage fewer resources by the user. Also, note that in auto-managed
+     * creation mode, user is allowed to create the
+     * domain topic on demand if needed.
+     * 
      * @param autoCreateTopicWithFirstSubscription the autoCreateTopicWithFirstSubscription value to set.
      * @return the DomainInner object itself.
      */
@@ -380,15 +444,19 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the autoDeleteTopicWithLastSubscription property: This Boolean is used to specify the deletion mechanism for
-     * 'all' the Event Grid Domain Topics associated with this Event Grid Domain resource. In this context, deletion of
-     * domain topic can be auto-managed (when true) or self-managed (when false). The default value for this property is
-     * true. When this property is set to true, Event Grid is responsible of automatically deleting the domain topic
-     * when the last event subscription at the scope of the domain topic is deleted. If this property is set to false,
-     * then the user needs to manually delete the domain topic when it is no longer needed (e.g., when last event
-     * subscription is deleted and the resource needs to be cleaned up). The self-management mode can be used if the
-     * user wants full control of when the domain topic needs to be deleted, while auto-managed mode provides the
-     * flexibility to perform less operations and manage fewer resources by the user.
-     *
+     * 'all' the Event Grid Domain Topics associated with this Event Grid Domain resource.
+     * In this context, deletion of domain topic can be auto-managed (when true) or self-managed (when false). The
+     * default value for this property is true.
+     * When this property is set to true, Event Grid is responsible of automatically deleting the domain topic when the
+     * last event subscription at the scope
+     * of the domain topic is deleted. If this property is set to false, then the user needs to manually delete the
+     * domain topic when it is no longer needed
+     * (e.g., when last event subscription is deleted and the resource needs to be cleaned up). The self-management mode
+     * can be used if the user wants full
+     * control of when the domain topic needs to be deleted, while auto-managed mode provides the flexibility to perform
+     * less operations and manage fewer
+     * resources by the user.
+     * 
      * @return the autoDeleteTopicWithLastSubscription value.
      */
     public Boolean autoDeleteTopicWithLastSubscription() {
@@ -397,15 +465,19 @@ public final class DomainInner extends Resource {
 
     /**
      * Set the autoDeleteTopicWithLastSubscription property: This Boolean is used to specify the deletion mechanism for
-     * 'all' the Event Grid Domain Topics associated with this Event Grid Domain resource. In this context, deletion of
-     * domain topic can be auto-managed (when true) or self-managed (when false). The default value for this property is
-     * true. When this property is set to true, Event Grid is responsible of automatically deleting the domain topic
-     * when the last event subscription at the scope of the domain topic is deleted. If this property is set to false,
-     * then the user needs to manually delete the domain topic when it is no longer needed (e.g., when last event
-     * subscription is deleted and the resource needs to be cleaned up). The self-management mode can be used if the
-     * user wants full control of when the domain topic needs to be deleted, while auto-managed mode provides the
-     * flexibility to perform less operations and manage fewer resources by the user.
-     *
+     * 'all' the Event Grid Domain Topics associated with this Event Grid Domain resource.
+     * In this context, deletion of domain topic can be auto-managed (when true) or self-managed (when false). The
+     * default value for this property is true.
+     * When this property is set to true, Event Grid is responsible of automatically deleting the domain topic when the
+     * last event subscription at the scope
+     * of the domain topic is deleted. If this property is set to false, then the user needs to manually delete the
+     * domain topic when it is no longer needed
+     * (e.g., when last event subscription is deleted and the resource needs to be cleaned up). The self-management mode
+     * can be used if the user wants full
+     * control of when the domain topic needs to be deleted, while auto-managed mode provides the flexibility to perform
+     * less operations and manage fewer
+     * resources by the user.
+     * 
      * @param autoDeleteTopicWithLastSubscription the autoDeleteTopicWithLastSubscription value to set.
      * @return the DomainInner object itself.
      */
@@ -419,7 +491,7 @@ public final class DomainInner extends Resource {
 
     /**
      * Get the dataResidencyBoundary property: Data Residency Boundary of the resource.
-     *
+     * 
      * @return the dataResidencyBoundary value.
      */
     public DataResidencyBoundary dataResidencyBoundary() {
@@ -428,7 +500,7 @@ public final class DomainInner extends Resource {
 
     /**
      * Set the dataResidencyBoundary property: Data Residency Boundary of the resource.
-     *
+     * 
      * @param dataResidencyBoundary the dataResidencyBoundary value to set.
      * @return the DomainInner object itself.
      */
@@ -442,7 +514,7 @@ public final class DomainInner extends Resource {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -455,5 +527,63 @@ public final class DomainInner extends Resource {
         if (identity() != null) {
             identity().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("location", location());
+        jsonWriter.writeMapField("tags", tags(), (writer, element) -> writer.writeString(element));
+        jsonWriter.writeJsonField("properties", this.innerProperties);
+        jsonWriter.writeJsonField("sku", this.sku);
+        jsonWriter.writeJsonField("identity", this.identity);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DomainInner from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DomainInner if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DomainInner.
+     */
+    public static DomainInner fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DomainInner deserializedDomainInner = new DomainInner();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedDomainInner.id = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedDomainInner.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedDomainInner.type = reader.getString();
+                } else if ("location".equals(fieldName)) {
+                    deserializedDomainInner.withLocation(reader.getString());
+                } else if ("tags".equals(fieldName)) {
+                    Map<String, String> tags = reader.readMap(reader1 -> reader1.getString());
+                    deserializedDomainInner.withTags(tags);
+                } else if ("properties".equals(fieldName)) {
+                    deserializedDomainInner.innerProperties = DomainProperties.fromJson(reader);
+                } else if ("sku".equals(fieldName)) {
+                    deserializedDomainInner.sku = ResourceSku.fromJson(reader);
+                } else if ("identity".equals(fieldName)) {
+                    deserializedDomainInner.identity = IdentityInfo.fromJson(reader);
+                } else if ("systemData".equals(fieldName)) {
+                    deserializedDomainInner.systemData = SystemData.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedDomainInner;
+        });
     }
 }

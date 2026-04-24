@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -31,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
 
 public class AzureResourceTests extends BlobNioTestBase {
     private Map<String, Object> config;
@@ -58,7 +58,7 @@ public class AzureResourceTests extends BlobNioTestBase {
 
     @Test
     public void instanceType() {
-        assertThrows(IllegalArgumentException.class, () -> new AzureResource(mock(Path.class)));
+        assertThrows(IllegalArgumentException.class, () -> new AzureResource(Paths.get("")));
     }
 
     @ParameterizedTest
@@ -69,8 +69,8 @@ public class AzureResourceTests extends BlobNioTestBase {
         // Generate resource names.
         // In root1, the resource will be in the root. In root2, the resource will be several levels deep. Also
         // root1 will be non-default directory and root2 is default directory.
-        AzurePath parentPath1 = (AzurePath) fs.getPath(rootNameToContainerName(getNonDefaultRootDir(fs)),
-            generateBlobName());
+        AzurePath parentPath1
+            = (AzurePath) fs.getPath(rootNameToContainerName(getNonDefaultRootDir(fs)), generateBlobName());
         AzurePath parentPath2 = (AzurePath) fs.getPath(getPathWithDepth(3), generateBlobName());
 
         // Generate clients to resources.
@@ -96,8 +96,8 @@ public class AzureResourceTests extends BlobNioTestBase {
         }
 
         boolean directoryExists = status == DirectoryStatus.EMPTY || status == DirectoryStatus.NOT_EMPTY;
-        assertEquals(status, new AzureResource(parentPath1).checkDirStatus());
-        assertEquals(status, new AzureResource(parentPath2).checkDirStatus());
+        assertEquals(status, new AzureResource(parentPath1).getDirectoryStatus());
+        assertEquals(status, new AzureResource(parentPath2).getDirectoryStatus());
         assertEquals(directoryExists, new AzureResource(parentPath1).checkDirectoryExists());
         assertEquals(directoryExists, new AzureResource(parentPath2).checkDirectoryExists());
     }
@@ -118,8 +118,8 @@ public class AzureResourceTests extends BlobNioTestBase {
         Files.createFile(path1);
         Files.createFile(path2);
 
-        assertEquals(DirectoryStatus.NOT_A_DIRECTORY, new AzureResource(path1).checkDirStatus());
-        assertEquals(DirectoryStatus.NOT_A_DIRECTORY, new AzureResource(path2).checkDirStatus());
+        assertEquals(DirectoryStatus.NOT_A_DIRECTORY, new AzureResource(path1).getDirectoryStatus());
+        assertEquals(DirectoryStatus.NOT_A_DIRECTORY, new AzureResource(path2).getDirectoryStatus());
     }
 
     @Test
@@ -132,8 +132,8 @@ public class AzureResourceTests extends BlobNioTestBase {
         Files.createDirectory(fs.getPath(pathName2));
 
         // Both should be empty
-        assertEquals(DirectoryStatus.EMPTY, new AzureResource(fs.getPath(pathName)).checkDirStatus());
-        assertEquals(DirectoryStatus.EMPTY, new AzureResource(fs.getPath(pathName2)).checkDirStatus());
+        assertEquals(DirectoryStatus.EMPTY, new AzureResource(fs.getPath(pathName)).getDirectoryStatus());
+        assertEquals(DirectoryStatus.EMPTY, new AzureResource(fs.getPath(pathName2)).getDirectoryStatus());
     }
 
     @Test
@@ -151,13 +151,12 @@ public class AzureResourceTests extends BlobNioTestBase {
         Files.createFile(childPath);
         Files.createFile(middlePath);
 
-        assertEquals(DirectoryStatus.NOT_EMPTY, new AzureResource(dirPath).checkDirStatus());
+        assertEquals(DirectoryStatus.NOT_EMPTY, new AzureResource(dirPath).getDirectoryStatus());
     }
 
     @Test
     public void parentDirExistsFalse() throws IOException {
-        assertFalse(new AzureResource(createFS(config).getPath(generateBlobName(), "bar"))
-            .checkParentDirectoryExists());
+        assertFalse(new AzureResource(createFS(config).getPath(generateBlobName(), "bar")).parentDirectoryExists());
     }
 
     @Test
@@ -169,7 +168,7 @@ public class AzureResourceTests extends BlobNioTestBase {
             .getAppendBlobClient()
             .create();
 
-        assertTrue(new AzureResource(fs.getPath(fileName, childName)).checkParentDirectoryExists());
+        assertTrue(new AzureResource(fs.getPath(fileName, childName)).parentDirectoryExists());
     }
 
     @Test
@@ -178,13 +177,13 @@ public class AzureResourceTests extends BlobNioTestBase {
         String fileName = generateBlobName();
         putDirectoryBlob(rootNameToContainerClient(getDefaultDir(fs)).getBlobClient(fileName).getBlockBlobClient());
 
-        assertTrue(new AzureResource(fs.getPath(fileName, "bar")).checkParentDirectoryExists());
+        assertTrue(new AzureResource(fs.getPath(fileName, "bar")).parentDirectoryExists());
     }
 
     @Test
     public void parentDirExistsRoot() throws IOException {
         // No parent means the parent is implicitly the default root, which always exists
-        assertTrue(new AzureResource(createFS(config).getPath("foo")).checkParentDirectoryExists());
+        assertTrue(new AzureResource(createFS(config).getPath("foo")).parentDirectoryExists());
 
     }
 
@@ -195,11 +194,11 @@ public class AzureResourceTests extends BlobNioTestBase {
         String rootName = getNonDefaultRootDir(fs);
         rootNameToContainerClient(rootName).getBlobClient("fizz/buzz/bazz").getAppendBlobClient().create();
 
-        assertTrue(new AzureResource(fs.getPath(rootName, "fizz/buzz")).checkParentDirectoryExists());
+        assertTrue(new AzureResource(fs.getPath(rootName, "fizz/buzz")).parentDirectoryExists());
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"false,false", "true,false", "false,true", "true,true"})
+    @CsvSource(value = { "false,false", "true,false", "false,true", "true,true" })
     public void putDirectoryBlob(boolean metadata, boolean properties) throws IOException, NoSuchAlgorithmException {
         AzureResource resource = new AzureResource(createFS(config).getPath(generateBlobName()));
         byte[] contentMd5 = MessageDigest.getInstance("MD5").digest(new byte[0]);
@@ -251,8 +250,7 @@ public class AzureResourceTests extends BlobNioTestBase {
         AzureResource resource = new AzureResource(createFS(config).getPath(generateBlobName()));
         resource.getBlobClient().upload(DATA.getDefaultBinaryData());
         match = setupBlobMatchCondition(resource.getBlobClient(), match);
-        resource.putDirectoryBlob(new BlobRequestConditions()
-            .setIfMatch(match)
+        resource.putDirectoryBlob(new BlobRequestConditions().setIfMatch(match)
             .setIfNoneMatch(noneMatch)
             .setIfModifiedSince(modified)
             .setIfUnmodifiedSince(unmodified));
@@ -273,8 +271,7 @@ public class AzureResourceTests extends BlobNioTestBase {
         AzureResource resource = new AzureResource(createFS(config).getPath(generateBlobName()));
         resource.getBlobClient().upload(DATA.getDefaultBinaryData());
         noneMatch = setupBlobMatchCondition(resource.getBlobClient(), noneMatch);
-        BlobRequestConditions bac = new BlobRequestConditions()
-            .setIfMatch(match)
+        BlobRequestConditions bac = new BlobRequestConditions().setIfMatch(match)
             .setIfNoneMatch(noneMatch)
             .setIfModifiedSince(modified)
             .setIfUnmodifiedSince(unmodified);

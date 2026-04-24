@@ -6,67 +6,46 @@ package com.azure.resourcemanager.appcontainers.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.appcontainers.ContainerAppsApiManager;
 import com.azure.resourcemanager.appcontainers.models.JobExecution;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class JobsExecutionsListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"name\":\"fiijrykwlefksxqc\",\"id\":\"zfpxgnmqvzvluy\",\"type\":\"aiossscyvaifp\",\"properties\":{\"status\":\"Running\",\"startTime\":\"2021-06-18T06:17:35Z\",\"endTime\":\"2021-10-04T22:51:20Z\",\"template\":{\"containers\":[{\"image\":\"fxtjdhsoym\",\"name\":\"v\",\"command\":[\"ftteh\",\"pboujs\",\"kfvvdshxcde\",\"suenyg\"],\"args\":[\"g\",\"tfrnquk\",\"rf\",\"s\"],\"env\":[{}],\"resources\":{}}],\"initContainers\":[{\"image\":\"ylt\",\"name\":\"ntf\",\"command\":[\"g\",\"jdxwnazkurrdre\",\"zjwhsetwwjwz\"],\"args\":[\"e\",\"zuukykcyqhyqq\"],\"env\":[{},{}],\"resources\":{}}]}}}]}";
 
-        String responseStr =
-            "{\"value\":[{\"name\":\"cjimryvwgcwwpbmz\",\"id\":\"esyds\",\"type\":\"efoh\",\"status\":\"Degraded\",\"startTime\":\"2021-09-26T17:40:29Z\",\"endTime\":\"2021-01-07T15:19:45Z\",\"template\":{\"containers\":[],\"initContainers\":[]}}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        ContainerAppsApiManager manager = ContainerAppsApiManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<JobExecution> response = manager.jobsExecutions()
+            .list("nkbtlwljss", "ctsnldkpwol", "isubxbteog", com.azure.core.util.Context.NONE);
 
-        ContainerAppsApiManager manager =
-            ContainerAppsApiManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<JobExecution> response =
-            manager.jobsExecutions().list("nqpvwgfstmhqykiz", "d", "saoafcluqvox", com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("cjimryvwgcwwpbmz", response.iterator().next().name());
-        Assertions.assertEquals("esyds", response.iterator().next().id());
-        Assertions.assertEquals("efoh", response.iterator().next().type());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-09-26T17:40:29Z"), response.iterator().next().startTime());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-01-07T15:19:45Z"), response.iterator().next().endTime());
+        Assertions.assertEquals("fiijrykwlefksxqc", response.iterator().next().name());
+        Assertions.assertEquals("zfpxgnmqvzvluy", response.iterator().next().id());
+        Assertions.assertEquals("aiossscyvaifp", response.iterator().next().type());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-06-18T06:17:35Z"), response.iterator().next().startTime());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-10-04T22:51:20Z"), response.iterator().next().endTime());
+        Assertions.assertEquals("fxtjdhsoym", response.iterator().next().template().containers().get(0).image());
+        Assertions.assertEquals("v", response.iterator().next().template().containers().get(0).name());
+        Assertions.assertEquals("ftteh", response.iterator().next().template().containers().get(0).command().get(0));
+        Assertions.assertEquals("g", response.iterator().next().template().containers().get(0).args().get(0));
+        Assertions.assertEquals("ylt", response.iterator().next().template().initContainers().get(0).image());
+        Assertions.assertEquals("ntf", response.iterator().next().template().initContainers().get(0).name());
+        Assertions.assertEquals("g", response.iterator().next().template().initContainers().get(0).command().get(0));
+        Assertions.assertEquals("e", response.iterator().next().template().initContainers().get(0).args().get(0));
     }
 }

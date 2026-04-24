@@ -6,68 +6,41 @@ package com.azure.resourcemanager.webpubsub.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.webpubsub.WebPubSubManager;
 import com.azure.resourcemanager.webpubsub.models.Replica;
 import com.azure.resourcemanager.webpubsub.models.WebPubSubSkuTier;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class WebPubSubReplicasListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"sku\":{\"name\":\"osovyrrleaesin\",\"tier\":\"Standard\",\"size\":\"jqo\",\"family\":\"pihehce\",\"capacity\":695554313},\"properties\":{\"provisioningState\":\"Moving\",\"regionEndpointEnabled\":\"rjb\",\"resourceStopped\":\"pxdlv\"},\"location\":\"frexcrseqw\",\"tags\":{\"hxogjggsvoujkxi\":\"ghudg\"},\"id\":\"dafhr\",\"name\":\"mdyomkxfbvfbh\",\"type\":\"y\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"sku\":{\"name\":\"iwfbrkwpzdqtvhcs\",\"tier\":\"Basic\",\"size\":\"qaxsipietgbebjf\",\"family\":\"bmoichd\",\"capacity\":816539003},\"properties\":{\"provisioningState\":\"Moving\"},\"location\":\"nt\",\"tags\":{\"cjuhplrvkm\":\"tzviqsowsaaelcat\",\"ggcvk\":\"cwmjvlg\",\"izrzb\":\"y\",\"ztlvtmvagbwidqlv\":\"psfxsf\"},\"id\":\"ukoveofi\",\"name\":\"rvjfnmjmvlw\",\"type\":\"z\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        WebPubSubManager manager = WebPubSubManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureEnvironment.AZURE));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<Replica> response
+            = manager.webPubSubReplicas().list("wwsko", "dcbrwimuvq", com.azure.core.util.Context.NONE);
 
-        WebPubSubManager manager =
-            WebPubSubManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<Replica> response =
-            manager.webPubSubReplicas().list("hqo", "oihiqak", com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("nt", response.iterator().next().location());
-        Assertions.assertEquals("tzviqsowsaaelcat", response.iterator().next().tags().get("cjuhplrvkm"));
-        Assertions.assertEquals("iwfbrkwpzdqtvhcs", response.iterator().next().sku().name());
-        Assertions.assertEquals(WebPubSubSkuTier.BASIC, response.iterator().next().sku().tier());
-        Assertions.assertEquals(816539003, response.iterator().next().sku().capacity());
+        Assertions.assertEquals("frexcrseqw", response.iterator().next().location());
+        Assertions.assertEquals("ghudg", response.iterator().next().tags().get("hxogjggsvoujkxi"));
+        Assertions.assertEquals("osovyrrleaesin", response.iterator().next().sku().name());
+        Assertions.assertEquals(WebPubSubSkuTier.STANDARD, response.iterator().next().sku().tier());
+        Assertions.assertEquals(695554313, response.iterator().next().sku().capacity());
+        Assertions.assertEquals("rjb", response.iterator().next().regionEndpointEnabled());
+        Assertions.assertEquals("pxdlv", response.iterator().next().resourceStopped());
     }
 }

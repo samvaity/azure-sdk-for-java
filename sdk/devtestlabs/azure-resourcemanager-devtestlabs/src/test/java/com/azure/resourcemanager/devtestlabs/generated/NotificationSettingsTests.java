@@ -12,32 +12,28 @@ import org.junit.jupiter.api.Assertions;
 public final class NotificationSettingsTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        NotificationSettings model =
-            BinaryData
-                .fromString(
-                    "{\"status\":\"Disabled\",\"timeInMinutes\":980316888,\"webhookUrl\":\"xhqyudxorrqnb\",\"emailRecipient\":\"czvyifq\",\"notificationLocale\":\"kdvjsll\"}")
-                .toObject(NotificationSettings.class);
+        NotificationSettings model = BinaryData.fromString(
+            "{\"status\":\"Disabled\",\"timeInMinutes\":528280521,\"webhookUrl\":\"dxyt\",\"emailRecipient\":\"oyrxvwfudwpzntxh\",\"notificationLocale\":\"hl\"}")
+            .toObject(NotificationSettings.class);
         Assertions.assertEquals(EnableStatus.DISABLED, model.status());
-        Assertions.assertEquals(980316888, model.timeInMinutes());
-        Assertions.assertEquals("xhqyudxorrqnb", model.webhookUrl());
-        Assertions.assertEquals("czvyifq", model.emailRecipient());
-        Assertions.assertEquals("kdvjsll", model.notificationLocale());
+        Assertions.assertEquals(528280521, model.timeInMinutes());
+        Assertions.assertEquals("dxyt", model.webhookUrl());
+        Assertions.assertEquals("oyrxvwfudwpzntxh", model.emailRecipient());
+        Assertions.assertEquals("hl", model.notificationLocale());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        NotificationSettings model =
-            new NotificationSettings()
-                .withStatus(EnableStatus.DISABLED)
-                .withTimeInMinutes(980316888)
-                .withWebhookUrl("xhqyudxorrqnb")
-                .withEmailRecipient("czvyifq")
-                .withNotificationLocale("kdvjsll");
+        NotificationSettings model = new NotificationSettings().withStatus(EnableStatus.DISABLED)
+            .withTimeInMinutes(528280521)
+            .withWebhookUrl("dxyt")
+            .withEmailRecipient("oyrxvwfudwpzntxh")
+            .withNotificationLocale("hl");
         model = BinaryData.fromObject(model).toObject(NotificationSettings.class);
         Assertions.assertEquals(EnableStatus.DISABLED, model.status());
-        Assertions.assertEquals(980316888, model.timeInMinutes());
-        Assertions.assertEquals("xhqyudxorrqnb", model.webhookUrl());
-        Assertions.assertEquals("czvyifq", model.emailRecipient());
-        Assertions.assertEquals("kdvjsll", model.notificationLocale());
+        Assertions.assertEquals(528280521, model.timeInMinutes());
+        Assertions.assertEquals("dxyt", model.webhookUrl());
+        Assertions.assertEquals("oyrxvwfudwpzntxh", model.emailRecipient());
+        Assertions.assertEquals("hl", model.notificationLocale());
     }
 }

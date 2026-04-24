@@ -5,82 +5,106 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Custom activity type. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("Custom")
-@JsonFlatten
+/**
+ * Custom activity type.
+ */
 @Fluent
 public class CustomActivity extends ExecutionActivity {
     /*
+     * Type of activity.
+     */
+    @Generated
+    private String type = "Custom";
+
+    /*
      * Command for custom activity Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.command", required = true)
+    @Generated
     private Object command;
 
     /*
      * Resource linked service reference.
      */
-    @JsonProperty(value = "typeProperties.resourceLinkedService")
+    @Generated
     private LinkedServiceReference resourceLinkedService;
 
     /*
      * Folder path for resource files Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.folderPath")
+    @Generated
     private Object folderPath;
 
     /*
      * Reference objects
      */
-    @JsonProperty(value = "typeProperties.referenceObjects")
+    @Generated
     private CustomActivityReferenceObject referenceObjects;
 
     /*
      * User defined property bag. There is no restriction on the keys or values that can be used. The user specified
      * custom activity has the full responsibility to consume and interpret the content defined.
      */
-    @JsonProperty(value = "typeProperties.extendedProperties")
+    @Generated
     private Map<String, Object> extendedProperties;
 
     /*
      * The retention time for the files submitted for custom activity. Type: double (or Expression with resultType
      * double).
      */
-    @JsonProperty(value = "typeProperties.retentionTimeInDays")
+    @Generated
     private Object retentionTimeInDays;
 
     /*
      * Elevation level and scope for the user, default is nonadmin task. Type: string (or Expression with resultType
      * double).
      */
-    @JsonProperty(value = "typeProperties.autoUserSpecification")
+    @Generated
     private Object autoUserSpecification;
 
-    /** Creates an instance of CustomActivity class. */
-    public CustomActivity() {}
+    /**
+     * Creates an instance of CustomActivity class.
+     */
+    @Generated
+    public CustomActivity() {
+    }
+
+    /**
+     * Get the type property: Type of activity.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the command property: Command for custom activity Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the command value.
      */
+    @Generated
     public Object getCommand() {
         return this.command;
     }
 
     /**
      * Set the command property: Command for custom activity Type: string (or Expression with resultType string).
-     *
+     * 
      * @param command the command value to set.
      * @return the CustomActivity object itself.
      */
+    @Generated
     public CustomActivity setCommand(Object command) {
         this.command = command;
         return this;
@@ -88,19 +112,21 @@ public class CustomActivity extends ExecutionActivity {
 
     /**
      * Get the resourceLinkedService property: Resource linked service reference.
-     *
+     * 
      * @return the resourceLinkedService value.
      */
+    @Generated
     public LinkedServiceReference getResourceLinkedService() {
         return this.resourceLinkedService;
     }
 
     /**
      * Set the resourceLinkedService property: Resource linked service reference.
-     *
+     * 
      * @param resourceLinkedService the resourceLinkedService value to set.
      * @return the CustomActivity object itself.
      */
+    @Generated
     public CustomActivity setResourceLinkedService(LinkedServiceReference resourceLinkedService) {
         this.resourceLinkedService = resourceLinkedService;
         return this;
@@ -108,19 +134,21 @@ public class CustomActivity extends ExecutionActivity {
 
     /**
      * Get the folderPath property: Folder path for resource files Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the folderPath value.
      */
+    @Generated
     public Object getFolderPath() {
         return this.folderPath;
     }
 
     /**
      * Set the folderPath property: Folder path for resource files Type: string (or Expression with resultType string).
-     *
+     * 
      * @param folderPath the folderPath value to set.
      * @return the CustomActivity object itself.
      */
+    @Generated
     public CustomActivity setFolderPath(Object folderPath) {
         this.folderPath = folderPath;
         return this;
@@ -128,19 +156,21 @@ public class CustomActivity extends ExecutionActivity {
 
     /**
      * Get the referenceObjects property: Reference objects.
-     *
+     * 
      * @return the referenceObjects value.
      */
+    @Generated
     public CustomActivityReferenceObject getReferenceObjects() {
         return this.referenceObjects;
     }
 
     /**
      * Set the referenceObjects property: Reference objects.
-     *
+     * 
      * @param referenceObjects the referenceObjects value to set.
      * @return the CustomActivity object itself.
      */
+    @Generated
     public CustomActivity setReferenceObjects(CustomActivityReferenceObject referenceObjects) {
         this.referenceObjects = referenceObjects;
         return this;
@@ -150,9 +180,10 @@ public class CustomActivity extends ExecutionActivity {
      * Get the extendedProperties property: User defined property bag. There is no restriction on the keys or values
      * that can be used. The user specified custom activity has the full responsibility to consume and interpret the
      * content defined.
-     *
+     * 
      * @return the extendedProperties value.
      */
+    @Generated
     public Map<String, Object> getExtendedProperties() {
         return this.extendedProperties;
     }
@@ -161,10 +192,11 @@ public class CustomActivity extends ExecutionActivity {
      * Set the extendedProperties property: User defined property bag. There is no restriction on the keys or values
      * that can be used. The user specified custom activity has the full responsibility to consume and interpret the
      * content defined.
-     *
+     * 
      * @param extendedProperties the extendedProperties value to set.
      * @return the CustomActivity object itself.
      */
+    @Generated
     public CustomActivity setExtendedProperties(Map<String, Object> extendedProperties) {
         this.extendedProperties = extendedProperties;
         return this;
@@ -173,9 +205,10 @@ public class CustomActivity extends ExecutionActivity {
     /**
      * Get the retentionTimeInDays property: The retention time for the files submitted for custom activity. Type:
      * double (or Expression with resultType double).
-     *
+     * 
      * @return the retentionTimeInDays value.
      */
+    @Generated
     public Object getRetentionTimeInDays() {
         return this.retentionTimeInDays;
     }
@@ -183,10 +216,11 @@ public class CustomActivity extends ExecutionActivity {
     /**
      * Set the retentionTimeInDays property: The retention time for the files submitted for custom activity. Type:
      * double (or Expression with resultType double).
-     *
+     * 
      * @param retentionTimeInDays the retentionTimeInDays value to set.
      * @return the CustomActivity object itself.
      */
+    @Generated
     public CustomActivity setRetentionTimeInDays(Object retentionTimeInDays) {
         this.retentionTimeInDays = retentionTimeInDays;
         return this;
@@ -195,9 +229,10 @@ public class CustomActivity extends ExecutionActivity {
     /**
      * Get the autoUserSpecification property: Elevation level and scope for the user, default is nonadmin task. Type:
      * string (or Expression with resultType double).
-     *
+     * 
      * @return the autoUserSpecification value.
      */
+    @Generated
     public Object getAutoUserSpecification() {
         return this.autoUserSpecification;
     }
@@ -205,68 +240,222 @@ public class CustomActivity extends ExecutionActivity {
     /**
      * Set the autoUserSpecification property: Elevation level and scope for the user, default is nonadmin task. Type:
      * string (or Expression with resultType double).
-     *
+     * 
      * @param autoUserSpecification the autoUserSpecification value to set.
      * @return the CustomActivity object itself.
      */
+    @Generated
     public CustomActivity setAutoUserSpecification(Object autoUserSpecification) {
         this.autoUserSpecification = autoUserSpecification;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CustomActivity setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         super.setLinkedServiceName(linkedServiceName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CustomActivity setPolicy(ActivityPolicy policy) {
         super.setPolicy(policy);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CustomActivity setName(String name) {
         super.setName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CustomActivity setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CustomActivity setState(ActivityState state) {
         super.setState(state);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CustomActivity setOnInactiveMarkAs(ActivityOnInactiveMarkAs onInactiveMarkAs) {
         super.setOnInactiveMarkAs(onInactiveMarkAs);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CustomActivity setDependsOn(List<ActivityDependency> dependsOn) {
         super.setDependsOn(dependsOn);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CustomActivity setUserProperties(List<UserProperty> userProperties) {
         super.setUserProperties(userProperties);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", getName());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeStringField("state", getState() == null ? null : getState().toString());
+        jsonWriter.writeStringField("onInactiveMarkAs",
+            getOnInactiveMarkAs() == null ? null : getOnInactiveMarkAs().toString());
+        jsonWriter.writeArrayField("dependsOn", getDependsOn(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("userProperties", getUserProperties(),
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("linkedServiceName", getLinkedServiceName());
+        jsonWriter.writeJsonField("policy", getPolicy());
+        jsonWriter.writeStringField("type", this.type);
+        if (command != null
+            || resourceLinkedService != null
+            || folderPath != null
+            || referenceObjects != null
+            || extendedProperties != null
+            || retentionTimeInDays != null
+            || autoUserSpecification != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("command", this.command);
+            jsonWriter.writeJsonField("resourceLinkedService", this.resourceLinkedService);
+            if (this.folderPath != null) {
+                jsonWriter.writeUntypedField("folderPath", this.folderPath);
+            }
+            jsonWriter.writeJsonField("referenceObjects", this.referenceObjects);
+            jsonWriter.writeMapField("extendedProperties", this.extendedProperties,
+                (writer, element) -> writer.writeUntyped(element));
+            if (this.retentionTimeInDays != null) {
+                jsonWriter.writeUntypedField("retentionTimeInDays", this.retentionTimeInDays);
+            }
+            if (this.autoUserSpecification != null) {
+                jsonWriter.writeUntypedField("autoUserSpecification", this.autoUserSpecification);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CustomActivity from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CustomActivity if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the CustomActivity.
+     */
+    @Generated
+    public static CustomActivity fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CustomActivity deserializedCustomActivity = new CustomActivity();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedCustomActivity.setName(reader.getString());
+                } else if ("description".equals(fieldName)) {
+                    deserializedCustomActivity.setDescription(reader.getString());
+                } else if ("state".equals(fieldName)) {
+                    deserializedCustomActivity.setState(ActivityState.fromString(reader.getString()));
+                } else if ("onInactiveMarkAs".equals(fieldName)) {
+                    deserializedCustomActivity
+                        .setOnInactiveMarkAs(ActivityOnInactiveMarkAs.fromString(reader.getString()));
+                } else if ("dependsOn".equals(fieldName)) {
+                    List<ActivityDependency> dependsOn
+                        = reader.readArray(reader1 -> ActivityDependency.fromJson(reader1));
+                    deserializedCustomActivity.setDependsOn(dependsOn);
+                } else if ("userProperties".equals(fieldName)) {
+                    List<UserProperty> userProperties = reader.readArray(reader1 -> UserProperty.fromJson(reader1));
+                    deserializedCustomActivity.setUserProperties(userProperties);
+                } else if ("linkedServiceName".equals(fieldName)) {
+                    deserializedCustomActivity.setLinkedServiceName(LinkedServiceReference.fromJson(reader));
+                } else if ("policy".equals(fieldName)) {
+                    deserializedCustomActivity.setPolicy(ActivityPolicy.fromJson(reader));
+                } else if ("type".equals(fieldName)) {
+                    deserializedCustomActivity.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("command".equals(fieldName)) {
+                            deserializedCustomActivity.command = reader.readUntyped();
+                        } else if ("resourceLinkedService".equals(fieldName)) {
+                            deserializedCustomActivity.resourceLinkedService = LinkedServiceReference.fromJson(reader);
+                        } else if ("folderPath".equals(fieldName)) {
+                            deserializedCustomActivity.folderPath = reader.readUntyped();
+                        } else if ("referenceObjects".equals(fieldName)) {
+                            deserializedCustomActivity.referenceObjects
+                                = CustomActivityReferenceObject.fromJson(reader);
+                        } else if ("extendedProperties".equals(fieldName)) {
+                            Map<String, Object> extendedProperties = reader.readMap(reader1 -> reader1.readUntyped());
+                            deserializedCustomActivity.extendedProperties = extendedProperties;
+                        } else if ("retentionTimeInDays".equals(fieldName)) {
+                            deserializedCustomActivity.retentionTimeInDays = reader.readUntyped();
+                        } else if ("autoUserSpecification".equals(fieldName)) {
+                            deserializedCustomActivity.autoUserSpecification = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedCustomActivity.setAdditionalProperties(additionalProperties);
+
+            return deserializedCustomActivity;
+        });
     }
 }

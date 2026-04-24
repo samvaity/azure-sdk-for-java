@@ -13,29 +13,27 @@ import org.junit.jupiter.api.Assertions;
 public final class RackPatchParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        RackPatchParameters model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"rackLocation\":\"ctfjgtixr\",\"rackSerialNumber\":\"zuyt\"},\"tags\":{\"bauiropi\":\"lmuowo\",\"n\":\"nszonwpngaj\"}}")
-                .toObject(RackPatchParameters.class);
-        Assertions.assertEquals("lmuowo", model.tags().get("bauiropi"));
-        Assertions.assertEquals("ctfjgtixr", model.rackLocation());
-        Assertions.assertEquals("zuyt", model.rackSerialNumber());
+        RackPatchParameters model = BinaryData.fromString(
+            "{\"properties\":{\"rackLocation\":\"mewjjstliuhq\",\"rackSerialNumber\":\"moaiancz\"},\"tags\":{\"rxvvbxi\":\"drrslblxydk\",\"h\":\"kgfbqljnqkhy\",\"kulehurqlrq\":\"c\"}}")
+            .toObject(RackPatchParameters.class);
+        Assertions.assertEquals("drrslblxydk", model.tags().get("rxvvbxi"));
+        Assertions.assertEquals("mewjjstliuhq", model.rackLocation());
+        Assertions.assertEquals("moaiancz", model.rackSerialNumber());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        RackPatchParameters model =
-            new RackPatchParameters()
-                .withTags(mapOf("bauiropi", "lmuowo", "n", "nszonwpngaj"))
-                .withRackLocation("ctfjgtixr")
-                .withRackSerialNumber("zuyt");
+        RackPatchParameters model = new RackPatchParameters()
+            .withTags(mapOf("rxvvbxi", "drrslblxydk", "h", "kgfbqljnqkhy", "kulehurqlrq", "c"))
+            .withRackLocation("mewjjstliuhq")
+            .withRackSerialNumber("moaiancz");
         model = BinaryData.fromObject(model).toObject(RackPatchParameters.class);
-        Assertions.assertEquals("lmuowo", model.tags().get("bauiropi"));
-        Assertions.assertEquals("ctfjgtixr", model.rackLocation());
-        Assertions.assertEquals("zuyt", model.rackSerialNumber());
+        Assertions.assertEquals("drrslblxydk", model.tags().get("rxvvbxi"));
+        Assertions.assertEquals("mewjjstliuhq", model.rackLocation());
+        Assertions.assertEquals("moaiancz", model.rackSerialNumber());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

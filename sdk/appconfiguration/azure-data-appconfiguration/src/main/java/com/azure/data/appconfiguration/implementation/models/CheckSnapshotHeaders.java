@@ -5,25 +5,31 @@
 package com.azure.data.appconfiguration.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 
-/** The CheckSnapshotHeaders model. */
+/**
+ * The CheckSnapshotHeaders model.
+ */
 @Fluent
 public final class CheckSnapshotHeaders {
     /*
      * The ETag property.
      */
+    @Generated
     private String eTag;
 
     /*
      * The Sync-Token property.
      */
+    @Generated
     private String syncToken;
 
     /*
      * The Link property.
      */
+    @Generated
     private String link;
 
     private static final HttpHeaderName SYNC_TOKEN = HttpHeaderName.fromString("Sync-Token");
@@ -31,7 +37,7 @@ public final class CheckSnapshotHeaders {
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of CheckSnapshotHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public CheckSnapshotHeaders(HttpHeaders rawHeaders) {
@@ -42,19 +48,21 @@ public final class CheckSnapshotHeaders {
 
     /**
      * Get the eTag property: The ETag property.
-     *
+     * 
      * @return the eTag value.
      */
+    @Generated
     public String getETag() {
         return this.eTag;
     }
 
     /**
      * Set the eTag property: The ETag property.
-     *
+     * 
      * @param eTag the eTag value to set.
      * @return the CheckSnapshotHeaders object itself.
      */
+    @Generated
     public CheckSnapshotHeaders setETag(String eTag) {
         this.eTag = eTag;
         return this;
@@ -62,19 +70,21 @@ public final class CheckSnapshotHeaders {
 
     /**
      * Get the syncToken property: The Sync-Token property.
-     *
+     * 
      * @return the syncToken value.
      */
+    @Generated
     public String getSyncToken() {
         return this.syncToken;
     }
 
     /**
      * Set the syncToken property: The Sync-Token property.
-     *
+     * 
      * @param syncToken the syncToken value to set.
      * @return the CheckSnapshotHeaders object itself.
      */
+    @Generated
     public CheckSnapshotHeaders setSyncToken(String syncToken) {
         this.syncToken = syncToken;
         return this;
@@ -82,19 +92,21 @@ public final class CheckSnapshotHeaders {
 
     /**
      * Get the link property: The Link property.
-     *
+     * 
      * @return the link value.
      */
+    @Generated
     public String getLink() {
         return this.link;
     }
 
     /**
      * Set the link property: The Link property.
-     *
+     * 
      * @param link the link value to set.
      * @return the CheckSnapshotHeaders object itself.
      */
+    @Generated
     public CheckSnapshotHeaders setLink(String link) {
         this.link = link;
         return this;

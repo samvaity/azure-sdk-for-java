@@ -33,7 +33,7 @@ public class ReadFeedTriggersTest extends TestSuiteBase {
         super(clientBuilder);
     }
 
-    @Test(groups = { "simple" }, timeOut = FEED_TIMEOUT)
+    @Test(groups = { "query" }, timeOut = FEED_TIMEOUT)
     public void readTriggers() throws Exception {
         CosmosPagedFlux<CosmosTriggerProperties> feedObservable = createdCollection.getScripts().readAllTriggers();
         int maxItemCount = 2;
@@ -50,11 +50,11 @@ public class ReadFeedTriggersTest extends TestSuiteBase {
         validateQuerySuccess(feedObservable.byPage(maxItemCount), validator, FEED_TIMEOUT);
     }
 
-    @BeforeClass(groups = { "simple" }, timeOut = SETUP_TIMEOUT)
+    @BeforeClass(groups = { "query" }, timeOut = SETUP_TIMEOUT)
     public void before_ReadFeedTriggersTest() {
         client = getClientBuilder().buildAsyncClient();
         createdCollection = getSharedMultiPartitionCosmosContainer(client);
-        truncateCollection(createdCollection);
+        cleanUpContainer(createdCollection);
 
         for (int i = 0; i < 5; i++) {
             this.createdTriggers.add(this.createTriggers(createdCollection));
@@ -63,7 +63,7 @@ public class ReadFeedTriggersTest extends TestSuiteBase {
         waitIfNeededForReplicasToCatchUp(getClientBuilder());
     }
 
-    @AfterClass(groups = { "simple" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
+    @AfterClass(groups = { "query" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
     public void afterClass() {
         safeClose(client);
     }

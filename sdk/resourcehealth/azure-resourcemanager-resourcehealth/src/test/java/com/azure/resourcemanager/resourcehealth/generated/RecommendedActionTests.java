@@ -11,23 +11,22 @@ import org.junit.jupiter.api.Assertions;
 public final class RecommendedActionTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        RecommendedAction model =
-            BinaryData
-                .fromString(
-                    "{\"action\":\"ex\",\"actionUrl\":\"bhtqqrolfpfpsa\",\"_ActionUrl.Comment\":\"bquxigjy\",\"actionUrlText\":\"zjaoyfhrtxil\"}")
-                .toObject(RecommendedAction.class);
-        Assertions.assertEquals("ex", model.action());
-        Assertions.assertEquals("bhtqqrolfpfpsa", model.actionUrl());
-        Assertions.assertEquals("zjaoyfhrtxil", model.actionUrlText());
+        RecommendedAction model = BinaryData.fromString(
+            "{\"action\":\"lcuiywgqywgndr\",\"actionUrl\":\"nhzgpphrcgyn\",\"_ActionUrl.Comment\":\"cpecfvmmcoofs\",\"actionUrlText\":\"zevgb\"}")
+            .toObject(RecommendedAction.class);
+        Assertions.assertEquals("lcuiywgqywgndr", model.action());
+        Assertions.assertEquals("nhzgpphrcgyn", model.actionUrl());
+        Assertions.assertEquals("zevgb", model.actionUrlText());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        RecommendedAction model =
-            new RecommendedAction().withAction("ex").withActionUrl("bhtqqrolfpfpsa").withActionUrlText("zjaoyfhrtxil");
+        RecommendedAction model = new RecommendedAction().withAction("lcuiywgqywgndr")
+            .withActionUrl("nhzgpphrcgyn")
+            .withActionUrlText("zevgb");
         model = BinaryData.fromObject(model).toObject(RecommendedAction.class);
-        Assertions.assertEquals("ex", model.action());
-        Assertions.assertEquals("bhtqqrolfpfpsa", model.actionUrl());
-        Assertions.assertEquals("zjaoyfhrtxil", model.actionUrlText());
+        Assertions.assertEquals("lcuiywgqywgndr", model.action());
+        Assertions.assertEquals("nhzgpphrcgyn", model.actionUrl());
+        Assertions.assertEquals("zevgb", model.actionUrlText());
     }
 }

@@ -8,48 +8,74 @@ import com.azure.core.annotation.Fluent;
 import com.azure.core.management.Resource;
 import com.azure.core.management.SystemData;
 import com.azure.core.util.logging.ClientLogger;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.networkcloud.models.ExtendedLocation;
 import com.azure.resourcemanager.networkcloud.models.VolumeDetailedStatus;
 import com.azure.resourcemanager.networkcloud.models.VolumeProvisioningState;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/** Volume represents storage made available for use by resources running on the cluster. */
+/**
+ * Volume represents storage made available for use by resources running on the cluster.
+ */
 @Fluent
 public final class VolumeInner extends Resource {
     /*
-     * ExtendedLocation represents the Azure custom location where the resource will be created.
-     *
+     * Resource ETag.
+     */
+    private String etag;
+
+    /*
      * The extended location of the cluster associated with the resource.
      */
-    @JsonProperty(value = "extendedLocation", required = true)
     private ExtendedLocation extendedLocation;
 
     /*
-     * VolumeProperties represents properties of the volume resource.
-     *
      * The list of the resource properties.
      */
-    @JsonProperty(value = "properties", required = true)
     private VolumeProperties innerProperties = new VolumeProperties();
 
     /*
      * Azure Resource Manager metadata containing createdBy and modifiedBy information.
      */
-    @JsonProperty(value = "systemData", access = JsonProperty.Access.WRITE_ONLY)
     private SystemData systemData;
 
-    /** Creates an instance of VolumeInner class. */
+    /*
+     * The type of the resource.
+     */
+    private String type;
+
+    /*
+     * The name of the resource.
+     */
+    private String name;
+
+    /*
+     * Fully qualified resource Id for the resource.
+     */
+    private String id;
+
+    /**
+     * Creates an instance of VolumeInner class.
+     */
     public VolumeInner() {
     }
 
     /**
-     * Get the extendedLocation property: ExtendedLocation represents the Azure custom location where the resource will
-     * be created.
-     *
-     * <p>The extended location of the cluster associated with the resource.
-     *
+     * Get the etag property: Resource ETag.
+     * 
+     * @return the etag value.
+     */
+    public String etag() {
+        return this.etag;
+    }
+
+    /**
+     * Get the extendedLocation property: The extended location of the cluster associated with the resource.
+     * 
      * @return the extendedLocation value.
      */
     public ExtendedLocation extendedLocation() {
@@ -57,11 +83,8 @@ public final class VolumeInner extends Resource {
     }
 
     /**
-     * Set the extendedLocation property: ExtendedLocation represents the Azure custom location where the resource will
-     * be created.
-     *
-     * <p>The extended location of the cluster associated with the resource.
-     *
+     * Set the extendedLocation property: The extended location of the cluster associated with the resource.
+     * 
      * @param extendedLocation the extendedLocation value to set.
      * @return the VolumeInner object itself.
      */
@@ -71,10 +94,8 @@ public final class VolumeInner extends Resource {
     }
 
     /**
-     * Get the innerProperties property: VolumeProperties represents properties of the volume resource.
-     *
-     * <p>The list of the resource properties.
-     *
+     * Get the innerProperties property: The list of the resource properties.
+     * 
      * @return the innerProperties value.
      */
     private VolumeProperties innerProperties() {
@@ -83,21 +104,55 @@ public final class VolumeInner extends Resource {
 
     /**
      * Get the systemData property: Azure Resource Manager metadata containing createdBy and modifiedBy information.
-     *
+     * 
      * @return the systemData value.
      */
     public SystemData systemData() {
         return this.systemData;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Get the type property: The type of the resource.
+     * 
+     * @return the type value.
+     */
+    @Override
+    public String type() {
+        return this.type;
+    }
+
+    /**
+     * Get the name property: The name of the resource.
+     * 
+     * @return the name value.
+     */
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    /**
+     * Get the id property: Fully qualified resource Id for the resource.
+     * 
+     * @return the id value.
+     */
+    @Override
+    public String id() {
+        return this.id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public VolumeInner withLocation(String location) {
         super.withLocation(location);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public VolumeInner withTags(Map<String, String> tags) {
         super.withTags(tags);
@@ -105,9 +160,18 @@ public final class VolumeInner extends Resource {
     }
 
     /**
+     * Get the allocatedSizeMiB property: The allocated size of the volume in Mebibytes.
+     * 
+     * @return the allocatedSizeMiB value.
+     */
+    public Long allocatedSizeMiB() {
+        return this.innerProperties() == null ? null : this.innerProperties().allocatedSizeMiB();
+    }
+
+    /**
      * Get the attachedTo property: The list of resource IDs that attach the volume. It may include virtual machines and
      * Hybrid AKS clusters.
-     *
+     * 
      * @return the attachedTo value.
      */
     public List<String> attachedTo() {
@@ -116,7 +180,7 @@ public final class VolumeInner extends Resource {
 
     /**
      * Get the detailedStatus property: The more detailed status of the volume.
-     *
+     * 
      * @return the detailedStatus value.
      */
     public VolumeDetailedStatus detailedStatus() {
@@ -125,7 +189,7 @@ public final class VolumeInner extends Resource {
 
     /**
      * Get the detailedStatusMessage property: The descriptive message about the current detailed status.
-     *
+     * 
      * @return the detailedStatusMessage value.
      */
     public String detailedStatusMessage() {
@@ -134,7 +198,7 @@ public final class VolumeInner extends Resource {
 
     /**
      * Get the provisioningState property: The provisioning state of the volume.
-     *
+     * 
      * @return the provisioningState value.
      */
     public VolumeProvisioningState provisioningState() {
@@ -143,7 +207,7 @@ public final class VolumeInner extends Resource {
 
     /**
      * Get the serialNumber property: The unique identifier of the volume.
-     *
+     * 
      * @return the serialNumber value.
      */
     public String serialNumber() {
@@ -151,8 +215,8 @@ public final class VolumeInner extends Resource {
     }
 
     /**
-     * Get the sizeMiB property: The size of the allocation for this volume in Mebibytes.
-     *
+     * Get the sizeMiB property: The requested storage allocation for the volume in Mebibytes.
+     * 
      * @return the sizeMiB value.
      */
     public long sizeMiB() {
@@ -160,8 +224,8 @@ public final class VolumeInner extends Resource {
     }
 
     /**
-     * Set the sizeMiB property: The size of the allocation for this volume in Mebibytes.
-     *
+     * Set the sizeMiB property: The requested storage allocation for the volume in Mebibytes.
+     * 
      * @param sizeMiB the sizeMiB value to set.
      * @return the VolumeInner object itself.
      */
@@ -174,26 +238,104 @@ public final class VolumeInner extends Resource {
     }
 
     /**
+     * Get the storageApplianceId property: The resource ID of the storage appliance that hosts the volume.
+     * 
+     * @return the storageApplianceId value.
+     */
+    public String storageApplianceId() {
+        return this.innerProperties() == null ? null : this.innerProperties().storageApplianceId();
+    }
+
+    /**
+     * Set the storageApplianceId property: The resource ID of the storage appliance that hosts the volume.
+     * 
+     * @param storageApplianceId the storageApplianceId value to set.
+     * @return the VolumeInner object itself.
+     */
+    public VolumeInner withStorageApplianceId(String storageApplianceId) {
+        if (this.innerProperties() == null) {
+            this.innerProperties = new VolumeProperties();
+        }
+        this.innerProperties().withStorageApplianceId(storageApplianceId);
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (extendedLocation() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property extendedLocation in model VolumeInner"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Missing required property extendedLocation in model VolumeInner"));
         } else {
             extendedLocation().validate();
         }
         if (innerProperties() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property innerProperties in model VolumeInner"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Missing required property innerProperties in model VolumeInner"));
         } else {
             innerProperties().validate();
         }
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(VolumeInner.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("location", location());
+        jsonWriter.writeMapField("tags", tags(), (writer, element) -> writer.writeString(element));
+        jsonWriter.writeJsonField("extendedLocation", this.extendedLocation);
+        jsonWriter.writeJsonField("properties", this.innerProperties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of VolumeInner from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of VolumeInner if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the VolumeInner.
+     */
+    public static VolumeInner fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            VolumeInner deserializedVolumeInner = new VolumeInner();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedVolumeInner.id = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedVolumeInner.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedVolumeInner.type = reader.getString();
+                } else if ("location".equals(fieldName)) {
+                    deserializedVolumeInner.withLocation(reader.getString());
+                } else if ("tags".equals(fieldName)) {
+                    Map<String, String> tags = reader.readMap(reader1 -> reader1.getString());
+                    deserializedVolumeInner.withTags(tags);
+                } else if ("extendedLocation".equals(fieldName)) {
+                    deserializedVolumeInner.extendedLocation = ExtendedLocation.fromJson(reader);
+                } else if ("properties".equals(fieldName)) {
+                    deserializedVolumeInner.innerProperties = VolumeProperties.fromJson(reader);
+                } else if ("etag".equals(fieldName)) {
+                    deserializedVolumeInner.etag = reader.getString();
+                } else if ("systemData".equals(fieldName)) {
+                    deserializedVolumeInner.systemData = SystemData.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedVolumeInner;
+        });
+    }
 }

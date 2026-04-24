@@ -11,20 +11,19 @@ import org.junit.jupiter.api.Assertions;
 public final class CommitmentPlanAssociationTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CommitmentPlanAssociation model =
-            BinaryData
-                .fromString("{\"commitmentPlanId\":\"l\",\"commitmentPlanLocation\":\"uvfqawrlyxwj\"}")
+        CommitmentPlanAssociation model
+            = BinaryData.fromString("{\"commitmentPlanId\":\"bciqfouflm\",\"commitmentPlanLocation\":\"kzsmodm\"}")
                 .toObject(CommitmentPlanAssociation.class);
-        Assertions.assertEquals("l", model.commitmentPlanId());
-        Assertions.assertEquals("uvfqawrlyxwj", model.commitmentPlanLocation());
+        Assertions.assertEquals("bciqfouflm", model.commitmentPlanId());
+        Assertions.assertEquals("kzsmodm", model.commitmentPlanLocation());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CommitmentPlanAssociation model =
-            new CommitmentPlanAssociation().withCommitmentPlanId("l").withCommitmentPlanLocation("uvfqawrlyxwj");
+        CommitmentPlanAssociation model
+            = new CommitmentPlanAssociation().withCommitmentPlanId("bciqfouflm").withCommitmentPlanLocation("kzsmodm");
         model = BinaryData.fromObject(model).toObject(CommitmentPlanAssociation.class);
-        Assertions.assertEquals("l", model.commitmentPlanId());
-        Assertions.assertEquals("uvfqawrlyxwj", model.commitmentPlanLocation());
+        Assertions.assertEquals("bciqfouflm", model.commitmentPlanId());
+        Assertions.assertEquals("kzsmodm", model.commitmentPlanLocation());
     }
 }

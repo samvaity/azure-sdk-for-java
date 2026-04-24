@@ -147,6 +147,7 @@ public interface CosmosOperations {
      * @return the patched item
      */
     <T> T patch(Object id, PartitionKey partitionKey, Class<T> domainType, CosmosPatchOperations patchOperations, CosmosPatchItemRequestOptions options);
+
     /**
      * Inserts item
      *
@@ -157,6 +158,17 @@ public interface CosmosOperations {
      * @return the inserted item
      */
     <T> T insert(String containerName, T objectToSave, PartitionKey partitionKey);
+
+    /**
+     * Insert items using bulk operations.
+     *
+     * @param information must not be {@literal null}
+     * @param entities must not be {@literal null}
+     * @param <T> type class of domain type
+     * @param <S> type class of domain type
+     * @return the inserted item
+     */
+    <S extends T, T> Iterable<S> insertAll(CosmosEntityInformation<T, ?> information, Iterable<S> entities);
 
     /**
      * Inserts item
@@ -213,7 +225,17 @@ public interface CosmosOperations {
     <T> void deleteEntity(String containerName, T entity);
 
     /**
-     * Delete all items in a container
+     * Delete using a list of entities with bulk
+     *
+     * @param <T> type class of domain type
+     * @param <S> type class of domain type
+     * @param information must not be {@literal null}
+     * @param entities must not be {@literal null}
+     */
+    <S extends T, T> void deleteEntities(CosmosEntityInformation<T, ?> information, Iterable<S> entities);
+
+    /**
+     * Delete all items in a container. Uses bulk if possible.
      *
      * @param containerName the container name
      * @param domainType the domainType
@@ -228,7 +250,7 @@ public interface CosmosOperations {
     void deleteContainer(String containerName);
 
     /**
-     * Delete items matching query
+     * Delete items matching query. Uses bulk if possible.
      *
      * @param query the document query
      * @param domainType type class
@@ -346,6 +368,15 @@ public interface CosmosOperations {
     <T> long count(SqlQuerySpec querySpec, String containerName);
 
     /**
+     * Sum
+     *
+     * @param querySpec the document query spec
+     * @param containerName the container name
+     * @return sum result
+     */
+    long sum(SqlQuerySpec querySpec, String containerName);
+
+    /**
      * To get converter
      *
      * @return MappingCosmosConverter
@@ -386,5 +417,4 @@ public interface CosmosOperations {
      * @return the Page
      */
     <T> Page<T> runPaginationQuery(SqlQuerySpec querySpec, Pageable pageable, Class<?> domainType, Class<T> returnType);
-
 }

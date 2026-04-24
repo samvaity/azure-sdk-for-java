@@ -3,26 +3,27 @@
 
 package com.azure.developer.loadtesting;
 
-import java.io.File;
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.azure.core.http.rest.RequestOptions;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.polling.LongRunningOperationStatus;
 import com.azure.core.util.polling.PollResponse;
 import com.azure.core.util.polling.SyncPoller;
+import com.azure.developer.loadtesting.models.LoadTestRun;
+import com.azure.developer.loadtesting.models.LoadTestingFileType;
 import com.azure.identity.DefaultAzureCredentialBuilder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.azure.json.JsonProviders;
+import com.azure.json.JsonReader;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Map;
 
 /**
- * Sample demonstrates how to uploading and validating a test file, and running a test run.
+ * Sample demonstrates how to upload and validate a test file and running a test run.
  *
- * Authenticates with the load testing resource and shows how to uploading and validating a test file, and running
- * a test run in a given resource.
+ * Authenticates with the load testing resource and shows how to upload and validate a test file, run a test run
+ * in a given resource.
  *
  * @throws ClientAuthenticationException - when the credentials have insufficient permissions for load test resource.
  * @throws ResourceNotFoundException - when test with `testId` does not exist when uploading file.
@@ -31,9 +32,9 @@ public final class LongRunningOperations {
     public void beginUploadTestFile() {
         // BEGIN: java-longRunningOperations-sample-beginUploadTestFile
         LoadTestAdministrationClient client = new LoadTestAdministrationClientBuilder()
-                .credential(new DefaultAzureCredentialBuilder().build())
-                .endpoint("<endpoint>")
-                .buildClient();
+            .credential(new DefaultAzureCredentialBuilder().build())
+            .endpoint("<endpoint>")
+            .buildClient();
 
         String inputTestId = "12345678-1234-1234-1234-123456789abc";
         String inputFileName = "input-test-file.jmx";
@@ -43,18 +44,22 @@ public final class LongRunningOperations {
         Duration pollInterval = Duration.ofSeconds(1);
 
         RequestOptions reqOpts = new RequestOptions()
-                .addQueryParam("fileType", "JMX_FILE");
+            .addQueryParam("fileType", LoadTestingFileType.TEST_SCRIPT.toString());
 
         SyncPoller<BinaryData, BinaryData> poller = client.beginUploadTestFile(inputTestId, inputFileName, fileData, reqOpts);
         poller = poller.setPollInterval(pollInterval);
 
         PollResponse<BinaryData> pollResponse = poller.poll();
-        while (pollResponse.getStatus() == LongRunningOperationStatus.IN_PROGRESS || pollResponse.getStatus() == LongRunningOperationStatus.NOT_STARTED) {
-            try {
-                JsonNode file = new ObjectMapper().readTree(pollResponse.getValue().toString());
-                String validationStatus = file.get("validationStatus").asText();
-                System.out.println("Validation Status: " + validationStatus.toString());
-            } catch (JsonProcessingException e) {
+
+        while (pollResponse.getStatus() == LongRunningOperationStatus.IN_PROGRESS
+            || pollResponse.getStatus() == LongRunningOperationStatus.NOT_STARTED) {
+
+            try (JsonReader jsonReader = JsonProviders.createReader(pollResponse.getValue().toBytes())) {
+                Map<String, Object> jsonTree = jsonReader.readMap(JsonReader::readUntyped);
+
+                String validationStatus = jsonTree.get("validationStatus").toString();
+                System.out.println("Validation Status: " + validationStatus);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -68,16 +73,18 @@ public final class LongRunningOperations {
         }
 
         poller.waitForCompletion();
+
         BinaryData fileBinary = poller.getFinalResult();
 
-        try {
-            JsonNode file = new ObjectMapper().readTree(fileBinary.toString());
-            String url = file.get("url").asText();
-            String fileName = file.get("fileName").asText();
-            String fileType = file.get("fileType").asText();
-            String validationStatus = file.get("validationStatus").asText();
+        try (JsonReader jsonReader = JsonProviders.createReader(fileBinary.toBytes())) {
+            Map<String, Object> jsonTree = jsonReader.readMap(JsonReader::readUntyped);
+
+            String url = jsonTree.get("url").toString();
+            String fileName = jsonTree.get("fileName").toString();
+            String fileType = jsonTree.get("fileType").toString();
+            String validationStatus = jsonTree.get("validationStatus").toString();
             System.out.println(String.format("%s\t%s\t%s\t%s", fileName, fileType, url, validationStatus));
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         // END: java-longRunningOperations-sample-beginUploadTestFile
@@ -86,29 +93,31 @@ public final class LongRunningOperations {
     public void beginTestRun() {
         // BEGIN: java-longRunningOperations-sample-beginTestRun
         LoadTestRunClient client = new LoadTestRunClientBuilder()
-                .credential(new DefaultAzureCredentialBuilder().build())
-                .endpoint("<endpoint>")
-                .buildClient();
+            .credential(new DefaultAzureCredentialBuilder().build())
+            .endpoint("<endpoint>")
+            .buildClient();
 
         String inputTestRunId = "12345678-1234-1234-1234-123456789abc";
         String inputTestId = "87654321-1234-1234-1234-123456789abc";
 
-        Map<String, Object> testRunMap = new HashMap<String, Object>();
-        testRunMap.put("testId", inputTestId);
-        testRunMap.put("displayName", "Sample Test Run");
-        testRunMap.put("description", "Java SDK Sample Test Run");
+        LoadTestRun testRun = new LoadTestRun()
+            .setTestId(inputTestId)
+            .setDisplayName("Sample Test Run")
+            .setDescription("Java SDK Sample Test Run");
 
         Duration pollInterval = Duration.ofSeconds(5);
 
-        BinaryData inputTestRunBinary = BinaryData.fromObject(testRunMap);
-
-        SyncPoller<BinaryData, BinaryData> poller = client.beginTestRun(inputTestRunId, inputTestRunBinary, null);
+        SyncPoller<LoadTestRun, LoadTestRun> poller = client.beginTestRun(inputTestRunId, testRun, null);
         poller = poller.setPollInterval(pollInterval);
 
-        PollResponse<BinaryData> pollResponse = poller.poll();
-        while (pollResponse.getStatus() == LongRunningOperationStatus.IN_PROGRESS || pollResponse.getStatus() == LongRunningOperationStatus.NOT_STARTED) {
-            BinaryData testRunBinary = pollResponse.getValue();
-            System.out.println("Test Run all info: " + testRunBinary.toString());
+        PollResponse<LoadTestRun> pollResponse = poller.poll();
+
+        while (pollResponse.getStatus() == LongRunningOperationStatus.IN_PROGRESS
+            || pollResponse.getStatus() == LongRunningOperationStatus.NOT_STARTED) {
+
+            LoadTestRun testRunResponse = pollResponse.getValue();
+
+            System.out.println("Test Run all info: " + testRunResponse.toString());
 
             try {
                 Thread.sleep(pollInterval.toMillis());
@@ -120,17 +129,13 @@ public final class LongRunningOperations {
         }
 
         poller.waitForCompletion();
-        BinaryData testRunBinary = poller.getFinalResult();
+        LoadTestRun testRunResponse = poller.getFinalResult();
 
-        try {
-            JsonNode file = new ObjectMapper().readTree(testRunBinary.toString());
-            String testId = file.get("testId").asText();
-            String testRunId = file.get("testRunId").asText();
-            String status = file.get("status").asText();
-            System.out.println(String.format("%s\t%s\t%s", testId, testRunId, status));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        String testId = testRunResponse.getTestId();
+        String testRunId = testRunResponse.getTestRunId();
+        String status = testRunResponse.getStatus().toString();
+
+        System.out.println(String.format("%s\t%s\t%s", testId, testRunId, status));
         // END: java-longRunningOperations-sample-beginTestRun
     }
 }

@@ -2,6 +2,8 @@
 // Licensed under the MIT License.
 
 /**
- * Package containing internal models used by Azure Security Key Vault Keys library.
+ * <!-- @formatter:off -->
+ * Package containing the implementation data models for Keys clients. The Key Vault clients perform cryptographic key
+ * operations and vault operations against the Key Vault service.
  */
 package com.azure.security.keyvault.keys.implementation.models;

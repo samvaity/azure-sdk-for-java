@@ -20,7 +20,7 @@ public class CreateIndexerExample {
     /**
      * This example shows how to create a new Indexer in a Cognitive Search Service.
      * <p>
-     * From the Azure portal, get your Azure Cognitive Search service URL and API key,
+     * From the Azure portal, get your Azure AI Search service URL and API key,
      * and set the values of these environment variables:
      */
     private static final String ENDPOINT = Configuration.getGlobalConfiguration().get("AZURE_COGNITIVE_SEARCH_ENDPOINT");
@@ -60,17 +60,15 @@ public class CreateIndexerExample {
             .setFieldMappings(fieldMappings)
             .setSchedule(indexingSchedule);
 
-        System.out.println(String.format("Creating Indexer: %s", indexer.getName()));
-        Response<SearchIndexer> response = searchIndexerAsyncClient.createOrUpdateIndexerWithResponse(
-            indexer, false
-        ).block();
+        System.out.printf("Creating Indexer: %s%n", indexer.getName());
+        Response<SearchIndexer> response = searchIndexerAsyncClient.createOrUpdateIndexerWithResponse(indexer, null)
+            .block();
 
         if (response != null) {
-            System.out.println(String.format("Response code: %s", response.getStatusCode()));
+            System.out.printf("Response code: %s%n", response.getStatusCode());
 
             SearchIndexer createdIndexer = response.getValue();
-            System.out.println(String
-                .format("Created indexer name: %s, ETag: %s", createdIndexer.getName(), createdIndexer.getETag()));
+            System.out.printf("Created indexer name: %s, ETag: %s%n", createdIndexer.getName(), createdIndexer.getETag());
         }
     }
 }

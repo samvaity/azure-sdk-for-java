@@ -49,6 +49,10 @@ import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNo
 @JsonFilter("RntbdToken")
 final class RntbdRequestHeaders extends RntbdTokenStream<RntbdRequestHeader> {
 
+    private static ImplementationBridgeHelpers.PriorityLevelHelper.PriorityLevelAccessor priorityLevelAccessor() {
+        return ImplementationBridgeHelpers.PriorityLevelHelper.getPriorityLevelAccessor();
+    }
+
     // region Fields
 
     private static final String URL_TRIM = "/";
@@ -68,13 +72,20 @@ final class RntbdRequestHeaders extends RntbdTokenStream<RntbdRequestHeader> {
         final byte[] content = request.getContentAsByteArray();
 
         this.getPayloadPresent().setValue(content != null && content.length > 0);
-        this.getReplicaPath().setValue(args.replicaPath());
-        this.getTransportRequestID().setValue(args.transportRequestId());
+
+        RntbdToken replicaPathToken = this.getReplicaPath();
+        if (replicaPathToken != null) {
+            replicaPathToken.setValue(args.replicaPath());
+        }
+
+        RntbdToken transportRequestIDToken = this.getTransportRequestID();
+        if (transportRequestIDToken != null) {
+            transportRequestIDToken.setValue(args.transportRequestId());
+        }
 
         final Map<String, String> headers = request.getHeaders();
 
         // Special-case headers
-
         this.addAimHeader(headers);
         this.addAllowScanOnQuery(headers);
         this.addBinaryIdIfPresent(headers);
@@ -84,7 +95,7 @@ final class RntbdRequestHeaders extends RntbdTokenStream<RntbdRequestHeader> {
         this.addCollectionRemoteStorageSecurityIdentifier(headers);
         this.addConsistencyLevelHeader(headers);
         this.addContentSerializationFormat(headers);
-        this.addContinuationToken(request);
+        this.addContinuationToken(request, headers);
         this.addDateHeader(headers);
         this.addDisableRUPerMinuteUsage(headers);
         this.addEmitVerboseTracesInQuery(headers);
@@ -124,6 +135,10 @@ final class RntbdRequestHeaders extends RntbdTokenStream<RntbdRequestHeader> {
         this.addSDKSupportedCapabilities(headers);
         this.addChangeFeedWireFormatVersion(headers);
         this.addPriorityLevel(headers);
+        this.addGlobalDatabaseAccountName(headers);
+        this.addThroughputBucket(headers);
+        this.addPopulateQueryAdvice(headers);
+        this.addHubRegionProcessingOnly(headers);
 
         // Normal headers (Strings, Ints, Longs, etc.)
 
@@ -177,7 +192,7 @@ final class RntbdRequestHeaders extends RntbdTokenStream<RntbdRequestHeader> {
     }
 
     private RntbdRequestHeaders(ByteBuf in) {
-        super(RntbdRequestHeader.set, RntbdRequestHeader.map, in);
+        super(RntbdRequestHeader.set, RntbdRequestHeader.map, in, RntbdRequestHeader.class);
     }
 
     // endregion
@@ -282,6 +297,16 @@ final class RntbdRequestHeaders extends RntbdTokenStream<RntbdRequestHeader> {
     }
 
     private RntbdToken getPriorityLevel() { return this.get(RntbdRequestHeader.PriorityLevel); }
+
+    private RntbdToken getThroughputBucket() { return this.get(RntbdRequestHeader.ThroughputBucket); }
+
+    private RntbdToken getPopulateQueryAdvice() { return this.get(RntbdRequestHeader.PopulateQueryAdvice); }
+
+    private RntbdToken getHubRegionProcessingOnly() { return this.get(RntbdRequestHeader.HubRegionProcessingOnly); }
+
+    private RntbdToken getGlobalDatabaseAccountName() {
+        return this.get(RntbdRequestHeader.GlobalDatabaseAccountName);
+    }
 
     private RntbdToken getDatabaseName() {
         return this.get(RntbdRequestHeader.DatabaseName);
@@ -739,8 +764,12 @@ final class RntbdRequestHeaders extends RntbdTokenStream<RntbdRequestHeader> {
         }
     }
 
-    private void addContinuationToken(final RxDocumentServiceRequest request) {
-        final String value = request.getContinuation();
+    private void addContinuationToken(final RxDocumentServiceRequest request, final Map<String, String> headers) {
+        String value = request.getContinuation();
+        if (StringUtils.isEmpty(value)) {
+            value = headers.get(HttpHeaders.CONTINUATION);
+        }
+
         if (StringUtils.isNotEmpty(value)) {
             this.getContinuationToken().setValue(value);
         }
@@ -768,11 +797,43 @@ final class RntbdRequestHeaders extends RntbdTokenStream<RntbdRequestHeader> {
             }
 
             this.getPriorityLevel().setValue(
-                ImplementationBridgeHelpers
-                    .PriorityLevelHelper
-                    .getPriorityLevelAccessor()
+                priorityLevelAccessor()
                     .getPriorityValue(priorityLevel)
             );
+        }
+    }
+
+    private void addThroughputBucket(final Map<String, String> headers) {
+        final String value = headers.get(HttpHeaders.THROUGHPUT_BUCKET);
+
+        if (StringUtils.isNotEmpty(value)) {
+            final int throughputBucket = Integer.valueOf(value);
+            this.getThroughputBucket().setValue((byte)throughputBucket);
+        }
+    }
+
+    private void addPopulateQueryAdvice(final Map<String, String> headers) {
+        final String value = headers.get(HttpHeaders.POPULATE_QUERY_ADVICE);
+        if (StringUtils.isNotEmpty(value)) {
+            this.getPopulateQueryAdvice().setValue(Boolean.parseBoolean(value));
+        }
+    }
+
+    private void addHubRegionProcessingOnly(final Map<String, String> headers) {
+        final String value = headers.get(HttpHeaders.HUB_REGION_PROCESSING_ONLY);
+
+        if (StringUtils.isNotEmpty(value)) {
+            final boolean hubRegionProcessingOnly = Boolean.parseBoolean(value);
+            this.getHubRegionProcessingOnly().setValue(hubRegionProcessingOnly);
+        }
+    }
+
+    private void addGlobalDatabaseAccountName(final Map<String, String> headers)
+    {
+        final String value = headers.get(HttpHeaders.GLOBAL_DATABASE_ACCOUNT_NAME);
+
+        if (StringUtils.isNotEmpty(value)) {
+            this.getGlobalDatabaseAccountName().setValue(value);
         }
     }
 
@@ -1111,7 +1172,10 @@ final class RntbdRequestHeaders extends RntbdTokenStream<RntbdRequestHeader> {
 
         if (StringUtils.isNotEmpty(value)) {
             // Name-based can also have ResourceId because gateway might have generated it
-            this.getResourceId().setValue(ResourceId.parse(request.getResourceType(), value));
+            RntbdToken requestIdToken = this.getResourceId();
+            if (requestIdToken != null) {
+                requestIdToken.setValue(ResourceId.parse(request.getResourceType(), value));
+            }
         }
 
         if (request.getIsNameBased()) {

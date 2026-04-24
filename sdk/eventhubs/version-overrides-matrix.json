@@ -1,13 +1,16 @@
 {
   "matrix": {
     "Agent": {
-      "ubuntu-20.04": { "OSVmImage": "MMSUbuntu20.04", "Pool": "azsdk-pool-mms-ubuntu-2004-general" }
+      "ubuntu-24.04": { "OSVmImage": "env:LINUXVMIMAGE", "Pool": "env:LINUXPOOL" }
     },
-    "JavaTestVersion": "1.17",
+    "JavaTestVersion": "1.25",
     "TestGoals": "surefire:test",
-    "VersionOverrides": [
+    "VersionOverride": [
       "reactor_2020",
-      "reactor_2022"
+      "reactor_2022",
+      "reactor_2023",
+      "reactor_2024",
+      "reactor_2025"
     ],
     "TestVersionSupport": true
   }

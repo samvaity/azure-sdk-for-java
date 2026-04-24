@@ -5,55 +5,79 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Avro dataset. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("Avro")
-@JsonFlatten
+/**
+ * Avro dataset.
+ */
 @Fluent
 public class AvroDataset extends Dataset {
     /*
+     * Type of dataset.
+     */
+    @Generated
+    private String type = "Avro";
+
+    /*
      * The location of the avro storage.
      */
-    @JsonProperty(value = "typeProperties.location")
+    @Generated
     private DatasetLocation location;
 
     /*
      * A string from AvroCompressionCodecEnum or an expression
      */
-    @JsonProperty(value = "typeProperties.avroCompressionCodec")
+    @Generated
     private Object avroCompressionCodec;
 
     /*
      * The avroCompressionLevel property.
      */
-    @JsonProperty(value = "typeProperties.avroCompressionLevel")
+    @Generated
     private Integer avroCompressionLevel;
 
-    /** Creates an instance of AvroDataset class. */
-    public AvroDataset() {}
+    /**
+     * Creates an instance of AvroDataset class.
+     */
+    @Generated
+    public AvroDataset() {
+    }
+
+    /**
+     * Get the type property: Type of dataset.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the location property: The location of the avro storage.
-     *
+     * 
      * @return the location value.
      */
+    @Generated
     public DatasetLocation getLocation() {
         return this.location;
     }
 
     /**
      * Set the location property: The location of the avro storage.
-     *
+     * 
      * @param location the location value to set.
      * @return the AvroDataset object itself.
      */
+    @Generated
     public AvroDataset setLocation(DatasetLocation location) {
         this.location = location;
         return this;
@@ -61,19 +85,21 @@ public class AvroDataset extends Dataset {
 
     /**
      * Get the avroCompressionCodec property: A string from AvroCompressionCodecEnum or an expression.
-     *
+     * 
      * @return the avroCompressionCodec value.
      */
+    @Generated
     public Object getAvroCompressionCodec() {
         return this.avroCompressionCodec;
     }
 
     /**
      * Set the avroCompressionCodec property: A string from AvroCompressionCodecEnum or an expression.
-     *
+     * 
      * @param avroCompressionCodec the avroCompressionCodec value to set.
      * @return the AvroDataset object itself.
      */
+    @Generated
     public AvroDataset setAvroCompressionCodec(Object avroCompressionCodec) {
         this.avroCompressionCodec = avroCompressionCodec;
         return this;
@@ -81,70 +107,195 @@ public class AvroDataset extends Dataset {
 
     /**
      * Get the avroCompressionLevel property: The avroCompressionLevel property.
-     *
+     * 
      * @return the avroCompressionLevel value.
      */
+    @Generated
     public Integer getAvroCompressionLevel() {
         return this.avroCompressionLevel;
     }
 
     /**
      * Set the avroCompressionLevel property: The avroCompressionLevel property.
-     *
+     * 
      * @param avroCompressionLevel the avroCompressionLevel value to set.
      * @return the AvroDataset object itself.
      */
+    @Generated
     public AvroDataset setAvroCompressionLevel(Integer avroCompressionLevel) {
         this.avroCompressionLevel = avroCompressionLevel;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AvroDataset setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AvroDataset setStructure(Object structure) {
         super.setStructure(structure);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AvroDataset setSchema(Object schema) {
         super.setSchema(schema);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AvroDataset setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         super.setLinkedServiceName(linkedServiceName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AvroDataset setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AvroDataset setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AvroDataset setFolder(DatasetFolder folder) {
         super.setFolder(folder);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("linkedServiceName", getLinkedServiceName());
+        jsonWriter.writeStringField("description", getDescription());
+        if (getStructure() != null) {
+            jsonWriter.writeUntypedField("structure", getStructure());
+        }
+        if (getSchema() != null) {
+            jsonWriter.writeUntypedField("schema", getSchema());
+        }
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeJsonField("folder", getFolder());
+        jsonWriter.writeStringField("type", this.type);
+        if (location != null || avroCompressionCodec != null || avroCompressionLevel != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeJsonField("location", this.location);
+            if (this.avroCompressionCodec != null) {
+                jsonWriter.writeUntypedField("avroCompressionCodec", this.avroCompressionCodec);
+            }
+            jsonWriter.writeNumberField("avroCompressionLevel", this.avroCompressionLevel);
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AvroDataset from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AvroDataset if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AvroDataset.
+     */
+    @Generated
+    public static AvroDataset fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AvroDataset deserializedAvroDataset = new AvroDataset();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("linkedServiceName".equals(fieldName)) {
+                    deserializedAvroDataset.setLinkedServiceName(LinkedServiceReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedAvroDataset.setDescription(reader.getString());
+                } else if ("structure".equals(fieldName)) {
+                    deserializedAvroDataset.setStructure(reader.readUntyped());
+                } else if ("schema".equals(fieldName)) {
+                    deserializedAvroDataset.setSchema(reader.readUntyped());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedAvroDataset.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedAvroDataset.setAnnotations(annotations);
+                } else if ("folder".equals(fieldName)) {
+                    deserializedAvroDataset.setFolder(DatasetFolder.fromJson(reader));
+                } else if ("type".equals(fieldName)) {
+                    deserializedAvroDataset.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("location".equals(fieldName)) {
+                            deserializedAvroDataset.location = DatasetLocation.fromJson(reader);
+                        } else if ("avroCompressionCodec".equals(fieldName)) {
+                            deserializedAvroDataset.avroCompressionCodec = reader.readUntyped();
+                        } else if ("avroCompressionLevel".equals(fieldName)) {
+                            deserializedAvroDataset.avroCompressionLevel = reader.getNullable(JsonReader::getInt);
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAvroDataset.setAdditionalProperties(additionalProperties);
+
+            return deserializedAvroDataset;
+        });
     }
 }

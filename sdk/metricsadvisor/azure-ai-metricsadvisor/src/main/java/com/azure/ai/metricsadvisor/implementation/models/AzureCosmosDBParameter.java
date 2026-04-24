@@ -5,53 +5,66 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The AzureCosmosDBParameter model. */
+/**
+ * The AzureCosmosDBParameter model.
+ */
 @Fluent
-public final class AzureCosmosDBParameter {
+public final class AzureCosmosDBParameter implements JsonSerializable<AzureCosmosDBParameter> {
     /*
      * The connection string of this Azure CosmosDB
      */
-    @JsonProperty(value = "connectionString")
+    @Generated
     private String connectionString;
 
     /*
      * The statement to query this collection
      */
-    @JsonProperty(value = "sqlQuery", required = true)
+    @Generated
     private String sqlQuery;
 
     /*
      * A database name in this Azure CosmosDB
      */
-    @JsonProperty(value = "database", required = true)
+    @Generated
     private String database;
 
     /*
      * A collection id in this database
      */
-    @JsonProperty(value = "collectionId", required = true)
+    @Generated
     private String collectionId;
 
-    /** Creates an instance of AzureCosmosDBParameter class. */
-    public AzureCosmosDBParameter() {}
+    /**
+     * Creates an instance of AzureCosmosDBParameter class.
+     */
+    @Generated
+    public AzureCosmosDBParameter() {
+    }
 
     /**
      * Get the connectionString property: The connection string of this Azure CosmosDB.
-     *
+     * 
      * @return the connectionString value.
      */
+    @Generated
     public String getConnectionString() {
         return this.connectionString;
     }
 
     /**
      * Set the connectionString property: The connection string of this Azure CosmosDB.
-     *
+     * 
      * @param connectionString the connectionString value to set.
      * @return the AzureCosmosDBParameter object itself.
      */
+    @Generated
     public AzureCosmosDBParameter setConnectionString(String connectionString) {
         this.connectionString = connectionString;
         return this;
@@ -59,19 +72,21 @@ public final class AzureCosmosDBParameter {
 
     /**
      * Get the sqlQuery property: The statement to query this collection.
-     *
+     * 
      * @return the sqlQuery value.
      */
+    @Generated
     public String getSqlQuery() {
         return this.sqlQuery;
     }
 
     /**
      * Set the sqlQuery property: The statement to query this collection.
-     *
+     * 
      * @param sqlQuery the sqlQuery value to set.
      * @return the AzureCosmosDBParameter object itself.
      */
+    @Generated
     public AzureCosmosDBParameter setSqlQuery(String sqlQuery) {
         this.sqlQuery = sqlQuery;
         return this;
@@ -79,19 +94,21 @@ public final class AzureCosmosDBParameter {
 
     /**
      * Get the database property: A database name in this Azure CosmosDB.
-     *
+     * 
      * @return the database value.
      */
+    @Generated
     public String getDatabase() {
         return this.database;
     }
 
     /**
      * Set the database property: A database name in this Azure CosmosDB.
-     *
+     * 
      * @param database the database value to set.
      * @return the AzureCosmosDBParameter object itself.
      */
+    @Generated
     public AzureCosmosDBParameter setDatabase(String database) {
         this.database = database;
         return this;
@@ -99,21 +116,71 @@ public final class AzureCosmosDBParameter {
 
     /**
      * Get the collectionId property: A collection id in this database.
-     *
+     * 
      * @return the collectionId value.
      */
+    @Generated
     public String getCollectionId() {
         return this.collectionId;
     }
 
     /**
      * Set the collectionId property: A collection id in this database.
-     *
+     * 
      * @param collectionId the collectionId value to set.
      * @return the AzureCosmosDBParameter object itself.
      */
+    @Generated
     public AzureCosmosDBParameter setCollectionId(String collectionId) {
         this.collectionId = collectionId;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("sqlQuery", this.sqlQuery);
+        jsonWriter.writeStringField("database", this.database);
+        jsonWriter.writeStringField("collectionId", this.collectionId);
+        jsonWriter.writeStringField("connectionString", this.connectionString);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureCosmosDBParameter from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureCosmosDBParameter if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AzureCosmosDBParameter.
+     */
+    @Generated
+    public static AzureCosmosDBParameter fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureCosmosDBParameter deserializedAzureCosmosDBParameter = new AzureCosmosDBParameter();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sqlQuery".equals(fieldName)) {
+                    deserializedAzureCosmosDBParameter.sqlQuery = reader.getString();
+                } else if ("database".equals(fieldName)) {
+                    deserializedAzureCosmosDBParameter.database = reader.getString();
+                } else if ("collectionId".equals(fieldName)) {
+                    deserializedAzureCosmosDBParameter.collectionId = reader.getString();
+                } else if ("connectionString".equals(fieldName)) {
+                    deserializedAzureCosmosDBParameter.connectionString = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedAzureCosmosDBParameter;
+        });
     }
 }

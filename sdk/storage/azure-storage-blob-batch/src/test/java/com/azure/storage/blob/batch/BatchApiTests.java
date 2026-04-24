@@ -20,14 +20,15 @@ import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
 import com.azure.storage.blob.specialized.BlobClientBase;
 import com.azure.storage.blob.specialized.BlockBlobClient;
 import com.azure.storage.blob.specialized.PageBlobClient;
+import com.azure.storage.common.Utility;
 import com.azure.storage.common.sas.AccountSasPermission;
 import com.azure.storage.common.sas.AccountSasResourceType;
 import com.azure.storage.common.sas.AccountSasService;
 import com.azure.storage.common.sas.AccountSasSignatureValues;
 import com.azure.storage.common.sas.SasProtocol;
+import com.azure.storage.common.test.shared.extensions.RequiredServiceVersion;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -102,10 +103,12 @@ public class BatchApiTests extends BlobBatchTestBase {
         String blobName2 = generateBlobName();
         BlobBatch batch = batchClient.getBlobBatch();
         BlobContainerClient containerClient = primaryBlobServiceClient.createBlobContainer(containerName);
-        containerClient.getBlobClient(blobName1).getBlockBlobClient().upload(DATA.getDefaultInputStream(),
-            DATA.getDefaultDataSize());
-        containerClient.getBlobClient(blobName2).getBlockBlobClient().upload(DATA.getDefaultInputStream(),
-            DATA.getDefaultDataSize());
+        containerClient.getBlobClient(blobName1)
+            .getBlockBlobClient()
+            .upload(DATA.getDefaultInputStream(), DATA.getDefaultDataSize());
+        containerClient.getBlobClient(blobName2)
+            .getBlockBlobClient()
+            .upload(DATA.getDefaultInputStream(), DATA.getDefaultDataSize());
 
         Response<Void> response1 = batch.setBlobAccessTier(containerName, blobName1, AccessTier.HOT);
         Response<Void> response2 = batch.setBlobAccessTier(containerName, blobName2, AccessTier.COOL);
@@ -115,7 +118,31 @@ public class BatchApiTests extends BlobBatchTestBase {
         assertEquals(200, response2.getStatusCode());
     }
 
-    @DisabledIf("olderThan20191212ServiceVersion")
+    @Test
+    @RequiredServiceVersion(clazz = BlobServiceVersion.class, min = "2026-02-06")
+    public void setBlobAccessTierSmart() {
+        String containerName = generateContainerName();
+        String blobName1 = generateBlobName();
+        String blobName2 = generateBlobName();
+        BlobBatchClient premiumBatchClient = new BlobBatchClientBuilder(premiumStorageBlobServiceClient).buildClient();
+        BlobBatch batch = premiumBatchClient.getBlobBatch();
+        BlobContainerClient containerClient = premiumStorageBlobServiceClient.createBlobContainer(containerName);
+        containerClient.getBlobClient(blobName1)
+            .getBlockBlobClient()
+            .upload(DATA.getDefaultInputStream(), DATA.getDefaultDataSize());
+        containerClient.getBlobClient(blobName2)
+            .getBlockBlobClient()
+            .upload(DATA.getDefaultInputStream(), DATA.getDefaultDataSize());
+
+        Response<Void> response1 = batch.setBlobAccessTier(containerName, blobName1, AccessTier.SMART);
+        Response<Void> response2 = batch.setBlobAccessTier(containerName, blobName2, AccessTier.SMART);
+        premiumBatchClient.submitBatch(batch);
+
+        assertEquals(200, response1.getStatusCode());
+        assertEquals(200, response2.getStatusCode());
+    }
+
+    @RequiredServiceVersion(clazz = BlobServiceVersion.class, min = "2019-12-12")
     @ParameterizedTest
     @MethodSource("setTierRehydratePrioritySupplier")
     public void setTierRehydratePriority(RehydratePriority rehydratePriority) {
@@ -127,8 +154,8 @@ public class BatchApiTests extends BlobBatchTestBase {
         blobClient1.getBlockBlobClient().upload(DATA.getDefaultInputStream(), DATA.getDefaultDataSize());
         blobClient1.setAccessTier(AccessTier.ARCHIVE);
 
-        Response<Void> response1 = batch.setBlobAccessTier(
-            new BlobBatchSetBlobAccessTierOptions(blobClient1.getBlobUrl(), AccessTier.HOT)
+        Response<Void> response1
+            = batch.setBlobAccessTier(new BlobBatchSetBlobAccessTierOptions(blobClient1.getBlobUrl(), AccessTier.HOT)
                 .setPriority(rehydratePriority));
         batchClient.submitBatch(batch);
 
@@ -140,7 +167,7 @@ public class BatchApiTests extends BlobBatchTestBase {
         return Stream.of(RehydratePriority.STANDARD, RehydratePriority.HIGH);
     }
 
-    @DisabledIf("olderThan20191212ServiceVersion")
+    @RequiredServiceVersion(clazz = BlobServiceVersion.class, min = "2019-12-12")
     @ParameterizedTest
     @MethodSource("setTierAcSupplier")
     public void setTierAc(String leaseId, String tags) {
@@ -150,20 +177,18 @@ public class BatchApiTests extends BlobBatchTestBase {
         blobClient1.getBlockBlobClient().upload(DATA.getDefaultBinaryData());
         blobClient1.setTags(Collections.singletonMap("foo", "bar"));
 
-        Response<Void> response1 = batch.setBlobAccessTier(new BlobBatchSetBlobAccessTierOptions(
-            blobClient1.getBlobUrl(), AccessTier.HOT)
-            .setLeaseId(setupBlobLeaseCondition(blobClient1, leaseId)).setTagsConditions(tags));
+        Response<Void> response1
+            = batch.setBlobAccessTier(new BlobBatchSetBlobAccessTierOptions(blobClient1.getBlobUrl(), AccessTier.HOT)
+                .setLeaseId(setupBlobLeaseCondition(blobClient1, leaseId))
+                .setTagsConditions(tags));
         batchClient.submitBatch(batch);
 
         assertEquals(200, response1.getStatusCode());
     }
 
     private static Stream<Arguments> setTierAcSupplier() {
-        return Stream.of(
-            Arguments.of(null, null),
-            Arguments.of(RECEIVED_LEASE_ID, null),
-            Arguments.of(null, "\"foo\" = 'bar'")
-        );
+        return Stream.of(Arguments.of(null, null), Arguments.of(RECEIVED_LEASE_ID, null),
+            Arguments.of(null, "\"foo\" = 'bar'"));
     }
 
     @ParameterizedTest
@@ -174,12 +199,12 @@ public class BatchApiTests extends BlobBatchTestBase {
         BlobClient blobClient1 = containerClient.getBlobClient(generateBlobName());
         blobClient1.getBlockBlobClient().upload(DATA.getDefaultBinaryData());
 
-        batch.setBlobAccessTier(new BlobBatchSetBlobAccessTierOptions(blobClient1.getBlobUrl(), AccessTier.HOT)
-            .setLeaseId(leaseId).setTagsConditions(tags));
+        batch.setBlobAccessTier(
+            new BlobBatchSetBlobAccessTierOptions(blobClient1.getBlobUrl(), AccessTier.HOT).setLeaseId(leaseId)
+                .setTagsConditions(tags));
 
         assertThrows(BlobBatchStorageException.class, () -> batchClient.submitBatch(batch));
     }
-
 
     // Ensures errors in the batch using BlobBatchAsyncClient are emitted as onError and are not thrown.
     @ParameterizedTest
@@ -190,8 +215,9 @@ public class BatchApiTests extends BlobBatchTestBase {
         BlobClient blobClient1 = containerClient.getBlobClient(generateBlobName());
         blobClient1.getBlockBlobClient().upload(DATA.getDefaultBinaryData());
 
-        batch.setBlobAccessTier(new BlobBatchSetBlobAccessTierOptions(blobClient1.getBlobUrl(), AccessTier.HOT)
-            .setLeaseId(leaseId).setTagsConditions(tags));
+        batch.setBlobAccessTier(
+            new BlobBatchSetBlobAccessTierOptions(blobClient1.getBlobUrl(), AccessTier.HOT).setLeaseId(leaseId)
+                .setTagsConditions(tags));
 
         StepVerifier.create(batchAsyncClient.submitBatch(batch))
             .expectError(BlobBatchStorageException.class)
@@ -278,8 +304,8 @@ public class BatchApiTests extends BlobBatchTestBase {
         Response<Void> response1 = batch.setBlobAccessTier(containerName, generateBlobName(), AccessTier.HOT);
         Response<Void> response2 = batch.setBlobAccessTier(containerName, generateBlobName(), AccessTier.COOL);
 
-        BlobBatchStorageException ex = assertThrows(BlobBatchStorageException.class,
-            () -> batchClient.submitBatch(batch));
+        BlobBatchStorageException ex
+            = assertThrows(BlobBatchStorageException.class, () -> batchClient.submitBatch(batch));
         assertEquals(2, getIterableSize(ex.getBatchExceptions()));
         assertThrows(BlobStorageException.class, response1::getStatusCode);
         assertThrows(BlobStorageException.class, response2::getStatusCode);
@@ -369,8 +395,8 @@ public class BatchApiTests extends BlobBatchTestBase {
         Response<Void> response1 = batch.deleteBlob(containerName, generateBlobName());
         Response<Void> response2 = batch.deleteBlob(containerName, generateBlobName());
 
-        BlobBatchStorageException ex = assertThrows(BlobBatchStorageException.class,
-            () -> batchClient.submitBatch(batch));
+        BlobBatchStorageException ex
+            = assertThrows(BlobBatchStorageException.class, () -> batchClient.submitBatch(batch));
         assertEquals(2, getIterableSize(ex.getBatchExceptions()));
         assertThrows(BlobStorageException.class, response1::getStatusCode);
         assertThrows(BlobStorageException.class, response2::getStatusCode);
@@ -409,7 +435,8 @@ public class BatchApiTests extends BlobBatchTestBase {
         }
 
         List<Response<Void>> responseList = batchClient.deleteBlobs(blobUrls, DeleteSnapshotsOptionType.INCLUDE)
-            .stream().collect(Collectors.toList());
+            .stream()
+            .collect(Collectors.toList());
 
         assertEquals(10, responseList.size());
         for (Response<Void> response : responseList) {
@@ -427,8 +454,8 @@ public class BatchApiTests extends BlobBatchTestBase {
             blobUrls.add(blockBlobClient.getBlobUrl());
         }
 
-        List<Response<Void>> responseList = batchClient.setBlobsAccessTier(blobUrls, AccessTier.HOT).stream()
-            .collect(Collectors.toList());
+        List<Response<Void>> responseList
+            = batchClient.setBlobsAccessTier(blobUrls, AccessTier.HOT).stream().collect(Collectors.toList());
 
         assertEquals(10, responseList.size());
         for (Response<Void> response : responseList) {
@@ -444,8 +471,8 @@ public class BatchApiTests extends BlobBatchTestBase {
         BlobClientBase snapClient = blobClient.createSnapshot();
 
         List<String> blobUrls = Collections.singletonList(snapClient.getBlobUrl());
-        List<Response<Void>> responseList = batchClient.setBlobsAccessTier(blobUrls, AccessTier.HOT).stream()
-            .collect(Collectors.toList());
+        List<Response<Void>> responseList
+            = batchClient.setBlobsAccessTier(blobUrls, AccessTier.HOT).stream().collect(Collectors.toList());
 
         assertEquals(1, responseList.size());
         assertEquals(200, responseList.get(0).getStatusCode());
@@ -461,10 +488,10 @@ public class BatchApiTests extends BlobBatchTestBase {
         BlockBlobItem blobItemV1 = blobClient.getBlockBlobClient().upload(inputV1, inputV1.available());
         blobClient.getBlockBlobClient().upload(inputV2, inputV2.available(), true);
 
-        List<String> blobUrls = Collections.singletonList(blobClient.getVersionClient(blobItemV1.getVersionId())
-            .getBlobUrl());
-        List<Response<Void>> responseList = batchClient.setBlobsAccessTier(blobUrls, AccessTier.HOT).stream()
-            .collect(Collectors.toList());
+        List<String> blobUrls
+            = Collections.singletonList(blobClient.getVersionClient(blobItemV1.getVersionId()).getBlobUrl());
+        List<Response<Void>> responseList
+            = batchClient.setBlobsAccessTier(blobUrls, AccessTier.HOT).stream().collect(Collectors.toList());
 
         assertEquals(1, responseList.size());
         assertEquals(200, responseList.get(0).getStatusCode());
@@ -542,20 +569,16 @@ public class BatchApiTests extends BlobBatchTestBase {
         containerClient.getBlobClient(blobName2).getPageBlobClient().create(0);
 
         AccountSasService service = new AccountSasService().setBlobAccess(true);
-        AccountSasResourceType resourceType = new AccountSasResourceType()
-            .setContainer(true)
-            .setService(true)
-            .setObject(true);
-        AccountSasPermission permissions = new AccountSasPermission()
-            .setReadPermission(true)
-            .setCreatePermission(true)
-            .setDeletePermission(true);
-        AccountSasSignatureValues sasValues = new AccountSasSignatureValues(testResourceNamer.now().plusDays(1),
-            permissions, service, resourceType);
+        AccountSasResourceType resourceType
+            = new AccountSasResourceType().setContainer(true).setService(true).setObject(true);
+        AccountSasPermission permissions
+            = new AccountSasPermission().setReadPermission(true).setCreatePermission(true).setDeletePermission(true);
+        AccountSasSignatureValues sasValues
+            = new AccountSasSignatureValues(testResourceNamer.now().plusDays(1), permissions, service, resourceType);
 
-        BlobBatchClient batchClient = new BlobBatchClientBuilder(getServiceClient(
-            primaryBlobServiceClient.generateAccountSas(sasValues), primaryBlobServiceClient.getAccountUrl()))
-            .buildClient();
+        BlobBatchClient batchClient
+            = new BlobBatchClientBuilder(getServiceClient(primaryBlobServiceClient.generateAccountSas(sasValues),
+                primaryBlobServiceClient.getAccountUrl())).buildClient();
 
         BlobBatch batch = batchClient.getBlobBatch();
         Response<Void> response1 = batch.deleteBlob(containerName, blobName1);
@@ -577,30 +600,28 @@ public class BatchApiTests extends BlobBatchTestBase {
         containerClient.getBlobClient(blobName2).getPageBlobClient().create(0);
 
         AccountSasService service = new AccountSasService().setBlobAccess(true);
-        AccountSasResourceType resourceType = new AccountSasResourceType()
-            .setContainer(true)
-            .setService(true)
-            .setObject(true);
+        AccountSasResourceType resourceType
+            = new AccountSasResourceType().setContainer(true).setService(true).setObject(true);
         AccountSasPermission permissions = new AccountSasPermission() // No delete permission
             .setReadPermission(true)
             .setCreatePermission(true);
-        AccountSasSignatureValues sasValues = new AccountSasSignatureValues(testResourceNamer.now().plusDays(1),
-            permissions, service, resourceType);
+        AccountSasSignatureValues sasValues
+            = new AccountSasSignatureValues(testResourceNamer.now().plusDays(1), permissions, service, resourceType);
 
-        BlobBatchClient batchClient = new BlobBatchClientBuilder(getServiceClient(
-            primaryBlobServiceClient.generateAccountSas(sasValues), primaryBlobServiceClient.getAccountUrl()))
-            .buildClient();
+        BlobBatchClient batchClient
+            = new BlobBatchClientBuilder(getServiceClient(primaryBlobServiceClient.generateAccountSas(sasValues),
+                primaryBlobServiceClient.getAccountUrl())).buildClient();
 
         BlobBatch batch = batchClient.getBlobBatch();
         batch.deleteBlob(containerName, blobName1);
         batch.deleteBlob(containerName, blobName2);
 
-        BlobBatchStorageException ex = assertThrows(BlobBatchStorageException.class,
-            () -> batchClient.submitBatch(batch));
+        BlobBatchStorageException ex
+            = assertThrows(BlobBatchStorageException.class, () -> batchClient.submitBatch(batch));
         assertEquals(2, getIterableSize(ex.getBatchExceptions()));
     }
 
-    @DisabledIf("olderThan20200612ServiceVersion")
+    @RequiredServiceVersion(clazz = BlobServiceVersion.class, min = "2020-06-12")
     // Container scoped batch
     @Test
     public void setTierAllSucceedContainerScoped() {
@@ -621,7 +642,7 @@ public class BatchApiTests extends BlobBatchTestBase {
         assertEquals(200, response2.getStatusCode());
     }
 
-    @DisabledIf("olderThan20200612ServiceVersion")
+    @RequiredServiceVersion(clazz = BlobServiceVersion.class, min = "2020-06-12")
     @Test
     public void deleteBlobAllSucceedContainerScoped() {
         String containerName = generateContainerName();
@@ -641,7 +662,7 @@ public class BatchApiTests extends BlobBatchTestBase {
         assertEquals(202, response2.getStatusCode());
     }
 
-    @DisabledIf("olderThan20200612ServiceVersion")
+    @RequiredServiceVersion(clazz = BlobServiceVersion.class, min = "2020-06-12")
     @Test
     public void bulkDeleteBlobsContainerScoped() {
         String containerName = generateContainerName();
@@ -660,7 +681,7 @@ public class BatchApiTests extends BlobBatchTestBase {
         }
     }
 
-    @DisabledIf("olderThan20200612ServiceVersion")
+    @RequiredServiceVersion(clazz = BlobServiceVersion.class, min = "2020-06-12")
     @Test
     public void bulkSetAccessTierContainerScoped() {
         String containerName = generateContainerName();
@@ -718,7 +739,7 @@ public class BatchApiTests extends BlobBatchTestBase {
         assertThrows(BlobStorageException.class, () -> batchClient.submitBatch(batch));
     }
 
-    @DisabledIf("olderThan20200612ServiceVersion")
+    @RequiredServiceVersion(clazz = BlobServiceVersion.class, min = "2020-06-12")
     @Test
     public void submitBatchWithContainerSasCredentials() {
         String containerName = generateContainerName();
@@ -729,8 +750,7 @@ public class BatchApiTests extends BlobBatchTestBase {
         containerClient.getBlobClient(blobName1).getPageBlobClient().create(0);
         containerClient.getBlobClient(blobName2).getPageBlobClient().create(0);
 
-        BlobContainerSasPermission permission = new BlobContainerSasPermission()
-            .setReadPermission(true)
+        BlobContainerSasPermission permission = new BlobContainerSasPermission().setReadPermission(true)
             .setWritePermission(true)
             .setCreatePermission(true)
             .setDeletePermission(true)
@@ -738,19 +758,19 @@ public class BatchApiTests extends BlobBatchTestBase {
             .setListPermission(true)
             .setMovePermission(true)
             .setExecutePermission(true);
-        BlobServiceSasSignatureValues sasValues = new BlobServiceSasSignatureValues(testResourceNamer.now().plusDays(1),
-            permission)
-            .setStartTime(testResourceNamer.now().minusDays(1))
-            .setProtocol(SasProtocol.HTTPS_HTTP)
-            .setCacheControl("cache")
-            .setContentDisposition("disposition")
-            .setContentEncoding("encoding")
-            .setContentLanguage("language")
-            .setContentType("type");
+        BlobServiceSasSignatureValues sasValues
+            = new BlobServiceSasSignatureValues(testResourceNamer.now().plusDays(1), permission)
+                .setStartTime(testResourceNamer.now().minusDays(1))
+                .setProtocol(SasProtocol.HTTPS_HTTP)
+                .setCacheControl("cache")
+                .setContentDisposition("disposition")
+                .setContentEncoding("encoding")
+                .setContentLanguage("language")
+                .setContentType("type");
 
         BlobBatchClient batchClient = new BlobBatchClientBuilder(
             getContainerClient(containerClient.generateSas(sasValues), containerClient.getBlobContainerUrl()))
-            .buildClient();
+                .buildClient();
 
         BlobBatch batch = batchClient.getBlobBatch();
 
@@ -762,7 +782,7 @@ public class BatchApiTests extends BlobBatchTestBase {
         assertEquals(202, response2.getStatusCode());
     }
 
-    @DisabledIf("olderThan20200612ServiceVersion")
+    @RequiredServiceVersion(clazz = BlobServiceVersion.class, min = "2020-06-12")
     @Test
     public void submitBatchWithContainerSasCredentialsError() {
         String containerName = generateContainerName();
@@ -777,43 +797,179 @@ public class BatchApiTests extends BlobBatchTestBase {
             .setReadPermission(true)
             .setWritePermission(true)
             .setCreatePermission(true);
-        BlobServiceSasSignatureValues sasValues = new BlobServiceSasSignatureValues(testResourceNamer.now().plusDays(1),
-            permission)
-            .setStartTime(testResourceNamer.now().minusDays(1))
-            .setProtocol(SasProtocol.HTTPS_HTTP)
-            .setCacheControl("cache")
-            .setContentDisposition("disposition")
-            .setContentEncoding("encoding")
-            .setContentLanguage("language")
-            .setContentType("type");
+        BlobServiceSasSignatureValues sasValues
+            = new BlobServiceSasSignatureValues(testResourceNamer.now().plusDays(1), permission)
+                .setStartTime(testResourceNamer.now().minusDays(1))
+                .setProtocol(SasProtocol.HTTPS_HTTP)
+                .setCacheControl("cache")
+                .setContentDisposition("disposition")
+                .setContentEncoding("encoding")
+                .setContentLanguage("language")
+                .setContentType("type");
 
         BlobBatchClient batchClient = new BlobBatchClientBuilder(
             getContainerClient(containerClient.generateSas(sasValues), containerClient.getBlobContainerUrl()))
-            .buildClient();
+                .buildClient();
 
         BlobBatch batch = batchClient.getBlobBatch();
         batch.deleteBlob(containerName, blobName1);
         batch.deleteBlob(containerName, blobName2);
 
-        BlobBatchStorageException ex = assertThrows(BlobBatchStorageException.class,
-            () -> batchClient.submitBatch(batch));
+        BlobBatchStorageException ex
+            = assertThrows(BlobBatchStorageException.class, () -> batchClient.submitBatch(batch));
         assertEquals(2, getIterableSize(ex.getBatchExceptions()));
     }
 
-    private static boolean olderThan20191212ServiceVersion() {
-        return olderThan(BlobServiceVersion.V2019_12_12);
+    // Tests container name encoding for BlobBatch.deleteBlob. Container names with special characters are not supported
+    // by the service, however, the names should still be encoded.
+    @Test
+    public void deleteBlobContainerNameEncoding() {
+        String containerName = "my container";
+        String blobName = generateBlobName();
+
+        BlobBatch batch = batchClient.getBlobBatch();
+        Response<Void> response = batch.deleteBlob(containerName, blobName);
+
+        assertThrows(BlobBatchStorageException.class, () -> batchClient.submitBatch(batch));
+        BlobStorageException temp = assertThrows(BlobStorageException.class, response::getRequest);
+
+        assertTrue(temp.getResponse().getRequest().getUrl().toString().contains("my%20container"));
     }
 
-    private static boolean olderThan20200612ServiceVersion() {
-        return olderThan(BlobServiceVersion.V2020_06_12);
+    // Tests blob name encoding for BlobBatch.deleteBlob.
+    @Test
+    public void deleteBlobNameEncoding() {
+        String containerName = generateContainerName();
+        String blobName = generateBlobName() + "enc!";
+        BlobContainerClient containerClient = primaryBlobServiceClient.createBlobContainer(containerName);
+        containerClient.getBlobClient(blobName).getPageBlobClient().create(0);
+
+        BlobBatch batch = batchClient.getBlobBatch();
+        Response<Void> response = batch.deleteBlob(containerName, blobName);
+        batchClient.submitBatch(batch);
+
+        assertEquals(202, response.getStatusCode());
     }
 
-    private static boolean olderThan(BlobServiceVersion targetVersion) {
-        String targetServiceVersionFromEnvironment = ENVIRONMENT.getServiceVersion();
-        BlobServiceVersion version = (targetServiceVersionFromEnvironment != null)
-            ? Enum.valueOf(BlobServiceVersion.class, targetServiceVersionFromEnvironment)
-            : BlobServiceVersion.getLatest();
+    // Tests container name encoding for BlobBatch.setBlobAccessTier. Container names with special characters are not supported
+    // by the service, however, the names should still be encoded.
+    @Test
+    public void setTierContainerNameEncoding() {
+        String containerName = "my container";
+        String blobName = generateBlobName();
 
-        return version.ordinal() < targetVersion.ordinal();
+        BlobBatch batch = batchClient.getBlobBatch();
+        Response<Void> response = batch.setBlobAccessTier(containerName, blobName, AccessTier.HOT);
+
+        assertThrows(BlobBatchStorageException.class, () -> batchClient.submitBatch(batch));
+        BlobStorageException temp = assertThrows(BlobStorageException.class, response::getRequest);
+
+        assertTrue(temp.getResponse().getRequest().getUrl().toString().contains("my%20container"));
+    }
+
+    // Tests blob name encoding for BlobBatch.setBlobAccessTier
+    @Test
+    public void setTierBlobNameEncoding() {
+        String containerName = generateContainerName();
+        String blobName = generateBlobName() + "enc!";
+        BlobContainerClient containerClient = primaryBlobServiceClient.createBlobContainer(containerName);
+        containerClient.getBlobClient(blobName).getBlockBlobClient().upload(DATA.getDefaultBinaryData());
+
+        BlobBatch batch = batchClient.getBlobBatch();
+        Response<Void> response = batch.setBlobAccessTier(containerName, blobName, AccessTier.HOT);
+        batchClient.submitBatch(batch);
+
+        assertEquals(200, response.getStatusCode());
+    }
+
+    // Tests container name encoding for BlobBatchSetBlobAccessTierOptions constructor. Container names with special characters are not supported
+    // by the service, however, the names should still be encoded.
+    @Test
+    public void setTierContainerNameEncodingOptionsConstructor() {
+        String containerName = "my container";
+        String blobName = generateBlobName();
+
+        BlobBatch batch = batchClient.getBlobBatch();
+        BlobBatchSetBlobAccessTierOptions options
+            = new BlobBatchSetBlobAccessTierOptions(containerName, blobName, AccessTier.HOT);
+        Response<Void> response = batch.setBlobAccessTier(options);
+
+        assertThrows(BlobBatchStorageException.class, () -> batchClient.submitBatch(batch));
+        BlobStorageException temp = assertThrows(BlobStorageException.class, response::getRequest);
+
+        assertTrue(temp.getResponse().getRequest().getUrl().toString().contains("my%20container"));
+    }
+
+    //Tests blob name encoding for BlobBatchSetBlobAccessTierOptions constructor
+    @Test
+    public void setTierBlobNameEncodingOptionsConstructor() {
+        String containerName = generateContainerName();
+        String blobName = generateBlobName() + "enc!";
+        BlobContainerClient containerClient = primaryBlobServiceClient.createBlobContainer(containerName);
+        containerClient.getBlobClient(blobName).getBlockBlobClient().upload(DATA.getDefaultBinaryData());
+
+        BlobBatch batch = batchClient.getBlobBatch();
+        BlobBatchSetBlobAccessTierOptions options
+            = new BlobBatchSetBlobAccessTierOptions(containerName, blobName, AccessTier.HOT);
+        Response<Void> response = batch.setBlobAccessTier(options);
+        batchClient.submitBatch(batch);
+
+        assertEquals(200, response.getStatusCode());
+        String identifier = options.getBlobIdentifier();
+        assertTrue(identifier.contains(Utility.urlEncode(blobName)));
+    }
+
+    // Tests getters return unencoded names (constructor with separate names)
+    @Test
+    public void getBlobNameAndContainerNameOptionsConstructor() {
+        String containerName = "my container";
+        String blobName = "my blob";
+
+        BlobBatchSetBlobAccessTierOptions options
+            = new BlobBatchSetBlobAccessTierOptions(containerName, blobName, AccessTier.HOT);
+
+        assertEquals(containerName, options.getBlobContainerName());
+        assertEquals(blobName, options.getBlobName());
+
+        String identifier = options.getBlobIdentifier();
+        assertTrue(identifier.contains("my%20container"));
+        assertTrue(identifier.contains("my%20blob"));
+    }
+
+    // Tests getters return unencoded names (constructor with full blob URL)
+    @Test
+    public void getBlobNameAndContainerNameUrlConstructor() {
+        String containerName = "my container";
+        String blobName = "my blob";
+        BlockBlobClient blockBlobClient = primaryBlobServiceClient.getBlobContainerClient(containerName)
+            .getBlobClient(blobName)
+            .getBlockBlobClient();
+
+        BlobBatchSetBlobAccessTierOptions options
+            = new BlobBatchSetBlobAccessTierOptions(blockBlobClient.getBlobUrl(), AccessTier.HOT);
+
+        assertEquals(containerName, options.getBlobContainerName());
+        assertEquals(blobName, options.getBlobName());
+
+        String identifier = options.getBlobIdentifier();
+        assertTrue(identifier.contains("my%20container"));
+        assertTrue(identifier.contains("my%20blob"));
+    }
+
+    @Test
+    public void blobBatchSetBlobAccessTierOptionsHandlesSpecialChars() {
+        String blobName = "my blob";
+        String containerName = generateContainerName();
+
+        BlobBatch batch = batchClient.getBlobBatch();
+        BlobContainerClient containerClient = primaryBlobServiceClient.createBlobContainer(containerName);
+
+        BlobClient blobClient1 = containerClient.getBlobClient(blobName);
+        blobClient1.getBlockBlobClient().upload(DATA.getDefaultBinaryData());
+
+        Response<Void> response
+            = batch.setBlobAccessTier(new BlobBatchSetBlobAccessTierOptions(containerName, blobName, AccessTier.HOT));
+        batchClient.submitBatch(batch);
+        assertEquals(200, response.getStatusCode());
     }
 }

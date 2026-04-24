@@ -5,50 +5,57 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Linked service for an HTTP source. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("HttpServer")
-@JsonFlatten
+/**
+ * Linked service for an HTTP source.
+ */
 @Fluent
 public class HttpLinkedService extends LinkedService {
+    /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "HttpServer";
+
     /*
      * The base URL of the HTTP endpoint, e.g. http://www.microsoft.com. Type: string (or Expression with resultType
      * string).
      */
-    @JsonProperty(value = "typeProperties.url", required = true)
+    @Generated
     private Object url;
 
     /*
      * The authentication type to be used to connect to the HTTP server.
      */
-    @JsonProperty(value = "typeProperties.authenticationType")
+    @Generated
     private HttpAuthenticationType authenticationType;
 
     /*
      * User name for Basic, Digest, or Windows authentication. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.userName")
+    @Generated
     private Object userName;
 
     /*
      * Password for Basic, Digest, Windows, or ClientCertificate with EmbeddedCertData authentication.
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private SecretBase password;
 
     /*
-     * Base64 encoded certificate data for ClientCertificate authentication. For on-premises copy with
-     * ClientCertificate authentication, either CertThumbprint or EmbeddedCertData/Password should be specified. Type:
-     * string (or Expression with resultType string).
+     * Base64 encoded certificate data for ClientCertificate authentication. For on-premises copy with ClientCertificate
+     * authentication, either CertThumbprint or EmbeddedCertData/Password should be specified. Type: string (or
+     * Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.embeddedCertData")
+    @Generated
     private Object embeddedCertData;
 
     /*
@@ -56,32 +63,48 @@ public class HttpLinkedService extends LinkedService {
      * copy with ClientCertificate authentication, either CertThumbprint or EmbeddedCertData/Password should be
      * specified. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.certThumbprint")
+    @Generated
     private Object certThumbprint;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
     /*
      * If true, validate the HTTPS server SSL certificate. Default value is true. Type: boolean (or Expression with
      * resultType boolean).
      */
-    @JsonProperty(value = "typeProperties.enableServerCertificateValidation")
+    @Generated
     private Object enableServerCertificateValidation;
 
-    /** Creates an instance of HttpLinkedService class. */
-    public HttpLinkedService() {}
+    /**
+     * Creates an instance of HttpLinkedService class.
+     */
+    @Generated
+    public HttpLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the url property: The base URL of the HTTP endpoint, e.g. http://www.microsoft.com. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @return the url value.
      */
+    @Generated
     public Object getUrl() {
         return this.url;
     }
@@ -89,10 +112,11 @@ public class HttpLinkedService extends LinkedService {
     /**
      * Set the url property: The base URL of the HTTP endpoint, e.g. http://www.microsoft.com. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @param url the url value to set.
      * @return the HttpLinkedService object itself.
      */
+    @Generated
     public HttpLinkedService setUrl(Object url) {
         this.url = url;
         return this;
@@ -100,19 +124,21 @@ public class HttpLinkedService extends LinkedService {
 
     /**
      * Get the authenticationType property: The authentication type to be used to connect to the HTTP server.
-     *
+     * 
      * @return the authenticationType value.
      */
+    @Generated
     public HttpAuthenticationType getAuthenticationType() {
         return this.authenticationType;
     }
 
     /**
      * Set the authenticationType property: The authentication type to be used to connect to the HTTP server.
-     *
+     * 
      * @param authenticationType the authenticationType value to set.
      * @return the HttpLinkedService object itself.
      */
+    @Generated
     public HttpLinkedService setAuthenticationType(HttpAuthenticationType authenticationType) {
         this.authenticationType = authenticationType;
         return this;
@@ -121,9 +147,10 @@ public class HttpLinkedService extends LinkedService {
     /**
      * Get the userName property: User name for Basic, Digest, or Windows authentication. Type: string (or Expression
      * with resultType string).
-     *
+     * 
      * @return the userName value.
      */
+    @Generated
     public Object getUserName() {
         return this.userName;
     }
@@ -131,10 +158,11 @@ public class HttpLinkedService extends LinkedService {
     /**
      * Set the userName property: User name for Basic, Digest, or Windows authentication. Type: string (or Expression
      * with resultType string).
-     *
+     * 
      * @param userName the userName value to set.
      * @return the HttpLinkedService object itself.
      */
+    @Generated
     public HttpLinkedService setUserName(Object userName) {
         this.userName = userName;
         return this;
@@ -143,9 +171,10 @@ public class HttpLinkedService extends LinkedService {
     /**
      * Get the password property: Password for Basic, Digest, Windows, or ClientCertificate with EmbeddedCertData
      * authentication.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
@@ -153,10 +182,11 @@ public class HttpLinkedService extends LinkedService {
     /**
      * Set the password property: Password for Basic, Digest, Windows, or ClientCertificate with EmbeddedCertData
      * authentication.
-     *
+     * 
      * @param password the password value to set.
      * @return the HttpLinkedService object itself.
      */
+    @Generated
     public HttpLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -166,9 +196,10 @@ public class HttpLinkedService extends LinkedService {
      * Get the embeddedCertData property: Base64 encoded certificate data for ClientCertificate authentication. For
      * on-premises copy with ClientCertificate authentication, either CertThumbprint or EmbeddedCertData/Password should
      * be specified. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the embeddedCertData value.
      */
+    @Generated
     public Object getEmbeddedCertData() {
         return this.embeddedCertData;
     }
@@ -177,10 +208,11 @@ public class HttpLinkedService extends LinkedService {
      * Set the embeddedCertData property: Base64 encoded certificate data for ClientCertificate authentication. For
      * on-premises copy with ClientCertificate authentication, either CertThumbprint or EmbeddedCertData/Password should
      * be specified. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param embeddedCertData the embeddedCertData value to set.
      * @return the HttpLinkedService object itself.
      */
+    @Generated
     public HttpLinkedService setEmbeddedCertData(Object embeddedCertData) {
         this.embeddedCertData = embeddedCertData;
         return this;
@@ -190,9 +222,10 @@ public class HttpLinkedService extends LinkedService {
      * Get the certThumbprint property: Thumbprint of certificate for ClientCertificate authentication. Only valid for
      * on-premises copy. For on-premises copy with ClientCertificate authentication, either CertThumbprint or
      * EmbeddedCertData/Password should be specified. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the certThumbprint value.
      */
+    @Generated
     public Object getCertThumbprint() {
         return this.certThumbprint;
     }
@@ -201,10 +234,11 @@ public class HttpLinkedService extends LinkedService {
      * Set the certThumbprint property: Thumbprint of certificate for ClientCertificate authentication. Only valid for
      * on-premises copy. For on-premises copy with ClientCertificate authentication, either CertThumbprint or
      * EmbeddedCertData/Password should be specified. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param certThumbprint the certThumbprint value to set.
      * @return the HttpLinkedService object itself.
      */
+    @Generated
     public HttpLinkedService setCertThumbprint(Object certThumbprint) {
         this.certThumbprint = certThumbprint;
         return this;
@@ -213,9 +247,10 @@ public class HttpLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -223,10 +258,11 @@ public class HttpLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the HttpLinkedService object itself.
      */
+    @Generated
     public HttpLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
@@ -235,9 +271,10 @@ public class HttpLinkedService extends LinkedService {
     /**
      * Get the enableServerCertificateValidation property: If true, validate the HTTPS server SSL certificate. Default
      * value is true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the enableServerCertificateValidation value.
      */
+    @Generated
     public Object getEnableServerCertificateValidation() {
         return this.enableServerCertificateValidation;
     }
@@ -245,40 +282,188 @@ public class HttpLinkedService extends LinkedService {
     /**
      * Set the enableServerCertificateValidation property: If true, validate the HTTPS server SSL certificate. Default
      * value is true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param enableServerCertificateValidation the enableServerCertificateValidation value to set.
      * @return the HttpLinkedService object itself.
      */
+    @Generated
     public HttpLinkedService setEnableServerCertificateValidation(Object enableServerCertificateValidation) {
         this.enableServerCertificateValidation = enableServerCertificateValidation;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public HttpLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (url != null
+            || authenticationType != null
+            || userName != null
+            || password != null
+            || embeddedCertData != null
+            || certThumbprint != null
+            || encryptedCredential != null
+            || enableServerCertificateValidation != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("url", this.url);
+            jsonWriter.writeStringField("authenticationType",
+                this.authenticationType == null ? null : this.authenticationType.toString());
+            if (this.userName != null) {
+                jsonWriter.writeUntypedField("userName", this.userName);
+            }
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.embeddedCertData != null) {
+                jsonWriter.writeUntypedField("embeddedCertData", this.embeddedCertData);
+            }
+            if (this.certThumbprint != null) {
+                jsonWriter.writeUntypedField("certThumbprint", this.certThumbprint);
+            }
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            if (this.enableServerCertificateValidation != null) {
+                jsonWriter.writeUntypedField("enableServerCertificateValidation",
+                    this.enableServerCertificateValidation);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of HttpLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of HttpLinkedService if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the HttpLinkedService.
+     */
+    @Generated
+    public static HttpLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            HttpLinkedService deserializedHttpLinkedService = new HttpLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedHttpLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedHttpLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedHttpLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedHttpLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedHttpLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedHttpLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("url".equals(fieldName)) {
+                            deserializedHttpLinkedService.url = reader.readUntyped();
+                        } else if ("authenticationType".equals(fieldName)) {
+                            deserializedHttpLinkedService.authenticationType
+                                = HttpAuthenticationType.fromString(reader.getString());
+                        } else if ("userName".equals(fieldName)) {
+                            deserializedHttpLinkedService.userName = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedHttpLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("embeddedCertData".equals(fieldName)) {
+                            deserializedHttpLinkedService.embeddedCertData = reader.readUntyped();
+                        } else if ("certThumbprint".equals(fieldName)) {
+                            deserializedHttpLinkedService.certThumbprint = reader.readUntyped();
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedHttpLinkedService.encryptedCredential = reader.readUntyped();
+                        } else if ("enableServerCertificateValidation".equals(fieldName)) {
+                            deserializedHttpLinkedService.enableServerCertificateValidation = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedHttpLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedHttpLinkedService;
+        });
     }
 }

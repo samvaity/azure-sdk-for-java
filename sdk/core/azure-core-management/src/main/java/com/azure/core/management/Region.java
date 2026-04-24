@@ -73,6 +73,10 @@ public final class Region {
      * Brazil Southeast (South America)
      */
     public static final Region BRAZIL_SOUTHEAST = new Region("brazilsoutheast", "Brazil Southeast");
+    /**
+     * Mexico Central (Mexico)
+     */
+    public static final Region MEXICO_CENTRAL = new Region("mexicocentral", "Mexico Central");
     /*
      * Azure Cloud - Europe
      */
@@ -128,6 +132,18 @@ public final class Region {
      * UK West (Europe)
      */
     public static final Region UK_WEST = new Region("ukwest", "UK West");
+    /**
+     * Italy North (Europe)
+     */
+    public static final Region ITALY_NORTH = new Region("italynorth", "Italy North");
+    /**
+     * Spain Central (Europe)
+     */
+    public static final Region SPAIN_CENTRAL = new Region("spaincentral", "Spain Central");
+    /**
+     * Poland Central (Europe)
+     */
+    public static final Region POLAND_CENTRAL = new Region("polandcentral", "Poland Central");
     /*
      * Azure Cloud - Asia
      */
@@ -183,6 +199,14 @@ public final class Region {
      * West India (Asia Pacific)
      */
     public static final Region INDIA_WEST = new Region("westindia", "West India");
+    /**
+     * Indonesia Central (Asia Pacific)
+     */
+    public static final Region INDONESIA_CENTRAL = new Region("indonesiacentral", "Indonesia Central");
+    /**
+     * New Zealand North (Asia Pacific)
+     */
+    public static final Region NEW_ZEALAND_NORTH = new Region("newzealandnorth", "New Zealand North");
     /*
      * Azure Cloud - Middle East and Africa
      */
@@ -194,6 +218,10 @@ public final class Region {
      * UAE Central (Middle East)
      */
     public static final Region UAE_CENTRAL = new Region("uaecentral", "UAE Central");
+    /**
+     * Israel Central (Middle East)
+     */
+    public static final Region ISRAEL_CENTRAL = new Region("israelcentral", "Israel Central");
     /**
      * Qatar Central (Middle East) (recommended)
      */
@@ -363,13 +391,15 @@ public final class Region {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
         if (!(obj instanceof Region)) {
             return false;
-        } else if (obj == this) {
-            return true;
-        } else {
-            Region rhs = (Region) obj;
-            return this.name.equalsIgnoreCase(rhs.name);
         }
+
+        Region rhs = (Region) obj;
+        return this.name.equalsIgnoreCase(rhs.name);
     }
 }

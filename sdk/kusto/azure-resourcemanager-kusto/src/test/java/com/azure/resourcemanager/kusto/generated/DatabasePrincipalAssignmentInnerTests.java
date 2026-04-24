@@ -13,29 +13,26 @@ import org.junit.jupiter.api.Assertions;
 public final class DatabasePrincipalAssignmentInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DatabasePrincipalAssignmentInner model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"principalId\":\"aq\",\"role\":\"UnrestrictedViewer\",\"tenantId\":\"yjpkiidzyexz\",\"principalType\":\"App\",\"tenantName\":\"ixhnrztf\",\"principalName\":\"hb\",\"provisioningState\":\"Canceled\",\"aadObjectId\":\"alaulppggdtpnapn\"},\"id\":\"iropuhpigvpgylg\",\"name\":\"git\",\"type\":\"medjvcslynqwwncw\"}")
-                .toObject(DatabasePrincipalAssignmentInner.class);
-        Assertions.assertEquals("aq", model.principalId());
-        Assertions.assertEquals(DatabasePrincipalRole.UNRESTRICTED_VIEWER, model.role());
-        Assertions.assertEquals("yjpkiidzyexz", model.tenantId());
+        DatabasePrincipalAssignmentInner model = BinaryData.fromString(
+            "{\"properties\":{\"principalId\":\"syocogjltdtbnnha\",\"role\":\"User\",\"tenantId\":\"crkvcikhnv\",\"principalType\":\"App\",\"tenantName\":\"qgxqquezikyw\",\"principalName\":\"xkalla\",\"provisioningState\":\"Failed\",\"aadObjectId\":\"wuipiccjzkzivg\"},\"id\":\"vc\",\"name\":\"ayrhyrnx\",\"type\":\"mueedndrdvstk\"}")
+            .toObject(DatabasePrincipalAssignmentInner.class);
+        Assertions.assertEquals("syocogjltdtbnnha", model.principalId());
+        Assertions.assertEquals(DatabasePrincipalRole.USER, model.role());
+        Assertions.assertEquals("crkvcikhnv", model.tenantId());
         Assertions.assertEquals(PrincipalType.APP, model.principalType());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        DatabasePrincipalAssignmentInner model =
-            new DatabasePrincipalAssignmentInner()
-                .withPrincipalId("aq")
-                .withRole(DatabasePrincipalRole.UNRESTRICTED_VIEWER)
-                .withTenantId("yjpkiidzyexz")
+        DatabasePrincipalAssignmentInner model
+            = new DatabasePrincipalAssignmentInner().withPrincipalId("syocogjltdtbnnha")
+                .withRole(DatabasePrincipalRole.USER)
+                .withTenantId("crkvcikhnv")
                 .withPrincipalType(PrincipalType.APP);
         model = BinaryData.fromObject(model).toObject(DatabasePrincipalAssignmentInner.class);
-        Assertions.assertEquals("aq", model.principalId());
-        Assertions.assertEquals(DatabasePrincipalRole.UNRESTRICTED_VIEWER, model.role());
-        Assertions.assertEquals("yjpkiidzyexz", model.tenantId());
+        Assertions.assertEquals("syocogjltdtbnnha", model.principalId());
+        Assertions.assertEquals(DatabasePrincipalRole.USER, model.role());
+        Assertions.assertEquals("crkvcikhnv", model.tenantId());
         Assertions.assertEquals(PrincipalType.APP, model.principalType());
     }
 }

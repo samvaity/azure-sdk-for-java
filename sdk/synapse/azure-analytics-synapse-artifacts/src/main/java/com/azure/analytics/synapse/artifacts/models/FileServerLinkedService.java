@@ -5,62 +5,86 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** File system linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("FileServer")
-@JsonFlatten
+/**
+ * File system linked service.
+ */
 @Fluent
 public class FileServerLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "FileServer";
+
+    /*
      * Host name of the server. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.host", required = true)
+    @Generated
     private Object host;
 
     /*
      * User ID to logon the server. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.userId")
+    @Generated
     private Object userId;
 
     /*
      * Password to logon the server.
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private SecretBase password;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of FileServerLinkedService class. */
-    public FileServerLinkedService() {}
+    /**
+     * Creates an instance of FileServerLinkedService class.
+     */
+    @Generated
+    public FileServerLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the host property: Host name of the server. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the host value.
      */
+    @Generated
     public Object getHost() {
         return this.host;
     }
 
     /**
      * Set the host property: Host name of the server. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param host the host value to set.
      * @return the FileServerLinkedService object itself.
      */
+    @Generated
     public FileServerLinkedService setHost(Object host) {
         this.host = host;
         return this;
@@ -68,19 +92,21 @@ public class FileServerLinkedService extends LinkedService {
 
     /**
      * Get the userId property: User ID to logon the server. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the userId value.
      */
+    @Generated
     public Object getUserId() {
         return this.userId;
     }
 
     /**
      * Set the userId property: User ID to logon the server. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param userId the userId value to set.
      * @return the FileServerLinkedService object itself.
      */
+    @Generated
     public FileServerLinkedService setUserId(Object userId) {
         this.userId = userId;
         return this;
@@ -88,19 +114,21 @@ public class FileServerLinkedService extends LinkedService {
 
     /**
      * Get the password property: Password to logon the server.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: Password to logon the server.
-     *
+     * 
      * @param password the password value to set.
      * @return the FileServerLinkedService object itself.
      */
+    @Generated
     public FileServerLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -109,9 +137,10 @@ public class FileServerLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -119,40 +148,160 @@ public class FileServerLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the FileServerLinkedService object itself.
      */
+    @Generated
     public FileServerLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public FileServerLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public FileServerLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public FileServerLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public FileServerLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public FileServerLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (host != null || userId != null || password != null || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("host", this.host);
+            if (this.userId != null) {
+                jsonWriter.writeUntypedField("userId", this.userId);
+            }
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of FileServerLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of FileServerLinkedService if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the FileServerLinkedService.
+     */
+    @Generated
+    public static FileServerLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            FileServerLinkedService deserializedFileServerLinkedService = new FileServerLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedFileServerLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedFileServerLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedFileServerLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedFileServerLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedFileServerLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedFileServerLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("host".equals(fieldName)) {
+                            deserializedFileServerLinkedService.host = reader.readUntyped();
+                        } else if ("userId".equals(fieldName)) {
+                            deserializedFileServerLinkedService.userId = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedFileServerLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedFileServerLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedFileServerLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedFileServerLinkedService;
+        });
     }
 }

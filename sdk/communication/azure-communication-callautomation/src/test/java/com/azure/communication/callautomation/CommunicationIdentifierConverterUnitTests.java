@@ -8,12 +8,23 @@ import com.azure.communication.callautomation.implementation.models.Communicatio
 import com.azure.communication.callautomation.implementation.models.CommunicationIdentifierModel;
 import com.azure.communication.callautomation.implementation.models.CommunicationIdentifierModelKind;
 import com.azure.communication.callautomation.implementation.models.CommunicationUserIdentifierModel;
+import com.azure.communication.callautomation.implementation.models.MicrosoftTeamsAppIdentifierModel;
 import com.azure.communication.callautomation.implementation.models.MicrosoftTeamsUserIdentifierModel;
 import com.azure.communication.callautomation.implementation.models.PhoneNumberIdentifierModel;
-import com.azure.communication.common.*;
+import com.azure.communication.callautomation.implementation.models.TeamsExtensionUserIdentifierModel;
+import com.azure.communication.common.CommunicationCloudEnvironment;
+import com.azure.communication.common.CommunicationIdentifier;
+import com.azure.communication.common.CommunicationUserIdentifier;
+import com.azure.communication.common.MicrosoftTeamsAppIdentifier;
+import com.azure.communication.common.MicrosoftTeamsUserIdentifier;
+import com.azure.communication.common.PhoneNumberIdentifier;
+import com.azure.communication.common.TeamsExtensionUserIdentifier;
+import com.azure.communication.common.UnknownIdentifier;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class CommunicationIdentifierConverterUnitTests extends CallAutomationUnitTestBase {
 
@@ -22,14 +33,18 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
     private final String testPhoneNumber = "+12223334444";
     private final String testPhoneNumberRawId = "4:+12223334444";
     private final String testTeamsUserId = "Microsoft Teams User Id";
+    private final String testTeamsExtensionUserId = "TeamsExtensionId";
+    private final String testTeamsExtensionResourceId = "ResourceId";
+    private final String testTeamsExtensionTenantId = "TenantId";
+    private final String testTeamsExtensionRawId = "8:gcch-acs:ResourceId_TenantId_TeamsExtensionId";
 
     @Test
     public void convertWithoutKindCommunicationUser() {
-        CommunicationUserIdentifierModel communicationUserIdentifierModel = new CommunicationUserIdentifierModel()
-            .setId(testUserId);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setCommunicationUser(communicationUserIdentifierModel)
-            .setRawId(testRawId);
+        CommunicationUserIdentifierModel communicationUserIdentifierModel
+            = new CommunicationUserIdentifierModel().setId(testUserId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setCommunicationUser(communicationUserIdentifierModel)
+                .setRawId(testRawId);
 
         CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
 
@@ -41,12 +56,12 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithKindCommunicationUser() {
-        CommunicationUserIdentifierModel communicationUserIdentifierModel = new CommunicationUserIdentifierModel()
-            .setId(testUserId);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setCommunicationUser(communicationUserIdentifierModel)
-            .setKind(CommunicationIdentifierModelKind.COMMUNICATION_USER)
-            .setRawId(testRawId);
+        CommunicationUserIdentifierModel communicationUserIdentifierModel
+            = new CommunicationUserIdentifierModel().setId(testUserId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setCommunicationUser(communicationUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.COMMUNICATION_USER)
+                .setRawId(testRawId);
 
         CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
 
@@ -60,10 +75,10 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
     @Test
     public void convertWithKindCommunicationUserNoId() {
         CommunicationUserIdentifierModel communicationUserIdentifierModel = new CommunicationUserIdentifierModel();
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setCommunicationUser(communicationUserIdentifierModel)
-            .setKind(CommunicationIdentifierModelKind.COMMUNICATION_USER)
-            .setRawId(testRawId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setCommunicationUser(communicationUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.COMMUNICATION_USER)
+                .setRawId(testRawId);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -75,9 +90,9 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
     @Test
     public void convertWithoutKindCommunicationUserNoId() {
         CommunicationUserIdentifierModel communicationUserIdentifierModel = new CommunicationUserIdentifierModel();
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setCommunicationUser(communicationUserIdentifierModel)
-            .setRawId(testRawId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setCommunicationUser(communicationUserIdentifierModel)
+                .setRawId(testRawId);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -88,9 +103,9 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithKindButNoCommunicationUser() {
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setKind(CommunicationIdentifierModelKind.COMMUNICATION_USER)
-            .setRawId(testRawId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setKind(CommunicationIdentifierModelKind.COMMUNICATION_USER)
+                .setRawId(testRawId);
 
         CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
 
@@ -103,11 +118,11 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithoutKindPhoneNumber() {
-        PhoneNumberIdentifierModel phoneNumberIdentifierModel = new PhoneNumberIdentifierModel()
-            .setValue(testPhoneNumber);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setPhoneNumber(phoneNumberIdentifierModel)
-            .setRawId(testPhoneNumberRawId);
+        PhoneNumberIdentifierModel phoneNumberIdentifierModel
+            = new PhoneNumberIdentifierModel().setValue(testPhoneNumber);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setPhoneNumber(phoneNumberIdentifierModel)
+                .setRawId(testPhoneNumberRawId);
 
         CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
 
@@ -119,12 +134,12 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithKindPhoneNumber() {
-        PhoneNumberIdentifierModel phoneNumberIdentifierModel = new PhoneNumberIdentifierModel()
-            .setValue(testPhoneNumber);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setPhoneNumber(phoneNumberIdentifierModel)
-            .setKind(CommunicationIdentifierModelKind.PHONE_NUMBER)
-            .setRawId(testPhoneNumberRawId);
+        PhoneNumberIdentifierModel phoneNumberIdentifierModel
+            = new PhoneNumberIdentifierModel().setValue(testPhoneNumber);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setPhoneNumber(phoneNumberIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.PHONE_NUMBER)
+                .setRawId(testPhoneNumberRawId);
 
         CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
 
@@ -137,9 +152,9 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithKindButNoPhoneNumber() {
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setKind(CommunicationIdentifierModelKind.PHONE_NUMBER)
-            .setRawId(testRawId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setKind(CommunicationIdentifierModelKind.PHONE_NUMBER)
+                .setRawId(testRawId);
 
         CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
 
@@ -153,10 +168,10 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
     @Test
     public void convertWithKindPhoneNumberNoPhoneValue() {
         PhoneNumberIdentifierModel phoneNumberIdentifierModel = new PhoneNumberIdentifierModel();
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setPhoneNumber(phoneNumberIdentifierModel)
-            .setKind(CommunicationIdentifierModelKind.PHONE_NUMBER)
-            .setRawId(testPhoneNumberRawId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setPhoneNumber(phoneNumberIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.PHONE_NUMBER)
+                .setRawId(testPhoneNumberRawId);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -168,9 +183,194 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
     @Test
     public void convertWithoutKindPhoneNumberNoPhoneValue() {
         PhoneNumberIdentifierModel phoneNumberIdentifierModel = new PhoneNumberIdentifierModel();
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setPhoneNumber(phoneNumberIdentifierModel)
-            .setRawId(testPhoneNumberRawId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setPhoneNumber(phoneNumberIdentifierModel)
+                .setRawId(testPhoneNumberRawId);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithoutKindTeamsExtensionUser() {
+        TeamsExtensionUserIdentifierModel teamsExtensionUserIdentifierModel
+            = new TeamsExtensionUserIdentifierModel().setUserId(testTeamsExtensionUserId)
+                .setResourceId(testTeamsExtensionResourceId)
+                .setTenantId(testTeamsExtensionTenantId)
+                .setCloud(CommunicationCloudEnvironmentModel.GCCH);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setTeamsExtensionUser(teamsExtensionUserIdentifierModel)
+                .setRawId(testTeamsExtensionRawId);
+
+        CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+
+        TeamsExtensionUserIdentifier expected
+            = new TeamsExtensionUserIdentifier(testTeamsExtensionUserId, testTeamsExtensionTenantId,
+                testTeamsExtensionResourceId).setCloudEnvironment(CommunicationCloudEnvironment.GCCH)
+                    .setRawId(testTeamsExtensionRawId);
+
+        assertNull(communicationIdentifierModel.getKind());
+        System.out.println("got.getRawId(): " + got.getRawId());
+        System.out.println("expected.getRawId(): " + expected.getRawId());
+        assertEquals(expected, got);
+    }
+
+    @Test
+    public void convertWithKindTeamsExtensionUser() {
+        TeamsExtensionUserIdentifierModel teamsExtensionUserIdentifierModel
+            = new TeamsExtensionUserIdentifierModel().setUserId(testTeamsExtensionUserId)
+                .setResourceId(testTeamsExtensionResourceId)
+                .setTenantId(testTeamsExtensionTenantId)
+                .setCloud(CommunicationCloudEnvironmentModel.GCCH);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setTeamsExtensionUser(teamsExtensionUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.TEAMS_EXTENSION_USER)
+                .setRawId(testTeamsExtensionRawId);
+
+        CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+
+        TeamsExtensionUserIdentifier expected
+            = new TeamsExtensionUserIdentifier(testTeamsExtensionUserId, testTeamsExtensionTenantId,
+                testTeamsExtensionResourceId).setCloudEnvironment(CommunicationCloudEnvironment.GCCH)
+                    .setRawId(testTeamsExtensionRawId);
+
+        assertNotNull(communicationIdentifierModel.getKind());
+        assertEquals(CommunicationIdentifierModelKind.TEAMS_EXTENSION_USER, communicationIdentifierModel.getKind());
+        assertEquals(expected, got);
+    }
+
+    @Test
+    public void convertWithKindTeamsExtensionUserNoUserId() {
+        TeamsExtensionUserIdentifierModel teamsExtensionUserIdentifierModel
+            = new TeamsExtensionUserIdentifierModel().setResourceId(testTeamsExtensionResourceId)
+                .setTenantId(testTeamsExtensionTenantId)
+                .setCloud(CommunicationCloudEnvironmentModel.GCCH);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setTeamsExtensionUser(teamsExtensionUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.TEAMS_EXTENSION_USER)
+                .setRawId(testTeamsExtensionRawId);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithoutKindTeamsExtensionUserNoUserId() {
+        TeamsExtensionUserIdentifierModel teamsExtensionUserIdentifierModel
+            = new TeamsExtensionUserIdentifierModel().setResourceId(testTeamsExtensionResourceId)
+                .setTenantId(testTeamsExtensionTenantId)
+                .setCloud(CommunicationCloudEnvironmentModel.GCCH);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setTeamsExtensionUser(teamsExtensionUserIdentifierModel)
+                .setRawId(testTeamsExtensionRawId);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithKindTeamsExtensionUserNoCloudEnv() {
+        TeamsExtensionUserIdentifierModel teamsExtensionUserIdentifierModel
+            = new TeamsExtensionUserIdentifierModel().setUserId(testTeamsExtensionUserId)
+                .setResourceId(testTeamsExtensionResourceId)
+                .setTenantId(testTeamsExtensionTenantId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setTeamsExtensionUser(teamsExtensionUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.TEAMS_EXTENSION_USER)
+                .setRawId(testTeamsExtensionRawId);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithoutKindTeamsExtensionUserNoCloudEnv() {
+        TeamsExtensionUserIdentifierModel teamsExtensionUserIdentifierModel
+            = new TeamsExtensionUserIdentifierModel().setUserId(testTeamsExtensionUserId)
+                .setResourceId(testTeamsExtensionResourceId)
+                .setTenantId(testTeamsExtensionTenantId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setTeamsExtensionUser(teamsExtensionUserIdentifierModel)
+                .setRawId(testTeamsExtensionRawId);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithKindTeamsExtensionUserNoRawId() {
+        TeamsExtensionUserIdentifierModel teamsExtensionUserIdentifierModel
+            = new TeamsExtensionUserIdentifierModel().setUserId(testTeamsExtensionUserId)
+                .setResourceId(testTeamsExtensionResourceId)
+                .setTenantId(testTeamsExtensionTenantId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setTeamsExtensionUser(teamsExtensionUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.TEAMS_EXTENSION_USER);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithoutKindTeamsExtensionUserNoRawId() {
+        TeamsExtensionUserIdentifierModel teamsExtensionUserIdentifierModel
+            = new TeamsExtensionUserIdentifierModel().setUserId(testTeamsExtensionUserId)
+                .setResourceId(testTeamsExtensionResourceId)
+                .setTenantId(testTeamsExtensionTenantId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setTeamsExtensionUser(teamsExtensionUserIdentifierModel);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithKindTeamsExtensionUserNoResourceId() {
+        TeamsExtensionUserIdentifierModel teamsExtensionUserIdentifierModel
+            = new TeamsExtensionUserIdentifierModel().setUserId(testTeamsExtensionUserId)
+                .setTenantId(testTeamsExtensionTenantId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setTeamsExtensionUser(teamsExtensionUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.TEAMS_EXTENSION_USER)
+                .setRawId(testPhoneNumberRawId);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithKindTeamsExtensionUserNoTenantId() {
+        TeamsExtensionUserIdentifierModel teamsExtensionUserIdentifierModel
+            = new TeamsExtensionUserIdentifierModel().setUserId(testTeamsExtensionUserId)
+                .setResourceId(testTeamsExtensionResourceId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setTeamsExtensionUser(teamsExtensionUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.TEAMS_EXTENSION_USER)
+                .setRawId(testPhoneNumberRawId);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -181,19 +381,19 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithoutKindMicrosoftTeamsUser() {
-        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel = new MicrosoftTeamsUserIdentifierModel()
-            .setUserId(testTeamsUserId)
-            .setCloud(CommunicationCloudEnvironmentModel.GCCH)
-            .setIsAnonymous(true);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
-            .setRawId(testRawId);
+        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel
+            = new MicrosoftTeamsUserIdentifierModel().setUserId(testTeamsUserId)
+                .setCloud(CommunicationCloudEnvironmentModel.GCCH)
+                .setIsAnonymous(true);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
+                .setRawId(testRawId);
 
         CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
 
-        MicrosoftTeamsUserIdentifier expected = new MicrosoftTeamsUserIdentifier(testTeamsUserId)
-            .setCloudEnvironment(CommunicationCloudEnvironment.GCCH)
-            .setRawId(testRawId);
+        MicrosoftTeamsUserIdentifier expected
+            = new MicrosoftTeamsUserIdentifier(testTeamsUserId).setCloudEnvironment(CommunicationCloudEnvironment.GCCH)
+                .setRawId(testRawId);
 
         assertNull(communicationIdentifierModel.getKind());
         assertEquals(expected, got);
@@ -201,20 +401,20 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithKindMicrosoftTeamsUser() {
-        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel = new MicrosoftTeamsUserIdentifierModel()
-            .setUserId(testTeamsUserId)
-            .setCloud(CommunicationCloudEnvironmentModel.GCCH)
-            .setIsAnonymous(true);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
-            .setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_USER)
-            .setRawId(testRawId);
+        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel
+            = new MicrosoftTeamsUserIdentifierModel().setUserId(testTeamsUserId)
+                .setCloud(CommunicationCloudEnvironmentModel.GCCH)
+                .setIsAnonymous(true);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_USER)
+                .setRawId(testRawId);
 
         CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
 
-        MicrosoftTeamsUserIdentifier expected = new MicrosoftTeamsUserIdentifier(testTeamsUserId)
-            .setCloudEnvironment(CommunicationCloudEnvironment.GCCH)
-            .setRawId(testRawId);
+        MicrosoftTeamsUserIdentifier expected
+            = new MicrosoftTeamsUserIdentifier(testTeamsUserId).setCloudEnvironment(CommunicationCloudEnvironment.GCCH)
+                .setRawId(testRawId);
 
         assertNotNull(communicationIdentifierModel.getKind());
         assertEquals(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_USER, communicationIdentifierModel.getKind());
@@ -223,13 +423,13 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithKindMicrosoftTeamsUserNoUserId() {
-        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel = new MicrosoftTeamsUserIdentifierModel()
-            .setCloud(CommunicationCloudEnvironmentModel.GCCH)
-            .setIsAnonymous(true);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
-            .setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_USER)
-            .setRawId(testRawId);
+        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel
+            = new MicrosoftTeamsUserIdentifierModel().setCloud(CommunicationCloudEnvironmentModel.GCCH)
+                .setIsAnonymous(true);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_USER)
+                .setRawId(testRawId);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -240,12 +440,12 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithoutKindMicrosoftTeamsUserNoUserId() {
-        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel = new MicrosoftTeamsUserIdentifierModel()
-            .setCloud(CommunicationCloudEnvironmentModel.GCCH)
-            .setIsAnonymous(true);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
-            .setRawId(testRawId);
+        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel
+            = new MicrosoftTeamsUserIdentifierModel().setCloud(CommunicationCloudEnvironmentModel.GCCH)
+                .setIsAnonymous(true);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
+                .setRawId(testRawId);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -256,13 +456,12 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithKindMicrosoftTeamsUserNoCloudEnv() {
-        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel = new MicrosoftTeamsUserIdentifierModel()
-            .setUserId(testTeamsUserId)
-            .setIsAnonymous(true);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
-            .setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_USER)
-            .setRawId(testRawId);
+        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel
+            = new MicrosoftTeamsUserIdentifierModel().setUserId(testTeamsUserId).setIsAnonymous(true);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_USER)
+                .setRawId(testRawId);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -273,12 +472,11 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithoutKindMicrosoftTeamsUserNoCloudEnv() {
-        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel = new MicrosoftTeamsUserIdentifierModel()
-            .setUserId(testTeamsUserId)
-            .setIsAnonymous(true);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
-            .setRawId(testRawId);
+        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel
+            = new MicrosoftTeamsUserIdentifierModel().setUserId(testTeamsUserId).setIsAnonymous(true);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel)
+                .setRawId(testRawId);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -289,13 +487,13 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithKindMicrosoftTeamsUserNoRawId() {
-        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel = new MicrosoftTeamsUserIdentifierModel()
-            .setUserId(testTeamsUserId)
-            .setCloud(CommunicationCloudEnvironmentModel.GCCH)
-            .setIsAnonymous(true);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_USER)
-            .setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel);
+        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel
+            = new MicrosoftTeamsUserIdentifierModel().setUserId(testTeamsUserId)
+                .setCloud(CommunicationCloudEnvironmentModel.GCCH)
+                .setIsAnonymous(true);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_USER)
+                .setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -306,12 +504,111 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithoutKindMicrosoftTeamsUserNoRawId() {
-        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel = new MicrosoftTeamsUserIdentifierModel()
-            .setUserId(testTeamsUserId)
-            .setCloud(CommunicationCloudEnvironmentModel.GCCH)
-            .setIsAnonymous(true);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel);
+        MicrosoftTeamsUserIdentifierModel microsoftTeamsUserIdentifierModel
+            = new MicrosoftTeamsUserIdentifierModel().setUserId(testTeamsUserId)
+                .setCloud(CommunicationCloudEnvironmentModel.GCCH)
+                .setIsAnonymous(true);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsUser(microsoftTeamsUserIdentifierModel);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithoutKindMicrosoftTeamsApp() {
+        MicrosoftTeamsAppIdentifierModel microsoftTeamsAppIdentifierModel
+            = new MicrosoftTeamsAppIdentifierModel().setAppId(testTeamsUserId)
+                .setCloud(CommunicationCloudEnvironmentModel.GCCH);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsApp(microsoftTeamsAppIdentifierModel)
+                .setRawId(testTeamsUserId);
+
+        CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+
+        MicrosoftTeamsAppIdentifier expected
+            = new MicrosoftTeamsAppIdentifier(testTeamsUserId, CommunicationCloudEnvironment.GCCH);
+
+        assertNull(communicationIdentifierModel.getKind());
+        assertEquals(expected, got);
+    }
+
+    @Test
+    public void convertWithKindMicrosoftTeamsApp() {
+        MicrosoftTeamsAppIdentifierModel microsoftTeamsAppIdentifierModel
+            = new MicrosoftTeamsAppIdentifierModel().setAppId(testTeamsUserId)
+                .setCloud(CommunicationCloudEnvironmentModel.GCCH);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsApp(microsoftTeamsAppIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_APP)
+                .setRawId(testTeamsUserId);
+
+        CommunicationIdentifier got = CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+
+        MicrosoftTeamsAppIdentifier expected
+            = new MicrosoftTeamsAppIdentifier(testTeamsUserId, CommunicationCloudEnvironment.GCCH);
+
+        assertNotNull(communicationIdentifierModel.getKind());
+        assertEquals(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_APP, communicationIdentifierModel.getKind());
+        assertEquals(expected, got);
+    }
+
+    @Test
+    public void convertWithKindMicrosoftTeamsAppNoAppId() {
+        MicrosoftTeamsAppIdentifierModel microsoftTeamsAppIdentifierModel
+            = new MicrosoftTeamsAppIdentifierModel().setCloud(CommunicationCloudEnvironmentModel.GCCH);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsApp(microsoftTeamsAppIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_APP)
+                .setRawId(testTeamsUserId);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithoutKindMicrosoftTeamsAppNoAppId() {
+        MicrosoftTeamsAppIdentifierModel microsoftTeamsAppIdentifierModel
+            = new MicrosoftTeamsAppIdentifierModel().setCloud(CommunicationCloudEnvironmentModel.GCCH);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsApp(microsoftTeamsAppIdentifierModel)
+                .setRawId(testTeamsUserId);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithKindMicrosoftTeamsAppNoCloudEnv() {
+        MicrosoftTeamsAppIdentifierModel microsoftTeamsAppIdentifierModel
+            = new MicrosoftTeamsAppIdentifierModel().setAppId(testTeamsUserId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsApp(microsoftTeamsAppIdentifierModel)
+                .setKind(CommunicationIdentifierModelKind.MICROSOFT_TEAMS_APP)
+                .setRawId(testTeamsUserId);
+
+        try {
+            CommunicationIdentifierConverter.convert(communicationIdentifierModel);
+        } catch (Exception e) {
+            assert (e instanceof NullPointerException);
+        }
+    }
+
+    @Test
+    public void convertWithoutKindMicrosoftTeamsAppNoCloudEnv() {
+        MicrosoftTeamsAppIdentifierModel microsoftTeamsAppIdentifierModel
+            = new MicrosoftTeamsAppIdentifierModel().setAppId(testTeamsUserId);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setMicrosoftTeamsApp(microsoftTeamsAppIdentifierModel);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -322,8 +619,8 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithKindUnknownAndRawId() {
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setKind(CommunicationIdentifierModelKind.UNKNOWN);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setKind(CommunicationIdentifierModelKind.UNKNOWN);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);
@@ -345,14 +642,14 @@ public class CommunicationIdentifierConverterUnitTests extends CallAutomationUni
 
     @Test
     public void convertWithMultipleTypes() {
-        CommunicationUserIdentifierModel communicationUserIdentifierModel = new CommunicationUserIdentifierModel()
-            .setId(testUserId);
-        PhoneNumberIdentifierModel phoneNumberIdentifierModel = new PhoneNumberIdentifierModel()
-            .setValue(testPhoneNumber);
-        CommunicationIdentifierModel communicationIdentifierModel = new CommunicationIdentifierModel()
-            .setCommunicationUser(communicationUserIdentifierModel)
-            .setPhoneNumber(phoneNumberIdentifierModel)
-            .setRawId(testRawId);
+        CommunicationUserIdentifierModel communicationUserIdentifierModel
+            = new CommunicationUserIdentifierModel().setId(testUserId);
+        PhoneNumberIdentifierModel phoneNumberIdentifierModel
+            = new PhoneNumberIdentifierModel().setValue(testPhoneNumber);
+        CommunicationIdentifierModel communicationIdentifierModel
+            = new CommunicationIdentifierModel().setCommunicationUser(communicationUserIdentifierModel)
+                .setPhoneNumber(phoneNumberIdentifierModel)
+                .setRawId(testRawId);
 
         try {
             CommunicationIdentifierConverter.convert(communicationIdentifierModel);

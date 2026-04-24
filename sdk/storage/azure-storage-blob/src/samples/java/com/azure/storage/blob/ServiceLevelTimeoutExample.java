@@ -4,6 +4,7 @@
 package com.azure.storage.blob;
 
 import com.azure.core.util.Context;
+import com.azure.core.util.CoreUtils;
 import com.azure.storage.blob.models.ParallelTransferOptions;
 import com.azure.storage.blob.options.BlobContainerCreateOptions;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
@@ -24,8 +25,8 @@ import java.util.UUID;
  * timeout interval elapses before the service has finished processing the request, the service returns an error.
  * For more information on setting service timeouts, see here:
  * <a href="https://learn.microsoft.com/rest/api/storageservices/setting-timeouts-for-blob-service-operations">Setting timeouts for blob service operations</a>
- * <a href="https://learn.microsoft.com/en-us/rest/api/storageservices/setting-timeouts-for-file-service-operations">Setting timeouts for file service operations</a>
- * <a href="https://learn.microsoft.com/en-us/rest/api/storageservices/setting-timeouts-for-queue-service-operations">Setting timeouts for queue service operations</a>
+ * <a href="https://learn.microsoft.com/rest/api/storageservices/setting-timeouts-for-file-service-operations">Setting timeouts for file service operations</a>
+ * <a href="https://learn.microsoft.com/rest/api/storageservices/setting-timeouts-for-queue-service-operations">Setting timeouts for queue service operations</a>
  */
 public class ServiceLevelTimeoutExample {
 
@@ -99,7 +100,7 @@ public class ServiceLevelTimeoutExample {
     }
 
     static byte[] getRandomByteArray(int size) {
-        long seed = UUID.fromString(UUID.randomUUID().toString()).getMostSignificantBits() & Long.MAX_VALUE;
+        long seed = UUID.fromString(CoreUtils.randomUuid().toString()).getMostSignificantBits() & Long.MAX_VALUE;
         Random rand = new Random(seed);
         byte[] data = new byte[size];
         rand.nextBytes(data);

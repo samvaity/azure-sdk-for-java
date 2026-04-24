@@ -14,26 +14,25 @@ import org.junit.jupiter.api.Assertions;
 public final class UpdateDomainRequestParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        UpdateDomainRequestParameters model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"userEngagementTracking\":\"Enabled\"},\"tags\":{\"mcl\":\"jrmvdjwzrlo\",\"jctbza\":\"hijco\",\"sycbkbfk\":\"s\",\"c\":\"ukdkexxppofmxa\"}}")
-                .toObject(UpdateDomainRequestParameters.class);
-        Assertions.assertEquals("jrmvdjwzrlo", model.tags().get("mcl"));
+        UpdateDomainRequestParameters model = BinaryData
+            .fromString(
+                "{\"properties\":{\"userEngagementTracking\":\"Enabled\"},\"tags\":{\"uhrhcffcyddgl\":\"npzaoq\"}}")
+            .toObject(UpdateDomainRequestParameters.class);
+        Assertions.assertEquals("npzaoq", model.tags().get("uhrhcffcyddgl"));
         Assertions.assertEquals(UserEngagementTracking.ENABLED, model.userEngagementTracking());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        UpdateDomainRequestParameters model =
-            new UpdateDomainRequestParameters()
-                .withTags(mapOf("mcl", "jrmvdjwzrlo", "jctbza", "hijco", "sycbkbfk", "s", "c", "ukdkexxppofmxa"))
+        UpdateDomainRequestParameters model
+            = new UpdateDomainRequestParameters().withTags(mapOf("uhrhcffcyddgl", "npzaoq"))
                 .withUserEngagementTracking(UserEngagementTracking.ENABLED);
         model = BinaryData.fromObject(model).toObject(UpdateDomainRequestParameters.class);
-        Assertions.assertEquals("jrmvdjwzrlo", model.tags().get("mcl"));
+        Assertions.assertEquals("npzaoq", model.tags().get("uhrhcffcyddgl"));
         Assertions.assertEquals(UserEngagementTracking.ENABLED, model.userEngagementTracking());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

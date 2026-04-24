@@ -16,31 +16,36 @@ import com.azure.core.test.models.TestProxySanitizer;
 import com.azure.core.test.models.TestProxySanitizerType;
 import com.azure.core.test.utils.MockTokenCredential;
 import com.azure.core.util.Configuration;
+import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.logging.LogLevel;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class PhoneNumbersIntegrationTestBase extends TestProxyTestBase {
+    private static final ClientLogger LOGGER = new ClientLogger(PhoneNumbersIntegrationTestBase.class);
+
     private static final String CONNECTION_STRING = Configuration.getGlobalConfiguration()
-            .get("COMMUNICATION_LIVETEST_STATIC_CONNECTION_STRING",
-                    "endpoint=https://REDACTED.communication.azure.com/;accesskey=QWNjZXNzS2V5");
+        .get("COMMUNICATION_LIVETEST_STATIC_CONNECTION_STRING",
+            "endpoint=https://REDACTED.communication.azure.com/;accesskey=QWNjZXNzS2V5");
     protected static final String COUNTRY_CODE = Configuration.getGlobalConfiguration().get("COUNTRY_CODE", "US");
-    protected static final String MS_USERAGENT_OVERRIDE = Configuration.getGlobalConfiguration()
-            .get("AZURE_USERAGENT_OVERRIDE", "");
+    protected static final String MS_USERAGENT_OVERRIDE
+        = Configuration.getGlobalConfiguration().get("AZURE_USERAGENT_OVERRIDE", "");
 
     protected PhoneNumbersClientBuilder getClientBuilderWithConnectionString(HttpClient httpClient) {
         PhoneNumbersClientBuilder builder = new PhoneNumbersClientBuilder();
-        builder
-                .httpClient(getHttpClient(httpClient))
-                .addPolicy(getOverrideMSUserAgentPolicy())
-                .connectionString(CONNECTION_STRING);
+        builder.httpClient(getHttpClient(httpClient))
+            .addPolicy(getOverrideMSUserAgentPolicy())
+            .connectionString(CONNECTION_STRING);
 
         if (interceptorManager.isRecordMode()) {
             builder.addPolicy(interceptorManager.getRecordPolicy());
         }
 
         if (!interceptorManager.isLiveMode()) {
+            interceptorManager.removeSanitizers("AZSDK3430");
             addTestProxySanitizer();
         }
 
@@ -52,25 +57,33 @@ public class PhoneNumbersIntegrationTestBase extends TestProxyTestBase {
     }
 
     private void addTestProxyMatchers() {
-        interceptorManager.addMatchers(Arrays.asList(
-            new CustomMatcher().setHeadersKeyOnlyMatch(Arrays.asList("x-ms-hmac-string-to-sign-base64"))));
+        interceptorManager.addMatchers(Arrays.asList(new CustomMatcher()
+            .setHeadersKeyOnlyMatch(Arrays.asList("x-ms-content-sha256", "x-ms-hmac-string-to-sign-base64"))));
     }
 
     private void addTestProxySanitizer() {
         // sanitize phone numbers
-        interceptorManager.addSanitizers(Arrays.asList(
-            new TestProxySanitizer("(?<=/phoneNumbers/)([^/?]+)", "REDACTED", TestProxySanitizerType.URL),
-            new TestProxySanitizer("id", null, "REDACTED", TestProxySanitizerType.BODY_KEY),
-            new TestProxySanitizer("phoneNumber", null, "REDACTED", TestProxySanitizerType.BODY_KEY)));
+        interceptorManager.addSanitizers(
+            Arrays.asList(new TestProxySanitizer("(?<=/phoneNumbers/)([^/?]+)", "REDACTED", TestProxySanitizerType.URL),
+                new TestProxySanitizer("([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})",
+                    "11111111-1111-1111-1111-111111111111", TestProxySanitizerType.BODY_REGEX),
+                new TestProxySanitizer("([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})",
+                    "11111111-1111-1111-1111-111111111111", TestProxySanitizerType.URL),
+                new TestProxySanitizer("$..phoneNumber", null, "REDACTED", TestProxySanitizerType.BODY_KEY),
+                new TestProxySanitizer("$..nationalFormat", null, "REDACTED", TestProxySanitizerType.BODY_KEY),
+                new TestProxySanitizer("$..internationalFormat", null, "REDACTED", TestProxySanitizerType.BODY_KEY),
+                new TestProxySanitizer("((?:\\\\u002B)[0-9]{11,})|((?:\\\\%2B)[0-9]{11,})|((?:[+]?)[0-9]{11,})",
+                    "111111111111", TestProxySanitizerType.BODY_KEY),
+                new TestProxySanitizer("((?:\\\\u002B)[0-9]{11,})|((?:\\\\%2B)[0-9]{11,})|((?:[+]?)[0-9]{11,})",
+                    "111111111111", TestProxySanitizerType.BODY_REGEX)));
     }
 
     protected PhoneNumbersClientBuilder getClientBuilderUsingManagedIdentity(HttpClient httpClient) {
 
         PhoneNumbersClientBuilder builder = new PhoneNumbersClientBuilder();
-        builder
-                .httpClient(getHttpClient(httpClient))
-                .addPolicy(getOverrideMSUserAgentPolicy())
-                .endpoint(new CommunicationConnectionString(CONNECTION_STRING).getEndpoint());
+        builder.httpClient(getHttpClient(httpClient))
+            .addPolicy(getOverrideMSUserAgentPolicy())
+            .endpoint(new CommunicationConnectionString(CONNECTION_STRING).getEndpoint());
 
         if (interceptorManager.isRecordMode()) {
             builder.credential(new DefaultAzureCredentialBuilder().build());
@@ -78,6 +91,7 @@ public class PhoneNumbersIntegrationTestBase extends TestProxyTestBase {
         }
 
         if (!interceptorManager.isLiveMode()) {
+            interceptorManager.removeSanitizers("AZSDK3430");
             addTestProxySanitizer();
         }
 
@@ -105,8 +119,8 @@ public class PhoneNumbersIntegrationTestBase extends TestProxyTestBase {
     }
 
     protected String getTestPhoneNumber() {
-        boolean skipCapabilitiesTests = Configuration.getGlobalConfiguration()
-                .get("SKIP_UPDATE_CAPABILITIES_LIVE_TESTS", "false").equals("true");
+        boolean skipCapabilitiesTests
+            = Configuration.getGlobalConfiguration().get("SKIP_UPDATE_CAPABILITIES_LIVE_TESTS", "false").equals("true");
 
         if (getTestMode() == TestMode.PLAYBACK || skipCapabilitiesTests) {
             return getDefaultPhoneNumber();
@@ -122,6 +136,13 @@ public class PhoneNumbersIntegrationTestBase extends TestProxyTestBase {
         return phoneNumber;
     }
 
+    protected String getReservationId() {
+        if (getTestMode() == TestMode.PLAYBACK) {
+            return "11111111-1111-1111-1111-111111111111";
+        }
+        return UUID.randomUUID().toString();
+    }
+
     private HttpPipelinePolicy getOverrideMSUserAgentPolicy() {
         HttpHeaders headers = new HttpHeaders();
         if (!MS_USERAGENT_OVERRIDE.isEmpty()) {
@@ -132,15 +153,14 @@ public class PhoneNumbersIntegrationTestBase extends TestProxyTestBase {
     }
 
     private Mono<HttpResponse> logHeaders(String testName, HttpPipelineNextPolicy next) {
-        return next.process()
-                .flatMap(httpResponse -> {
-                    final HttpResponse bufferedResponse = httpResponse.buffer();
+        return next.process().flatMap(httpResponse -> {
+            final HttpResponse bufferedResponse = httpResponse.buffer();
 
-                    // Should sanitize printed reponse url
-                    System.out.println("MS-CV header for " + testName + " request "
-                            + bufferedResponse.getRequest().getUrl() + ": " + bufferedResponse.getHeaderValue("MS-CV"));
-                    return Mono.just(bufferedResponse);
-                });
+            // Should sanitize printed reponse url
+            LOGGER.log(LogLevel.VERBOSE, () -> "MS-CV header for " + testName + " request "
+                + bufferedResponse.getRequest().getUrl() + ": " + bufferedResponse.getHeaderValue("MS-CV"));
+            return Mono.just(bufferedResponse);
+        });
     }
 
     private String getDefaultPhoneNumber() {
@@ -154,8 +174,8 @@ public class PhoneNumbersIntegrationTestBase extends TestProxyTestBase {
                 "AZURE_TEST_AGENT value is required to run update capabilities live tests.");
         }
 
-        String phoneNumber = Configuration.getGlobalConfiguration()
-            .get(String.format("AZURE_PHONE_NUMBER_%s", testAgent));
+        String phoneNumber
+            = Configuration.getGlobalConfiguration().get(String.format("AZURE_PHONE_NUMBER_%s", testAgent));
         if (phoneNumber == null) {
             throw new IllegalStateException(
                 "A phone number specific to the current test agent is required to run update capabilities live tests.");

@@ -12,18 +12,15 @@ import java.util.Arrays;
 public final class PrivateLinkResourceListResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        PrivateLinkResourceListResult model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"properties\":{\"groupId\":\"tlwwrlk\",\"requiredMembers\":[\"ncvokotllxdyhg\",\"y\"],\"requiredZoneNames\":[\"gjltdtbnnhado\",\"crkvcikhnv\",\"amqgxqquezikyw\",\"gxk\"]},\"id\":\"la\",\"name\":\"melwuipiccjz\",\"type\":\"z\"},{\"properties\":{\"groupId\":\"vvcnayr\",\"requiredMembers\":[\"nxxmueedndrdv\",\"tkwqqtchealm\",\"mtdaa\"],\"requiredZoneNames\":[\"v\",\"vgpiohgwxrt\"]},\"id\":\"dxepxgyq\",\"name\":\"gvr\",\"type\":\"mnpkukghimdblxg\"}]}")
-                .toObject(PrivateLinkResourceListResult.class);
+        PrivateLinkResourceListResult model = BinaryData.fromString(
+            "{\"value\":[{\"properties\":{\"groupId\":\"ldgmfpgvmpip\",\"requiredMembers\":[\"thaqfxssmwu\"],\"requiredZoneNames\":[\"dsrezpdrhneuyow\",\"kdw\"]},\"id\":\"i\",\"name\":\"ib\",\"type\":\"rcgp\"}]}")
+            .toObject(PrivateLinkResourceListResult.class);
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        PrivateLinkResourceListResult model =
-            new PrivateLinkResourceListResult()
-                .withValue(Arrays.asList(new PrivateLinkResourceInner(), new PrivateLinkResourceInner()));
+        PrivateLinkResourceListResult model
+            = new PrivateLinkResourceListResult().withValue(Arrays.asList(new PrivateLinkResourceInner()));
         model = BinaryData.fromObject(model).toObject(PrivateLinkResourceListResult.class);
     }
 }

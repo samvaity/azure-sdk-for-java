@@ -6,40 +6,61 @@ package com.azure.resourcemanager.databox.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The requirements to validate customer address where the device needs to be shipped. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "validationType")
-@JsonTypeName("ValidateAddress")
+/**
+ * The requirements to validate customer address where the device needs to be shipped.
+ */
 @Fluent
 public final class ValidateAddress extends ValidationInputRequest {
     /*
+     * Identifies the type of validation request.
+     */
+    private ValidationInputDiscriminator validationType = ValidationInputDiscriminator.VALIDATE_ADDRESS;
+
+    /*
      * Shipping address of the customer.
      */
-    @JsonProperty(value = "shippingAddress", required = true)
     private ShippingAddress shippingAddress;
 
     /*
      * Device type to be used for the job.
      */
-    @JsonProperty(value = "deviceType", required = true)
     private SkuName deviceType;
 
     /*
      * Preferences related to the shipment logistics of the sku.
      */
-    @JsonProperty(value = "transportPreferences")
     private TransportPreferences transportPreferences;
 
-    /** Creates an instance of ValidateAddress class. */
+    /*
+     * The customer friendly name of the combination of version and capacity of the device. This field is necessary only
+     * at the time of ordering the newer generation device i.e. AzureDataBox120 and AzureDataBox525 as of Feb/2025
+     */
+    private ModelName model;
+
+    /**
+     * Creates an instance of ValidateAddress class.
+     */
     public ValidateAddress() {
     }
 
     /**
+     * Get the validationType property: Identifies the type of validation request.
+     * 
+     * @return the validationType value.
+     */
+    @Override
+    public ValidationInputDiscriminator validationType() {
+        return this.validationType;
+    }
+
+    /**
      * Get the shippingAddress property: Shipping address of the customer.
-     *
+     * 
      * @return the shippingAddress value.
      */
     public ShippingAddress shippingAddress() {
@@ -48,7 +69,7 @@ public final class ValidateAddress extends ValidationInputRequest {
 
     /**
      * Set the shippingAddress property: Shipping address of the customer.
-     *
+     * 
      * @param shippingAddress the shippingAddress value to set.
      * @return the ValidateAddress object itself.
      */
@@ -59,7 +80,7 @@ public final class ValidateAddress extends ValidationInputRequest {
 
     /**
      * Get the deviceType property: Device type to be used for the job.
-     *
+     * 
      * @return the deviceType value.
      */
     public SkuName deviceType() {
@@ -68,7 +89,7 @@ public final class ValidateAddress extends ValidationInputRequest {
 
     /**
      * Set the deviceType property: Device type to be used for the job.
-     *
+     * 
      * @param deviceType the deviceType value to set.
      * @return the ValidateAddress object itself.
      */
@@ -79,7 +100,7 @@ public final class ValidateAddress extends ValidationInputRequest {
 
     /**
      * Get the transportPreferences property: Preferences related to the shipment logistics of the sku.
-     *
+     * 
      * @return the transportPreferences value.
      */
     public TransportPreferences transportPreferences() {
@@ -88,7 +109,7 @@ public final class ValidateAddress extends ValidationInputRequest {
 
     /**
      * Set the transportPreferences property: Preferences related to the shipment logistics of the sku.
-     *
+     * 
      * @param transportPreferences the transportPreferences value to set.
      * @return the ValidateAddress object itself.
      */
@@ -98,24 +119,46 @@ public final class ValidateAddress extends ValidationInputRequest {
     }
 
     /**
+     * Get the model property: The customer friendly name of the combination of version and capacity of the device. This
+     * field is necessary only at the time of ordering the newer generation device i.e. AzureDataBox120 and
+     * AzureDataBox525 as of Feb/2025.
+     * 
+     * @return the model value.
+     */
+    public ModelName model() {
+        return this.model;
+    }
+
+    /**
+     * Set the model property: The customer friendly name of the combination of version and capacity of the device. This
+     * field is necessary only at the time of ordering the newer generation device i.e. AzureDataBox120 and
+     * AzureDataBox525 as of Feb/2025.
+     * 
+     * @param model the model value to set.
+     * @return the ValidateAddress object itself.
+     */
+    public ValidateAddress withModel(ModelName model) {
+        this.model = model;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
     public void validate() {
-        super.validate();
         if (shippingAddress() == null) {
-            throw LOGGER
-                .logExceptionAsError(
+            throw LOGGER.atError()
+                .log(
                     new IllegalArgumentException("Missing required property shippingAddress in model ValidateAddress"));
         } else {
             shippingAddress().validate();
         }
         if (deviceType() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property deviceType in model ValidateAddress"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Missing required property deviceType in model ValidateAddress"));
         }
         if (transportPreferences() != null) {
             transportPreferences().validate();
@@ -123,4 +166,55 @@ public final class ValidateAddress extends ValidationInputRequest {
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(ValidateAddress.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("shippingAddress", this.shippingAddress);
+        jsonWriter.writeStringField("deviceType", this.deviceType == null ? null : this.deviceType.toString());
+        jsonWriter.writeStringField("validationType",
+            this.validationType == null ? null : this.validationType.toString());
+        jsonWriter.writeJsonField("transportPreferences", this.transportPreferences);
+        jsonWriter.writeStringField("model", this.model == null ? null : this.model.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ValidateAddress from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ValidateAddress if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ValidateAddress.
+     */
+    public static ValidateAddress fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ValidateAddress deserializedValidateAddress = new ValidateAddress();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("shippingAddress".equals(fieldName)) {
+                    deserializedValidateAddress.shippingAddress = ShippingAddress.fromJson(reader);
+                } else if ("deviceType".equals(fieldName)) {
+                    deserializedValidateAddress.deviceType = SkuName.fromString(reader.getString());
+                } else if ("validationType".equals(fieldName)) {
+                    deserializedValidateAddress.validationType
+                        = ValidationInputDiscriminator.fromString(reader.getString());
+                } else if ("transportPreferences".equals(fieldName)) {
+                    deserializedValidateAddress.transportPreferences = TransportPreferences.fromJson(reader);
+                } else if ("model".equals(fieldName)) {
+                    deserializedValidateAddress.model = ModelName.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedValidateAddress;
+        });
+    }
 }

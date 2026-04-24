@@ -13,35 +13,34 @@ import org.junit.jupiter.api.Assertions;
 public final class PatchExtensionTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        PatchExtension model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"autoUpgradeMinorVersion\":true,\"releaseTrain\":\"ikxwc\",\"version\":\"yscnpqxu\",\"configurationSettings\":{\"n\":\"y\"},\"configurationProtectedSettings\":{\"vd\":\"ybrk\"}}}")
-                .toObject(PatchExtension.class);
+        PatchExtension model = BinaryData.fromString(
+            "{\"properties\":{\"autoUpgradeMinorVersion\":true,\"releaseTrain\":\"jhulsuuvmkjo\",\"version\":\"rwfndiod\",\"configurationSettings\":{\"ryo\":\"lwejdpv\",\"hbcryffdfdosyge\":\"psoacctazakljl\",\"rzevdphlxaol\":\"paojakhmsbzjh\"},\"configurationProtectedSettings\":{\"jbp\":\"trg\",\"jrwzox\":\"zfsinzgvf\",\"felluwfzitonpe\":\"j\",\"vhpfxxypininmay\":\"fpjkjlxofp\"}}}")
+            .toObject(PatchExtension.class);
         Assertions.assertEquals(true, model.autoUpgradeMinorVersion());
-        Assertions.assertEquals("ikxwc", model.releaseTrain());
-        Assertions.assertEquals("yscnpqxu", model.version());
-        Assertions.assertEquals("y", model.configurationSettings().get("n"));
-        Assertions.assertEquals("ybrk", model.configurationProtectedSettings().get("vd"));
+        Assertions.assertEquals("jhulsuuvmkjo", model.releaseTrain());
+        Assertions.assertEquals("rwfndiod", model.version());
+        Assertions.assertEquals("lwejdpv", model.configurationSettings().get("ryo"));
+        Assertions.assertEquals("trg", model.configurationProtectedSettings().get("jbp"));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        PatchExtension model =
-            new PatchExtension()
-                .withAutoUpgradeMinorVersion(true)
-                .withReleaseTrain("ikxwc")
-                .withVersion("yscnpqxu")
-                .withConfigurationSettings(mapOf("n", "y"))
-                .withConfigurationProtectedSettings(mapOf("vd", "ybrk"));
+        PatchExtension model = new PatchExtension().withAutoUpgradeMinorVersion(true)
+            .withReleaseTrain("jhulsuuvmkjo")
+            .withVersion("rwfndiod")
+            .withConfigurationSettings(
+                mapOf("ryo", "lwejdpv", "hbcryffdfdosyge", "psoacctazakljl", "rzevdphlxaol", "paojakhmsbzjh"))
+            .withConfigurationProtectedSettings(
+                mapOf("jbp", "trg", "jrwzox", "zfsinzgvf", "felluwfzitonpe", "j", "vhpfxxypininmay", "fpjkjlxofp"));
         model = BinaryData.fromObject(model).toObject(PatchExtension.class);
         Assertions.assertEquals(true, model.autoUpgradeMinorVersion());
-        Assertions.assertEquals("ikxwc", model.releaseTrain());
-        Assertions.assertEquals("yscnpqxu", model.version());
-        Assertions.assertEquals("y", model.configurationSettings().get("n"));
-        Assertions.assertEquals("ybrk", model.configurationProtectedSettings().get("vd"));
+        Assertions.assertEquals("jhulsuuvmkjo", model.releaseTrain());
+        Assertions.assertEquals("rwfndiod", model.version());
+        Assertions.assertEquals("lwejdpv", model.configurationSettings().get("ryo"));
+        Assertions.assertEquals("trg", model.configurationProtectedSettings().get("jbp"));
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

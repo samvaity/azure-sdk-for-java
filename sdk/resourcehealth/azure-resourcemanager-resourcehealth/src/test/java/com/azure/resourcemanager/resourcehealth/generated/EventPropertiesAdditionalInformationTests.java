@@ -11,18 +11,15 @@ import org.junit.jupiter.api.Assertions;
 public final class EventPropertiesAdditionalInformationTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        EventPropertiesAdditionalInformation model =
-            BinaryData
-                .fromString("{\"message\":\"juahaquhcdhmdual\"}")
-                .toObject(EventPropertiesAdditionalInformation.class);
-        Assertions.assertEquals("juahaquhcdhmdual", model.message());
+        EventPropertiesAdditionalInformation model
+            = BinaryData.fromString("{\"message\":\"abfatkl\"}").toObject(EventPropertiesAdditionalInformation.class);
+        Assertions.assertEquals("abfatkl", model.message());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        EventPropertiesAdditionalInformation model =
-            new EventPropertiesAdditionalInformation().withMessage("juahaquhcdhmdual");
+        EventPropertiesAdditionalInformation model = new EventPropertiesAdditionalInformation().withMessage("abfatkl");
         model = BinaryData.fromObject(model).toObject(EventPropertiesAdditionalInformation.class);
-        Assertions.assertEquals("juahaquhcdhmdual", model.message());
+        Assertions.assertEquals("abfatkl", model.message());
     }
 }

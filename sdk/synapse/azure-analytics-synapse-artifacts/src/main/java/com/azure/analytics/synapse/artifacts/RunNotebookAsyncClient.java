@@ -8,23 +8,28 @@ import com.azure.analytics.synapse.artifacts.implementation.RunNotebooksImpl;
 import com.azure.analytics.synapse.artifacts.models.CloudErrorException;
 import com.azure.analytics.synapse.artifacts.models.RunNotebookRequest;
 import com.azure.analytics.synapse.artifacts.models.RunNotebookResponse;
+import com.azure.analytics.synapse.artifacts.models.RunNotebookResponseException;
 import com.azure.analytics.synapse.artifacts.models.RunNotebookSnapshotResponse;
-import com.azure.analytics.synapse.artifacts.models.RunNotebooksCreateRunResponse;
+import com.azure.analytics.synapse.artifacts.models.RunNotebooksCreateRunHeaders;
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.ResponseBase;
 import reactor.core.publisher.Mono;
 
-/** Initializes a new instance of the asynchronous ArtifactsClient type. */
+/**
+ * Initializes a new instance of the asynchronous ArtifactsClient type.
+ */
 @ServiceClient(builder = ArtifactsClientBuilder.class, isAsync = true)
 public final class RunNotebookAsyncClient {
-    @Generated private final RunNotebooksImpl serviceClient;
+    @Generated
+    private final RunNotebooksImpl serviceClient;
 
     /**
      * Initializes an instance of RunNotebookAsyncClient class.
-     *
+     * 
      * @param serviceClient the service client implementation.
      */
     @Generated
@@ -34,25 +39,27 @@ public final class RunNotebookAsyncClient {
 
     /**
      * Run notebook.
-     *
-     * @param runId Notebook run id.
+     * 
+     * @param runId Notebook run id. For Create Run, you can generate a new GUID and use it here. For other actions,
+     * this is the same ID used in Create Run.
      * @param runNotebookRequest Run notebook request payload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws CloudErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return run notebook response on successful completion of {@link Mono}.
+     * @return run notebook response along with {@link ResponseBase} on successful completion of {@link Mono}.
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<RunNotebooksCreateRunResponse> createRunWithResponse(
-            String runId, RunNotebookRequest runNotebookRequest) {
+    public Mono<ResponseBase<RunNotebooksCreateRunHeaders, RunNotebookResponse>> createRunWithResponse(String runId,
+        RunNotebookRequest runNotebookRequest) {
         return this.serviceClient.createRunWithResponseAsync(runId, runNotebookRequest);
     }
 
     /**
      * Run notebook.
-     *
-     * @param runId Notebook run id.
+     * 
+     * @param runId Notebook run id. For Create Run, you can generate a new GUID and use it here. For other actions,
+     * this is the same ID used in Create Run.
      * @param runNotebookRequest Run notebook request payload.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws CloudErrorException thrown if the request is rejected by server.
@@ -66,9 +73,28 @@ public final class RunNotebookAsyncClient {
     }
 
     /**
+     * Run notebook.
+     * 
+     * @param runId Notebook run id. For Create Run, you can generate a new GUID and use it here. For other actions,
+     * this is the same ID used in Create Run.
+     * @param runNotebookRequest Run notebook request payload.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudErrorException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return run notebook response along with {@link Response} on successful completion of {@link Mono}.
+     */
+    @Generated
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<RunNotebookResponse>> createRunNoCustomHeadersWithResponse(String runId,
+        RunNotebookRequest runNotebookRequest) {
+        return this.serviceClient.createRunNoCustomHeadersWithResponseAsync(runId, runNotebookRequest);
+    }
+
+    /**
      * Get RunNotebook Status for run id.
-     *
-     * @param runId Notebook run id.
+     * 
+     * @param runId Notebook run id. For Create Run, you can generate a new GUID and use it here. For other actions,
+     * this is the same ID used in Create Run.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws CloudErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -82,8 +108,9 @@ public final class RunNotebookAsyncClient {
 
     /**
      * Get RunNotebook Status for run id.
-     *
-     * @param runId Notebook run id.
+     * 
+     * @param runId Notebook run id. For Create Run, you can generate a new GUID and use it here. For other actions,
+     * this is the same ID used in Create Run.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws CloudErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -97,10 +124,12 @@ public final class RunNotebookAsyncClient {
 
     /**
      * Cancel notebook run.
-     *
-     * @param runId Notebook run id.
+     * 
+     * @param runId Notebook run id. For Create Run, you can generate a new GUID and use it here. For other actions,
+     * this is the same ID used in Create Run.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws CloudErrorException thrown if the request is rejected by server.
+     * @throws RunNotebookResponseException thrown if the request is rejected by server on status code 409.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return run notebook response along with {@link Response} on successful completion of {@link Mono}.
      */
@@ -112,10 +141,12 @@ public final class RunNotebookAsyncClient {
 
     /**
      * Cancel notebook run.
-     *
-     * @param runId Notebook run id.
+     * 
+     * @param runId Notebook run id. For Create Run, you can generate a new GUID and use it here. For other actions,
+     * this is the same ID used in Create Run.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws CloudErrorException thrown if the request is rejected by server.
+     * @throws RunNotebookResponseException thrown if the request is rejected by server on status code 409.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return run notebook response on successful completion of {@link Mono}.
      */
@@ -127,8 +158,9 @@ public final class RunNotebookAsyncClient {
 
     /**
      * Get RunNotebook Snapshot for run id.
-     *
-     * @param runId Notebook run id.
+     * 
+     * @param runId Notebook run id. For Create Run, you can generate a new GUID and use it here. For other actions,
+     * this is the same ID used in Create Run.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws CloudErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -142,8 +174,9 @@ public final class RunNotebookAsyncClient {
 
     /**
      * Get RunNotebook Snapshot for run id.
-     *
-     * @param runId Notebook run id.
+     * 
+     * @param runId Notebook run id. For Create Run, you can generate a new GUID and use it here. For other actions,
+     * this is the same ID used in Create Run.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws CloudErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.

@@ -14,24 +14,27 @@ import com.azure.search.documents.SearchAsyncClient;
 import com.azure.search.documents.SearchClient;
 import com.azure.search.documents.indexes.SearchIndexAsyncClient;
 import com.azure.search.documents.indexes.SearchIndexClientBuilder;
-import com.azure.search.documents.indexes.models.IndexDocumentsBatch;
 import com.azure.search.documents.indexes.models.SearchIndex;
 import com.azure.search.documents.indexes.models.SearchSuggester;
+import com.azure.search.documents.models.IndexAction;
+import com.azure.search.documents.models.IndexActionType;
+import com.azure.search.documents.models.IndexDocumentsBatch;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.InetSocketAddress;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Base class for Azure Search performance tests.
  */
 public abstract class ServiceTest<TOptions extends PerfStressOptions> extends PerfStressTest<TOptions> {
-    private static final String CONFIGURATION_ERROR = "Configuration %s must be set in either environment variables "
-        + "or system properties.%n";
+    private static final String CONFIGURATION_ERROR
+        = "Configuration %s must be set in either environment variables " + "or system properties.%n";
     private static final String ALLOWED_INDEX_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
     private static final int INDEX_NAME_LENGTH = 24;
 
@@ -73,8 +76,7 @@ public abstract class ServiceTest<TOptions extends PerfStressOptions> extends Pe
             System.exit(1);
         }
 
-        SearchIndexClientBuilder builder = new SearchIndexClientBuilder()
-            .endpoint(searchEndpoint)
+        SearchIndexClientBuilder builder = new SearchIndexClientBuilder().endpoint(searchEndpoint)
             .credential(new AzureKeyCredential(searchApiKey))
             .httpClient(new NettyAsyncHttpClientBuilder()
                 .proxy(new ProxyOptions(ProxyOptions.Type.HTTP, new InetSocketAddress("localhost", 8888)))
@@ -94,8 +96,8 @@ public abstract class ServiceTest<TOptions extends PerfStressOptions> extends Pe
     @Override
     public Mono<Void> globalSetupAsync() {
         return searchIndexAsyncClient
-            .createIndex(new SearchIndex(indexName, SearchIndexAsyncClient.buildSearchFields(Hotel.class, null))
-                .setSuggesters(new SearchSuggester(SUGGESTER_NAME, Arrays.asList("Description", "HotelName"))))
+            .createIndex(new SearchIndex(indexName, SearchIndexAsyncClient.buildSearchFields(Hotel.class))
+                .setSuggesters(new SearchSuggester(SUGGESTER_NAME, "Description", "HotelName")))
             .then();
     }
 
@@ -118,17 +120,22 @@ public abstract class ServiceTest<TOptions extends PerfStressOptions> extends Pe
          * index for its document count until it is equal to the count passed.
          */
         return Mono.defer(() -> {
-            List<Hotel> hotels = DocumentGenerator.generateHotels(documentCount, DocumentSize.valueOf(documentSize));
+            List<Map<String, Object>> hotels
+                = DocumentGenerator.generateHotels(documentCount, DocumentSize.valueOf(documentSize));
 
             return Flux.range(0, (int) Math.ceil(hotels.size() / 100D))
                 .map(i -> hotels.subList(i * 100, Math.min((i + 1) * 100, hotels.size())))
-                .flatMap(hotelDocuments -> searchAsyncClient.indexDocuments(new IndexDocumentsBatch<Hotel>()
-                    .addUploadActions(hotelDocuments)))
+                .flatMap(
+                    hotelDocuments -> searchAsyncClient.indexDocuments(new IndexDocumentsBatch(hotelDocuments.stream()
+                        .map(
+                            doc -> new IndexAction().setActionType(IndexActionType.UPLOAD).setAdditionalProperties(doc))
+                        .collect(Collectors.toList()))))
                 .then();
-        }).then(Mono.defer(() -> searchAsyncClient.getDocumentCount()
-            .delaySubscription(Duration.ofSeconds(1))
-            .filter(count -> count == documentCount)
-            .repeatWhenEmpty(Flux::repeat)
-            .then()));
+        })
+            .then(Mono.defer(() -> searchAsyncClient.getDocumentCount()
+                .delaySubscription(Duration.ofSeconds(1))
+                .filter(count -> count == documentCount)
+                .repeatWhenEmpty(Flux::repeat)
+                .then()));
     }
 }

@@ -11,6 +11,13 @@ import java.time.OffsetDateTime;
 /** Quota used, limit, and next reset date/time. */
 @Immutable
 public final class QuotaDetails {
+
+    /**
+     * Creates a QuotaDetails object.
+     */
+    public QuotaDetails() {
+    }
+
     /*
      * Amount of the resource quota used.
      */
@@ -68,20 +75,17 @@ public final class QuotaDetails {
     static {
         QuotaDetailsHelper.setAccessor(new QuotaDetailsHelper.QuotaDetailsAccessor() {
             @Override
-            public void setUsed(
-                QuotaDetails quotaDetails, int used) {
+            public void setUsed(QuotaDetails quotaDetails, int used) {
                 quotaDetails.setUsed(used);
             }
 
             @Override
-            public void setQuota(
-                QuotaDetails quotaDetails, int quota) {
+            public void setQuota(QuotaDetails quotaDetails, int quota) {
                 quotaDetails.setQuota(quota);
             }
 
             @Override
-            public void setQuotaResetDateTime(
-                QuotaDetails quotaDetails, OffsetDateTime quotaResetDateTime) {
+            public void setQuotaResetDateTime(QuotaDetails quotaDetails, OffsetDateTime quotaResetDateTime) {
                 quotaDetails.setQuotaResetDateTime(quotaResetDateTime);
             }
         });

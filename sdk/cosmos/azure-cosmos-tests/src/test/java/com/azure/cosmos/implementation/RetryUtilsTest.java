@@ -5,7 +5,7 @@ package com.azure.cosmos.implementation;
 import com.azure.cosmos.implementation.directconnectivity.AddressSelector;
 import com.azure.cosmos.implementation.directconnectivity.StoreResponse;
 import com.azure.cosmos.implementation.directconnectivity.StoreResponseValidator;
-import io.reactivex.subscribers.TestSubscriber;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -14,14 +14,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import static com.azure.cosmos.implementation.TestUtils.mockDiagnosticsClientContext;
 import static com.azure.cosmos.implementation.TestUtils.mockDocumentServiceRequest;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 public class RetryUtilsTest {
@@ -75,8 +74,11 @@ public class RetryUtilsTest {
         Mockito.when(retryPolicy.shouldRetry(ArgumentMatchers.any()))
                 .thenReturn(Mono.just(ShouldRetryResult.retryAfter(BACK_OFF_DURATION)));
         Mono<StoreResponse> response = onErrorFunc.apply(new GoneException());
-        StoreResponseValidator validator = StoreResponseValidator.create().withStatus(storeResponse.getStatus())
-                .withContent(storeResponse.getResponseBody()).build();
+        StoreResponseValidator validator = StoreResponseValidator
+            .create()
+            .withStatus(storeResponse.getStatus())
+            .withContent((ObjectNode)storeResponse.getResponseBodyAsJson())
+            .build();
         validateSuccess(response, validator, TIMEOUT);
         Mockito.verify(callbackMethod, Mockito.times(4)).apply(ArgumentMatchers.any());
     }
@@ -95,33 +97,30 @@ public class RetryUtilsTest {
         Mockito.when(retryPolicy.shouldRetry(ArgumentMatchers.any()))
                 .thenReturn(Mono.just(ShouldRetryResult.retryAfter(BACK_OFF_DURATION)));
         Mono<StoreResponse> response = onErrorFunc.apply(new GoneException());
-        StoreResponseValidator validator = StoreResponseValidator.create().withStatus(storeResponse.getStatus())
-                .withContent(storeResponse.getResponseBody()).build();
+        StoreResponseValidator validator = StoreResponseValidator
+            .create()
+            .withStatus(storeResponse.getStatus())
+            .withContent((ObjectNode)storeResponse.getResponseBodyAsJson())
+            .build();
         validateSuccess(response, validator, TIMEOUT);
         Mockito.verify(inBackoffAlternateCallbackMethod, Mockito.times(4)).apply(ArgumentMatchers.any());
     }
 
     private void validateFailure(Mono<StoreResponse> single, long timeout, Class<? extends Throwable> class1) {
-
-        TestSubscriber<StoreResponse> testSubscriber = new TestSubscriber<>();
-        single.subscribe(testSubscriber);
-        testSubscriber.awaitTerminalEvent(timeout, TimeUnit.MILLISECONDS);
-        testSubscriber.assertNotComplete();
-        testSubscriber.assertTerminated();
-        assertThat(testSubscriber.errorCount()).isEqualTo(1);
-        Throwable throwable = Exceptions.unwrap(testSubscriber.errors().get(0));
-        if (!(throwable.getClass().equals(class1))) {
-            fail("Not expecting " + testSubscriber.getEvents().get(1).get(0));
-        }
+        StepVerifier.create(single)
+            .expectErrorSatisfies(thrown -> {
+                Throwable throwable = Exceptions.unwrap(thrown);
+                if (!(throwable.getClass().equals(class1))) {
+                    fail("Not expecting " + thrown);
+                }
+            }).verify(Duration.ofMillis(timeout));
     }
 
     private void validateSuccess(Mono<StoreResponse> single, StoreResponseValidator validator, long timeout) {
-
-        TestSubscriber<StoreResponse> testSubscriber = new TestSubscriber<>();
-        single.subscribe(testSubscriber);
-        testSubscriber.awaitTerminalEvent(timeout, TimeUnit.MILLISECONDS);
-        assertThat(testSubscriber.valueCount()).isEqualTo(1);
-        validator.validate(testSubscriber.values().get(0));
+        StepVerifier.create(single)
+            .assertNext(validator::validate)
+            .expectComplete()
+            .verify(Duration.ofMillis(timeout));
     }
 
     private void toggleMockFuncBtwFailureSuccess(
@@ -141,7 +140,7 @@ public class RetryUtilsTest {
     }
 
     private StoreResponse getStoreResponse() {
-        StoreResponseBuilder storeResponseBuilder = new StoreResponseBuilder().withContent("Test content")
+        StoreResponseBuilder storeResponseBuilder = new StoreResponseBuilder().withContent("{\"id\":\"Test content\"}")
                 .withStatus(200);
         return storeResponseBuilder.build();
     }

@@ -11,20 +11,18 @@ import org.junit.jupiter.api.Assertions;
 public final class MoveResourceDependencyOverrideTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MoveResourceDependencyOverride model =
-            BinaryData
-                .fromString("{\"id\":\"ctbzaq\",\"targetId\":\"sycbkbfk\"}")
-                .toObject(MoveResourceDependencyOverride.class);
-        Assertions.assertEquals("ctbzaq", model.id());
-        Assertions.assertEquals("sycbkbfk", model.targetId());
+        MoveResourceDependencyOverride model = BinaryData.fromString("{\"id\":\"qqwx\",\"targetId\":\"feallnwsu\"}")
+            .toObject(MoveResourceDependencyOverride.class);
+        Assertions.assertEquals("qqwx", model.id());
+        Assertions.assertEquals("feallnwsu", model.targetId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MoveResourceDependencyOverride model =
-            new MoveResourceDependencyOverride().withId("ctbzaq").withTargetId("sycbkbfk");
+        MoveResourceDependencyOverride model
+            = new MoveResourceDependencyOverride().withId("qqwx").withTargetId("feallnwsu");
         model = BinaryData.fromObject(model).toObject(MoveResourceDependencyOverride.class);
-        Assertions.assertEquals("ctbzaq", model.id());
-        Assertions.assertEquals("sycbkbfk", model.targetId());
+        Assertions.assertEquals("qqwx", model.id());
+        Assertions.assertEquals("feallnwsu", model.targetId());
     }
 }

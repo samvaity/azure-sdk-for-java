@@ -5,75 +5,91 @@
 package com.azure.communication.callautomation.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The RecognizeOptionsInternal model. */
+/**
+ * The RecognizeOptionsInternal model.
+ */
 @Fluent
-public final class RecognizeOptionsInternal {
+public final class RecognizeOptionsInternal implements JsonSerializable<RecognizeOptionsInternal> {
     /*
      * Determines if we interrupt the prompt and start recognizing.
      */
-    @JsonProperty(value = "interruptPrompt")
+    @Generated
     private Boolean interruptPrompt;
 
     /*
      * Time to wait for first input after prompt (if any).
      */
-    @JsonProperty(value = "initialSilenceTimeoutInSeconds")
+    @Generated
     private Integer initialSilenceTimeoutInSeconds;
 
     /*
      * Target participant of DTMF tone recognition.
      */
-    @JsonProperty(value = "targetParticipant", required = true)
+    @Generated
     private CommunicationIdentifierModel targetParticipant;
 
     /*
      * Speech language to be recognized, If not set default is en-US
      */
-    @JsonProperty(value = "speechLanguage")
+    @Generated
     private String speechLanguage;
 
     /*
      * Endpoint where the custom model was deployed.
      */
-    @JsonProperty(value = "speechRecognitionModelEndpointId")
+    @Generated
     private String speechRecognitionModelEndpointId;
 
     /*
      * Defines configurations for DTMF.
      */
-    @JsonProperty(value = "dtmfOptions")
+    @Generated
     private DtmfOptionsInternal dtmfOptions;
 
     /*
      * Defines Ivr choices for recognize.
      */
-    @JsonProperty(value = "choices")
-    private List<RecognizeChoiceInternal> choices;
+    @Generated
+    private List<RecognitionChoiceInternal> choices;
 
     /*
      * Defines continuous speech recognition option.
      */
-    @JsonProperty(value = "speechOptions")
+    @Generated
     private SpeechOptionsInternal speechOptions;
 
     /**
+     * Creates an instance of RecognizeOptionsInternal class.
+     */
+    @Generated
+    public RecognizeOptionsInternal() {
+    }
+
+    /**
      * Get the interruptPrompt property: Determines if we interrupt the prompt and start recognizing.
-     *
+     * 
      * @return the interruptPrompt value.
      */
+    @Generated
     public Boolean isInterruptPrompt() {
         return this.interruptPrompt;
     }
 
     /**
      * Set the interruptPrompt property: Determines if we interrupt the prompt and start recognizing.
-     *
+     * 
      * @param interruptPrompt the interruptPrompt value to set.
      * @return the RecognizeOptionsInternal object itself.
      */
+    @Generated
     public RecognizeOptionsInternal setInterruptPrompt(Boolean interruptPrompt) {
         this.interruptPrompt = interruptPrompt;
         return this;
@@ -81,19 +97,21 @@ public final class RecognizeOptionsInternal {
 
     /**
      * Get the initialSilenceTimeoutInSeconds property: Time to wait for first input after prompt (if any).
-     *
+     * 
      * @return the initialSilenceTimeoutInSeconds value.
      */
+    @Generated
     public Integer getInitialSilenceTimeoutInSeconds() {
         return this.initialSilenceTimeoutInSeconds;
     }
 
     /**
      * Set the initialSilenceTimeoutInSeconds property: Time to wait for first input after prompt (if any).
-     *
+     * 
      * @param initialSilenceTimeoutInSeconds the initialSilenceTimeoutInSeconds value to set.
      * @return the RecognizeOptionsInternal object itself.
      */
+    @Generated
     public RecognizeOptionsInternal setInitialSilenceTimeoutInSeconds(Integer initialSilenceTimeoutInSeconds) {
         this.initialSilenceTimeoutInSeconds = initialSilenceTimeoutInSeconds;
         return this;
@@ -101,19 +119,21 @@ public final class RecognizeOptionsInternal {
 
     /**
      * Get the targetParticipant property: Target participant of DTMF tone recognition.
-     *
+     * 
      * @return the targetParticipant value.
      */
+    @Generated
     public CommunicationIdentifierModel getTargetParticipant() {
         return this.targetParticipant;
     }
 
     /**
      * Set the targetParticipant property: Target participant of DTMF tone recognition.
-     *
+     * 
      * @param targetParticipant the targetParticipant value to set.
      * @return the RecognizeOptionsInternal object itself.
      */
+    @Generated
     public RecognizeOptionsInternal setTargetParticipant(CommunicationIdentifierModel targetParticipant) {
         this.targetParticipant = targetParticipant;
         return this;
@@ -121,19 +141,21 @@ public final class RecognizeOptionsInternal {
 
     /**
      * Get the speechLanguage property: Speech language to be recognized, If not set default is en-US.
-     *
+     * 
      * @return the speechLanguage value.
      */
+    @Generated
     public String getSpeechLanguage() {
         return this.speechLanguage;
     }
 
     /**
      * Set the speechLanguage property: Speech language to be recognized, If not set default is en-US.
-     *
+     * 
      * @param speechLanguage the speechLanguage value to set.
      * @return the RecognizeOptionsInternal object itself.
      */
+    @Generated
     public RecognizeOptionsInternal setSpeechLanguage(String speechLanguage) {
         this.speechLanguage = speechLanguage;
         return this;
@@ -141,19 +163,21 @@ public final class RecognizeOptionsInternal {
 
     /**
      * Get the speechRecognitionModelEndpointId property: Endpoint where the custom model was deployed.
-     *
+     * 
      * @return the speechRecognitionModelEndpointId value.
      */
+    @Generated
     public String getSpeechRecognitionModelEndpointId() {
         return this.speechRecognitionModelEndpointId;
     }
 
     /**
      * Set the speechRecognitionModelEndpointId property: Endpoint where the custom model was deployed.
-     *
+     * 
      * @param speechRecognitionModelEndpointId the speechRecognitionModelEndpointId value to set.
      * @return the RecognizeOptionsInternal object itself.
      */
+    @Generated
     public RecognizeOptionsInternal setSpeechRecognitionModelEndpointId(String speechRecognitionModelEndpointId) {
         this.speechRecognitionModelEndpointId = speechRecognitionModelEndpointId;
         return this;
@@ -161,19 +185,21 @@ public final class RecognizeOptionsInternal {
 
     /**
      * Get the dtmfOptions property: Defines configurations for DTMF.
-     *
+     * 
      * @return the dtmfOptions value.
      */
+    @Generated
     public DtmfOptionsInternal getDtmfOptions() {
         return this.dtmfOptions;
     }
 
     /**
      * Set the dtmfOptions property: Defines configurations for DTMF.
-     *
+     * 
      * @param dtmfOptions the dtmfOptions value to set.
      * @return the RecognizeOptionsInternal object itself.
      */
+    @Generated
     public RecognizeOptionsInternal setDtmfOptions(DtmfOptionsInternal dtmfOptions) {
         this.dtmfOptions = dtmfOptions;
         return this;
@@ -181,41 +207,109 @@ public final class RecognizeOptionsInternal {
 
     /**
      * Get the choices property: Defines Ivr choices for recognize.
-     *
+     * 
      * @return the choices value.
      */
-    public List<RecognizeChoiceInternal> getChoices() {
+    @Generated
+    public List<RecognitionChoiceInternal> getChoices() {
         return this.choices;
     }
 
     /**
      * Set the choices property: Defines Ivr choices for recognize.
-     *
+     * 
      * @param choices the choices value to set.
      * @return the RecognizeOptionsInternal object itself.
      */
-    public RecognizeOptionsInternal setChoices(List<RecognizeChoiceInternal> choices) {
+    @Generated
+    public RecognizeOptionsInternal setChoices(List<RecognitionChoiceInternal> choices) {
         this.choices = choices;
         return this;
     }
 
     /**
      * Get the speechOptions property: Defines continuous speech recognition option.
-     *
+     * 
      * @return the speechOptions value.
      */
+    @Generated
     public SpeechOptionsInternal getSpeechOptions() {
         return this.speechOptions;
     }
 
     /**
      * Set the speechOptions property: Defines continuous speech recognition option.
-     *
+     * 
      * @param speechOptions the speechOptions value to set.
      * @return the RecognizeOptionsInternal object itself.
      */
+    @Generated
     public RecognizeOptionsInternal setSpeechOptions(SpeechOptionsInternal speechOptions) {
         this.speechOptions = speechOptions;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("targetParticipant", this.targetParticipant);
+        jsonWriter.writeBooleanField("interruptPrompt", this.interruptPrompt);
+        jsonWriter.writeNumberField("initialSilenceTimeoutInSeconds", this.initialSilenceTimeoutInSeconds);
+        jsonWriter.writeStringField("speechLanguage", this.speechLanguage);
+        jsonWriter.writeStringField("speechRecognitionModelEndpointId", this.speechRecognitionModelEndpointId);
+        jsonWriter.writeJsonField("dtmfOptions", this.dtmfOptions);
+        jsonWriter.writeArrayField("choices", this.choices, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("speechOptions", this.speechOptions);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RecognizeOptionsInternal from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RecognizeOptionsInternal if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the RecognizeOptionsInternal.
+     */
+    @Generated
+    public static RecognizeOptionsInternal fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RecognizeOptionsInternal deserializedRecognizeOptionsInternal = new RecognizeOptionsInternal();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("targetParticipant".equals(fieldName)) {
+                    deserializedRecognizeOptionsInternal.targetParticipant
+                        = CommunicationIdentifierModel.fromJson(reader);
+                } else if ("interruptPrompt".equals(fieldName)) {
+                    deserializedRecognizeOptionsInternal.interruptPrompt = reader.getNullable(JsonReader::getBoolean);
+                } else if ("initialSilenceTimeoutInSeconds".equals(fieldName)) {
+                    deserializedRecognizeOptionsInternal.initialSilenceTimeoutInSeconds
+                        = reader.getNullable(JsonReader::getInt);
+                } else if ("speechLanguage".equals(fieldName)) {
+                    deserializedRecognizeOptionsInternal.speechLanguage = reader.getString();
+                } else if ("speechRecognitionModelEndpointId".equals(fieldName)) {
+                    deserializedRecognizeOptionsInternal.speechRecognitionModelEndpointId = reader.getString();
+                } else if ("dtmfOptions".equals(fieldName)) {
+                    deserializedRecognizeOptionsInternal.dtmfOptions = DtmfOptionsInternal.fromJson(reader);
+                } else if ("choices".equals(fieldName)) {
+                    List<RecognitionChoiceInternal> choices
+                        = reader.readArray(reader1 -> RecognitionChoiceInternal.fromJson(reader1));
+                    deserializedRecognizeOptionsInternal.choices = choices;
+                } else if ("speechOptions".equals(fieldName)) {
+                    deserializedRecognizeOptionsInternal.speechOptions = SpeechOptionsInternal.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRecognizeOptionsInternal;
+        });
     }
 }

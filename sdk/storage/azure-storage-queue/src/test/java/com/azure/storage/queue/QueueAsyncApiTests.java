@@ -6,15 +6,24 @@ package com.azure.storage.queue;
 import com.azure.core.util.BinaryData;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.storage.common.StorageSharedKeyCredential;
+import com.azure.storage.common.test.shared.extensions.LiveOnly;
+import com.azure.storage.common.test.shared.extensions.RequiredServiceVersion;
+import com.azure.storage.common.test.shared.policy.InvalidServiceVersionPipelinePolicy;
 import com.azure.storage.queue.models.PeekedMessageItem;
 import com.azure.storage.queue.models.QueueAccessPolicy;
+import com.azure.storage.queue.models.QueueAudience;
 import com.azure.storage.queue.models.QueueErrorCode;
 import com.azure.storage.queue.models.QueueMessageItem;
+import com.azure.storage.queue.models.QueueProperties;
 import com.azure.storage.queue.models.QueueSignedIdentifier;
+import com.azure.storage.queue.models.QueueStorageException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -33,6 +42,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.azure.core.test.utils.TestUtils.assertArraysEqual;
+import static com.azure.storage.common.implementation.StorageImplUtils.INVALID_VERSION_HEADER_MESSAGE;
 import static com.azure.storage.queue.QueueApiTests.CREATE_METADATA;
 import static com.azure.storage.queue.QueueApiTests.TEST_METADATA;
 import static com.azure.storage.queue.QueueTestHelper.assertAsyncResponseStatusCode;
@@ -40,9 +50,11 @@ import static com.azure.storage.queue.QueueTestHelper.assertExceptionStatusCodeA
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class QueueAsyncApiTests extends QueueTestBase {
     private String queueName;
@@ -57,8 +69,8 @@ public class QueueAsyncApiTests extends QueueTestBase {
 
     @Test
     public void getQueueUrl() {
-        String accountName = StorageSharedKeyCredential.fromConnectionString(getPrimaryConnectionString())
-            .getAccountName();
+        String accountName
+            = StorageSharedKeyCredential.fromConnectionString(getPrimaryConnectionString()).getAccountName();
         String expectURL = String.format("https://%s.queue.core.windows.net/%s", accountName, queueName);
 
         assertEquals(expectURL, queueAsyncClient.getQueueUrl());
@@ -66,8 +78,7 @@ public class QueueAsyncApiTests extends QueueTestBase {
 
     @Test
     public void ipBasedEndpoint() {
-        QueueAsyncClient queueAsyncClient = new QueueClientBuilder()
-            .connectionString(getPrimaryConnectionString())
+        QueueAsyncClient queueAsyncClient = new QueueClientBuilder().connectionString(getPrimaryConnectionString())
             .endpoint("http://127.0.0.1:10001/devstoreaccount1/myqueue")
             .buildAsyncClient();
 
@@ -129,24 +140,20 @@ public class QueueAsyncApiTests extends QueueTestBase {
 
     @Test
     public void deleteIfExistsQueueThatDoesNotExist() {
-        StepVerifier.create(queueAsyncClient.deleteIfExistsWithResponse())
-            .assertNext(response -> {
-                assertEquals(404, response.getStatusCode());
-                assertFalse(response.getValue());
-            })
-            .verifyComplete();
+        StepVerifier.create(queueAsyncClient.deleteIfExistsWithResponse()).assertNext(response -> {
+            assertEquals(404, response.getStatusCode());
+            assertFalse(response.getValue());
+        }).verifyComplete();
     }
 
     @Test
     public void getProperties() {
         queueAsyncClient.createWithResponse(TEST_METADATA).block();
-        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse())
-            .assertNext(response -> {
-                assertEquals(200, response.getStatusCode());
-                assertEquals(0, response.getValue().getApproximateMessagesCount());
-                assertEquals(TEST_METADATA, response.getValue().getMetadata());
-            })
-            .verifyComplete();
+        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse()).assertNext(response -> {
+            assertEquals(200, response.getStatusCode());
+            assertEquals(0, response.getValue().getApproximateMessagesCount());
+            assertEquals(TEST_METADATA, response.getValue().getMetadata());
+        }).verifyComplete();
     }
 
     @Test
@@ -161,21 +168,17 @@ public class QueueAsyncApiTests extends QueueTestBase {
         Map<String, String> expectedCreate, Map<String, String> expectedSet) {
         queueAsyncClient.createWithResponse(create).block();
 
-        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse())
-            .assertNext(response -> {
-                assertEquals(200, response.getStatusCode());
-                assertEquals(expectedCreate, response.getValue().getMetadata());
-            })
-            .verifyComplete();
+        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse()).assertNext(response -> {
+            assertEquals(200, response.getStatusCode());
+            assertEquals(expectedCreate, response.getValue().getMetadata());
+        }).verifyComplete();
 
         assertAsyncResponseStatusCode(queueAsyncClient.setMetadataWithResponse(set), 204);
 
-        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse())
-            .assertNext(response -> {
-                assertEquals(200, response.getStatusCode());
-                assertEquals(expectedSet, response.getValue().getMetadata());
-            })
-            .verifyComplete();
+        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse()).assertNext(response -> {
+            assertEquals(200, response.getStatusCode());
+            assertEquals(expectedSet, response.getValue().getMetadata());
+        }).verifyComplete();
     }
 
     @Test
@@ -195,9 +198,7 @@ public class QueueAsyncApiTests extends QueueTestBase {
     @Test
     public void getAccessPolicy() {
         queueAsyncClient.create().block();
-        StepVerifier.create(queueAsyncClient.getAccessPolicy())
-            .expectNextCount(0)
-            .verifyComplete();
+        StepVerifier.create(queueAsyncClient.getAccessPolicy()).expectNextCount(0).verifyComplete();
     }
 
     @Test
@@ -209,16 +210,14 @@ public class QueueAsyncApiTests extends QueueTestBase {
     @Test
     public void setAccessPolicy() {
         queueAsyncClient.create().block();
-        QueueAccessPolicy accessPolicy = new QueueAccessPolicy()
-            .setPermissions("raup")
+        QueueAccessPolicy accessPolicy = new QueueAccessPolicy().setPermissions("raup")
             .setStartsOn(OffsetDateTime.of(LocalDateTime.of(2000, 1, 1, 0, 0), ZoneOffset.UTC))
             .setExpiresOn(OffsetDateTime.of(LocalDateTime.of(2020, 1, 1, 0, 0), ZoneOffset.UTC));
-        QueueSignedIdentifier permission = new QueueSignedIdentifier()
-            .setId("testpermission")
-            .setAccessPolicy(accessPolicy);
+        QueueSignedIdentifier permission
+            = new QueueSignedIdentifier().setId("testpermission").setAccessPolicy(accessPolicy);
 
-        assertAsyncResponseStatusCode(queueAsyncClient.setAccessPolicyWithResponse(
-            Collections.singletonList(permission)), 204);
+        assertAsyncResponseStatusCode(
+            queueAsyncClient.setAccessPolicyWithResponse(Collections.singletonList(permission)), 204);
         StepVerifier.create(queueAsyncClient.getAccessPolicy())
             .assertNext(policy -> QueueTestHelper.assertPermissionsAreEqual(permission, policy))
             .verifyComplete();
@@ -226,8 +225,7 @@ public class QueueAsyncApiTests extends QueueTestBase {
 
     @Test
     public void setInvalidAccessPolicy() {
-        QueueAccessPolicy accessPolicy = new QueueAccessPolicy()
-            .setPermissions("r")
+        QueueAccessPolicy accessPolicy = new QueueAccessPolicy().setPermissions("r")
             .setStartsOn(OffsetDateTime.of(LocalDateTime.of(2000, 1, 1, 0, 0), ZoneOffset.UTC))
             .setExpiresOn(OffsetDateTime.of(LocalDateTime.of(2020, 1, 1, 0, 0), ZoneOffset.UTC));
         QueueSignedIdentifier permission = new QueueSignedIdentifier()
@@ -236,21 +234,18 @@ public class QueueAsyncApiTests extends QueueTestBase {
         queueAsyncClient.create().block();
 
         StepVerifier.create(queueAsyncClient.setAccessPolicyWithResponse(Collections.singletonList(permission)))
-            .verifyErrorSatisfies(ex -> assertExceptionStatusCodeAndMessage(ex, 400,
-                QueueErrorCode.INVALID_XML_DOCUMENT));
+            .verifyErrorSatisfies(
+                ex -> assertExceptionStatusCodeAndMessage(ex, 400, QueueErrorCode.INVALID_XML_DOCUMENT));
     }
 
     @Test
     public void setMultipleAccessPolicies() {
-        QueueAccessPolicy accessPolicy = new QueueAccessPolicy()
-            .setPermissions("r")
+        QueueAccessPolicy accessPolicy = new QueueAccessPolicy().setPermissions("r")
             .setStartsOn(OffsetDateTime.of(LocalDateTime.of(2000, 1, 1, 0, 0), ZoneOffset.UTC))
             .setExpiresOn(OffsetDateTime.of(LocalDateTime.of(2020, 1, 1, 0, 0), ZoneOffset.UTC));
         List<QueueSignedIdentifier> permissions = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            permissions.add(new QueueSignedIdentifier()
-                .setId("policy" + i)
-                .setAccessPolicy(accessPolicy));
+            permissions.add(new QueueSignedIdentifier().setId("policy" + i).setAccessPolicy(accessPolicy));
         }
         queueAsyncClient.create().block();
 
@@ -264,21 +259,18 @@ public class QueueAsyncApiTests extends QueueTestBase {
 
     @Test
     public void setTooManyAccessPolicies() {
-        QueueAccessPolicy accessPolicy = new QueueAccessPolicy()
-            .setPermissions("r")
+        QueueAccessPolicy accessPolicy = new QueueAccessPolicy().setPermissions("r")
             .setStartsOn(OffsetDateTime.of(LocalDateTime.of(2000, 1, 1, 0, 0), ZoneOffset.UTC))
             .setExpiresOn(OffsetDateTime.of(LocalDateTime.of(2020, 1, 1, 0, 0), ZoneOffset.UTC));
         List<QueueSignedIdentifier> permissions = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            permissions.add(new QueueSignedIdentifier()
-                .setId("policy" + i)
-                .setAccessPolicy(accessPolicy));
+            permissions.add(new QueueSignedIdentifier().setId("policy" + i).setAccessPolicy(accessPolicy));
         }
         queueAsyncClient.create().block();
 
         StepVerifier.create(queueAsyncClient.setAccessPolicyWithResponse(permissions))
-            .verifyErrorSatisfies(ex -> assertExceptionStatusCodeAndMessage(ex, 400,
-                QueueErrorCode.INVALID_XML_DOCUMENT));
+            .verifyErrorSatisfies(
+                ex -> assertExceptionStatusCodeAndMessage(ex, 400, QueueErrorCode.INVALID_XML_DOCUMENT));
     }
 
     @Test
@@ -317,15 +309,17 @@ public class QueueAsyncApiTests extends QueueTestBase {
     public void enqueueTimeToLive() {
         queueAsyncClient.create().block();
 
-        assertAsyncResponseStatusCode(queueAsyncClient.sendMessageWithResponse("test message", Duration.ofSeconds(0),
-            Duration.ofSeconds(2)), 201);
+        assertAsyncResponseStatusCode(
+            queueAsyncClient.sendMessageWithResponse("test message", Duration.ofSeconds(0), Duration.ofSeconds(2)),
+            201);
     }
 
     @Test
     public void enqueueMessageEncodedMessage() {
         queueAsyncClient.create().block();
         QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
         BinaryData expectMsg = BinaryData.fromString("test message");
 
         assertAsyncResponseStatusCode(encodingQueueClient.sendMessageWithResponse(expectMsg, null, null), 201);
@@ -359,7 +353,8 @@ public class QueueAsyncApiTests extends QueueTestBase {
         String encodedMsg = Base64.getEncoder().encodeToString(expectMsg.getBytes(StandardCharsets.UTF_8));
         queueAsyncClient.sendMessage(encodedMsg).block();
         QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
         StepVerifier.create(encodingQueueClient.receiveMessage())
             .assertNext(message -> assertEquals(expectMsg, message.getBody().toString()))
@@ -372,7 +367,8 @@ public class QueueAsyncApiTests extends QueueTestBase {
         String expectMsg = "test message";
         queueAsyncClient.sendMessage(expectMsg).block();
         QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
         StepVerifier.create(encodingQueueClient.receiveMessage()).verifyError(IllegalArgumentException.class);
     }
@@ -386,23 +382,21 @@ public class QueueAsyncApiTests extends QueueTestBase {
         queueAsyncClient.sendMessage(encodedMsg).block();
         AtomicReference<QueueMessageItem> badMessage = new AtomicReference<>();
         AtomicReference<String> queueUrl = new AtomicReference<>();
-        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper()
-            .messageEncoding(QueueMessageEncoding.BASE64)
+        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
             .processMessageDecodingErrorAsync(failure -> {
                 badMessage.set(failure.getQueueMessageItem());
                 queueUrl.set(failure.getQueueAsyncClient().getQueueUrl());
                 return Mono.empty();
             })
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
-        StepVerifier.create(encodingQueueClient.receiveMessages(10))
-            .assertNext(message -> {
-                assertEquals(expectMsg, message.getBody().toString());
-                assertNotNull(badMessage.get());
-                assertEquals(expectMsg, badMessage.get().getBody().toString());
-                assertEquals(queueAsyncClient.getQueueUrl(), queueUrl.get());
-            })
-            .verifyComplete();
+        StepVerifier.create(encodingQueueClient.receiveMessages(10)).assertNext(message -> {
+            assertEquals(expectMsg, message.getBody().toString());
+            assertNotNull(badMessage.get());
+            assertEquals(expectMsg, badMessage.get().getBody().toString());
+            assertEquals(queueAsyncClient.getQueueUrl(), queueUrl.get());
+        }).verifyComplete();
     }
 
     @Test
@@ -413,22 +407,20 @@ public class QueueAsyncApiTests extends QueueTestBase {
         queueAsyncClient.sendMessage(expectMsg).block();
         queueAsyncClient.sendMessage(encodedMsg).block();
         AtomicReference<QueueMessageItem> badMessage = new AtomicReference<>();
-        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper()
-            .messageEncoding(QueueMessageEncoding.BASE64)
+        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
             .processMessageDecodingErrorAsync(failure -> {
                 QueueMessageItem item = failure.getQueueMessageItem();
                 badMessage.set(item);
                 return failure.getQueueAsyncClient().deleteMessage(item.getMessageId(), item.getPopReceipt());
             })
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
-        StepVerifier.create(encodingQueueClient.receiveMessages(10))
-            .assertNext(message -> {
-                assertEquals(expectMsg, message.getBody().toString());
-                assertNotNull(badMessage.get());
-                assertEquals(expectMsg, badMessage.get().getBody().toString());
-            })
-            .verifyComplete();
+        StepVerifier.create(encodingQueueClient.receiveMessages(10)).assertNext(message -> {
+            assertEquals(expectMsg, message.getBody().toString());
+            assertNotNull(badMessage.get());
+            assertEquals(expectMsg, badMessage.get().getBody().toString());
+        }).verifyComplete();
     }
 
     @Test
@@ -439,22 +431,20 @@ public class QueueAsyncApiTests extends QueueTestBase {
         queueAsyncClient.sendMessage(expectMsg).block();
         queueAsyncClient.sendMessage(encodedMsg).block();
         AtomicReference<QueueMessageItem> badMessage = new AtomicReference<>();
-        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper()
-            .messageEncoding(QueueMessageEncoding.BASE64)
+        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
             .processMessageDecodingError(failure -> {
                 QueueMessageItem item = failure.getQueueMessageItem();
                 badMessage.set(item);
                 failure.getQueueClient().deleteMessage(item.getMessageId(), item.getPopReceipt());
             })
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
-        StepVerifier.create(encodingQueueClient.receiveMessages(10))
-            .assertNext(message -> {
-                assertEquals(expectMsg, message.getBody().toString());
-                assertNotNull(badMessage.get());
-                assertEquals(expectMsg, badMessage.get().getBody().toString());
-            })
-            .verifyComplete();
+        StepVerifier.create(encodingQueueClient.receiveMessages(10)).assertNext(message -> {
+            assertEquals(expectMsg, message.getBody().toString());
+            assertNotNull(badMessage.get());
+            assertEquals(expectMsg, badMessage.get().getBody().toString());
+        }).verifyComplete();
     }
 
     @Test
@@ -464,12 +454,12 @@ public class QueueAsyncApiTests extends QueueTestBase {
         String encodedMsg = Base64.getEncoder().encodeToString(expectMsg.getBytes(StandardCharsets.UTF_8));
         queueAsyncClient.sendMessage(expectMsg).block();
         queueAsyncClient.sendMessage(encodedMsg).block();
-        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper()
-            .messageEncoding(QueueMessageEncoding.BASE64)
+        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
             .processMessageDecodingErrorAsync(message -> {
                 throw new IllegalStateException("KABOOM");
             })
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
         StepVerifier.create(encodingQueueClient.receiveMessages(10)).verifyError(IllegalStateException.class);
     }
@@ -491,16 +481,18 @@ public class QueueAsyncApiTests extends QueueTestBase {
     @Test
     public void dequeueTooManyMessages() {
         queueAsyncClient.create().block();
-        StepVerifier.create(queueAsyncClient.receiveMessages(33)).verifyErrorSatisfies(ex ->
-            assertExceptionStatusCodeAndMessage(ex, 400, QueueErrorCode.OUT_OF_RANGE_QUERY_PARAMETER_VALUE));
+        StepVerifier.create(queueAsyncClient.receiveMessages(33))
+            .verifyErrorSatisfies(
+                ex -> assertExceptionStatusCodeAndMessage(ex, 400, QueueErrorCode.OUT_OF_RANGE_QUERY_PARAMETER_VALUE));
     }
 
     @Test
     public void enqueueDequeueNonUtfMessage() {
         queueAsyncClient.create().block();
         QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
-            .buildAsyncClient().getQueueAsyncClient(queueName);
-        byte[] content = new byte[]{(byte) 0xFF, 0x00}; // Not a valid UTF-8 byte sequence.
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
+        byte[] content = new byte[] { (byte) 0xFF, 0x00 }; // Not a valid UTF-8 byte sequence.
         encodingQueueClient.sendMessage(BinaryData.fromBytes(content)).block();
 
         StepVerifier.create(encodingQueueClient.receiveMessage())
@@ -512,8 +504,9 @@ public class QueueAsyncApiTests extends QueueTestBase {
     public void enqueuePeekNonUtfMessage() {
         queueAsyncClient.create().block();
         QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
-            .buildAsyncClient().getQueueAsyncClient(queueName);
-        byte[] content = new byte[]{(byte) 0xFF, 0x00}; // Not a valid UTF-8 byte sequence.
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
+        byte[] content = new byte[] { (byte) 0xFF, 0x00 }; // Not a valid UTF-8 byte sequence.
         encodingQueueClient.sendMessage(BinaryData.fromBytes(content)).block();
 
         StepVerifier.create(encodingQueueClient.peekMessage())
@@ -545,7 +538,8 @@ public class QueueAsyncApiTests extends QueueTestBase {
         String encodedMsg = Base64.getEncoder().encodeToString(expectMsg.getBytes(StandardCharsets.UTF_8));
         queueAsyncClient.sendMessage(encodedMsg).block();
         QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
         StepVerifier.create(encodingQueueClient.peekMessage())
             .assertNext(message -> assertEquals(expectMsg, message.getBody().toString()))
@@ -557,7 +551,8 @@ public class QueueAsyncApiTests extends QueueTestBase {
         queueAsyncClient.create().block();
         queueAsyncClient.sendMessage("test message").block();
         QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
         StepVerifier.create(encodingQueueClient.peekMessage()).verifyError(IllegalArgumentException.class);
     }
@@ -572,25 +567,23 @@ public class QueueAsyncApiTests extends QueueTestBase {
         AtomicReference<PeekedMessageItem> badMessage = new AtomicReference<>();
         AtomicReference<String> queueUrl = new AtomicReference<>();
         AtomicReference<Exception> cause = new AtomicReference<>();
-        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper()
-            .messageEncoding(QueueMessageEncoding.BASE64)
+        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
             .processMessageDecodingErrorAsync(failure -> {
                 badMessage.set(failure.getPeekedMessageItem());
                 queueUrl.set(failure.getQueueAsyncClient().getQueueUrl());
                 cause.set(failure.getCause());
                 return Mono.empty();
             })
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
-        StepVerifier.create(encodingQueueClient.peekMessages(10))
-            .assertNext(message -> {
-                assertEquals(expectMsg, message.getBody().toString());
-                assertNotNull(badMessage.get());
-                assertEquals(expectMsg, badMessage.get().getBody().toString());
-                assertEquals(queueAsyncClient.getQueueUrl(), queueUrl.get());
-                assertNotNull(cause.get());
-            })
-            .verifyComplete();
+        StepVerifier.create(encodingQueueClient.peekMessages(10)).assertNext(message -> {
+            assertEquals(expectMsg, message.getBody().toString());
+            assertNotNull(badMessage.get());
+            assertEquals(expectMsg, badMessage.get().getBody().toString());
+            assertEquals(queueAsyncClient.getQueueUrl(), queueUrl.get());
+            assertNotNull(cause.get());
+        }).verifyComplete();
     }
 
     @Test
@@ -602,24 +595,22 @@ public class QueueAsyncApiTests extends QueueTestBase {
         queueAsyncClient.sendMessage(encodedMsg).block();
         AtomicReference<PeekedMessageItem> badMessage = new AtomicReference<>();
         AtomicReference<Exception> cause = new AtomicReference<>();
-        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper()
-            .messageEncoding(QueueMessageEncoding.BASE64)
+        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
             .processMessageDecodingError(failure -> {
                 badMessage.set(failure.getPeekedMessageItem());
                 cause.set(failure.getCause());
                 // call some sync API
                 failure.getQueueClient().getProperties();
             })
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
-        StepVerifier.create(encodingQueueClient.peekMessages(10))
-            .assertNext(peekedMessageItem -> {
-                assertEquals(expectMsg, peekedMessageItem.getBody().toString());
-                assertNotNull(badMessage.get());
-                assertEquals(expectMsg, badMessage.get().getBody().toString());
-                assertNotNull(cause.get());
-            })
-            .verifyComplete();
+        StepVerifier.create(encodingQueueClient.peekMessages(10)).assertNext(peekedMessageItem -> {
+            assertEquals(expectMsg, peekedMessageItem.getBody().toString());
+            assertNotNull(badMessage.get());
+            assertEquals(expectMsg, badMessage.get().getBody().toString());
+            assertNotNull(cause.get());
+        }).verifyComplete();
     }
 
     @Test
@@ -629,12 +620,12 @@ public class QueueAsyncApiTests extends QueueTestBase {
         String encodedMsg = Base64.getEncoder().encodeToString(expectMsg.getBytes(StandardCharsets.UTF_8));
         queueAsyncClient.sendMessage(expectMsg).block();
         queueAsyncClient.sendMessage(encodedMsg).block();
-        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper()
-            .messageEncoding(QueueMessageEncoding.BASE64)
+        QueueAsyncClient encodingQueueClient = queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
             .processMessageDecodingErrorAsync(message -> {
                 throw new IllegalStateException("KABOOM");
             })
-            .buildAsyncClient().getQueueAsyncClient(queueName);
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
 
         StepVerifier.create(encodingQueueClient.peekMessages(10)).verifyError(IllegalStateException.class);
     }
@@ -657,8 +648,9 @@ public class QueueAsyncApiTests extends QueueTestBase {
     public void peekTooManyMessages() {
         queueAsyncClient.create().block();
 
-        StepVerifier.create(queueAsyncClient.peekMessages(33)).verifyErrorSatisfies(ex ->
-            assertExceptionStatusCodeAndMessage(ex, 400, QueueErrorCode.OUT_OF_RANGE_QUERY_PARAMETER_VALUE));
+        StepVerifier.create(queueAsyncClient.peekMessages(33))
+            .verifyErrorSatisfies(
+                ex -> assertExceptionStatusCodeAndMessage(ex, 400, QueueErrorCode.OUT_OF_RANGE_QUERY_PARAMETER_VALUE));
     }
 
     @Test
@@ -674,21 +666,17 @@ public class QueueAsyncApiTests extends QueueTestBase {
         queueAsyncClient.sendMessage("test message 2").block();
         queueAsyncClient.sendMessage("test message 3").block();
 
-        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse())
-            .assertNext(response -> {
-                assertEquals(200, response.getStatusCode());
-                assertEquals(3, response.getValue().getApproximateMessagesCount());
-            })
-            .verifyComplete();
+        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse()).assertNext(response -> {
+            assertEquals(200, response.getStatusCode());
+            assertEquals(3, response.getValue().getApproximateMessagesCount());
+        }).verifyComplete();
 
         assertAsyncResponseStatusCode(queueAsyncClient.clearMessagesWithResponse(), 204);
 
-        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse())
-            .assertNext(response -> {
-                assertEquals(200, response.getStatusCode());
-                assertEquals(0, response.getValue().getApproximateMessagesCount());
-            })
-            .verifyComplete();
+        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse()).assertNext(response -> {
+            assertEquals(200, response.getStatusCode());
+            assertEquals(0, response.getValue().getApproximateMessagesCount());
+        }).verifyComplete();
     }
 
     @Test
@@ -705,22 +693,18 @@ public class QueueAsyncApiTests extends QueueTestBase {
         queueAsyncClient.sendMessage("test message 3").block();
         QueueMessageItem dequeueMsg = queueAsyncClient.receiveMessage().block();
 
-        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse())
-            .assertNext(response -> {
-                assertEquals(200, response.getStatusCode());
-                assertEquals(3, response.getValue().getApproximateMessagesCount());
-            })
-            .verifyComplete();
+        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse()).assertNext(response -> {
+            assertEquals(200, response.getStatusCode());
+            assertEquals(3, response.getValue().getApproximateMessagesCount());
+        }).verifyComplete();
 
-        assertAsyncResponseStatusCode(queueAsyncClient.deleteMessageWithResponse(dequeueMsg.getMessageId(),
-            dequeueMsg.getPopReceipt()), 204);
+        assertAsyncResponseStatusCode(
+            queueAsyncClient.deleteMessageWithResponse(dequeueMsg.getMessageId(), dequeueMsg.getPopReceipt()), 204);
 
-        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse())
-            .assertNext(response -> {
-                assertEquals(200, response.getStatusCode());
-                assertEquals(2, response.getValue().getApproximateMessagesCount());
-            })
-            .verifyComplete();
+        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse()).assertNext(response -> {
+            assertEquals(200, response.getStatusCode());
+            assertEquals(2, response.getValue().getApproximateMessagesCount());
+        }).verifyComplete();
     }
 
     @ParameterizedTest
@@ -764,7 +748,8 @@ public class QueueAsyncApiTests extends QueueTestBase {
         String updateMessageId = messageId ? message.getMessageId() : message.getMessageId() + "Random";
         String updatePopReceipt = popReceipt ? message.getPopReceipt() : message.getPopReceipt() + "Random";
 
-        StepVerifier.create(queueAsyncClient.updateMessageWithResponse(updateMessageId, updatePopReceipt, updateMsg,
+        StepVerifier
+            .create(queueAsyncClient.updateMessageWithResponse(updateMessageId, updatePopReceipt, updateMsg,
                 Duration.ofSeconds(1)))
             .verifyErrorSatisfies(ex -> assertExceptionStatusCodeAndMessage(ex, statusCode, errMsg));
     }
@@ -778,12 +763,13 @@ public class QueueAsyncApiTests extends QueueTestBase {
         QueueMessageItem dequeueMsg = queueAsyncClient.receiveMessage().block();
 
         assertAsyncResponseStatusCode(queueAsyncClient.updateMessageWithResponse(dequeueMsg.getMessageId(),
-            dequeueMsg.getPopReceipt(), null, Duration.ofSeconds(1), null), 204);
+            dequeueMsg.getPopReceipt(), null, Duration.ofSeconds(1)), 204);
 
         sleepIfRunningAgainstService(2000);
 
-        StepVerifier.create(queueAsyncClient.peekMessage()).assertNext(peekedMessageItem ->
-                assertEquals(messageText, peekedMessageItem.getMessageText())).verifyComplete();
+        StepVerifier.create(queueAsyncClient.peekMessage())
+            .assertNext(peekedMessageItem -> assertEquals(messageText, peekedMessageItem.getMessageText()))
+            .verifyComplete();
     }
 
     @Test
@@ -799,8 +785,26 @@ public class QueueAsyncApiTests extends QueueTestBase {
 
         sleepIfRunningAgainstService(2000);
 
-        StepVerifier.create(queueAsyncClient.peekMessage()).assertNext(peekedMessageItem ->
-            assertEquals(messageText, peekedMessageItem.getMessageText())).verifyComplete();
+        StepVerifier.create(queueAsyncClient.peekMessage())
+            .assertNext(peekedMessageItem -> assertEquals(messageText, peekedMessageItem.getMessageText()))
+            .verifyComplete();
+    }
+
+    @Test
+    public void updateMessageWithBase64Client() {
+        String updateMsg = "Updated test message";
+        QueueAsyncClient encodingQueueClient = getBase64Client();
+        encodingQueueClient.create().block();
+        encodingQueueClient.sendMessage("test message before update").block();
+
+        QueueMessageItem dequeueMsg = encodingQueueClient.receiveMessage().block();
+
+        assertAsyncResponseStatusCode(encodingQueueClient.updateMessageWithResponse(dequeueMsg.getMessageId(),
+            dequeueMsg.getPopReceipt(), updateMsg, Duration.ofSeconds(1)), 204);
+
+        StepVerifier.create(encodingQueueClient.peekMessage().delaySubscription(getMessageUpdateDelay(2000)))
+            .assertNext(peekedMessageItem -> assertEquals(updateMsg, peekedMessageItem.getMessageText()))
+            .verifyComplete();
     }
 
     @Test
@@ -813,22 +817,142 @@ public class QueueAsyncApiTests extends QueueTestBase {
         URL url = new URL(queueAsyncClient.getQueueUrl());
         String endpoint = new URL("http", url.getHost(), url.getPort(), url.getFile()).toString();
 
-        assertThrows(IllegalArgumentException.class, () -> new QueueClientBuilder()
-            .credential(new DefaultAzureCredentialBuilder().build())
-            .endpoint(endpoint)
-            .buildAsyncClient());
+        assertThrows(IllegalArgumentException.class,
+            () -> new QueueClientBuilder().credential(new DefaultAzureCredentialBuilder().build())
+                .endpoint(endpoint)
+                .buildAsyncClient());
     }
 
     // This tests the policy is in the right place because if it were added per retry, it would be after the credentials
     // and auth would fail because we changed a signed header.
     @Test
     public void perCallPolicy() {
-        QueueAsyncClient queueAsyncClient = queueBuilderHelper().addPolicy(getPerCallVersionPolicy())
-            .buildAsyncClient();
+        QueueAsyncClient queueAsyncClient
+            = queueBuilderHelper().addPolicy(getPerCallVersionPolicy()).buildAsyncClient();
 
         queueAsyncClient.create().block();
 
-        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse()).assertNext(queuePropertiesResponse ->
-            assertEquals("2017-11-09", queuePropertiesResponse.getHeaders().getValue("x-ms-version"))).verifyComplete();
+        StepVerifier.create(queueAsyncClient.getPropertiesWithResponse())
+            .assertNext(queuePropertiesResponse -> assertEquals("2017-11-09",
+                queuePropertiesResponse.getHeaders().getValue("x-ms-version")))
+            .verifyComplete();
+    }
+
+    private QueueAsyncClient getBase64Client() {
+        return queueServiceBuilderHelper().messageEncoding(QueueMessageEncoding.BASE64)
+            .buildAsyncClient()
+            .getQueueAsyncClient(queueName);
+    }
+
+    @Test
+    public void defaultAudience() {
+        queueAsyncClient.createIfNotExists().block();
+        QueueAsyncClient aadQueue = getOAuthQueueClientBuilder().audience(null) // should default to "https://storage.azure.com/"
+            .queueName(queueAsyncClient.getQueueName())
+            .buildAsyncClient();
+
+        StepVerifier.create(aadQueue.getProperties()).assertNext(r -> assertNotNull(r)).verifyComplete();
+    }
+
+    @Test
+    public void storageAccountAudience() {
+        queueAsyncClient.createIfNotExists().block();
+        QueueAsyncClient aadQueue = getOAuthQueueClientBuilder()
+            .audience(QueueAudience.createQueueServiceAccountAudience(queueAsyncClient.getAccountName()))
+            .queueName(queueAsyncClient.getQueueName())
+            .buildAsyncClient();
+
+        StepVerifier.create(aadQueue.getProperties()).assertNext(r -> assertNotNull(r)).verifyComplete();
+    }
+
+    @RequiredServiceVersion(clazz = QueueServiceVersion.class, min = "2024-08-04")
+    @LiveOnly
+    @Test
+    /* This test tests if the bearer challenge is working properly. A bad audience is passed in, the service returns
+    the default audience, and the request gets retried with this default audience, making the call function as expected.
+     */
+    public void audienceErrorBearerChallengeRetry() {
+        queueAsyncClient.createIfNotExists().block();
+        QueueAsyncClient aadQueue = getOAuthQueueClientBuilder().queueName(queueAsyncClient.getQueueName())
+            .audience(QueueAudience.createQueueServiceAccountAudience("badaudience"))
+            .buildAsyncClient();
+
+        StepVerifier.create(aadQueue.getProperties()).assertNext(r -> assertNotNull(r)).verifyComplete();
+    }
+
+    @Test
+    public void audienceFromString() {
+        String url = String.format("https://%s.queue.core.windows.net/", queueAsyncClient.getAccountName());
+        QueueAudience audience = QueueAudience.fromString(url);
+
+        queueAsyncClient.createIfNotExists().block();
+        QueueAsyncClient aadQueue = getOAuthQueueClientBuilder().audience(audience)
+            .queueName(queueAsyncClient.getQueueName())
+            .buildAsyncClient();
+
+        StepVerifier.create(aadQueue.getProperties()).assertNext(r -> assertNotNull(r)).verifyComplete();
+    }
+
+    @Test
+    @RequiredServiceVersion(clazz = QueueServiceVersion.class, min = "2025-07-05")
+    public void getSetAccessPolicyOAuth() {
+        // Arrange
+        QueueServiceAsyncClient service = getOAuthQueueServiceAsyncClient();
+        Mono<Boolean> createQueue = queueAsyncClient.createIfNotExists();
+        queueAsyncClient = service.getQueueAsyncClient(queueName);
+
+        StepVerifier
+            .create(createQueue.then(queueAsyncClient.getAccessPolicy()
+                .collectList()
+                .flatMap(identifiers -> queueAsyncClient.setAccessPolicy(identifiers).then(Mono.just(identifiers)))))
+            .assertNext(Assertions::assertNotNull)
+            .verifyComplete();
+    }
+
+    @SuppressWarnings("deprecation")
+    @ParameterizedTest
+    @ValueSource(ints = { 0, 5, 12 })
+    public void getPropertiesApproximateMessagesCountLong(int messageCount) {
+        Mono<Boolean> createQueue = queueAsyncClient.createIfNotExists();
+
+        Mono<Void> sendMessages
+            = Flux.range(1, messageCount).flatMap(i -> queueAsyncClient.sendMessage("Message " + i)).then();
+
+        StepVerifier.create(createQueue.then(sendMessages).then(queueAsyncClient.getPropertiesWithResponse()))
+            .assertNext(response -> {
+                assertNotNull(response);
+                assertEquals(messageCount, response.getValue().getApproximateMessagesCount());
+                assertEquals(messageCount, response.getValue().getApproximateMessagesCountLong());
+            })
+            .verifyComplete();
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    public void getPropertiesApproximateMessagesCountOverflow() {
+        QueueProperties properties = new QueueProperties(null, Long.MAX_VALUE);
+        Mono<QueueProperties> asyncResponse = Mono.just(properties);
+
+        StepVerifier.create(asyncResponse).assertNext(response -> {
+            assertEquals(Long.MAX_VALUE, response.getApproximateMessagesCountLong());
+            int expectedOverflowValue = (int) Long.MAX_VALUE;
+            assertEquals(expectedOverflowValue, response.getApproximateMessagesCount());
+        }).verifyComplete();
+    }
+
+    @Test
+    public void invalidServiceVersion() {
+        QueueServiceAsyncClient serviceClient
+            = instrument(new QueueServiceClientBuilder().endpoint(ENVIRONMENT.getPrimaryAccount().getQueueEndpoint())
+                .credential(ENVIRONMENT.getPrimaryAccount().getCredential())
+                .addPolicy(new InvalidServiceVersionPipelinePolicy())).buildAsyncClient();
+
+        QueueAsyncClient queueClient = serviceClient.getQueueAsyncClient(getRandomName(60));
+
+        StepVerifier.create(queueClient.createIfNotExists()).verifyErrorSatisfies(ex -> {
+            QueueStorageException exception = assertInstanceOf(QueueStorageException.class, ex);
+            assertEquals(400, exception.getStatusCode());
+            assertTrue(exception.getMessage().contains(INVALID_VERSION_HEADER_MESSAGE));
+        });
     }
 }

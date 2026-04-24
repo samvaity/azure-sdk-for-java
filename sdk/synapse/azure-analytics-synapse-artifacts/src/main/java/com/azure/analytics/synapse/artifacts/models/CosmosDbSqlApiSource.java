@@ -5,64 +5,91 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity Azure CosmosDB (SQL API) Collection source. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("CosmosDbSqlApiSource")
+/**
+ * A copy activity Azure CosmosDB (SQL API) Collection source.
+ */
 @Fluent
 public final class CosmosDbSqlApiSource extends CopySource {
     /*
+     * Copy source type.
+     */
+    @Generated
+    private String type = "CosmosDbSqlApiSource";
+
+    /*
      * SQL API query. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "query")
+    @Generated
     private Object query;
 
     /*
      * Page size of the result. Type: integer (or Expression with resultType integer).
      */
-    @JsonProperty(value = "pageSize")
+    @Generated
     private Object pageSize;
 
     /*
      * Preferred regions. Type: array of strings (or Expression with resultType array of strings).
      */
-    @JsonProperty(value = "preferredRegions")
+    @Generated
     private Object preferredRegions;
 
     /*
      * Whether detect primitive values as datetime values. Type: boolean (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "detectDatetime")
+    @Generated
     private Object detectDatetime;
 
     /*
      * Specifies the additional columns to be added to source data. Type: array of objects(AdditionalColumns) (or
      * Expression with resultType array of objects).
      */
-    @JsonProperty(value = "additionalColumns")
+    @Generated
     private Object additionalColumns;
 
-    /** Creates an instance of CosmosDbSqlApiSource class. */
-    public CosmosDbSqlApiSource() {}
+    /**
+     * Creates an instance of CosmosDbSqlApiSource class.
+     */
+    @Generated
+    public CosmosDbSqlApiSource() {
+    }
+
+    /**
+     * Get the type property: Copy source type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the query property: SQL API query. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the query value.
      */
+    @Generated
     public Object getQuery() {
         return this.query;
     }
 
     /**
      * Set the query property: SQL API query. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param query the query value to set.
      * @return the CosmosDbSqlApiSource object itself.
      */
+    @Generated
     public CosmosDbSqlApiSource setQuery(Object query) {
         this.query = query;
         return this;
@@ -70,19 +97,21 @@ public final class CosmosDbSqlApiSource extends CopySource {
 
     /**
      * Get the pageSize property: Page size of the result. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @return the pageSize value.
      */
+    @Generated
     public Object getPageSize() {
         return this.pageSize;
     }
 
     /**
      * Set the pageSize property: Page size of the result. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @param pageSize the pageSize value to set.
      * @return the CosmosDbSqlApiSource object itself.
      */
+    @Generated
     public CosmosDbSqlApiSource setPageSize(Object pageSize) {
         this.pageSize = pageSize;
         return this;
@@ -91,9 +120,10 @@ public final class CosmosDbSqlApiSource extends CopySource {
     /**
      * Get the preferredRegions property: Preferred regions. Type: array of strings (or Expression with resultType array
      * of strings).
-     *
+     * 
      * @return the preferredRegions value.
      */
+    @Generated
     public Object getPreferredRegions() {
         return this.preferredRegions;
     }
@@ -101,10 +131,11 @@ public final class CosmosDbSqlApiSource extends CopySource {
     /**
      * Set the preferredRegions property: Preferred regions. Type: array of strings (or Expression with resultType array
      * of strings).
-     *
+     * 
      * @param preferredRegions the preferredRegions value to set.
      * @return the CosmosDbSqlApiSource object itself.
      */
+    @Generated
     public CosmosDbSqlApiSource setPreferredRegions(Object preferredRegions) {
         this.preferredRegions = preferredRegions;
         return this;
@@ -113,9 +144,10 @@ public final class CosmosDbSqlApiSource extends CopySource {
     /**
      * Get the detectDatetime property: Whether detect primitive values as datetime values. Type: boolean (or Expression
      * with resultType boolean).
-     *
+     * 
      * @return the detectDatetime value.
      */
+    @Generated
     public Object getDetectDatetime() {
         return this.detectDatetime;
     }
@@ -123,10 +155,11 @@ public final class CosmosDbSqlApiSource extends CopySource {
     /**
      * Set the detectDatetime property: Whether detect primitive values as datetime values. Type: boolean (or Expression
      * with resultType boolean).
-     *
+     * 
      * @param detectDatetime the detectDatetime value to set.
      * @return the CosmosDbSqlApiSource object itself.
      */
+    @Generated
     public CosmosDbSqlApiSource setDetectDatetime(Object detectDatetime) {
         this.detectDatetime = detectDatetime;
         return this;
@@ -135,9 +168,10 @@ public final class CosmosDbSqlApiSource extends CopySource {
     /**
      * Get the additionalColumns property: Specifies the additional columns to be added to source data. Type: array of
      * objects(AdditionalColumns) (or Expression with resultType array of objects).
-     *
+     * 
      * @return the additionalColumns value.
      */
+    @Generated
     public Object getAdditionalColumns() {
         return this.additionalColumns;
     }
@@ -145,33 +179,132 @@ public final class CosmosDbSqlApiSource extends CopySource {
     /**
      * Set the additionalColumns property: Specifies the additional columns to be added to source data. Type: array of
      * objects(AdditionalColumns) (or Expression with resultType array of objects).
-     *
+     * 
      * @param additionalColumns the additionalColumns value to set.
      * @return the CosmosDbSqlApiSource object itself.
      */
+    @Generated
     public CosmosDbSqlApiSource setAdditionalColumns(Object additionalColumns) {
         this.additionalColumns = additionalColumns;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CosmosDbSqlApiSource setSourceRetryCount(Object sourceRetryCount) {
         super.setSourceRetryCount(sourceRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CosmosDbSqlApiSource setSourceRetryWait(Object sourceRetryWait) {
         super.setSourceRetryWait(sourceRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CosmosDbSqlApiSource setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getSourceRetryCount() != null) {
+            jsonWriter.writeUntypedField("sourceRetryCount", getSourceRetryCount());
+        }
+        if (getSourceRetryWait() != null) {
+            jsonWriter.writeUntypedField("sourceRetryWait", getSourceRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.query != null) {
+            jsonWriter.writeUntypedField("query", this.query);
+        }
+        if (this.pageSize != null) {
+            jsonWriter.writeUntypedField("pageSize", this.pageSize);
+        }
+        if (this.preferredRegions != null) {
+            jsonWriter.writeUntypedField("preferredRegions", this.preferredRegions);
+        }
+        if (this.detectDatetime != null) {
+            jsonWriter.writeUntypedField("detectDatetime", this.detectDatetime);
+        }
+        if (this.additionalColumns != null) {
+            jsonWriter.writeUntypedField("additionalColumns", this.additionalColumns);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CosmosDbSqlApiSource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CosmosDbSqlApiSource if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the CosmosDbSqlApiSource.
+     */
+    @Generated
+    public static CosmosDbSqlApiSource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CosmosDbSqlApiSource deserializedCosmosDbSqlApiSource = new CosmosDbSqlApiSource();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sourceRetryCount".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSource.setSourceRetryCount(reader.readUntyped());
+                } else if ("sourceRetryWait".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSource.setSourceRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSource.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSource.type = reader.getString();
+                } else if ("query".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSource.query = reader.readUntyped();
+                } else if ("pageSize".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSource.pageSize = reader.readUntyped();
+                } else if ("preferredRegions".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSource.preferredRegions = reader.readUntyped();
+                } else if ("detectDatetime".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSource.detectDatetime = reader.readUntyped();
+                } else if ("additionalColumns".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSource.additionalColumns = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedCosmosDbSqlApiSource.setAdditionalProperties(additionalProperties);
+
+            return deserializedCosmosDbSqlApiSource;
+        });
     }
 }

@@ -11,19 +11,17 @@ import org.junit.jupiter.api.Assertions;
 public final class CommitmentQuotaTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CommitmentQuota model =
-            BinaryData
-                .fromString("{\"quantity\":6504833090063292182,\"unit\":\"mehhseyvjusrtsl\"}")
-                .toObject(CommitmentQuota.class);
-        Assertions.assertEquals(6504833090063292182L, model.quantity());
-        Assertions.assertEquals("mehhseyvjusrtsl", model.unit());
+        CommitmentQuota model = BinaryData.fromString("{\"quantity\":9120098526772116433,\"unit\":\"wuwprzqlv\"}")
+            .toObject(CommitmentQuota.class);
+        Assertions.assertEquals(9120098526772116433L, model.quantity());
+        Assertions.assertEquals("wuwprzqlv", model.unit());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CommitmentQuota model = new CommitmentQuota().withQuantity(6504833090063292182L).withUnit("mehhseyvjusrtsl");
+        CommitmentQuota model = new CommitmentQuota().withQuantity(9120098526772116433L).withUnit("wuwprzqlv");
         model = BinaryData.fromObject(model).toObject(CommitmentQuota.class);
-        Assertions.assertEquals(6504833090063292182L, model.quantity());
-        Assertions.assertEquals("mehhseyvjusrtsl", model.unit());
+        Assertions.assertEquals(9120098526772116433L, model.quantity());
+        Assertions.assertEquals("wuwprzqlv", model.unit());
     }
 }

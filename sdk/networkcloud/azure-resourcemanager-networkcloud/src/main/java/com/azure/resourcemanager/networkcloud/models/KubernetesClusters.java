@@ -8,68 +8,77 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of KubernetesClusters. */
+/**
+ * Resource collection API of KubernetesClusters.
+ */
 public interface KubernetesClusters {
     /**
      * List Kubernetes clusters in the subscription.
-     *
-     * <p>Get a list of Kubernetes clusters in the provided subscription.
-     *
+     * 
+     * Get a list of Kubernetes clusters in the provided subscription.
+     * 
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of Kubernetes clusters in the provided subscription as paginated response with {@link
-     *     PagedIterable}.
+     * @return a list of Kubernetes clusters in the provided subscription as paginated response with
+     * {@link PagedIterable}.
      */
     PagedIterable<KubernetesCluster> list();
 
     /**
      * List Kubernetes clusters in the subscription.
-     *
-     * <p>Get a list of Kubernetes clusters in the provided subscription.
-     *
+     * 
+     * Get a list of Kubernetes clusters in the provided subscription.
+     * 
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of Kubernetes clusters in the provided subscription as paginated response with {@link
-     *     PagedIterable}.
+     * @return a list of Kubernetes clusters in the provided subscription as paginated response with
+     * {@link PagedIterable}.
      */
-    PagedIterable<KubernetesCluster> list(Context context);
+    PagedIterable<KubernetesCluster> list(Integer top, String skipToken, Context context);
 
     /**
      * List Kubernetes clusters in the resource group.
-     *
-     * <p>Get a list of Kubernetes clusters in the provided resource group.
-     *
+     * 
+     * Get a list of Kubernetes clusters in the provided resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of Kubernetes clusters in the provided resource group as paginated response with {@link
-     *     PagedIterable}.
+     * @return a list of Kubernetes clusters in the provided resource group as paginated response with
+     * {@link PagedIterable}.
      */
     PagedIterable<KubernetesCluster> listByResourceGroup(String resourceGroupName);
 
     /**
      * List Kubernetes clusters in the resource group.
-     *
-     * <p>Get a list of Kubernetes clusters in the provided resource group.
-     *
+     * 
+     * Get a list of Kubernetes clusters in the provided resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of Kubernetes clusters in the provided resource group as paginated response with {@link
-     *     PagedIterable}.
+     * @return a list of Kubernetes clusters in the provided resource group as paginated response with
+     * {@link PagedIterable}.
      */
-    PagedIterable<KubernetesCluster> listByResourceGroup(String resourceGroupName, Context context);
+    PagedIterable<KubernetesCluster> listByResourceGroup(String resourceGroupName, Integer top, String skipToken,
+        Context context);
 
     /**
      * Retrieve the Kubernetes cluster.
-     *
-     * <p>Get properties of the provided the Kubernetes cluster.
-     *
+     * 
+     * Get properties of the provided the Kubernetes cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
      * @param context The context to associate with this operation.
@@ -78,14 +87,14 @@ public interface KubernetesClusters {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return properties of the provided the Kubernetes cluster along with {@link Response}.
      */
-    Response<KubernetesCluster> getByResourceGroupWithResponse(
-        String resourceGroupName, String kubernetesClusterName, Context context);
+    Response<KubernetesCluster> getByResourceGroupWithResponse(String resourceGroupName, String kubernetesClusterName,
+        Context context);
 
     /**
      * Retrieve the Kubernetes cluster.
-     *
-     * <p>Get properties of the provided the Kubernetes cluster.
-     *
+     * 
+     * Get properties of the provided the Kubernetes cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -97,53 +106,59 @@ public interface KubernetesClusters {
 
     /**
      * Delete the Kubernetes cluster.
-     *
-     * <p>Delete the provided Kubernetes cluster.
-     *
+     * 
+     * Delete the provided Kubernetes cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void deleteByResourceGroup(String resourceGroupName, String kubernetesClusterName);
+    OperationStatusResult deleteByResourceGroup(String resourceGroupName, String kubernetesClusterName);
 
     /**
      * Delete the Kubernetes cluster.
-     *
-     * <p>Delete the provided Kubernetes cluster.
-     *
+     * 
+     * Delete the provided Kubernetes cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void delete(String resourceGroupName, String kubernetesClusterName, Context context);
+    OperationStatusResult delete(String resourceGroupName, String kubernetesClusterName, String ifMatch,
+        String ifNoneMatch, Context context);
 
     /**
      * Restart a targeted node.
-     *
-     * <p>Restart a targeted node of a Kubernetes cluster.
-     *
+     * 
+     * Restart a targeted node of a Kubernetes cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
      * @param kubernetesClusterRestartNodeParameters The request body.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void restartNode(
-        String resourceGroupName,
-        String kubernetesClusterName,
+    OperationStatusResult restartNode(String resourceGroupName, String kubernetesClusterName,
         KubernetesClusterRestartNodeParameters kubernetesClusterRestartNodeParameters);
 
     /**
      * Restart a targeted node.
-     *
-     * <p>Restart a targeted node of a Kubernetes cluster.
-     *
+     * 
+     * Restart a targeted node of a Kubernetes cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
      * @param kubernetesClusterRestartNodeParameters The request body.
@@ -151,18 +166,16 @@ public interface KubernetesClusters {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void restartNode(
-        String resourceGroupName,
-        String kubernetesClusterName,
-        KubernetesClusterRestartNodeParameters kubernetesClusterRestartNodeParameters,
-        Context context);
+    OperationStatusResult restartNode(String resourceGroupName, String kubernetesClusterName,
+        KubernetesClusterRestartNodeParameters kubernetesClusterRestartNodeParameters, Context context);
 
     /**
      * Retrieve the Kubernetes cluster.
-     *
-     * <p>Get properties of the provided the Kubernetes cluster.
-     *
+     * 
+     * Get properties of the provided the Kubernetes cluster.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -173,9 +186,9 @@ public interface KubernetesClusters {
 
     /**
      * Retrieve the Kubernetes cluster.
-     *
-     * <p>Get properties of the provided the Kubernetes cluster.
-     *
+     * 
+     * Get properties of the provided the Kubernetes cluster.
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -187,32 +200,38 @@ public interface KubernetesClusters {
 
     /**
      * Delete the Kubernetes cluster.
-     *
-     * <p>Delete the provided Kubernetes cluster.
-     *
+     * 
+     * Delete the provided Kubernetes cluster.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void deleteById(String id);
+    OperationStatusResult deleteById(String id);
 
     /**
      * Delete the Kubernetes cluster.
-     *
-     * <p>Delete the provided Kubernetes cluster.
-     *
+     * 
+     * Delete the provided Kubernetes cluster.
+     * 
      * @param id the resource ID.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void deleteByIdWithResponse(String id, Context context);
+    OperationStatusResult deleteByIdWithResponse(String id, String ifMatch, String ifNoneMatch, Context context);
 
     /**
      * Begins definition for a new KubernetesCluster resource.
-     *
+     * 
      * @param name resource name.
      * @return the first stage of the new KubernetesCluster definition.
      */

@@ -6,76 +6,48 @@ package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.networkcloud.NetworkCloudManager;
 import com.azure.resourcemanager.networkcloud.models.HybridAksIpamEnabled;
 import com.azure.resourcemanager.networkcloud.models.HybridAksPluginType;
 import com.azure.resourcemanager.networkcloud.models.IpAllocationType;
 import com.azure.resourcemanager.networkcloud.models.L3Network;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class L3NetworksListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"etag\":\"qkpmmzpstau\",\"extendedLocation\":{\"name\":\"lawiubmomsgvvjhv\",\"type\":\"lrlohewjjmajnkdf\"},\"properties\":{\"associatedResourceIds\":[\"onswae\",\"kzfzqxjosho\"],\"clusterId\":\"otryegp\",\"detailedStatus\":\"Error\",\"detailedStatusMessage\":\"mexznlwkb\",\"hybridAksClustersAssociatedIds\":[\"xkhupzeruf\",\"jblcdrmyfcemftz\",\"yykyalu\",\"ekdfqnhttwd\"],\"hybridAksIpamEnabled\":\"False\",\"hybridAksPluginType\":\"SRIOV\",\"interfaceName\":\"jjnnu\",\"ipAllocationType\":\"DualStack\",\"ipv4ConnectedPrefix\":\"kmhmnulwempdc\",\"ipv6ConnectedPrefix\":\"rhjul\",\"l3IsolationDomainId\":\"sulwzpflusn\",\"provisioningState\":\"Provisioning\",\"virtualMachinesAssociatedIds\":[\"gzotfriyrgkoekvz\"],\"vlan\":6701485974284673902},\"location\":\"xh\",\"tags\":{\"y\":\"ctxbxmolpcqyd\",\"rjeizik\":\"vskiczd\",\"ycqsxr\":\"qaboohxbms\",\"ewuyqa\":\"d\"},\"id\":\"ohpjhgejkbv\",\"name\":\"hdaurghooxaexb\",\"type\":\"hxjxjoezlqxrkdkn\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"extendedLocation\":{\"name\":\"jpziu\",\"type\":\"fbzkk\"},\"properties\":{\"associatedResourceIds\":[\"hqsycljselp\"],\"clusterId\":\"bafvafhlbylcc\",\"detailedStatus\":\"Available\",\"detailedStatusMessage\":\"rhyzdf\",\"hybridAksClustersAssociatedIds\":[\"ofpltdbm\",\"irrhv\"],\"hybridAksIpamEnabled\":\"True\",\"hybridAksPluginType\":\"OSDevice\",\"interfaceName\":\"wnpqigtuujwouhd\",\"ipAllocationType\":\"IPV4\",\"ipv4ConnectedPrefix\":\"grbjbxsjybvitvqk\",\"ipv6ConnectedPrefix\":\"az\",\"l3IsolationDomainId\":\"umtggmuwdchozfn\",\"provisioningState\":\"Canceled\",\"virtualMachinesAssociatedIds\":[\"v\"],\"vlan\":6060971044812127967},\"location\":\"kizvoa\",\"tags\":{\"lnuwiguy\":\"a\",\"wxh\":\"lykwphvxz\"},\"id\":\"pejtl\",\"name\":\"exaonwivkcq\",\"type\":\"rxhxkn\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        NetworkCloudManager manager = NetworkCloudManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<L3Network> response
+            = manager.l3Networks().list(1691066269, "mlcfnzhmhsurl", com.azure.core.util.Context.NONE);
 
-        NetworkCloudManager manager =
-            NetworkCloudManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<L3Network> response = manager.l3Networks().list(com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("kizvoa", response.iterator().next().location());
-        Assertions.assertEquals("a", response.iterator().next().tags().get("lnuwiguy"));
-        Assertions.assertEquals("jpziu", response.iterator().next().extendedLocation().name());
-        Assertions.assertEquals("fbzkk", response.iterator().next().extendedLocation().type());
-        Assertions.assertEquals(HybridAksIpamEnabled.TRUE, response.iterator().next().hybridAksIpamEnabled());
-        Assertions.assertEquals(HybridAksPluginType.OSDEVICE, response.iterator().next().hybridAksPluginType());
-        Assertions.assertEquals("wnpqigtuujwouhd", response.iterator().next().interfaceName());
-        Assertions.assertEquals(IpAllocationType.IPV4, response.iterator().next().ipAllocationType());
-        Assertions.assertEquals("grbjbxsjybvitvqk", response.iterator().next().ipv4ConnectedPrefix());
-        Assertions.assertEquals("az", response.iterator().next().ipv6ConnectedPrefix());
-        Assertions.assertEquals("umtggmuwdchozfn", response.iterator().next().l3IsolationDomainId());
-        Assertions.assertEquals(6060971044812127967L, response.iterator().next().vlan());
+        Assertions.assertEquals("xh", response.iterator().next().location());
+        Assertions.assertEquals("ctxbxmolpcqyd", response.iterator().next().tags().get("y"));
+        Assertions.assertEquals("lawiubmomsgvvjhv", response.iterator().next().extendedLocation().name());
+        Assertions.assertEquals("lrlohewjjmajnkdf", response.iterator().next().extendedLocation().type());
+        Assertions.assertEquals(HybridAksIpamEnabled.FALSE, response.iterator().next().hybridAksIpamEnabled());
+        Assertions.assertEquals(HybridAksPluginType.SRIOV, response.iterator().next().hybridAksPluginType());
+        Assertions.assertEquals("jjnnu", response.iterator().next().interfaceName());
+        Assertions.assertEquals(IpAllocationType.DUAL_STACK, response.iterator().next().ipAllocationType());
+        Assertions.assertEquals("kmhmnulwempdc", response.iterator().next().ipv4ConnectedPrefix());
+        Assertions.assertEquals("rhjul", response.iterator().next().ipv6ConnectedPrefix());
+        Assertions.assertEquals("sulwzpflusn", response.iterator().next().l3IsolationDomainId());
+        Assertions.assertEquals(6701485974284673902L, response.iterator().next().vlan());
     }
 }

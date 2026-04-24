@@ -5,109 +5,133 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** HDInsight streaming activity type. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("HDInsightStreaming")
-@JsonFlatten
+/**
+ * HDInsight streaming activity type.
+ */
 @Fluent
 public class HDInsightStreamingActivity extends ExecutionActivity {
     /*
+     * Type of activity.
+     */
+    @Generated
+    private String type = "HDInsightStreaming";
+
+    /*
      * Storage linked service references.
      */
-    @JsonProperty(value = "typeProperties.storageLinkedServices")
+    @Generated
     private List<LinkedServiceReference> storageLinkedServices;
 
     /*
      * User specified arguments to HDInsightActivity.
      */
-    @JsonProperty(value = "typeProperties.arguments")
+    @Generated
     private List<Object> arguments;
 
     /*
      * Debug info option.
      */
-    @JsonProperty(value = "typeProperties.getDebugInfo")
+    @Generated
     private HDInsightActivityDebugInfoOption getDebugInfo;
 
     /*
      * Mapper executable name. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.mapper", required = true)
+    @Generated
     private Object mapper;
 
     /*
      * Reducer executable name. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.reducer", required = true)
+    @Generated
     private Object reducer;
 
     /*
      * Input blob path. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.input", required = true)
+    @Generated
     private Object input;
 
     /*
      * Output blob path. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.output", required = true)
+    @Generated
     private Object output;
 
     /*
      * Paths to streaming job files. Can be directories.
      */
-    @JsonProperty(value = "typeProperties.filePaths", required = true)
+    @Generated
     private List<Object> filePaths;
 
     /*
      * Linked service reference where the files are located.
      */
-    @JsonProperty(value = "typeProperties.fileLinkedService")
+    @Generated
     private LinkedServiceReference fileLinkedService;
 
     /*
      * Combiner executable name. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.combiner")
+    @Generated
     private Object combiner;
 
     /*
      * Command line environment values.
      */
-    @JsonProperty(value = "typeProperties.commandEnvironment")
+    @Generated
     private List<Object> commandEnvironment;
 
     /*
      * Allows user to specify defines for streaming job request.
      */
-    @JsonProperty(value = "typeProperties.defines")
+    @Generated
     private Map<String, Object> defines;
 
-    /** Creates an instance of HDInsightStreamingActivity class. */
-    public HDInsightStreamingActivity() {}
+    /**
+     * Creates an instance of HDInsightStreamingActivity class.
+     */
+    @Generated
+    public HDInsightStreamingActivity() {
+    }
+
+    /**
+     * Get the type property: Type of activity.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the storageLinkedServices property: Storage linked service references.
-     *
+     * 
      * @return the storageLinkedServices value.
      */
+    @Generated
     public List<LinkedServiceReference> getStorageLinkedServices() {
         return this.storageLinkedServices;
     }
 
     /**
      * Set the storageLinkedServices property: Storage linked service references.
-     *
+     * 
      * @param storageLinkedServices the storageLinkedServices value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setStorageLinkedServices(List<LinkedServiceReference> storageLinkedServices) {
         this.storageLinkedServices = storageLinkedServices;
         return this;
@@ -115,19 +139,21 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the arguments property: User specified arguments to HDInsightActivity.
-     *
+     * 
      * @return the arguments value.
      */
+    @Generated
     public List<Object> getArguments() {
         return this.arguments;
     }
 
     /**
      * Set the arguments property: User specified arguments to HDInsightActivity.
-     *
+     * 
      * @param arguments the arguments value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setArguments(List<Object> arguments) {
         this.arguments = arguments;
         return this;
@@ -135,19 +161,21 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the getDebugInfo property: Debug info option.
-     *
+     * 
      * @return the getDebugInfo value.
      */
+    @Generated
     public HDInsightActivityDebugInfoOption getGetDebugInfo() {
         return this.getDebugInfo;
     }
 
     /**
      * Set the getDebugInfo property: Debug info option.
-     *
+     * 
      * @param getDebugInfo the getDebugInfo value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setGetDebugInfo(HDInsightActivityDebugInfoOption getDebugInfo) {
         this.getDebugInfo = getDebugInfo;
         return this;
@@ -155,19 +183,21 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the mapper property: Mapper executable name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the mapper value.
      */
+    @Generated
     public Object getMapper() {
         return this.mapper;
     }
 
     /**
      * Set the mapper property: Mapper executable name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param mapper the mapper value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setMapper(Object mapper) {
         this.mapper = mapper;
         return this;
@@ -175,19 +205,21 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the reducer property: Reducer executable name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the reducer value.
      */
+    @Generated
     public Object getReducer() {
         return this.reducer;
     }
 
     /**
      * Set the reducer property: Reducer executable name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param reducer the reducer value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setReducer(Object reducer) {
         this.reducer = reducer;
         return this;
@@ -195,19 +227,21 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the input property: Input blob path. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the input value.
      */
+    @Generated
     public Object getInput() {
         return this.input;
     }
 
     /**
      * Set the input property: Input blob path. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param input the input value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setInput(Object input) {
         this.input = input;
         return this;
@@ -215,19 +249,21 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the output property: Output blob path. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the output value.
      */
+    @Generated
     public Object getOutput() {
         return this.output;
     }
 
     /**
      * Set the output property: Output blob path. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param output the output value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setOutput(Object output) {
         this.output = output;
         return this;
@@ -235,19 +271,21 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the filePaths property: Paths to streaming job files. Can be directories.
-     *
+     * 
      * @return the filePaths value.
      */
+    @Generated
     public List<Object> getFilePaths() {
         return this.filePaths;
     }
 
     /**
      * Set the filePaths property: Paths to streaming job files. Can be directories.
-     *
+     * 
      * @param filePaths the filePaths value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setFilePaths(List<Object> filePaths) {
         this.filePaths = filePaths;
         return this;
@@ -255,19 +293,21 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the fileLinkedService property: Linked service reference where the files are located.
-     *
+     * 
      * @return the fileLinkedService value.
      */
+    @Generated
     public LinkedServiceReference getFileLinkedService() {
         return this.fileLinkedService;
     }
 
     /**
      * Set the fileLinkedService property: Linked service reference where the files are located.
-     *
+     * 
      * @param fileLinkedService the fileLinkedService value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setFileLinkedService(LinkedServiceReference fileLinkedService) {
         this.fileLinkedService = fileLinkedService;
         return this;
@@ -275,19 +315,21 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the combiner property: Combiner executable name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the combiner value.
      */
+    @Generated
     public Object getCombiner() {
         return this.combiner;
     }
 
     /**
      * Set the combiner property: Combiner executable name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param combiner the combiner value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setCombiner(Object combiner) {
         this.combiner = combiner;
         return this;
@@ -295,19 +337,21 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the commandEnvironment property: Command line environment values.
-     *
+     * 
      * @return the commandEnvironment value.
      */
+    @Generated
     public List<Object> getCommandEnvironment() {
         return this.commandEnvironment;
     }
 
     /**
      * Set the commandEnvironment property: Command line environment values.
-     *
+     * 
      * @param commandEnvironment the commandEnvironment value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setCommandEnvironment(List<Object> commandEnvironment) {
         this.commandEnvironment = commandEnvironment;
         return this;
@@ -315,77 +359,257 @@ public class HDInsightStreamingActivity extends ExecutionActivity {
 
     /**
      * Get the defines property: Allows user to specify defines for streaming job request.
-     *
+     * 
      * @return the defines value.
      */
+    @Generated
     public Map<String, Object> getDefines() {
         return this.defines;
     }
 
     /**
      * Set the defines property: Allows user to specify defines for streaming job request.
-     *
+     * 
      * @param defines the defines value to set.
      * @return the HDInsightStreamingActivity object itself.
      */
+    @Generated
     public HDInsightStreamingActivity setDefines(Map<String, Object> defines) {
         this.defines = defines;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HDInsightStreamingActivity setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         super.setLinkedServiceName(linkedServiceName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HDInsightStreamingActivity setPolicy(ActivityPolicy policy) {
         super.setPolicy(policy);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HDInsightStreamingActivity setName(String name) {
         super.setName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HDInsightStreamingActivity setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HDInsightStreamingActivity setState(ActivityState state) {
         super.setState(state);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HDInsightStreamingActivity setOnInactiveMarkAs(ActivityOnInactiveMarkAs onInactiveMarkAs) {
         super.setOnInactiveMarkAs(onInactiveMarkAs);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HDInsightStreamingActivity setDependsOn(List<ActivityDependency> dependsOn) {
         super.setDependsOn(dependsOn);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HDInsightStreamingActivity setUserProperties(List<UserProperty> userProperties) {
         super.setUserProperties(userProperties);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", getName());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeStringField("state", getState() == null ? null : getState().toString());
+        jsonWriter.writeStringField("onInactiveMarkAs",
+            getOnInactiveMarkAs() == null ? null : getOnInactiveMarkAs().toString());
+        jsonWriter.writeArrayField("dependsOn", getDependsOn(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("userProperties", getUserProperties(),
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("linkedServiceName", getLinkedServiceName());
+        jsonWriter.writeJsonField("policy", getPolicy());
+        jsonWriter.writeStringField("type", this.type);
+        if (storageLinkedServices != null
+            || arguments != null
+            || getDebugInfo != null
+            || mapper != null
+            || reducer != null
+            || input != null
+            || output != null
+            || filePaths != null
+            || fileLinkedService != null
+            || combiner != null
+            || commandEnvironment != null
+            || defines != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeArrayField("storageLinkedServices", this.storageLinkedServices,
+                (writer, element) -> writer.writeJson(element));
+            jsonWriter.writeArrayField("arguments", this.arguments, (writer, element) -> writer.writeUntyped(element));
+            jsonWriter.writeStringField("getDebugInfo",
+                this.getDebugInfo == null ? null : this.getDebugInfo.toString());
+            jsonWriter.writeUntypedField("mapper", this.mapper);
+            jsonWriter.writeUntypedField("reducer", this.reducer);
+            jsonWriter.writeUntypedField("input", this.input);
+            jsonWriter.writeUntypedField("output", this.output);
+            jsonWriter.writeArrayField("filePaths", this.filePaths, (writer, element) -> writer.writeUntyped(element));
+            jsonWriter.writeJsonField("fileLinkedService", this.fileLinkedService);
+            if (this.combiner != null) {
+                jsonWriter.writeUntypedField("combiner", this.combiner);
+            }
+            jsonWriter.writeArrayField("commandEnvironment", this.commandEnvironment,
+                (writer, element) -> writer.writeUntyped(element));
+            jsonWriter.writeMapField("defines", this.defines, (writer, element) -> writer.writeUntyped(element));
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of HDInsightStreamingActivity from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of HDInsightStreamingActivity if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the HDInsightStreamingActivity.
+     */
+    @Generated
+    public static HDInsightStreamingActivity fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            HDInsightStreamingActivity deserializedHDInsightStreamingActivity = new HDInsightStreamingActivity();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedHDInsightStreamingActivity.setName(reader.getString());
+                } else if ("description".equals(fieldName)) {
+                    deserializedHDInsightStreamingActivity.setDescription(reader.getString());
+                } else if ("state".equals(fieldName)) {
+                    deserializedHDInsightStreamingActivity.setState(ActivityState.fromString(reader.getString()));
+                } else if ("onInactiveMarkAs".equals(fieldName)) {
+                    deserializedHDInsightStreamingActivity
+                        .setOnInactiveMarkAs(ActivityOnInactiveMarkAs.fromString(reader.getString()));
+                } else if ("dependsOn".equals(fieldName)) {
+                    List<ActivityDependency> dependsOn
+                        = reader.readArray(reader1 -> ActivityDependency.fromJson(reader1));
+                    deserializedHDInsightStreamingActivity.setDependsOn(dependsOn);
+                } else if ("userProperties".equals(fieldName)) {
+                    List<UserProperty> userProperties = reader.readArray(reader1 -> UserProperty.fromJson(reader1));
+                    deserializedHDInsightStreamingActivity.setUserProperties(userProperties);
+                } else if ("linkedServiceName".equals(fieldName)) {
+                    deserializedHDInsightStreamingActivity
+                        .setLinkedServiceName(LinkedServiceReference.fromJson(reader));
+                } else if ("policy".equals(fieldName)) {
+                    deserializedHDInsightStreamingActivity.setPolicy(ActivityPolicy.fromJson(reader));
+                } else if ("type".equals(fieldName)) {
+                    deserializedHDInsightStreamingActivity.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("storageLinkedServices".equals(fieldName)) {
+                            List<LinkedServiceReference> storageLinkedServices
+                                = reader.readArray(reader1 -> LinkedServiceReference.fromJson(reader1));
+                            deserializedHDInsightStreamingActivity.storageLinkedServices = storageLinkedServices;
+                        } else if ("arguments".equals(fieldName)) {
+                            List<Object> arguments = reader.readArray(reader1 -> reader1.readUntyped());
+                            deserializedHDInsightStreamingActivity.arguments = arguments;
+                        } else if ("getDebugInfo".equals(fieldName)) {
+                            deserializedHDInsightStreamingActivity.getDebugInfo
+                                = HDInsightActivityDebugInfoOption.fromString(reader.getString());
+                        } else if ("mapper".equals(fieldName)) {
+                            deserializedHDInsightStreamingActivity.mapper = reader.readUntyped();
+                        } else if ("reducer".equals(fieldName)) {
+                            deserializedHDInsightStreamingActivity.reducer = reader.readUntyped();
+                        } else if ("input".equals(fieldName)) {
+                            deserializedHDInsightStreamingActivity.input = reader.readUntyped();
+                        } else if ("output".equals(fieldName)) {
+                            deserializedHDInsightStreamingActivity.output = reader.readUntyped();
+                        } else if ("filePaths".equals(fieldName)) {
+                            List<Object> filePaths = reader.readArray(reader1 -> reader1.readUntyped());
+                            deserializedHDInsightStreamingActivity.filePaths = filePaths;
+                        } else if ("fileLinkedService".equals(fieldName)) {
+                            deserializedHDInsightStreamingActivity.fileLinkedService
+                                = LinkedServiceReference.fromJson(reader);
+                        } else if ("combiner".equals(fieldName)) {
+                            deserializedHDInsightStreamingActivity.combiner = reader.readUntyped();
+                        } else if ("commandEnvironment".equals(fieldName)) {
+                            List<Object> commandEnvironment = reader.readArray(reader1 -> reader1.readUntyped());
+                            deserializedHDInsightStreamingActivity.commandEnvironment = commandEnvironment;
+                        } else if ("defines".equals(fieldName)) {
+                            Map<String, Object> defines = reader.readMap(reader1 -> reader1.readUntyped());
+                            deserializedHDInsightStreamingActivity.defines = defines;
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedHDInsightStreamingActivity.setAdditionalProperties(additionalProperties);
+
+            return deserializedHDInsightStreamingActivity;
+        });
     }
 }

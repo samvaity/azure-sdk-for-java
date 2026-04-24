@@ -5,84 +5,99 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
-/** The AnomalyAlertingConfiguration model. */
+/**
+ * The AnomalyAlertingConfiguration model.
+ */
 @Fluent
-public final class AnomalyAlertingConfiguration {
+public final class AnomalyAlertingConfiguration implements JsonSerializable<AnomalyAlertingConfiguration> {
     /*
      * anomaly alerting configuration unique id
      */
-    @JsonProperty(value = "anomalyAlertingConfigurationId", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private UUID anomalyAlertingConfigurationId;
 
     /*
      * anomaly alerting configuration name
      */
-    @JsonProperty(value = "name", required = true)
+    @Generated
     private String name;
 
     /*
      * anomaly alerting configuration description
      */
-    @JsonProperty(value = "description")
+    @Generated
     private String description;
 
     /*
      * cross metrics operator
-     *
+     * 
      * should be specified when setting up multiple metric alerting configurations
      */
-    @JsonProperty(value = "crossMetricsOperator")
+    @Generated
     private AnomalyAlertingConfigurationLogicType crossMetricsOperator;
 
     /*
      * dimensions used to split alert
      */
-    @JsonProperty(value = "splitAlertByDimensions")
+    @Generated
     private List<String> splitAlertByDimensions;
 
     /*
      * hook unique ids
      */
-    @JsonProperty(value = "hookIds", required = true)
+    @Generated
     private List<UUID> hookIds;
 
     /*
      * Anomaly alerting configurations
      */
-    @JsonProperty(value = "metricAlertingConfigurations", required = true)
+    @Generated
     private List<MetricAlertingConfiguration> metricAlertingConfigurations;
 
-    /** Creates an instance of AnomalyAlertingConfiguration class. */
-    public AnomalyAlertingConfiguration() {}
+    /**
+     * Creates an instance of AnomalyAlertingConfiguration class.
+     */
+    @Generated
+    public AnomalyAlertingConfiguration() {
+    }
 
     /**
      * Get the anomalyAlertingConfigurationId property: anomaly alerting configuration unique id.
-     *
+     * 
      * @return the anomalyAlertingConfigurationId value.
      */
+    @Generated
     public UUID getAnomalyAlertingConfigurationId() {
         return this.anomalyAlertingConfigurationId;
     }
 
     /**
      * Get the name property: anomaly alerting configuration name.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: anomaly alerting configuration name.
-     *
+     * 
      * @param name the name value to set.
      * @return the AnomalyAlertingConfiguration object itself.
      */
+    @Generated
     public AnomalyAlertingConfiguration setName(String name) {
         this.name = name;
         return this;
@@ -90,19 +105,21 @@ public final class AnomalyAlertingConfiguration {
 
     /**
      * Get the description property: anomaly alerting configuration description.
-     *
+     * 
      * @return the description value.
      */
+    @Generated
     public String getDescription() {
         return this.description;
     }
 
     /**
      * Set the description property: anomaly alerting configuration description.
-     *
+     * 
      * @param description the description value to set.
      * @return the AnomalyAlertingConfiguration object itself.
      */
+    @Generated
     public AnomalyAlertingConfiguration setDescription(String description) {
         this.description = description;
         return this;
@@ -110,44 +127,48 @@ public final class AnomalyAlertingConfiguration {
 
     /**
      * Get the crossMetricsOperator property: cross metrics operator
-     *
-     * <p>should be specified when setting up multiple metric alerting configurations.
-     *
+     * 
+     * should be specified when setting up multiple metric alerting configurations.
+     * 
      * @return the crossMetricsOperator value.
      */
+    @Generated
     public AnomalyAlertingConfigurationLogicType getCrossMetricsOperator() {
         return this.crossMetricsOperator;
     }
 
     /**
      * Set the crossMetricsOperator property: cross metrics operator
-     *
-     * <p>should be specified when setting up multiple metric alerting configurations.
-     *
+     * 
+     * should be specified when setting up multiple metric alerting configurations.
+     * 
      * @param crossMetricsOperator the crossMetricsOperator value to set.
      * @return the AnomalyAlertingConfiguration object itself.
      */
-    public AnomalyAlertingConfiguration setCrossMetricsOperator(
-            AnomalyAlertingConfigurationLogicType crossMetricsOperator) {
+    @Generated
+    public AnomalyAlertingConfiguration
+        setCrossMetricsOperator(AnomalyAlertingConfigurationLogicType crossMetricsOperator) {
         this.crossMetricsOperator = crossMetricsOperator;
         return this;
     }
 
     /**
      * Get the splitAlertByDimensions property: dimensions used to split alert.
-     *
+     * 
      * @return the splitAlertByDimensions value.
      */
+    @Generated
     public List<String> getSplitAlertByDimensions() {
         return this.splitAlertByDimensions;
     }
 
     /**
      * Set the splitAlertByDimensions property: dimensions used to split alert.
-     *
+     * 
      * @param splitAlertByDimensions the splitAlertByDimensions value to set.
      * @return the AnomalyAlertingConfiguration object itself.
      */
+    @Generated
     public AnomalyAlertingConfiguration setSplitAlertByDimensions(List<String> splitAlertByDimensions) {
         this.splitAlertByDimensions = splitAlertByDimensions;
         return this;
@@ -155,19 +176,21 @@ public final class AnomalyAlertingConfiguration {
 
     /**
      * Get the hookIds property: hook unique ids.
-     *
+     * 
      * @return the hookIds value.
      */
+    @Generated
     public List<UUID> getHookIds() {
         return this.hookIds;
     }
 
     /**
      * Set the hookIds property: hook unique ids.
-     *
+     * 
      * @param hookIds the hookIds value to set.
      * @return the AnomalyAlertingConfiguration object itself.
      */
+    @Generated
     public AnomalyAlertingConfiguration setHookIds(List<UUID> hookIds) {
         this.hookIds = hookIds;
         return this;
@@ -175,22 +198,92 @@ public final class AnomalyAlertingConfiguration {
 
     /**
      * Get the metricAlertingConfigurations property: Anomaly alerting configurations.
-     *
+     * 
      * @return the metricAlertingConfigurations value.
      */
+    @Generated
     public List<MetricAlertingConfiguration> getMetricAlertingConfigurations() {
         return this.metricAlertingConfigurations;
     }
 
     /**
      * Set the metricAlertingConfigurations property: Anomaly alerting configurations.
-     *
+     * 
      * @param metricAlertingConfigurations the metricAlertingConfigurations value to set.
      * @return the AnomalyAlertingConfiguration object itself.
      */
-    public AnomalyAlertingConfiguration setMetricAlertingConfigurations(
-            List<MetricAlertingConfiguration> metricAlertingConfigurations) {
+    @Generated
+    public AnomalyAlertingConfiguration
+        setMetricAlertingConfigurations(List<MetricAlertingConfiguration> metricAlertingConfigurations) {
         this.metricAlertingConfigurations = metricAlertingConfigurations;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeArrayField("hookIds", this.hookIds,
+            (writer, element) -> writer.writeString(Objects.toString(element, null)));
+        jsonWriter.writeArrayField("metricAlertingConfigurations", this.metricAlertingConfigurations,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("description", this.description);
+        jsonWriter.writeStringField("crossMetricsOperator",
+            this.crossMetricsOperator == null ? null : this.crossMetricsOperator.toString());
+        jsonWriter.writeArrayField("splitAlertByDimensions", this.splitAlertByDimensions,
+            (writer, element) -> writer.writeString(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AnomalyAlertingConfiguration from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AnomalyAlertingConfiguration if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AnomalyAlertingConfiguration.
+     */
+    @Generated
+    public static AnomalyAlertingConfiguration fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AnomalyAlertingConfiguration deserializedAnomalyAlertingConfiguration = new AnomalyAlertingConfiguration();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedAnomalyAlertingConfiguration.name = reader.getString();
+                } else if ("hookIds".equals(fieldName)) {
+                    List<UUID> hookIds = reader.readArray(
+                        reader1 -> reader1.getNullable(nonNullReader -> UUID.fromString(nonNullReader.getString())));
+                    deserializedAnomalyAlertingConfiguration.hookIds = hookIds;
+                } else if ("metricAlertingConfigurations".equals(fieldName)) {
+                    List<MetricAlertingConfiguration> metricAlertingConfigurations
+                        = reader.readArray(reader1 -> MetricAlertingConfiguration.fromJson(reader1));
+                    deserializedAnomalyAlertingConfiguration.metricAlertingConfigurations
+                        = metricAlertingConfigurations;
+                } else if ("anomalyAlertingConfigurationId".equals(fieldName)) {
+                    deserializedAnomalyAlertingConfiguration.anomalyAlertingConfigurationId
+                        = reader.getNullable(nonNullReader -> UUID.fromString(nonNullReader.getString()));
+                } else if ("description".equals(fieldName)) {
+                    deserializedAnomalyAlertingConfiguration.description = reader.getString();
+                } else if ("crossMetricsOperator".equals(fieldName)) {
+                    deserializedAnomalyAlertingConfiguration.crossMetricsOperator
+                        = AnomalyAlertingConfigurationLogicType.fromString(reader.getString());
+                } else if ("splitAlertByDimensions".equals(fieldName)) {
+                    List<String> splitAlertByDimensions = reader.readArray(reader1 -> reader1.getString());
+                    deserializedAnomalyAlertingConfiguration.splitAlertByDimensions = splitAlertByDimensions;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedAnomalyAlertingConfiguration;
+        });
     }
 }

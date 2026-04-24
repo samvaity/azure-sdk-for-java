@@ -15,33 +15,28 @@ import org.junit.jupiter.api.Assertions;
 public final class LanguageExtensionsListTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        LanguageExtensionsList model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"languageExtensionName\":\"R\",\"languageExtensionImageName\":\"R\"},{\"languageExtensionName\":\"R\",\"languageExtensionImageName\":\"R\"},{\"languageExtensionName\":\"R\",\"languageExtensionImageName\":\"Python3_10_8\"}]}")
-                .toObject(LanguageExtensionsList.class);
+        LanguageExtensionsList model = BinaryData.fromString(
+            "{\"value\":[{\"languageExtensionName\":\"R\",\"languageExtensionImageName\":\"Python3_11_7_DL\",\"languageExtensionCustomImageName\":\"qtrgqjbpfzfsinzg\"},{\"languageExtensionName\":\"R\",\"languageExtensionImageName\":\"Python3_11_7\",\"languageExtensionCustomImageName\":\"zoxxjtf\"}]}")
+            .toObject(LanguageExtensionsList.class);
         Assertions.assertEquals(LanguageExtensionName.R, model.value().get(0).languageExtensionName());
-        Assertions.assertEquals(LanguageExtensionImageName.R, model.value().get(0).languageExtensionImageName());
+        Assertions.assertEquals(LanguageExtensionImageName.PYTHON3_11_7_DL,
+            model.value().get(0).languageExtensionImageName());
+        Assertions.assertEquals("qtrgqjbpfzfsinzg", model.value().get(0).languageExtensionCustomImageName());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        LanguageExtensionsList model =
-            new LanguageExtensionsList()
-                .withValue(
-                    Arrays
-                        .asList(
-                            new LanguageExtensionInner()
-                                .withLanguageExtensionName(LanguageExtensionName.R)
-                                .withLanguageExtensionImageName(LanguageExtensionImageName.R),
-                            new LanguageExtensionInner()
-                                .withLanguageExtensionName(LanguageExtensionName.R)
-                                .withLanguageExtensionImageName(LanguageExtensionImageName.R),
-                            new LanguageExtensionInner()
-                                .withLanguageExtensionName(LanguageExtensionName.R)
-                                .withLanguageExtensionImageName(LanguageExtensionImageName.PYTHON3_10_8)));
+        LanguageExtensionsList model = new LanguageExtensionsList().withValue(Arrays.asList(
+            new LanguageExtensionInner().withLanguageExtensionName(LanguageExtensionName.R)
+                .withLanguageExtensionImageName(LanguageExtensionImageName.PYTHON3_11_7_DL)
+                .withLanguageExtensionCustomImageName("qtrgqjbpfzfsinzg"),
+            new LanguageExtensionInner().withLanguageExtensionName(LanguageExtensionName.R)
+                .withLanguageExtensionImageName(LanguageExtensionImageName.PYTHON3_11_7)
+                .withLanguageExtensionCustomImageName("zoxxjtf")));
         model = BinaryData.fromObject(model).toObject(LanguageExtensionsList.class);
         Assertions.assertEquals(LanguageExtensionName.R, model.value().get(0).languageExtensionName());
-        Assertions.assertEquals(LanguageExtensionImageName.R, model.value().get(0).languageExtensionImageName());
+        Assertions.assertEquals(LanguageExtensionImageName.PYTHON3_11_7_DL,
+            model.value().get(0).languageExtensionImageName());
+        Assertions.assertEquals("qtrgqjbpfzfsinzg", model.value().get(0).languageExtensionCustomImageName());
     }
 }

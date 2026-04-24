@@ -10,11 +10,9 @@ import com.azure.resourcemanager.devcenter.models.ScheduleListResult;
 public final class ScheduleListResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ScheduleListResult model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"properties\":{\"provisioningState\":\"RolloutInProgress\",\"type\":\"StopDevBox\",\"frequency\":\"Daily\",\"time\":\"jpxac\",\"timeZone\":\"udfnbyxba\",\"state\":\"Enabled\"},\"id\":\"yvayffimrzr\",\"name\":\"uzqogsexnevf\",\"type\":\"nwnwme\"}],\"nextLink\":\"syyceuzsoibjud\"}")
-                .toObject(ScheduleListResult.class);
+        ScheduleListResult model = BinaryData.fromString(
+            "{\"value\":[{\"properties\":{\"provisioningState\":\"Creating\",\"type\":\"StopDevBox\",\"frequency\":\"Daily\",\"time\":\"i\",\"timeZone\":\"nhn\",\"state\":\"Disabled\",\"tags\":{\"cesutrgjupauut\":\"qjzgxmrhublw\"},\"location\":\"oqh\"},\"id\":\"ejqgw\",\"name\":\"pnfqntcyp\",\"type\":\"xjvfoimwksl\"},{\"properties\":{\"provisioningState\":\"Creating\",\"type\":\"StopDevBox\",\"frequency\":\"Daily\",\"time\":\"dfcea\",\"timeZone\":\"lhvygdyftu\",\"state\":\"Disabled\",\"tags\":{\"biwkojgcyzt\":\"awjs\",\"qphchqnrnrpxehuw\":\"fmznba\",\"bydvkhbejdz\":\"ykqgaifmvik\",\"srhnjivo\":\"xcv\"},\"location\":\"tnovqfzgemjdftul\"},\"id\":\"tduceamt\",\"name\":\"czu\",\"type\":\"m\"},{\"properties\":{\"provisioningState\":\"Deleting\",\"type\":\"StopDevBox\",\"frequency\":\"Daily\",\"time\":\"knssxmojm\",\"timeZone\":\"p\",\"state\":\"Disabled\",\"tags\":{\"ql\":\"kwcf\"},\"location\":\"x\"},\"id\":\"czheyd\",\"name\":\"sdshmkxmaehvb\",\"type\":\"xu\"},{\"properties\":{\"provisioningState\":\"Canceled\",\"type\":\"StopDevBox\",\"frequency\":\"Daily\",\"time\":\"baxk\",\"timeZone\":\"ywrckp\",\"state\":\"Disabled\",\"tags\":{\"uudl\":\"pluodpv\",\"ostgkts\":\"zibt\",\"zedqbcvhzlhplo\":\"vdxec\",\"qfbumlkxtrqjf\":\"qkdlw\"},\"location\":\"lmbtxhwgfwsrt\"},\"id\":\"coezbrhubskh\",\"name\":\"dyg\",\"type\":\"ookk\"}],\"nextLink\":\"qjbvleorfmlu\"}")
+            .toObject(ScheduleListResult.class);
     }
 
     @org.junit.jupiter.api.Test

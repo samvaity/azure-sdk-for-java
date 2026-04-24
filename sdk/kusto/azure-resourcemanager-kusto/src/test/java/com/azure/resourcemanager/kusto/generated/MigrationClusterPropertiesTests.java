@@ -10,10 +10,10 @@ import com.azure.resourcemanager.kusto.models.MigrationClusterProperties;
 public final class MigrationClusterPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrationClusterProperties model =
-            BinaryData
-                .fromString("{\"id\":\"xbnjbiksq\",\"uri\":\"lssai\",\"dataIngestionUri\":\"p\",\"role\":\"Source\"}")
-                .toObject(MigrationClusterProperties.class);
+        MigrationClusterProperties model = BinaryData
+            .fromString(
+                "{\"id\":\"ltmrldh\",\"uri\":\"jzzd\",\"dataIngestionUri\":\"qxhocdgeablgphut\",\"role\":\"Source\"}")
+            .toObject(MigrationClusterProperties.class);
     }
 
     @org.junit.jupiter.api.Test

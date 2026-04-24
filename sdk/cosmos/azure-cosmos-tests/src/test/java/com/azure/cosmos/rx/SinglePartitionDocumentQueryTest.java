@@ -3,39 +3,40 @@
 package com.azure.cosmos.rx;
 
 import com.azure.cosmos.BridgeInternal;
+import com.azure.cosmos.ConnectionMode;
 import com.azure.cosmos.CosmosAsyncClient;
 import com.azure.cosmos.CosmosAsyncContainer;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.cosmos.CosmosException;
-import com.azure.cosmos.implementation.RxDocumentClientImpl;
-import com.azure.cosmos.implementation.RxStoreModel;
-import com.azure.cosmos.implementation.directconnectivity.ReflectionUtils;
-import com.azure.cosmos.implementation.guava25.collect.Lists;
-import com.azure.cosmos.models.ModelBridgeInternal;
-import com.azure.cosmos.models.PartitionKey;
-import com.azure.cosmos.util.CosmosPagedFlux;
-import com.azure.cosmos.implementation.InternalObjectNode;
-import com.azure.cosmos.models.CosmosItemRequestOptions;
-import com.azure.cosmos.models.CosmosQueryRequestOptions;
-import com.azure.cosmos.models.FeedResponse;
-import com.azure.cosmos.models.SqlParameter;
-import com.azure.cosmos.models.SqlQuerySpec;
 import com.azure.cosmos.implementation.Database;
 import com.azure.cosmos.implementation.FailureValidator;
 import com.azure.cosmos.implementation.FeedResponseListValidator;
 import com.azure.cosmos.implementation.FeedResponseValidator;
+import com.azure.cosmos.implementation.InternalObjectNode;
+import com.azure.cosmos.implementation.RxDocumentClientImpl;
+import com.azure.cosmos.implementation.RxStoreModel;
 import com.azure.cosmos.implementation.TestUtils;
-import io.reactivex.subscribers.TestSubscriber;
+import com.azure.cosmos.implementation.directconnectivity.ReflectionUtils;
+import com.azure.cosmos.implementation.guava25.collect.Lists;
+import com.azure.cosmos.models.CosmosItemRequestOptions;
+import com.azure.cosmos.models.CosmosQueryRequestOptions;
+import com.azure.cosmos.models.FeedResponse;
+import com.azure.cosmos.models.PartitionKey;
+import com.azure.cosmos.models.SqlParameter;
+import com.azure.cosmos.models.SqlQuerySpec;
+import com.azure.cosmos.util.CosmosPagedFlux;
 import org.mockito.Mockito;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import reactor.test.StepVerifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,7 +58,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
         super(clientBuilder);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT, dataProvider = "queryMetricsArgProvider")
+    @Test(groups = { "query" }, timeOut = TIMEOUT, dataProvider = "queryMetricsArgProvider")
     public void queryDocuments(Boolean qmEnabled) throws Exception {
 
         String query = "SELECT * from c where c.prop = 99";
@@ -71,7 +72,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
 
         CosmosPagedFlux<InternalObjectNode> queryObservable = createdCollection.queryItems(query, options, InternalObjectNode.class);
 
-        List<InternalObjectNode> expectedDocs = createdDocuments.stream().filter(d -> 99 == ModelBridgeInternal.getIntFromJsonSerializable(d,"prop") ).collect(Collectors.toList());
+        List<InternalObjectNode> expectedDocs = createdDocuments.stream().filter(d -> 99 == d.getInt("prop") ).collect(Collectors.toList());
         assertThat(expectedDocs).isNotEmpty();
 
         int expectedPageSize = (expectedDocs.size() + maxItemCount - 1) / maxItemCount;
@@ -88,7 +89,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(maxItemCount), validator, 10000);
     }
 
-    @Test(groups = {"simple"})
+    @Test(groups = {"query"})
     public void querySinglePartitionDocuments() throws Exception {
         // Test to make sure single partition queries go to DirectMode when DirectMode is set
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
@@ -97,15 +98,19 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
                                              .getContainer(createdCollection.getId());
         RxDocumentClientImpl asyncDocumentClient = (RxDocumentClientImpl) ReflectionUtils.getAsyncDocumentClient(client);
         RxStoreModel serverStoreModel = ReflectionUtils.getRxServerStoreModel(asyncDocumentClient);
-        RxStoreModel gatewayProxy = ReflectionUtils.getGatewayProxy(asyncDocumentClient);
-
-
+        RxStoreModel proxy = asyncDocumentClient.useThinClient() ?
+            ReflectionUtils.getThinProxy(asyncDocumentClient) :
+            ReflectionUtils.getGatewayProxy(asyncDocumentClient);
 
         RxStoreModel spyServerStoreModel = Mockito.spy(serverStoreModel);
-        RxStoreModel spyGatewayProxy = Mockito.spy(gatewayProxy);
+        RxStoreModel spyProxy = Mockito.spy(proxy);
 
         ReflectionUtils.setServerStoreModel(asyncDocumentClient, spyServerStoreModel);
-        ReflectionUtils.setGatewayProxy(asyncDocumentClient, spyGatewayProxy);
+        if (asyncDocumentClient.useThinClient()) {
+            ReflectionUtils.setThinProxy(asyncDocumentClient, spyProxy);
+        } else {
+            ReflectionUtils.setGatewayProxy(asyncDocumentClient, spyProxy);
+        }
 
         CosmosPagedFlux<InternalObjectNode> queryFlux = container
                                                             .queryItems("select * from root", options,
@@ -115,15 +120,16 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
         queryFlux.byPage().blockLast();
 
         // Validation:
-        // In gateway mode, serverstoremodel is GatewayStoreModel so below passes
+        // In gateway mode, serverstoremodel is GatewayStoreModel/ThinClientStoreModel so below passes
         // In direct mode, serverStoreModel is ServerStoreModel. So queryPlan goes through gatewayProxy and the query
         // goes through the serverStoreModel
-        Mockito.verify(spyGatewayProxy, Mockito.times(1)).processMessage(Mockito.any());
-        Mockito.verify(spyServerStoreModel, Mockito.times(1)).processMessage(Mockito.any());
-
+        Mockito.verify(spyProxy, Mockito.times(1)).processMessage(Mockito.any());
+        if (asyncDocumentClient.getConnectionPolicy().getConnectionMode() == ConnectionMode.DIRECT) {
+            Mockito.verify(spyServerStoreModel, Mockito.times(1)).processMessage(Mockito.any());
+        }
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryDocuments_ParameterizedQueryWithInClause() throws Exception {
         String query = "SELECT * from c where c.prop IN (@param1, @param2)";
         List<SqlParameter> params = Lists.newArrayList(new SqlParameter("@param1", 3), new SqlParameter("@param2", 4));
@@ -134,7 +140,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
 
         CosmosPagedFlux<InternalObjectNode> queryObservable = createdCollection.queryItems(sqs, options, InternalObjectNode.class);
 
-        List<InternalObjectNode> expectedDocs = createdDocuments.stream().filter(d -> (3 == ModelBridgeInternal.getIntFromJsonSerializable(d,"prop") || 4 == ModelBridgeInternal.getIntFromJsonSerializable(d,"prop"))).collect(Collectors.toList());
+        List<InternalObjectNode> expectedDocs = createdDocuments.stream().filter(d -> (3 == d.getInt("prop") || 4 == d.getInt("prop"))).collect(Collectors.toList());
         assertThat(expectedDocs).isNotEmpty();
 
         int expectedPageSize = (expectedDocs.size() + maxItemCount - 1) / maxItemCount;
@@ -150,7 +156,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(), validator, 10000);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryDocuments_ParameterizedQuery() throws Exception {
         String query = "SELECT * from c where c.prop = @param";
         SqlQuerySpec sqs = new SqlQuerySpec(query, Collections.singletonList(new SqlParameter("@param", 3)));
@@ -160,7 +166,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
 
         CosmosPagedFlux<InternalObjectNode> queryObservable = createdCollection.queryItems(sqs, options, InternalObjectNode.class);
 
-        List<InternalObjectNode> expectedDocs = createdDocuments.stream().filter(d -> 3 == ModelBridgeInternal.getIntFromJsonSerializable(d,"prop")).collect(Collectors.toList());
+        List<InternalObjectNode> expectedDocs = createdDocuments.stream().filter(d -> 3 == d.getInt("prop")).collect(Collectors.toList());
         assertThat(expectedDocs).isNotEmpty();
 
         int expectedPageSize = (expectedDocs.size() + maxItemCount - 1) / maxItemCount;
@@ -176,7 +182,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(), validator, 10000);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryDocuments_NoResults() throws Exception {
 
         String query = "SELECT * from root r where r.id = '2'";
@@ -193,7 +199,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(), validator);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryDocumentsWithPageSize() throws Exception {
 
         String query = "SELECT * from root";
@@ -219,7 +225,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(maxItemCount), validator);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryOrderBy() throws Exception {
 
         String query = "SELECT * FROM r ORDER BY r.prop ASC";
@@ -233,8 +239,8 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
 
         FeedResponseListValidator<InternalObjectNode> validator = new FeedResponseListValidator.Builder<InternalObjectNode>()
                 .containsExactly(createdDocuments.stream()
-                        .sorted((e1, e2) -> Integer.compare(ModelBridgeInternal.getIntFromJsonSerializable(e1, "prop"),
-                            ModelBridgeInternal.getIntFromJsonSerializable(e2, "prop")))
+                        .sorted((e1, e2) -> Integer.compare(e1.getInt("prop"),
+                            e2.getInt("prop")))
                         .map(d -> d.getResourceId()).collect(Collectors.toList()))
                 .numberOfPages(expectedPageSize)
                 .allPagesSatisfy(new FeedResponseValidator.Builder<InternalObjectNode>()
@@ -244,7 +250,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(maxItemCount), validator);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT * 10)
+    @Test(groups = { "query" }, timeOut = TIMEOUT * 10)
     public void continuationToken() throws Exception {
         String query = "SELECT * FROM r ORDER BY r.prop ASC";
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
@@ -252,39 +258,36 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
         int maxItemCount = 3;
         CosmosPagedFlux<InternalObjectNode> queryObservable = createdCollection.queryItems(query, options, InternalObjectNode.class);
 
-        TestSubscriber<FeedResponse<InternalObjectNode>> subscriber = new TestSubscriber<>();
-        queryObservable.byPage(maxItemCount).take(1).subscribe(subscriber);
+        AtomicReference<FeedResponse<InternalObjectNode>> value = new AtomicReference<>();
+        StepVerifier.create(queryObservable.byPage(maxItemCount).take(1))
+            .consumeNextWith(value::set)
+            .verifyComplete();
 
-        subscriber.awaitTerminalEvent();
-        subscriber.assertComplete();
-        subscriber.assertNoErrors();
-        assertThat(subscriber.valueCount()).isEqualTo(1);
-        @SuppressWarnings("unchecked")
-        FeedResponse<InternalObjectNode> page = ((FeedResponse<InternalObjectNode>) subscriber.getEvents().get(0).get(0));
+        FeedResponse<InternalObjectNode> page = value.get();
         assertThat(page.getResults()).hasSize(3);
 
         assertThat(page.getContinuationToken()).isNotEmpty();
 
         queryObservable = createdCollection.queryItems(query, options, InternalObjectNode.class);
 
-        List<InternalObjectNode> expectedDocs = createdDocuments.stream().filter(d -> (ModelBridgeInternal.getIntFromJsonSerializable(d,"prop") > 2)).collect(Collectors.toList());
+        List<InternalObjectNode> expectedDocs = createdDocuments.stream().filter(d -> (d.getInt("prop") > 2)).collect(Collectors.toList());
         int expectedPageSize = (expectedDocs.size() + maxItemCount - 1) / maxItemCount;
 
         assertThat(expectedDocs).hasSize(createdDocuments.size() -3);
 
         FeedResponseListValidator<InternalObjectNode> validator = new FeedResponseListValidator.Builder<InternalObjectNode>()
                 .containsExactly(expectedDocs.stream()
-                        .sorted((e1, e2) -> Integer.compare(ModelBridgeInternal.getIntFromJsonSerializable(e1,"prop"),
-                            ModelBridgeInternal.getIntFromJsonSerializable(e2, "prop")))
+                        .sorted((e1, e2) -> Integer.compare(e1.getInt("prop"),
+                            e2.getInt("prop")))
                         .map(d -> d.getResourceId()).collect(Collectors.toList()))
                 .numberOfPages(expectedPageSize)
                 .allPagesSatisfy(new FeedResponseValidator.Builder<InternalObjectNode>()
                         .requestChargeGreaterThanOrEqualTo(1.0).build())
                 .build();
-        validateQuerySuccess(queryObservable.byPage(page.getContinuationToken()), validator);
+        validateQuerySuccess(queryObservable.byPage(page.getContinuationToken(), maxItemCount), validator);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void invalidQuerySytax() throws Exception {
         String query = "I am an invalid query";
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
@@ -305,11 +308,11 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
                    .getProperties(cosmosContainer.createItem(docDefinition, new CosmosItemRequestOptions()).block());
     }
 
-    @BeforeClass(groups = { "simple" }, timeOut = SETUP_TIMEOUT)
+    @BeforeClass(groups = { "query" }, timeOut = SETUP_TIMEOUT)
     public void before_SinglePartitionDocumentQueryTest() throws Exception {
         client = getClientBuilder().buildAsyncClient();
         createdCollection = getSharedSinglePartitionCosmosContainer(client);
-        truncateCollection(createdCollection);
+        cleanUpContainer(createdCollection);
 
         for(int i = 0; i < 5; i++) {
             createdDocuments.add(createDocument(createdCollection, i));
@@ -322,7 +325,7 @@ public class SinglePartitionDocumentQueryTest extends TestSuiteBase {
         waitIfNeededForReplicasToCatchUp(getClientBuilder());
     }
 
-    @AfterClass(groups = { "simple" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
+    @AfterClass(groups = { "query" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
     public void afterClass() {
         safeClose(client);
     }

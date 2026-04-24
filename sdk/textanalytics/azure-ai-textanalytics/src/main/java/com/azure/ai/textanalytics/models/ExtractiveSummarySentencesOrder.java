@@ -4,42 +4,53 @@
 
 package com.azure.ai.textanalytics.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The sorting criteria to use for the results of Extractive Summarization. */
+/**
+ * The sorting criteria to use for the results of Extractive Summarization.
+ */
 public final class ExtractiveSummarySentencesOrder extends ExpandableStringEnum<ExtractiveSummarySentencesOrder> {
-    /** Indicates that results should be sorted in order of appearance in the text. */
+    /**
+     * Indicates that results should be sorted in order of appearance in the text.
+     */
+    @Generated
     public static final ExtractiveSummarySentencesOrder OFFSET = fromString("Offset");
 
-    /** Indicates that results should be sorted in order of importance (i.e. rank score) according to the model. */
+    /**
+     * Indicates that results should be sorted in order of importance (i.e. rank score) according to the model.
+     */
+    @Generated
     public static final ExtractiveSummarySentencesOrder RANK = fromString("Rank");
 
     /**
      * Creates a new instance of ExtractiveSummarySentencesOrder value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public ExtractiveSummarySentencesOrder() {}
+    public ExtractiveSummarySentencesOrder() {
+    }
 
     /**
      * Creates or finds a ExtractiveSummarySentencesOrder from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ExtractiveSummarySentencesOrder.
      */
-    @JsonCreator
+    @Generated
     public static ExtractiveSummarySentencesOrder fromString(String name) {
         return fromString(name, ExtractiveSummarySentencesOrder.class);
     }
 
     /**
      * Gets known ExtractiveSummarySentencesOrder values.
-     *
+     * 
      * @return known ExtractiveSummarySentencesOrder values.
      */
+    @Generated
     public static Collection<ExtractiveSummarySentencesOrder> values() {
         return values(ExtractiveSummarySentencesOrder.class);
     }

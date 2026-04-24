@@ -5,37 +5,168 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Data flow resource type. */
+/**
+ * Data flow resource type.
+ */
 @Fluent
 public final class DataFlowResource extends SubResource {
     /*
      * Data flow properties.
      */
-    @JsonProperty(value = "properties", required = true)
+    @Generated
     private DataFlow properties;
 
-    /** Creates an instance of DataFlowResource class. */
-    public DataFlowResource() {}
+    /*
+     * Resource Etag.
+     */
+    @Generated
+    private String etag;
+
+    /*
+     * The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+     */
+    @Generated
+    private String type;
+
+    /*
+     * The name of the resource
+     */
+    @Generated
+    private String name;
+
+    /*
+     * Fully qualified resource ID for the resource. Ex -
+     * /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{
+     * resourceType}/{resourceName}
+     */
+    @Generated
+    private String id;
+
+    /**
+     * Creates an instance of DataFlowResource class.
+     */
+    @Generated
+    public DataFlowResource() {
+    }
 
     /**
      * Get the properties property: Data flow properties.
-     *
+     * 
      * @return the properties value.
      */
+    @Generated
     public DataFlow getProperties() {
         return this.properties;
     }
 
     /**
      * Set the properties property: Data flow properties.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the DataFlowResource object itself.
      */
+    @Generated
     public DataFlowResource setProperties(DataFlow properties) {
         this.properties = properties;
         return this;
+    }
+
+    /**
+     * Get the etag property: Resource Etag.
+     * 
+     * @return the etag value.
+     */
+    @Generated
+    @Override
+    public String getEtag() {
+        return this.etag;
+    }
+
+    /**
+     * Get the type property: The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or
+     * "Microsoft.Storage/storageAccounts".
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
+
+    /**
+     * Get the name property: The name of the resource.
+     * 
+     * @return the name value.
+     */
+    @Generated
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Get the id property: Fully qualified resource ID for the resource. Ex -
+     * /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}.
+     * 
+     * @return the id value.
+     */
+    @Generated
+    @Override
+    public String getId() {
+        return this.id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("properties", this.properties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DataFlowResource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DataFlowResource if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DataFlowResource.
+     */
+    @Generated
+    public static DataFlowResource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DataFlowResource deserializedDataFlowResource = new DataFlowResource();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedDataFlowResource.id = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedDataFlowResource.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedDataFlowResource.type = reader.getString();
+                } else if ("etag".equals(fieldName)) {
+                    deserializedDataFlowResource.etag = reader.getString();
+                } else if ("properties".equals(fieldName)) {
+                    deserializedDataFlowResource.properties = DataFlow.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedDataFlowResource;
+        });
     }
 }

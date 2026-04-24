@@ -4,14 +4,18 @@
 
 package com.azure.resourcemanager.iothub.generated;
 
-/** Samples for IotHubResource List. */
+/**
+ * Samples for IotHubResource List.
+ */
 public final class IotHubResourceListSamples {
     /*
-     * x-ms-original-file: specification/iothub/resource-manager/Microsoft.Devices/preview/2022-11-15-preview/examples/iothub_listbysubscription.json
+     * x-ms-original-file:
+     * specification/iothub/resource-manager/Microsoft.Devices/IoTHub/preview/2025-08-01-preview/examples/
+     * iothub_listbysubscription.json
      */
     /**
      * Sample code: IotHubResource_ListBySubscription.
-     *
+     * 
      * @param manager Entry point to IotHubManager.
      */
     public static void iotHubResourceListBySubscription(com.azure.resourcemanager.iothub.IotHubManager manager) {

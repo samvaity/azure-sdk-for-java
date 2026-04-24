@@ -6,84 +6,47 @@ package com.azure.resourcemanager.devtestlabs.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.devtestlabs.DevTestLabsManager;
 import com.azure.resourcemanager.devtestlabs.models.GalleryImage;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class GalleryImagesListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"properties\":{\"author\":\"nudn\",\"createdDate\":\"2021-05-20T20:57:54Z\",\"description\":\"hjxwxq\",\"imageReference\":{\"offer\":\"ipmpvksmitnsq\",\"publisher\":\"l\",\"sku\":\"lkrdpqgfhy\",\"osType\":\"rakkld\",\"version\":\"c\"},\"icon\":\"cmfcnrjajq\",\"enabled\":true,\"planId\":\"jti\",\"isPlanAuthorized\":true},\"location\":\"zqgxx\",\"tags\":{\"prnzc\":\"bmtlpqagyno\",\"ryqxzxa\":\"lin\",\"mqimiymqru\":\"zi\",\"asvvoqsbpkfl\":\"guhfupe\"},\"id\":\"nfkgxsyaowuzowpu\",\"name\":\"hdkcprgu\",\"type\":\"xrztiochlu\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"properties\":{\"author\":\"w\",\"createdDate\":\"2021-03-18T01:10:33Z\",\"description\":\"tbwbqamteuli\",\"imageReference\":{\"offer\":\"pkcvmwf\",\"publisher\":\"xxe\",\"sku\":\"ywbo\",\"osType\":\"c\",\"version\":\"iciijqpkzfbojx\"},\"icon\":\"cs\",\"enabled\":true,\"planId\":\"ixvcpwnkwywzwo\",\"isPlanAuthorized\":false},\"location\":\"ickduoiqta\",\"tags\":{\"bcfhzagxnv\":\"vsknxrwzawnv\"},\"id\":\"ycvdimw\",\"name\":\"zregzgyufutrwpw\",\"type\":\"ryekzkd\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        DevTestLabsManager manager = DevTestLabsManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureEnvironment.AZURE));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<GalleryImage> response = manager.galleryImages()
+            .list("xob", "mfkwiyjvzuk", "srnawnvzmln", "oywsxvjabjqqaxu", 695117693, "y",
+                com.azure.core.util.Context.NONE);
 
-        DevTestLabsManager manager =
-            DevTestLabsManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<GalleryImage> response =
-            manager
-                .galleryImages()
-                .list(
-                    "kyeclcdigpta",
-                    "brzmqxucycijoclx",
-                    "utgjcyz",
-                    "zjd",
-                    67737671,
-                    "qjbtxjeaoqaqbzgy",
-                    com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("ickduoiqta", response.iterator().next().location());
-        Assertions.assertEquals("vsknxrwzawnv", response.iterator().next().tags().get("bcfhzagxnv"));
-        Assertions.assertEquals("w", response.iterator().next().author());
-        Assertions.assertEquals("tbwbqamteuli", response.iterator().next().description());
-        Assertions.assertEquals("pkcvmwf", response.iterator().next().imageReference().offer());
-        Assertions.assertEquals("xxe", response.iterator().next().imageReference().publisher());
-        Assertions.assertEquals("ywbo", response.iterator().next().imageReference().sku());
-        Assertions.assertEquals("c", response.iterator().next().imageReference().osType());
-        Assertions.assertEquals("iciijqpkzfbojx", response.iterator().next().imageReference().version());
-        Assertions.assertEquals("cs", response.iterator().next().icon());
+        Assertions.assertEquals("zqgxx", response.iterator().next().location());
+        Assertions.assertEquals("bmtlpqagyno", response.iterator().next().tags().get("prnzc"));
+        Assertions.assertEquals("nudn", response.iterator().next().author());
+        Assertions.assertEquals("hjxwxq", response.iterator().next().description());
+        Assertions.assertEquals("ipmpvksmitnsq", response.iterator().next().imageReference().offer());
+        Assertions.assertEquals("l", response.iterator().next().imageReference().publisher());
+        Assertions.assertEquals("lkrdpqgfhy", response.iterator().next().imageReference().sku());
+        Assertions.assertEquals("rakkld", response.iterator().next().imageReference().osType());
+        Assertions.assertEquals("c", response.iterator().next().imageReference().version());
+        Assertions.assertEquals("cmfcnrjajq", response.iterator().next().icon());
         Assertions.assertEquals(true, response.iterator().next().enabled());
-        Assertions.assertEquals("ixvcpwnkwywzwo", response.iterator().next().planId());
-        Assertions.assertEquals(false, response.iterator().next().isPlanAuthorized());
+        Assertions.assertEquals("jti", response.iterator().next().planId());
+        Assertions.assertEquals(true, response.iterator().next().isPlanAuthorized());
     }
 }

@@ -10,11 +10,9 @@ import com.azure.resourcemanager.networkcloud.models.FeatureStatus;
 public final class FeatureStatusTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        FeatureStatus model =
-            BinaryData
-                .fromString(
-                    "{\"detailedStatus\":\"Failed\",\"detailedStatusMessage\":\"qolbgyc\",\"name\":\"iertgccymvaolp\",\"version\":\"lqlfm\"}")
-                .toObject(FeatureStatus.class);
+        FeatureStatus model = BinaryData.fromString(
+            "{\"detailedStatus\":\"Failed\",\"detailedStatusMessage\":\"ukyhejhzis\",\"name\":\"fpel\",\"version\":\"p\"}")
+            .toObject(FeatureStatus.class);
     }
 
     @org.junit.jupiter.api.Test

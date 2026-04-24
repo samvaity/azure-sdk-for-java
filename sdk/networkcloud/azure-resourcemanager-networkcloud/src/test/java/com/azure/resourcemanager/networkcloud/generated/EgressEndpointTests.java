@@ -13,30 +13,23 @@ import org.junit.jupiter.api.Assertions;
 public final class EgressEndpointTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        EgressEndpoint model =
-            BinaryData
-                .fromString(
-                    "{\"category\":\"rpmopjmc\",\"endpoints\":[{\"domainName\":\"tuo\",\"port\":2607649356608262418},{\"domainName\":\"uiuaodsfcpkvxodp\",\"port\":784151733516976899},{\"domainName\":\"yzydagfuaxbezyi\",\"port\":13185464662023528}]}")
-                .toObject(EgressEndpoint.class);
-        Assertions.assertEquals("rpmopjmc", model.category());
-        Assertions.assertEquals("tuo", model.endpoints().get(0).domainName());
-        Assertions.assertEquals(2607649356608262418L, model.endpoints().get(0).port());
+        EgressEndpoint model = BinaryData.fromString(
+            "{\"category\":\"ahvljuaha\",\"endpoints\":[{\"domainName\":\"hcdhmdual\",\"port\":495813413204095798},{\"domainName\":\"pvfadmwsrcr\",\"port\":5411587900664634399}]}")
+            .toObject(EgressEndpoint.class);
+        Assertions.assertEquals("ahvljuaha", model.category());
+        Assertions.assertEquals("hcdhmdual", model.endpoints().get(0).domainName());
+        Assertions.assertEquals(495813413204095798L, model.endpoints().get(0).port());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        EgressEndpoint model =
-            new EgressEndpoint()
-                .withCategory("rpmopjmc")
-                .withEndpoints(
-                    Arrays
-                        .asList(
-                            new EndpointDependency().withDomainName("tuo").withPort(2607649356608262418L),
-                            new EndpointDependency().withDomainName("uiuaodsfcpkvxodp").withPort(784151733516976899L),
-                            new EndpointDependency().withDomainName("yzydagfuaxbezyi").withPort(13185464662023528L)));
+        EgressEndpoint model = new EgressEndpoint().withCategory("ahvljuaha")
+            .withEndpoints(
+                Arrays.asList(new EndpointDependency().withDomainName("hcdhmdual").withPort(495813413204095798L),
+                    new EndpointDependency().withDomainName("pvfadmwsrcr").withPort(5411587900664634399L)));
         model = BinaryData.fromObject(model).toObject(EgressEndpoint.class);
-        Assertions.assertEquals("rpmopjmc", model.category());
-        Assertions.assertEquals("tuo", model.endpoints().get(0).domainName());
-        Assertions.assertEquals(2607649356608262418L, model.endpoints().get(0).port());
+        Assertions.assertEquals("ahvljuaha", model.category());
+        Assertions.assertEquals("hcdhmdual", model.endpoints().get(0).domainName());
+        Assertions.assertEquals(495813413204095798L, model.endpoints().get(0).port());
     }
 }

@@ -12,15 +12,15 @@ import org.junit.jupiter.api.Assertions;
 public final class WindowsOsInfoTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        WindowsOsInfo model =
-            BinaryData.fromString("{\"windowsOsState\":\"SysprepApplied\"}").toObject(WindowsOsInfo.class);
-        Assertions.assertEquals(WindowsOsState.SYSPREP_APPLIED, model.windowsOsState());
+        WindowsOsInfo model
+            = BinaryData.fromString("{\"windowsOsState\":\"NonSysprepped\"}").toObject(WindowsOsInfo.class);
+        Assertions.assertEquals(WindowsOsState.NON_SYSPREPPED, model.windowsOsState());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        WindowsOsInfo model = new WindowsOsInfo().withWindowsOsState(WindowsOsState.SYSPREP_APPLIED);
+        WindowsOsInfo model = new WindowsOsInfo().withWindowsOsState(WindowsOsState.NON_SYSPREPPED);
         model = BinaryData.fromObject(model).toObject(WindowsOsInfo.class);
-        Assertions.assertEquals(WindowsOsState.SYSPREP_APPLIED, model.windowsOsState());
+        Assertions.assertEquals(WindowsOsState.NON_SYSPREPPED, model.windowsOsState());
     }
 }

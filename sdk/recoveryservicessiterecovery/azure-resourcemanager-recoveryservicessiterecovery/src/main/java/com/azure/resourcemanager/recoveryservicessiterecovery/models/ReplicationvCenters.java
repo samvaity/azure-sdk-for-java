@@ -8,30 +8,32 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of ReplicationvCenters. */
+/**
+ * Resource collection API of ReplicationvCenters.
+ */
 public interface ReplicationvCenters {
     /**
      * Gets the list of vCenter registered under a fabric.
-     *
-     * <p>Lists the vCenter servers registered in a fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the vCenter servers registered in a fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return collection of vCenter details as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<VCenter> listByReplicationFabrics(String resourceName, String resourceGroupName, String fabricName);
+    PagedIterable<VCenter> listByReplicationFabrics(String resourceGroupName, String resourceName, String fabricName);
 
     /**
      * Gets the list of vCenter registered under a fabric.
-     *
-     * <p>Lists the vCenter servers registered in a fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the vCenter servers registered in a fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -39,16 +41,16 @@ public interface ReplicationvCenters {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return collection of vCenter details as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<VCenter> listByReplicationFabrics(
-        String resourceName, String resourceGroupName, String fabricName, Context context);
+    PagedIterable<VCenter> listByReplicationFabrics(String resourceGroupName, String resourceName, String fabricName,
+        Context context);
 
     /**
      * Gets the details of a vCenter.
-     *
-     * <p>Gets the details of a registered vCenter server(Add vCenter server).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of a registered vCenter server(Add vCenter server).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param vcenterName vcenter name.
      * @param context The context to associate with this operation.
@@ -57,16 +59,16 @@ public interface ReplicationvCenters {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the details of a registered vCenter server(Add vCenter server) along with {@link Response}.
      */
-    Response<VCenter> getWithResponse(
-        String resourceName, String resourceGroupName, String fabricName, String vcenterName, Context context);
+    Response<VCenter> getWithResponse(String resourceGroupName, String resourceName, String fabricName,
+        String vcenterName, Context context);
 
     /**
      * Gets the details of a vCenter.
-     *
-     * <p>Gets the details of a registered vCenter server(Add vCenter server).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of a registered vCenter server(Add vCenter server).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param vcenterName vcenter name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -74,30 +76,30 @@ public interface ReplicationvCenters {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the details of a registered vCenter server(Add vCenter server).
      */
-    VCenter get(String resourceName, String resourceGroupName, String fabricName, String vcenterName);
+    VCenter get(String resourceGroupName, String resourceName, String fabricName, String vcenterName);
 
     /**
      * Remove vcenter operation.
-     *
-     * <p>The operation to remove(unregister) a registered vCenter server from the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to remove(unregister) a registered vCenter server from the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param vcenterName vcenter name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    void delete(String resourceName, String resourceGroupName, String fabricName, String vcenterName);
+    void delete(String resourceGroupName, String resourceName, String fabricName, String vcenterName);
 
     /**
      * Remove vcenter operation.
-     *
-     * <p>The operation to remove(unregister) a registered vCenter server from the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to remove(unregister) a registered vCenter server from the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param vcenterName vcenter name.
      * @param context The context to associate with this operation.
@@ -105,42 +107,42 @@ public interface ReplicationvCenters {
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    void delete(String resourceName, String resourceGroupName, String fabricName, String vcenterName, Context context);
+    void delete(String resourceGroupName, String resourceName, String fabricName, String vcenterName, Context context);
 
     /**
      * Gets the list of vCenter registered under the vault.
-     *
-     * <p>Lists the vCenter servers registered in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the vCenter servers registered in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return collection of vCenter details as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<VCenter> list(String resourceName, String resourceGroupName);
+    PagedIterable<VCenter> list(String resourceGroupName, String resourceName);
 
     /**
      * Gets the list of vCenter registered under the vault.
-     *
-     * <p>Lists the vCenter servers registered in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the vCenter servers registered in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return collection of vCenter details as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<VCenter> list(String resourceName, String resourceGroupName, Context context);
+    PagedIterable<VCenter> list(String resourceGroupName, String resourceName, Context context);
 
     /**
      * Gets the details of a vCenter.
-     *
-     * <p>Gets the details of a registered vCenter server(Add vCenter server).
-     *
+     * 
+     * Gets the details of a registered vCenter server(Add vCenter server).
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -151,9 +153,9 @@ public interface ReplicationvCenters {
 
     /**
      * Gets the details of a vCenter.
-     *
-     * <p>Gets the details of a registered vCenter server(Add vCenter server).
-     *
+     * 
+     * Gets the details of a registered vCenter server(Add vCenter server).
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -165,9 +167,9 @@ public interface ReplicationvCenters {
 
     /**
      * Remove vcenter operation.
-     *
-     * <p>The operation to remove(unregister) a registered vCenter server from the vault.
-     *
+     * 
+     * The operation to remove(unregister) a registered vCenter server from the vault.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -177,9 +179,9 @@ public interface ReplicationvCenters {
 
     /**
      * Remove vcenter operation.
-     *
-     * <p>The operation to remove(unregister) a registered vCenter server from the vault.
-     *
+     * 
+     * The operation to remove(unregister) a registered vCenter server from the vault.
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -190,7 +192,7 @@ public interface ReplicationvCenters {
 
     /**
      * Begins definition for a new VCenter resource.
-     *
+     * 
      * @param name resource name.
      * @return the first stage of the new VCenter definition.
      */

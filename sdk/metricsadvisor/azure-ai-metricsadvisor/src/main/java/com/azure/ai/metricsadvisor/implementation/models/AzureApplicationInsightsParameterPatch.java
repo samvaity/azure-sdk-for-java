@@ -5,53 +5,67 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The AzureApplicationInsightsParameterPatch model. */
+/**
+ * The AzureApplicationInsightsParameterPatch model.
+ */
 @Fluent
-public final class AzureApplicationInsightsParameterPatch {
+public final class AzureApplicationInsightsParameterPatch
+    implements JsonSerializable<AzureApplicationInsightsParameterPatch> {
     /*
      * The Azure cloud that this Azure Application Insights in
      */
-    @JsonProperty(value = "azureCloud")
+    @Generated
     private String azureCloud;
 
     /*
      * The application id of this Azure Application Insights
      */
-    @JsonProperty(value = "applicationId")
+    @Generated
     private String applicationId;
 
     /*
      * The API Key that can access this Azure Application Insights
      */
-    @JsonProperty(value = "apiKey")
+    @Generated
     private String apiKey;
 
     /*
      * The statement to query this Azure Application Insights
      */
-    @JsonProperty(value = "query")
+    @Generated
     private String query;
 
-    /** Creates an instance of AzureApplicationInsightsParameterPatch class. */
-    public AzureApplicationInsightsParameterPatch() {}
+    /**
+     * Creates an instance of AzureApplicationInsightsParameterPatch class.
+     */
+    @Generated
+    public AzureApplicationInsightsParameterPatch() {
+    }
 
     /**
      * Get the azureCloud property: The Azure cloud that this Azure Application Insights in.
-     *
+     * 
      * @return the azureCloud value.
      */
+    @Generated
     public String getAzureCloud() {
         return this.azureCloud;
     }
 
     /**
      * Set the azureCloud property: The Azure cloud that this Azure Application Insights in.
-     *
+     * 
      * @param azureCloud the azureCloud value to set.
      * @return the AzureApplicationInsightsParameterPatch object itself.
      */
+    @Generated
     public AzureApplicationInsightsParameterPatch setAzureCloud(String azureCloud) {
         this.azureCloud = azureCloud;
         return this;
@@ -59,19 +73,21 @@ public final class AzureApplicationInsightsParameterPatch {
 
     /**
      * Get the applicationId property: The application id of this Azure Application Insights.
-     *
+     * 
      * @return the applicationId value.
      */
+    @Generated
     public String getApplicationId() {
         return this.applicationId;
     }
 
     /**
      * Set the applicationId property: The application id of this Azure Application Insights.
-     *
+     * 
      * @param applicationId the applicationId value to set.
      * @return the AzureApplicationInsightsParameterPatch object itself.
      */
+    @Generated
     public AzureApplicationInsightsParameterPatch setApplicationId(String applicationId) {
         this.applicationId = applicationId;
         return this;
@@ -79,19 +95,21 @@ public final class AzureApplicationInsightsParameterPatch {
 
     /**
      * Get the apiKey property: The API Key that can access this Azure Application Insights.
-     *
+     * 
      * @return the apiKey value.
      */
+    @Generated
     public String getApiKey() {
         return this.apiKey;
     }
 
     /**
      * Set the apiKey property: The API Key that can access this Azure Application Insights.
-     *
+     * 
      * @param apiKey the apiKey value to set.
      * @return the AzureApplicationInsightsParameterPatch object itself.
      */
+    @Generated
     public AzureApplicationInsightsParameterPatch setApiKey(String apiKey) {
         this.apiKey = apiKey;
         return this;
@@ -99,21 +117,71 @@ public final class AzureApplicationInsightsParameterPatch {
 
     /**
      * Get the query property: The statement to query this Azure Application Insights.
-     *
+     * 
      * @return the query value.
      */
+    @Generated
     public String getQuery() {
         return this.query;
     }
 
     /**
      * Set the query property: The statement to query this Azure Application Insights.
-     *
+     * 
      * @param query the query value to set.
      * @return the AzureApplicationInsightsParameterPatch object itself.
      */
+    @Generated
     public AzureApplicationInsightsParameterPatch setQuery(String query) {
         this.query = query;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("azureCloud", this.azureCloud);
+        jsonWriter.writeStringField("applicationId", this.applicationId);
+        jsonWriter.writeStringField("apiKey", this.apiKey);
+        jsonWriter.writeStringField("query", this.query);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureApplicationInsightsParameterPatch from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureApplicationInsightsParameterPatch if the JsonReader was pointing to an instance of
+     * it, or null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the AzureApplicationInsightsParameterPatch.
+     */
+    @Generated
+    public static AzureApplicationInsightsParameterPatch fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureApplicationInsightsParameterPatch deserializedAzureApplicationInsightsParameterPatch
+                = new AzureApplicationInsightsParameterPatch();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("azureCloud".equals(fieldName)) {
+                    deserializedAzureApplicationInsightsParameterPatch.azureCloud = reader.getString();
+                } else if ("applicationId".equals(fieldName)) {
+                    deserializedAzureApplicationInsightsParameterPatch.applicationId = reader.getString();
+                } else if ("apiKey".equals(fieldName)) {
+                    deserializedAzureApplicationInsightsParameterPatch.apiKey = reader.getString();
+                } else if ("query".equals(fieldName)) {
+                    deserializedAzureApplicationInsightsParameterPatch.query = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedAzureApplicationInsightsParameterPatch;
+        });
     }
 }

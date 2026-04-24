@@ -6,21 +6,43 @@ package com.azure.resourcemanager.iothub.generated;
 
 import com.azure.resourcemanager.iothub.models.CertificateProperties;
 
-/** Samples for Certificates CreateOrUpdate. */
+/**
+ * Samples for Certificates CreateOrUpdate.
+ */
 public final class CertificatesCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/iothub/resource-manager/Microsoft.Devices/preview/2022-11-15-preview/examples/iothub_certificatescreateorupdate.json
+     * x-ms-original-file:
+     * specification/iothub/resource-manager/Microsoft.Devices/IoTHub/preview/2025-08-01-preview/examples/
+     * iothub_certificatescreateorupdate.json
      */
     /**
      * Sample code: Certificates_CreateOrUpdate.
-     *
+     * 
      * @param manager Entry point to IotHubManager.
      */
     public static void certificatesCreateOrUpdate(com.azure.resourcemanager.iothub.IotHubManager manager) {
-        manager
-            .certificates()
+        manager.certificates()
             .define("cert")
             .withExistingIotHub("myResourceGroup", "iothub")
+            .withProperties(new CertificateProperties().withCertificate("############################################"))
+            .create();
+    }
+
+    /*
+     * x-ms-original-file:
+     * specification/iothub/resource-manager/Microsoft.Devices/IoTHub/preview/2025-08-01-preview/examples/
+     * CreateOrReplace_Certificates_With_DeviceRegistryPolicy.json
+     */
+    /**
+     * Sample code: CreateOrReplace_Certificates_With_DeviceRegistryPolicy.
+     * 
+     * @param manager Entry point to IotHubManager.
+     */
+    public static void
+        createOrReplaceCertificatesWithDeviceRegistryPolicy(com.azure.resourcemanager.iothub.IotHubManager manager) {
+        manager.certificates()
+            .define("cert")
+            .withExistingIotHub("myResourceGroup", "testHub")
             .withProperties(new CertificateProperties().withCertificate("############################################"))
             .create();
     }

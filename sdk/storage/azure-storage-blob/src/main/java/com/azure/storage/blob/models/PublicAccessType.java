@@ -4,42 +4,53 @@
 
 package com.azure.storage.blob.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for PublicAccessType. */
+/**
+ * Defines values for PublicAccessType.
+ */
 public final class PublicAccessType extends ExpandableStringEnum<PublicAccessType> {
-    /** Static value container for PublicAccessType. */
+    /**
+     * Static value container for PublicAccessType.
+     */
+    @Generated
     public static final PublicAccessType CONTAINER = fromString("container");
 
-    /** Static value blob for PublicAccessType. */
+    /**
+     * Static value blob for PublicAccessType.
+     */
+    @Generated
     public static final PublicAccessType BLOB = fromString("blob");
 
     /**
      * Creates a new instance of PublicAccessType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public PublicAccessType() {}
+    public PublicAccessType() {
+    }
 
     /**
      * Creates or finds a PublicAccessType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding PublicAccessType.
      */
-    @JsonCreator
+    @Generated
     public static PublicAccessType fromString(String name) {
         return fromString(name, PublicAccessType.class);
     }
 
     /**
      * Gets known PublicAccessType values.
-     *
+     * 
      * @return known PublicAccessType values.
      */
+    @Generated
     public static Collection<PublicAccessType> values() {
         return values(PublicAccessType.class);
     }

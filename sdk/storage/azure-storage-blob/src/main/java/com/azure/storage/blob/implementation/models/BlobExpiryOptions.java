@@ -4,48 +4,65 @@
 
 package com.azure.storage.blob.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for BlobExpiryOptions. */
+/**
+ * Defines values for BlobExpiryOptions.
+ */
 public final class BlobExpiryOptions extends ExpandableStringEnum<BlobExpiryOptions> {
-    /** Static value NeverExpire for BlobExpiryOptions. */
+    /**
+     * Static value NeverExpire for BlobExpiryOptions.
+     */
+    @Generated
     public static final BlobExpiryOptions NEVER_EXPIRE = fromString("NeverExpire");
 
-    /** Static value RelativeToCreation for BlobExpiryOptions. */
+    /**
+     * Static value RelativeToCreation for BlobExpiryOptions.
+     */
+    @Generated
     public static final BlobExpiryOptions RELATIVE_TO_CREATION = fromString("RelativeToCreation");
 
-    /** Static value RelativeToNow for BlobExpiryOptions. */
+    /**
+     * Static value RelativeToNow for BlobExpiryOptions.
+     */
+    @Generated
     public static final BlobExpiryOptions RELATIVE_TO_NOW = fromString("RelativeToNow");
 
-    /** Static value Absolute for BlobExpiryOptions. */
+    /**
+     * Static value Absolute for BlobExpiryOptions.
+     */
+    @Generated
     public static final BlobExpiryOptions ABSOLUTE = fromString("Absolute");
 
     /**
      * Creates a new instance of BlobExpiryOptions value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public BlobExpiryOptions() {}
+    public BlobExpiryOptions() {
+    }
 
     /**
      * Creates or finds a BlobExpiryOptions from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding BlobExpiryOptions.
      */
-    @JsonCreator
+    @Generated
     public static BlobExpiryOptions fromString(String name) {
         return fromString(name, BlobExpiryOptions.class);
     }
 
     /**
      * Gets known BlobExpiryOptions values.
-     *
+     * 
      * @return known BlobExpiryOptions values.
      */
+    @Generated
     public static Collection<BlobExpiryOptions> values() {
         return values(BlobExpiryOptions.class);
     }

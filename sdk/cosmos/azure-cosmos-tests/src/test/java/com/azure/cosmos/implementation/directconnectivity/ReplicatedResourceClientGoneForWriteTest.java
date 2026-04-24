@@ -96,7 +96,6 @@ public class ReplicatedResourceClientGoneForWriteTest {
             gatewayServiceConfigurationReaderWrapper.gatewayServiceConfigurationReader,
             authorizationTokenProvider,
             false,
-            false,
             null);
 
         RxDocumentServiceRequest request = RxDocumentServiceRequest.createFromName(
@@ -121,7 +120,7 @@ public class ReplicatedResourceClientGoneForWriteTest {
         FailureValidator validator = FailureValidator
             .builder()
             .instanceOf(CosmosException.class)
-            .statusCode(410).build();
+            .statusCode(408).build();
         ReplicatedResourceClientPartitionSplitTest.validateFailure(
             storeResponseObs,
             validator,

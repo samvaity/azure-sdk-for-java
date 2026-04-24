@@ -5,26 +5,38 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** SSIS execution parameter. */
+/**
+ * SSIS execution parameter.
+ */
 @Fluent
-public final class SsisExecutionParameter {
+public final class SsisExecutionParameter implements JsonSerializable<SsisExecutionParameter> {
     /*
      * SSIS package execution parameter value. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "value", required = true)
+    @Generated
     private Object value;
 
-    /** Creates an instance of SsisExecutionParameter class. */
-    public SsisExecutionParameter() {}
+    /**
+     * Creates an instance of SsisExecutionParameter class.
+     */
+    @Generated
+    public SsisExecutionParameter() {
+    }
 
     /**
      * Get the value property: SSIS package execution parameter value. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the value value.
      */
+    @Generated
     public Object getValue() {
         return this.value;
     }
@@ -32,12 +44,52 @@ public final class SsisExecutionParameter {
     /**
      * Set the value property: SSIS package execution parameter value. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param value the value value to set.
      * @return the SsisExecutionParameter object itself.
      */
+    @Generated
     public SsisExecutionParameter setValue(Object value) {
         this.value = value;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeUntypedField("value", this.value);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SsisExecutionParameter from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SsisExecutionParameter if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SsisExecutionParameter.
+     */
+    @Generated
+    public static SsisExecutionParameter fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SsisExecutionParameter deserializedSsisExecutionParameter = new SsisExecutionParameter();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("value".equals(fieldName)) {
+                    deserializedSsisExecutionParameter.value = reader.readUntyped();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSsisExecutionParameter;
+        });
     }
 }

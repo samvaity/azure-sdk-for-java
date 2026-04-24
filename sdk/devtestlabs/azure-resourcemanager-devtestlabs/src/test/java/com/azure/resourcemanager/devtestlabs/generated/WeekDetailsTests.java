@@ -12,20 +12,21 @@ import org.junit.jupiter.api.Assertions;
 public final class WeekDetailsTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        WeekDetails model =
-            BinaryData
-                .fromString("{\"weekdays\":[\"bezy\",\"uokktwhrdxwz\",\"wqsmbsur\",\"xim\"],\"time\":\"yocf\"}")
-                .toObject(WeekDetails.class);
-        Assertions.assertEquals("bezy", model.weekdays().get(0));
-        Assertions.assertEquals("yocf", model.time());
+        WeekDetails model = BinaryData
+            .fromString(
+                "{\"weekdays\":[\"nermcl\",\"plpho\",\"uscrpabgyepsb\",\"tazqugxywpmueefj\"],\"time\":\"fqkquj\"}")
+            .toObject(WeekDetails.class);
+        Assertions.assertEquals("nermcl", model.weekdays().get(0));
+        Assertions.assertEquals("fqkquj", model.time());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        WeekDetails model =
-            new WeekDetails().withWeekdays(Arrays.asList("bezy", "uokktwhrdxwz", "wqsmbsur", "xim")).withTime("yocf");
+        WeekDetails model
+            = new WeekDetails().withWeekdays(Arrays.asList("nermcl", "plpho", "uscrpabgyepsb", "tazqugxywpmueefj"))
+                .withTime("fqkquj");
         model = BinaryData.fromObject(model).toObject(WeekDetails.class);
-        Assertions.assertEquals("bezy", model.weekdays().get(0));
-        Assertions.assertEquals("yocf", model.time());
+        Assertions.assertEquals("nermcl", model.weekdays().get(0));
+        Assertions.assertEquals("fqkquj", model.time());
     }
 }

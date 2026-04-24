@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 package com.azure.cosmos.rx;
 
-import com.azure.cosmos.BridgeInternal;
 import com.azure.cosmos.CosmosAsyncClient;
 import com.azure.cosmos.CosmosAsyncContainer;
 import com.azure.cosmos.CosmosClientBuilder;
@@ -25,8 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static com.azure.cosmos.implementation.guava27.Strings.lenientFormat;
 
 public class AggregateQueryTests extends TestSuiteBase {
 
@@ -88,7 +85,7 @@ public class AggregateQueryTests extends TestSuiteBase {
         super(clientBuilder);
     }
 
-    @Test(groups = { "simple" }, timeOut = 2 * TIMEOUT, dataProvider = "queryMetricsArgProvider")
+    @Test(groups = { "query" }, timeOut = 2 * TIMEOUT, dataProvider = "queryMetricsArgProvider")
     @Ignore("TODO 32129 - reenable after fixing flakiness.")
     public void queryDocumentsWithAggregates(Boolean qmEnabled) throws Exception {
 
@@ -116,7 +113,7 @@ public class AggregateQueryTests extends TestSuiteBase {
 
     public void bulkInsert() {
         generateTestData();
-        voidBulkInsertBlocking(createdCollection, docs);
+        voidInsertAllItemsBlocking(createdCollection, docs, true);
     }
 
     public void generateTestData() {
@@ -125,15 +122,15 @@ public class AggregateQueryTests extends TestSuiteBase {
         for (int i = 0; i < values.length; i++) {
             InternalObjectNode d = new InternalObjectNode();
             d.setId(UUID.randomUUID().toString());
-            BridgeInternal.setProperty(d, partitionKey, values[i]);
+            d.set(partitionKey, values[i]);
             docs.add(d);
         }
 
         for (int i = 0; i < numberOfDocsWithSamePartitionKey; i++) {
             InternalObjectNode d = new InternalObjectNode();
-            BridgeInternal.setProperty(d, partitionKey, uniquePartitionKey);
-            BridgeInternal.setProperty(d, "getResourceId", Integer.toString(i));
-            BridgeInternal.setProperty(d, field, i + 1);
+            d.set(partitionKey, uniquePartitionKey);
+            d.set("getResourceId", Integer.toString(i));
+            d.set(field, i + 1);
             d.setId(UUID.randomUUID().toString());
             docs.add(d);
         }
@@ -141,7 +138,7 @@ public class AggregateQueryTests extends TestSuiteBase {
         numberOfDocumentsWithNumericId = numberOfDocuments - values.length - numberOfDocsWithSamePartitionKey;
         for (int i = 0; i < numberOfDocumentsWithNumericId; i++) {
             InternalObjectNode d = new InternalObjectNode();
-            BridgeInternal.setProperty(d, partitionKey, i + 1);
+            d.set(partitionKey, i + 1);
             d.setId(UUID.randomUUID().toString());
             docs.add(d);
         }
@@ -229,7 +226,7 @@ public class AggregateQueryTests extends TestSuiteBase {
                                                                         + ",'min_field':" + min + "}")));
     }
 
-    @Test(groups = { "simple" }, timeOut = 2 * TIMEOUT)
+    @Test(groups = { "query" }, timeOut = 2 * TIMEOUT)
     public void queryDocumentsWithMultipleAggregates() {
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
 
@@ -259,23 +256,23 @@ public class AggregateQueryTests extends TestSuiteBase {
         return obj;
     }
 
-    @AfterClass(groups = { "simple" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
+    @AfterClass(groups = { "query" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
     public void afterClass() {
         safeClose(client);
     }
 
-    @BeforeClass(groups = { "simple" }, timeOut = 4 * SETUP_TIMEOUT)
+    @BeforeClass(groups = { "query" }, timeOut = 4 * SETUP_TIMEOUT)
     public void before_AggregateQueryTests() throws Throwable {
         client = this.getClientBuilder().buildAsyncClient();
         createdCollection = getSharedMultiPartitionCosmosContainer(client);
         try {
-            truncateCollection(createdCollection);
+            cleanUpContainer(createdCollection);
         } catch (Throwable throwable) {
             throwable = Exceptions.unwrap(throwable);
             if (!(throwable instanceof CosmosException)) {
-                throw new AssertionError(lenientFormat("stopping test due to collection %s truncation failure: ",
-                    createdCollection,
-                    throwable));
+                throw new AssertionError(String.format("stopping test due to collection %s truncation failure: ",
+                    createdCollection),
+                    throwable);
             }
             logger.error("ignored: collection {} truncation failure: ", createdCollection, throwable);
         }

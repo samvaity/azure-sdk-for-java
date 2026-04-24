@@ -6,12 +6,15 @@ package com.azure.cosmos.benchmark;
 import com.azure.cosmos.implementation.AsyncDocumentClient;
 import com.azure.cosmos.implementation.Database;
 import com.azure.cosmos.implementation.DocumentCollection;
+import com.azure.cosmos.implementation.OperationType;
+import com.azure.cosmos.implementation.QueryFeedOperationState;
 import com.azure.cosmos.implementation.RequestOptions;
+import com.azure.cosmos.implementation.ResourceType;
 import com.azure.cosmos.implementation.TestConfigurations;
+import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.IncludedPath;
 import com.azure.cosmos.models.IndexingPolicy;
 import com.azure.cosmos.models.PartitionKeyDefinition;
-import com.beust.jcommander.JCommander;
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -30,8 +33,8 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.azure.cosmos.implementation.guava27.Strings.lenientFormat;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class ReadMyWritesConsistencyTest {
 
@@ -90,42 +93,27 @@ public class ReadMyWritesConsistencyTest {
         };
     }
 
-    @Test(dataProvider = "collectionLinkTypeArgProvider", groups = "e2e")
+    @Test(dataProvider = "collectionLinkTypeArgProvider", groups = "e2e", retryAnalyzer = FlakyTestRetryAnalyzer.class)
     public void readMyWrites(boolean useNameLink) throws Exception {
 
         int concurrency = 5;
 
-        String cmdFormat = "-serviceEndpoint %s -masterKey %s" +
-            " -databaseId %s" +
-            " -collectionId %s" +
-            " -consistencyLevel %s" +
-            " -concurrency %s" +
-            " -numberOfOperations %s" +
-            " -maxRunningTimeDuration %s" +
-            " -operation ReadMyWrites" +
-            " -connectionMode Direct" +
-            " -numberOfPreCreatedDocuments 100" +
-            " -printingInterval 60" +
-            "%s";
-
-        String cmd = lenientFormat(cmdFormat,
-            TestConfigurations.HOST,
-            TestConfigurations.MASTER_KEY,
-            database.getId(),
-            collection.getId(),
-            desiredConsistency,
-            concurrency,
-            numberOfOperationsAsString,
-            maxRunningTime,
-            (useNameLink ? " -useNameLink" : ""));
-
-        Configuration cfg = new Configuration();
-        new JCommander(cfg, StringUtils.split(cmd));
+        TenantWorkloadConfig cfg = new TenantWorkloadConfig();
+        cfg.setServiceEndpoint(TestConfigurations.HOST);
+        cfg.setMasterKey(TestConfigurations.MASTER_KEY);
+        cfg.setDatabaseId(database.getId());
+        cfg.setContainerId(collection.getId());
+        cfg.setConsistencyLevel(desiredConsistency);
+        cfg.setConcurrency(concurrency);
+        cfg.setNumberOfOperations(Integer.parseInt(numberOfOperationsAsString));
+        cfg.setOperation("ReadMyWrites");
+        cfg.setConnectionMode("Direct");
+        cfg.setNumberOfPreCreatedDocuments(100);
 
         AtomicInteger success = new AtomicInteger();
         AtomicInteger error = new AtomicInteger();
 
-        ReadMyWriteWorkflow wf = new ReadMyWriteWorkflow(cfg) {
+        ReadMyWriteWorkflow wf = new ReadMyWriteWorkflow(cfg, Schedulers.parallel()) {
             @Override
             protected void onError(Throwable throwable) {
                 logger.error("Error occurred in ReadMyWriteWorkflow", throwable);
@@ -147,7 +135,10 @@ public class ReadMyWritesConsistencyTest {
         int numberOfOperations = Integer.parseInt(numberOfOperationsAsString);
 
         assertThat(error).hasValue(0);
-        assertThat(collectionScaleUpFailed).isFalse();
+        if (collectionScaleUpFailed.get()) {
+            fail("Failed to scale up collection " + database.getId()
+                + "/" + collection.getId() + ". This test failure can be safely ignored in CI pipelines.");
+        }
 
         if (numberOfOperations > 0) {
             assertThat(success).hasValue(numberOfOperations);
@@ -175,14 +166,20 @@ public class ReadMyWritesConsistencyTest {
 
     private void scheduleScaleUp(int delayStartInSeconds, int newThroughput) {
         AsyncDocumentClient housekeepingClient = Utils.housekeepingClient();
-        Flux.just(0L).delayElements(Duration.ofSeconds(delayStartInSeconds), Schedulers.newSingle("ScaleUpThread")).flatMap(aVoid -> {
+        QueryFeedOperationState state = DocDBUtils.createDummyQueryFeedOperationState(
+            ResourceType.Offer,
+            OperationType.Query,
+            new CosmosQueryRequestOptions(),
+            housekeepingClient
+        );
 
+        Flux.just(0L).delayElements(Duration.ofSeconds(delayStartInSeconds), Schedulers.newSingle("ScaleUpThread")).flatMap(aVoid -> {
             // increase throughput to max for a single partition collection to avoid throttling
             // for bulk insert and later queries.
             return housekeepingClient.queryOffers(
                 String.format("SELECT * FROM r WHERE r.offerResourceId = '%s'",
                     collection.getResourceId())
-                , null).flatMap(page -> Flux.fromIterable(page.getResults()))
+                , state).flatMap(page -> Flux.fromIterable(page.getResults()))
                                      .take(1).flatMap(offer -> {
                     logger.info("going to scale up collection, newThroughput {}", newThroughput);
                     offer.setThroughput(newThroughput);

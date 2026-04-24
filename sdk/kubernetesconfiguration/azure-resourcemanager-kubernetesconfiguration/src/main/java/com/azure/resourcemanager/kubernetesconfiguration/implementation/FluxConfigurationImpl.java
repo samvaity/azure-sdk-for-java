@@ -26,8 +26,7 @@ public final class FluxConfigurationImpl implements FluxConfiguration {
 
     private final com.azure.resourcemanager.kubernetesconfiguration.SourceControlConfigurationManager serviceManager;
 
-    FluxConfigurationImpl(
-        FluxConfigurationInner innerObject,
+    FluxConfigurationImpl(FluxConfigurationInner innerObject,
         com.azure.resourcemanager.kubernetesconfiguration.SourceControlConfigurationManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
@@ -118,6 +117,14 @@ public final class FluxConfigurationImpl implements FluxConfiguration {
 
     public OffsetDateTime statusUpdatedAt() {
         return this.innerModel().statusUpdatedAt();
+    }
+
+    public Boolean waitForReconciliation() {
+        return this.innerModel().waitForReconciliation();
+    }
+
+    public String reconciliationWaitDuration() {
+        return this.innerModel().reconciliationWaitDuration();
     }
 
     public FluxComplianceState complianceState() {

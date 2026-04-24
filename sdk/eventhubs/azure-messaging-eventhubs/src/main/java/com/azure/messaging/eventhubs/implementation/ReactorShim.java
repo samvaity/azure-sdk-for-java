@@ -22,7 +22,7 @@ public final class ReactorShim {
     private static final ClientLogger LOGGER = new ClientLogger(ReactorShim.class);
 
     /* Reactor Operator names */
-    private static final String  WINDOW_TIMEOUT_OPERATOR = "windowTimeout";
+    private static final String WINDOW_TIMEOUT_OPERATOR = "windowTimeout";
     /* Reactor Operator handles */
     private static final MethodHandle BACKPRESSURE_WINDOW_TIMEOUT_OPERATOR_HANDLE;
 
@@ -48,6 +48,7 @@ public final class ReactorShim {
      * @param <T> the element type of the source {@link Flux}.
      * @return a {@link Flux} of {@link Flux} windows based on element count and duration.
      */
+    @SuppressWarnings("unchecked")
     public static <T> Flux<Flux<T>> windowTimeout(Flux<T> source, int maxSize, Duration maxTime) {
         if (BACKPRESSURE_WINDOW_TIMEOUT_OPERATOR_HANDLE == null) {
             // optimized (backpressure) aware windowTimeout operator not available use standard variant.
@@ -55,7 +56,8 @@ public final class ReactorShim {
         }
 
         try {
-            return ((Flux<Flux<T>>) (BACKPRESSURE_WINDOW_TIMEOUT_OPERATOR_HANDLE.invoke(source, maxSize, maxTime, true)));
+            return ((Flux<Flux<T>>) (BACKPRESSURE_WINDOW_TIMEOUT_OPERATOR_HANDLE.invoke(source, maxSize, maxTime,
+                true)));
         } catch (Throwable err) {
             // 'java.lang.invoke' throws Throwable. Given 'Error' category represents a serious
             // abnormal thread state throw it immediately else throw via standard azure-core Logger.
@@ -77,10 +79,12 @@ public final class ReactorShim {
      */
     private static MethodHandle lookupBackpressureWindowTimeoutOperator() {
         try {
-            return MethodHandles.publicLookup().findVirtual(Flux.class, WINDOW_TIMEOUT_OPERATOR,
-                MethodType.methodType(Flux.class, int.class, Duration.class, boolean.class));
+            return MethodHandles.publicLookup()
+                .findVirtual(Flux.class, WINDOW_TIMEOUT_OPERATOR,
+                    MethodType.methodType(Flux.class, int.class, Duration.class, boolean.class));
         } catch (IllegalAccessException | NoSuchMethodException err) {
-            LOGGER.verbose("Failed to retrieve MethodHandle for backpressure aware windowTimeout Reactor operator.", err);
+            LOGGER.verbose("Failed to retrieve MethodHandle for backpressure aware windowTimeout Reactor operator.",
+                err);
         }
         return null;
     }

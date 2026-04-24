@@ -5,49 +5,91 @@
 package com.azure.monitor.query.implementation.logs.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** Response to a batch query. */
+/**
+ * Response to a batch query.
+ */
 @Fluent
-public final class BatchResponse {
+public final class BatchResponse implements JsonSerializable<BatchResponse> {
     /*
      * An array of responses corresponding to each individual request in a batch.
      */
-    @JsonProperty(value = "responses")
+    @Generated
     private List<BatchQueryResponse> responses;
 
-    /** Creates an instance of BatchResponse class. */
-    public BatchResponse() {}
+    /**
+     * Creates an instance of BatchResponse class.
+     */
+    @Generated
+    public BatchResponse() {
+    }
 
     /**
      * Get the responses property: An array of responses corresponding to each individual request in a batch.
-     *
+     * 
      * @return the responses value.
      */
+    @Generated
     public List<BatchQueryResponse> getResponses() {
         return this.responses;
     }
 
     /**
      * Set the responses property: An array of responses corresponding to each individual request in a batch.
-     *
+     * 
      * @param responses the responses value to set.
      * @return the BatchResponse object itself.
      */
+    @Generated
     public BatchResponse setResponses(List<BatchQueryResponse> responses) {
         this.responses = responses;
         return this;
     }
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * {@inheritDoc}
      */
-    public void validate() {
-        if (getResponses() != null) {
-            getResponses().forEach(e -> e.validate());
-        }
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("responses", this.responses, (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of BatchResponse from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of BatchResponse if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the BatchResponse.
+     */
+    @Generated
+    public static BatchResponse fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            BatchResponse deserializedBatchResponse = new BatchResponse();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("responses".equals(fieldName)) {
+                    List<BatchQueryResponse> responses
+                        = reader.readArray(reader1 -> BatchQueryResponse.fromJson(reader1));
+                    deserializedBatchResponse.responses = responses;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedBatchResponse;
+        });
     }
 }

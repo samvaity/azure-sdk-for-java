@@ -6,68 +6,42 @@ package com.azure.resourcemanager.communication.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.communication.CommunicationManager;
 import com.azure.resourcemanager.communication.models.CommunicationServiceResource;
-import java.nio.ByteBuffer;
+import com.azure.resourcemanager.communication.models.ManagedServiceIdentityType;
+import com.azure.resourcemanager.communication.models.PublicNetworkAccess;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class CommunicationServicesGetByResourceGroupWithResponseMockTests {
     @Test
     public void testGetByResourceGroupWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"properties\":{\"provisioningState\":\"Moving\",\"hostName\":\"veekgpwozuhkfp\",\"dataLocation\":\"sjyofdx\",\"notificationHubId\":\"us\",\"version\":\"touwaboekqv\",\"immutableResourceId\":\"lns\",\"linkedDomains\":[\"xwyjsflhhc\",\"aln\",\"ixisxyawjoy\",\"qcslyjpkiid\"],\"publicNetworkAccess\":\"SecuredByPerimeter\",\"disableLocalAuth\":true},\"identity\":{\"principalId\":\"bf229f15-d810-4aeb-b9d6-699ad900dc08\",\"tenantId\":\"15cb783d-ddea-42d3-87e4-b1225f9db90d\",\"type\":\"SystemAssigned\",\"userAssignedIdentities\":{\"ztfolhbnxk\":{\"principalId\":\"2b8797d1-0741-4b23-ad7c-5944e3dabd1b\",\"clientId\":\"2c3e6383-c037-4b3a-9e49-c0744a42525f\"},\"aulppggd\":{\"principalId\":\"1c3272c3-61dd-49fc-9bd8-9385ad1d12f0\",\"clientId\":\"08f88d4f-4c7d-4a83-887e-945e6df6a0d4\"}}},\"location\":\"napnyiropuhpigv\",\"tags\":{\"txmedj\":\"lgqg\",\"lynqwwncwzzh\":\"c\",\"ellwptfdy\":\"gktrmgucnapkte\",\"rhhuaopppcqeqx\":\"pfqbuaceopzf\"},\"id\":\"lzdahzxctobgbkdm\",\"name\":\"izpost\",\"type\":\"grcfb\"}";
 
-        String responseStr =
-            "{\"properties\":{\"provisioningState\":\"Deleting\",\"hostName\":\"xdbabphlwr\",\"dataLocation\":\"lfktsths\",\"notificationHubId\":\"ocmnyyazttbtwwrq\",\"version\":\"edckzywbiexzfey\",\"immutableResourceId\":\"axibxujw\",\"linkedDomains\":[\"walm\",\"zyoxaepdkzjan\",\"ux\",\"hdwbavxbniwdjs\"]},\"location\":\"tsdbpgn\",\"tags\":{\"pzxbz\":\"x\"},\"id\":\"fzab\",\"name\":\"lcuhxwtctyqiklb\",\"type\":\"ovplw\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        CommunicationManager manager = CommunicationManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        CommunicationServiceResource response = manager.communicationServices()
+            .getByResourceGroupWithResponse("nxipeil", "jzuaejxdultskzbb", com.azure.core.util.Context.NONE)
+            .getValue();
 
-        CommunicationManager manager =
-            CommunicationManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        CommunicationServiceResource response =
-            manager
-                .communicationServices()
-                .getByResourceGroupWithResponse("nrs", "nlqidybyxczf", com.azure.core.util.Context.NONE)
-                .getValue();
-
-        Assertions.assertEquals("tsdbpgn", response.location());
-        Assertions.assertEquals("x", response.tags().get("pzxbz"));
-        Assertions.assertEquals("lfktsths", response.dataLocation());
-        Assertions.assertEquals("walm", response.linkedDomains().get(0));
+        Assertions.assertEquals("napnyiropuhpigv", response.location());
+        Assertions.assertEquals("lgqg", response.tags().get("txmedj"));
+        Assertions.assertEquals(ManagedServiceIdentityType.SYSTEM_ASSIGNED, response.identity().type());
+        Assertions.assertEquals("sjyofdx", response.dataLocation());
+        Assertions.assertEquals("xwyjsflhhc", response.linkedDomains().get(0));
+        Assertions.assertEquals(PublicNetworkAccess.SECURED_BY_PERIMETER, response.publicNetworkAccess());
+        Assertions.assertTrue(response.disableLocalAuth());
     }
 }

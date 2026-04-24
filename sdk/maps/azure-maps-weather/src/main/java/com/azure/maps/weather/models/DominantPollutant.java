@@ -4,46 +4,77 @@
 
 package com.azure.maps.weather.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Type of pollutant. Please note that more may be added at any time. */
+/**
+ * Type of pollutant. Please note that more may be added at any time.
+ */
 public final class DominantPollutant extends ExpandableStringEnum<DominantPollutant> {
-    /** Static value Carbon Monoxide for DominantPollutant. */
+    /**
+     * Carbon monoxide ("CO").
+     */
+    @Generated
     public static final DominantPollutant CARBON_MONOXIDE = fromString("Carbon Monoxide");
 
-    /** Static value Nitrogen Dioxide for DominantPollutant. */
+    /**
+     * Nitrogen dioxide ("NO2").
+     */
+    @Generated
     public static final DominantPollutant NITROGEN_DIOXIDE = fromString("Nitrogen Dioxide");
 
-    /** Static value Ozone for DominantPollutant. */
+    /**
+     * Ozone ("O3").
+     */
+    @Generated
     public static final DominantPollutant OZONE = fromString("Ozone");
 
-    /** Static value Particulate Matter 2.5 for DominantPollutant. */
+    /**
+     * Particulate matter 2.5 ("PM2.5").
+     */
+    @Generated
     public static final DominantPollutant PARTICULATE_MATTER25 = fromString("Particulate Matter 2.5");
 
-    /** Static value Particulate Matter 10 for DominantPollutant. */
+    /**
+     * Particulate matter 10 ("PM10").
+     */
+    @Generated
     public static final DominantPollutant PARTICULATE_MATTER10 = fromString("Particulate Matter 10");
 
-    /** Static value Sulfur Dioxide for DominantPollutant. */
+    /**
+     * Sulfur dioxide ("SO2").
+     */
+    @Generated
     public static final DominantPollutant SULFUR_DIOXIDE = fromString("Sulfur Dioxide");
 
     /**
+     * Creates a new instance of DominantPollutant value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public DominantPollutant() {
+    }
+
+    /**
      * Creates or finds a DominantPollutant from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding DominantPollutant.
      */
-    @JsonCreator
+    @Generated
     public static DominantPollutant fromString(String name) {
         return fromString(name, DominantPollutant.class);
     }
 
     /**
      * Gets known DominantPollutant values.
-     *
+     * 
      * @return known DominantPollutant values.
      */
+    @Generated
     public static Collection<DominantPollutant> values() {
         return values(DominantPollutant.class);
     }

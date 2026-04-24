@@ -4,6 +4,8 @@
 package com.azure.cosmos;
 
 import com.azure.core.http.ProxyOptions;
+import com.azure.cosmos.implementation.Configs;
+import com.azure.cosmos.util.Beta;
 
 import java.time.Duration;
 
@@ -18,20 +20,21 @@ public final class GatewayConnectionConfig {
     private static final Duration MIN_NETWORK_REQUEST_TIMEOUT = Duration.ofSeconds(60);
     private static final Duration DEFAULT_NETWORK_REQUEST_TIMEOUT = Duration.ofSeconds(60);
     private static final Duration DEFAULT_IDLE_CONNECTION_TIMEOUT = Duration.ofSeconds(60);
-    private static final int DEFAULT_MAX_CONNECTION_POOL_SIZE = 1000;
 
     private Duration networkRequestTimeout;
     private int maxConnectionPoolSize;
     private Duration idleConnectionTimeout;
     private ProxyOptions proxy;
+    private Http2ConnectionConfig http2ConnectionConfig;
 
     /**
      * Constructor.
      */
     public GatewayConnectionConfig() {
         this.idleConnectionTimeout = DEFAULT_IDLE_CONNECTION_TIMEOUT;
-        this.maxConnectionPoolSize = DEFAULT_MAX_CONNECTION_POOL_SIZE;
+        this.maxConnectionPoolSize = Configs.getDefaultHttpPoolSize();
         this.networkRequestTimeout = DEFAULT_NETWORK_REQUEST_TIMEOUT;
+        this.http2ConnectionConfig = new Http2ConnectionConfig();
     }
 
     /**
@@ -136,6 +139,27 @@ public final class GatewayConnectionConfig {
         return this;
     }
 
+    /***
+     * Get the http2 connection config.
+     * @return the {@link Http2ConnectionConfig}.
+     */
+    @Beta(value = Beta.SinceVersion.V4_69_0, warningText = Beta.PREVIEW_SUBJECT_TO_CHANGE_WARNING)
+    public Http2ConnectionConfig getHttp2ConnectionConfig() {
+        return http2ConnectionConfig;
+    }
+
+    /***
+     * Set the http2 connection config.
+     * @param http2ConnectionConfig the {@link Http2ConnectionConfig}.
+     */
+    @Beta(value = Beta.SinceVersion.V4_69_0, warningText = Beta.PREVIEW_SUBJECT_TO_CHANGE_WARNING)
+    public GatewayConnectionConfig setHttp2ConnectionConfig(Http2ConnectionConfig http2ConnectionConfig) {
+        checkNotNull(http2ConnectionConfig, "Argument 'http2ConnectionConfig' can not be null");
+
+        this.http2ConnectionConfig = http2ConnectionConfig;
+        return this;
+    }
+
     @Override
     public String toString() {
         String proxyType = proxy != null ? proxy.getType().toString() : null;
@@ -147,6 +171,7 @@ public final class GatewayConnectionConfig {
             ", networkRequestTimeout=" + networkRequestTimeout +
             ", proxyType=" + proxyType +
             ", inetSocketProxyAddress=" + proxyAddress +
+            ", http2ConnectionConfig=" + http2ConnectionConfig.toDiagnosticsString() +
             '}';
     }
 }

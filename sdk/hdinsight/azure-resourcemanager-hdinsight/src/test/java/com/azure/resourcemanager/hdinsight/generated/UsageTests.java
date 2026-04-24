@@ -11,26 +11,21 @@ import org.junit.jupiter.api.Assertions;
 public final class UsageTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        Usage model =
-            BinaryData
-                .fromString(
-                    "{\"unit\":\"mciodhkhazxkhn\",\"currentValue\":1031605542268068469,\"limit\":5106824512288532592,\"name\":{\"value\":\"egokdwbwhkszzcmr\",\"localizedValue\":\"xztvbtqgsfraoyzk\"}}")
-                .toObject(Usage.class);
-        Assertions.assertEquals("mciodhkhazxkhn", model.unit());
-        Assertions.assertEquals(1031605542268068469L, model.currentValue());
-        Assertions.assertEquals(5106824512288532592L, model.limit());
+        Usage model = BinaryData.fromString(
+            "{\"unit\":\"gdknnqv\",\"currentValue\":8546326573006782142,\"limit\":796378729484127038,\"name\":{\"value\":\"udsgs\",\"localizedValue\":\"mkycgra\"}}")
+            .toObject(Usage.class);
+        Assertions.assertEquals("gdknnqv", model.unit());
+        Assertions.assertEquals(8546326573006782142L, model.currentValue());
+        Assertions.assertEquals(796378729484127038L, model.limit());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        Usage model =
-            new Usage()
-                .withUnit("mciodhkhazxkhn")
-                .withCurrentValue(1031605542268068469L)
-                .withLimit(5106824512288532592L);
+        Usage model
+            = new Usage().withUnit("gdknnqv").withCurrentValue(8546326573006782142L).withLimit(796378729484127038L);
         model = BinaryData.fromObject(model).toObject(Usage.class);
-        Assertions.assertEquals("mciodhkhazxkhn", model.unit());
-        Assertions.assertEquals(1031605542268068469L, model.currentValue());
-        Assertions.assertEquals(5106824512288532592L, model.limit());
+        Assertions.assertEquals("gdknnqv", model.unit());
+        Assertions.assertEquals(8546326573006782142L, model.currentValue());
+        Assertions.assertEquals(796378729484127038L, model.limit());
     }
 }

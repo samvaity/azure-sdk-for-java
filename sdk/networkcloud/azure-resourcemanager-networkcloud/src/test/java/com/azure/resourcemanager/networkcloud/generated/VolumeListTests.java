@@ -16,41 +16,46 @@ import org.junit.jupiter.api.Assertions;
 public final class VolumeListTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        VolumeList model =
-            BinaryData
-                .fromString(
-                    "{\"nextLink\":\"mpimaqxzhemjyh\",\"value\":[{\"extendedLocation\":{\"name\":\"jswtwkozzwc\",\"type\":\"lkb\"},\"properties\":{\"attachedTo\":[],\"detailedStatus\":\"Active\",\"detailedStatusMessage\":\"jnjwltlwt\",\"provisioningState\":\"Accepted\",\"serialNumber\":\"ktalhsnvkcdmxz\",\"sizeMiB\":7215202878981332083},\"location\":\"imlnwiaaomylw\",\"tags\":{\"l\":\"ulcsethwwnpj\"},\"id\":\"zswpchwa\",\"name\":\"fb\",\"type\":\"usnfepgfewet\"}]}")
-                .toObject(VolumeList.class);
-        Assertions.assertEquals("mpimaqxzhemjyh", model.nextLink());
-        Assertions.assertEquals("imlnwiaaomylw", model.value().get(0).location());
-        Assertions.assertEquals("ulcsethwwnpj", model.value().get(0).tags().get("l"));
-        Assertions.assertEquals("jswtwkozzwc", model.value().get(0).extendedLocation().name());
-        Assertions.assertEquals("lkb", model.value().get(0).extendedLocation().type());
-        Assertions.assertEquals(7215202878981332083L, model.value().get(0).sizeMiB());
+        VolumeList model = BinaryData.fromString(
+            "{\"nextLink\":\"fqkfuarenl\",\"value\":[{\"etag\":\"klnvnafvvkyfede\",\"extendedLocation\":{\"name\":\"jboslcqxypok\",\"type\":\"hminqcymczngnbdx\"},\"properties\":{\"allocatedSizeMiB\":5929229428598126104,\"attachedTo\":[\"nvudbchaqdtvqecr\",\"ct\"],\"detailedStatus\":\"Provisioning\",\"detailedStatusMessage\":\"tddmf\",\"provisioningState\":\"Canceled\",\"serialNumber\":\"tx\",\"sizeMiB\":3534624948212489198,\"storageApplianceId\":\"napxbannovv\"},\"location\":\"czytprwn\",\"tags\":{\"rouuxvnsasbcry\":\"oevytlyokr\",\"izrxklob\":\"o\"},\"id\":\"xnazpmkml\",\"name\":\"vevfxz\",\"type\":\"pj\"},{\"etag\":\"zxlioh\",\"extendedLocation\":{\"name\":\"d\",\"type\":\"dtfgxqbawpcbb\"},\"properties\":{\"allocatedSizeMiB\":2776880760546842080,\"attachedTo\":[\"napqo\",\"yuicdhzbdy\"],\"detailedStatus\":\"Error\",\"detailedStatusMessage\":\"bdvibidmhmwffpl\",\"provisioningState\":\"Accepted\",\"serialNumber\":\"apckccrrvw\",\"sizeMiB\":5172465473466396677,\"storageApplianceId\":\"oy\"},\"location\":\"k\",\"tags\":{\"pyyrmfs\":\"immoiroqboshbrag\",\"opfppdbwnupgah\":\"bpav\",\"jcaacfdmmcpugm\":\"kuma\"},\"id\":\"hqepvufhbzehewh\",\"name\":\"qhnlbqnbld\",\"type\":\"eaclgschorimk\"}]}")
+            .toObject(VolumeList.class);
+        Assertions.assertEquals("fqkfuarenl", model.nextLink());
+        Assertions.assertEquals("czytprwn", model.value().get(0).location());
+        Assertions.assertEquals("oevytlyokr", model.value().get(0).tags().get("rouuxvnsasbcry"));
+        Assertions.assertEquals("jboslcqxypok", model.value().get(0).extendedLocation().name());
+        Assertions.assertEquals("hminqcymczngnbdx", model.value().get(0).extendedLocation().type());
+        Assertions.assertEquals(3534624948212489198L, model.value().get(0).sizeMiB());
+        Assertions.assertEquals("napxbannovv", model.value().get(0).storageApplianceId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        VolumeList model =
-            new VolumeList()
-                .withNextLink("mpimaqxzhemjyh")
-                .withValue(
-                    Arrays
-                        .asList(
-                            new VolumeInner()
-                                .withLocation("imlnwiaaomylw")
-                                .withTags(mapOf("l", "ulcsethwwnpj"))
-                                .withExtendedLocation(new ExtendedLocation().withName("jswtwkozzwc").withType("lkb"))
-                                .withSizeMiB(7215202878981332083L)));
+        VolumeList model
+            = new VolumeList().withNextLink("fqkfuarenl")
+                .withValue(Arrays.asList(
+                    new VolumeInner().withLocation("czytprwn")
+                        .withTags(mapOf("rouuxvnsasbcry", "oevytlyokr", "izrxklob", "o"))
+                        .withExtendedLocation(
+                            new ExtendedLocation().withName("jboslcqxypok").withType("hminqcymczngnbdx"))
+                        .withSizeMiB(3534624948212489198L)
+                        .withStorageApplianceId("napxbannovv"),
+                    new VolumeInner().withLocation("k")
+                        .withTags(
+                            mapOf("pyyrmfs", "immoiroqboshbrag", "opfppdbwnupgah", "bpav", "jcaacfdmmcpugm", "kuma"))
+                        .withExtendedLocation(new ExtendedLocation().withName("d").withType("dtfgxqbawpcbb"))
+                        .withSizeMiB(5172465473466396677L)
+                        .withStorageApplianceId("oy")));
         model = BinaryData.fromObject(model).toObject(VolumeList.class);
-        Assertions.assertEquals("mpimaqxzhemjyh", model.nextLink());
-        Assertions.assertEquals("imlnwiaaomylw", model.value().get(0).location());
-        Assertions.assertEquals("ulcsethwwnpj", model.value().get(0).tags().get("l"));
-        Assertions.assertEquals("jswtwkozzwc", model.value().get(0).extendedLocation().name());
-        Assertions.assertEquals("lkb", model.value().get(0).extendedLocation().type());
-        Assertions.assertEquals(7215202878981332083L, model.value().get(0).sizeMiB());
+        Assertions.assertEquals("fqkfuarenl", model.nextLink());
+        Assertions.assertEquals("czytprwn", model.value().get(0).location());
+        Assertions.assertEquals("oevytlyokr", model.value().get(0).tags().get("rouuxvnsasbcry"));
+        Assertions.assertEquals("jboslcqxypok", model.value().get(0).extendedLocation().name());
+        Assertions.assertEquals("hminqcymczngnbdx", model.value().get(0).extendedLocation().type());
+        Assertions.assertEquals(3534624948212489198L, model.value().get(0).sizeMiB());
+        Assertions.assertEquals("napxbannovv", model.value().get(0).storageApplianceId());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

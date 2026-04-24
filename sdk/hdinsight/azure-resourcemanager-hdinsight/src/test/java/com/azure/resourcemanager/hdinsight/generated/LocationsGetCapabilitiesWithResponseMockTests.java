@@ -6,70 +6,40 @@ package com.azure.resourcemanager.hdinsight.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.hdinsight.HDInsightManager;
 import com.azure.resourcemanager.hdinsight.models.CapabilitiesResult;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class LocationsGetCapabilitiesWithResponseMockTests {
     @Test
     public void testGetCapabilitiesWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"versions\":{\"ddpqt\":{\"available\":[{\"friendlyName\":\"pihehce\",\"displayName\":\"bmrqbrjbbmp\",\"isDefault\":false,\"componentVersions\":{\"hud\":\"kfrexcrseqwjks\"}},{\"friendlyName\":\"hxogjggsvoujkxi\",\"displayName\":\"afhrkmdyomk\",\"isDefault\":false,\"componentVersions\":{\"pwpgddei\":\"bhdyir\",\"muikjcjcaztbws\":\"awzovgkk\"}},{\"friendlyName\":\"qowxwcom\",\"displayName\":\"kytwvcz\",\"isDefault\":false,\"componentVersions\":{\"xt\":\"cvejyfdvlvhbwrn\"}}]},\"vteo\":{\"available\":[{\"friendlyName\":\"mnaoy\",\"displayName\":\"kcoeqswank\",\"isDefault\":true,\"componentVersions\":{\"rlktgjcsggu\":\"hdroznnh\",\"zgfbukklelssx\":\"hemlwywaee\",\"jks\":\"lycsxz\",\"oewbid\":\"lsmdesqplpvmjc\"}}]},\"iiiovgqcgxuugq\":{\"available\":[{\"friendlyName\":\"piudeugfsxzecpa\",\"displayName\":\"kufykhvu\",\"isDefault\":false,\"componentVersions\":{\"jltymkmvguihy\":\"rutznabaobnsluj\",\"phkixkykxdssjpe\":\"arts\",\"rmymyincqlhr\":\"mucfxhikkf\",\"sl\":\"s\"}}]}},\"regions\":{\"hqlkccuzgygqwaho\":{\"available\":[\"iowlxteqdptj\",\"wdtgukranblw\"]},\"mhbrbqgvg\":{\"available\":[\"wgniipr\",\"lvawuwzdufypivls\",\"bjpmcubk\",\"ifoxxkubvphav\"]},\"wfiwzcxmj\":{\"available\":[\"bbttefjo\",\"nssqyzqed\",\"kdfrdbiqmrjgeihf\",\"lg\"]},\"fjlrxwtoauk\":{\"available\":[\"ephmgtvljvrcmyfq\",\"pgxh\",\"pomyqwcabvnuile\",\"yaswlpaugmr\"]}},\"features\":[\"vcisiz\"],\"quota\":{\"coresUsed\":3070657287286069217,\"maxCoresAllowed\":2996980592511322774,\"regionalQuotas\":[{\"regionName\":\"vedwcgyeewx\",\"coresUsed\":6124367728048997773,\"coresAvailable\":2080947935687298140},{\"regionName\":\"omguamlj\",\"coresUsed\":89407002480372975,\"coresAvailable\":5798228186879436561},{\"regionName\":\"zgaufcshhvn\",\"coresUsed\":2190540767152653017,\"coresAvailable\":7283254554944912845},{\"regionName\":\"pqanxrjkix\",\"coresUsed\":3357915863387443370,\"coresAvailable\":6541184818779379216}]}}";
 
-        String responseStr =
-            "{\"versions\":{\"vxnqmhrpqpd\":{\"available\":[{\"friendlyName\":\"mguaml\",\"displayName\":\"l\",\"isDefault\":true,\"componentVersions\":{\"nxkympqanxrjk\":\"lzgaufcshhvnew\",\"ypnyghshxc\":\"xtwbta\",\"ycphdrwjjkhvyo\":\"lhkgmnsghp\",\"u\":\"ac\"}}]},\"opedbwdpyqyybxub\":{\"available\":[{\"friendlyName\":\"oi\",\"displayName\":\"css\",\"isDefault\":true,\"componentVersions\":{\"zr\":\"fmcsypobkd\",\"czzydmxzjij\":\"zsylollgt\",\"hci\":\"vuaurk\",\"kkjanurnnqbnqbp\":\"ldefxrdcoxn\"}},{\"friendlyName\":\"xqltgrd\",\"displayName\":\"ypxrx\",\"isDefault\":false,\"componentVersions\":{\"ctafsrbxrblm\":\"wuh\",\"spnxwqagnepzw\":\"iowxi\",\"rxaomzisglrrcze\":\"klsbsbqqqagw\"}},{\"friendlyName\":\"hhltnjadhqo\",\"displayName\":\"jqoyueayfbpcm\",\"isDefault\":false,\"componentVersions\":{\"mbscbbx\":\"rrueqthwmg\",\"d\":\"gdhxi\"}}]},\"qvapcohhoucq\":{\"available\":[{\"friendlyName\":\"fcbqwremjela\",\"displayName\":\"cigeleohdbvqvw\",\"isDefault\":true,\"componentVersions\":{\"x\":\"wbeonrlkwzdqy\",\"seqchkrt\":\"eakxcptsoqfyi\"}},{\"friendlyName\":\"razisg\",\"displayName\":\"iuemvanbwzohmnr\",\"isDefault\":false,\"componentVersions\":{\"dptysprqs\":\"jklinh\",\"fiqwoy\":\"nzxojpslsvjgpli\"}}]}},\"regions\":{\"tjzmi\":{\"available\":[\"cxzrzdcgdzben\",\"ibcawetzqddtjw\",\"ljhznamtuatmzwcj\",\"nc\"]}},\"features\":[\"bgatzu\",\"vbxngr\",\"bwggahtt\"],\"quota\":{\"coresUsed\":5012267039710812753,\"maxCoresAllowed\":8685578675388239679,\"regionalQuotas\":[{\"regionName\":\"lx\",\"coresUsed\":8142650207393641540,\"coresAvailable\":9197287039568468333},{\"regionName\":\"wqrjzfrg\",\"coresUsed\":1666719420079000960,\"coresAvailable\":6972744056743819269},{\"regionName\":\"uocnjrohmbpyr\",\"coresUsed\":3555567142611740957,\"coresAvailable\":8489336253229945435},{\"regionName\":\"dyvkfkmr\",\"coresUsed\":2786568529817022163,\"coresAvailable\":5427029931191366862}]}}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        HDInsightManager manager = HDInsightManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        CapabilitiesResult response = manager.locations()
+            .getCapabilitiesWithResponse("yrrleaesinuqt", com.azure.core.util.Context.NONE)
+            .getValue();
 
-        HDInsightManager manager =
-            HDInsightManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        CapabilitiesResult response =
-            manager.locations().getCapabilitiesWithResponse("gyeewxeiq", com.azure.core.util.Context.NONE).getValue();
-
-        Assertions.assertEquals("mguaml", response.versions().get("vxnqmhrpqpd").available().get(0).friendlyName());
-        Assertions.assertEquals("l", response.versions().get("vxnqmhrpqpd").available().get(0).displayName());
-        Assertions.assertEquals(true, response.versions().get("vxnqmhrpqpd").available().get(0).isDefault());
-        Assertions
-            .assertEquals(
-                "lzgaufcshhvnew",
-                response.versions().get("vxnqmhrpqpd").available().get(0).componentVersions().get("nxkympqanxrjk"));
-        Assertions.assertEquals("cxzrzdcgdzben", response.regions().get("tjzmi").available().get(0));
-        Assertions.assertEquals("bgatzu", response.features().get(0));
+        Assertions.assertEquals("pihehce", response.versions().get("ddpqt").available().get(0).friendlyName());
+        Assertions.assertEquals("bmrqbrjbbmp", response.versions().get("ddpqt").available().get(0).displayName());
+        Assertions.assertFalse(response.versions().get("ddpqt").available().get(0).isDefault());
+        Assertions.assertEquals("kfrexcrseqwjks",
+            response.versions().get("ddpqt").available().get(0).componentVersions().get("hud"));
+        Assertions.assertEquals("iowlxteqdptj", response.regions().get("hqlkccuzgygqwaho").available().get(0));
+        Assertions.assertEquals("vcisiz", response.features().get(0));
     }
 }

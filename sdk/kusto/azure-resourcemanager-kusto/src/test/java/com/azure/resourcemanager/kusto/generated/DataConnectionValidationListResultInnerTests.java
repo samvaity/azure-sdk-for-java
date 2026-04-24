@@ -13,23 +13,19 @@ import org.junit.jupiter.api.Assertions;
 public final class DataConnectionValidationListResultInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DataConnectionValidationListResultInner model =
-            BinaryData
-                .fromString("{\"value\":[{\"errorMessage\":\"curdoiwiitht\"},{\"errorMessage\":\"ubxcbihw\"}]}")
-                .toObject(DataConnectionValidationListResultInner.class);
-        Assertions.assertEquals("curdoiwiitht", model.value().get(0).errorMessage());
+        DataConnectionValidationListResultInner model = BinaryData.fromString(
+            "{\"value\":[{\"errorMessage\":\"dweyuqdunv\"},{\"errorMessage\":\"nrwrbiork\"},{\"errorMessage\":\"lywjhh\"}]}")
+            .toObject(DataConnectionValidationListResultInner.class);
+        Assertions.assertEquals("dweyuqdunv", model.value().get(0).errorMessage());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        DataConnectionValidationListResultInner model =
-            new DataConnectionValidationListResultInner()
-                .withValue(
-                    Arrays
-                        .asList(
-                            new DataConnectionValidationResult().withErrorMessage("curdoiwiitht"),
-                            new DataConnectionValidationResult().withErrorMessage("ubxcbihw")));
+        DataConnectionValidationListResultInner model = new DataConnectionValidationListResultInner()
+            .withValue(Arrays.asList(new DataConnectionValidationResult().withErrorMessage("dweyuqdunv"),
+                new DataConnectionValidationResult().withErrorMessage("nrwrbiork"),
+                new DataConnectionValidationResult().withErrorMessage("lywjhh")));
         model = BinaryData.fromObject(model).toObject(DataConnectionValidationListResultInner.class);
-        Assertions.assertEquals("curdoiwiitht", model.value().get(0).errorMessage());
+        Assertions.assertEquals("dweyuqdunv", model.value().get(0).errorMessage());
     }
 }

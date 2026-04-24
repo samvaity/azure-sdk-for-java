@@ -5,82 +5,82 @@
 package com.azure.storage.queue.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.storage.queue.models.QueueItem;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** The object returned when calling List Queues on a Queue Service. */
-@JacksonXmlRootElement(localName = "EnumerationResults")
+/**
+ * The object returned when calling List Queues on a Queue Service.
+ */
 @Fluent
-public final class ListQueuesSegmentResponse {
+public final class ListQueuesSegmentResponse implements XmlSerializable<ListQueuesSegmentResponse> {
     /*
      * The ServiceEndpoint property.
      */
-    @JacksonXmlProperty(localName = "ServiceEndpoint", isAttribute = true)
+    @Generated
     private String serviceEndpoint;
 
     /*
      * The Prefix property.
      */
-    @JsonProperty(value = "Prefix", required = true)
+    @Generated
     private String prefix;
 
     /*
      * The Marker property.
      */
-    @JsonProperty(value = "Marker")
+    @Generated
     private String marker;
 
     /*
      * The MaxResults property.
      */
-    @JsonProperty(value = "MaxResults", required = true)
+    @Generated
     private int maxResults;
-
-    private static final class QueuesWrapper {
-        @JacksonXmlProperty(localName = "Queue")
-        private final List<QueueItem> items;
-
-        @JsonCreator
-        private QueuesWrapper(@JacksonXmlProperty(localName = "Queue") List<QueueItem> items) {
-            this.items = items;
-        }
-    }
 
     /*
      * The QueueItems property.
      */
-    @JsonProperty(value = "Queues")
-    private QueuesWrapper queueItems;
+    @Generated
+    private List<QueueItem> queueItems;
 
     /*
      * The NextMarker property.
      */
-    @JsonProperty(value = "NextMarker", required = true)
+    @Generated
     private String nextMarker;
 
-    /** Creates an instance of ListQueuesSegmentResponse class. */
-    public ListQueuesSegmentResponse() {}
+    /**
+     * Creates an instance of ListQueuesSegmentResponse class.
+     */
+    @Generated
+    public ListQueuesSegmentResponse() {
+    }
 
     /**
      * Get the serviceEndpoint property: The ServiceEndpoint property.
-     *
+     * 
      * @return the serviceEndpoint value.
      */
+    @Generated
     public String getServiceEndpoint() {
         return this.serviceEndpoint;
     }
 
     /**
      * Set the serviceEndpoint property: The ServiceEndpoint property.
-     *
+     * 
      * @param serviceEndpoint the serviceEndpoint value to set.
      * @return the ListQueuesSegmentResponse object itself.
      */
+    @Generated
     public ListQueuesSegmentResponse setServiceEndpoint(String serviceEndpoint) {
         this.serviceEndpoint = serviceEndpoint;
         return this;
@@ -88,19 +88,21 @@ public final class ListQueuesSegmentResponse {
 
     /**
      * Get the prefix property: The Prefix property.
-     *
+     * 
      * @return the prefix value.
      */
+    @Generated
     public String getPrefix() {
         return this.prefix;
     }
 
     /**
      * Set the prefix property: The Prefix property.
-     *
+     * 
      * @param prefix the prefix value to set.
      * @return the ListQueuesSegmentResponse object itself.
      */
+    @Generated
     public ListQueuesSegmentResponse setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
@@ -108,19 +110,21 @@ public final class ListQueuesSegmentResponse {
 
     /**
      * Get the marker property: The Marker property.
-     *
+     * 
      * @return the marker value.
      */
+    @Generated
     public String getMarker() {
         return this.marker;
     }
 
     /**
      * Set the marker property: The Marker property.
-     *
+     * 
      * @param marker the marker value to set.
      * @return the ListQueuesSegmentResponse object itself.
      */
+    @Generated
     public ListQueuesSegmentResponse setMarker(String marker) {
         this.marker = marker;
         return this;
@@ -128,19 +132,21 @@ public final class ListQueuesSegmentResponse {
 
     /**
      * Get the maxResults property: The MaxResults property.
-     *
+     * 
      * @return the maxResults value.
      */
+    @Generated
     public int getMaxResults() {
         return this.maxResults;
     }
 
     /**
      * Set the maxResults property: The MaxResults property.
-     *
+     * 
      * @param maxResults the maxResults value to set.
      * @return the ListQueuesSegmentResponse object itself.
      */
+    @Generated
     public ListQueuesSegmentResponse setMaxResults(int maxResults) {
         this.maxResults = maxResults;
         return this;
@@ -148,44 +154,137 @@ public final class ListQueuesSegmentResponse {
 
     /**
      * Get the queueItems property: The QueueItems property.
-     *
+     * 
      * @return the queueItems value.
      */
+    @Generated
     public List<QueueItem> getQueueItems() {
         if (this.queueItems == null) {
-            this.queueItems = new QueuesWrapper(new ArrayList<QueueItem>());
+            this.queueItems = new ArrayList<>();
         }
-        return this.queueItems.items;
+        return this.queueItems;
     }
 
     /**
      * Set the queueItems property: The QueueItems property.
-     *
+     * 
      * @param queueItems the queueItems value to set.
      * @return the ListQueuesSegmentResponse object itself.
      */
+    @Generated
     public ListQueuesSegmentResponse setQueueItems(List<QueueItem> queueItems) {
-        this.queueItems = new QueuesWrapper(queueItems);
+        this.queueItems = queueItems;
         return this;
     }
 
     /**
      * Get the nextMarker property: The NextMarker property.
-     *
+     * 
      * @return the nextMarker value.
      */
+    @Generated
     public String getNextMarker() {
         return this.nextMarker;
     }
 
     /**
      * Set the nextMarker property: The NextMarker property.
-     *
+     * 
      * @param nextMarker the nextMarker value to set.
      * @return the ListQueuesSegmentResponse object itself.
      */
+    @Generated
     public ListQueuesSegmentResponse setNextMarker(String nextMarker) {
         this.nextMarker = nextMarker;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "EnumerationResults" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeStringAttribute("ServiceEndpoint", this.serviceEndpoint);
+        xmlWriter.writeStringElement("Prefix", this.prefix);
+        xmlWriter.writeStringElement("Marker", this.marker);
+        xmlWriter.writeIntElement("MaxResults", this.maxResults);
+        if (this.queueItems != null) {
+            xmlWriter.writeStartElement("Queues");
+            for (QueueItem element : this.queueItems) {
+                xmlWriter.writeXml(element, "Queue");
+            }
+            xmlWriter.writeEndElement();
+        }
+        xmlWriter.writeStringElement("NextMarker", this.nextMarker);
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of ListQueuesSegmentResponse from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of ListQueuesSegmentResponse if the XmlReader was pointing to an instance of it, or null if
+     * it was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the ListQueuesSegmentResponse.
+     */
+    @Generated
+    public static ListQueuesSegmentResponse fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of ListQueuesSegmentResponse from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of ListQueuesSegmentResponse if the XmlReader was pointing to an instance of it, or null if
+     * it was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the ListQueuesSegmentResponse.
+     */
+    @Generated
+    public static ListQueuesSegmentResponse fromXml(XmlReader xmlReader, String rootElementName)
+        throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "EnumerationResults" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            ListQueuesSegmentResponse deserializedListQueuesSegmentResponse = new ListQueuesSegmentResponse();
+            deserializedListQueuesSegmentResponse.serviceEndpoint = reader.getStringAttribute(null, "ServiceEndpoint");
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Prefix".equals(elementName.getLocalPart())) {
+                    deserializedListQueuesSegmentResponse.prefix = reader.getStringElement();
+                } else if ("Marker".equals(elementName.getLocalPart())) {
+                    deserializedListQueuesSegmentResponse.marker = reader.getStringElement();
+                } else if ("MaxResults".equals(elementName.getLocalPart())) {
+                    deserializedListQueuesSegmentResponse.maxResults = reader.getIntElement();
+                } else if ("Queues".equals(elementName.getLocalPart())) {
+                    while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                        elementName = reader.getElementName();
+                        if ("Queue".equals(elementName.getLocalPart())) {
+                            if (deserializedListQueuesSegmentResponse.queueItems == null) {
+                                deserializedListQueuesSegmentResponse.queueItems = new ArrayList<>();
+                            }
+                            deserializedListQueuesSegmentResponse.queueItems.add(QueueItem.fromXml(reader, "Queue"));
+                        } else {
+                            reader.skipElement();
+                        }
+                    }
+                } else if ("NextMarker".equals(elementName.getLocalPart())) {
+                    deserializedListQueuesSegmentResponse.nextMarker = reader.getStringElement();
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedListQueuesSegmentResponse;
+        });
     }
 }

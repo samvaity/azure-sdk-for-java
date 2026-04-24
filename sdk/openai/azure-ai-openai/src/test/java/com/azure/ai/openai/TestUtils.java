@@ -13,16 +13,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.azure.core.test.TestBase.AZURE_TEST_SERVICE_VERSIONS_VALUE_ALL;
-import static com.azure.core.test.TestBase.getHttpClients;
+import static com.azure.core.test.TestProxyTestBase.AZURE_TEST_SERVICE_VERSIONS_VALUE_ALL;
+import static com.azure.core.test.TestProxyTestBase.getHttpClients;
 
 public class TestUtils {
     static final String DISPLAY_NAME_WITH_ARGUMENTS = "{displayName} with [{arguments}]";
     static final String FAKE_API_KEY = "fakeKeyPlaceholder";
 
     private static final String AZURE_OPENAI_TEST_SERVICE_VERSIONS = "AZURE_OPENAI_TEST_SERVICE_VERSIONS";
-    private static final String SERVICE_VERSION_FROM_ENV =
-        Configuration.getGlobalConfiguration().get(AZURE_OPENAI_TEST_SERVICE_VERSIONS);
+    private static final String SERVICE_VERSION_FROM_ENV
+        = Configuration.getGlobalConfiguration().get(AZURE_OPENAI_TEST_SERVICE_VERSIONS);
 
     /**
      * Returns a stream of arguments that includes all combinations of eligible {@link HttpClient HttpClients} and
@@ -64,7 +64,7 @@ public class TestUtils {
             return true;
         }
         String[] configuredServiceVersionList = SERVICE_VERSION_FROM_ENV.split(",");
-        return Arrays.stream(configuredServiceVersionList).anyMatch(configuredServiceVersion ->
-            serviceVersion.getVersion().equals(configuredServiceVersion.trim()));
+        return Arrays.stream(configuredServiceVersionList)
+            .anyMatch(configuredServiceVersion -> serviceVersion.getVersion().equals(configuredServiceVersion.trim()));
     }
 }

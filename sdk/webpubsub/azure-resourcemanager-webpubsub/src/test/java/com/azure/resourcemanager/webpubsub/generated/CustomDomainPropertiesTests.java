@@ -12,23 +12,19 @@ import org.junit.jupiter.api.Assertions;
 public final class CustomDomainPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CustomDomainProperties model =
-            BinaryData
-                .fromString(
-                    "{\"provisioningState\":\"Failed\",\"domainName\":\"iby\",\"customCertificate\":{\"id\":\"dl\"}}")
-                .toObject(CustomDomainProperties.class);
-        Assertions.assertEquals("iby", model.domainName());
-        Assertions.assertEquals("dl", model.customCertificate().id());
+        CustomDomainProperties model = BinaryData.fromString(
+            "{\"provisioningState\":\"Canceled\",\"domainName\":\"spughftqsxhq\",\"customCertificate\":{\"id\":\"j\"}}")
+            .toObject(CustomDomainProperties.class);
+        Assertions.assertEquals("spughftqsxhq", model.domainName());
+        Assertions.assertEquals("j", model.customCertificate().id());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CustomDomainProperties model =
-            new CustomDomainProperties()
-                .withDomainName("iby")
-                .withCustomCertificate(new ResourceReference().withId("dl"));
+        CustomDomainProperties model = new CustomDomainProperties().withDomainName("spughftqsxhq")
+            .withCustomCertificate(new ResourceReference().withId("j"));
         model = BinaryData.fromObject(model).toObject(CustomDomainProperties.class);
-        Assertions.assertEquals("iby", model.domainName());
-        Assertions.assertEquals("dl", model.customCertificate().id());
+        Assertions.assertEquals("spughftqsxhq", model.domainName());
+        Assertions.assertEquals("j", model.customCertificate().id());
     }
 }

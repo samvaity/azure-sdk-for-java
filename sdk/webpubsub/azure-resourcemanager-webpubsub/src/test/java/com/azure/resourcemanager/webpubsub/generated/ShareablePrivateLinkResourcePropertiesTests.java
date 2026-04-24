@@ -11,25 +11,23 @@ import org.junit.jupiter.api.Assertions;
 public final class ShareablePrivateLinkResourcePropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ShareablePrivateLinkResourceProperties model =
-            BinaryData
-                .fromString("{\"description\":\"xeclzedqbcvhzlhp\",\"groupId\":\"dqkdlwwqfbu\",\"type\":\"kxtrq\"}")
+        ShareablePrivateLinkResourceProperties model
+            = BinaryData.fromString("{\"description\":\"nb\",\"groupId\":\"rxgibbd\",\"type\":\"confozauors\"}")
                 .toObject(ShareablePrivateLinkResourceProperties.class);
-        Assertions.assertEquals("xeclzedqbcvhzlhp", model.description());
-        Assertions.assertEquals("dqkdlwwqfbu", model.groupId());
-        Assertions.assertEquals("kxtrq", model.type());
+        Assertions.assertEquals("nb", model.description());
+        Assertions.assertEquals("rxgibbd", model.groupId());
+        Assertions.assertEquals("confozauors", model.type());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ShareablePrivateLinkResourceProperties model =
-            new ShareablePrivateLinkResourceProperties()
-                .withDescription("xeclzedqbcvhzlhp")
-                .withGroupId("dqkdlwwqfbu")
-                .withType("kxtrq");
+        ShareablePrivateLinkResourceProperties model
+            = new ShareablePrivateLinkResourceProperties().withDescription("nb")
+                .withGroupId("rxgibbd")
+                .withType("confozauors");
         model = BinaryData.fromObject(model).toObject(ShareablePrivateLinkResourceProperties.class);
-        Assertions.assertEquals("xeclzedqbcvhzlhp", model.description());
-        Assertions.assertEquals("dqkdlwwqfbu", model.groupId());
-        Assertions.assertEquals("kxtrq", model.type());
+        Assertions.assertEquals("nb", model.description());
+        Assertions.assertEquals("rxgibbd", model.groupId());
+        Assertions.assertEquals("confozauors", model.type());
     }
 }

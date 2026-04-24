@@ -5,101 +5,118 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The WholeMetricConfigurationPatch model. */
+/**
+ * The WholeMetricConfigurationPatch model.
+ */
 @Fluent
-public final class WholeMetricConfigurationPatch {
+public final class WholeMetricConfigurationPatch implements JsonSerializable<WholeMetricConfigurationPatch> {
     /*
      * condition operator
-     *
+     * 
      * should be specified when combining multiple detection conditions
      */
-    @JsonProperty(value = "conditionOperator")
+    @Generated
     private AnomalyDetectionConfigurationLogicType conditionOperator;
 
     /*
      * The smartDetectionCondition property.
      */
-    @JsonProperty(value = "smartDetectionCondition")
+    @Generated
     private SmartDetectionConditionPatch smartDetectionCondition;
 
     /*
      * The hardThresholdCondition property.
      */
-    @JsonProperty(value = "hardThresholdCondition")
+    @Generated
     private HardThresholdConditionPatch hardThresholdCondition;
 
     /*
      * The changeThresholdCondition property.
      */
-    @JsonProperty(value = "changeThresholdCondition")
+    @Generated
     private ChangeThresholdConditionPatch changeThresholdCondition;
 
-    /** Creates an instance of WholeMetricConfigurationPatch class. */
-    public WholeMetricConfigurationPatch() {}
+    /**
+     * Creates an instance of WholeMetricConfigurationPatch class.
+     */
+    @Generated
+    public WholeMetricConfigurationPatch() {
+    }
 
     /**
      * Get the conditionOperator property: condition operator
-     *
-     * <p>should be specified when combining multiple detection conditions.
-     *
+     * 
+     * should be specified when combining multiple detection conditions.
+     * 
      * @return the conditionOperator value.
      */
+    @Generated
     public AnomalyDetectionConfigurationLogicType getConditionOperator() {
         return this.conditionOperator;
     }
 
     /**
      * Set the conditionOperator property: condition operator
-     *
-     * <p>should be specified when combining multiple detection conditions.
-     *
+     * 
+     * should be specified when combining multiple detection conditions.
+     * 
      * @param conditionOperator the conditionOperator value to set.
      * @return the WholeMetricConfigurationPatch object itself.
      */
-    public WholeMetricConfigurationPatch setConditionOperator(
-            AnomalyDetectionConfigurationLogicType conditionOperator) {
+    @Generated
+    public WholeMetricConfigurationPatch
+        setConditionOperator(AnomalyDetectionConfigurationLogicType conditionOperator) {
         this.conditionOperator = conditionOperator;
         return this;
     }
 
     /**
      * Get the smartDetectionCondition property: The smartDetectionCondition property.
-     *
+     * 
      * @return the smartDetectionCondition value.
      */
+    @Generated
     public SmartDetectionConditionPatch getSmartDetectionCondition() {
         return this.smartDetectionCondition;
     }
 
     /**
      * Set the smartDetectionCondition property: The smartDetectionCondition property.
-     *
+     * 
      * @param smartDetectionCondition the smartDetectionCondition value to set.
      * @return the WholeMetricConfigurationPatch object itself.
      */
-    public WholeMetricConfigurationPatch setSmartDetectionCondition(
-            SmartDetectionConditionPatch smartDetectionCondition) {
+    @Generated
+    public WholeMetricConfigurationPatch
+        setSmartDetectionCondition(SmartDetectionConditionPatch smartDetectionCondition) {
         this.smartDetectionCondition = smartDetectionCondition;
         return this;
     }
 
     /**
      * Get the hardThresholdCondition property: The hardThresholdCondition property.
-     *
+     * 
      * @return the hardThresholdCondition value.
      */
+    @Generated
     public HardThresholdConditionPatch getHardThresholdCondition() {
         return this.hardThresholdCondition;
     }
 
     /**
      * Set the hardThresholdCondition property: The hardThresholdCondition property.
-     *
+     * 
      * @param hardThresholdCondition the hardThresholdCondition value to set.
      * @return the WholeMetricConfigurationPatch object itself.
      */
+    @Generated
     public WholeMetricConfigurationPatch setHardThresholdCondition(HardThresholdConditionPatch hardThresholdCondition) {
         this.hardThresholdCondition = hardThresholdCondition;
         return this;
@@ -107,22 +124,77 @@ public final class WholeMetricConfigurationPatch {
 
     /**
      * Get the changeThresholdCondition property: The changeThresholdCondition property.
-     *
+     * 
      * @return the changeThresholdCondition value.
      */
+    @Generated
     public ChangeThresholdConditionPatch getChangeThresholdCondition() {
         return this.changeThresholdCondition;
     }
 
     /**
      * Set the changeThresholdCondition property: The changeThresholdCondition property.
-     *
+     * 
      * @param changeThresholdCondition the changeThresholdCondition value to set.
      * @return the WholeMetricConfigurationPatch object itself.
      */
-    public WholeMetricConfigurationPatch setChangeThresholdCondition(
-            ChangeThresholdConditionPatch changeThresholdCondition) {
+    @Generated
+    public WholeMetricConfigurationPatch
+        setChangeThresholdCondition(ChangeThresholdConditionPatch changeThresholdCondition) {
         this.changeThresholdCondition = changeThresholdCondition;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("conditionOperator",
+            this.conditionOperator == null ? null : this.conditionOperator.toString());
+        jsonWriter.writeJsonField("smartDetectionCondition", this.smartDetectionCondition);
+        jsonWriter.writeJsonField("hardThresholdCondition", this.hardThresholdCondition);
+        jsonWriter.writeJsonField("changeThresholdCondition", this.changeThresholdCondition);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of WholeMetricConfigurationPatch from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of WholeMetricConfigurationPatch if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the WholeMetricConfigurationPatch.
+     */
+    @Generated
+    public static WholeMetricConfigurationPatch fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            WholeMetricConfigurationPatch deserializedWholeMetricConfigurationPatch
+                = new WholeMetricConfigurationPatch();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("conditionOperator".equals(fieldName)) {
+                    deserializedWholeMetricConfigurationPatch.conditionOperator
+                        = AnomalyDetectionConfigurationLogicType.fromString(reader.getString());
+                } else if ("smartDetectionCondition".equals(fieldName)) {
+                    deserializedWholeMetricConfigurationPatch.smartDetectionCondition
+                        = SmartDetectionConditionPatch.fromJson(reader);
+                } else if ("hardThresholdCondition".equals(fieldName)) {
+                    deserializedWholeMetricConfigurationPatch.hardThresholdCondition
+                        = HardThresholdConditionPatch.fromJson(reader);
+                } else if ("changeThresholdCondition".equals(fieldName)) {
+                    deserializedWholeMetricConfigurationPatch.changeThresholdCondition
+                        = ChangeThresholdConditionPatch.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedWholeMetricConfigurationPatch;
+        });
     }
 }

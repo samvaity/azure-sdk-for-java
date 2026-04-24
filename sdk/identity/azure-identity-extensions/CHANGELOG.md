@@ -1,6 +1,6 @@
 # Release History
 
-## 1.2.0-beta.2 (Unreleased)
+## 1.3.0-beta.1 (Unreleased)
 
 ### Features Added
 
@@ -9,6 +9,204 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 1.2.7 (2026-01-29)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.18.1` to version `1.18.2`.
+
+## 1.2.6 (2025-10-27)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.18.0` to version `1.18.1`.
+
+## 1.2.5 (2025-09-25)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.16.3` to version `1.18.0`.
+
+## 1.2.4 (2025-07-29)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.16.2` to version `1.16.3`.
+
+## 1.2.3 (2025-06-19)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.15.4` to version `1.16.2`.
+
+## 1.2.2 (2025-03-24)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.15.3` to version `1.15.4`.
+
+## 1.2.1 (2025-02-25)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.15.0` to version `1.15.3`.
+
+## 1.2.0 (2025-01-16)
+
+### Features Added
+- Support cache for token credential object. [#39393](https://github.com/Azure/azure-sdk-for-java/issues/39393).
+
+### Bugs Fixed
+- Fix the issue where the token acquisition timeout is not set via the property `azure.accessTokenTimeoutInSeconds`. [#43512](https://github.com/Azure/azure-sdk-for-java/issues/43512).
+
+### Other Changes
+
+#### Dependency Updates
+- Upgraded `azure-identity` from `1.14.2` to version `1.15.0`.
+
+## 1.1.22 (2024-12-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.14.0` to version `1.14.2`.
+
+## 1.1.21 (2024-10-28)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.13.3` to version `1.14.0`.
+
+## 1.1.20 (2024-09-28)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.13.2` to version `1.13.3`.
+
+## 1.1.19 (2024-08-25)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.13.1` to version `1.13.2`.
+
+## 1.1.18 (2024-07-27)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.13.0` to version `1.13.1`.
+
+## 1.1.17 (2024-06-25)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.12.1` to version `1.13.0`.
+
+## 1.1.16 (2024-05-28)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.12.0` to version `1.12.1`.
+
+## 1.1.15 (2024-04-23)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.11.4` to version `1.12.0`.
+
+## 1.1.14 (2024-03-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.11.2` to version `1.11.4`.
+- Upgraded `postgresql` from `42.3.8` to version `42.3.9`.
+
+## 1.1.13 (2024-02-22)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.11.1` to version `1.11.2`.
+
+## 1.1.12 (2024-02-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.11.0` to version `1.11.1`.
+
+## 1.1.11 (2023-12-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.11.0` to version `1.11.1`.
+
+## 1.1.10 (2023-11-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.10.4` to version `1.11.0`.
+
+## 1.1.9 (2023-10-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.10.1` to version `1.10.4`.
+
+## 1.1.8 (2023-09-22)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.10.0` to version `1.10.1`.
+
+## 1.1.7 (2023-08-18)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-identity` from `1.9.2` to version `1.10.0`.
 
 ## 1.1.6 (2023-07-25)
 

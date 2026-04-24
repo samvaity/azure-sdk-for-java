@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.GetUserTablesSqlSyncTaskOu
 public final class GetUserTablesSqlSyncTaskOutputTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        GetUserTablesSqlSyncTaskOutput model =
-            BinaryData
-                .fromString(
-                    "{\"databasesToSourceTables\":\"jphuopxodlqi\",\"databasesToTargetTables\":\"torzih\",\"tableValidationErrors\":\"osjswsr\",\"validationErrors\":[{\"message\":\"zrpzb\",\"actionableMessage\":\"ckqqzqioxiysui\",\"filePath\":\"ynkedyatrwyhqmib\",\"lineNumber\":\"hwit\",\"hResult\":1364304656,\"stackTrace\":\"yynpcdpumnzgmwz\"},{\"message\":\"abikns\",\"actionableMessage\":\"gj\",\"filePath\":\"bldtlww\",\"lineNumber\":\"kdmtncvokotll\",\"hResult\":1085578683,\"stackTrace\":\"gsyocogj\"},{\"message\":\"dtbnnha\",\"actionableMessage\":\"ocrkvcikh\",\"filePath\":\"p\",\"lineNumber\":\"qgxqquezikyw\",\"hResult\":1344310513,\"stackTrace\":\"allatmelwuipic\"},{\"message\":\"zkzivgvvcnay\",\"actionableMessage\":\"yrnxxmueedn\",\"filePath\":\"dvstkw\",\"lineNumber\":\"tchealmf\",\"hResult\":149792642,\"stackTrace\":\"aygdvwvgpioh\"}]}")
-                .toObject(GetUserTablesSqlSyncTaskOutput.class);
+        GetUserTablesSqlSyncTaskOutput model = BinaryData.fromString(
+            "{\"databasesToSourceTables\":\"elvidizozsdbccx\",\"databasesToTargetTables\":\"on\",\"tableValidationErrors\":\"gnwncypuuwwlt\",\"validationErrors\":[{\"message\":\"ctzenkeifzzhmkd\",\"actionableMessage\":\"vflyhbxcu\",\"filePath\":\"hxgsrboldfor\",\"lineNumber\":\"wjlvizbfhfov\",\"hResult\":1713123413,\"stackTrace\":\"pbt\"},{\"message\":\"dxe\",\"actionableMessage\":\"abbelawumuaslzk\",\"filePath\":\"rwoycqucwyh\",\"lineNumber\":\"nomdrkywuhpsv\",\"hResult\":888405116,\"stackTrace\":\"utlwexxwla\"},{\"message\":\"iexzsrzpge\",\"actionableMessage\":\"tybbwwpgda\",\"filePath\":\"hzyvlixqnrkcx\",\"lineNumber\":\"ibn\",\"hResult\":866421840,\"stackTrace\":\"uxswqrntvl\"}]}")
+            .toObject(GetUserTablesSqlSyncTaskOutput.class);
     }
 
     @org.junit.jupiter.api.Test

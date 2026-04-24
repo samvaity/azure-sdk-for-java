@@ -13,6 +13,14 @@ import java.util.List;
  */
 @Immutable
 public final class DocumentStyle {
+
+    /**
+     * Creates a DocumentStyle object.
+     */
+    public DocumentStyle() {
+
+    }
+
     /*
      * Is content handwritten?
      */
@@ -64,11 +72,11 @@ public final class DocumentStyle {
         return this.isHandwritten;
     }
 
-      /**
-     * Get the spans property: Location of the text elements in the concatenated content the style applies to.
-     *
-     * @return the spans value.
-     */
+    /**
+    * Get the spans property: Location of the text elements in the concatenated content the style applies to.
+    *
+    * @return the spans value.
+    */
     public List<DocumentSpan> getSpans() {
         return this.spans;
     }
@@ -77,7 +85,6 @@ public final class DocumentStyle {
      * Set the spans property: Location of the text elements in the concatenated content the style applies to.
      *
      * @param spans the spans value to set.
-     * @return the DocumentStyle object itself.
      */
     private void setSpans(List<DocumentSpan> spans) {
         this.spans = spans;
@@ -96,7 +103,6 @@ public final class DocumentStyle {
      * Set the confidence property: Confidence of correctly identifying the style.
      *
      * @param confidence the confidence value to set.
-     * @return the DocumentStyle object itself.
      */
     private void setConfidence(float confidence) {
         this.confidence = confidence;
@@ -121,6 +127,7 @@ public final class DocumentStyle {
     private void setColor(String color) {
         this.color = color;
     }
+
     private void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
     }

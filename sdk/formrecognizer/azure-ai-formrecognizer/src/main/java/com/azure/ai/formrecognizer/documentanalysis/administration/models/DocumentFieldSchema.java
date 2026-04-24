@@ -14,6 +14,13 @@ import java.util.Map;
  */
 @Immutable
 public final class DocumentFieldSchema {
+
+    /**
+     * Constructs a DocumentFieldSchema object.
+     */
+    public DocumentFieldSchema() {
+    }
+
     /*
      * Semantic data type of the field value.
      */
@@ -152,7 +159,8 @@ public final class DocumentFieldSchema {
             }
 
             @Override
-            public void setProperties(DocumentFieldSchema documentFieldSchema, Map<String, DocumentFieldSchema> properties) {
+            public void setProperties(DocumentFieldSchema documentFieldSchema,
+                Map<String, DocumentFieldSchema> properties) {
                 documentFieldSchema.setProperties(properties);
             }
         });

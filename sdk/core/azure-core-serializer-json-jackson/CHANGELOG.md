@@ -1,6 +1,6 @@
 # Release History
 
-## 1.5.0-beta.1 (Unreleased)
+## 1.7.0-beta.1 (Unreleased)
 
 ### Features Added
 
@@ -9,6 +9,224 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 1.6.3 (2026-01-15)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.57.0` to `1.57.1`.
+- Upgraded Reactor from `3.7.11` to `3.7.14`. ([#47611](https://github.com/Azure/azure-sdk-for-java/pull/47611))
+
+## 1.6.2 (2025-10-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.1` to `1.57.0`.
+- Upgraded Reactor from `3.7.9` to `3.7.11`. ([#46894](https://github.com/Azure/azure-sdk-for-java/pull/46894))
+
+## 1.6.1 (2025-09-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.0` to `1.56.1`.
+
+## 1.6.0 (2025-08-07)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.5` to `1.56.0`.
+- Upgraded Reactor from `3.4.41` to `3.7.8`. ([#46207](https://github.com/Azure/azure-sdk-for-java/pull/46207))
+
+## 1.5.10 (2025-06-26)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.4` to `1.55.5`.
+- Upgraded Jackson Core from `2.18.3` to `2.18.4.1`.
+
+## 1.5.9 (2025-06-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.3` to `1.55.4`.
+- Upgraded Jackson from `2.17.2` to `2.18.3`.
+
+## 1.5.8 (2025-03-10)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.2` to `1.55.3`.
+
+## 1.5.7 (2025-02-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.1` to `1.55.2`.
+
+## 1.5.6 (2025-02-12)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.0` to `1.55.1`.
+
+## 1.5.5 (2025-02-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.1` to `1.55.0`.
+
+## 1.5.4 (2024-11-14)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.0` to `1.54.1`.
+
+## 1.5.3 (2024-11-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.53.0` to `1.54.0`.
+
+## 1.5.2 (2024-10-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.52.0` to `1.53.0`.
+
+## 1.5.1 (2024-09-12)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.51.0` to `1.52.0`.
+
+## 1.5.0 (2024-07-31)
+
+### Features Added
+
+- Added implementations of `azure-json`'s `JsonElement` that wrap `JsonArray` and `JsonObject` to simplify combining
+  Jackson functionality with `azure-json` functionality.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.50.0` to `1.51.0`.
+- Upgraded Jackson from `2.13.5` to `2.17.2`.
+
+## 1.4.14 (2024-07-12)
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.1` to `1.50.0`.
+
+## 1.4.13 (2024-06-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.0` to `1.49.1`.
+
+## 1.4.12 (2024-05-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.48.0` to `1.49.0`.
+
+## 1.4.11 (2024-04-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.47.0` to `1.48.0`.
+- 
+## 1.4.10 (2024-03-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.46.0` to `1.47.0`.
+
+## 1.4.9 (2024-02-02)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.45.1` to `1.46.0`.
+
+## 1.4.7 (2023-11-03)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.1` to `1.45.0`.
+
+## 1.4.6 (2023-10-17)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.0` to `1.44.1`.
+
+## 1.4.5 (2023-10-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.43.0` to `1.44.0`.
+
+## 1.4.4 (2023-09-07)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.42.0` to `1.43.0`.
+
+## 1.4.3 (2023-08-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.41.0` to `1.42.0`.
 
 ## 1.4.2 (2023-07-06)
 
@@ -42,7 +260,7 @@
 
 ### Other Changes
 
-- Added dependency on `azure-json` and added support for `JsonSeriliazable` in `JacksonAdapter`.
+- Added dependency on `azure-json` and added support for `JsonSerializable` in `JacksonAdapter`.
 
 #### Dependency Updates
 
@@ -301,7 +519,7 @@
 
 ## 1.0.0-beta.3 (2020-08-12)
 
-- Changed `JacksonJsonSerializer` to implement `azure-core`'s `JsonSerialzer` instead of `azure-core-experimental`'s.
+- Changed `JacksonJsonSerializer` to implement `azure-core`'s `JsonSerializer` instead of `azure-core-experimental`'s.
 - Removed JSON tree models and APIs.
 - `JacksonJsonSerializer` now implements the interface `MemberNameConverter`.
 

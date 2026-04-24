@@ -8,11 +8,13 @@ import com.azure.core.util.logging.ClientLogger;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.function.Function;
 
 /**
  * Helper class that unifies SPI instances creation.
+ *
  * @param <TProvider> Service Provider interface.
  * @param <TInstance> Service interface type.
  */
@@ -42,38 +44,47 @@ public final class Providers<TProvider, TInstance> {
         // System classloader to load TProvider classes.
         ServiceLoader<TProvider> serviceLoader = ServiceLoader.load(providerClass, Providers.class.getClassLoader());
 
-        availableProviders = new HashMap<>();
-        // Use the first provider found in the service loader iterator.
+        TProvider defaultProvider = null;
+        String defaultProviderName = null;
+        this.availableProviders = new HashMap<>();
+
+        // Load all provider instances.
         Iterator<TProvider> it = serviceLoader.iterator();
-        if (it.hasNext()) {
-            defaultProvider = it.next();
-            defaultProviderName = defaultProvider.getClass().getName();
-            availableProviders.put(defaultProviderName, defaultProvider);
-            LOGGER.verbose("Using {} as the default {}.", defaultProviderName, providerClass.getName());
-        } else {
-            defaultProvider = null;
-            defaultProviderName = null;
-        }
-
         while (it.hasNext()) {
-            TProvider additionalProvider = it.next();
-            String additionalProviderName = additionalProvider.getClass().getName();
-            availableProviders.put(additionalProviderName, additionalProvider);
-            LOGGER.verbose("Additional provider found on the classpath: {}", additionalProviderName);
+            try {
+                TProvider provider = it.next();
+                String providerName = provider.getClass().getName();
+                availableProviders.put(providerName, provider);
+                if (defaultProvider == null) {
+                    defaultProvider = provider;
+                    defaultProviderName = providerName;
+                    LOGGER.atVerbose()
+                        .addKeyValue("providerName", providerName)
+                        .addKeyValue("providerClass", providerClass.getName())
+                        .log("Loaded default provider.");
+                } else {
+                    LOGGER.atVerbose()
+                        .addKeyValue("providerName", providerName)
+                        .log("Additional provider found on the classpath");
+                }
+            } catch (LinkageError | ServiceConfigurationError error) {
+                LOGGER.atWarning().log(() -> "Failed to load a provider instance.", error);
+            }
         }
 
-        defaultImplementation = defaultImplementationName;
-        noDefaultImplementation = CoreUtils.isNullOrEmpty(defaultImplementation);
-        noProviderMessage = noProviderErrorMessage;
+        this.defaultProvider = defaultProvider;
+        this.defaultProviderName = defaultProviderName;
+        this.defaultImplementation = defaultImplementationName;
+        this.noDefaultImplementation = CoreUtils.isNullOrEmpty(defaultImplementation);
+        this.noProviderMessage = noProviderErrorMessage;
     }
 
     private String formatNoSpecificProviderErrorMessage(String selectedImplementation) {
-        return String.format("A request was made to use a specific "
-                + "%s but it wasn't found on the classpath. If you're using a dependency manager ensure you're "
-                + "including the dependency that provides the specific implementation. If you're including the "
-                + "specific implementation ensure that the %s service it supplies is being included in the "
-                + "'META-INF/services' file '%s'. The requested provider was: %s.",
-                providerClass.getSimpleName(), providerClass.getSimpleName(), providerClass.getName(), selectedImplementation);
+        return "A request was made to use a specific " + providerClass.getSimpleName() + " but it wasn't found on the "
+            + "classpath. If you're using a dependency manager ensure you're including the dependency that provides "
+            + "the specific implementation. If you're including the specific implementation ensure that the "
+            + providerClass.getSimpleName() + " service it supplies is being included in the 'META-INF/services' file "
+            + "'" + providerClass.getName() + "'. The requested provider was: " + selectedImplementation + ".";
     }
 
     /**
@@ -81,14 +92,15 @@ public final class Providers<TProvider, TInstance> {
      *
      * @param createInstance callback that creates service instance with resolved provider.
      * @param fallbackInstance service instance to return if provider is not found. Usually a no-op implementation.
-     *                         If null and no provider (satisfying all conditions) is found, throws {@link IllegalStateException}
-     * @param selectedImplementation Explicit provider implementation class. It still must be registered in META-INF/services.
+     * If null and no provider (satisfying all conditions) is found, throws {@link IllegalStateException}
+     * @param selectedImplementation Explicit provider implementation class. It still must be registered in
+     * META-INF/services.
      * @return created service instance.
      *
      * @throws IllegalStateException when requested provider cannot be found and fallback instance is null.
      */
-    public TInstance create(Function<TProvider, TInstance> createInstance,
-                                TInstance fallbackInstance, Class<? extends TProvider> selectedImplementation) {
+    public TInstance create(Function<TProvider, TInstance> createInstance, TInstance fallbackInstance,
+        Class<? extends TProvider> selectedImplementation) {
         TProvider provider;
         String implementationName;
         if (selectedImplementation == null && noDefaultImplementation) {
@@ -102,18 +114,21 @@ public final class Providers<TProvider, TInstance> {
                 return fallbackInstance;
             }
         } else {
-            implementationName = selectedImplementation == null ? defaultImplementation : selectedImplementation.getName();
+            implementationName
+                = selectedImplementation == null ? defaultImplementation : selectedImplementation.getName();
             provider = availableProviders.get(implementationName);
             if (provider == null) {
                 // no fallback here - user requested specific implementation, and it was not found
-                throw LOGGER.logExceptionAsError(new IllegalStateException(formatNoSpecificProviderErrorMessage(implementationName)));
+                throw LOGGER.logExceptionAsError(
+                    new IllegalStateException(formatNoSpecificProviderErrorMessage(implementationName)));
             }
         }
 
         try {
             return createInstance.apply(provider);
         } catch (ClassCastException ex) {
-            throw LOGGER.logExceptionAsError(new IllegalStateException(formatNoSpecificProviderErrorMessage(implementationName), ex));
+            throw LOGGER.logExceptionAsError(
+                new IllegalStateException(formatNoSpecificProviderErrorMessage(implementationName), ex));
         }
     }
 }

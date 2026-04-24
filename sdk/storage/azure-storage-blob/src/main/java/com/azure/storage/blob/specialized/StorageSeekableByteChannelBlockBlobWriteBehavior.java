@@ -4,6 +4,7 @@
 package com.azure.storage.blob.specialized;
 
 import com.azure.core.util.BinaryData;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.storage.blob.models.AccessTier;
 import com.azure.storage.blob.models.BlobHttpHeaders;
@@ -21,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -95,7 +95,7 @@ class StorageSeekableByteChannelBlockBlobWriteBehavior implements StorageSeekabl
 
     @Override
     public void write(ByteBuffer src, long destOffset) throws IOException {
-        String blockId = Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes(UTF_8));
+        String blockId = Base64.getEncoder().encodeToString(CoreUtils.randomUuid().toString().getBytes(UTF_8));
         BlockBlobStageBlockOptions options = new BlockBlobStageBlockOptions(blockId, BinaryData.fromByteBuffer(src));
         if (conditions != null) {
             options.setLeaseId(conditions.getLeaseId());
@@ -112,25 +112,28 @@ class StorageSeekableByteChannelBlockBlobWriteBehavior implements StorageSeekabl
             case OVERWRITE:
                 commitList = newBlockIds;
                 break;
+
             case APPEND:
-                commitList = Stream.of(existingBlockIds, newBlockIds)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toList());
+                commitList
+                    = Stream.of(existingBlockIds, newBlockIds).flatMap(Collection::stream).collect(Collectors.toList());
                 break;
+
             case PREPEND:
-                commitList = Stream.of(newBlockIds, existingBlockIds)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toList());
+                commitList
+                    = Stream.of(newBlockIds, existingBlockIds).flatMap(Collection::stream).collect(Collectors.toList());
                 break;
+
             default:
                 // Unreachable block to satisfy compiler
                 throw LOGGER.logExceptionAsError(new UnsupportedOperationException(
                     "Commit not supported with the configured BlockBlobSeekableByteChannelWriteMode."));
         }
 
-        client.commitBlockListWithResponse(new BlockBlobCommitBlockListOptions(commitList)
-                .setHeaders(headers).setMetadata(metadata).setTags(tags).setTier(tier).setRequestConditions(conditions),
-            null, null);
+        client.commitBlockListWithResponse(new BlockBlobCommitBlockListOptions(commitList).setHeaders(headers)
+            .setMetadata(metadata)
+            .setTags(tags)
+            .setTier(tier)
+            .setRequestConditions(conditions), null, null);
     }
 
     @Override
@@ -141,7 +144,7 @@ class StorageSeekableByteChannelBlockBlobWriteBehavior implements StorageSeekabl
 
     @Override
     public void resize(long newSize) {
-        throw LOGGER.logExceptionAsError(new UnsupportedOperationException(
-            "Block blobs cannot have size explicitly set."));
+        throw LOGGER
+            .logExceptionAsError(new UnsupportedOperationException("Block blobs cannot have size explicitly set."));
     }
 }

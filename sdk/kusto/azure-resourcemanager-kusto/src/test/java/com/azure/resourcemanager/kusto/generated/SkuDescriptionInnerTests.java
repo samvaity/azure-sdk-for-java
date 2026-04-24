@@ -10,11 +10,9 @@ import com.azure.resourcemanager.kusto.fluent.models.SkuDescriptionInner;
 public final class SkuDescriptionInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        SkuDescriptionInner model =
-            BinaryData
-                .fromString(
-                    "{\"resourceType\":\"aaxdbabphlwrq\",\"name\":\"ktsthsucocmny\",\"tier\":\"zt\",\"locations\":[\"wwrq\",\"uedck\"],\"locationInfo\":[{\"location\":\"biexzfeyu\",\"zones\":[\"ibx\",\"jwbhqwalmuz\",\"oxaepd\",\"zjancuxr\"],\"zoneDetails\":[{\"name\":[\"v\",\"bniwdj\",\"wz\",\"s\"],\"capabilities\":[{}]},{\"name\":[\"xytxhpzxbz\",\"fzab\"],\"capabilities\":[{}]},{\"name\":[\"xwtctyqiklbbovpl\"],\"capabilities\":[{},{}]}]},{\"location\":\"hvgyuguosvmk\",\"zones\":[\"xquk\"],\"zoneDetails\":[{\"name\":[\"mg\",\"xnkjzkdesl\",\"vlopwiyighx\"],\"capabilities\":[{},{}]},{\"name\":[\"baiuebbaumny\"],\"capabilities\":[{}]},{\"name\":[\"eojnabc\"],\"capabilities\":[{},{},{}]}]},{\"location\":\"mtxpsiebtfh\",\"zones\":[\"sapskr\"],\"zoneDetails\":[{\"name\":[\"jdhtldwkyzxu\",\"tkncwsc\"],\"capabilities\":[{},{},{},{}]},{\"name\":[\"otogtwrupqs\",\"vnm\",\"cykvceo\",\"eil\"],\"capabilities\":[{},{},{},{}]},{\"name\":[\"yfjfcnjbkcn\",\"dhbt\",\"kphywpnvjto\",\"nermcl\"],\"capabilities\":[{},{}]},{\"name\":[\"oxuscrpabgyepsbj\",\"azqugxywpmueefj\"],\"capabilities\":[{},{}]}]}],\"restrictions\":[\"dataq\",\"datajidsuyonobglaoc\",\"dataxtccmg\"]}")
-                .toObject(SkuDescriptionInner.class);
+        SkuDescriptionInner model = BinaryData.fromString(
+            "{\"resourceType\":\"fbjfdtwssotftpvj\",\"name\":\"exilzznfqqnvwpmq\",\"tier\":\"ruoujmk\",\"locations\":[\"wqytjrybnwjewgdr\",\"ervnaenqpehi\"],\"locationInfo\":[{\"location\":\"ygmi\",\"zones\":[\"nzdndslgna\",\"qig\",\"nduhavhqlkthum\",\"qolbgyc\"],\"zoneDetails\":[{\"name\":[\"tgccymvaolpss\"],\"capabilities\":[{},{},{},{}]},{\"name\":[\"mdnbbglzpswiy\",\"mcwyhzdxssadb\",\"mnvdfzn\"],\"capabilities\":[{}]},{\"name\":[\"vxzbncb\",\"ylpstdbhhxsrzdz\",\"cers\",\"dntnevf\"],\"capabilities\":[{},{},{},{}]},{\"name\":[\"gtdsslswt\",\"weriofzpyqsem\",\"abnetshh\"],\"capabilities\":[{}]}]},{\"location\":\"edplvwiwubmw\",\"zones\":[\"sldnkwwtppjflcxo\"],\"zoneDetails\":[{\"name\":[\"nzmnsikvm\"],\"capabilities\":[{}]},{\"name\":[\"qkdltfz\",\"mhhv\",\"gureodkwobdag\",\"tibqdxbxwakb\"],\"capabilities\":[{}]},{\"name\":[\"dlkzgxhuri\",\"lbpodxunk\",\"ebxmubyynt\"],\"capabilities\":[{},{}]},{\"name\":[\"tkoievseotgq\",\"l\"],\"capabilities\":[{},{},{},{}]}]}],\"restrictions\":[\"datalauwzizxbmpgcjef\",\"datazmuvpbttdumorppx\",\"databmnzbtbhjpgl\",\"datafgohdneuelfphs\"]}")
+            .toObject(SkuDescriptionInner.class);
     }
 
     @org.junit.jupiter.api.Test

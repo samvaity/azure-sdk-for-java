@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Request options to create a job with classification policy.
+ * Request options to create a job using a classification policy.
  * Job: A unit of work to be routed.
  */
-public class CreateJobWithClassificationPolicyOptions {
+public final class CreateJobWithClassificationPolicyOptions {
     /**
      * The id of the job.
      */
-    private final String id;
+    private final String jobId;
 
     /**
      * Reference to an external parent context, eg. call ID.
@@ -25,11 +25,6 @@ public class CreateJobWithClassificationPolicyOptions {
      * The channel identifier. eg. voice, chat, etc.
      */
     private final String channelId;
-
-    /**
-     * The Id of the Classification policy used for classifying a job.
-     */
-    private final String classificationPolicyId;
 
     /**
      * The Id of the Queue that this job is queued to.
@@ -56,12 +51,12 @@ public class CreateJobWithClassificationPolicyOptions {
      * A set of key/value pairs that are identifying attributes used by the
      * rules engines to make decisions.
      */
-    private Map<String, LabelValue> labels;
+    private Map<String, RouterValue> labels;
 
     /**
      * A set of non-identifying attributes attached to this job.
      */
-    private Map<String, LabelValue> tags;
+    private Map<String, RouterValue> tags;
 
     /**
      * Notes attached to a job, sorted by timestamp.
@@ -71,14 +66,19 @@ public class CreateJobWithClassificationPolicyOptions {
     /*
      * The matchingMode property.
      */
-    private RouterJobMatchingMode matchingMode;
+    private JobMatchingMode matchingMode;
+
+    /*
+     * The Id of the classification policy used to classify the job.
+     */
+    private final String classificationPolicyId;
 
     /**
      * Get the matchingMode property: The matchingMode property.
      *
      * @return the matchingMode value.
      */
-    public RouterJobMatchingMode getMatchingMode() {
+    public JobMatchingMode getMatchingMode() {
         return this.matchingMode;
     }
 
@@ -88,19 +88,19 @@ public class CreateJobWithClassificationPolicyOptions {
      * @param matchingMode the matchingMode value to set.
      * @return the RouterJobInternal object itself.
      */
-    public CreateJobWithClassificationPolicyOptions setMatchingMode(RouterJobMatchingMode matchingMode) {
+    public CreateJobWithClassificationPolicyOptions setMatchingMode(JobMatchingMode matchingMode) {
         this.matchingMode = matchingMode;
         return this;
     }
 
     /**
      * Constructor for CreateJobOptions.
-     * @param id The id of the job.
+     * @param jobId The id of the job.
      * @param channelId The channel identifier. eg. voice, chat, etc.
-     * @param classificationPolicyId The Id of the classification Policy.
+     * @param classificationPolicyId The Id of the classification policy that will be used to classify the job.
      */
-    public CreateJobWithClassificationPolicyOptions(String id, String channelId, String classificationPolicyId) {
-        this.id = id;
+    public CreateJobWithClassificationPolicyOptions(String jobId, String channelId, String classificationPolicyId) {
+        this.jobId = jobId;
         this.channelId = channelId;
         this.classificationPolicyId = classificationPolicyId;
     }
@@ -116,22 +116,22 @@ public class CreateJobWithClassificationPolicyOptions {
     }
 
     /**
+     * Sets queueId.
+     * @param queueId The Id of the Queue that this job is queued to.
+     * @return this
+     */
+    public CreateJobWithClassificationPolicyOptions setQueueId(String queueId) {
+        this.queueId = queueId;
+        return this;
+    }
+
+    /**
      * Sets channelReference.
      * @param channelReference Reference to an external parent context, eg. call ID.
      * @return this
      */
     public CreateJobWithClassificationPolicyOptions setChannelReference(String channelReference) {
         this.channelReference = channelReference;
-        return this;
-    }
-
-    /**
-     * Sets classificationPolicyId.
-     * @param queueId The Id of a queue for the job.
-     * @return this
-     */
-    public CreateJobWithClassificationPolicyOptions setQueueId(String queueId) {
-        this.queueId = queueId;
         return this;
     }
 
@@ -151,7 +151,8 @@ public class CreateJobWithClassificationPolicyOptions {
      *   satisfy in order to process this job.
      * @return this
      */
-    public CreateJobWithClassificationPolicyOptions setRequestedWorkerSelectors(List<RouterWorkerSelector> requestedWorkerSelectors) {
+    public CreateJobWithClassificationPolicyOptions
+        setRequestedWorkerSelectors(List<RouterWorkerSelector> requestedWorkerSelectors) {
         this.requestedWorkerSelectors = requestedWorkerSelectors;
         return this;
     }
@@ -162,7 +163,7 @@ public class CreateJobWithClassificationPolicyOptions {
      *   rules engines to make decisions.
      * @return this
      */
-    public CreateJobWithClassificationPolicyOptions setLabels(Map<String, LabelValue> labels) {
+    public CreateJobWithClassificationPolicyOptions setLabels(Map<String, RouterValue> labels) {
         this.labels = labels;
         return this;
     }
@@ -172,7 +173,7 @@ public class CreateJobWithClassificationPolicyOptions {
      * @param tags A set of non-identifying attributes attached to this job.
      * @return this
      */
-    public CreateJobWithClassificationPolicyOptions setTags(Map<String, LabelValue> tags) {
+    public CreateJobWithClassificationPolicyOptions setTags(Map<String, RouterValue> tags) {
         this.tags = tags;
         return this;
     }
@@ -191,8 +192,8 @@ public class CreateJobWithClassificationPolicyOptions {
      * Returns the id of RouterJob.
      * @return id.
      */
-    public String getId() {
-        return this.id;
+    public String getJobId() {
+        return this.jobId;
     }
 
     /**
@@ -212,7 +213,7 @@ public class CreateJobWithClassificationPolicyOptions {
     }
 
     /**
-     * Returns the Id of the Classification policy used for classifying a job.
+     * Returns the Id of the classification policy that will be used to classify the job.
      * @return classificationPolicyId
      */
     public String getClassificationPolicyId() {
@@ -257,7 +258,7 @@ public class CreateJobWithClassificationPolicyOptions {
      * rules engines to make decisions.
      * @return labels
      */
-    public Map<String, LabelValue> getLabels() {
+    public Map<String, RouterValue> getLabels() {
         return this.labels;
     }
 
@@ -265,7 +266,7 @@ public class CreateJobWithClassificationPolicyOptions {
      * A set of non-identifying attributes attached to this job
      * @return tags
      */
-    public Map<String, LabelValue> getTags() {
+    public Map<String, RouterValue> getTags() {
         return this.tags;
     }
 

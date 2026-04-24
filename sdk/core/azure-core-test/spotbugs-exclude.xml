@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter xmlns="https://github.com/spotbugs/filter/3.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+  <Match>
+    <Bug pattern="CT_CONSTRUCTOR_THROW" />
+    <Or>
+      <Class name="com.azure.core.test.InterceptorManager" />
+      <Class name="com.azure.core.test.utils.HttpURLConnectionHttpClient$HttpURLResponse" />
+      <Class name="com.azure.core.test.utils.TestProxyDownloader$PlatformInfo" />
+    </Or>
+  </Match>
+  <Match>
+    <Bug pattern="REC_CATCH_EXCEPTION" />
+    <Class name="com.azure.core.test.http.MockHttpClient" />
+  </Match>
+</FindBugsFilter>

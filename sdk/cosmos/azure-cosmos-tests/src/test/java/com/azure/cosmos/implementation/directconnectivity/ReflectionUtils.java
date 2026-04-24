@@ -10,12 +10,15 @@ import com.azure.cosmos.CosmosClient;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.cosmos.implementation.ApiType;
 import com.azure.cosmos.implementation.AsyncDocumentClient;
+import com.azure.cosmos.implementation.DatabaseAccountManagerInternal;
 import com.azure.cosmos.implementation.ClientSideRequestStatistics;
+import com.azure.cosmos.implementation.Configs;
 import com.azure.cosmos.implementation.ConnectionPolicy;
 import com.azure.cosmos.implementation.DiagnosticsProvider;
 import com.azure.cosmos.implementation.DocumentCollection;
 import com.azure.cosmos.implementation.GlobalEndpointManager;
 import com.azure.cosmos.implementation.IRetryPolicyFactory;
+import com.azure.cosmos.implementation.ISessionContainer;
 import com.azure.cosmos.implementation.OperationType;
 import com.azure.cosmos.implementation.RetryContext;
 import com.azure.cosmos.implementation.RxDocumentClientImpl;
@@ -33,17 +36,18 @@ import com.azure.cosmos.implementation.cpu.CpuMemoryListener;
 import com.azure.cosmos.implementation.cpu.CpuMemoryMonitor;
 import com.azure.cosmos.implementation.directconnectivity.rntbd.ProactiveOpenConnectionsProcessor;
 import com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdEndpoint;
-import com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdServiceEndpoint;
 import com.azure.cosmos.implementation.http.HttpClient;
 import com.azure.cosmos.implementation.http.HttpHeaders;
 import com.azure.cosmos.implementation.http.HttpRequest;
 import com.azure.cosmos.implementation.routing.CollectionRoutingMap;
 import com.azure.cosmos.implementation.routing.LocationCache;
-import com.azure.cosmos.implementation.throughputControl.ThroughputControlTrackingUnit;
-import com.azure.cosmos.implementation.throughputControl.ThroughputRequestThrottler;
-import com.azure.cosmos.implementation.throughputControl.controller.request.GlobalThroughputRequestController;
-import com.azure.cosmos.implementation.throughputControl.controller.request.PkRangesThroughputRequestController;
+import com.azure.cosmos.implementation.throughputControl.sdk.ThroughputControlTrackingUnit;
+import com.azure.cosmos.implementation.throughputControl.sdk.ThroughputRequestThrottler;
+import com.azure.cosmos.implementation.throughputControl.sdk.controller.request.GlobalThroughputRequestController;
+import com.azure.cosmos.implementation.throughputControl.sdk.controller.request.PkRangesThroughputRequestController;
 import com.azure.cosmos.models.CosmosClientTelemetryConfig;
+import com.azure.cosmos.models.FeedResponse;
+import io.netty.handler.ssl.SslContext;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.ref.WeakReference;
@@ -181,8 +185,19 @@ public class ReflectionUtils {
         set(globalEndPointManager, millSec, "backgroundRefreshLocationTimeIntervalInMS");
     }
 
+    public static void setBackgroundRefreshJitterMaxInSeconds(GlobalEndpointManager globalEndPointManager, int seconds){
+        set(globalEndPointManager, seconds, "backgroundRefreshJitterMaxInSeconds");
+    }
+
     public static void setDiagnosticsProvider(CosmosAsyncClient cosmosAsyncClient, DiagnosticsProvider tracerProvider){
         set(cosmosAsyncClient, tracerProvider, "diagnosticsProvider");
+    }
+
+    public static DiagnosticsProvider getDiagnosticsProvider(CosmosAsyncClient cosmosAsyncClient){
+        return get(
+            DiagnosticsProvider.class,
+            cosmosAsyncClient,
+            "diagnosticsProvider");
     }
 
     public static void setClientTelemetryConfig(CosmosAsyncClient cosmosAsyncClient, CosmosClientTelemetryConfig cfg){
@@ -222,6 +237,10 @@ public class ReflectionUtils {
         return getStaticField(CpuMemoryMonitor.class, "cpuListeners");
     }
 
+    public static RxStoreModel getThinProxy(RxDocumentClientImpl rxDocumentClient){
+        return get(RxStoreModel.class, rxDocumentClient, "thinProxy");
+    }
+
     public static RxStoreModel getGatewayProxy(RxDocumentClientImpl rxDocumentClient){
         return get(RxStoreModel.class, rxDocumentClient, "gatewayProxy");
     }
@@ -232,6 +251,18 @@ public class ReflectionUtils {
 
     public static GlobalEndpointManager getGlobalEndpointManager(RxDocumentClientImpl rxDocumentClient){
         return get(GlobalEndpointManager.class, rxDocumentClient, "globalEndpointManager");
+    }
+
+    public static DatabaseAccountManagerInternal getGlobalEndpointManagerOwner(GlobalEndpointManager globalEndpointManager) {
+        return get(DatabaseAccountManagerInternal.class, globalEndpointManager, "owner");
+    }
+
+    public static void setGlobalEndpointManagerOwner(GlobalEndpointManager globalEndpointManager, DatabaseAccountManagerInternal newOwner) {
+        set(globalEndpointManager, newOwner, "owner");
+    }
+
+    public static void setThinProxy(RxDocumentClientImpl client, RxStoreModel storeModel) {
+        set(client, storeModel, "thinProxy");
     }
 
     public static void setGatewayProxy(RxDocumentClientImpl client, RxStoreModel storeModel) {
@@ -282,12 +313,25 @@ public class ReflectionUtils {
         return get(StoreReader.class, consistencyReader, "storeReader");
     }
 
+    public static StoreReader getStoreReader(ConsistencyWriter consistencyWriter) {
+        return get(StoreReader.class, consistencyWriter, "storeReader");
+    }
+
     public static void setStoreReader(ConsistencyReader consistencyReader, StoreReader storeReader) {
         set(consistencyReader, storeReader, "storeReader");
     }
 
     public static void setTransportClient(StoreReader storeReader, TransportClient transportClient) {
         set(storeReader, transportClient, "transportClient");
+    }
+
+    public static void setTransportClient(CosmosClient client, TransportClient transportClient) {
+        StoreClient storeClient = getStoreClient((RxDocumentClientImpl) CosmosBridgeInternal.getAsyncDocumentClient(client));
+        set(storeClient, transportClient, "transportClient");
+        ReplicatedResourceClient replicatedResClient = getReplicatedResourceClient(storeClient);
+        ConsistencyWriter writer = getConsistencyWriter(replicatedResClient);
+        set(replicatedResClient, transportClient, "transportClient");
+        set(writer, transportClient, "transportClient");
     }
 
     public static TransportClient getTransportClient(ReplicatedResourceClient replicatedResourceClient) {
@@ -412,6 +456,10 @@ public class ReflectionUtils {
         return get(LocationCache.class, globalEndpointManager, "locationCache");
     }
 
+    public static ConnectionPolicy getConnectionPolicy(LocationCache locationCache) {
+        return get(ConnectionPolicy.class, locationCache, "connectionPolicy");
+    }
+
     public static HttpClient getClientTelemetryHttpClint(ClientTelemetry clientTelemetry) {
         return get(HttpClient.class, clientTelemetry, "httpClient");
     }
@@ -430,8 +478,8 @@ public class ReflectionUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static AtomicReference<Uri.HealthStatus> getHealthStatus(Uri uri) {
-        return get(AtomicReference.class, uri, "healthStatus");
+    public static AtomicReference<Uri.HealthStatusAndDiagnosticStringTuple> getHealthStatus(Uri uri) {
+        return get(AtomicReference.class, uri, "healthStatusTuple");
     }
 
     @SuppressWarnings("unchecked")
@@ -441,5 +489,31 @@ public class ReflectionUtils {
 
     public static void setEndpointProvider(RntbdTransportClient rntbdTransportClient, RntbdEndpoint.Provider provider) {
         set(rntbdTransportClient, provider, "endpointProvider");
+    }
+
+    public static ISessionContainer getSessionContainer(RxDocumentClientImpl rxDocumentClient) {
+        return get(ISessionContainer.class, rxDocumentClient, "sessionContainer");
+    }
+
+    public static SslContext getSslContext(Configs configs) {
+        return get(SslContext.class, configs, "sslContext");
+    }
+
+    public static SslContext getSslContextWithCertValidationDisabled(Configs configs) {
+        return get(SslContext.class, configs, "sslContextWithCertValidationDisabled");
+    }
+
+    public static void setNoChanges(FeedResponse feedResponse, boolean noChanges) {
+        set(feedResponse, noChanges, "nochanges");
+    }
+
+    public static Class<?> getClassBySimpleName(Class<?>[] classes, String classSimpleName) {
+        for (Class<?> clazz : classes) {
+            if (clazz.getSimpleName().equals(classSimpleName)) {
+                return clazz;
+            }
+        }
+
+        return null;
     }
 }

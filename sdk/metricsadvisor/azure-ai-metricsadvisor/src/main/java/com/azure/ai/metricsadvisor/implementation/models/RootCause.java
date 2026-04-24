@@ -5,54 +5,67 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The RootCause model. */
+/**
+ * The RootCause model.
+ */
 @Fluent
-public final class RootCause {
+public final class RootCause implements JsonSerializable<RootCause> {
     /*
      * The rootCause property.
      */
-    @JsonProperty(value = "rootCause", required = true)
+    @Generated
     private DimensionGroupIdentity rootCause;
 
     /*
      * drilling down path from query anomaly to root cause
      */
-    @JsonProperty(value = "path", required = true)
+    @Generated
     private List<String> path;
 
     /*
      * score of the root cause
      */
-    @JsonProperty(value = "score", required = true)
+    @Generated
     private double score;
 
     /*
      * description of the root cause
      */
-    @JsonProperty(value = "description", required = true)
+    @Generated
     private String description;
 
-    /** Creates an instance of RootCause class. */
-    public RootCause() {}
+    /**
+     * Creates an instance of RootCause class.
+     */
+    @Generated
+    public RootCause() {
+    }
 
     /**
      * Get the rootCause property: The rootCause property.
-     *
+     * 
      * @return the rootCause value.
      */
+    @Generated
     public DimensionGroupIdentity getRootCause() {
         return this.rootCause;
     }
 
     /**
      * Set the rootCause property: The rootCause property.
-     *
+     * 
      * @param rootCause the rootCause value to set.
      * @return the RootCause object itself.
      */
+    @Generated
     public RootCause setRootCause(DimensionGroupIdentity rootCause) {
         this.rootCause = rootCause;
         return this;
@@ -60,19 +73,21 @@ public final class RootCause {
 
     /**
      * Get the path property: drilling down path from query anomaly to root cause.
-     *
+     * 
      * @return the path value.
      */
+    @Generated
     public List<String> getPath() {
         return this.path;
     }
 
     /**
      * Set the path property: drilling down path from query anomaly to root cause.
-     *
+     * 
      * @param path the path value to set.
      * @return the RootCause object itself.
      */
+    @Generated
     public RootCause setPath(List<String> path) {
         this.path = path;
         return this;
@@ -80,19 +95,21 @@ public final class RootCause {
 
     /**
      * Get the score property: score of the root cause.
-     *
+     * 
      * @return the score value.
      */
+    @Generated
     public double getScore() {
         return this.score;
     }
 
     /**
      * Set the score property: score of the root cause.
-     *
+     * 
      * @param score the score value to set.
      * @return the RootCause object itself.
      */
+    @Generated
     public RootCause setScore(double score) {
         this.score = score;
         return this;
@@ -100,21 +117,72 @@ public final class RootCause {
 
     /**
      * Get the description property: description of the root cause.
-     *
+     * 
      * @return the description value.
      */
+    @Generated
     public String getDescription() {
         return this.description;
     }
 
     /**
      * Set the description property: description of the root cause.
-     *
+     * 
      * @param description the description value to set.
      * @return the RootCause object itself.
      */
+    @Generated
     public RootCause setDescription(String description) {
         this.description = description;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("rootCause", this.rootCause);
+        jsonWriter.writeArrayField("path", this.path, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeDoubleField("score", this.score);
+        jsonWriter.writeStringField("description", this.description);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RootCause from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RootCause if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the RootCause.
+     */
+    @Generated
+    public static RootCause fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RootCause deserializedRootCause = new RootCause();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("rootCause".equals(fieldName)) {
+                    deserializedRootCause.rootCause = DimensionGroupIdentity.fromJson(reader);
+                } else if ("path".equals(fieldName)) {
+                    List<String> path = reader.readArray(reader1 -> reader1.getString());
+                    deserializedRootCause.path = path;
+                } else if ("score".equals(fieldName)) {
+                    deserializedRootCause.score = reader.getDouble();
+                } else if ("description".equals(fieldName)) {
+                    deserializedRootCause.description = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRootCause;
+        });
     }
 }

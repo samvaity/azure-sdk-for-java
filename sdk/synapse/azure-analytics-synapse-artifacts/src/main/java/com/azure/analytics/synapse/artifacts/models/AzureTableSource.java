@@ -5,36 +5,62 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity Azure Table source. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("AzureTableSource")
+/**
+ * A copy activity Azure Table source.
+ */
 @Fluent
 public final class AzureTableSource extends TabularSource {
     /*
+     * Copy source type.
+     */
+    @Generated
+    private String type = "AzureTableSource";
+
+    /*
      * Azure Table source query. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "azureTableSourceQuery")
+    @Generated
     private Object azureTableSourceQuery;
 
     /*
      * Azure Table source ignore table not found. Type: boolean (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "azureTableSourceIgnoreTableNotFound")
+    @Generated
     private Object azureTableSourceIgnoreTableNotFound;
 
-    /** Creates an instance of AzureTableSource class. */
-    public AzureTableSource() {}
+    /**
+     * Creates an instance of AzureTableSource class.
+     */
+    @Generated
+    public AzureTableSource() {
+    }
+
+    /**
+     * Get the type property: Copy source type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the azureTableSourceQuery property: Azure Table source query. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the azureTableSourceQuery value.
      */
+    @Generated
     public Object getAzureTableSourceQuery() {
         return this.azureTableSourceQuery;
     }
@@ -42,10 +68,11 @@ public final class AzureTableSource extends TabularSource {
     /**
      * Set the azureTableSourceQuery property: Azure Table source query. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param azureTableSourceQuery the azureTableSourceQuery value to set.
      * @return the AzureTableSource object itself.
      */
+    @Generated
     public AzureTableSource setAzureTableSourceQuery(Object azureTableSourceQuery) {
         this.azureTableSourceQuery = azureTableSourceQuery;
         return this;
@@ -54,9 +81,10 @@ public final class AzureTableSource extends TabularSource {
     /**
      * Get the azureTableSourceIgnoreTableNotFound property: Azure Table source ignore table not found. Type: boolean
      * (or Expression with resultType boolean).
-     *
+     * 
      * @return the azureTableSourceIgnoreTableNotFound value.
      */
+    @Generated
     public Object getAzureTableSourceIgnoreTableNotFound() {
         return this.azureTableSourceIgnoreTableNotFound;
     }
@@ -64,47 +92,148 @@ public final class AzureTableSource extends TabularSource {
     /**
      * Set the azureTableSourceIgnoreTableNotFound property: Azure Table source ignore table not found. Type: boolean
      * (or Expression with resultType boolean).
-     *
+     * 
      * @param azureTableSourceIgnoreTableNotFound the azureTableSourceIgnoreTableNotFound value to set.
      * @return the AzureTableSource object itself.
      */
+    @Generated
     public AzureTableSource setAzureTableSourceIgnoreTableNotFound(Object azureTableSourceIgnoreTableNotFound) {
         this.azureTableSourceIgnoreTableNotFound = azureTableSourceIgnoreTableNotFound;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureTableSource setQueryTimeout(Object queryTimeout) {
         super.setQueryTimeout(queryTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureTableSource setAdditionalColumns(Object additionalColumns) {
         super.setAdditionalColumns(additionalColumns);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureTableSource setSourceRetryCount(Object sourceRetryCount) {
         super.setSourceRetryCount(sourceRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureTableSource setSourceRetryWait(Object sourceRetryWait) {
         super.setSourceRetryWait(sourceRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureTableSource setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getSourceRetryCount() != null) {
+            jsonWriter.writeUntypedField("sourceRetryCount", getSourceRetryCount());
+        }
+        if (getSourceRetryWait() != null) {
+            jsonWriter.writeUntypedField("sourceRetryWait", getSourceRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        if (getQueryTimeout() != null) {
+            jsonWriter.writeUntypedField("queryTimeout", getQueryTimeout());
+        }
+        if (getAdditionalColumns() != null) {
+            jsonWriter.writeUntypedField("additionalColumns", getAdditionalColumns());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.azureTableSourceQuery != null) {
+            jsonWriter.writeUntypedField("azureTableSourceQuery", this.azureTableSourceQuery);
+        }
+        if (this.azureTableSourceIgnoreTableNotFound != null) {
+            jsonWriter.writeUntypedField("azureTableSourceIgnoreTableNotFound",
+                this.azureTableSourceIgnoreTableNotFound);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureTableSource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureTableSource if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the AzureTableSource.
+     */
+    @Generated
+    public static AzureTableSource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureTableSource deserializedAzureTableSource = new AzureTableSource();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sourceRetryCount".equals(fieldName)) {
+                    deserializedAzureTableSource.setSourceRetryCount(reader.readUntyped());
+                } else if ("sourceRetryWait".equals(fieldName)) {
+                    deserializedAzureTableSource.setSourceRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedAzureTableSource.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("queryTimeout".equals(fieldName)) {
+                    deserializedAzureTableSource.setQueryTimeout(reader.readUntyped());
+                } else if ("additionalColumns".equals(fieldName)) {
+                    deserializedAzureTableSource.setAdditionalColumns(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedAzureTableSource.type = reader.getString();
+                } else if ("azureTableSourceQuery".equals(fieldName)) {
+                    deserializedAzureTableSource.azureTableSourceQuery = reader.readUntyped();
+                } else if ("azureTableSourceIgnoreTableNotFound".equals(fieldName)) {
+                    deserializedAzureTableSource.azureTableSourceIgnoreTableNotFound = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAzureTableSource.setAdditionalProperties(additionalProperties);
+
+            return deserializedAzureTableSource;
+        });
     }
 }

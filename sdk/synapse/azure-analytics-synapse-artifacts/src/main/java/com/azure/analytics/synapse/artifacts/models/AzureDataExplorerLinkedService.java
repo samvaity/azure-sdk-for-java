@@ -5,68 +5,91 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Azure Data Explorer (Kusto) linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("AzureDataExplorer")
-@JsonFlatten
+/**
+ * Azure Data Explorer (Kusto) linked service.
+ */
 @Fluent
 public class AzureDataExplorerLinkedService extends LinkedService {
+    /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "AzureDataExplorer";
+
     /*
      * The endpoint of Azure Data Explorer (the engine's endpoint). URL will be in the format
      * https://<clusterName>.<regionName>.kusto.windows.net. Type: string (or Expression with resultType string)
      */
-    @JsonProperty(value = "typeProperties.endpoint", required = true)
+    @Generated
     private Object endpoint;
 
     /*
      * The ID of the service principal used to authenticate against Azure Data Explorer. Type: string (or Expression
      * with resultType string).
      */
-    @JsonProperty(value = "typeProperties.servicePrincipalId")
+    @Generated
     private Object servicePrincipalId;
 
     /*
      * The key of the service principal used to authenticate against Kusto.
      */
-    @JsonProperty(value = "typeProperties.servicePrincipalKey")
+    @Generated
     private SecretBase servicePrincipalKey;
 
     /*
      * Database name for connection. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.database", required = true)
+    @Generated
     private Object database;
 
     /*
      * The name or ID of the tenant to which the service principal belongs. Type: string (or Expression with resultType
      * string).
      */
-    @JsonProperty(value = "typeProperties.tenant")
+    @Generated
     private Object tenant;
 
     /*
      * The credential reference containing authentication information.
      */
-    @JsonProperty(value = "typeProperties.credential")
+    @Generated
     private CredentialReference credential;
 
-    /** Creates an instance of AzureDataExplorerLinkedService class. */
-    public AzureDataExplorerLinkedService() {}
+    /**
+     * Creates an instance of AzureDataExplorerLinkedService class.
+     */
+    @Generated
+    public AzureDataExplorerLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the endpoint property: The endpoint of Azure Data Explorer (the engine's endpoint). URL will be in the format
      * https://&lt;clusterName&gt;.&lt;regionName&gt;.kusto.windows.net. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the endpoint value.
      */
+    @Generated
     public Object getEndpoint() {
         return this.endpoint;
     }
@@ -75,10 +98,11 @@ public class AzureDataExplorerLinkedService extends LinkedService {
      * Set the endpoint property: The endpoint of Azure Data Explorer (the engine's endpoint). URL will be in the format
      * https://&lt;clusterName&gt;.&lt;regionName&gt;.kusto.windows.net. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param endpoint the endpoint value to set.
      * @return the AzureDataExplorerLinkedService object itself.
      */
+    @Generated
     public AzureDataExplorerLinkedService setEndpoint(Object endpoint) {
         this.endpoint = endpoint;
         return this;
@@ -87,9 +111,10 @@ public class AzureDataExplorerLinkedService extends LinkedService {
     /**
      * Get the servicePrincipalId property: The ID of the service principal used to authenticate against Azure Data
      * Explorer. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the servicePrincipalId value.
      */
+    @Generated
     public Object getServicePrincipalId() {
         return this.servicePrincipalId;
     }
@@ -97,10 +122,11 @@ public class AzureDataExplorerLinkedService extends LinkedService {
     /**
      * Set the servicePrincipalId property: The ID of the service principal used to authenticate against Azure Data
      * Explorer. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param servicePrincipalId the servicePrincipalId value to set.
      * @return the AzureDataExplorerLinkedService object itself.
      */
+    @Generated
     public AzureDataExplorerLinkedService setServicePrincipalId(Object servicePrincipalId) {
         this.servicePrincipalId = servicePrincipalId;
         return this;
@@ -108,19 +134,21 @@ public class AzureDataExplorerLinkedService extends LinkedService {
 
     /**
      * Get the servicePrincipalKey property: The key of the service principal used to authenticate against Kusto.
-     *
+     * 
      * @return the servicePrincipalKey value.
      */
+    @Generated
     public SecretBase getServicePrincipalKey() {
         return this.servicePrincipalKey;
     }
 
     /**
      * Set the servicePrincipalKey property: The key of the service principal used to authenticate against Kusto.
-     *
+     * 
      * @param servicePrincipalKey the servicePrincipalKey value to set.
      * @return the AzureDataExplorerLinkedService object itself.
      */
+    @Generated
     public AzureDataExplorerLinkedService setServicePrincipalKey(SecretBase servicePrincipalKey) {
         this.servicePrincipalKey = servicePrincipalKey;
         return this;
@@ -128,19 +156,21 @@ public class AzureDataExplorerLinkedService extends LinkedService {
 
     /**
      * Get the database property: Database name for connection. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the database value.
      */
+    @Generated
     public Object getDatabase() {
         return this.database;
     }
 
     /**
      * Set the database property: Database name for connection. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param database the database value to set.
      * @return the AzureDataExplorerLinkedService object itself.
      */
+    @Generated
     public AzureDataExplorerLinkedService setDatabase(Object database) {
         this.database = database;
         return this;
@@ -149,9 +179,10 @@ public class AzureDataExplorerLinkedService extends LinkedService {
     /**
      * Get the tenant property: The name or ID of the tenant to which the service principal belongs. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @return the tenant value.
      */
+    @Generated
     public Object getTenant() {
         return this.tenant;
     }
@@ -159,10 +190,11 @@ public class AzureDataExplorerLinkedService extends LinkedService {
     /**
      * Set the tenant property: The name or ID of the tenant to which the service principal belongs. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @param tenant the tenant value to set.
      * @return the AzureDataExplorerLinkedService object itself.
      */
+    @Generated
     public AzureDataExplorerLinkedService setTenant(Object tenant) {
         this.tenant = tenant;
         return this;
@@ -170,49 +202,185 @@ public class AzureDataExplorerLinkedService extends LinkedService {
 
     /**
      * Get the credential property: The credential reference containing authentication information.
-     *
+     * 
      * @return the credential value.
      */
+    @Generated
     public CredentialReference getCredential() {
         return this.credential;
     }
 
     /**
      * Set the credential property: The credential reference containing authentication information.
-     *
+     * 
      * @param credential the credential value to set.
      * @return the AzureDataExplorerLinkedService object itself.
      */
+    @Generated
     public AzureDataExplorerLinkedService setCredential(CredentialReference credential) {
         this.credential = credential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public AzureDataExplorerLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (endpoint != null
+            || servicePrincipalId != null
+            || servicePrincipalKey != null
+            || database != null
+            || tenant != null
+            || credential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("endpoint", this.endpoint);
+            if (this.servicePrincipalId != null) {
+                jsonWriter.writeUntypedField("servicePrincipalId", this.servicePrincipalId);
+            }
+            jsonWriter.writeJsonField("servicePrincipalKey", this.servicePrincipalKey);
+            jsonWriter.writeUntypedField("database", this.database);
+            if (this.tenant != null) {
+                jsonWriter.writeUntypedField("tenant", this.tenant);
+            }
+            jsonWriter.writeJsonField("credential", this.credential);
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureDataExplorerLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureDataExplorerLinkedService if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AzureDataExplorerLinkedService.
+     */
+    @Generated
+    public static AzureDataExplorerLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureDataExplorerLinkedService deserializedAzureDataExplorerLinkedService
+                = new AzureDataExplorerLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedAzureDataExplorerLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedAzureDataExplorerLinkedService
+                        .setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedAzureDataExplorerLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedAzureDataExplorerLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedAzureDataExplorerLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedAzureDataExplorerLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("endpoint".equals(fieldName)) {
+                            deserializedAzureDataExplorerLinkedService.endpoint = reader.readUntyped();
+                        } else if ("servicePrincipalId".equals(fieldName)) {
+                            deserializedAzureDataExplorerLinkedService.servicePrincipalId = reader.readUntyped();
+                        } else if ("servicePrincipalKey".equals(fieldName)) {
+                            deserializedAzureDataExplorerLinkedService.servicePrincipalKey
+                                = SecretBase.fromJson(reader);
+                        } else if ("database".equals(fieldName)) {
+                            deserializedAzureDataExplorerLinkedService.database = reader.readUntyped();
+                        } else if ("tenant".equals(fieldName)) {
+                            deserializedAzureDataExplorerLinkedService.tenant = reader.readUntyped();
+                        } else if ("credential".equals(fieldName)) {
+                            deserializedAzureDataExplorerLinkedService.credential
+                                = CredentialReference.fromJson(reader);
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAzureDataExplorerLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedAzureDataExplorerLinkedService;
+        });
     }
 }

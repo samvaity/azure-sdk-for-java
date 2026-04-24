@@ -6,124 +6,140 @@ package com.azure.ai.personalizer.administration.models;
 
 import com.azure.ai.personalizer.models.LearningMode;
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
-/** The configuration of the service. */
+/**
+ * The configuration of the service.
+ */
 @Fluent
-public final class PersonalizerServiceProperties {
+public final class PersonalizerServiceProperties implements JsonSerializable<PersonalizerServiceProperties> {
     /*
      * The time span waited until a request is marked with the default reward
      * and should be between 5 seconds and 2 days.
      * For example, PT5M (5 mins). For information about the time format,
      * see http://en.wikipedia.org/wiki/ISO_8601#Durations
      */
-    @JsonProperty(value = "rewardWaitTime", required = true)
+    @Generated
     private Duration rewardWaitTime;
 
     /*
-     * The reward given if a reward is not received within the specified wait
-     * time.
+     * The reward given if a reward is not received within the specified wait time.
      */
-    @JsonProperty(value = "defaultReward", required = true)
+    @Generated
     private float defaultReward;
 
     /*
-     * The function used to process rewards, if multiple reward scores are
-     * received before rewardWaitTime is over.
+     * The function used to process rewards, if multiple reward scores are received before rewardWaitTime is over.
      */
-    @JsonProperty(value = "rewardAggregation", required = true)
+    @Generated
     private String rewardAggregation;
 
     /*
      * The percentage of rank responses that will use exploration.
      */
-    @JsonProperty(value = "explorationPercentage", required = true)
+    @Generated
     private float explorationPercentage;
 
     /*
-     * Personalizer will start using the most updated trained model for online
-     * ranks automatically every specified time period.
+     * Personalizer will start using the most updated trained model for online ranks automatically every specified time
+     * period.
      * For example, PT5M (5 mins). For information about the time format,
      * see http://en.wikipedia.org/wiki/ISO_8601#Durations
      */
-    @JsonProperty(value = "modelExportFrequency", required = true)
+    @Generated
     private Duration modelExportFrequency;
 
     /*
      * Flag indicates whether log mirroring is enabled.
      */
-    @JsonProperty(value = "logMirrorEnabled")
+    @Generated
     private Boolean logMirrorEnabled;
 
     /*
      * Azure storage account container SAS URI for log mirroring.
      */
-    @JsonProperty(value = "logMirrorSasUri")
+    @Generated
     private String logMirrorSasUrl;
 
     /*
-     * Number of days historical logs are to be maintained. -1 implies the logs
-     * will never be deleted.
+     * Number of days historical logs are to be maintained. -1 implies the logs will never be deleted.
      */
-    @JsonProperty(value = "logRetentionDays", required = true)
+    @Generated
     private int logRetentionDays;
 
     /*
      * Last time model training configuration was updated
      */
-    @JsonProperty(value = "lastConfigurationEditDate")
+    @Generated
     private OffsetDateTime lastConfigurationEditDate;
 
     /*
      * Learning Modes for Personalizer
      */
-    @JsonProperty(value = "learningMode")
+    @Generated
     private LearningMode learningMode;
 
     /*
-     * Flag indicating whether Personalizer will automatically optimize
-     * Learning Settings by running Offline Evaluations periodically.
+     * Flag indicating whether Personalizer will automatically optimize Learning Settings by running Offline Evaluations
+     * periodically.
      */
-    @JsonProperty(value = "isAutoOptimizationEnabled")
+    @Generated
     private Boolean isAutoOptimizationEnabled;
 
     /*
-     * Frequency of automatic optimization. Only relevant if
-     * IsAutoOptimizationEnabled is true.
+     * Frequency of automatic optimization. Only relevant if IsAutoOptimizationEnabled is true.
      * For example, PT5M (5 mins). For information about the time format,
      * \r\nsee http://en.wikipedia.org/wiki/ISO_8601#Durations
      */
-    @JsonProperty(value = "autoOptimizationFrequency")
+    @Generated
     private Duration autoOptimizationFrequency;
 
     /*
-     * Date when the first automatic optimization evaluation must be performed.
-     * Only relevant if IsAutoOptimizationEnabled is true.
+     * Date when the first automatic optimization evaluation must be performed. Only relevant if
+     * IsAutoOptimizationEnabled is true.
      */
-    @JsonProperty(value = "autoOptimizationStartDate")
+    @Generated
     private OffsetDateTime autoOptimizationStartDate;
 
     /**
-     * Get the rewardWaitTime property: The time span waited until a request is marked with the default reward and
-     * should be between 5 seconds and 2 days. For example, PT5M (5 mins). For information about the time format, see
-     * http://en.wikipedia.org/wiki/ISO_8601#Durations.
-     *
+     * Creates an instance of PersonalizerServiceProperties class.
+     */
+    @Generated
+    public PersonalizerServiceProperties() {
+    }
+
+    /**
+     * Get the rewardWaitTime property: The time span waited until a request is marked with the default reward
+     * and should be between 5 seconds and 2 days.
+     * For example, PT5M (5 mins). For information about the time format,
+     * see http://en.wikipedia.org/wiki/ISO_8601#Durations.
+     * 
      * @return the rewardWaitTime value.
      */
+    @Generated
     public Duration getRewardWaitTime() {
         return this.rewardWaitTime;
     }
 
     /**
-     * Set the rewardWaitTime property: The time span waited until a request is marked with the default reward and
-     * should be between 5 seconds and 2 days. For example, PT5M (5 mins). For information about the time format, see
-     * http://en.wikipedia.org/wiki/ISO_8601#Durations.
-     *
+     * Set the rewardWaitTime property: The time span waited until a request is marked with the default reward
+     * and should be between 5 seconds and 2 days.
+     * For example, PT5M (5 mins). For information about the time format,
+     * see http://en.wikipedia.org/wiki/ISO_8601#Durations.
+     * 
      * @param rewardWaitTime the rewardWaitTime value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setRewardWaitTime(Duration rewardWaitTime) {
         this.rewardWaitTime = rewardWaitTime;
         return this;
@@ -131,19 +147,21 @@ public final class PersonalizerServiceProperties {
 
     /**
      * Get the defaultReward property: The reward given if a reward is not received within the specified wait time.
-     *
+     * 
      * @return the defaultReward value.
      */
+    @Generated
     public float getDefaultReward() {
         return this.defaultReward;
     }
 
     /**
      * Set the defaultReward property: The reward given if a reward is not received within the specified wait time.
-     *
+     * 
      * @param defaultReward the defaultReward value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setDefaultReward(float defaultReward) {
         this.defaultReward = defaultReward;
         return this;
@@ -152,9 +170,10 @@ public final class PersonalizerServiceProperties {
     /**
      * Get the rewardAggregation property: The function used to process rewards, if multiple reward scores are received
      * before rewardWaitTime is over.
-     *
+     * 
      * @return the rewardAggregation value.
      */
+    @Generated
     public String getRewardAggregation() {
         return this.rewardAggregation;
     }
@@ -162,10 +181,11 @@ public final class PersonalizerServiceProperties {
     /**
      * Set the rewardAggregation property: The function used to process rewards, if multiple reward scores are received
      * before rewardWaitTime is over.
-     *
+     * 
      * @param rewardAggregation the rewardAggregation value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setRewardAggregation(String rewardAggregation) {
         this.rewardAggregation = rewardAggregation;
         return this;
@@ -173,19 +193,21 @@ public final class PersonalizerServiceProperties {
 
     /**
      * Get the explorationPercentage property: The percentage of rank responses that will use exploration.
-     *
+     * 
      * @return the explorationPercentage value.
      */
+    @Generated
     public float getExplorationPercentage() {
         return this.explorationPercentage;
     }
 
     /**
      * Set the explorationPercentage property: The percentage of rank responses that will use exploration.
-     *
+     * 
      * @param explorationPercentage the explorationPercentage value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setExplorationPercentage(float explorationPercentage) {
         this.explorationPercentage = explorationPercentage;
         return this;
@@ -193,23 +215,27 @@ public final class PersonalizerServiceProperties {
 
     /**
      * Get the modelExportFrequency property: Personalizer will start using the most updated trained model for online
-     * ranks automatically every specified time period. For example, PT5M (5 mins). For information about the time
-     * format, see http://en.wikipedia.org/wiki/ISO_8601#Durations.
-     *
+     * ranks automatically every specified time period.
+     * For example, PT5M (5 mins). For information about the time format,
+     * see http://en.wikipedia.org/wiki/ISO_8601#Durations.
+     * 
      * @return the modelExportFrequency value.
      */
+    @Generated
     public Duration getModelExportFrequency() {
         return this.modelExportFrequency;
     }
 
     /**
      * Set the modelExportFrequency property: Personalizer will start using the most updated trained model for online
-     * ranks automatically every specified time period. For example, PT5M (5 mins). For information about the time
-     * format, see http://en.wikipedia.org/wiki/ISO_8601#Durations.
-     *
+     * ranks automatically every specified time period.
+     * For example, PT5M (5 mins). For information about the time format,
+     * see http://en.wikipedia.org/wiki/ISO_8601#Durations.
+     * 
      * @param modelExportFrequency the modelExportFrequency value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setModelExportFrequency(Duration modelExportFrequency) {
         this.modelExportFrequency = modelExportFrequency;
         return this;
@@ -217,19 +243,21 @@ public final class PersonalizerServiceProperties {
 
     /**
      * Get the logMirrorEnabled property: Flag indicates whether log mirroring is enabled.
-     *
+     * 
      * @return the logMirrorEnabled value.
      */
+    @Generated
     public Boolean isLogMirrorEnabled() {
         return this.logMirrorEnabled;
     }
 
     /**
      * Set the logMirrorEnabled property: Flag indicates whether log mirroring is enabled.
-     *
+     * 
      * @param logMirrorEnabled the logMirrorEnabled value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setLogMirrorEnabled(Boolean logMirrorEnabled) {
         this.logMirrorEnabled = logMirrorEnabled;
         return this;
@@ -237,19 +265,21 @@ public final class PersonalizerServiceProperties {
 
     /**
      * Get the logMirrorSasUrl property: Azure storage account container SAS URI for log mirroring.
-     *
+     * 
      * @return the logMirrorSasUrl value.
      */
+    @Generated
     public String getLogMirrorSasUrl() {
         return this.logMirrorSasUrl;
     }
 
     /**
-     * Get the logMirrorSasUrl property: Azure storage account container SAS URI for log mirroring.
-     *
+     * Set the logMirrorSasUrl property: Azure storage account container SAS URI for log mirroring.
+     * 
      * @param logMirrorSasUrl the logMirrorSasUrl value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setLogMirrorSasUrl(String logMirrorSasUrl) {
         this.logMirrorSasUrl = logMirrorSasUrl;
         return this;
@@ -258,9 +288,10 @@ public final class PersonalizerServiceProperties {
     /**
      * Get the logRetentionDays property: Number of days historical logs are to be maintained. -1 implies the logs will
      * never be deleted.
-     *
+     * 
      * @return the logRetentionDays value.
      */
+    @Generated
     public int getLogRetentionDays() {
         return this.logRetentionDays;
     }
@@ -268,10 +299,11 @@ public final class PersonalizerServiceProperties {
     /**
      * Set the logRetentionDays property: Number of days historical logs are to be maintained. -1 implies the logs will
      * never be deleted.
-     *
+     * 
      * @param logRetentionDays the logRetentionDays value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setLogRetentionDays(int logRetentionDays) {
         this.logRetentionDays = logRetentionDays;
         return this;
@@ -279,19 +311,21 @@ public final class PersonalizerServiceProperties {
 
     /**
      * Get the lastConfigurationEditDate property: Last time model training configuration was updated.
-     *
+     * 
      * @return the lastConfigurationEditDate value.
      */
+    @Generated
     public OffsetDateTime getLastConfigurationEditDate() {
         return this.lastConfigurationEditDate;
     }
 
     /**
      * Set the lastConfigurationEditDate property: Last time model training configuration was updated.
-     *
+     * 
      * @param lastConfigurationEditDate the lastConfigurationEditDate value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setLastConfigurationEditDate(OffsetDateTime lastConfigurationEditDate) {
         this.lastConfigurationEditDate = lastConfigurationEditDate;
         return this;
@@ -299,19 +333,21 @@ public final class PersonalizerServiceProperties {
 
     /**
      * Get the learningMode property: Learning Modes for Personalizer.
-     *
+     * 
      * @return the learningMode value.
      */
+    @Generated
     public LearningMode getLearningMode() {
         return this.learningMode;
     }
 
     /**
      * Set the learningMode property: Learning Modes for Personalizer.
-     *
+     * 
      * @param learningMode the learningMode value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setLearningMode(LearningMode learningMode) {
         this.learningMode = learningMode;
         return this;
@@ -320,9 +356,10 @@ public final class PersonalizerServiceProperties {
     /**
      * Get the isAutoOptimizationEnabled property: Flag indicating whether Personalizer will automatically optimize
      * Learning Settings by running Offline Evaluations periodically.
-     *
+     * 
      * @return the isAutoOptimizationEnabled value.
      */
+    @Generated
     public Boolean isAutoOptimizationEnabled() {
         return this.isAutoOptimizationEnabled;
     }
@@ -330,10 +367,11 @@ public final class PersonalizerServiceProperties {
     /**
      * Set the isAutoOptimizationEnabled property: Flag indicating whether Personalizer will automatically optimize
      * Learning Settings by running Offline Evaluations periodically.
-     *
+     * 
      * @param isAutoOptimizationEnabled the isAutoOptimizationEnabled value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setIsAutoOptimizationEnabled(Boolean isAutoOptimizationEnabled) {
         this.isAutoOptimizationEnabled = isAutoOptimizationEnabled;
         return this;
@@ -341,23 +379,27 @@ public final class PersonalizerServiceProperties {
 
     /**
      * Get the autoOptimizationFrequency property: Frequency of automatic optimization. Only relevant if
-     * IsAutoOptimizationEnabled is true. For example, PT5M (5 mins). For information about the time format, \r\nsee
-     * http://en.wikipedia.org/wiki/ISO_8601#Durations.
-     *
+     * IsAutoOptimizationEnabled is true.
+     * For example, PT5M (5 mins). For information about the time format,
+     * \r\nsee http://en.wikipedia.org/wiki/ISO_8601#Durations.
+     * 
      * @return the autoOptimizationFrequency value.
      */
+    @Generated
     public Duration getAutoOptimizationFrequency() {
         return this.autoOptimizationFrequency;
     }
 
     /**
      * Set the autoOptimizationFrequency property: Frequency of automatic optimization. Only relevant if
-     * IsAutoOptimizationEnabled is true. For example, PT5M (5 mins). For information about the time format, \r\nsee
-     * http://en.wikipedia.org/wiki/ISO_8601#Durations.
-     *
+     * IsAutoOptimizationEnabled is true.
+     * For example, PT5M (5 mins). For information about the time format,
+     * \r\nsee http://en.wikipedia.org/wiki/ISO_8601#Durations.
+     * 
      * @param autoOptimizationFrequency the autoOptimizationFrequency value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setAutoOptimizationFrequency(Duration autoOptimizationFrequency) {
         this.autoOptimizationFrequency = autoOptimizationFrequency;
         return this;
@@ -366,9 +408,10 @@ public final class PersonalizerServiceProperties {
     /**
      * Get the autoOptimizationStartDate property: Date when the first automatic optimization evaluation must be
      * performed. Only relevant if IsAutoOptimizationEnabled is true.
-     *
+     * 
      * @return the autoOptimizationStartDate value.
      */
+    @Generated
     public OffsetDateTime getAutoOptimizationStartDate() {
         return this.autoOptimizationStartDate;
     }
@@ -376,12 +419,105 @@ public final class PersonalizerServiceProperties {
     /**
      * Set the autoOptimizationStartDate property: Date when the first automatic optimization evaluation must be
      * performed. Only relevant if IsAutoOptimizationEnabled is true.
-     *
+     * 
      * @param autoOptimizationStartDate the autoOptimizationStartDate value to set.
      * @return the PersonalizerServiceProperties object itself.
      */
+    @Generated
     public PersonalizerServiceProperties setAutoOptimizationStartDate(OffsetDateTime autoOptimizationStartDate) {
         this.autoOptimizationStartDate = autoOptimizationStartDate;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("rewardWaitTime", CoreUtils.durationToStringWithDays(this.rewardWaitTime));
+        jsonWriter.writeFloatField("defaultReward", this.defaultReward);
+        jsonWriter.writeStringField("rewardAggregation", this.rewardAggregation);
+        jsonWriter.writeFloatField("explorationPercentage", this.explorationPercentage);
+        jsonWriter.writeStringField("modelExportFrequency",
+            CoreUtils.durationToStringWithDays(this.modelExportFrequency));
+        jsonWriter.writeIntField("logRetentionDays", this.logRetentionDays);
+        jsonWriter.writeBooleanField("logMirrorEnabled", this.logMirrorEnabled);
+        jsonWriter.writeStringField("logMirrorSasUri", this.logMirrorSasUrl);
+        jsonWriter.writeStringField("lastConfigurationEditDate",
+            this.lastConfigurationEditDate == null
+                ? null
+                : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.lastConfigurationEditDate));
+        jsonWriter.writeStringField("learningMode", this.learningMode == null ? null : this.learningMode.toString());
+        jsonWriter.writeBooleanField("isAutoOptimizationEnabled", this.isAutoOptimizationEnabled);
+        jsonWriter.writeStringField("autoOptimizationFrequency",
+            CoreUtils.durationToStringWithDays(this.autoOptimizationFrequency));
+        jsonWriter.writeStringField("autoOptimizationStartDate",
+            this.autoOptimizationStartDate == null
+                ? null
+                : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.autoOptimizationStartDate));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PersonalizerServiceProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PersonalizerServiceProperties if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the PersonalizerServiceProperties.
+     */
+    @Generated
+    public static PersonalizerServiceProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PersonalizerServiceProperties deserializedPersonalizerServiceProperties
+                = new PersonalizerServiceProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("rewardWaitTime".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.rewardWaitTime
+                        = reader.getNullable(nonNullReader -> Duration.parse(nonNullReader.getString()));
+                } else if ("defaultReward".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.defaultReward = reader.getFloat();
+                } else if ("rewardAggregation".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.rewardAggregation = reader.getString();
+                } else if ("explorationPercentage".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.explorationPercentage = reader.getFloat();
+                } else if ("modelExportFrequency".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.modelExportFrequency
+                        = reader.getNullable(nonNullReader -> Duration.parse(nonNullReader.getString()));
+                } else if ("logRetentionDays".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.logRetentionDays = reader.getInt();
+                } else if ("logMirrorEnabled".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.logMirrorEnabled
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("logMirrorSasUri".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.logMirrorSasUrl = reader.getString();
+                } else if ("lastConfigurationEditDate".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.lastConfigurationEditDate = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("learningMode".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.learningMode
+                        = LearningMode.fromString(reader.getString());
+                } else if ("isAutoOptimizationEnabled".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.isAutoOptimizationEnabled
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("autoOptimizationFrequency".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.autoOptimizationFrequency
+                        = reader.getNullable(nonNullReader -> Duration.parse(nonNullReader.getString()));
+                } else if ("autoOptimizationStartDate".equals(fieldName)) {
+                    deserializedPersonalizerServiceProperties.autoOptimizationStartDate = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPersonalizerServiceProperties;
+        });
     }
 }

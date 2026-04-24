@@ -11,6 +11,7 @@ import com.azure.core.http.HttpPipelineBuilder;
 import com.azure.core.http.HttpPipelinePosition;
 import com.azure.core.http.policy.AddDatePolicy;
 import com.azure.core.http.policy.AddHeadersFromContextPolicy;
+import com.azure.core.http.policy.BearerTokenAuthenticationPolicy;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpLoggingPolicy;
 import com.azure.core.http.policy.HttpPipelinePolicy;
@@ -19,33 +20,65 @@ import com.azure.core.http.policy.RequestIdPolicy;
 import com.azure.core.http.policy.RetryOptions;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
-import com.azure.core.management.http.policy.ArmChallengeAuthenticationPolicy;
 import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.util.Configuration;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.resourcemanager.cognitiveservices.fluent.CognitiveServicesManagementClient;
+import com.azure.resourcemanager.cognitiveservices.implementation.AccountCapabilityHostsImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.AccountConnectionsImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.AccountsImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.CognitiveServicesManagementClientBuilder;
 import com.azure.resourcemanager.cognitiveservices.implementation.CommitmentPlansImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.CommitmentTiersImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.DefenderForAISettingsImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.DeletedAccountsImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.DeploymentsImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.EncryptionScopesImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.LocationBasedModelCapacitiesImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.ModelCapacitiesImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.ModelsImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.NetworkSecurityPerimeterConfigurationsImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.OperationsImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.PrivateEndpointConnectionsImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.PrivateLinkResourcesImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.ProjectCapabilityHostsImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.ProjectConnectionsImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.ProjectsImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.QuotaTiersImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.RaiBlocklistItemsImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.RaiBlocklistsImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.RaiContentFiltersImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.RaiPoliciesImpl;
+import com.azure.resourcemanager.cognitiveservices.implementation.RaiTopicsImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.ResourceProvidersImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.ResourceSkusImpl;
 import com.azure.resourcemanager.cognitiveservices.implementation.UsagesImpl;
+import com.azure.resourcemanager.cognitiveservices.models.AccountCapabilityHosts;
+import com.azure.resourcemanager.cognitiveservices.models.AccountConnections;
 import com.azure.resourcemanager.cognitiveservices.models.Accounts;
 import com.azure.resourcemanager.cognitiveservices.models.CommitmentPlans;
 import com.azure.resourcemanager.cognitiveservices.models.CommitmentTiers;
+import com.azure.resourcemanager.cognitiveservices.models.DefenderForAISettings;
 import com.azure.resourcemanager.cognitiveservices.models.DeletedAccounts;
 import com.azure.resourcemanager.cognitiveservices.models.Deployments;
+import com.azure.resourcemanager.cognitiveservices.models.EncryptionScopes;
+import com.azure.resourcemanager.cognitiveservices.models.LocationBasedModelCapacities;
+import com.azure.resourcemanager.cognitiveservices.models.ModelCapacities;
 import com.azure.resourcemanager.cognitiveservices.models.Models;
+import com.azure.resourcemanager.cognitiveservices.models.NetworkSecurityPerimeterConfigurations;
 import com.azure.resourcemanager.cognitiveservices.models.Operations;
 import com.azure.resourcemanager.cognitiveservices.models.PrivateEndpointConnections;
 import com.azure.resourcemanager.cognitiveservices.models.PrivateLinkResources;
+import com.azure.resourcemanager.cognitiveservices.models.ProjectCapabilityHosts;
+import com.azure.resourcemanager.cognitiveservices.models.ProjectConnections;
+import com.azure.resourcemanager.cognitiveservices.models.Projects;
+import com.azure.resourcemanager.cognitiveservices.models.QuotaTiers;
+import com.azure.resourcemanager.cognitiveservices.models.RaiBlocklistItems;
+import com.azure.resourcemanager.cognitiveservices.models.RaiBlocklists;
+import com.azure.resourcemanager.cognitiveservices.models.RaiContentFilters;
+import com.azure.resourcemanager.cognitiveservices.models.RaiPolicies;
+import com.azure.resourcemanager.cognitiveservices.models.RaiTopics;
 import com.azure.resourcemanager.cognitiveservices.models.ResourceProviders;
 import com.azure.resourcemanager.cognitiveservices.models.ResourceSkus;
 import com.azure.resourcemanager.cognitiveservices.models.Usages;
@@ -53,10 +86,14 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-/** Entry point to CognitiveServicesManager. Cognitive Services Management Client. */
+/**
+ * Entry point to CognitiveServicesManager.
+ * Cognitive Services Management Client.
+ */
 public final class CognitiveServicesManager {
     private Accounts accounts;
 
@@ -74,6 +111,10 @@ public final class CognitiveServicesManager {
 
     private Models models;
 
+    private LocationBasedModelCapacities locationBasedModelCapacities;
+
+    private ModelCapacities modelCapacities;
+
     private PrivateEndpointConnections privateEndpointConnections;
 
     private PrivateLinkResources privateLinkResources;
@@ -82,23 +123,49 @@ public final class CognitiveServicesManager {
 
     private CommitmentPlans commitmentPlans;
 
+    private EncryptionScopes encryptionScopes;
+
+    private RaiPolicies raiPolicies;
+
+    private RaiBlocklists raiBlocklists;
+
+    private RaiBlocklistItems raiBlocklistItems;
+
+    private RaiTopics raiTopics;
+
+    private RaiContentFilters raiContentFilters;
+
+    private NetworkSecurityPerimeterConfigurations networkSecurityPerimeterConfigurations;
+
+    private DefenderForAISettings defenderForAISettings;
+
+    private Projects projects;
+
+    private AccountConnections accountConnections;
+
+    private ProjectConnections projectConnections;
+
+    private AccountCapabilityHosts accountCapabilityHosts;
+
+    private ProjectCapabilityHosts projectCapabilityHosts;
+
+    private QuotaTiers quotaTiers;
+
     private final CognitiveServicesManagementClient clientObject;
 
     private CognitiveServicesManager(HttpPipeline httpPipeline, AzureProfile profile, Duration defaultPollInterval) {
         Objects.requireNonNull(httpPipeline, "'httpPipeline' cannot be null.");
         Objects.requireNonNull(profile, "'profile' cannot be null.");
-        this.clientObject =
-            new CognitiveServicesManagementClientBuilder()
-                .pipeline(httpPipeline)
-                .endpoint(profile.getEnvironment().getResourceManagerEndpoint())
-                .subscriptionId(profile.getSubscriptionId())
-                .defaultPollInterval(defaultPollInterval)
-                .buildClient();
+        this.clientObject = new CognitiveServicesManagementClientBuilder().pipeline(httpPipeline)
+            .endpoint(profile.getEnvironment().getResourceManagerEndpoint())
+            .subscriptionId(profile.getSubscriptionId())
+            .defaultPollInterval(defaultPollInterval)
+            .buildClient();
     }
 
     /**
      * Creates an instance of CognitiveServices service API entry point.
-     *
+     * 
      * @param credential the credential to use.
      * @param profile the Azure profile for client.
      * @return the CognitiveServices service API instance.
@@ -111,7 +178,7 @@ public final class CognitiveServicesManager {
 
     /**
      * Creates an instance of CognitiveServices service API entry point.
-     *
+     * 
      * @param httpPipeline the {@link HttpPipeline} configured with Azure authentication credential.
      * @param profile the Azure profile for client.
      * @return the CognitiveServices service API instance.
@@ -124,16 +191,21 @@ public final class CognitiveServicesManager {
 
     /**
      * Gets a Configurable instance that can be used to create CognitiveServicesManager with optional configuration.
-     *
+     * 
      * @return the Configurable instance allowing configurations.
      */
     public static Configurable configure() {
         return new CognitiveServicesManager.Configurable();
     }
 
-    /** The Configurable allowing configurations to be set. */
+    /**
+     * The Configurable allowing configurations to be set.
+     */
     public static final class Configurable {
         private static final ClientLogger LOGGER = new ClientLogger(Configurable.class);
+        private static final String SDK_VERSION = "version";
+        private static final Map<String, String> PROPERTIES
+            = CoreUtils.getProperties("azure-resourcemanager-cognitiveservices.properties");
 
         private HttpClient httpClient;
         private HttpLogOptions httpLogOptions;
@@ -203,8 +275,8 @@ public final class CognitiveServicesManager {
 
         /**
          * Sets the retry options for the HTTP pipeline retry policy.
-         *
-         * <p>This setting has no effect, if retry policy is set via {@link #withRetryPolicy(RetryPolicy)}.
+         * <p>
+         * This setting has no effect, if retry policy is set via {@link #withRetryPolicy(RetryPolicy)}.
          *
          * @param retryOptions the retry options for the HTTP pipeline retry policy.
          * @return the configurable object itself.
@@ -221,8 +293,8 @@ public final class CognitiveServicesManager {
          * @return the configurable object itself.
          */
         public Configurable withDefaultPollInterval(Duration defaultPollInterval) {
-            this.defaultPollInterval =
-                Objects.requireNonNull(defaultPollInterval, "'defaultPollInterval' cannot be null.");
+            this.defaultPollInterval
+                = Objects.requireNonNull(defaultPollInterval, "'defaultPollInterval' cannot be null.");
             if (this.defaultPollInterval.isNegative()) {
                 throw LOGGER
                     .logExceptionAsError(new IllegalArgumentException("'defaultPollInterval' cannot be negative"));
@@ -241,16 +313,16 @@ public final class CognitiveServicesManager {
             Objects.requireNonNull(credential, "'credential' cannot be null.");
             Objects.requireNonNull(profile, "'profile' cannot be null.");
 
+            String clientVersion = PROPERTIES.getOrDefault(SDK_VERSION, "UnknownVersion");
+
             StringBuilder userAgentBuilder = new StringBuilder();
-            userAgentBuilder
-                .append("azsdk-java")
+            userAgentBuilder.append("azsdk-java")
                 .append("-")
                 .append("com.azure.resourcemanager.cognitiveservices")
                 .append("/")
-                .append("1.1.0-beta.1");
+                .append(clientVersion);
             if (!Configuration.getGlobalConfiguration().get("AZURE_TELEMETRY_DISABLED", false)) {
-                userAgentBuilder
-                    .append(" (")
+                userAgentBuilder.append(" (")
                     .append(Configuration.getGlobalConfiguration().get("java.version"))
                     .append("; ")
                     .append(Configuration.getGlobalConfiguration().get("os.name"))
@@ -275,38 +347,28 @@ public final class CognitiveServicesManager {
             policies.add(new UserAgentPolicy(userAgentBuilder.toString()));
             policies.add(new AddHeadersFromContextPolicy());
             policies.add(new RequestIdPolicy());
-            policies
-                .addAll(
-                    this
-                        .policies
-                        .stream()
-                        .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_CALL)
-                        .collect(Collectors.toList()));
+            policies.addAll(this.policies.stream()
+                .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_CALL)
+                .collect(Collectors.toList()));
             HttpPolicyProviders.addBeforeRetryPolicies(policies);
             policies.add(retryPolicy);
             policies.add(new AddDatePolicy());
-            policies.add(new ArmChallengeAuthenticationPolicy(credential, scopes.toArray(new String[0])));
-            policies
-                .addAll(
-                    this
-                        .policies
-                        .stream()
-                        .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_RETRY)
-                        .collect(Collectors.toList()));
+            policies.add(new BearerTokenAuthenticationPolicy(credential, scopes.toArray(new String[0])));
+            policies.addAll(this.policies.stream()
+                .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_RETRY)
+                .collect(Collectors.toList()));
             HttpPolicyProviders.addAfterRetryPolicies(policies);
             policies.add(new HttpLoggingPolicy(httpLogOptions));
-            HttpPipeline httpPipeline =
-                new HttpPipelineBuilder()
-                    .httpClient(httpClient)
-                    .policies(policies.toArray(new HttpPipelinePolicy[0]))
-                    .build();
+            HttpPipeline httpPipeline = new HttpPipelineBuilder().httpClient(httpClient)
+                .policies(policies.toArray(new HttpPipelinePolicy[0]))
+                .build();
             return new CognitiveServicesManager(httpPipeline, profile, defaultPollInterval);
         }
     }
 
     /**
      * Gets the resource collection API of Accounts. It manages Account.
-     *
+     * 
      * @return Resource collection API of Accounts.
      */
     public Accounts accounts() {
@@ -318,7 +380,7 @@ public final class CognitiveServicesManager {
 
     /**
      * Gets the resource collection API of DeletedAccounts.
-     *
+     * 
      * @return Resource collection API of DeletedAccounts.
      */
     public DeletedAccounts deletedAccounts() {
@@ -330,7 +392,7 @@ public final class CognitiveServicesManager {
 
     /**
      * Gets the resource collection API of ResourceSkus.
-     *
+     * 
      * @return Resource collection API of ResourceSkus.
      */
     public ResourceSkus resourceSkus() {
@@ -342,7 +404,7 @@ public final class CognitiveServicesManager {
 
     /**
      * Gets the resource collection API of Usages.
-     *
+     * 
      * @return Resource collection API of Usages.
      */
     public Usages usages() {
@@ -354,7 +416,7 @@ public final class CognitiveServicesManager {
 
     /**
      * Gets the resource collection API of Operations.
-     *
+     * 
      * @return Resource collection API of Operations.
      */
     public Operations operations() {
@@ -366,7 +428,7 @@ public final class CognitiveServicesManager {
 
     /**
      * Gets the resource collection API of ResourceProviders.
-     *
+     * 
      * @return Resource collection API of ResourceProviders.
      */
     public ResourceProviders resourceProviders() {
@@ -378,7 +440,7 @@ public final class CognitiveServicesManager {
 
     /**
      * Gets the resource collection API of CommitmentTiers.
-     *
+     * 
      * @return Resource collection API of CommitmentTiers.
      */
     public CommitmentTiers commitmentTiers() {
@@ -390,7 +452,7 @@ public final class CognitiveServicesManager {
 
     /**
      * Gets the resource collection API of Models.
-     *
+     * 
      * @return Resource collection API of Models.
      */
     public Models models() {
@@ -401,21 +463,46 @@ public final class CognitiveServicesManager {
     }
 
     /**
+     * Gets the resource collection API of LocationBasedModelCapacities.
+     * 
+     * @return Resource collection API of LocationBasedModelCapacities.
+     */
+    public LocationBasedModelCapacities locationBasedModelCapacities() {
+        if (this.locationBasedModelCapacities == null) {
+            this.locationBasedModelCapacities
+                = new LocationBasedModelCapacitiesImpl(clientObject.getLocationBasedModelCapacities(), this);
+        }
+        return locationBasedModelCapacities;
+    }
+
+    /**
+     * Gets the resource collection API of ModelCapacities.
+     * 
+     * @return Resource collection API of ModelCapacities.
+     */
+    public ModelCapacities modelCapacities() {
+        if (this.modelCapacities == null) {
+            this.modelCapacities = new ModelCapacitiesImpl(clientObject.getModelCapacities(), this);
+        }
+        return modelCapacities;
+    }
+
+    /**
      * Gets the resource collection API of PrivateEndpointConnections. It manages PrivateEndpointConnection.
-     *
+     * 
      * @return Resource collection API of PrivateEndpointConnections.
      */
     public PrivateEndpointConnections privateEndpointConnections() {
         if (this.privateEndpointConnections == null) {
-            this.privateEndpointConnections =
-                new PrivateEndpointConnectionsImpl(clientObject.getPrivateEndpointConnections(), this);
+            this.privateEndpointConnections
+                = new PrivateEndpointConnectionsImpl(clientObject.getPrivateEndpointConnections(), this);
         }
         return privateEndpointConnections;
     }
 
     /**
      * Gets the resource collection API of PrivateLinkResources.
-     *
+     * 
      * @return Resource collection API of PrivateLinkResources.
      */
     public PrivateLinkResources privateLinkResources() {
@@ -427,7 +514,7 @@ public final class CognitiveServicesManager {
 
     /**
      * Gets the resource collection API of Deployments. It manages Deployment.
-     *
+     * 
      * @return Resource collection API of Deployments.
      */
     public Deployments deployments() {
@@ -439,7 +526,7 @@ public final class CognitiveServicesManager {
 
     /**
      * Gets the resource collection API of CommitmentPlans. It manages CommitmentPlan, CommitmentPlanAccountAssociation.
-     *
+     * 
      * @return Resource collection API of CommitmentPlans.
      */
     public CommitmentPlans commitmentPlans() {
@@ -450,8 +537,181 @@ public final class CognitiveServicesManager {
     }
 
     /**
-     * @return Wrapped service client CognitiveServicesManagementClient providing direct access to the underlying
-     *     auto-generated API implementation, based on Azure REST API.
+     * Gets the resource collection API of EncryptionScopes. It manages EncryptionScope.
+     * 
+     * @return Resource collection API of EncryptionScopes.
+     */
+    public EncryptionScopes encryptionScopes() {
+        if (this.encryptionScopes == null) {
+            this.encryptionScopes = new EncryptionScopesImpl(clientObject.getEncryptionScopes(), this);
+        }
+        return encryptionScopes;
+    }
+
+    /**
+     * Gets the resource collection API of RaiPolicies. It manages RaiPolicy.
+     * 
+     * @return Resource collection API of RaiPolicies.
+     */
+    public RaiPolicies raiPolicies() {
+        if (this.raiPolicies == null) {
+            this.raiPolicies = new RaiPoliciesImpl(clientObject.getRaiPolicies(), this);
+        }
+        return raiPolicies;
+    }
+
+    /**
+     * Gets the resource collection API of RaiBlocklists. It manages RaiBlocklist.
+     * 
+     * @return Resource collection API of RaiBlocklists.
+     */
+    public RaiBlocklists raiBlocklists() {
+        if (this.raiBlocklists == null) {
+            this.raiBlocklists = new RaiBlocklistsImpl(clientObject.getRaiBlocklists(), this);
+        }
+        return raiBlocklists;
+    }
+
+    /**
+     * Gets the resource collection API of RaiBlocklistItems. It manages RaiBlocklistItem.
+     * 
+     * @return Resource collection API of RaiBlocklistItems.
+     */
+    public RaiBlocklistItems raiBlocklistItems() {
+        if (this.raiBlocklistItems == null) {
+            this.raiBlocklistItems = new RaiBlocklistItemsImpl(clientObject.getRaiBlocklistItems(), this);
+        }
+        return raiBlocklistItems;
+    }
+
+    /**
+     * Gets the resource collection API of RaiTopics. It manages RaiTopic.
+     * 
+     * @return Resource collection API of RaiTopics.
+     */
+    public RaiTopics raiTopics() {
+        if (this.raiTopics == null) {
+            this.raiTopics = new RaiTopicsImpl(clientObject.getRaiTopics(), this);
+        }
+        return raiTopics;
+    }
+
+    /**
+     * Gets the resource collection API of RaiContentFilters.
+     * 
+     * @return Resource collection API of RaiContentFilters.
+     */
+    public RaiContentFilters raiContentFilters() {
+        if (this.raiContentFilters == null) {
+            this.raiContentFilters = new RaiContentFiltersImpl(clientObject.getRaiContentFilters(), this);
+        }
+        return raiContentFilters;
+    }
+
+    /**
+     * Gets the resource collection API of NetworkSecurityPerimeterConfigurations.
+     * 
+     * @return Resource collection API of NetworkSecurityPerimeterConfigurations.
+     */
+    public NetworkSecurityPerimeterConfigurations networkSecurityPerimeterConfigurations() {
+        if (this.networkSecurityPerimeterConfigurations == null) {
+            this.networkSecurityPerimeterConfigurations = new NetworkSecurityPerimeterConfigurationsImpl(
+                clientObject.getNetworkSecurityPerimeterConfigurations(), this);
+        }
+        return networkSecurityPerimeterConfigurations;
+    }
+
+    /**
+     * Gets the resource collection API of DefenderForAISettings. It manages DefenderForAISetting.
+     * 
+     * @return Resource collection API of DefenderForAISettings.
+     */
+    public DefenderForAISettings defenderForAISettings() {
+        if (this.defenderForAISettings == null) {
+            this.defenderForAISettings = new DefenderForAISettingsImpl(clientObject.getDefenderForAISettings(), this);
+        }
+        return defenderForAISettings;
+    }
+
+    /**
+     * Gets the resource collection API of Projects. It manages Project.
+     * 
+     * @return Resource collection API of Projects.
+     */
+    public Projects projects() {
+        if (this.projects == null) {
+            this.projects = new ProjectsImpl(clientObject.getProjects(), this);
+        }
+        return projects;
+    }
+
+    /**
+     * Gets the resource collection API of AccountConnections. It manages ConnectionPropertiesV2BasicResource.
+     * 
+     * @return Resource collection API of AccountConnections.
+     */
+    public AccountConnections accountConnections() {
+        if (this.accountConnections == null) {
+            this.accountConnections = new AccountConnectionsImpl(clientObject.getAccountConnections(), this);
+        }
+        return accountConnections;
+    }
+
+    /**
+     * Gets the resource collection API of ProjectConnections.
+     * 
+     * @return Resource collection API of ProjectConnections.
+     */
+    public ProjectConnections projectConnections() {
+        if (this.projectConnections == null) {
+            this.projectConnections = new ProjectConnectionsImpl(clientObject.getProjectConnections(), this);
+        }
+        return projectConnections;
+    }
+
+    /**
+     * Gets the resource collection API of AccountCapabilityHosts. It manages CapabilityHost.
+     * 
+     * @return Resource collection API of AccountCapabilityHosts.
+     */
+    public AccountCapabilityHosts accountCapabilityHosts() {
+        if (this.accountCapabilityHosts == null) {
+            this.accountCapabilityHosts
+                = new AccountCapabilityHostsImpl(clientObject.getAccountCapabilityHosts(), this);
+        }
+        return accountCapabilityHosts;
+    }
+
+    /**
+     * Gets the resource collection API of ProjectCapabilityHosts.
+     * 
+     * @return Resource collection API of ProjectCapabilityHosts.
+     */
+    public ProjectCapabilityHosts projectCapabilityHosts() {
+        if (this.projectCapabilityHosts == null) {
+            this.projectCapabilityHosts
+                = new ProjectCapabilityHostsImpl(clientObject.getProjectCapabilityHosts(), this);
+        }
+        return projectCapabilityHosts;
+    }
+
+    /**
+     * Gets the resource collection API of QuotaTiers. It manages QuotaTier.
+     * 
+     * @return Resource collection API of QuotaTiers.
+     */
+    public QuotaTiers quotaTiers() {
+        if (this.quotaTiers == null) {
+            this.quotaTiers = new QuotaTiersImpl(clientObject.getQuotaTiers(), this);
+        }
+        return quotaTiers;
+    }
+
+    /**
+     * Gets wrapped service client CognitiveServicesManagementClient providing direct access to the underlying
+     * auto-generated API implementation, based on Azure REST API.
+     * 
+     * @return Wrapped service client CognitiveServicesManagementClient.
      */
     public CognitiveServicesManagementClient serviceClient() {
         return this.clientObject;

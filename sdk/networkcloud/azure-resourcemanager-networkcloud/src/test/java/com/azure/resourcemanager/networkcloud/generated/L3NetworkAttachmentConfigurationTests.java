@@ -13,25 +13,23 @@ import org.junit.jupiter.api.Assertions;
 public final class L3NetworkAttachmentConfigurationTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        L3NetworkAttachmentConfiguration model =
-            BinaryData
-                .fromString("{\"ipamEnabled\":\"True\",\"networkId\":\"dagxtibqd\",\"pluginType\":\"DPDK\"}")
-                .toObject(L3NetworkAttachmentConfiguration.class);
+        L3NetworkAttachmentConfiguration model = BinaryData
+            .fromString("{\"ipamEnabled\":\"True\",\"networkId\":\"krribdeibqi\",\"pluginType\":\"MACVLAN\"}")
+            .toObject(L3NetworkAttachmentConfiguration.class);
         Assertions.assertEquals(L3NetworkConfigurationIpamEnabled.TRUE, model.ipamEnabled());
-        Assertions.assertEquals("dagxtibqd", model.networkId());
-        Assertions.assertEquals(KubernetesPluginType.DPDK, model.pluginType());
+        Assertions.assertEquals("krribdeibqi", model.networkId());
+        Assertions.assertEquals(KubernetesPluginType.MACVLAN, model.pluginType());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        L3NetworkAttachmentConfiguration model =
-            new L3NetworkAttachmentConfiguration()
-                .withIpamEnabled(L3NetworkConfigurationIpamEnabled.TRUE)
-                .withNetworkId("dagxtibqd")
-                .withPluginType(KubernetesPluginType.DPDK);
+        L3NetworkAttachmentConfiguration model
+            = new L3NetworkAttachmentConfiguration().withIpamEnabled(L3NetworkConfigurationIpamEnabled.TRUE)
+                .withNetworkId("krribdeibqi")
+                .withPluginType(KubernetesPluginType.MACVLAN);
         model = BinaryData.fromObject(model).toObject(L3NetworkAttachmentConfiguration.class);
         Assertions.assertEquals(L3NetworkConfigurationIpamEnabled.TRUE, model.ipamEnabled());
-        Assertions.assertEquals("dagxtibqd", model.networkId());
-        Assertions.assertEquals(KubernetesPluginType.DPDK, model.pluginType());
+        Assertions.assertEquals("krribdeibqi", model.networkId());
+        Assertions.assertEquals(KubernetesPluginType.MACVLAN, model.pluginType());
     }
 }

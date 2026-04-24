@@ -5,41 +5,54 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Azure Synapse expression definition. */
+/**
+ * Azure Synapse expression definition.
+ */
 @Fluent
-public final class Expression {
+public final class Expression implements JsonSerializable<Expression> {
     /*
      * Expression type.
      */
-    @JsonProperty(value = "type", required = true)
+    @Generated
     private ExpressionType type;
 
     /*
      * Expression value.
      */
-    @JsonProperty(value = "value", required = true)
+    @Generated
     private String value;
 
-    /** Creates an instance of Expression class. */
-    public Expression() {}
+    /**
+     * Creates an instance of Expression class.
+     */
+    @Generated
+    public Expression() {
+    }
 
     /**
      * Get the type property: Expression type.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public ExpressionType getType() {
         return this.type;
     }
 
     /**
      * Set the type property: Expression type.
-     *
+     * 
      * @param type the type value to set.
      * @return the Expression object itself.
      */
+    @Generated
     public Expression setType(ExpressionType type) {
         this.type = type;
         return this;
@@ -47,21 +60,65 @@ public final class Expression {
 
     /**
      * Get the value property: Expression value.
-     *
+     * 
      * @return the value value.
      */
+    @Generated
     public String getValue() {
         return this.value;
     }
 
     /**
      * Set the value property: Expression value.
-     *
+     * 
      * @param value the value value to set.
      * @return the Expression object itself.
      */
+    @Generated
     public Expression setValue(String value) {
         this.value = value;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("type", this.type == null ? null : this.type.toString());
+        jsonWriter.writeStringField("value", this.value);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of Expression from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of Expression if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the Expression.
+     */
+    @Generated
+    public static Expression fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            Expression deserializedExpression = new Expression();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("type".equals(fieldName)) {
+                    deserializedExpression.type = ExpressionType.fromString(reader.getString());
+                } else if ("value".equals(fieldName)) {
+                    deserializedExpression.value = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedExpression;
+        });
     }
 }

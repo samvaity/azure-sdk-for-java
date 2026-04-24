@@ -10,13 +10,13 @@ import com.azure.cosmos.CosmosAsyncDatabase;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.cosmos.CosmosDatabaseForTest;
 import com.azure.cosmos.CosmosException;
+import com.azure.cosmos.implementation.CosmosBulkExecutionOptionsImpl;
 import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import com.azure.cosmos.models.CosmosBulkItemResponse;
 import com.azure.cosmos.models.CosmosItemOperation;
 import com.azure.cosmos.models.CosmosContainerProperties;
 import com.azure.cosmos.models.CosmosBulkOperations;
 import com.azure.cosmos.models.PartitionKey;
-import com.azure.cosmos.models.CosmosBulkExecutionOptions;
 import com.azure.cosmos.models.CosmosBulkOperationResponse;
 import com.azure.cosmos.test.faultinjection.CosmosFaultInjectionHelper;
 import com.azure.cosmos.test.faultinjection.FaultInjectionConnectionErrorType;
@@ -38,10 +38,12 @@ import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Field;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -120,7 +122,7 @@ public class BulkExecutorTest extends BatchTestBase {
         CosmosItemOperation[] itemOperationsArray =
             new CosmosItemOperation[cosmosItemOperations.size()];
         cosmosItemOperations.toArray(itemOperationsArray);
-        CosmosBulkExecutionOptions cosmosBulkExecutionOptions = new CosmosBulkExecutionOptions();
+        CosmosBulkExecutionOptionsImpl cosmosBulkExecutionOptions = new CosmosBulkExecutionOptionsImpl();
         Flux<CosmosItemOperation> inputFlux = Flux
             .fromArray(itemOperationsArray)
             .delayElements(Duration.ofMillis(100));
@@ -148,7 +150,7 @@ public class BulkExecutorTest extends BatchTestBase {
 
     // Write operations should not be retried on a gone exception because the operation might have succeeded.
     @Test(groups = { "emulator" }, timeOut =  TIMEOUT)
-    public void executeBulk_OnGoneFailure() throws InterruptedException {
+    public void executeBulk_OnGoneFailure() {
         this.container = createContainer(database);
         if (!ImplementationBridgeHelpers
             .CosmosAsyncClientHelper
@@ -205,7 +207,7 @@ public class BulkExecutorTest extends BatchTestBase {
         final BulkExecutor<BulkExecutorTest> executor = new BulkExecutor<>(
             this.container,
             Flux.fromIterable(cosmosItemOperations),
-            new CosmosBulkExecutionOptions());
+            new CosmosBulkExecutionOptionsImpl());
 
         try {
             CosmosFaultInjectionHelper
@@ -232,8 +234,6 @@ public class BulkExecutorTest extends BatchTestBase {
         }
     }
 
-
-
     @Test(groups = { "emulator" }, timeOut = TIMEOUT)
     public void executeBulk_complete() throws InterruptedException {
         int totalRequest = 10;
@@ -256,7 +256,7 @@ public class BulkExecutorTest extends BatchTestBase {
         CosmosItemOperation[] itemOperationsArray =
             new CosmosItemOperation[cosmosItemOperations.size()];
         cosmosItemOperations.toArray(itemOperationsArray);
-        CosmosBulkExecutionOptions cosmosBulkExecutionOptions = new CosmosBulkExecutionOptions();
+        CosmosBulkExecutionOptionsImpl cosmosBulkExecutionOptions = new CosmosBulkExecutionOptionsImpl();
         final BulkExecutor<BulkExecutorTest> executor = new BulkExecutor<>(
             container,
             Flux.fromArray(itemOperationsArray),
@@ -292,6 +292,58 @@ public class BulkExecutorTest extends BatchTestBase {
 
             Thread.sleep(10);
             iterations++;
+        }
+    }
+
+    @Test(groups = { "emulator" }, timeOut = TIMEOUT)
+    public void executeBulk_tooManyRequest_recordInThresholds() throws Exception {
+        this.container = createContainer(database);
+
+        String pkValue = UUID.randomUUID().toString();
+        TestDoc testDoc = this.populateTestDoc(pkValue);
+        List<CosmosItemOperation> cosmosItemOperations = new ArrayList<>();
+        cosmosItemOperations.add(CosmosBulkOperations.getCreateItemOperation(testDoc, new PartitionKey(pkValue)));
+
+        FaultInjectionRule tooManyRequestRule =
+            new FaultInjectionRuleBuilder("ttrs-" + UUID.randomUUID())
+                .condition(new FaultInjectionConditionBuilder().operationType(FaultInjectionOperationType.BATCH_ITEM).build())
+                .result(FaultInjectionResultBuilders.getResultBuilder(FaultInjectionServerErrorType.TOO_MANY_REQUEST).times(1).build())
+                .duration(Duration.ofSeconds(30))
+                .hitLimit(1)
+                .build();
+
+        CosmosBulkExecutionOptionsImpl cosmosBulkExecutionOptions = new CosmosBulkExecutionOptionsImpl();
+        final BulkExecutor<Object> executor = new BulkExecutor<>(
+            container,
+            Flux.fromArray(cosmosItemOperations.toArray(new CosmosItemOperation[0])),
+            cosmosBulkExecutionOptions);
+
+        try {
+            CosmosFaultInjectionHelper.configureFaultInjectionRules(container, Arrays.asList(tooManyRequestRule)).block();
+
+            List<CosmosBulkOperationResponse<Object>> responses = executor.execute().collectList().block();
+
+            assertThat(responses.size()).isEqualTo(1);
+
+            // inspect partitionScopeThresholds via reflection and verify a retry was recorded
+            Field mapField = BulkExecutor.class.getDeclaredField("partitionScopeThresholds");
+            mapField.setAccessible(true);
+            Map<?, ?> thresholdsMap = (Map<?, ?>) mapField.get(executor);
+
+            assertThat(thresholdsMap).isNotEmpty();
+            Object thresholdsObj = thresholdsMap.values().iterator().next();
+            PartitionScopeThresholds thresholds = (PartitionScopeThresholds) thresholdsObj;
+
+            PartitionScopeThresholds.CurrentIntervalThresholds current = thresholds.getCurrentThresholds();
+            long retried = current.currentRetriedOperationCount.get();
+
+            assertThat(retried).isEqualTo(1);
+
+        } finally {
+            tooManyRequestRule.disable();
+            if (executor != null && !executor.isDisposed()) {
+                executor.dispose();
+            }
         }
     }
 }

@@ -5,156 +5,123 @@
 package com.azure.storage.blob.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.util.DateTimeRfc1123;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.time.OffsetDateTime;
 
-/** The BlobsSetHttpHeadersHeaders model. */
-@JacksonXmlRootElement(localName = "null")
+/**
+ * The BlobsSetHttpHeadersHeaders model.
+ */
 @Fluent
 public final class BlobsSetHttpHeadersHeaders {
     /*
-     * The x-ms-version property.
-     */
-    @JsonProperty(value = "x-ms-version")
-    private String xMsVersion;
-
-    /*
      * The ETag property.
      */
-    @JsonProperty(value = "ETag")
+    @Generated
     private String eTag;
-
-    /*
-     * The x-ms-blob-sequence-number property.
-     */
-    @JsonProperty(value = "x-ms-blob-sequence-number")
-    private Long xMsBlobSequenceNumber;
 
     /*
      * The Last-Modified property.
      */
-    @JsonProperty(value = "Last-Modified")
+    @Generated
     private DateTimeRfc1123 lastModified;
 
     /*
-     * The x-ms-request-id property.
+     * The x-ms-blob-sequence-number property.
      */
-    @JsonProperty(value = "x-ms-request-id")
-    private String xMsRequestId;
+    @Generated
+    private Long xMsBlobSequenceNumber;
 
     /*
      * The x-ms-client-request-id property.
      */
-    @JsonProperty(value = "x-ms-client-request-id")
+    @Generated
     private String xMsClientRequestId;
+
+    /*
+     * The x-ms-request-id property.
+     */
+    @Generated
+    private String xMsRequestId;
+
+    /*
+     * The x-ms-version property.
+     */
+    @Generated
+    private String xMsVersion;
 
     /*
      * The Date property.
      */
-    @JsonProperty(value = "Date")
+    @Generated
     private DateTimeRfc1123 date;
 
+    private static final HttpHeaderName X_MS_BLOB_SEQUENCE_NUMBER
+        = HttpHeaderName.fromString("x-ms-blob-sequence-number");
+
     private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
-
-    private static final HttpHeaderName X_MS_BLOB_SEQUENCE_NUMBER =
-            HttpHeaderName.fromString("x-ms-blob-sequence-number");
-
-    private static final HttpHeaderName X_MS_REQUEST_ID = HttpHeaderName.fromString("x-ms-request-id");
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of BlobsSetHttpHeadersHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public BlobsSetHttpHeadersHeaders(HttpHeaders rawHeaders) {
-        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
         this.eTag = rawHeaders.getValue(HttpHeaderName.ETAG);
-        String xMsBlobSequenceNumber = rawHeaders.getValue(X_MS_BLOB_SEQUENCE_NUMBER);
-        if (xMsBlobSequenceNumber != null) {
-            this.xMsBlobSequenceNumber = Long.parseLong(xMsBlobSequenceNumber);
-        }
         String lastModified = rawHeaders.getValue(HttpHeaderName.LAST_MODIFIED);
         if (lastModified != null) {
             this.lastModified = new DateTimeRfc1123(lastModified);
+        } else {
+            this.lastModified = null;
         }
-        this.xMsRequestId = rawHeaders.getValue(X_MS_REQUEST_ID);
+        String xMsBlobSequenceNumber = rawHeaders.getValue(X_MS_BLOB_SEQUENCE_NUMBER);
+        if (xMsBlobSequenceNumber != null) {
+            this.xMsBlobSequenceNumber = Long.parseLong(xMsBlobSequenceNumber);
+        } else {
+            this.xMsBlobSequenceNumber = null;
+        }
         this.xMsClientRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_CLIENT_REQUEST_ID);
+        this.xMsRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_REQUEST_ID);
+        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
         String date = rawHeaders.getValue(HttpHeaderName.DATE);
         if (date != null) {
             this.date = new DateTimeRfc1123(date);
+        } else {
+            this.date = null;
         }
-    }
-
-    /**
-     * Get the xMsVersion property: The x-ms-version property.
-     *
-     * @return the xMsVersion value.
-     */
-    public String getXMsVersion() {
-        return this.xMsVersion;
-    }
-
-    /**
-     * Set the xMsVersion property: The x-ms-version property.
-     *
-     * @param xMsVersion the xMsVersion value to set.
-     * @return the BlobsSetHttpHeadersHeaders object itself.
-     */
-    public BlobsSetHttpHeadersHeaders setXMsVersion(String xMsVersion) {
-        this.xMsVersion = xMsVersion;
-        return this;
     }
 
     /**
      * Get the eTag property: The ETag property.
-     *
+     * 
      * @return the eTag value.
      */
+    @Generated
     public String getETag() {
         return this.eTag;
     }
 
     /**
      * Set the eTag property: The ETag property.
-     *
+     * 
      * @param eTag the eTag value to set.
      * @return the BlobsSetHttpHeadersHeaders object itself.
      */
+    @Generated
     public BlobsSetHttpHeadersHeaders setETag(String eTag) {
         this.eTag = eTag;
         return this;
     }
 
     /**
-     * Get the xMsBlobSequenceNumber property: The x-ms-blob-sequence-number property.
-     *
-     * @return the xMsBlobSequenceNumber value.
-     */
-    public Long getXMsBlobSequenceNumber() {
-        return this.xMsBlobSequenceNumber;
-    }
-
-    /**
-     * Set the xMsBlobSequenceNumber property: The x-ms-blob-sequence-number property.
-     *
-     * @param xMsBlobSequenceNumber the xMsBlobSequenceNumber value to set.
-     * @return the BlobsSetHttpHeadersHeaders object itself.
-     */
-    public BlobsSetHttpHeadersHeaders setXMsBlobSequenceNumber(Long xMsBlobSequenceNumber) {
-        this.xMsBlobSequenceNumber = xMsBlobSequenceNumber;
-        return this;
-    }
-
-    /**
      * Get the lastModified property: The Last-Modified property.
-     *
+     * 
      * @return the lastModified value.
      */
+    @Generated
     public OffsetDateTime getLastModified() {
         if (this.lastModified == null) {
             return null;
@@ -164,10 +131,11 @@ public final class BlobsSetHttpHeadersHeaders {
 
     /**
      * Set the lastModified property: The Last-Modified property.
-     *
+     * 
      * @param lastModified the lastModified value to set.
      * @return the BlobsSetHttpHeadersHeaders object itself.
      */
+    @Generated
     public BlobsSetHttpHeadersHeaders setLastModified(OffsetDateTime lastModified) {
         if (lastModified == null) {
             this.lastModified = null;
@@ -178,50 +146,99 @@ public final class BlobsSetHttpHeadersHeaders {
     }
 
     /**
-     * Get the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @return the xMsRequestId value.
+     * Get the xMsBlobSequenceNumber property: The x-ms-blob-sequence-number property.
+     * 
+     * @return the xMsBlobSequenceNumber value.
      */
-    public String getXMsRequestId() {
-        return this.xMsRequestId;
+    @Generated
+    public Long getXMsBlobSequenceNumber() {
+        return this.xMsBlobSequenceNumber;
     }
 
     /**
-     * Set the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @param xMsRequestId the xMsRequestId value to set.
+     * Set the xMsBlobSequenceNumber property: The x-ms-blob-sequence-number property.
+     * 
+     * @param xMsBlobSequenceNumber the xMsBlobSequenceNumber value to set.
      * @return the BlobsSetHttpHeadersHeaders object itself.
      */
-    public BlobsSetHttpHeadersHeaders setXMsRequestId(String xMsRequestId) {
-        this.xMsRequestId = xMsRequestId;
+    @Generated
+    public BlobsSetHttpHeadersHeaders setXMsBlobSequenceNumber(Long xMsBlobSequenceNumber) {
+        this.xMsBlobSequenceNumber = xMsBlobSequenceNumber;
         return this;
     }
 
     /**
      * Get the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
+     * 
      * @return the xMsClientRequestId value.
      */
+    @Generated
     public String getXMsClientRequestId() {
         return this.xMsClientRequestId;
     }
 
     /**
      * Set the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
+     * 
      * @param xMsClientRequestId the xMsClientRequestId value to set.
      * @return the BlobsSetHttpHeadersHeaders object itself.
      */
+    @Generated
     public BlobsSetHttpHeadersHeaders setXMsClientRequestId(String xMsClientRequestId) {
         this.xMsClientRequestId = xMsClientRequestId;
         return this;
     }
 
     /**
+     * Get the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @return the xMsRequestId value.
+     */
+    @Generated
+    public String getXMsRequestId() {
+        return this.xMsRequestId;
+    }
+
+    /**
+     * Set the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @param xMsRequestId the xMsRequestId value to set.
+     * @return the BlobsSetHttpHeadersHeaders object itself.
+     */
+    @Generated
+    public BlobsSetHttpHeadersHeaders setXMsRequestId(String xMsRequestId) {
+        this.xMsRequestId = xMsRequestId;
+        return this;
+    }
+
+    /**
+     * Get the xMsVersion property: The x-ms-version property.
+     * 
+     * @return the xMsVersion value.
+     */
+    @Generated
+    public String getXMsVersion() {
+        return this.xMsVersion;
+    }
+
+    /**
+     * Set the xMsVersion property: The x-ms-version property.
+     * 
+     * @param xMsVersion the xMsVersion value to set.
+     * @return the BlobsSetHttpHeadersHeaders object itself.
+     */
+    @Generated
+    public BlobsSetHttpHeadersHeaders setXMsVersion(String xMsVersion) {
+        this.xMsVersion = xMsVersion;
+        return this;
+    }
+
+    /**
      * Get the date property: The Date property.
-     *
+     * 
      * @return the date value.
      */
+    @Generated
     public OffsetDateTime getDate() {
         if (this.date == null) {
             return null;
@@ -231,10 +248,11 @@ public final class BlobsSetHttpHeadersHeaders {
 
     /**
      * Set the date property: The Date property.
-     *
+     * 
      * @param date the date value to set.
      * @return the BlobsSetHttpHeadersHeaders object itself.
      */
+    @Generated
     public BlobsSetHttpHeadersHeaders setDate(OffsetDateTime date) {
         if (date == null) {
             this.date = null;

@@ -11,17 +11,17 @@ import com.azure.identity.implementation.util.ValidationUtil;
  *
  * <p>The {@link ClientSecretCredential} acquires a token via service principal authentication. It is a type of
  * authentication in Azure that enables a non-interactive login to
- * <a href="https://learn.microsoft.com/azure/active-directory/fundamentals/">Azure Active Directory (Azure AD)
- * </a>, allowing an application or service to authenticate itself with Azure resources.
- * A Service Principal is essentially an identity created for an application in Azure AD that can be used to
+ * <a href="https://learn.microsoft.com/entra/fundamentals/">Microsoft Entra ID</a>, allowing an
+ * application or service to authenticate itself with Azure resources.
+ * A Service Principal is essentially an identity created for an application in Microsoft Entra ID that can be used to
  * authenticate with Azure resources. It's like a "user identity" for the application or service, and it provides
  * a way for the application to authenticate itself with Azure resources without needing to use a user's credentials.
- * <a href="https://learn.microsoft.com/azure/active-directory/fundamentals/">Azure Active Directory
- * (Azure AD)</a> allows users to register service principals which can be used as an identity for authentication.
+ * <a href="https://learn.microsoft.com/entra/fundamentals/">Microsoft Entra ID</a> allows users to
+ * register service principals which can be used as an identity for authentication.
  * A client secret associated with the registered service principal is used as the password when authenticating the
  * service principal.
  * The {@link ClientSecretCredential} acquires an access token with a client secret for a service principal/registered
- * AAD application. The tenantId, clientId and clientSecret of the service principal are required for this credential
+ * Microsoft Entra application. The tenantId, clientId and clientSecret of the service principal are required for this credential
  * to acquire an access token. It can be used both in Azure hosted and local development environments for
  * authentication. For more information refer to the
  * <a href="https://aka.ms/azsdk/java/identity/clientsecretcredential/docs">conceptual knowledge and configuration
@@ -37,8 +37,7 @@ import com.azure.identity.implementation.util.ValidationUtil;
  *
  * <!-- src_embed com.azure.identity.credential.clientsecretcredential.construct -->
  * <pre>
- * TokenCredential clientSecretCredential = new ClientSecretCredentialBuilder&#40;&#41;
- *     .tenantId&#40;tenantId&#41;
+ * TokenCredential clientSecretCredential = new ClientSecretCredentialBuilder&#40;&#41;.tenantId&#40;tenantId&#41;
  *     .clientId&#40;clientId&#41;
  *     .clientSecret&#40;clientSecret&#41;
  *     .build&#40;&#41;;
@@ -56,8 +55,7 @@ import com.azure.identity.implementation.util.ValidationUtil;
  *
  * <!-- src_embed com.azure.identity.credential.clientsecretcredential.constructwithproxy -->
  * <pre>
- * TokenCredential secretCredential = new ClientSecretCredentialBuilder&#40;&#41;
- *     .tenantId&#40;tenantId&#41;
+ * TokenCredential secretCredential = new ClientSecretCredentialBuilder&#40;&#41;.tenantId&#40;tenantId&#41;
  *     .clientId&#40;clientId&#41;
  *     .clientSecret&#40;clientSecret&#41;
  *     .proxyOptions&#40;new ProxyOptions&#40;Type.HTTP, new InetSocketAddress&#40;&quot;10.21.32.43&quot;, 5465&#41;&#41;&#41;
@@ -74,8 +72,15 @@ public class ClientSecretCredentialBuilder extends AadCredentialBuilderBase<Clie
     private String clientSecret;
 
     /**
+     * Constructs an instance of ClientSecretCredentialBuilder.
+     */
+    public ClientSecretCredentialBuilder() {
+        super();
+    }
+
+    /**
      * Sets the client secret for the authentication.
-     * @param clientSecret the secret value of the AAD application.
+     * @param clientSecret the secret value of the Microsoft Entra application.
      * @return An updated instance of this builder.
      */
     public ClientSecretCredentialBuilder clientSecret(String clientSecret) {
@@ -114,8 +119,8 @@ public class ClientSecretCredentialBuilder extends AadCredentialBuilderBase<Clie
      * @param tokenCachePersistenceOptions the token cache configuration options
      * @return An updated instance of this builder with the token cache options configured.
      */
-    public ClientSecretCredentialBuilder tokenCachePersistenceOptions(TokenCachePersistenceOptions
-                                                                                tokenCachePersistenceOptions) {
+    public ClientSecretCredentialBuilder
+        tokenCachePersistenceOptions(TokenCachePersistenceOptions tokenCachePersistenceOptions) {
         this.identityClientOptions.setTokenCacheOptions(tokenCachePersistenceOptions);
         return this;
     }
@@ -126,8 +131,8 @@ public class ClientSecretCredentialBuilder extends AadCredentialBuilderBase<Clie
      * @return a {@link ClientSecretCredentialBuilder} with the current configurations.
      */
     public ClientSecretCredential build() {
-        ValidationUtil.validate(CLASS_NAME, LOGGER, "clientId", clientId, "tenantId", tenantId,
-            "clientSecret", clientSecret);
+        ValidationUtil.validate(CLASS_NAME, LOGGER, "clientId", clientId, "tenantId", tenantId, "clientSecret",
+            clientSecret);
 
         return new ClientSecretCredential(tenantId, clientId, clientSecret, identityClientOptions);
     }

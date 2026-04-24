@@ -13,29 +13,30 @@ import org.junit.jupiter.api.Assertions;
 public final class ApplicationGroupPatchTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ApplicationGroupPatch model =
-            BinaryData
-                .fromString(
-                    "{\"tags\":{\"axibxujw\":\"biexzfeyu\",\"muzyoxaepdk\":\"hqwa\",\"rhdwbavxbniw\":\"jancu\"},\"properties\":{\"description\":\"wz\",\"friendlyName\":\"dbpgnxytxhp\"},\"id\":\"xbzpfzab\",\"name\":\"lcuhxwtctyqiklb\",\"type\":\"ovplw\"}")
-                .toObject(ApplicationGroupPatch.class);
-        Assertions.assertEquals("biexzfeyu", model.tags().get("axibxujw"));
-        Assertions.assertEquals("wz", model.description());
-        Assertions.assertEquals("dbpgnxytxhp", model.friendlyName());
+        ApplicationGroupPatch model = BinaryData.fromString(
+            "{\"tags\":{\"modfvuefywsbpfvm\":\"dggkzzlvmbmpa\",\"yzvqt\":\"yhrfouyftaakcpw\",\"zksmondj\":\"nubexk\"},\"properties\":{\"description\":\"xvy\",\"friendlyName\":\"mg\",\"showInFeed\":true},\"id\":\"whojvp\",\"name\":\"jqg\",\"type\":\"ysmocmbqfqvmkcxo\"}")
+            .toObject(ApplicationGroupPatch.class);
+        Assertions.assertEquals("dggkzzlvmbmpa", model.tags().get("modfvuefywsbpfvm"));
+        Assertions.assertEquals("xvy", model.description());
+        Assertions.assertEquals("mg", model.friendlyName());
+        Assertions.assertEquals(true, model.showInFeed());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ApplicationGroupPatch model =
-            new ApplicationGroupPatch()
-                .withTags(mapOf("axibxujw", "biexzfeyu", "muzyoxaepdk", "hqwa", "rhdwbavxbniw", "jancu"))
-                .withDescription("wz")
-                .withFriendlyName("dbpgnxytxhp");
+        ApplicationGroupPatch model = new ApplicationGroupPatch()
+            .withTags(mapOf("modfvuefywsbpfvm", "dggkzzlvmbmpa", "yzvqt", "yhrfouyftaakcpw", "zksmondj", "nubexk"))
+            .withDescription("xvy")
+            .withFriendlyName("mg")
+            .withShowInFeed(true);
         model = BinaryData.fromObject(model).toObject(ApplicationGroupPatch.class);
-        Assertions.assertEquals("biexzfeyu", model.tags().get("axibxujw"));
-        Assertions.assertEquals("wz", model.description());
-        Assertions.assertEquals("dbpgnxytxhp", model.friendlyName());
+        Assertions.assertEquals("dggkzzlvmbmpa", model.tags().get("modfvuefywsbpfvm"));
+        Assertions.assertEquals("xvy", model.description());
+        Assertions.assertEquals("mg", model.friendlyName());
+        Assertions.assertEquals(true, model.showInFeed());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

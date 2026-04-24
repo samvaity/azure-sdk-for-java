@@ -12,7 +12,10 @@ import com.azure.core.util.polling.PollResponse;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.io.File;
+import java.nio.file.Files;
 
 public class ReadmeSamples {
 
@@ -139,5 +142,31 @@ public class ReadmeSamples {
 
         System.out.println("Operation Id: " + response.getValue().getId());
         // END: readme-sample-sendEmailWithAttachment
+    }
+
+    public void sendEmailWithInlineAttachment() throws IOException {
+        EmailClient emailClient = createEmailClientWithConnectionString();
+
+        // BEGIN: readme-sample-sendEmailWithInlineAttachment
+        byte[] pngContent = Files.readAllBytes(new File("./inline-attachment.png").toPath());
+        byte[] pngEncodedContent = Base64.getEncoder().encodeToString(pngContent).getBytes();
+        EmailAttachment attachment = new EmailAttachment(
+            "inline-attachment.png",
+            "image/png",
+            BinaryData.fromBytes(pngEncodedContent)
+        ).setContentId("inline_image");
+
+        EmailMessage message = new EmailMessage()
+            .setSenderAddress("<sender-email-address>")
+            .setToRecipients("<recipient-email-address>")
+            .setSubject("test subject")
+            .setBodyHtml("<h1>test message<img src=\"cid:inline_image\"></h1>")
+            .setAttachments(attachment);
+
+        SyncPoller<EmailSendResult, EmailSendResult> poller = emailClient.beginSend(message);
+        PollResponse<EmailSendResult> response = poller.waitForCompletion();
+
+        System.out.println("Operation Id: " + response.getValue().getId());
+        // END: readme-sample-sendEmailWithInlineAttachment
     }
 }

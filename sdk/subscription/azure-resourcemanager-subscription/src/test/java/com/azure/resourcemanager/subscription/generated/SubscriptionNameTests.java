@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Assertions;
 public final class SubscriptionNameTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        SubscriptionName model =
-            BinaryData.fromString("{\"subscriptionName\":\"hsgcbacphejkot\"}").toObject(SubscriptionName.class);
-        Assertions.assertEquals("hsgcbacphejkot", model.subscriptionName());
+        SubscriptionName model
+            = BinaryData.fromString("{\"subscriptionName\":\"czmehmtzopbsp\"}").toObject(SubscriptionName.class);
+        Assertions.assertEquals("czmehmtzopbsp", model.subscriptionName());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        SubscriptionName model = new SubscriptionName().withSubscriptionName("hsgcbacphejkot");
+        SubscriptionName model = new SubscriptionName().withSubscriptionName("czmehmtzopbsp");
         model = BinaryData.fromObject(model).toObject(SubscriptionName.class);
-        Assertions.assertEquals("hsgcbacphejkot", model.subscriptionName());
+        Assertions.assertEquals("czmehmtzopbsp", model.subscriptionName());
     }
 }

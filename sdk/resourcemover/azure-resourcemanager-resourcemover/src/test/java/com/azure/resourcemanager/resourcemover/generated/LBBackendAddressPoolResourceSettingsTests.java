@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Assertions;
 public final class LBBackendAddressPoolResourceSettingsTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        LBBackendAddressPoolResourceSettings model =
-            BinaryData.fromString("{\"name\":\"uzbpzkafku\"}").toObject(LBBackendAddressPoolResourceSettings.class);
-        Assertions.assertEquals("uzbpzkafku", model.name());
+        LBBackendAddressPoolResourceSettings model
+            = BinaryData.fromString("{\"name\":\"ww\"}").toObject(LBBackendAddressPoolResourceSettings.class);
+        Assertions.assertEquals("ww", model.name());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        LBBackendAddressPoolResourceSettings model = new LBBackendAddressPoolResourceSettings().withName("uzbpzkafku");
+        LBBackendAddressPoolResourceSettings model = new LBBackendAddressPoolResourceSettings().withName("ww");
         model = BinaryData.fromObject(model).toObject(LBBackendAddressPoolResourceSettings.class);
-        Assertions.assertEquals("uzbpzkafku", model.name());
+        Assertions.assertEquals("ww", model.name());
     }
 }

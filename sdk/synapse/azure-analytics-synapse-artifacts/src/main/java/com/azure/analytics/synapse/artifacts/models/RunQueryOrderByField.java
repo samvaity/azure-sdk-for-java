@@ -4,8 +4,8 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
 /**
@@ -14,57 +14,87 @@ import java.util.Collection;
  * trigger runs are TriggerName, TriggerRunTimestamp and Status.
  */
 public final class RunQueryOrderByField extends ExpandableStringEnum<RunQueryOrderByField> {
-    /** Static value RunStart for RunQueryOrderByField. */
+    /**
+     * Static value RunStart for RunQueryOrderByField.
+     */
+    @Generated
     public static final RunQueryOrderByField RUN_START = fromString("RunStart");
 
-    /** Static value RunEnd for RunQueryOrderByField. */
+    /**
+     * Static value RunEnd for RunQueryOrderByField.
+     */
+    @Generated
     public static final RunQueryOrderByField RUN_END = fromString("RunEnd");
 
-    /** Static value PipelineName for RunQueryOrderByField. */
+    /**
+     * Static value PipelineName for RunQueryOrderByField.
+     */
+    @Generated
     public static final RunQueryOrderByField PIPELINE_NAME = fromString("PipelineName");
 
-    /** Static value Status for RunQueryOrderByField. */
+    /**
+     * Static value Status for RunQueryOrderByField.
+     */
+    @Generated
     public static final RunQueryOrderByField STATUS = fromString("Status");
 
-    /** Static value ActivityName for RunQueryOrderByField. */
+    /**
+     * Static value ActivityName for RunQueryOrderByField.
+     */
+    @Generated
     public static final RunQueryOrderByField ACTIVITY_NAME = fromString("ActivityName");
 
-    /** Static value ActivityRunStart for RunQueryOrderByField. */
+    /**
+     * Static value ActivityRunStart for RunQueryOrderByField.
+     */
+    @Generated
     public static final RunQueryOrderByField ACTIVITY_RUN_START = fromString("ActivityRunStart");
 
-    /** Static value ActivityRunEnd for RunQueryOrderByField. */
+    /**
+     * Static value ActivityRunEnd for RunQueryOrderByField.
+     */
+    @Generated
     public static final RunQueryOrderByField ACTIVITY_RUN_END = fromString("ActivityRunEnd");
 
-    /** Static value TriggerName for RunQueryOrderByField. */
+    /**
+     * Static value TriggerName for RunQueryOrderByField.
+     */
+    @Generated
     public static final RunQueryOrderByField TRIGGER_NAME = fromString("TriggerName");
 
-    /** Static value TriggerRunTimestamp for RunQueryOrderByField. */
+    /**
+     * Static value TriggerRunTimestamp for RunQueryOrderByField.
+     */
+    @Generated
     public static final RunQueryOrderByField TRIGGER_RUN_TIMESTAMP = fromString("TriggerRunTimestamp");
 
     /**
      * Creates a new instance of RunQueryOrderByField value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public RunQueryOrderByField() {}
+    public RunQueryOrderByField() {
+    }
 
     /**
      * Creates or finds a RunQueryOrderByField from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding RunQueryOrderByField.
      */
-    @JsonCreator
+    @Generated
     public static RunQueryOrderByField fromString(String name) {
         return fromString(name, RunQueryOrderByField.class);
     }
 
     /**
      * Gets known RunQueryOrderByField values.
-     *
+     * 
      * @return known RunQueryOrderByField values.
      */
+    @Generated
     public static Collection<RunQueryOrderByField> values() {
         return values(RunQueryOrderByField.class);
     }

@@ -5,240 +5,260 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-/** The DataFeedDetail model. */
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "dataSourceType",
-        defaultImpl = DataFeedDetail.class)
-@JsonTypeName("DataFeedDetail")
-@JsonSubTypes({
-    @JsonSubTypes.Type(name = "AzureApplicationInsights", value = AzureApplicationInsightsDataFeed.class),
-    @JsonSubTypes.Type(name = "AzureBlob", value = AzureBlobDataFeed.class),
-    @JsonSubTypes.Type(name = "AzureCosmosDB", value = AzureCosmosDBDataFeed.class),
-    @JsonSubTypes.Type(name = "AzureDataExplorer", value = AzureDataExplorerDataFeed.class),
-    @JsonSubTypes.Type(name = "AzureDataLakeStorageGen2", value = AzureDataLakeStorageGen2DataFeed.class),
-    @JsonSubTypes.Type(name = "AzureEventHubs", value = AzureEventHubsDataFeed.class),
-    @JsonSubTypes.Type(name = "AzureLogAnalytics", value = AzureLogAnalyticsDataFeed.class),
-    @JsonSubTypes.Type(name = "AzureTable", value = AzureTableDataFeed.class),
-    @JsonSubTypes.Type(name = "InfluxDB", value = InfluxDBDataFeed.class),
-    @JsonSubTypes.Type(name = "MySql", value = MySqlDataFeed.class),
-    @JsonSubTypes.Type(name = "PostgreSql", value = PostgreSqlDataFeed.class),
-    @JsonSubTypes.Type(name = "SqlServer", value = SQLServerDataFeed.class),
-    @JsonSubTypes.Type(name = "MongoDB", value = MongoDBDataFeed.class)
-})
+/**
+ * The DataFeedDetail model.
+ */
 @Fluent
-public class DataFeedDetail {
+public class DataFeedDetail implements JsonSerializable<DataFeedDetail> {
+    /*
+     * data source type
+     */
+    @Generated
+    private DataSourceType dataSourceType = DataSourceType.fromString("DataFeedDetail");
+
     /*
      * data feed unique id
      */
-    @JsonProperty(value = "dataFeedId", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private UUID dataFeedId;
 
     /*
      * data feed name
      */
-    @JsonProperty(value = "dataFeedName", required = true)
+    @Generated
     private String dataFeedName;
 
     /*
      * data feed description
      */
-    @JsonProperty(value = "dataFeedDescription")
+    @Generated
     private String dataFeedDescription;
 
     /*
      * granularity of the time series
      */
-    @JsonProperty(value = "granularityName", required = true)
+    @Generated
     private Granularity granularityName;
 
     /*
      * if granularity is custom,it is required.
      */
-    @JsonProperty(value = "granularityAmount")
+    @Generated
     private Integer granularityAmount;
 
     /*
      * measure list
      */
-    @JsonProperty(value = "metrics", required = true)
+    @Generated
     private List<DataFeedMetric> metrics;
 
     /*
      * dimension list
      */
-    @JsonProperty(value = "dimension")
+    @Generated
     private List<DataFeedDimension> dimension;
 
     /*
-     * user-defined timestamp column. if timestampColumn is null, start time of every time slice will be used as
-     * default value.
+     * user-defined timestamp column. if timestampColumn is null, start time of every time slice will be used as default
+     * value.
      */
-    @JsonProperty(value = "timestampColumn")
+    @Generated
     private String timestampColumn;
 
     /*
      * ingestion start time
      */
-    @JsonProperty(value = "dataStartFrom", required = true)
+    @Generated
     private OffsetDateTime dataStartFrom;
 
     /*
      * the time that the beginning of data ingestion task will delay for every data slice according to this offset.
      */
-    @JsonProperty(value = "startOffsetInSeconds")
+    @Generated
     private Long startOffsetInSeconds;
 
     /*
      * the max concurrency of data ingestion queries against user data source. 0 means no limitation.
      */
-    @JsonProperty(value = "maxConcurrency")
+    @Generated
     private Integer maxConcurrency;
 
     /*
      * the min retry interval for failed data ingestion tasks.
      */
-    @JsonProperty(value = "minRetryIntervalInSeconds")
+    @Generated
     private Long minRetryIntervalInSeconds;
 
     /*
      * stop retry data ingestion after the data slice first schedule time in seconds.
      */
-    @JsonProperty(value = "stopRetryAfterInSeconds")
+    @Generated
     private Long stopRetryAfterInSeconds;
 
     /*
      * mark if the data feed need rollup
      */
-    @JsonProperty(value = "needRollup")
+    @Generated
     private NeedRollupEnum needRollup;
 
     /*
      * roll up method
      */
-    @JsonProperty(value = "rollUpMethod")
+    @Generated
     private RollUpMethod rollUpMethod;
 
     /*
      * roll up columns
      */
-    @JsonProperty(value = "rollUpColumns")
+    @Generated
     private List<String> rollUpColumns;
 
     /*
      * the identification value for the row of calculated all-up value.
      */
-    @JsonProperty(value = "allUpIdentification")
+    @Generated
     private String allUpIdentification;
 
     /*
      * the type of fill missing point for anomaly detection
      */
-    @JsonProperty(value = "fillMissingPointType")
+    @Generated
     private FillMissingPointType fillMissingPointType;
 
     /*
      * the value of fill missing point for anomaly detection
      */
-    @JsonProperty(value = "fillMissingPointValue")
+    @Generated
     private Double fillMissingPointValue;
 
     /*
      * data feed access mode, default is Private
      */
-    @JsonProperty(value = "viewMode")
+    @Generated
     private ViewMode viewMode;
 
     /*
      * data feed administrator
      */
-    @JsonProperty(value = "admins")
+    @Generated
     private List<String> admins;
 
     /*
      * data feed viewer
      */
-    @JsonProperty(value = "viewers")
+    @Generated
     private List<String> viewers;
 
     /*
      * the query user is one of data feed administrator or not
      */
-    @JsonProperty(value = "isAdmin", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Boolean isAdmin;
 
     /*
      * data feed creator
      */
-    @JsonProperty(value = "creator", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private String creator;
 
     /*
      * data feed status
      */
-    @JsonProperty(value = "status", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private EntityStatus status;
 
     /*
      * data feed created time
      */
-    @JsonProperty(value = "createdTime", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private OffsetDateTime createdTime;
 
     /*
      * action link for alert
      */
-    @JsonProperty(value = "actionLinkTemplate")
+    @Generated
     private String actionLinkTemplate;
 
     /*
      * authentication type for corresponding data source
      */
-    @JsonProperty(value = "authenticationType")
+    @Generated
     private AuthenticationTypeEnum authenticationType;
 
     /*
      * The credential entity id
      */
-    @JsonProperty(value = "credentialId")
+    @Generated
     private String credentialId;
 
-    /** Creates an instance of DataFeedDetail class. */
-    public DataFeedDetail() {}
+    /**
+     * Creates an instance of DataFeedDetail class.
+     */
+    @Generated
+    public DataFeedDetail() {
+    }
+
+    /**
+     * Get the dataSourceType property: data source type.
+     * 
+     * @return the dataSourceType value.
+     */
+    @Generated
+    public DataSourceType getDataSourceType() {
+        return this.dataSourceType;
+    }
 
     /**
      * Get the dataFeedId property: data feed unique id.
-     *
+     * 
      * @return the dataFeedId value.
      */
+    @Generated
     public UUID getDataFeedId() {
         return this.dataFeedId;
     }
 
     /**
+     * Set the dataFeedId property: data feed unique id.
+     * 
+     * @param dataFeedId the dataFeedId value to set.
+     * @return the DataFeedDetail object itself.
+     */
+    @Generated
+    DataFeedDetail setDataFeedId(UUID dataFeedId) {
+        this.dataFeedId = dataFeedId;
+        return this;
+    }
+
+    /**
      * Get the dataFeedName property: data feed name.
-     *
+     * 
      * @return the dataFeedName value.
      */
+    @Generated
     public String getDataFeedName() {
         return this.dataFeedName;
     }
 
     /**
      * Set the dataFeedName property: data feed name.
-     *
+     * 
      * @param dataFeedName the dataFeedName value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setDataFeedName(String dataFeedName) {
         this.dataFeedName = dataFeedName;
         return this;
@@ -246,19 +266,21 @@ public class DataFeedDetail {
 
     /**
      * Get the dataFeedDescription property: data feed description.
-     *
+     * 
      * @return the dataFeedDescription value.
      */
+    @Generated
     public String getDataFeedDescription() {
         return this.dataFeedDescription;
     }
 
     /**
      * Set the dataFeedDescription property: data feed description.
-     *
+     * 
      * @param dataFeedDescription the dataFeedDescription value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setDataFeedDescription(String dataFeedDescription) {
         this.dataFeedDescription = dataFeedDescription;
         return this;
@@ -266,19 +288,21 @@ public class DataFeedDetail {
 
     /**
      * Get the granularityName property: granularity of the time series.
-     *
+     * 
      * @return the granularityName value.
      */
+    @Generated
     public Granularity getGranularityName() {
         return this.granularityName;
     }
 
     /**
      * Set the granularityName property: granularity of the time series.
-     *
+     * 
      * @param granularityName the granularityName value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setGranularityName(Granularity granularityName) {
         this.granularityName = granularityName;
         return this;
@@ -286,19 +310,21 @@ public class DataFeedDetail {
 
     /**
      * Get the granularityAmount property: if granularity is custom,it is required.
-     *
+     * 
      * @return the granularityAmount value.
      */
+    @Generated
     public Integer getGranularityAmount() {
         return this.granularityAmount;
     }
 
     /**
      * Set the granularityAmount property: if granularity is custom,it is required.
-     *
+     * 
      * @param granularityAmount the granularityAmount value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setGranularityAmount(Integer granularityAmount) {
         this.granularityAmount = granularityAmount;
         return this;
@@ -306,19 +332,21 @@ public class DataFeedDetail {
 
     /**
      * Get the metrics property: measure list.
-     *
+     * 
      * @return the metrics value.
      */
+    @Generated
     public List<DataFeedMetric> getMetrics() {
         return this.metrics;
     }
 
     /**
      * Set the metrics property: measure list.
-     *
+     * 
      * @param metrics the metrics value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setMetrics(List<DataFeedMetric> metrics) {
         this.metrics = metrics;
         return this;
@@ -326,19 +354,21 @@ public class DataFeedDetail {
 
     /**
      * Get the dimension property: dimension list.
-     *
+     * 
      * @return the dimension value.
      */
+    @Generated
     public List<DataFeedDimension> getDimension() {
         return this.dimension;
     }
 
     /**
      * Set the dimension property: dimension list.
-     *
+     * 
      * @param dimension the dimension value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setDimension(List<DataFeedDimension> dimension) {
         this.dimension = dimension;
         return this;
@@ -347,9 +377,10 @@ public class DataFeedDetail {
     /**
      * Get the timestampColumn property: user-defined timestamp column. if timestampColumn is null, start time of every
      * time slice will be used as default value.
-     *
+     * 
      * @return the timestampColumn value.
      */
+    @Generated
     public String getTimestampColumn() {
         return this.timestampColumn;
     }
@@ -357,10 +388,11 @@ public class DataFeedDetail {
     /**
      * Set the timestampColumn property: user-defined timestamp column. if timestampColumn is null, start time of every
      * time slice will be used as default value.
-     *
+     * 
      * @param timestampColumn the timestampColumn value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setTimestampColumn(String timestampColumn) {
         this.timestampColumn = timestampColumn;
         return this;
@@ -368,19 +400,21 @@ public class DataFeedDetail {
 
     /**
      * Get the dataStartFrom property: ingestion start time.
-     *
+     * 
      * @return the dataStartFrom value.
      */
+    @Generated
     public OffsetDateTime getDataStartFrom() {
         return this.dataStartFrom;
     }
 
     /**
      * Set the dataStartFrom property: ingestion start time.
-     *
+     * 
      * @param dataStartFrom the dataStartFrom value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setDataStartFrom(OffsetDateTime dataStartFrom) {
         this.dataStartFrom = dataStartFrom;
         return this;
@@ -389,9 +423,10 @@ public class DataFeedDetail {
     /**
      * Get the startOffsetInSeconds property: the time that the beginning of data ingestion task will delay for every
      * data slice according to this offset.
-     *
+     * 
      * @return the startOffsetInSeconds value.
      */
+    @Generated
     public Long getStartOffsetInSeconds() {
         return this.startOffsetInSeconds;
     }
@@ -399,10 +434,11 @@ public class DataFeedDetail {
     /**
      * Set the startOffsetInSeconds property: the time that the beginning of data ingestion task will delay for every
      * data slice according to this offset.
-     *
+     * 
      * @param startOffsetInSeconds the startOffsetInSeconds value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setStartOffsetInSeconds(Long startOffsetInSeconds) {
         this.startOffsetInSeconds = startOffsetInSeconds;
         return this;
@@ -411,9 +447,10 @@ public class DataFeedDetail {
     /**
      * Get the maxConcurrency property: the max concurrency of data ingestion queries against user data source. 0 means
      * no limitation.
-     *
+     * 
      * @return the maxConcurrency value.
      */
+    @Generated
     public Integer getMaxConcurrency() {
         return this.maxConcurrency;
     }
@@ -421,10 +458,11 @@ public class DataFeedDetail {
     /**
      * Set the maxConcurrency property: the max concurrency of data ingestion queries against user data source. 0 means
      * no limitation.
-     *
+     * 
      * @param maxConcurrency the maxConcurrency value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setMaxConcurrency(Integer maxConcurrency) {
         this.maxConcurrency = maxConcurrency;
         return this;
@@ -432,19 +470,21 @@ public class DataFeedDetail {
 
     /**
      * Get the minRetryIntervalInSeconds property: the min retry interval for failed data ingestion tasks.
-     *
+     * 
      * @return the minRetryIntervalInSeconds value.
      */
+    @Generated
     public Long getMinRetryIntervalInSeconds() {
         return this.minRetryIntervalInSeconds;
     }
 
     /**
      * Set the minRetryIntervalInSeconds property: the min retry interval for failed data ingestion tasks.
-     *
+     * 
      * @param minRetryIntervalInSeconds the minRetryIntervalInSeconds value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setMinRetryIntervalInSeconds(Long minRetryIntervalInSeconds) {
         this.minRetryIntervalInSeconds = minRetryIntervalInSeconds;
         return this;
@@ -453,9 +493,10 @@ public class DataFeedDetail {
     /**
      * Get the stopRetryAfterInSeconds property: stop retry data ingestion after the data slice first schedule time in
      * seconds.
-     *
+     * 
      * @return the stopRetryAfterInSeconds value.
      */
+    @Generated
     public Long getStopRetryAfterInSeconds() {
         return this.stopRetryAfterInSeconds;
     }
@@ -463,10 +504,11 @@ public class DataFeedDetail {
     /**
      * Set the stopRetryAfterInSeconds property: stop retry data ingestion after the data slice first schedule time in
      * seconds.
-     *
+     * 
      * @param stopRetryAfterInSeconds the stopRetryAfterInSeconds value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setStopRetryAfterInSeconds(Long stopRetryAfterInSeconds) {
         this.stopRetryAfterInSeconds = stopRetryAfterInSeconds;
         return this;
@@ -474,19 +516,21 @@ public class DataFeedDetail {
 
     /**
      * Get the needRollup property: mark if the data feed need rollup.
-     *
+     * 
      * @return the needRollup value.
      */
+    @Generated
     public NeedRollupEnum getNeedRollup() {
         return this.needRollup;
     }
 
     /**
      * Set the needRollup property: mark if the data feed need rollup.
-     *
+     * 
      * @param needRollup the needRollup value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setNeedRollup(NeedRollupEnum needRollup) {
         this.needRollup = needRollup;
         return this;
@@ -494,19 +538,21 @@ public class DataFeedDetail {
 
     /**
      * Get the rollUpMethod property: roll up method.
-     *
+     * 
      * @return the rollUpMethod value.
      */
+    @Generated
     public RollUpMethod getRollUpMethod() {
         return this.rollUpMethod;
     }
 
     /**
      * Set the rollUpMethod property: roll up method.
-     *
+     * 
      * @param rollUpMethod the rollUpMethod value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setRollUpMethod(RollUpMethod rollUpMethod) {
         this.rollUpMethod = rollUpMethod;
         return this;
@@ -514,19 +560,21 @@ public class DataFeedDetail {
 
     /**
      * Get the rollUpColumns property: roll up columns.
-     *
+     * 
      * @return the rollUpColumns value.
      */
+    @Generated
     public List<String> getRollUpColumns() {
         return this.rollUpColumns;
     }
 
     /**
      * Set the rollUpColumns property: roll up columns.
-     *
+     * 
      * @param rollUpColumns the rollUpColumns value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setRollUpColumns(List<String> rollUpColumns) {
         this.rollUpColumns = rollUpColumns;
         return this;
@@ -534,19 +582,21 @@ public class DataFeedDetail {
 
     /**
      * Get the allUpIdentification property: the identification value for the row of calculated all-up value.
-     *
+     * 
      * @return the allUpIdentification value.
      */
+    @Generated
     public String getAllUpIdentification() {
         return this.allUpIdentification;
     }
 
     /**
      * Set the allUpIdentification property: the identification value for the row of calculated all-up value.
-     *
+     * 
      * @param allUpIdentification the allUpIdentification value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setAllUpIdentification(String allUpIdentification) {
         this.allUpIdentification = allUpIdentification;
         return this;
@@ -554,19 +604,21 @@ public class DataFeedDetail {
 
     /**
      * Get the fillMissingPointType property: the type of fill missing point for anomaly detection.
-     *
+     * 
      * @return the fillMissingPointType value.
      */
+    @Generated
     public FillMissingPointType getFillMissingPointType() {
         return this.fillMissingPointType;
     }
 
     /**
      * Set the fillMissingPointType property: the type of fill missing point for anomaly detection.
-     *
+     * 
      * @param fillMissingPointType the fillMissingPointType value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setFillMissingPointType(FillMissingPointType fillMissingPointType) {
         this.fillMissingPointType = fillMissingPointType;
         return this;
@@ -574,19 +626,21 @@ public class DataFeedDetail {
 
     /**
      * Get the fillMissingPointValue property: the value of fill missing point for anomaly detection.
-     *
+     * 
      * @return the fillMissingPointValue value.
      */
+    @Generated
     public Double getFillMissingPointValue() {
         return this.fillMissingPointValue;
     }
 
     /**
      * Set the fillMissingPointValue property: the value of fill missing point for anomaly detection.
-     *
+     * 
      * @param fillMissingPointValue the fillMissingPointValue value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setFillMissingPointValue(Double fillMissingPointValue) {
         this.fillMissingPointValue = fillMissingPointValue;
         return this;
@@ -594,19 +648,21 @@ public class DataFeedDetail {
 
     /**
      * Get the viewMode property: data feed access mode, default is Private.
-     *
+     * 
      * @return the viewMode value.
      */
+    @Generated
     public ViewMode getViewMode() {
         return this.viewMode;
     }
 
     /**
      * Set the viewMode property: data feed access mode, default is Private.
-     *
+     * 
      * @param viewMode the viewMode value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setViewMode(ViewMode viewMode) {
         this.viewMode = viewMode;
         return this;
@@ -614,19 +670,21 @@ public class DataFeedDetail {
 
     /**
      * Get the admins property: data feed administrator.
-     *
+     * 
      * @return the admins value.
      */
+    @Generated
     public List<String> getAdmins() {
         return this.admins;
     }
 
     /**
      * Set the admins property: data feed administrator.
-     *
+     * 
      * @param admins the admins value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setAdmins(List<String> admins) {
         this.admins = admins;
         return this;
@@ -634,19 +692,21 @@ public class DataFeedDetail {
 
     /**
      * Get the viewers property: data feed viewer.
-     *
+     * 
      * @return the viewers value.
      */
+    @Generated
     public List<String> getViewers() {
         return this.viewers;
     }
 
     /**
      * Set the viewers property: data feed viewer.
-     *
+     * 
      * @param viewers the viewers value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setViewers(List<String> viewers) {
         this.viewers = viewers;
         return this;
@@ -654,55 +714,109 @@ public class DataFeedDetail {
 
     /**
      * Get the isAdmin property: the query user is one of data feed administrator or not.
-     *
+     * 
      * @return the isAdmin value.
      */
+    @Generated
     public Boolean isAdmin() {
         return this.isAdmin;
     }
 
     /**
+     * Set the isAdmin property: the query user is one of data feed administrator or not.
+     * 
+     * @param isAdmin the isAdmin value to set.
+     * @return the DataFeedDetail object itself.
+     */
+    @Generated
+    DataFeedDetail setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
+        return this;
+    }
+
+    /**
      * Get the creator property: data feed creator.
-     *
+     * 
      * @return the creator value.
      */
+    @Generated
     public String getCreator() {
         return this.creator;
     }
 
     /**
+     * Set the creator property: data feed creator.
+     * 
+     * @param creator the creator value to set.
+     * @return the DataFeedDetail object itself.
+     */
+    @Generated
+    DataFeedDetail setCreator(String creator) {
+        this.creator = creator;
+        return this;
+    }
+
+    /**
      * Get the status property: data feed status.
-     *
+     * 
      * @return the status value.
      */
+    @Generated
     public EntityStatus getStatus() {
         return this.status;
     }
 
     /**
+     * Set the status property: data feed status.
+     * 
+     * @param status the status value to set.
+     * @return the DataFeedDetail object itself.
+     */
+    @Generated
+    DataFeedDetail setStatus(EntityStatus status) {
+        this.status = status;
+        return this;
+    }
+
+    /**
      * Get the createdTime property: data feed created time.
-     *
+     * 
      * @return the createdTime value.
      */
+    @Generated
     public OffsetDateTime getCreatedTime() {
         return this.createdTime;
     }
 
     /**
+     * Set the createdTime property: data feed created time.
+     * 
+     * @param createdTime the createdTime value to set.
+     * @return the DataFeedDetail object itself.
+     */
+    @Generated
+    DataFeedDetail setCreatedTime(OffsetDateTime createdTime) {
+        this.createdTime = createdTime;
+        return this;
+    }
+
+    /**
      * Get the actionLinkTemplate property: action link for alert.
-     *
+     * 
      * @return the actionLinkTemplate value.
      */
+    @Generated
     public String getActionLinkTemplate() {
         return this.actionLinkTemplate;
     }
 
     /**
      * Set the actionLinkTemplate property: action link for alert.
-     *
+     * 
      * @param actionLinkTemplate the actionLinkTemplate value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setActionLinkTemplate(String actionLinkTemplate) {
         this.actionLinkTemplate = actionLinkTemplate;
         return this;
@@ -710,19 +824,21 @@ public class DataFeedDetail {
 
     /**
      * Get the authenticationType property: authentication type for corresponding data source.
-     *
+     * 
      * @return the authenticationType value.
      */
+    @Generated
     public AuthenticationTypeEnum getAuthenticationType() {
         return this.authenticationType;
     }
 
     /**
      * Set the authenticationType property: authentication type for corresponding data source.
-     *
+     * 
      * @param authenticationType the authenticationType value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setAuthenticationType(AuthenticationTypeEnum authenticationType) {
         this.authenticationType = authenticationType;
         return this;
@@ -730,21 +846,211 @@ public class DataFeedDetail {
 
     /**
      * Get the credentialId property: The credential entity id.
-     *
+     * 
      * @return the credentialId value.
      */
+    @Generated
     public String getCredentialId() {
         return this.credentialId;
     }
 
     /**
      * Set the credentialId property: The credential entity id.
-     *
+     * 
      * @param credentialId the credentialId value to set.
      * @return the DataFeedDetail object itself.
      */
+    @Generated
     public DataFeedDetail setCredentialId(String credentialId) {
         this.credentialId = credentialId;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("dataFeedName", this.dataFeedName);
+        jsonWriter.writeStringField("granularityName",
+            this.granularityName == null ? null : this.granularityName.toString());
+        jsonWriter.writeArrayField("metrics", this.metrics, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("dataStartFrom",
+            this.dataStartFrom == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.dataStartFrom));
+        jsonWriter.writeStringField("dataSourceType",
+            this.dataSourceType == null ? null : this.dataSourceType.toString());
+        jsonWriter.writeStringField("dataFeedDescription", this.dataFeedDescription);
+        jsonWriter.writeNumberField("granularityAmount", this.granularityAmount);
+        jsonWriter.writeArrayField("dimension", this.dimension, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("timestampColumn", this.timestampColumn);
+        jsonWriter.writeNumberField("startOffsetInSeconds", this.startOffsetInSeconds);
+        jsonWriter.writeNumberField("maxConcurrency", this.maxConcurrency);
+        jsonWriter.writeNumberField("minRetryIntervalInSeconds", this.minRetryIntervalInSeconds);
+        jsonWriter.writeNumberField("stopRetryAfterInSeconds", this.stopRetryAfterInSeconds);
+        jsonWriter.writeStringField("needRollup", this.needRollup == null ? null : this.needRollup.toString());
+        jsonWriter.writeStringField("rollUpMethod", this.rollUpMethod == null ? null : this.rollUpMethod.toString());
+        jsonWriter.writeArrayField("rollUpColumns", this.rollUpColumns,
+            (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("allUpIdentification", this.allUpIdentification);
+        jsonWriter.writeStringField("fillMissingPointType",
+            this.fillMissingPointType == null ? null : this.fillMissingPointType.toString());
+        jsonWriter.writeNumberField("fillMissingPointValue", this.fillMissingPointValue);
+        jsonWriter.writeStringField("viewMode", this.viewMode == null ? null : this.viewMode.toString());
+        jsonWriter.writeArrayField("admins", this.admins, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeArrayField("viewers", this.viewers, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("actionLinkTemplate", this.actionLinkTemplate);
+        jsonWriter.writeStringField("authenticationType",
+            this.authenticationType == null ? null : this.authenticationType.toString());
+        jsonWriter.writeStringField("credentialId", this.credentialId);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DataFeedDetail from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DataFeedDetail if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DataFeedDetail.
+     */
+    @Generated
+    public static DataFeedDetail fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            String discriminatorValue = null;
+            try (JsonReader readerToUse = reader.bufferObject()) {
+                readerToUse.nextToken(); // Prepare for reading
+                while (readerToUse.nextToken() != JsonToken.END_OBJECT) {
+                    String fieldName = readerToUse.getFieldName();
+                    readerToUse.nextToken();
+                    if ("dataSourceType".equals(fieldName)) {
+                        discriminatorValue = readerToUse.getString();
+                        break;
+                    } else {
+                        readerToUse.skipChildren();
+                    }
+                }
+                // Use the discriminator value to determine which subtype should be deserialized.
+                if ("AzureApplicationInsights".equals(discriminatorValue)) {
+                    return AzureApplicationInsightsDataFeed.fromJson(readerToUse.reset());
+                } else if ("AzureBlob".equals(discriminatorValue)) {
+                    return AzureBlobDataFeed.fromJson(readerToUse.reset());
+                } else if ("AzureCosmosDB".equals(discriminatorValue)) {
+                    return AzureCosmosDBDataFeed.fromJson(readerToUse.reset());
+                } else if ("AzureDataExplorer".equals(discriminatorValue)) {
+                    return AzureDataExplorerDataFeed.fromJson(readerToUse.reset());
+                } else if ("AzureDataLakeStorageGen2".equals(discriminatorValue)) {
+                    return AzureDataLakeStorageGen2DataFeed.fromJson(readerToUse.reset());
+                } else if ("AzureEventHubs".equals(discriminatorValue)) {
+                    return AzureEventHubsDataFeed.fromJson(readerToUse.reset());
+                } else if ("AzureLogAnalytics".equals(discriminatorValue)) {
+                    return AzureLogAnalyticsDataFeed.fromJson(readerToUse.reset());
+                } else if ("AzureTable".equals(discriminatorValue)) {
+                    return AzureTableDataFeed.fromJson(readerToUse.reset());
+                } else if ("InfluxDB".equals(discriminatorValue)) {
+                    return InfluxDBDataFeed.fromJson(readerToUse.reset());
+                } else if ("MySql".equals(discriminatorValue)) {
+                    return MySqlDataFeed.fromJson(readerToUse.reset());
+                } else if ("PostgreSql".equals(discriminatorValue)) {
+                    return PostgreSqlDataFeed.fromJson(readerToUse.reset());
+                } else if ("SqlServer".equals(discriminatorValue)) {
+                    return SQLServerDataFeed.fromJson(readerToUse.reset());
+                } else if ("MongoDB".equals(discriminatorValue)) {
+                    return MongoDBDataFeed.fromJson(readerToUse.reset());
+                } else {
+                    return fromJsonKnownDiscriminator(readerToUse.reset());
+                }
+            }
+        });
+    }
+
+    @Generated
+    static DataFeedDetail fromJsonKnownDiscriminator(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DataFeedDetail deserializedDataFeedDetail = new DataFeedDetail();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("dataFeedName".equals(fieldName)) {
+                    deserializedDataFeedDetail.dataFeedName = reader.getString();
+                } else if ("granularityName".equals(fieldName)) {
+                    deserializedDataFeedDetail.granularityName = Granularity.fromString(reader.getString());
+                } else if ("metrics".equals(fieldName)) {
+                    List<DataFeedMetric> metrics = reader.readArray(reader1 -> DataFeedMetric.fromJson(reader1));
+                    deserializedDataFeedDetail.metrics = metrics;
+                } else if ("dataStartFrom".equals(fieldName)) {
+                    deserializedDataFeedDetail.dataStartFrom = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("dataSourceType".equals(fieldName)) {
+                    deserializedDataFeedDetail.dataSourceType = DataSourceType.fromString(reader.getString());
+                } else if ("dataFeedId".equals(fieldName)) {
+                    deserializedDataFeedDetail.dataFeedId
+                        = reader.getNullable(nonNullReader -> UUID.fromString(nonNullReader.getString()));
+                } else if ("dataFeedDescription".equals(fieldName)) {
+                    deserializedDataFeedDetail.dataFeedDescription = reader.getString();
+                } else if ("granularityAmount".equals(fieldName)) {
+                    deserializedDataFeedDetail.granularityAmount = reader.getNullable(JsonReader::getInt);
+                } else if ("dimension".equals(fieldName)) {
+                    List<DataFeedDimension> dimension
+                        = reader.readArray(reader1 -> DataFeedDimension.fromJson(reader1));
+                    deserializedDataFeedDetail.dimension = dimension;
+                } else if ("timestampColumn".equals(fieldName)) {
+                    deserializedDataFeedDetail.timestampColumn = reader.getString();
+                } else if ("startOffsetInSeconds".equals(fieldName)) {
+                    deserializedDataFeedDetail.startOffsetInSeconds = reader.getNullable(JsonReader::getLong);
+                } else if ("maxConcurrency".equals(fieldName)) {
+                    deserializedDataFeedDetail.maxConcurrency = reader.getNullable(JsonReader::getInt);
+                } else if ("minRetryIntervalInSeconds".equals(fieldName)) {
+                    deserializedDataFeedDetail.minRetryIntervalInSeconds = reader.getNullable(JsonReader::getLong);
+                } else if ("stopRetryAfterInSeconds".equals(fieldName)) {
+                    deserializedDataFeedDetail.stopRetryAfterInSeconds = reader.getNullable(JsonReader::getLong);
+                } else if ("needRollup".equals(fieldName)) {
+                    deserializedDataFeedDetail.needRollup = NeedRollupEnum.fromString(reader.getString());
+                } else if ("rollUpMethod".equals(fieldName)) {
+                    deserializedDataFeedDetail.rollUpMethod = RollUpMethod.fromString(reader.getString());
+                } else if ("rollUpColumns".equals(fieldName)) {
+                    List<String> rollUpColumns = reader.readArray(reader1 -> reader1.getString());
+                    deserializedDataFeedDetail.rollUpColumns = rollUpColumns;
+                } else if ("allUpIdentification".equals(fieldName)) {
+                    deserializedDataFeedDetail.allUpIdentification = reader.getString();
+                } else if ("fillMissingPointType".equals(fieldName)) {
+                    deserializedDataFeedDetail.fillMissingPointType
+                        = FillMissingPointType.fromString(reader.getString());
+                } else if ("fillMissingPointValue".equals(fieldName)) {
+                    deserializedDataFeedDetail.fillMissingPointValue = reader.getNullable(JsonReader::getDouble);
+                } else if ("viewMode".equals(fieldName)) {
+                    deserializedDataFeedDetail.viewMode = ViewMode.fromString(reader.getString());
+                } else if ("admins".equals(fieldName)) {
+                    List<String> admins = reader.readArray(reader1 -> reader1.getString());
+                    deserializedDataFeedDetail.admins = admins;
+                } else if ("viewers".equals(fieldName)) {
+                    List<String> viewers = reader.readArray(reader1 -> reader1.getString());
+                    deserializedDataFeedDetail.viewers = viewers;
+                } else if ("isAdmin".equals(fieldName)) {
+                    deserializedDataFeedDetail.isAdmin = reader.getNullable(JsonReader::getBoolean);
+                } else if ("creator".equals(fieldName)) {
+                    deserializedDataFeedDetail.creator = reader.getString();
+                } else if ("status".equals(fieldName)) {
+                    deserializedDataFeedDetail.status = EntityStatus.fromString(reader.getString());
+                } else if ("createdTime".equals(fieldName)) {
+                    deserializedDataFeedDetail.createdTime = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("actionLinkTemplate".equals(fieldName)) {
+                    deserializedDataFeedDetail.actionLinkTemplate = reader.getString();
+                } else if ("authenticationType".equals(fieldName)) {
+                    deserializedDataFeedDetail.authenticationType
+                        = AuthenticationTypeEnum.fromString(reader.getString());
+                } else if ("credentialId".equals(fieldName)) {
+                    deserializedDataFeedDetail.credentialId = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedDataFeedDetail;
+        });
     }
 }

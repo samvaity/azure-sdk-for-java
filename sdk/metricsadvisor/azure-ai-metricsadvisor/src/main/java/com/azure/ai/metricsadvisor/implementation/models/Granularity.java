@@ -4,57 +4,83 @@
 
 package com.azure.ai.metricsadvisor.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** granularity of the time series. */
+/**
+ * granularity of the time series.
+ */
 public final class Granularity extends ExpandableStringEnum<Granularity> {
-    /** Static value Yearly for Granularity. */
+    /**
+     * Static value Yearly for Granularity.
+     */
+    @Generated
     public static final Granularity YEARLY = fromString("Yearly");
 
-    /** Static value Monthly for Granularity. */
+    /**
+     * Static value Monthly for Granularity.
+     */
+    @Generated
     public static final Granularity MONTHLY = fromString("Monthly");
 
-    /** Static value Weekly for Granularity. */
+    /**
+     * Static value Weekly for Granularity.
+     */
+    @Generated
     public static final Granularity WEEKLY = fromString("Weekly");
 
-    /** Static value Daily for Granularity. */
+    /**
+     * Static value Daily for Granularity.
+     */
+    @Generated
     public static final Granularity DAILY = fromString("Daily");
 
-    /** Static value Hourly for Granularity. */
+    /**
+     * Static value Hourly for Granularity.
+     */
+    @Generated
     public static final Granularity HOURLY = fromString("Hourly");
 
-    /** Static value Minutely for Granularity. */
+    /**
+     * Static value Minutely for Granularity.
+     */
+    @Generated
     public static final Granularity MINUTELY = fromString("Minutely");
 
-    /** Static value Custom for Granularity. */
+    /**
+     * Static value Custom for Granularity.
+     */
+    @Generated
     public static final Granularity CUSTOM = fromString("Custom");
 
     /**
      * Creates a new instance of Granularity value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public Granularity() {}
+    public Granularity() {
+    }
 
     /**
      * Creates or finds a Granularity from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding Granularity.
      */
-    @JsonCreator
+    @Generated
     public static Granularity fromString(String name) {
         return fromString(name, Granularity.class);
     }
 
     /**
      * Gets known Granularity values.
-     *
+     * 
      * @return known Granularity values.
      */
+    @Generated
     public static Collection<Granularity> values() {
         return values(Granularity.class);
     }

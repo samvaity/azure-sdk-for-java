@@ -15,26 +15,22 @@ autorest
 
 ### Code generation settings
 ``` yaml
-use: '@autorest/java@4.1.16'
-input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/21921735e92f74e027266506d019135ccf0d4f8b/specification/storage/data-plane/Azure.Storage.Files.DataLake/preview/2021-06-08/DataLakeStorage.json
+use: '@autorest/java@4.1.63'
+input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/15d7f54a5389d5906ffb4e56bb2f38fe5525c0d3/specification/storage/data-plane/Azure.Storage.Files.DataLake/stable/2026-06-06/DataLakeStorage.json
 java: true
 output-folder: ../
 namespace: com.azure.storage.file.datalake
-enable-xml: true
 generate-client-as-impl: true
-generate-client-interfaces: false
-service-interface-as-public: true
 license-header: MICROSOFT_MIT_SMALL
-context-client-method-parameter: true
+enable-sync-stack: true
 optional-constant-as-enum: true
-default-http-exception-type: com.azure.storage.file.datalake.models.DataLakeStorageException
+default-http-exception-type: com.azure.storage.file.datalake.implementation.models.DataLakeStorageExceptionInternal
 models-subpackage: implementation.models
 custom-types: FileSystemInfo,FileSystemItem,FileSystemProperties,PathInfo,PathItem,PathProperties,ListFileSystemsOptions,PathHttpHeaders,EncryptionAlgorithmType,LeaseAction
 custom-types-subpackage: models
 customization-class: src/main/java/DataLakeStorageCustomization.java
-generic-response-type: true
 use-input-stream-for-binary: true
-no-custom-headers: true
+disable-client-builder: true
 ```
 
 ### Make the body of append octet-stream /{filesystem}/{path}?action=append
@@ -116,5 +112,5 @@ directive:
 ```
 
 
-![Impressions](https://azure-sdk-impressions.azurewebsites.net/api/impressions/azure-sdk-for-java%2Fsdk%2Fstorage%2Fazure-storage-file-datalake%2Fswagger%2FREADME.png)
+
 

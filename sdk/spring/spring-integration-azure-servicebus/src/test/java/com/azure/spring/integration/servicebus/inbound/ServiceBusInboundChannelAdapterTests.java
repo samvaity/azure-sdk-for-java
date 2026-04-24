@@ -16,14 +16,18 @@ import com.azure.spring.integration.core.implementation.instrumentation.DefaultI
 import com.azure.spring.integration.core.instrumentation.Instrumentation;
 import com.azure.spring.integration.servicebus.implementation.health.ServiceBusProcessorInstrumentation;
 import com.azure.spring.messaging.ListenerMode;
-import com.azure.spring.messaging.converter.AbstractAzureMessageConverter;
+import com.azure.spring.messaging.converter.AzureMessageConverter;
 import com.azure.spring.messaging.servicebus.core.ServiceBusProcessorFactory;
 import com.azure.spring.messaging.servicebus.core.listener.ServiceBusMessageListenerContainer;
 import com.azure.spring.messaging.servicebus.core.properties.ServiceBusContainerProperties;
-import com.azure.spring.messaging.servicebus.support.converter.ServiceBusMessageConverter;
+import com.azure.spring.messaging.servicebus.implementation.support.converter.ServiceBusMessageConverter;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
@@ -57,9 +61,13 @@ class ServiceBusInboundChannelAdapterTests {
     private List<Message<?>> messages = Arrays.stream(payloads)
                                               .map(p -> MessageBuilder.withPayload(p).build())
                                               .collect(Collectors.toList());
+    @Mock
+    private BeanFactory beanFactory;
+    private AutoCloseable closeable;
 
     @BeforeEach
     public void setUp() {
+        this.closeable = MockitoAnnotations.openMocks(this);
         this.processorFactory = mock(ServiceBusProcessorFactory.class);
         when(processorFactory.createProcessor(eq(destination), eq(subscription), isA(ServiceBusContainerProperties.class))).thenReturn(mock(ServiceBusProcessorClient.class));
 
@@ -69,6 +77,11 @@ class ServiceBusInboundChannelAdapterTests {
 
         this.adapter = new ServiceBusInboundChannelAdapter(
             new ServiceBusMessageListenerContainer(processorFactory, containerProperties));
+    }
+
+    @AfterEach
+    void close() throws Exception {
+        closeable.close();
     }
 
     @Test
@@ -103,13 +116,14 @@ class ServiceBusInboundChannelAdapterTests {
 
     @Test
     void setMessageConverter() {
-        AbstractAzureMessageConverter<ServiceBusReceivedMessage, ServiceBusMessage> converter = mock(ServiceBusMessageConverter.class);
+        AzureMessageConverter<ServiceBusReceivedMessage, ServiceBusMessage> converter = mock(ServiceBusMessageConverter.class);
         this.adapter.setMessageConverter(converter);
         assertThat(this.adapter).extracting("recordListener").extracting("messageConverter").isEqualTo(converter);
     }
 
     @Test
     void setPayloadType() {
+        this.adapter.setBeanFactory(this.beanFactory);
         this.adapter.afterPropertiesSet();
         assertThat(this.adapter).extracting("recordListener").extracting("payloadType").isEqualTo(byte[].class);
         this.adapter.setPayloadType(Long.class);

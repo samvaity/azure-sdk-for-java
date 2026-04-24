@@ -6,9 +6,10 @@ import com.azure.core.exception.ResourceModifiedException;
 import com.azure.core.http.HttpClient;
 import com.azure.core.test.TestMode;
 import com.azure.core.util.Configuration;
+import com.azure.security.keyvault.keys.models.KeyAttestation;
 import com.azure.security.keyvault.keys.models.KeyType;
 import com.azure.security.keyvault.keys.models.KeyVaultKey;
-import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -16,19 +17,20 @@ import java.math.BigInteger;
 
 import static com.azure.security.keyvault.keys.cryptography.TestHelper.DISPLAY_NAME_WITH_ARGUMENTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@EnabledIf("shouldRunHsmTest")
 public class KeyClientManagedHsmTest extends KeyClientTest implements KeyClientManagedHsmTestBase {
     public KeyClientManagedHsmTest() {
         this.isHsmEnabled = Configuration.getGlobalConfiguration().get("AZURE_MANAGEDHSM_ENDPOINT") != null;
-        this.runManagedHsmTest = isHsmEnabled || getTestMode() == TestMode.PLAYBACK;
+        this.runManagedHsmTest = shouldRunHsmTest();
     }
 
-    @Override
-    protected void beforeTest() {
-        Assumptions.assumeTrue(runManagedHsmTest);
-
-        super.beforeTest();
+    public static boolean shouldRunHsmTest() {
+        return Configuration.getGlobalConfiguration().get("AZURE_MANAGEDHSM_ENDPOINT") != null
+            || TEST_MODE == TestMode.PLAYBACK;
     }
 
     /**
@@ -54,8 +56,7 @@ public class KeyClientManagedHsmTest extends KeyClientTest implements KeyClientM
             KeyVaultKey rsaKey = keyClient.createRsaKey(keyToCreate);
 
             assertKeyEquals(keyToCreate, rsaKey);
-            assertEquals(BigInteger.valueOf(keyToCreate.getPublicExponent()),
-                toBigInteger(rsaKey.getKey().getE()));
+            assertEquals(BigInteger.valueOf(keyToCreate.getPublicExponent()), toBigInteger(rsaKey.getKey().getE()));
             assertEquals(keyToCreate.getKeySize(), rsaKey.getKey().getN().length * 8);
         });
     }
@@ -106,8 +107,8 @@ public class KeyClientManagedHsmTest extends KeyClientTest implements KeyClientM
     public void createOctKeyWithInvalidSize(HttpClient httpClient, KeyServiceVersion serviceVersion) {
         createKeyClient(httpClient, serviceVersion);
 
-        createOctKeyRunner(64, (keyToCreate) ->
-            assertThrows(ResourceModifiedException.class, () -> keyClient.createOctKey(keyToCreate)));
+        createOctKeyRunner(64,
+            (keyToCreate) -> assertThrows(ResourceModifiedException.class, () -> keyClient.createOctKey(keyToCreate)));
     }
 
     /**
@@ -132,10 +133,35 @@ public class KeyClientManagedHsmTest extends KeyClientTest implements KeyClientM
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getTestParameters")
     public void releaseKey(HttpClient httpClient, KeyServiceVersion serviceVersion) {
-        // Ignoring test until the service rolls out a fix for an issue with the "version" parameter of a release
-        // policy.
-        Assumptions.assumeTrue(serviceVersion != KeyServiceVersion.V7_4);
-
         super.releaseKey(httpClient, serviceVersion);
+    }
+
+    /**
+     * Tests that a key's attestation material can be retrieved.
+     */
+    @Override
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("getTestParameters")
+    public void getKeyAttestation(HttpClient httpClient, KeyServiceVersion serviceVersion) {
+        createKeyClient(httpClient, serviceVersion);
+
+        getKeyAttestationRunner((keyToCreate) -> {
+            assertKeyEquals(keyToCreate, keyClient.createKey(keyToCreate));
+
+            KeyVaultKey keyWithAttestation = keyClient.getKeyAttestation(keyToCreate.getName());
+
+            assertNotNull(keyWithAttestation);
+
+            KeyAttestation keyAttestation = keyWithAttestation.getProperties().getKeyAttestation();
+
+            assertNotNull(keyAttestation);
+            assertNotNull(keyAttestation.getCertificatePemFile());
+            assertTrue(keyAttestation.getCertificatePemFile().length > 0);
+            assertNotNull(keyAttestation.getPrivateKeyAttestation());
+            assertTrue(keyAttestation.getPrivateKeyAttestation().length > 0);
+            assertNotNull(keyAttestation.getPublicKeyAttestation());
+            assertTrue(keyAttestation.getPublicKeyAttestation().length > 0);
+            assertNotNull(keyAttestation.getVersion());
+        });
     }
 }

@@ -48,6 +48,10 @@ public final class TrunkedNetworkImpl implements TrunkedNetwork, TrunkedNetwork.
         }
     }
 
+    public String etag() {
+        return this.innerModel().etag();
+    }
+
     public ExtendedLocation extendedLocation() {
         return this.innerModel().extendedLocation();
     }
@@ -149,6 +153,14 @@ public final class TrunkedNetworkImpl implements TrunkedNetwork, TrunkedNetwork.
 
     private String trunkedNetworkName;
 
+    private String createIfMatch;
+
+    private String createIfNoneMatch;
+
+    private String updateIfMatch;
+
+    private String updateIfNoneMatch;
+
     private TrunkedNetworkPatchParameters updateTrunkedNetworkUpdateParameters;
 
     public TrunkedNetworkImpl withExistingResourceGroup(String resourceGroupName) {
@@ -157,20 +169,18 @@ public final class TrunkedNetworkImpl implements TrunkedNetwork, TrunkedNetwork.
     }
 
     public TrunkedNetwork create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getTrunkedNetworks()
-                .createOrUpdate(resourceGroupName, trunkedNetworkName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getTrunkedNetworks()
+            .createOrUpdate(resourceGroupName, trunkedNetworkName, this.innerModel(), createIfMatch, createIfNoneMatch,
+                Context.NONE);
         return this;
     }
 
     public TrunkedNetwork create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getTrunkedNetworks()
-                .createOrUpdate(resourceGroupName, trunkedNetworkName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getTrunkedNetworks()
+            .createOrUpdate(resourceGroupName, trunkedNetworkName, this.innerModel(), createIfMatch, createIfNoneMatch,
+                context);
         return this;
     }
 
@@ -178,60 +188,56 @@ public final class TrunkedNetworkImpl implements TrunkedNetwork, TrunkedNetwork.
         this.innerObject = new TrunkedNetworkInner();
         this.serviceManager = serviceManager;
         this.trunkedNetworkName = name;
+        this.createIfMatch = null;
+        this.createIfNoneMatch = null;
     }
 
     public TrunkedNetworkImpl update() {
+        this.updateIfMatch = null;
+        this.updateIfNoneMatch = null;
         this.updateTrunkedNetworkUpdateParameters = new TrunkedNetworkPatchParameters();
         return this;
     }
 
     public TrunkedNetwork apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getTrunkedNetworks()
-                .updateWithResponse(
-                    resourceGroupName, trunkedNetworkName, updateTrunkedNetworkUpdateParameters, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getTrunkedNetworks()
+            .updateWithResponse(resourceGroupName, trunkedNetworkName, updateIfMatch, updateIfNoneMatch,
+                updateTrunkedNetworkUpdateParameters, Context.NONE)
+            .getValue();
         return this;
     }
 
     public TrunkedNetwork apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getTrunkedNetworks()
-                .updateWithResponse(
-                    resourceGroupName, trunkedNetworkName, updateTrunkedNetworkUpdateParameters, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getTrunkedNetworks()
+            .updateWithResponse(resourceGroupName, trunkedNetworkName, updateIfMatch, updateIfNoneMatch,
+                updateTrunkedNetworkUpdateParameters, context)
+            .getValue();
         return this;
     }
 
-    TrunkedNetworkImpl(
-        TrunkedNetworkInner innerObject, com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
+    TrunkedNetworkImpl(TrunkedNetworkInner innerObject,
+        com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.trunkedNetworkName = Utils.getValueFromIdByName(innerObject.id(), "trunkedNetworks");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.trunkedNetworkName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "trunkedNetworks");
     }
 
     public TrunkedNetwork refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getTrunkedNetworks()
-                .getByResourceGroupWithResponse(resourceGroupName, trunkedNetworkName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getTrunkedNetworks()
+            .getByResourceGroupWithResponse(resourceGroupName, trunkedNetworkName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public TrunkedNetwork refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getTrunkedNetworks()
-                .getByResourceGroupWithResponse(resourceGroupName, trunkedNetworkName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getTrunkedNetworks()
+            .getByResourceGroupWithResponse(resourceGroupName, trunkedNetworkName, context)
+            .getValue();
         return this;
     }
 
@@ -280,7 +286,27 @@ public final class TrunkedNetworkImpl implements TrunkedNetwork, TrunkedNetwork.
         return this;
     }
 
+    public TrunkedNetworkImpl withIfMatch(String ifMatch) {
+        if (isInCreateMode()) {
+            this.createIfMatch = ifMatch;
+            return this;
+        } else {
+            this.updateIfMatch = ifMatch;
+            return this;
+        }
+    }
+
+    public TrunkedNetworkImpl withIfNoneMatch(String ifNoneMatch) {
+        if (isInCreateMode()) {
+            this.createIfNoneMatch = ifNoneMatch;
+            return this;
+        } else {
+            this.updateIfNoneMatch = ifNoneMatch;
+            return this;
+        }
+    }
+
     private boolean isInCreateMode() {
-        return this.innerModel().id() == null;
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

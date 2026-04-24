@@ -4,24 +4,23 @@
 
 package com.azure.resourcemanager.eventgrid.generated;
 
-/** Samples for DomainTopicEventSubscriptions Get. */
+/**
+ * Samples for DomainTopicEventSubscriptions Get.
+ */
 public final class DomainTopicEventSubscriptionsGetSamples {
     /*
-     * x-ms-original-file: specification/eventgrid/resource-manager/Microsoft.EventGrid/preview/2023-06-01-preview/examples/DomainTopicEventSubscriptions_Get.json
+     * x-ms-original-file:
+     * specification/eventgrid/resource-manager/Microsoft.EventGrid/preview/2025-04-01-preview/examples/
+     * DomainTopicEventSubscriptions_Get.json
      */
     /**
      * Sample code: DomainTopicEventSubscriptions_Get.
-     *
+     * 
      * @param manager Entry point to EventGridManager.
      */
     public static void domainTopicEventSubscriptionsGet(com.azure.resourcemanager.eventgrid.EventGridManager manager) {
-        manager
-            .domainTopicEventSubscriptions()
-            .getWithResponse(
-                "examplerg",
-                "exampleDomain1",
-                "exampleDomainTopic1",
-                "examplesubscription1",
+        manager.domainTopicEventSubscriptions()
+            .getWithResponse("examplerg", "exampleDomain1", "exampleDomainTopic1", "examplesubscription1",
                 com.azure.core.util.Context.NONE);
     }
 }

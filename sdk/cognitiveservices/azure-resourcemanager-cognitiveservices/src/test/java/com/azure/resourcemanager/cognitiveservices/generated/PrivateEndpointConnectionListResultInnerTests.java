@@ -17,68 +17,59 @@ import org.junit.jupiter.api.Assertions;
 public final class PrivateEndpointConnectionListResultInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        PrivateEndpointConnectionListResultInner model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"properties\":{\"privateEndpoint\":{\"id\":\"jw\"},\"privateLinkServiceConnectionState\":{\"status\":\"Pending\",\"description\":\"sluicpdggkzz\",\"actionsRequired\":\"mbmpaxmodfvuefy\"},\"provisioningState\":\"Creating\",\"groupIds\":[\"vmwy\",\"rfouyftaakcpw\"]},\"location\":\"vqtmnub\",\"etag\":\"kpzksmondjmq\",\"id\":\"xvy\",\"name\":\"omgkopkwho\",\"type\":\"v\"},{\"properties\":{\"privateEndpoint\":{\"id\":\"gxysmocmbqfqvm\"},\"privateLinkServiceConnectionState\":{\"status\":\"Pending\",\"description\":\"zapvhelx\",\"actionsRequired\":\"glyatddckcbcuej\"},\"provisioningState\":\"Succeeded\",\"groupIds\":[\"iqi\",\"rhos\",\"sdqrhzoymibmrq\"]},\"location\":\"ahwfluszdtmhrk\",\"etag\":\"fyyvoq\",\"id\":\"cpi\",\"name\":\"xpbtgiwbwo\",\"type\":\"nwashrtd\"}]}")
-                .toObject(PrivateEndpointConnectionListResultInner.class);
-        Assertions
-            .assertEquals(
-                PrivateEndpointServiceConnectionStatus.PENDING,
-                model.value().get(0).properties().privateLinkServiceConnectionState().status());
-        Assertions
-            .assertEquals(
-                "sluicpdggkzz", model.value().get(0).properties().privateLinkServiceConnectionState().description());
-        Assertions
-            .assertEquals(
-                "mbmpaxmodfvuefy",
-                model.value().get(0).properties().privateLinkServiceConnectionState().actionsRequired());
-        Assertions.assertEquals("vmwy", model.value().get(0).properties().groupIds().get(0));
-        Assertions.assertEquals("vqtmnub", model.value().get(0).location());
+        PrivateEndpointConnectionListResultInner model = BinaryData.fromString(
+            "{\"value\":[{\"properties\":{\"privateEndpoint\":{\"id\":\"ygdvwv\"},\"privateLinkServiceConnectionState\":{\"status\":\"Approved\",\"description\":\"hgwxrtfudx\",\"actionsRequired\":\"xg\"},\"provisioningState\":\"Deleting\",\"groupIds\":[\"rvmnpkukghimdblx\",\"wi\",\"fnjhfjxwmszkkfo\",\"rey\"]},\"location\":\"zi\",\"etag\":\"jawneaiv\",\"id\":\"czelpcirel\",\"name\":\"feaenwab\",\"type\":\"atklddxbjhwuaa\"},{\"properties\":{\"privateEndpoint\":{\"id\":\"osphyoul\"},\"privateLinkServiceConnectionState\":{\"status\":\"Rejected\",\"description\":\"xagl\",\"actionsRequired\":\"imjwosyt\"},\"provisioningState\":\"Succeeded\",\"groupIds\":[\"kfcktqum\"]},\"location\":\"kkezzikhlyfjhdgq\",\"etag\":\"ebdunyg\",\"id\":\"qidbqfatpxllrxcy\",\"name\":\"moadsuvarmy\",\"type\":\"dmjsjqb\"},{\"properties\":{\"privateEndpoint\":{\"id\":\"x\"},\"privateLinkServiceConnectionState\":{\"status\":\"Rejected\",\"description\":\"yc\",\"actionsRequired\":\"uhpkxkgymar\"},\"provisioningState\":\"Succeeded\",\"groupIds\":[\"xqugjhkycubedd\",\"ssofwqmzqa\",\"krmnjijpxacqqud\"]},\"location\":\"byxbaaabjy\",\"etag\":\"yffimrzrtuzqogs\",\"id\":\"nevfdnw\",\"name\":\"wmewzsyy\",\"type\":\"euzsoi\"}]}")
+            .toObject(PrivateEndpointConnectionListResultInner.class);
+        Assertions.assertEquals(PrivateEndpointServiceConnectionStatus.APPROVED,
+            model.value().get(0).properties().privateLinkServiceConnectionState().status());
+        Assertions.assertEquals("hgwxrtfudx",
+            model.value().get(0).properties().privateLinkServiceConnectionState().description());
+        Assertions.assertEquals("xg",
+            model.value().get(0).properties().privateLinkServiceConnectionState().actionsRequired());
+        Assertions.assertEquals("rvmnpkukghimdblx", model.value().get(0).properties().groupIds().get(0));
+        Assertions.assertEquals("zi", model.value().get(0).location());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        PrivateEndpointConnectionListResultInner model =
-            new PrivateEndpointConnectionListResultInner()
-                .withValue(
-                    Arrays
-                        .asList(
-                            new PrivateEndpointConnectionInner()
-                                .withProperties(
-                                    new PrivateEndpointConnectionProperties()
-                                        .withPrivateEndpoint(new PrivateEndpoint())
-                                        .withPrivateLinkServiceConnectionState(
-                                            new PrivateLinkServiceConnectionState()
-                                                .withStatus(PrivateEndpointServiceConnectionStatus.PENDING)
-                                                .withDescription("sluicpdggkzz")
-                                                .withActionsRequired("mbmpaxmodfvuefy"))
-                                        .withGroupIds(Arrays.asList("vmwy", "rfouyftaakcpw")))
-                                .withLocation("vqtmnub"),
-                            new PrivateEndpointConnectionInner()
-                                .withProperties(
-                                    new PrivateEndpointConnectionProperties()
-                                        .withPrivateEndpoint(new PrivateEndpoint())
-                                        .withPrivateLinkServiceConnectionState(
-                                            new PrivateLinkServiceConnectionState()
-                                                .withStatus(PrivateEndpointServiceConnectionStatus.PENDING)
-                                                .withDescription("zapvhelx")
-                                                .withActionsRequired("glyatddckcbcuej"))
-                                        .withGroupIds(Arrays.asList("iqi", "rhos", "sdqrhzoymibmrq")))
-                                .withLocation("ahwfluszdtmhrk")));
+        PrivateEndpointConnectionListResultInner model
+            = new PrivateEndpointConnectionListResultInner()
+                .withValue(Arrays.asList(
+                    new PrivateEndpointConnectionInner()
+                        .withProperties(
+                            new PrivateEndpointConnectionProperties().withPrivateEndpoint(new PrivateEndpoint())
+                                .withPrivateLinkServiceConnectionState(
+                                    new PrivateLinkServiceConnectionState()
+                                        .withStatus(PrivateEndpointServiceConnectionStatus.APPROVED)
+                                        .withDescription("hgwxrtfudx")
+                                        .withActionsRequired("xg"))
+                                .withGroupIds(Arrays.asList("rvmnpkukghimdblx", "wi", "fnjhfjxwmszkkfo", "rey")))
+                        .withLocation("zi"),
+                    new PrivateEndpointConnectionInner().withProperties(
+                        new PrivateEndpointConnectionProperties().withPrivateEndpoint(new PrivateEndpoint())
+                            .withPrivateLinkServiceConnectionState(new PrivateLinkServiceConnectionState()
+                                .withStatus(PrivateEndpointServiceConnectionStatus.REJECTED)
+                                .withDescription("xagl")
+                                .withActionsRequired("imjwosyt"))
+                            .withGroupIds(Arrays.asList("kfcktqum")))
+                        .withLocation("kkezzikhlyfjhdgq"),
+                    new PrivateEndpointConnectionInner()
+                        .withProperties(
+                            new PrivateEndpointConnectionProperties().withPrivateEndpoint(new PrivateEndpoint())
+                                .withPrivateLinkServiceConnectionState(new PrivateLinkServiceConnectionState()
+                                    .withStatus(PrivateEndpointServiceConnectionStatus.REJECTED)
+                                    .withDescription("yc")
+                                    .withActionsRequired("uhpkxkgymar"))
+                                .withGroupIds(Arrays.asList("xqugjhkycubedd", "ssofwqmzqa", "krmnjijpxacqqud")))
+                        .withLocation("byxbaaabjy")));
         model = BinaryData.fromObject(model).toObject(PrivateEndpointConnectionListResultInner.class);
-        Assertions
-            .assertEquals(
-                PrivateEndpointServiceConnectionStatus.PENDING,
-                model.value().get(0).properties().privateLinkServiceConnectionState().status());
-        Assertions
-            .assertEquals(
-                "sluicpdggkzz", model.value().get(0).properties().privateLinkServiceConnectionState().description());
-        Assertions
-            .assertEquals(
-                "mbmpaxmodfvuefy",
-                model.value().get(0).properties().privateLinkServiceConnectionState().actionsRequired());
-        Assertions.assertEquals("vmwy", model.value().get(0).properties().groupIds().get(0));
-        Assertions.assertEquals("vqtmnub", model.value().get(0).location());
+        Assertions.assertEquals(PrivateEndpointServiceConnectionStatus.APPROVED,
+            model.value().get(0).properties().privateLinkServiceConnectionState().status());
+        Assertions.assertEquals("hgwxrtfudx",
+            model.value().get(0).properties().privateLinkServiceConnectionState().description());
+        Assertions.assertEquals("xg",
+            model.value().get(0).properties().privateLinkServiceConnectionState().actionsRequired());
+        Assertions.assertEquals("rvmnpkukghimdblx", model.value().get(0).properties().groupIds().get(0));
+        Assertions.assertEquals("zi", model.value().get(0).location());
     }
 }

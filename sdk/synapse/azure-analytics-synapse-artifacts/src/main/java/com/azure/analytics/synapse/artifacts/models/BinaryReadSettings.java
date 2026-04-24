@@ -5,41 +5,120 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** Binary read settings. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("BinaryReadSettings")
+/**
+ * Binary read settings.
+ */
 @Fluent
 public final class BinaryReadSettings extends FormatReadSettings {
     /*
+     * The read setting type.
+     */
+    @Generated
+    private String type = "BinaryReadSettings";
+
+    /*
      * Compression settings.
      */
-    @JsonProperty(value = "compressionProperties")
+    @Generated
     private CompressionReadSettings compressionProperties;
 
-    /** Creates an instance of BinaryReadSettings class. */
-    public BinaryReadSettings() {}
+    /**
+     * Creates an instance of BinaryReadSettings class.
+     */
+    @Generated
+    public BinaryReadSettings() {
+    }
+
+    /**
+     * Get the type property: The read setting type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the compressionProperties property: Compression settings.
-     *
+     * 
      * @return the compressionProperties value.
      */
+    @Generated
     public CompressionReadSettings getCompressionProperties() {
         return this.compressionProperties;
     }
 
     /**
      * Set the compressionProperties property: Compression settings.
-     *
+     * 
      * @param compressionProperties the compressionProperties value to set.
      * @return the BinaryReadSettings object itself.
      */
+    @Generated
     public BinaryReadSettings setCompressionProperties(CompressionReadSettings compressionProperties) {
         this.compressionProperties = compressionProperties;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("type", this.type);
+        jsonWriter.writeJsonField("compressionProperties", this.compressionProperties);
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of BinaryReadSettings from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of BinaryReadSettings if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the BinaryReadSettings.
+     */
+    @Generated
+    public static BinaryReadSettings fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            BinaryReadSettings deserializedBinaryReadSettings = new BinaryReadSettings();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("type".equals(fieldName)) {
+                    deserializedBinaryReadSettings.type = reader.getString();
+                } else if ("compressionProperties".equals(fieldName)) {
+                    deserializedBinaryReadSettings.compressionProperties = CompressionReadSettings.fromJson(reader);
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedBinaryReadSettings.setAdditionalProperties(additionalProperties);
+
+            return deserializedBinaryReadSettings;
+        });
     }
 }

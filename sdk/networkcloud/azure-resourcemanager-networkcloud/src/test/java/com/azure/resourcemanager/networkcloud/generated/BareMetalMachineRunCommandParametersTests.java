@@ -12,26 +12,23 @@ import org.junit.jupiter.api.Assertions;
 public final class BareMetalMachineRunCommandParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        BareMetalMachineRunCommandParameters model =
-            BinaryData
-                .fromString(
-                    "{\"arguments\":[\"nfwqzdzgtilaxhn\",\"hqlyvijo\",\"wivkxo\"],\"limitTimeSeconds\":6975043128466071943,\"script\":\"nbixxrti\"}")
-                .toObject(BareMetalMachineRunCommandParameters.class);
-        Assertions.assertEquals("nfwqzdzgtilaxhn", model.arguments().get(0));
-        Assertions.assertEquals(6975043128466071943L, model.limitTimeSeconds());
-        Assertions.assertEquals("nbixxrti", model.script());
+        BareMetalMachineRunCommandParameters model = BinaryData.fromString(
+            "{\"arguments\":[\"hiqakydiwfbrk\",\"pzdqtvhcspod\",\"qaxsipietgbebjf\"],\"limitTimeSeconds\":8805567120468423519,\"script\":\"moichdlpnfpubntn\"}")
+            .toObject(BareMetalMachineRunCommandParameters.class);
+        Assertions.assertEquals("hiqakydiwfbrk", model.arguments().get(0));
+        Assertions.assertEquals(8805567120468423519L, model.limitTimeSeconds());
+        Assertions.assertEquals("moichdlpnfpubntn", model.script());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        BareMetalMachineRunCommandParameters model =
-            new BareMetalMachineRunCommandParameters()
-                .withArguments(Arrays.asList("nfwqzdzgtilaxhn", "hqlyvijo", "wivkxo"))
-                .withLimitTimeSeconds(6975043128466071943L)
-                .withScript("nbixxrti");
+        BareMetalMachineRunCommandParameters model = new BareMetalMachineRunCommandParameters()
+            .withArguments(Arrays.asList("hiqakydiwfbrk", "pzdqtvhcspod", "qaxsipietgbebjf"))
+            .withLimitTimeSeconds(8805567120468423519L)
+            .withScript("moichdlpnfpubntn");
         model = BinaryData.fromObject(model).toObject(BareMetalMachineRunCommandParameters.class);
-        Assertions.assertEquals("nfwqzdzgtilaxhn", model.arguments().get(0));
-        Assertions.assertEquals(6975043128466071943L, model.limitTimeSeconds());
-        Assertions.assertEquals("nbixxrti", model.script());
+        Assertions.assertEquals("hiqakydiwfbrk", model.arguments().get(0));
+        Assertions.assertEquals(8805567120468423519L, model.limitTimeSeconds());
+        Assertions.assertEquals("moichdlpnfpubntn", model.script());
     }
 }

@@ -11,29 +11,25 @@ import org.junit.jupiter.api.Assertions;
 public final class BlobNfsTargetTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        BlobNfsTarget model =
-            BinaryData
-                .fromString(
-                    "{\"target\":\"lmfmtdaay\",\"usageModel\":\"v\",\"verificationTimer\":1689077175,\"writeBackTimer\":772691250}")
-                .toObject(BlobNfsTarget.class);
-        Assertions.assertEquals("lmfmtdaay", model.target());
-        Assertions.assertEquals("v", model.usageModel());
-        Assertions.assertEquals(1689077175, model.verificationTimer());
-        Assertions.assertEquals(772691250, model.writeBackTimer());
+        BlobNfsTarget model = BinaryData.fromString(
+            "{\"target\":\"xkmcwaekrrjre\",\"usageModel\":\"xt\",\"verificationTimer\":747215260,\"writeBackTimer\":1781492308}")
+            .toObject(BlobNfsTarget.class);
+        Assertions.assertEquals("xkmcwaekrrjre", model.target());
+        Assertions.assertEquals("xt", model.usageModel());
+        Assertions.assertEquals(747215260, model.verificationTimer());
+        Assertions.assertEquals(1781492308, model.writeBackTimer());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        BlobNfsTarget model =
-            new BlobNfsTarget()
-                .withTarget("lmfmtdaay")
-                .withUsageModel("v")
-                .withVerificationTimer(1689077175)
-                .withWriteBackTimer(772691250);
+        BlobNfsTarget model = new BlobNfsTarget().withTarget("xkmcwaekrrjre")
+            .withUsageModel("xt")
+            .withVerificationTimer(747215260)
+            .withWriteBackTimer(1781492308);
         model = BinaryData.fromObject(model).toObject(BlobNfsTarget.class);
-        Assertions.assertEquals("lmfmtdaay", model.target());
-        Assertions.assertEquals("v", model.usageModel());
-        Assertions.assertEquals(1689077175, model.verificationTimer());
-        Assertions.assertEquals(772691250, model.writeBackTimer());
+        Assertions.assertEquals("xkmcwaekrrjre", model.target());
+        Assertions.assertEquals("xt", model.usageModel());
+        Assertions.assertEquals(747215260, model.verificationTimer());
+        Assertions.assertEquals(1781492308, model.writeBackTimer());
     }
 }

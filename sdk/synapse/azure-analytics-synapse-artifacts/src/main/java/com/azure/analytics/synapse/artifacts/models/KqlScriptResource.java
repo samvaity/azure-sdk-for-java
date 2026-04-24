@@ -5,53 +5,66 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The KqlScriptResource model. */
+/**
+ * The KqlScriptResource model.
+ */
 @Fluent
-public final class KqlScriptResource {
+public final class KqlScriptResource implements JsonSerializable<KqlScriptResource> {
     /*
      * The id property.
      */
-    @JsonProperty(value = "id")
+    @Generated
     private String id;
 
     /*
      * The name property.
      */
-    @JsonProperty(value = "name")
+    @Generated
     private String name;
 
     /*
      * The type property.
      */
-    @JsonProperty(value = "type")
+    @Generated
     private String type;
 
     /*
      * Properties of sql script.
      */
-    @JsonProperty(value = "properties")
+    @Generated
     private KqlScript properties;
 
-    /** Creates an instance of KqlScriptResource class. */
-    public KqlScriptResource() {}
+    /**
+     * Creates an instance of KqlScriptResource class.
+     */
+    @Generated
+    public KqlScriptResource() {
+    }
 
     /**
      * Get the id property: The id property.
-     *
+     * 
      * @return the id value.
      */
+    @Generated
     public String getId() {
         return this.id;
     }
 
     /**
      * Set the id property: The id property.
-     *
+     * 
      * @param id the id value to set.
      * @return the KqlScriptResource object itself.
      */
+    @Generated
     public KqlScriptResource setId(String id) {
         this.id = id;
         return this;
@@ -59,19 +72,21 @@ public final class KqlScriptResource {
 
     /**
      * Get the name property: The name property.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The name property.
-     *
+     * 
      * @param name the name value to set.
      * @return the KqlScriptResource object itself.
      */
+    @Generated
     public KqlScriptResource setName(String name) {
         this.name = name;
         return this;
@@ -79,19 +94,21 @@ public final class KqlScriptResource {
 
     /**
      * Get the type property: The type property.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public String getType() {
         return this.type;
     }
 
     /**
      * Set the type property: The type property.
-     *
+     * 
      * @param type the type value to set.
      * @return the KqlScriptResource object itself.
      */
+    @Generated
     public KqlScriptResource setType(String type) {
         this.type = type;
         return this;
@@ -99,21 +116,70 @@ public final class KqlScriptResource {
 
     /**
      * Get the properties property: Properties of sql script.
-     *
+     * 
      * @return the properties value.
      */
+    @Generated
     public KqlScript getProperties() {
         return this.properties;
     }
 
     /**
      * Set the properties property: Properties of sql script.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the KqlScriptResource object itself.
      */
+    @Generated
     public KqlScriptResource setProperties(KqlScript properties) {
         this.properties = properties;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("id", this.id);
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeStringField("type", this.type);
+        jsonWriter.writeJsonField("properties", this.properties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of KqlScriptResource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of KqlScriptResource if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the KqlScriptResource.
+     */
+    @Generated
+    public static KqlScriptResource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            KqlScriptResource deserializedKqlScriptResource = new KqlScriptResource();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedKqlScriptResource.id = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedKqlScriptResource.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedKqlScriptResource.type = reader.getString();
+                } else if ("properties".equals(fieldName)) {
+                    deserializedKqlScriptResource.properties = KqlScript.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedKqlScriptResource;
+        });
     }
 }

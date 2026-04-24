@@ -32,20 +32,15 @@ public final class EventPosition {
     private static final String END_OF_STREAM = "@latest";
 
     private static final EventPosition EARLIEST = fromOffset(START_OF_STREAM, false);
-    private static final EventPosition LATEST =  new EventPosition(false, END_OF_STREAM, null, null);
+    private static final EventPosition LATEST = new EventPosition(false, END_OF_STREAM, null, null);
 
     private final boolean isInclusive;
     private final String offset;
     private final Long sequenceNumber;
     private final Instant enqueuedDateTime;
 
-    private EventPosition(final boolean isInclusive, final Long offset, final Long sequenceNumber,
-                          final Instant enqueuedDateTime) {
-        this(isInclusive, String.valueOf(offset), sequenceNumber, enqueuedDateTime);
-    }
-
     private EventPosition(final boolean isInclusive, final String offset, final Long sequenceNumber,
-                          final Instant enqueuedDateTime) {
+        final Instant enqueuedDateTime) {
         this.offset = offset;
         this.sequenceNumber = sequenceNumber;
         this.enqueuedDateTime = enqueuedDateTime;
@@ -97,7 +92,9 @@ public final class EventPosition {
      *
      * @param offset The offset of the event within that partition.
      * @return An {@link EventPosition} object.
+     * @deprecated This method is obsolete and should no longer be used. Please use {@link #fromOffsetString(String)}.
      */
+    @Deprecated
     public static EventPosition fromOffset(long offset) {
         return fromOffset(offset, false);
     }
@@ -110,8 +107,40 @@ public final class EventPosition {
      * @param isInclusive If true, the event with the {@code offset} is included; otherwise, the next event will be
      *     received.
      * @return An {@link EventPosition} object.
+     * @deprecated This method is obsolete and should no longer be used. Please use {@link #fromOffsetString(String, boolean)}.
      */
+    @Deprecated
     private static EventPosition fromOffset(long offset, boolean isInclusive) {
+        return new EventPosition(isInclusive, String.valueOf(offset), null, null);
+    }
+
+    /**
+     * Creates a position to an event in the partition at the provided offset. The event at that offset will not be
+     * included. Instead, the next event is returned.
+     *
+     * <p>
+     * The offset is the relative position for event in the context of the stream. The offset should not be considered a
+     * stable value, as the same offset may refer to a different event as events reach the age limit for retention and
+     * are no longer visible within the stream.
+     * </p>
+     *
+     * @param offset The offset of the event within that partition.
+     * @return An {@link EventPosition} object.
+     */
+    public static EventPosition fromOffsetString(String offset) {
+        return fromOffsetString(offset, false);
+    }
+
+    /**
+     * Creates a position to an event in the partition at the provided offset. If {@code isInclusive} is true, the event
+     * with the same offset is returned. Otherwise, the next event is received.
+     *
+     * @param offset The offset of an event with respect to its relative position in the
+     * @param isInclusive If true, the event with the {@code offset} is included; otherwise, the next event will be
+     *     received.
+     * @return An {@link EventPosition} object.
+     */
+    private static EventPosition fromOffsetString(String offset, boolean isInclusive) {
         return new EventPosition(isInclusive, offset, null, null);
     }
 
@@ -175,15 +204,13 @@ public final class EventPosition {
      * @return The instant, in UTC, from which the next available event should be chosen.
      */
     public Instant getEnqueuedDateTime() {
-        return this.enqueuedDateTime;
+        return enqueuedDateTime;
     }
 
     @Override
     public String toString() {
-        return String.format(Locale.US, "offset[%s], sequenceNumber[%s], enqueuedTime[%s], isInclusive[%s]",
-            offset, sequenceNumber,
-            enqueuedDateTime != null ? enqueuedDateTime.toEpochMilli() : "null",
-            isInclusive);
+        return String.format(Locale.US, "offset[%s], sequenceNumber[%s], enqueuedTime[%s], isInclusive[%s]", offset,
+            sequenceNumber, enqueuedDateTime != null ? enqueuedDateTime.toEpochMilli() : "null", isInclusive);
     }
 
     @Override

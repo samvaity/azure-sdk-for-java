@@ -56,6 +56,14 @@ public final class ReplicaImpl implements Replica, Replica.Definition, Replica.U
         return this.innerModel().provisioningState();
     }
 
+    public String regionEndpointEnabled() {
+        return this.innerModel().regionEndpointEnabled();
+    }
+
+    public String resourceStopped() {
+        return this.innerModel().resourceStopped();
+    }
+
     public Region region() {
         return Region.fromName(this.regionName());
     }
@@ -89,20 +97,16 @@ public final class ReplicaImpl implements Replica, Replica.Definition, Replica.U
     }
 
     public Replica create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubReplicas()
-                .createOrUpdate(resourceGroupName, resourceName, replicaName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubReplicas()
+            .createOrUpdate(resourceGroupName, resourceName, replicaName, this.innerModel(), Context.NONE);
         return this;
     }
 
     public Replica create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubReplicas()
-                .createOrUpdate(resourceGroupName, resourceName, replicaName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubReplicas()
+            .createOrUpdate(resourceGroupName, resourceName, replicaName, this.innerModel(), context);
         return this;
     }
 
@@ -117,48 +121,40 @@ public final class ReplicaImpl implements Replica, Replica.Definition, Replica.U
     }
 
     public Replica apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubReplicas()
-                .update(resourceGroupName, resourceName, replicaName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubReplicas()
+            .update(resourceGroupName, resourceName, replicaName, this.innerModel(), Context.NONE);
         return this;
     }
 
     public Replica apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubReplicas()
-                .update(resourceGroupName, resourceName, replicaName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubReplicas()
+            .update(resourceGroupName, resourceName, replicaName, this.innerModel(), context);
         return this;
     }
 
     ReplicaImpl(ReplicaInner innerObject, com.azure.resourcemanager.webpubsub.WebPubSubManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.resourceName = Utils.getValueFromIdByName(innerObject.id(), "webPubSub");
-        this.replicaName = Utils.getValueFromIdByName(innerObject.id(), "replicas");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.resourceName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "webPubSub");
+        this.replicaName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "replicas");
     }
 
     public Replica refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubReplicas()
-                .getWithResponse(resourceGroupName, resourceName, replicaName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubReplicas()
+            .getWithResponse(resourceGroupName, resourceName, replicaName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public Replica refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubReplicas()
-                .getWithResponse(resourceGroupName, resourceName, replicaName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubReplicas()
+            .getWithResponse(resourceGroupName, resourceName, replicaName, context)
+            .getValue();
         return this;
     }
 
@@ -187,6 +183,16 @@ public final class ReplicaImpl implements Replica, Replica.Definition, Replica.U
 
     public ReplicaImpl withSku(ResourceSku sku) {
         this.innerModel().withSku(sku);
+        return this;
+    }
+
+    public ReplicaImpl withRegionEndpointEnabled(String regionEndpointEnabled) {
+        this.innerModel().withRegionEndpointEnabled(regionEndpointEnabled);
+        return this;
+    }
+
+    public ReplicaImpl withResourceStopped(String resourceStopped) {
+        this.innerModel().withResourceStopped(resourceStopped);
         return this;
     }
 }

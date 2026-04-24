@@ -4,47 +4,67 @@
 
 package com.azure.communication.phonenumbers.implementation.models;
 
-import com.azure.communication.phonenumbers.CodeCoverageAnnotation.Generated;
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.http.HttpHeaderName;
+import com.azure.core.http.HttpHeaders;
 
-/** The PhoneNumbersReleasePhoneNumberHeaders model. */
+/**
+ * The PhoneNumbersReleasePhoneNumberHeaders model.
+ */
 @Fluent
-@Generated
 public final class PhoneNumbersReleasePhoneNumberHeaders {
     /*
      * The release-id property.
      */
-    @JsonProperty(value = "release-id")
+    @Generated
     private String releaseId;
 
     /*
      * The operation-id property.
      */
-    @JsonProperty(value = "operation-id")
+    @Generated
     private String operationId;
 
     /*
      * The Operation-Location property.
      */
-    @JsonProperty(value = "Operation-Location")
+    @Generated
     private String operationLocation;
+
+    private static final HttpHeaderName RELEASE_ID = HttpHeaderName.fromString("release-id");
+
+    private static final HttpHeaderName OPERATION_ID = HttpHeaderName.fromString("operation-id");
+
+    // HttpHeaders containing the raw property values.
+    /**
+     * Creates an instance of PhoneNumbersReleasePhoneNumberHeaders class.
+     * 
+     * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
+     */
+    public PhoneNumbersReleasePhoneNumberHeaders(HttpHeaders rawHeaders) {
+        this.releaseId = rawHeaders.getValue(RELEASE_ID);
+        this.operationId = rawHeaders.getValue(OPERATION_ID);
+        this.operationLocation = rawHeaders.getValue(HttpHeaderName.OPERATION_LOCATION);
+    }
 
     /**
      * Get the releaseId property: The release-id property.
-     *
+     * 
      * @return the releaseId value.
      */
+    @Generated
     public String getReleaseId() {
         return this.releaseId;
     }
 
     /**
      * Set the releaseId property: The release-id property.
-     *
+     * 
      * @param releaseId the releaseId value to set.
      * @return the PhoneNumbersReleasePhoneNumberHeaders object itself.
      */
+    @Generated
     public PhoneNumbersReleasePhoneNumberHeaders setReleaseId(String releaseId) {
         this.releaseId = releaseId;
         return this;
@@ -52,19 +72,21 @@ public final class PhoneNumbersReleasePhoneNumberHeaders {
 
     /**
      * Get the operationId property: The operation-id property.
-     *
+     * 
      * @return the operationId value.
      */
+    @Generated
     public String getOperationId() {
         return this.operationId;
     }
 
     /**
      * Set the operationId property: The operation-id property.
-     *
+     * 
      * @param operationId the operationId value to set.
      * @return the PhoneNumbersReleasePhoneNumberHeaders object itself.
      */
+    @Generated
     public PhoneNumbersReleasePhoneNumberHeaders setOperationId(String operationId) {
         this.operationId = operationId;
         return this;
@@ -72,19 +94,21 @@ public final class PhoneNumbersReleasePhoneNumberHeaders {
 
     /**
      * Get the operationLocation property: The Operation-Location property.
-     *
+     * 
      * @return the operationLocation value.
      */
+    @Generated
     public String getOperationLocation() {
         return this.operationLocation;
     }
 
     /**
      * Set the operationLocation property: The Operation-Location property.
-     *
+     * 
      * @param operationLocation the operationLocation value to set.
      * @return the PhoneNumbersReleasePhoneNumberHeaders object itself.
      */
+    @Generated
     public PhoneNumbersReleasePhoneNumberHeaders setOperationLocation(String operationLocation) {
         this.operationLocation = operationLocation;
         return this;

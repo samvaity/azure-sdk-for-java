@@ -13,24 +13,20 @@ import org.junit.jupiter.api.Assertions;
 public final class SkuLocationInfoItemTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        SkuLocationInfoItem model =
-            BinaryData
-                .fromString(
-                    "{\"location\":\"udxytlmoyrx\",\"zones\":[\"u\",\"wpzntxhdzh\"],\"zoneDetails\":[{\"name\":[\"hckfrlhrx\"],\"capabilities\":[{\"name\":\"vpycanuzbp\",\"value\":\"afkuwb\"}]}]}")
-                .toObject(SkuLocationInfoItem.class);
-        Assertions.assertEquals("udxytlmoyrx", model.location());
-        Assertions.assertEquals("u", model.zones().get(0));
+        SkuLocationInfoItem model = BinaryData.fromString(
+            "{\"location\":\"yhtozfikdowwqu\",\"zones\":[\"zx\",\"lvithhqzonosgg\"],\"zoneDetails\":[{\"name\":[\"fwdsj\",\"ka\",\"jutiiswacff\",\"dkzzewkfvhqcrail\"],\"capabilities\":[{\"name\":\"pfuflrw\",\"value\":\"hdlxyjrxsagafcn\"}]}]}")
+            .toObject(SkuLocationInfoItem.class);
+        Assertions.assertEquals("yhtozfikdowwqu", model.location());
+        Assertions.assertEquals("zx", model.zones().get(0));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        SkuLocationInfoItem model =
-            new SkuLocationInfoItem()
-                .withLocation("udxytlmoyrx")
-                .withZones(Arrays.asList("u", "wpzntxhdzh"))
-                .withZoneDetails(Arrays.asList(new ResourceSkuZoneDetails()));
+        SkuLocationInfoItem model = new SkuLocationInfoItem().withLocation("yhtozfikdowwqu")
+            .withZones(Arrays.asList("zx", "lvithhqzonosgg"))
+            .withZoneDetails(Arrays.asList(new ResourceSkuZoneDetails()));
         model = BinaryData.fromObject(model).toObject(SkuLocationInfoItem.class);
-        Assertions.assertEquals("udxytlmoyrx", model.location());
-        Assertions.assertEquals("u", model.zones().get(0));
+        Assertions.assertEquals("yhtozfikdowwqu", model.location());
+        Assertions.assertEquals("zx", model.zones().get(0));
     }
 }

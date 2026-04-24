@@ -5,35 +5,54 @@
 package com.azure.resourcemanager.datamigration.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.management.exception.ManagementError;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import com.azure.resourcemanager.datamigration.fluent.models.CommandPropertiesInner;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-/** Properties for the task that validates connection to Azure SQL Database Managed Instance. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "taskType")
-@JsonTypeName("ConnectToTarget.AzureSqlDbMI")
+/**
+ * Properties for the task that validates connection to Azure SQL Database Managed Instance.
+ */
 @Fluent
 public final class ConnectToTargetSqlMITaskProperties extends ProjectTaskProperties {
     /*
+     * Task type.
+     */
+    private TaskType taskType = TaskType.CONNECT_TO_TARGET_AZURE_SQL_DB_MI;
+
+    /*
      * Task input
      */
-    @JsonProperty(value = "input")
     private ConnectToTargetSqlMITaskInput input;
 
     /*
      * Task output. This is ignored if submitted.
      */
-    @JsonProperty(value = "output", access = JsonProperty.Access.WRITE_ONLY)
     private List<ConnectToTargetSqlMITaskOutput> output;
 
-    /** Creates an instance of ConnectToTargetSqlMITaskProperties class. */
+    /**
+     * Creates an instance of ConnectToTargetSqlMITaskProperties class.
+     */
     public ConnectToTargetSqlMITaskProperties() {
     }
 
     /**
+     * Get the taskType property: Task type.
+     * 
+     * @return the taskType value.
+     */
+    @Override
+    public TaskType taskType() {
+        return this.taskType;
+    }
+
+    /**
      * Get the input property: Task input.
-     *
+     * 
      * @return the input value.
      */
     public ConnectToTargetSqlMITaskInput input() {
@@ -42,7 +61,7 @@ public final class ConnectToTargetSqlMITaskProperties extends ProjectTaskPropert
 
     /**
      * Set the input property: Task input.
-     *
+     * 
      * @param input the input value to set.
      * @return the ConnectToTargetSqlMITaskProperties object itself.
      */
@@ -53,7 +72,7 @@ public final class ConnectToTargetSqlMITaskProperties extends ProjectTaskPropert
 
     /**
      * Get the output property: Task output. This is ignored if submitted.
-     *
+     * 
      * @return the output value.
      */
     public List<ConnectToTargetSqlMITaskOutput> output() {
@@ -61,18 +80,87 @@ public final class ConnectToTargetSqlMITaskProperties extends ProjectTaskPropert
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ConnectToTargetSqlMITaskProperties withClientData(Map<String, String> clientData) {
+        super.withClientData(clientData);
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
     public void validate() {
-        super.validate();
         if (input() != null) {
             input().validate();
         }
         if (output() != null) {
             output().forEach(e -> e.validate());
         }
+        if (commands() != null) {
+            commands().forEach(e -> e.validate());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeMapField("clientData", clientData(), (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("taskType", this.taskType == null ? null : this.taskType.toString());
+        jsonWriter.writeJsonField("input", this.input);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ConnectToTargetSqlMITaskProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ConnectToTargetSqlMITaskProperties if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ConnectToTargetSqlMITaskProperties.
+     */
+    public static ConnectToTargetSqlMITaskProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ConnectToTargetSqlMITaskProperties deserializedConnectToTargetSqlMITaskProperties
+                = new ConnectToTargetSqlMITaskProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("errors".equals(fieldName)) {
+                    List<ManagementError> errors = reader.readArray(reader1 -> ManagementError.fromJson(reader1));
+                    deserializedConnectToTargetSqlMITaskProperties.withErrors(errors);
+                } else if ("state".equals(fieldName)) {
+                    deserializedConnectToTargetSqlMITaskProperties.withState(TaskState.fromString(reader.getString()));
+                } else if ("commands".equals(fieldName)) {
+                    List<CommandPropertiesInner> commands
+                        = reader.readArray(reader1 -> CommandPropertiesInner.fromJson(reader1));
+                    deserializedConnectToTargetSqlMITaskProperties.withCommands(commands);
+                } else if ("clientData".equals(fieldName)) {
+                    Map<String, String> clientData = reader.readMap(reader1 -> reader1.getString());
+                    deserializedConnectToTargetSqlMITaskProperties.withClientData(clientData);
+                } else if ("taskType".equals(fieldName)) {
+                    deserializedConnectToTargetSqlMITaskProperties.taskType = TaskType.fromString(reader.getString());
+                } else if ("input".equals(fieldName)) {
+                    deserializedConnectToTargetSqlMITaskProperties.input
+                        = ConnectToTargetSqlMITaskInput.fromJson(reader);
+                } else if ("output".equals(fieldName)) {
+                    List<ConnectToTargetSqlMITaskOutput> output
+                        = reader.readArray(reader1 -> ConnectToTargetSqlMITaskOutput.fromJson(reader1));
+                    deserializedConnectToTargetSqlMITaskProperties.output = output;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedConnectToTargetSqlMITaskProperties;
+        });
     }
 }

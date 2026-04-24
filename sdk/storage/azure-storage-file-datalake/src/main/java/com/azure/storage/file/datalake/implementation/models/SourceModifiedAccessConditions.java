@@ -5,57 +5,63 @@
 package com.azure.storage.file.datalake.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.DateTimeRfc1123;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.time.OffsetDateTime;
 
-/** Parameter group. */
-@JacksonXmlRootElement(localName = "SourceModifiedAccessConditions")
+/**
+ * Parameter group.
+ */
 @Fluent
 public final class SourceModifiedAccessConditions {
     /*
      * Specify an ETag value to operate only on blobs with a matching value.
      */
-    @JsonProperty(value = "sourceIfMatch")
+    @Generated
     private String sourceIfMatch;
 
     /*
      * Specify an ETag value to operate only on blobs without a matching value.
      */
-    @JsonProperty(value = "sourceIfNoneMatch")
+    @Generated
     private String sourceIfNoneMatch;
 
     /*
      * Specify this header value to operate only on a blob if it has been modified since the specified date/time.
      */
-    @JsonProperty(value = "sourceIfModifiedSince")
+    @Generated
     private DateTimeRfc1123 sourceIfModifiedSince;
 
     /*
      * Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
      */
-    @JsonProperty(value = "sourceIfUnmodifiedSince")
+    @Generated
     private DateTimeRfc1123 sourceIfUnmodifiedSince;
 
-    /** Creates an instance of SourceModifiedAccessConditions class. */
-    public SourceModifiedAccessConditions() {}
+    /**
+     * Creates an instance of SourceModifiedAccessConditions class.
+     */
+    @Generated
+    public SourceModifiedAccessConditions() {
+    }
 
     /**
      * Get the sourceIfMatch property: Specify an ETag value to operate only on blobs with a matching value.
-     *
+     * 
      * @return the sourceIfMatch value.
      */
+    @Generated
     public String getSourceIfMatch() {
         return this.sourceIfMatch;
     }
 
     /**
      * Set the sourceIfMatch property: Specify an ETag value to operate only on blobs with a matching value.
-     *
+     * 
      * @param sourceIfMatch the sourceIfMatch value to set.
      * @return the SourceModifiedAccessConditions object itself.
      */
+    @Generated
     public SourceModifiedAccessConditions setSourceIfMatch(String sourceIfMatch) {
         this.sourceIfMatch = sourceIfMatch;
         return this;
@@ -63,19 +69,21 @@ public final class SourceModifiedAccessConditions {
 
     /**
      * Get the sourceIfNoneMatch property: Specify an ETag value to operate only on blobs without a matching value.
-     *
+     * 
      * @return the sourceIfNoneMatch value.
      */
+    @Generated
     public String getSourceIfNoneMatch() {
         return this.sourceIfNoneMatch;
     }
 
     /**
      * Set the sourceIfNoneMatch property: Specify an ETag value to operate only on blobs without a matching value.
-     *
+     * 
      * @param sourceIfNoneMatch the sourceIfNoneMatch value to set.
      * @return the SourceModifiedAccessConditions object itself.
      */
+    @Generated
     public SourceModifiedAccessConditions setSourceIfNoneMatch(String sourceIfNoneMatch) {
         this.sourceIfNoneMatch = sourceIfNoneMatch;
         return this;
@@ -84,9 +92,10 @@ public final class SourceModifiedAccessConditions {
     /**
      * Get the sourceIfModifiedSince property: Specify this header value to operate only on a blob if it has been
      * modified since the specified date/time.
-     *
+     * 
      * @return the sourceIfModifiedSince value.
      */
+    @Generated
     public OffsetDateTime getSourceIfModifiedSince() {
         if (this.sourceIfModifiedSince == null) {
             return null;
@@ -97,10 +106,11 @@ public final class SourceModifiedAccessConditions {
     /**
      * Set the sourceIfModifiedSince property: Specify this header value to operate only on a blob if it has been
      * modified since the specified date/time.
-     *
+     * 
      * @param sourceIfModifiedSince the sourceIfModifiedSince value to set.
      * @return the SourceModifiedAccessConditions object itself.
      */
+    @Generated
     public SourceModifiedAccessConditions setSourceIfModifiedSince(OffsetDateTime sourceIfModifiedSince) {
         if (sourceIfModifiedSince == null) {
             this.sourceIfModifiedSince = null;
@@ -113,9 +123,10 @@ public final class SourceModifiedAccessConditions {
     /**
      * Get the sourceIfUnmodifiedSince property: Specify this header value to operate only on a blob if it has not been
      * modified since the specified date/time.
-     *
+     * 
      * @return the sourceIfUnmodifiedSince value.
      */
+    @Generated
     public OffsetDateTime getSourceIfUnmodifiedSince() {
         if (this.sourceIfUnmodifiedSince == null) {
             return null;
@@ -126,10 +137,11 @@ public final class SourceModifiedAccessConditions {
     /**
      * Set the sourceIfUnmodifiedSince property: Specify this header value to operate only on a blob if it has not been
      * modified since the specified date/time.
-     *
+     * 
      * @param sourceIfUnmodifiedSince the sourceIfUnmodifiedSince value to set.
      * @return the SourceModifiedAccessConditions object itself.
      */
+    @Generated
     public SourceModifiedAccessConditions setSourceIfUnmodifiedSince(OffsetDateTime sourceIfUnmodifiedSince) {
         if (sourceIfUnmodifiedSince == null) {
             this.sourceIfUnmodifiedSince = null;

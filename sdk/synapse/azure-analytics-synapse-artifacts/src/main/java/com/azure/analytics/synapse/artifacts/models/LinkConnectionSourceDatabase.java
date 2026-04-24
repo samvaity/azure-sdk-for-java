@@ -5,41 +5,54 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The LinkConnectionSourceDatabase model. */
+/**
+ * The LinkConnectionSourceDatabase model.
+ */
 @Fluent
-public final class LinkConnectionSourceDatabase {
+public final class LinkConnectionSourceDatabase implements JsonSerializable<LinkConnectionSourceDatabase> {
     /*
      * Linked service reference
      */
-    @JsonProperty(value = "linkedService")
+    @Generated
     private LinkedServiceReference linkedService;
 
     /*
      * Source database type properties
      */
-    @JsonProperty(value = "typeProperties")
+    @Generated
     private LinkConnectionSourceDatabaseTypeProperties typeProperties;
 
-    /** Creates an instance of LinkConnectionSourceDatabase class. */
-    public LinkConnectionSourceDatabase() {}
+    /**
+     * Creates an instance of LinkConnectionSourceDatabase class.
+     */
+    @Generated
+    public LinkConnectionSourceDatabase() {
+    }
 
     /**
      * Get the linkedService property: Linked service reference.
-     *
+     * 
      * @return the linkedService value.
      */
+    @Generated
     public LinkedServiceReference getLinkedService() {
         return this.linkedService;
     }
 
     /**
      * Set the linkedService property: Linked service reference.
-     *
+     * 
      * @param linkedService the linkedService value to set.
      * @return the LinkConnectionSourceDatabase object itself.
      */
+    @Generated
     public LinkConnectionSourceDatabase setLinkedService(LinkedServiceReference linkedService) {
         this.linkedService = linkedService;
         return this;
@@ -47,21 +60,65 @@ public final class LinkConnectionSourceDatabase {
 
     /**
      * Get the typeProperties property: Source database type properties.
-     *
+     * 
      * @return the typeProperties value.
      */
+    @Generated
     public LinkConnectionSourceDatabaseTypeProperties getTypeProperties() {
         return this.typeProperties;
     }
 
     /**
      * Set the typeProperties property: Source database type properties.
-     *
+     * 
      * @param typeProperties the typeProperties value to set.
      * @return the LinkConnectionSourceDatabase object itself.
      */
+    @Generated
     public LinkConnectionSourceDatabase setTypeProperties(LinkConnectionSourceDatabaseTypeProperties typeProperties) {
         this.typeProperties = typeProperties;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("linkedService", this.linkedService);
+        jsonWriter.writeJsonField("typeProperties", this.typeProperties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of LinkConnectionSourceDatabase from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of LinkConnectionSourceDatabase if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the LinkConnectionSourceDatabase.
+     */
+    @Generated
+    public static LinkConnectionSourceDatabase fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            LinkConnectionSourceDatabase deserializedLinkConnectionSourceDatabase = new LinkConnectionSourceDatabase();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("linkedService".equals(fieldName)) {
+                    deserializedLinkConnectionSourceDatabase.linkedService = LinkedServiceReference.fromJson(reader);
+                } else if ("typeProperties".equals(fieldName)) {
+                    deserializedLinkConnectionSourceDatabase.typeProperties
+                        = LinkConnectionSourceDatabaseTypeProperties.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedLinkConnectionSourceDatabase;
+        });
     }
 }

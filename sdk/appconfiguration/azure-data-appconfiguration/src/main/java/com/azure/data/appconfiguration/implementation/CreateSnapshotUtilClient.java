@@ -3,12 +3,13 @@
 
 package com.azure.data.appconfiguration.implementation;
 
-
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.ResponseBase;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.LongRunningOperationStatus;
+import com.azure.core.util.polling.PollOperationDetails;
 import com.azure.core.util.polling.PollResponse;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.PollingContext;
@@ -16,11 +17,12 @@ import com.azure.core.util.polling.SyncPoller;
 import com.azure.data.appconfiguration.implementation.models.CreateSnapshotHeaders;
 import com.azure.data.appconfiguration.implementation.models.OperationDetails;
 import com.azure.data.appconfiguration.implementation.models.State;
-import com.azure.data.appconfiguration.models.ConfigurationSettingSnapshot;
-import com.azure.data.appconfiguration.models.CreateSnapshotOperationDetail;
+import com.azure.data.appconfiguration.models.ConfigurationSnapshot;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import static com.azure.core.util.FluxUtil.monoError;
@@ -41,58 +43,45 @@ public class CreateSnapshotUtilClient {
         this.service = service;
     }
 
-    public PollerFlux<CreateSnapshotOperationDetail, ConfigurationSettingSnapshot> beginCreateSnapshot(String name,
-        ConfigurationSettingSnapshot snapshot) {
+    public PollerFlux<PollOperationDetails, ConfigurationSnapshot> beginCreateSnapshot(String name,
+        ConfigurationSnapshot snapshot) {
         try {
-            return new PollerFlux<>(
-                DEFAULT_POLL_INTERVAL,
-                activationOperation(
-                    service.createSnapshotWithResponseAsync(name, snapshot, Context.NONE)
-                        .map(response -> {
-                            CreateSnapshotOperationDetail operationDetail = new CreateSnapshotOperationDetail();
-                            CreateSnapshotOperationDetailPropertiesHelper.setOperationId(operationDetail,
-                                response.getDeserializedHeaders().getOperationLocation());
-                            return operationDetail;
-                        })),
-                pollingOperation(
-                    operationId -> service.getOperationDetailsWithResponseAsync(name, Context.NONE)),
-                (pollingContext, activationResponse) ->
-                    Mono.error(new RuntimeException("Cancellation is not supported.")),
+            return new PollerFlux<>(DEFAULT_POLL_INTERVAL, activationOperation(
+                service.createSnapshotWithResponseAsync(name, snapshot, Context.NONE).map(response -> {
+                    final Map<String, String> pollResponse = new HashMap<>();
+                    pollResponse.put("id", response.getDeserializedHeaders().getOperationLocation());
+                    return BinaryData.fromObject(pollResponse).toObject(PollOperationDetails.class);
+                })), pollingOperation(operationId -> service.getOperationDetailsWithResponseAsync(name, Context.NONE)),
+                (pollingContext, activationResponse) -> Mono
+                    .error(new RuntimeException("Cancellation is not supported.")),
                 fetchingOperation(
-                    operationId -> service.getSnapshotWithResponseAsync(
-                        name, null, null, null, Context.NONE)
-                                              .flatMap(res -> Mono.justOrEmpty(res.getValue())))
-            );
+                    operationId -> service.getSnapshotWithResponseAsync(name, null, null, null, Context.NONE)
+                        .flatMap(res -> Mono.justOrEmpty(res.getValue()))));
         } catch (Exception e) {
             return PollerFlux.error(e);
         }
     }
 
-    public SyncPoller<CreateSnapshotOperationDetail, ConfigurationSettingSnapshot> beginCreateSnapshot(String name,
-        ConfigurationSettingSnapshot snapshot, Context context) {
+    public SyncPoller<PollOperationDetails, ConfigurationSnapshot> beginCreateSnapshot(String name,
+        ConfigurationSnapshot snapshot, Context context) {
         try {
             final Context finalContext = getNotNullContext(context);
-            return SyncPoller.createPoller(
-                DEFAULT_POLL_INTERVAL,
+            return SyncPoller.createPoller(DEFAULT_POLL_INTERVAL,
                 cxt -> new PollResponse<>(LongRunningOperationStatus.NOT_STARTED,
                     activationOperationSync(name, snapshot, finalContext).apply(cxt)),
-                pollingOperationSync(
-                    operationId -> service.getOperationDetailsWithResponse(name, finalContext)),
+                pollingOperationSync(operationId -> service.getOperationDetailsWithResponse(name, finalContext)),
                 (pollingContext, activationResponse) -> {
                     throw LOGGER.logExceptionAsError(new RuntimeException("Cancellation is not supported."));
-                },
-                fetchingOperationSync(
-                    operationId -> service.getSnapshotWithResponse(name, null, null,
-                        null, finalContext).getValue())
-            );
+                }, fetchingOperationSync(
+                    operationId -> service.getSnapshotWithResponse(name, null, null, null, finalContext).getValue()));
         } catch (Exception e) {
             throw LOGGER.logExceptionAsError(new RuntimeException(e));
         }
     }
 
     // Activation operation
-    private Function<PollingContext<CreateSnapshotOperationDetail>, Mono<CreateSnapshotOperationDetail>>
-        activationOperation(Mono<CreateSnapshotOperationDetail> operationResult) {
+    private Function<PollingContext<PollOperationDetails>, Mono<PollOperationDetails>>
+        activationOperation(Mono<PollOperationDetails> operationResult) {
         return pollingContext -> {
             try {
                 return operationResult;
@@ -102,18 +91,16 @@ public class CreateSnapshotUtilClient {
         };
     }
 
-    private Function<PollingContext<CreateSnapshotOperationDetail>, CreateSnapshotOperationDetail>
-        activationOperationSync(String name, ConfigurationSettingSnapshot snapshot, Context context) {
+    private Function<PollingContext<PollOperationDetails>, PollOperationDetails> activationOperationSync(String name,
+        ConfigurationSnapshot snapshot, Context context) {
         return pollingContext -> {
             try {
                 final Context finalContext = getNotNullContext(context);
-                final ResponseBase<CreateSnapshotHeaders, ConfigurationSettingSnapshot> snapshotWithResponse =
-                    service.createSnapshotWithResponse(name, snapshot, finalContext);
-                CreateSnapshotOperationDetail operationDetail =
-                    new CreateSnapshotOperationDetail();
-                CreateSnapshotOperationDetailPropertiesHelper.setOperationId(operationDetail,
-                    snapshotWithResponse.getDeserializedHeaders().getOperationLocation());
-                return operationDetail;
+                final ResponseBase<CreateSnapshotHeaders, ConfigurationSnapshot> snapshotWithResponse
+                    = service.createSnapshotWithResponse(name, snapshot, finalContext);
+                final Map<String, String> pollResponse = new HashMap<>();
+                pollResponse.put("id", snapshotWithResponse.getDeserializedHeaders().getOperationLocation());
+                return BinaryData.fromObject(pollResponse).toObject(PollOperationDetails.class);
             } catch (RuntimeException ex) {
                 throw LOGGER.logExceptionAsError(ex);
             }
@@ -121,28 +108,25 @@ public class CreateSnapshotUtilClient {
     }
 
     // Polling operation
-    private Function<PollingContext<CreateSnapshotOperationDetail>, Mono<PollResponse<CreateSnapshotOperationDetail>>>
+    private Function<PollingContext<PollOperationDetails>, Mono<PollResponse<PollOperationDetails>>>
         pollingOperation(Function<String, Mono<Response<OperationDetails>>> pollingFunction) {
         return pollingContext -> {
             try {
-                final PollResponse<CreateSnapshotOperationDetail> pollResponse =
-                    pollingContext.getLatestResponse();
+                final PollResponse<PollOperationDetails> pollResponse = pollingContext.getLatestResponse();
                 final String operationId = pollResponse.getValue().getOperationId();
                 return pollingFunction.apply(operationId)
-                           .flatMap(modelResponse ->
-                                        Mono.just(processResponse(modelResponse, pollResponse)));
+                    .flatMap(modelResponse -> Mono.just(processResponse(modelResponse, pollResponse)));
             } catch (RuntimeException ex) {
                 return monoError(LOGGER, ex);
             }
         };
     }
 
-    private Function<PollingContext<CreateSnapshotOperationDetail>, PollResponse<CreateSnapshotOperationDetail>>
+    private Function<PollingContext<PollOperationDetails>, PollResponse<PollOperationDetails>>
         pollingOperationSync(Function<String, Response<OperationDetails>> pollingFunction) {
         return pollingContext -> {
             try {
-                final PollResponse<CreateSnapshotOperationDetail> pollResponse =
-                    pollingContext.getLatestResponse();
+                final PollResponse<PollOperationDetails> pollResponse = pollingContext.getLatestResponse();
                 return processResponse(pollingFunction.apply(pollResponse.getValue().getOperationId()), pollResponse);
             } catch (RuntimeException ex) {
                 throw LOGGER.logExceptionAsError(ex);
@@ -151,9 +135,8 @@ public class CreateSnapshotUtilClient {
     }
 
     // Fetching operation
-    private Function<PollingContext<CreateSnapshotOperationDetail>,
-                        Mono<ConfigurationSettingSnapshot>> fetchingOperation(
-        Function<String, Mono<ConfigurationSettingSnapshot>> fetchingFunction) {
+    private Function<PollingContext<PollOperationDetails>, Mono<ConfigurationSnapshot>>
+        fetchingOperation(Function<String, Mono<ConfigurationSnapshot>> fetchingFunction) {
         return pollingContext -> {
             try {
                 String operationId = pollingContext.getLatestResponse().getValue().getOperationId();
@@ -164,8 +147,8 @@ public class CreateSnapshotUtilClient {
         };
     }
 
-    private Function<PollingContext<CreateSnapshotOperationDetail>, ConfigurationSettingSnapshot> fetchingOperationSync(
-        Function<String, ConfigurationSettingSnapshot> fetchingFunction) {
+    private Function<PollingContext<PollOperationDetails>, ConfigurationSnapshot>
+        fetchingOperationSync(Function<String, ConfigurationSnapshot> fetchingFunction) {
         return pollingContext -> {
             try {
                 String operationId = pollingContext.getLatestResponse().getValue().getOperationId();
@@ -176,9 +159,8 @@ public class CreateSnapshotUtilClient {
         };
     }
 
-    private PollResponse<CreateSnapshotOperationDetail> processResponse(
-        Response<OperationDetails> response,
-        PollResponse<CreateSnapshotOperationDetail> operationResultPollResponse) {
+    private PollResponse<PollOperationDetails> processResponse(Response<OperationDetails> response,
+        PollResponse<PollOperationDetails> operationResultPollResponse) {
         LongRunningOperationStatus status;
         State state = response.getValue().getStatus();
         if (NOT_STARTED.equals(state) || RUNNING.equals(state)) {
@@ -186,8 +168,7 @@ public class CreateSnapshotUtilClient {
         } else if (SUCCEEDED.equals(state)) {
             status = LongRunningOperationStatus.SUCCESSFULLY_COMPLETED;
         } else {
-            status = LongRunningOperationStatus.fromString(
-                response.getValue().toString(), true);
+            status = LongRunningOperationStatus.fromString(response.getValue().toString(), true);
         }
         return new PollResponse<>(status, operationResultPollResponse.getValue());
     }

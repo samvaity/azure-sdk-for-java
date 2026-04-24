@@ -6,6 +6,9 @@ package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.networkcloud.models.ClusterManagerPatchParameters;
+import com.azure.resourcemanager.networkcloud.models.ManagedServiceIdentity;
+import com.azure.resourcemanager.networkcloud.models.ManagedServiceIdentityType;
+import com.azure.resourcemanager.networkcloud.models.UserAssignedIdentity;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
@@ -13,18 +16,25 @@ import org.junit.jupiter.api.Assertions;
 public final class ClusterManagerPatchParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ClusterManagerPatchParameters model =
-            BinaryData.fromString("{\"tags\":{\"kdlpa\":\"es\"}}").toObject(ClusterManagerPatchParameters.class);
-        Assertions.assertEquals("es", model.tags().get("kdlpa"));
+        ClusterManagerPatchParameters model = BinaryData.fromString(
+            "{\"identity\":{\"principalId\":\"9f83432b-3baf-4421-9892-eb01530118af\",\"tenantId\":\"f5b47c06-63a3-4b79-ab45-f1976ba25ab7\",\"type\":\"SystemAssigned\",\"userAssignedIdentities\":{\"owxwcomli\":{\"principalId\":\"54f461e1-6499-4c3f-b38a-0aef8d5f2e38\",\"clientId\":\"bacf6124-9455-44f4-a608-c74ddd77ed00\"}}},\"tags\":{\"yfdvlvhbwrnfxtgd\":\"wvczcswkacve\"}}")
+            .toObject(ClusterManagerPatchParameters.class);
+        Assertions.assertEquals(ManagedServiceIdentityType.SYSTEM_ASSIGNED, model.identity().type());
+        Assertions.assertEquals("wvczcswkacve", model.tags().get("yfdvlvhbwrnfxtgd"));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ClusterManagerPatchParameters model = new ClusterManagerPatchParameters().withTags(mapOf("kdlpa", "es"));
+        ClusterManagerPatchParameters model = new ClusterManagerPatchParameters()
+            .withIdentity(new ManagedServiceIdentity().withType(ManagedServiceIdentityType.SYSTEM_ASSIGNED)
+                .withUserAssignedIdentities(mapOf("owxwcomli", new UserAssignedIdentity())))
+            .withTags(mapOf("yfdvlvhbwrnfxtgd", "wvczcswkacve"));
         model = BinaryData.fromObject(model).toObject(ClusterManagerPatchParameters.class);
-        Assertions.assertEquals("es", model.tags().get("kdlpa"));
+        Assertions.assertEquals(ManagedServiceIdentityType.SYSTEM_ASSIGNED, model.identity().type());
+        Assertions.assertEquals("wvczcswkacve", model.tags().get("yfdvlvhbwrnfxtgd"));
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

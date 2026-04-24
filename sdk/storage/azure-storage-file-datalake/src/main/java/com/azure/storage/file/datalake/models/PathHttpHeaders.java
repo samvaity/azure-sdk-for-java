@@ -5,69 +5,74 @@
 package com.azure.storage.file.datalake.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.CoreUtils;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
-/** Parameter group. */
-@JacksonXmlRootElement(localName = "PathHttpHeaders")
+/**
+ * Parameter group.
+ */
 @Fluent
 public final class PathHttpHeaders {
     /*
      * Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a
      * read request.
      */
-    @JsonProperty(value = "cacheControl")
+    @Generated
     private String cacheControl;
 
     /*
-     * Optional. Sets the blob's content encoding. If specified, this property is stored with the blob and returned
-     * with a read request.
+     * Optional. Sets the blob's content encoding. If specified, this property is stored with the blob and returned with
+     * a read request.
      */
-    @JsonProperty(value = "contentEncoding")
+    @Generated
     private String contentEncoding;
 
     /*
      * Optional. Set the blob's content language. If specified, this property is stored with the blob and returned with
      * a read request.
      */
-    @JsonProperty(value = "contentLanguage")
+    @Generated
     private String contentLanguage;
 
     /*
      * Optional. Sets the blob's Content-Disposition header.
      */
-    @JsonProperty(value = "contentDisposition")
+    @Generated
     private String contentDisposition;
 
     /*
      * Optional. Sets the blob's content type. If specified, this property is stored with the blob and returned with a
      * read request.
      */
-    @JsonProperty(value = "contentType")
+    @Generated
     private String contentType;
 
     /*
      * Specify the transactional md5 for the body, to be validated by the service.
      */
-    @JsonProperty(value = "contentMd5")
+    @Generated
     private byte[] contentMd5;
 
     /*
      * Specify the transactional md5 for the body, to be validated by the service.
      */
-    @JsonProperty(value = "transactionalContentHash")
+    @Generated
     private byte[] transactionalContentHash;
 
-    /** Creates an instance of PathHttpHeaders class. */
-    public PathHttpHeaders() {}
+    /**
+     * Creates an instance of PathHttpHeaders class.
+     */
+    @Generated
+    public PathHttpHeaders() {
+    }
 
     /**
      * Get the cacheControl property: Optional. Sets the blob's cache control. If specified, this property is stored
      * with the blob and returned with a read request.
-     *
+     * 
      * @return the cacheControl value.
      */
+    @Generated
     public String getCacheControl() {
         return this.cacheControl;
     }
@@ -75,10 +80,11 @@ public final class PathHttpHeaders {
     /**
      * Set the cacheControl property: Optional. Sets the blob's cache control. If specified, this property is stored
      * with the blob and returned with a read request.
-     *
+     * 
      * @param cacheControl the cacheControl value to set.
      * @return the PathHttpHeaders object itself.
      */
+    @Generated
     public PathHttpHeaders setCacheControl(String cacheControl) {
         this.cacheControl = cacheControl;
         return this;
@@ -87,9 +93,10 @@ public final class PathHttpHeaders {
     /**
      * Get the contentEncoding property: Optional. Sets the blob's content encoding. If specified, this property is
      * stored with the blob and returned with a read request.
-     *
+     * 
      * @return the contentEncoding value.
      */
+    @Generated
     public String getContentEncoding() {
         return this.contentEncoding;
     }
@@ -97,10 +104,11 @@ public final class PathHttpHeaders {
     /**
      * Set the contentEncoding property: Optional. Sets the blob's content encoding. If specified, this property is
      * stored with the blob and returned with a read request.
-     *
+     * 
      * @param contentEncoding the contentEncoding value to set.
      * @return the PathHttpHeaders object itself.
      */
+    @Generated
     public PathHttpHeaders setContentEncoding(String contentEncoding) {
         this.contentEncoding = contentEncoding;
         return this;
@@ -109,9 +117,10 @@ public final class PathHttpHeaders {
     /**
      * Get the contentLanguage property: Optional. Set the blob's content language. If specified, this property is
      * stored with the blob and returned with a read request.
-     *
+     * 
      * @return the contentLanguage value.
      */
+    @Generated
     public String getContentLanguage() {
         return this.contentLanguage;
     }
@@ -119,10 +128,11 @@ public final class PathHttpHeaders {
     /**
      * Set the contentLanguage property: Optional. Set the blob's content language. If specified, this property is
      * stored with the blob and returned with a read request.
-     *
+     * 
      * @param contentLanguage the contentLanguage value to set.
      * @return the PathHttpHeaders object itself.
      */
+    @Generated
     public PathHttpHeaders setContentLanguage(String contentLanguage) {
         this.contentLanguage = contentLanguage;
         return this;
@@ -130,19 +140,21 @@ public final class PathHttpHeaders {
 
     /**
      * Get the contentDisposition property: Optional. Sets the blob's Content-Disposition header.
-     *
+     * 
      * @return the contentDisposition value.
      */
+    @Generated
     public String getContentDisposition() {
         return this.contentDisposition;
     }
 
     /**
      * Set the contentDisposition property: Optional. Sets the blob's Content-Disposition header.
-     *
+     * 
      * @param contentDisposition the contentDisposition value to set.
      * @return the PathHttpHeaders object itself.
      */
+    @Generated
     public PathHttpHeaders setContentDisposition(String contentDisposition) {
         this.contentDisposition = contentDisposition;
         return this;
@@ -151,9 +163,10 @@ public final class PathHttpHeaders {
     /**
      * Get the contentType property: Optional. Sets the blob's content type. If specified, this property is stored with
      * the blob and returned with a read request.
-     *
+     * 
      * @return the contentType value.
      */
+    @Generated
     public String getContentType() {
         return this.contentType;
     }
@@ -161,10 +174,11 @@ public final class PathHttpHeaders {
     /**
      * Set the contentType property: Optional. Sets the blob's content type. If specified, this property is stored with
      * the blob and returned with a read request.
-     *
+     * 
      * @param contentType the contentType value to set.
      * @return the PathHttpHeaders object itself.
      */
+    @Generated
     public PathHttpHeaders setContentType(String contentType) {
         this.contentType = contentType;
         return this;
@@ -172,19 +186,21 @@ public final class PathHttpHeaders {
 
     /**
      * Get the contentMd5 property: Specify the transactional md5 for the body, to be validated by the service.
-     *
+     * 
      * @return the contentMd5 value.
      */
+    @Generated
     public byte[] getContentMd5() {
         return CoreUtils.clone(this.contentMd5);
     }
 
     /**
      * Set the contentMd5 property: Specify the transactional md5 for the body, to be validated by the service.
-     *
+     * 
      * @param contentMd5 the contentMd5 value to set.
      * @return the PathHttpHeaders object itself.
      */
+    @Generated
     public PathHttpHeaders setContentMd5(byte[] contentMd5) {
         this.contentMd5 = CoreUtils.clone(contentMd5);
         return this;
@@ -193,9 +209,10 @@ public final class PathHttpHeaders {
     /**
      * Get the transactionalContentHash property: Specify the transactional md5 for the body, to be validated by the
      * service.
-     *
+     * 
      * @return the transactionalContentHash value.
      */
+    @Generated
     public byte[] getTransactionalContentHash() {
         return CoreUtils.clone(this.transactionalContentHash);
     }
@@ -203,10 +220,11 @@ public final class PathHttpHeaders {
     /**
      * Set the transactionalContentHash property: Specify the transactional md5 for the body, to be validated by the
      * service.
-     *
+     * 
      * @param transactionalContentHash the transactionalContentHash value to set.
      * @return the PathHttpHeaders object itself.
      */
+    @Generated
     public PathHttpHeaders setTransactionalContentHash(byte[] transactionalContentHash) {
         this.transactionalContentHash = CoreUtils.clone(transactionalContentHash);
         return this;

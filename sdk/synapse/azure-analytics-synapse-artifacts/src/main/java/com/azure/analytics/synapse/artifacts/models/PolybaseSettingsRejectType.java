@@ -4,42 +4,53 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Indicates whether the RejectValue property is specified as a literal value or a percentage. */
+/**
+ * Indicates whether the RejectValue property is specified as a literal value or a percentage.
+ */
 public final class PolybaseSettingsRejectType extends ExpandableStringEnum<PolybaseSettingsRejectType> {
-    /** Static value value for PolybaseSettingsRejectType. */
+    /**
+     * Static value value for PolybaseSettingsRejectType.
+     */
+    @Generated
     public static final PolybaseSettingsRejectType VALUE = fromString("value");
 
-    /** Static value percentage for PolybaseSettingsRejectType. */
+    /**
+     * Static value percentage for PolybaseSettingsRejectType.
+     */
+    @Generated
     public static final PolybaseSettingsRejectType PERCENTAGE = fromString("percentage");
 
     /**
      * Creates a new instance of PolybaseSettingsRejectType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public PolybaseSettingsRejectType() {}
+    public PolybaseSettingsRejectType() {
+    }
 
     /**
      * Creates or finds a PolybaseSettingsRejectType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding PolybaseSettingsRejectType.
      */
-    @JsonCreator
+    @Generated
     public static PolybaseSettingsRejectType fromString(String name) {
         return fromString(name, PolybaseSettingsRejectType.class);
     }
 
     /**
      * Gets known PolybaseSettingsRejectType values.
-     *
+     * 
      * @return known PolybaseSettingsRejectType values.
      */
+    @Generated
     public static Collection<PolybaseSettingsRejectType> values() {
         return values(PolybaseSettingsRejectType.class);
     }

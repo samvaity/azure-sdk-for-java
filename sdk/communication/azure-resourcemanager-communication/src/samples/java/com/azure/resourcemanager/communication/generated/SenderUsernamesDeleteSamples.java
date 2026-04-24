@@ -4,25 +4,24 @@
 
 package com.azure.resourcemanager.communication.generated;
 
-/** Samples for SenderUsernames Delete. */
+/**
+ * Samples for SenderUsernames Delete.
+ */
 public final class SenderUsernamesDeleteSamples {
     /*
-     * x-ms-original-file: specification/communication/resource-manager/Microsoft.Communication/stable/2023-03-31/examples/senderUsernames/delete.json
+     * x-ms-original-file:
+     * specification/communication/resource-manager/Microsoft.Communication/stable/2025-09-01/examples/senderUsernames/
+     * delete.json
      */
     /**
      * Sample code: Delete SenderUsernames resource.
-     *
+     * 
      * @param manager Entry point to CommunicationManager.
      */
-    public static void deleteSenderUsernamesResource(
-        com.azure.resourcemanager.communication.CommunicationManager manager) {
-        manager
-            .senderUsernames()
-            .deleteWithResponse(
-                "MyResourceGroup",
-                "MyEmailServiceResource",
-                "mydomain.com",
-                "contosoNewsAlerts",
+    public static void
+        deleteSenderUsernamesResource(com.azure.resourcemanager.communication.CommunicationManager manager) {
+        manager.senderUsernames()
+            .deleteWithResponse("MyResourceGroup", "MyEmailServiceResource", "mydomain.com", "contosoNewsAlerts",
                 com.azure.core.util.Context.NONE);
     }
 }

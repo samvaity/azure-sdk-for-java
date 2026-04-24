@@ -15,37 +15,36 @@ import org.junit.jupiter.api.Assertions;
 public final class ReplicaInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ReplicaInner model =
-            BinaryData
-                .fromString(
-                    "{\"sku\":{\"name\":\"rxkpmloazuruoc\",\"tier\":\"Free\",\"size\":\"rb\",\"family\":\"oybfhjxakvvj\",\"capacity\":1902606328},\"properties\":{\"provisioningState\":\"Updating\"},\"location\":\"lmywwtkgkxnyed\",\"tags\":{\"xuuwhcj\":\"yvudtjuewbci\",\"akkud\":\"xccybvpa\",\"wjplma\":\"px\"},\"id\":\"stcyohpfkyrkdbd\",\"name\":\"iogsjkmnwq\",\"type\":\"nobaiyhddviacegf\"}")
-                .toObject(ReplicaInner.class);
-        Assertions.assertEquals("lmywwtkgkxnyed", model.location());
-        Assertions.assertEquals("yvudtjuewbci", model.tags().get("xuuwhcj"));
-        Assertions.assertEquals("rxkpmloazuruoc", model.sku().name());
-        Assertions.assertEquals(WebPubSubSkuTier.FREE, model.sku().tier());
-        Assertions.assertEquals(1902606328, model.sku().capacity());
+        ReplicaInner model = BinaryData.fromString(
+            "{\"sku\":{\"name\":\"rnxrxcpj\",\"tier\":\"Standard\",\"size\":\"vokqdzfv\",\"family\":\"ivjlfrqttbajlka\",\"capacity\":764088106},\"properties\":{\"provisioningState\":\"Canceled\",\"regionEndpointEnabled\":\"pidkqqfkuvscxkdm\",\"resourceStopped\":\"govibrxkpmloazu\"},\"location\":\"ocbgoorbteoyb\",\"tags\":{\"il\":\"xakvvjgslor\",\"t\":\"yw\"},\"id\":\"gkxnyedabg\",\"name\":\"vudtjuewbcihx\",\"type\":\"uwhcjyxccybv\"}")
+            .toObject(ReplicaInner.class);
+        Assertions.assertEquals("ocbgoorbteoyb", model.location());
+        Assertions.assertEquals("xakvvjgslor", model.tags().get("il"));
+        Assertions.assertEquals("rnxrxcpj", model.sku().name());
+        Assertions.assertEquals(WebPubSubSkuTier.STANDARD, model.sku().tier());
+        Assertions.assertEquals(764088106, model.sku().capacity());
+        Assertions.assertEquals("pidkqqfkuvscxkdm", model.regionEndpointEnabled());
+        Assertions.assertEquals("govibrxkpmloazu", model.resourceStopped());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ReplicaInner model =
-            new ReplicaInner()
-                .withLocation("lmywwtkgkxnyed")
-                .withTags(mapOf("xuuwhcj", "yvudtjuewbci", "akkud", "xccybvpa", "wjplma", "px"))
-                .withSku(
-                    new ResourceSku()
-                        .withName("rxkpmloazuruoc")
-                        .withTier(WebPubSubSkuTier.FREE)
-                        .withCapacity(1902606328));
+        ReplicaInner model = new ReplicaInner().withLocation("ocbgoorbteoyb")
+            .withTags(mapOf("il", "xakvvjgslor", "t", "yw"))
+            .withSku(new ResourceSku().withName("rnxrxcpj").withTier(WebPubSubSkuTier.STANDARD).withCapacity(764088106))
+            .withRegionEndpointEnabled("pidkqqfkuvscxkdm")
+            .withResourceStopped("govibrxkpmloazu");
         model = BinaryData.fromObject(model).toObject(ReplicaInner.class);
-        Assertions.assertEquals("lmywwtkgkxnyed", model.location());
-        Assertions.assertEquals("yvudtjuewbci", model.tags().get("xuuwhcj"));
-        Assertions.assertEquals("rxkpmloazuruoc", model.sku().name());
-        Assertions.assertEquals(WebPubSubSkuTier.FREE, model.sku().tier());
-        Assertions.assertEquals(1902606328, model.sku().capacity());
+        Assertions.assertEquals("ocbgoorbteoyb", model.location());
+        Assertions.assertEquals("xakvvjgslor", model.tags().get("il"));
+        Assertions.assertEquals("rnxrxcpj", model.sku().name());
+        Assertions.assertEquals(WebPubSubSkuTier.STANDARD, model.sku().tier());
+        Assertions.assertEquals(764088106, model.sku().capacity());
+        Assertions.assertEquals("pidkqqfkuvscxkdm", model.regionEndpointEnabled());
+        Assertions.assertEquals("govibrxkpmloazu", model.resourceStopped());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

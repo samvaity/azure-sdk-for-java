@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.MigrateSqlServerSqlDbTaskO
 public final class MigrateSqlServerSqlDbTaskOutputTableLevelTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlDbTaskOutputTableLevel model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"TableLevelOutput\",\"objectName\":\"gzslesjcbhernnti\",\"startedOn\":\"2021-09-10T03:49:52Z\",\"endedOn\":\"2021-08-27T00:56:15Z\",\"state\":\"Completed\",\"statusMessage\":\"uwrbehwagoh\",\"itemsCount\":248267720763277178,\"itemsCompletedCount\":2232582311474631364,\"errorPrefix\":\"emvvhm\",\"resultPrefix\":\"drjf\",\"id\":\"acoebj\"}")
-                .toObject(MigrateSqlServerSqlDbTaskOutputTableLevel.class);
+        MigrateSqlServerSqlDbTaskOutputTableLevel model = BinaryData.fromString(
+            "{\"resultType\":\"TableLevelOutput\",\"objectName\":\"ela\",\"startedOn\":\"2021-08-31T06:52:26Z\",\"endedOn\":\"2021-03-24T08:52Z\",\"state\":\"Completed\",\"statusMessage\":\"ohdbvqvwzkj\",\"itemsCount\":4814444783011826740,\"itemsCompletedCount\":8352788009308200473,\"errorPrefix\":\"lkwzdqybxceakxcp\",\"resultPrefix\":\"oqfyiaseqch\",\"id\":\"ttzrazisgyki\"}")
+            .toObject(MigrateSqlServerSqlDbTaskOutputTableLevel.class);
     }
 
     @org.junit.jupiter.api.Test

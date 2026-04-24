@@ -6,20 +6,17 @@ package com.azure.resourcemanager.policyinsights.generated;
 
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.policyinsights.models.PolicyEvaluationResult;
-import org.junit.jupiter.api.Test;
 
 public final class PolicyEvaluationResultTests {
-    @Test
-    public void testDeserialize() {
-        PolicyEvaluationResult model =
-            BinaryData
-                .fromString(
-                    "{\"policyInfo\":{\"policyDefinitionId\":\"nqvsaznqnto\",\"policySetDefinitionId\":\"dsg\",\"policyDefinitionReferenceId\":\"hmk\",\"policyAssignmentId\":\"grauwjuetaebur\"},\"evaluationResult\":\"dmovsm\",\"evaluationDetails\":{\"evaluatedExpressions\":[{\"result\":\"b\",\"expression\":\"oefki\",\"expressionKind\":\"vtpuqujmqlgk\",\"path\":\"tndoaongbjc\",\"operator\":\"i\"}],\"ifNotExistsDetails\":{\"resourceId\":\"ed\",\"totalResources\":659482239}}}")
-                .toObject(PolicyEvaluationResult.class);
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        PolicyEvaluationResult model = BinaryData.fromString(
+            "{\"policyInfo\":{\"policyDefinitionId\":\"uhxu\",\"policySetDefinitionId\":\"buew\",\"policyDefinitionReferenceId\":\"s\",\"policyAssignmentId\":\"jlxuz\"},\"evaluationResult\":\"wpusxjbaqehg\",\"evaluationDetails\":{\"evaluatedExpressions\":[{\"result\":\"jqatucoigebxn\",\"expression\":\"wfepbnwgfmx\",\"expressionKind\":\"cgbjbgdlfgt\",\"path\":\"snaquf\",\"expressionValue\":\"databctqhamzjrwd\",\"targetValue\":\"datazeqyjleziun\",\"operator\":\"dfzantkwcegy\"},{\"result\":\"lbnseqac\",\"expression\":\"vpilg\",\"expressionKind\":\"oq\",\"path\":\"gmditgueiookjbs\",\"expressionValue\":\"datartdtpdelq\",\"targetValue\":\"dataslmot\",\"operator\":\"bnfxofvc\"},{\"result\":\"gdirazf\",\"expression\":\"ejwabmdujtmvco\",\"expressionKind\":\"xcmjurbu\",\"path\":\"lkyqltqsrog\",\"expressionValue\":\"datawkffdjkt\",\"targetValue\":\"datasidfv\",\"operator\":\"g\"}],\"ifNotExistsDetails\":{\"resourceId\":\"fuijtkbus\",\"totalResources\":1183676629},\"reason\":\"fikayiansharujtj\"},\"effectDetails\":{\"policyEffect\":\"fzyjqt\"}}")
+            .toObject(PolicyEvaluationResult.class);
     }
 
-    @Test
-    public void testSerialize() {
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
         PolicyEvaluationResult model = new PolicyEvaluationResult();
         model = BinaryData.fromObject(model).toObject(PolicyEvaluationResult.class);
     }

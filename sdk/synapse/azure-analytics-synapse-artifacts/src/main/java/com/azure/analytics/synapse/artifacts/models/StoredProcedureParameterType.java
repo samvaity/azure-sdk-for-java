@@ -4,57 +4,83 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Stored procedure parameter type. */
+/**
+ * Stored procedure parameter type.
+ */
 public final class StoredProcedureParameterType extends ExpandableStringEnum<StoredProcedureParameterType> {
-    /** Static value String for StoredProcedureParameterType. */
+    /**
+     * Static value String for StoredProcedureParameterType.
+     */
+    @Generated
     public static final StoredProcedureParameterType STRING = fromString("String");
 
-    /** Static value Int for StoredProcedureParameterType. */
+    /**
+     * Static value Int for StoredProcedureParameterType.
+     */
+    @Generated
     public static final StoredProcedureParameterType INT = fromString("Int");
 
-    /** Static value Int64 for StoredProcedureParameterType. */
+    /**
+     * Static value Int64 for StoredProcedureParameterType.
+     */
+    @Generated
     public static final StoredProcedureParameterType INT64 = fromString("Int64");
 
-    /** Static value Decimal for StoredProcedureParameterType. */
+    /**
+     * Static value Decimal for StoredProcedureParameterType.
+     */
+    @Generated
     public static final StoredProcedureParameterType DECIMAL = fromString("Decimal");
 
-    /** Static value Guid for StoredProcedureParameterType. */
+    /**
+     * Static value Guid for StoredProcedureParameterType.
+     */
+    @Generated
     public static final StoredProcedureParameterType GUID = fromString("Guid");
 
-    /** Static value Boolean for StoredProcedureParameterType. */
+    /**
+     * Static value Boolean for StoredProcedureParameterType.
+     */
+    @Generated
     public static final StoredProcedureParameterType BOOLEAN = fromString("Boolean");
 
-    /** Static value Date for StoredProcedureParameterType. */
+    /**
+     * Static value Date for StoredProcedureParameterType.
+     */
+    @Generated
     public static final StoredProcedureParameterType DATE = fromString("Date");
 
     /**
      * Creates a new instance of StoredProcedureParameterType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public StoredProcedureParameterType() {}
+    public StoredProcedureParameterType() {
+    }
 
     /**
      * Creates or finds a StoredProcedureParameterType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding StoredProcedureParameterType.
      */
-    @JsonCreator
+    @Generated
     public static StoredProcedureParameterType fromString(String name) {
         return fromString(name, StoredProcedureParameterType.class);
     }
 
     /**
      * Gets known StoredProcedureParameterType values.
-     *
+     * 
      * @return known StoredProcedureParameterType values.
      */
+    @Generated
     public static Collection<StoredProcedureParameterType> values() {
         return values(StoredProcedureParameterType.class);
     }

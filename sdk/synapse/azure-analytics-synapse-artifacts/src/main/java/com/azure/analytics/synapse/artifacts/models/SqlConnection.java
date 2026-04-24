@@ -5,63 +5,74 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.HashMap;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** The connection used to execute the SQL script. */
+/**
+ * The connection used to execute the SQL script.
+ */
 @Fluent
-public final class SqlConnection {
+public final class SqlConnection implements JsonSerializable<SqlConnection> {
     /*
      * The type of the connection.
      */
-    @JsonProperty(value = "type")
+    @Generated
     private SqlConnectionType type;
 
     /*
      * The identifier of the connection.
      */
-    @JsonProperty(value = "name")
+    @Generated
     private String name;
 
     /*
      * The associated SQL pool name (supported by SQL pool v3)
      */
-    @JsonProperty(value = "poolName")
+    @Generated
     private String poolName;
 
     /*
      * The associated database name (supported by SQL pool v3)
      */
-    @JsonProperty(value = "databaseName")
+    @Generated
     private String databaseName;
 
     /*
      * The connection used to execute the SQL script.
      */
-    @JsonIgnore private Map<String, Object> additionalProperties;
+    @Generated
+    private Map<String, Object> additionalProperties;
 
-    /** Creates an instance of SqlConnection class. */
-    public SqlConnection() {}
+    /**
+     * Creates an instance of SqlConnection class.
+     */
+    @Generated
+    public SqlConnection() {
+    }
 
     /**
      * Get the type property: The type of the connection.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public SqlConnectionType getType() {
         return this.type;
     }
 
     /**
      * Set the type property: The type of the connection.
-     *
+     * 
      * @param type the type value to set.
      * @return the SqlConnection object itself.
      */
+    @Generated
     public SqlConnection setType(SqlConnectionType type) {
         this.type = type;
         return this;
@@ -69,19 +80,21 @@ public final class SqlConnection {
 
     /**
      * Get the name property: The identifier of the connection.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The identifier of the connection.
-     *
+     * 
      * @param name the name value to set.
      * @return the SqlConnection object itself.
      */
+    @Generated
     public SqlConnection setName(String name) {
         this.name = name;
         return this;
@@ -89,19 +102,21 @@ public final class SqlConnection {
 
     /**
      * Get the poolName property: The associated SQL pool name (supported by SQL pool v3).
-     *
+     * 
      * @return the poolName value.
      */
+    @Generated
     public String getPoolName() {
         return this.poolName;
     }
 
     /**
      * Set the poolName property: The associated SQL pool name (supported by SQL pool v3).
-     *
+     * 
      * @param poolName the poolName value to set.
      * @return the SqlConnection object itself.
      */
+    @Generated
     public SqlConnection setPoolName(String poolName) {
         this.poolName = poolName;
         return this;
@@ -109,19 +124,21 @@ public final class SqlConnection {
 
     /**
      * Get the databaseName property: The associated database name (supported by SQL pool v3).
-     *
+     * 
      * @return the databaseName value.
      */
+    @Generated
     public String getDatabaseName() {
         return this.databaseName;
     }
 
     /**
      * Set the databaseName property: The associated database name (supported by SQL pool v3).
-     *
+     * 
      * @param databaseName the databaseName value to set.
      * @return the SqlConnection object itself.
      */
+    @Generated
     public SqlConnection setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
         return this;
@@ -129,30 +146,81 @@ public final class SqlConnection {
 
     /**
      * Get the additionalProperties property: The connection used to execute the SQL script.
-     *
+     * 
      * @return the additionalProperties value.
      */
-    @JsonAnyGetter
+    @Generated
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     /**
      * Set the additionalProperties property: The connection used to execute the SQL script.
-     *
+     * 
      * @param additionalProperties the additionalProperties value to set.
      * @return the SqlConnection object itself.
      */
+    @Generated
     public SqlConnection setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
         return this;
     }
 
-    @JsonAnySetter
-    void setAdditionalProperties(String key, Object value) {
-        if (additionalProperties == null) {
-            additionalProperties = new HashMap<>();
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("type", this.type == null ? null : this.type.toString());
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeStringField("poolName", this.poolName);
+        jsonWriter.writeStringField("databaseName", this.databaseName);
+        if (additionalProperties != null) {
+            for (Map.Entry<String, Object> additionalProperty : additionalProperties.entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
         }
-        additionalProperties.put(key, value);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SqlConnection from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SqlConnection if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the SqlConnection.
+     */
+    @Generated
+    public static SqlConnection fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SqlConnection deserializedSqlConnection = new SqlConnection();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("type".equals(fieldName)) {
+                    deserializedSqlConnection.type = SqlConnectionType.fromString(reader.getString());
+                } else if ("name".equals(fieldName)) {
+                    deserializedSqlConnection.name = reader.getString();
+                } else if ("poolName".equals(fieldName)) {
+                    deserializedSqlConnection.poolName = reader.getString();
+                } else if ("databaseName".equals(fieldName)) {
+                    deserializedSqlConnection.databaseName = reader.getString();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedSqlConnection.additionalProperties = additionalProperties;
+
+            return deserializedSqlConnection;
+        });
     }
 }

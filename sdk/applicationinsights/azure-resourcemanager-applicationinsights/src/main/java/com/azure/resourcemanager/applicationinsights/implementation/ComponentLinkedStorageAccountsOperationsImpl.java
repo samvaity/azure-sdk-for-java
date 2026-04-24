@@ -21,16 +21,27 @@ public final class ComponentLinkedStorageAccountsOperationsImpl implements Compo
 
     private final com.azure.resourcemanager.applicationinsights.ApplicationInsightsManager serviceManager;
 
-    public ComponentLinkedStorageAccountsOperationsImpl(
-        ComponentLinkedStorageAccountsOperationsClient innerClient,
+    public ComponentLinkedStorageAccountsOperationsImpl(ComponentLinkedStorageAccountsOperationsClient innerClient,
         com.azure.resourcemanager.applicationinsights.ApplicationInsightsManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
     }
 
+    public Response<ComponentLinkedStorageAccounts> getWithResponse(String resourceGroupName, String resourceName,
+        StorageType storageType, Context context) {
+        Response<ComponentLinkedStorageAccountsInner> inner
+            = this.serviceClient().getWithResponse(resourceGroupName, resourceName, storageType, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new ComponentLinkedStorageAccountsImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
+    }
+
     public ComponentLinkedStorageAccounts get(String resourceGroupName, String resourceName, StorageType storageType) {
-        ComponentLinkedStorageAccountsInner inner =
-            this.serviceClient().get(resourceGroupName, resourceName, storageType);
+        ComponentLinkedStorageAccountsInner inner
+            = this.serviceClient().get(resourceGroupName, resourceName, storageType);
         if (inner != null) {
             return new ComponentLinkedStorageAccountsImpl(inner, this.manager());
         } else {
@@ -38,143 +49,92 @@ public final class ComponentLinkedStorageAccountsOperationsImpl implements Compo
         }
     }
 
-    public Response<ComponentLinkedStorageAccounts> getWithResponse(
-        String resourceGroupName, String resourceName, StorageType storageType, Context context) {
-        Response<ComponentLinkedStorageAccountsInner> inner =
-            this.serviceClient().getWithResponse(resourceGroupName, resourceName, storageType, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new ComponentLinkedStorageAccountsImpl(inner.getValue(), this.manager()));
-        } else {
-            return null;
-        }
+    public Response<Void> deleteWithResponse(String resourceGroupName, String resourceName, StorageType storageType,
+        Context context) {
+        return this.serviceClient().deleteWithResponse(resourceGroupName, resourceName, storageType, context);
     }
 
     public void delete(String resourceGroupName, String resourceName, StorageType storageType) {
         this.serviceClient().delete(resourceGroupName, resourceName, storageType);
     }
 
-    public Response<Void> deleteWithResponse(
-        String resourceGroupName, String resourceName, StorageType storageType, Context context) {
-        return this.serviceClient().deleteWithResponse(resourceGroupName, resourceName, storageType, context);
-    }
-
     public ComponentLinkedStorageAccounts getById(String id) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String resourceName = Utils.getValueFromIdByName(id, "components");
+        String resourceName = ResourceManagerUtils.getValueFromIdByName(id, "components");
         if (resourceName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String.format("The resource ID '%s' is not valid. Missing path segment 'components'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'components'.", id)));
         }
-        StorageType storageType = StorageType.fromString(Utils.getValueFromIdByName(id, "linkedStorageAccounts"));
-        if (storageType == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'linkedStorageAccounts'.",
-                                id)));
+        String storageTypeLocal = ResourceManagerUtils.getValueFromIdByName(id, "linkedStorageAccounts");
+        if (storageTypeLocal == null) {
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'linkedStorageAccounts'.", id)));
         }
+        StorageType storageType = StorageType.fromString(storageTypeLocal);
         return this.getWithResponse(resourceGroupName, resourceName, storageType, Context.NONE).getValue();
     }
 
     public Response<ComponentLinkedStorageAccounts> getByIdWithResponse(String id, Context context) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String resourceName = Utils.getValueFromIdByName(id, "components");
+        String resourceName = ResourceManagerUtils.getValueFromIdByName(id, "components");
         if (resourceName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String.format("The resource ID '%s' is not valid. Missing path segment 'components'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'components'.", id)));
         }
-        StorageType storageType = StorageType.fromString(Utils.getValueFromIdByName(id, "linkedStorageAccounts"));
-        if (storageType == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'linkedStorageAccounts'.",
-                                id)));
+        String storageTypeLocal = ResourceManagerUtils.getValueFromIdByName(id, "linkedStorageAccounts");
+        if (storageTypeLocal == null) {
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'linkedStorageAccounts'.", id)));
         }
+        StorageType storageType = StorageType.fromString(storageTypeLocal);
         return this.getWithResponse(resourceGroupName, resourceName, storageType, context);
     }
 
     public void deleteById(String id) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String resourceName = Utils.getValueFromIdByName(id, "components");
+        String resourceName = ResourceManagerUtils.getValueFromIdByName(id, "components");
         if (resourceName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String.format("The resource ID '%s' is not valid. Missing path segment 'components'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'components'.", id)));
         }
-        StorageType storageType = StorageType.fromString(Utils.getValueFromIdByName(id, "linkedStorageAccounts"));
-        if (storageType == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'linkedStorageAccounts'.",
-                                id)));
+        String storageTypeLocal = ResourceManagerUtils.getValueFromIdByName(id, "linkedStorageAccounts");
+        if (storageTypeLocal == null) {
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'linkedStorageAccounts'.", id)));
         }
+        StorageType storageType = StorageType.fromString(storageTypeLocal);
         this.deleteWithResponse(resourceGroupName, resourceName, storageType, Context.NONE);
     }
 
     public Response<Void> deleteByIdWithResponse(String id, Context context) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String resourceName = Utils.getValueFromIdByName(id, "components");
+        String resourceName = ResourceManagerUtils.getValueFromIdByName(id, "components");
         if (resourceName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String.format("The resource ID '%s' is not valid. Missing path segment 'components'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'components'.", id)));
         }
-        StorageType storageType = StorageType.fromString(Utils.getValueFromIdByName(id, "linkedStorageAccounts"));
-        if (storageType == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'linkedStorageAccounts'.",
-                                id)));
+        String storageTypeLocal = ResourceManagerUtils.getValueFromIdByName(id, "linkedStorageAccounts");
+        if (storageTypeLocal == null) {
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'linkedStorageAccounts'.", id)));
         }
+        StorageType storageType = StorageType.fromString(storageTypeLocal);
         return this.deleteWithResponse(resourceGroupName, resourceName, storageType, context);
     }
 

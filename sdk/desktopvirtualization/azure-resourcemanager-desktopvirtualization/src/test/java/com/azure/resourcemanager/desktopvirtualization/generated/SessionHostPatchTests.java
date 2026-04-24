@@ -11,23 +11,22 @@ import org.junit.jupiter.api.Assertions;
 public final class SessionHostPatchTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        SessionHostPatch model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"allowNewSession\":true,\"assignedUser\":\"lr\",\"friendlyName\":\"yjmoadsu\"},\"id\":\"arm\",\"name\":\"wdmjsjqbjhhyx\",\"type\":\"rw\"}")
-                .toObject(SessionHostPatch.class);
-        Assertions.assertEquals(true, model.allowNewSession());
-        Assertions.assertEquals("lr", model.assignedUser());
-        Assertions.assertEquals("yjmoadsu", model.friendlyName());
+        SessionHostPatch model = BinaryData.fromString(
+            "{\"properties\":{\"allowNewSession\":false,\"assignedUser\":\"zfbn\",\"friendlyName\":\"mctlpdngitv\"},\"id\":\"mhrixkwmyijejve\",\"name\":\"rh\",\"type\":\"pna\"}")
+            .toObject(SessionHostPatch.class);
+        Assertions.assertEquals(false, model.allowNewSession());
+        Assertions.assertEquals("zfbn", model.assignedUser());
+        Assertions.assertEquals("mctlpdngitv", model.friendlyName());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        SessionHostPatch model =
-            new SessionHostPatch().withAllowNewSession(true).withAssignedUser("lr").withFriendlyName("yjmoadsu");
+        SessionHostPatch model = new SessionHostPatch().withAllowNewSession(false)
+            .withAssignedUser("zfbn")
+            .withFriendlyName("mctlpdngitv");
         model = BinaryData.fromObject(model).toObject(SessionHostPatch.class);
-        Assertions.assertEquals(true, model.allowNewSession());
-        Assertions.assertEquals("lr", model.assignedUser());
-        Assertions.assertEquals("yjmoadsu", model.friendlyName());
+        Assertions.assertEquals(false, model.allowNewSession());
+        Assertions.assertEquals("zfbn", model.assignedUser());
+        Assertions.assertEquals("mctlpdngitv", model.friendlyName());
     }
 }

@@ -5,6 +5,7 @@
 package com.azure.resourcemanager.desktopvirtualization.generated;
 
 import com.azure.core.util.BinaryData;
+import com.azure.resourcemanager.desktopvirtualization.models.PublicNetworkAccess;
 import com.azure.resourcemanager.desktopvirtualization.models.WorkspacePatch;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,41 +15,32 @@ import org.junit.jupiter.api.Assertions;
 public final class WorkspacePatchTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        WorkspacePatch model =
-            BinaryData
-                .fromString(
-                    "{\"tags\":{\"ppbhtqqrolfp\":\"mbe\",\"gjyjgzjaoyfhrtxi\":\"psalgbqux\",\"rkujy\":\"n\",\"rlyxwjkcprbnw\":\"vlejuvfqa\"},\"properties\":{\"description\":\"jvtbvpyss\",\"friendlyName\":\"nruj\",\"applicationGroupReferences\":[\"hmuouqfprwzwbn\",\"uitnwuiz\",\"a\",\"x\"]}}")
-                .toObject(WorkspacePatch.class);
-        Assertions.assertEquals("mbe", model.tags().get("ppbhtqqrolfp"));
-        Assertions.assertEquals("jvtbvpyss", model.description());
-        Assertions.assertEquals("nruj", model.friendlyName());
-        Assertions.assertEquals("hmuouqfprwzwbn", model.applicationGroupReferences().get(0));
+        WorkspacePatch model = BinaryData.fromString(
+            "{\"tags\":{\"jionpimexgstxgc\":\"xobnbdxkqpxok\"},\"properties\":{\"description\":\"gmaajrm\",\"friendlyName\":\"jwzrl\",\"applicationGroupReferences\":[\"clwhijcoejctbz\"],\"publicNetworkAccess\":\"Enabled\"}}")
+            .toObject(WorkspacePatch.class);
+        Assertions.assertEquals("xobnbdxkqpxok", model.tags().get("jionpimexgstxgc"));
+        Assertions.assertEquals("gmaajrm", model.description());
+        Assertions.assertEquals("jwzrl", model.friendlyName());
+        Assertions.assertEquals("clwhijcoejctbz", model.applicationGroupReferences().get(0));
+        Assertions.assertEquals(PublicNetworkAccess.ENABLED, model.publicNetworkAccess());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        WorkspacePatch model =
-            new WorkspacePatch()
-                .withTags(
-                    mapOf(
-                        "ppbhtqqrolfp",
-                        "mbe",
-                        "gjyjgzjaoyfhrtxi",
-                        "psalgbqux",
-                        "rkujy",
-                        "n",
-                        "rlyxwjkcprbnw",
-                        "vlejuvfqa"))
-                .withDescription("jvtbvpyss")
-                .withFriendlyName("nruj")
-                .withApplicationGroupReferences(Arrays.asList("hmuouqfprwzwbn", "uitnwuiz", "a", "x"));
+        WorkspacePatch model = new WorkspacePatch().withTags(mapOf("jionpimexgstxgc", "xobnbdxkqpxok"))
+            .withDescription("gmaajrm")
+            .withFriendlyName("jwzrl")
+            .withApplicationGroupReferences(Arrays.asList("clwhijcoejctbz"))
+            .withPublicNetworkAccess(PublicNetworkAccess.ENABLED);
         model = BinaryData.fromObject(model).toObject(WorkspacePatch.class);
-        Assertions.assertEquals("mbe", model.tags().get("ppbhtqqrolfp"));
-        Assertions.assertEquals("jvtbvpyss", model.description());
-        Assertions.assertEquals("nruj", model.friendlyName());
-        Assertions.assertEquals("hmuouqfprwzwbn", model.applicationGroupReferences().get(0));
+        Assertions.assertEquals("xobnbdxkqpxok", model.tags().get("jionpimexgstxgc"));
+        Assertions.assertEquals("gmaajrm", model.description());
+        Assertions.assertEquals("jwzrl", model.friendlyName());
+        Assertions.assertEquals("clwhijcoejctbz", model.applicationGroupReferences().get(0));
+        Assertions.assertEquals(PublicNetworkAccess.ENABLED, model.publicNetworkAccess());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

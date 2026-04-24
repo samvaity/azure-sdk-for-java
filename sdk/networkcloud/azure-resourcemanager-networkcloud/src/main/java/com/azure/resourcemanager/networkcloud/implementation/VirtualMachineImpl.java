@@ -10,10 +10,13 @@ import com.azure.core.util.Context;
 import com.azure.resourcemanager.networkcloud.fluent.models.VirtualMachineInner;
 import com.azure.resourcemanager.networkcloud.models.ExtendedLocation;
 import com.azure.resourcemanager.networkcloud.models.ImageRepositoryCredentials;
+import com.azure.resourcemanager.networkcloud.models.ManagedServiceIdentity;
 import com.azure.resourcemanager.networkcloud.models.NetworkAttachment;
+import com.azure.resourcemanager.networkcloud.models.OperationStatusResult;
 import com.azure.resourcemanager.networkcloud.models.SshPublicKey;
 import com.azure.resourcemanager.networkcloud.models.StorageProfile;
 import com.azure.resourcemanager.networkcloud.models.VirtualMachine;
+import com.azure.resourcemanager.networkcloud.models.VirtualMachineAssignRelayParameters;
 import com.azure.resourcemanager.networkcloud.models.VirtualMachineBootMethod;
 import com.azure.resourcemanager.networkcloud.models.VirtualMachineDetailedStatus;
 import com.azure.resourcemanager.networkcloud.models.VirtualMachineDeviceModelType;
@@ -24,7 +27,6 @@ import com.azure.resourcemanager.networkcloud.models.VirtualMachinePowerOffParam
 import com.azure.resourcemanager.networkcloud.models.VirtualMachinePowerState;
 import com.azure.resourcemanager.networkcloud.models.VirtualMachineProvisioningState;
 import com.azure.resourcemanager.networkcloud.models.VirtualMachineVirtioInterfaceType;
-import com.azure.resourcemanager.networkcloud.models.VirtualMachineVolumeParameters;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +61,16 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
         }
     }
 
+    public String etag() {
+        return this.innerModel().etag();
+    }
+
     public ExtendedLocation extendedLocation() {
         return this.innerModel().extendedLocation();
+    }
+
+    public ManagedServiceIdentity identity() {
+        return this.innerModel().identity();
     }
 
     public SystemData systemData() {
@@ -89,6 +99,10 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
 
     public String clusterId() {
         return this.innerModel().clusterId();
+    }
+
+    public ExtendedLocation consoleExtendedLocation() {
+        return this.innerModel().consoleExtendedLocation();
     }
 
     public long cpuCores() {
@@ -124,6 +138,10 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
         return this.innerModel().networkData();
     }
 
+    public String networkDataContent() {
+        return this.innerModel().networkDataContent();
+    }
+
     public List<VirtualMachinePlacementHint> placementHints() {
         List<VirtualMachinePlacementHint> inner = this.innerModel().placementHints();
         if (inner != null) {
@@ -156,6 +174,10 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
 
     public String userData() {
         return this.innerModel().userData();
+    }
+
+    public String userDataContent() {
+        return this.innerModel().userDataContent();
     }
 
     public VirtualMachineVirtioInterfaceType virtioInterface() {
@@ -207,6 +229,14 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
 
     private String virtualMachineName;
 
+    private String createIfMatch;
+
+    private String createIfNoneMatch;
+
+    private String updateIfMatch;
+
+    private String updateIfNoneMatch;
+
     private VirtualMachinePatchParameters updateVirtualMachineUpdateParameters;
 
     public VirtualMachineImpl withExistingResourceGroup(String resourceGroupName) {
@@ -215,20 +245,18 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
     }
 
     public VirtualMachine create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getVirtualMachines()
-                .createOrUpdate(resourceGroupName, virtualMachineName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getVirtualMachines()
+            .createOrUpdate(resourceGroupName, virtualMachineName, this.innerModel(), createIfMatch, createIfNoneMatch,
+                Context.NONE);
         return this;
     }
 
     public VirtualMachine create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getVirtualMachines()
-                .createOrUpdate(resourceGroupName, virtualMachineName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getVirtualMachines()
+            .createOrUpdate(resourceGroupName, virtualMachineName, this.innerModel(), createIfMatch, createIfNoneMatch,
+                context);
         return this;
     }
 
@@ -236,115 +264,99 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
         this.innerObject = new VirtualMachineInner();
         this.serviceManager = serviceManager;
         this.virtualMachineName = name;
+        this.createIfMatch = null;
+        this.createIfNoneMatch = null;
     }
 
     public VirtualMachineImpl update() {
+        this.updateIfMatch = null;
+        this.updateIfNoneMatch = null;
         this.updateVirtualMachineUpdateParameters = new VirtualMachinePatchParameters();
         return this;
     }
 
     public VirtualMachine apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getVirtualMachines()
-                .update(resourceGroupName, virtualMachineName, updateVirtualMachineUpdateParameters, Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getVirtualMachines()
+            .update(resourceGroupName, virtualMachineName, updateIfMatch, updateIfNoneMatch,
+                updateVirtualMachineUpdateParameters, Context.NONE);
         return this;
     }
 
     public VirtualMachine apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getVirtualMachines()
-                .update(resourceGroupName, virtualMachineName, updateVirtualMachineUpdateParameters, context);
+        this.innerObject = serviceManager.serviceClient()
+            .getVirtualMachines()
+            .update(resourceGroupName, virtualMachineName, updateIfMatch, updateIfNoneMatch,
+                updateVirtualMachineUpdateParameters, context);
         return this;
     }
 
-    VirtualMachineImpl(
-        VirtualMachineInner innerObject, com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
+    VirtualMachineImpl(VirtualMachineInner innerObject,
+        com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.virtualMachineName = Utils.getValueFromIdByName(innerObject.id(), "virtualMachines");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.virtualMachineName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "virtualMachines");
     }
 
     public VirtualMachine refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getVirtualMachines()
-                .getByResourceGroupWithResponse(resourceGroupName, virtualMachineName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getVirtualMachines()
+            .getByResourceGroupWithResponse(resourceGroupName, virtualMachineName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public VirtualMachine refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getVirtualMachines()
-                .getByResourceGroupWithResponse(resourceGroupName, virtualMachineName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getVirtualMachines()
+            .getByResourceGroupWithResponse(resourceGroupName, virtualMachineName, context)
+            .getValue();
         return this;
     }
 
-    public void attachVolume(VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters) {
-        serviceManager
-            .virtualMachines()
-            .attachVolume(resourceGroupName, virtualMachineName, virtualMachineAttachVolumeParameters);
+    public OperationStatusResult assignRelay() {
+        return serviceManager.virtualMachines().assignRelay(resourceGroupName, virtualMachineName);
     }
 
-    public void attachVolume(VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters, Context context) {
-        serviceManager
-            .virtualMachines()
-            .attachVolume(resourceGroupName, virtualMachineName, virtualMachineAttachVolumeParameters, context);
+    public OperationStatusResult assignRelay(VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters,
+        Context context) {
+        return serviceManager.virtualMachines()
+            .assignRelay(resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters, context);
     }
 
-    public void detachVolume(VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters) {
-        serviceManager
-            .virtualMachines()
-            .detachVolume(resourceGroupName, virtualMachineName, virtualMachineDetachVolumeParameters);
+    public OperationStatusResult powerOff() {
+        return serviceManager.virtualMachines().powerOff(resourceGroupName, virtualMachineName);
     }
 
-    public void detachVolume(VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters, Context context) {
-        serviceManager
-            .virtualMachines()
-            .detachVolume(resourceGroupName, virtualMachineName, virtualMachineDetachVolumeParameters, context);
-    }
-
-    public void powerOff() {
-        serviceManager.virtualMachines().powerOff(resourceGroupName, virtualMachineName);
-    }
-
-    public void powerOff(VirtualMachinePowerOffParameters virtualMachinePowerOffParameters, Context context) {
-        serviceManager
-            .virtualMachines()
+    public OperationStatusResult powerOff(VirtualMachinePowerOffParameters virtualMachinePowerOffParameters,
+        Context context) {
+        return serviceManager.virtualMachines()
             .powerOff(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters, context);
     }
 
-    public void reimage() {
-        serviceManager.virtualMachines().reimage(resourceGroupName, virtualMachineName);
+    public OperationStatusResult reimage() {
+        return serviceManager.virtualMachines().reimage(resourceGroupName, virtualMachineName);
     }
 
-    public void reimage(Context context) {
-        serviceManager.virtualMachines().reimage(resourceGroupName, virtualMachineName, context);
+    public OperationStatusResult reimage(Context context) {
+        return serviceManager.virtualMachines().reimage(resourceGroupName, virtualMachineName, context);
     }
 
-    public void restart() {
-        serviceManager.virtualMachines().restart(resourceGroupName, virtualMachineName);
+    public OperationStatusResult restart() {
+        return serviceManager.virtualMachines().restart(resourceGroupName, virtualMachineName);
     }
 
-    public void restart(Context context) {
-        serviceManager.virtualMachines().restart(resourceGroupName, virtualMachineName, context);
+    public OperationStatusResult restart(Context context) {
+        return serviceManager.virtualMachines().restart(resourceGroupName, virtualMachineName, context);
     }
 
-    public void start() {
-        serviceManager.virtualMachines().start(resourceGroupName, virtualMachineName);
+    public OperationStatusResult start() {
+        return serviceManager.virtualMachines().start(resourceGroupName, virtualMachineName);
     }
 
-    public void start(Context context) {
-        serviceManager.virtualMachines().start(resourceGroupName, virtualMachineName, context);
+    public OperationStatusResult start(Context context) {
+        return serviceManager.virtualMachines().start(resourceGroupName, virtualMachineName, context);
     }
 
     public VirtualMachineImpl withRegion(Region location) {
@@ -402,8 +414,23 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
         }
     }
 
+    public VirtualMachineImpl withIdentity(ManagedServiceIdentity identity) {
+        if (isInCreateMode()) {
+            this.innerModel().withIdentity(identity);
+            return this;
+        } else {
+            this.updateVirtualMachineUpdateParameters.withIdentity(identity);
+            return this;
+        }
+    }
+
     public VirtualMachineImpl withBootMethod(VirtualMachineBootMethod bootMethod) {
         this.innerModel().withBootMethod(bootMethod);
+        return this;
+    }
+
+    public VirtualMachineImpl withConsoleExtendedLocation(ExtendedLocation consoleExtendedLocation) {
+        this.innerModel().withConsoleExtendedLocation(consoleExtendedLocation);
         return this;
     }
 
@@ -422,6 +449,11 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
         return this;
     }
 
+    public VirtualMachineImpl withNetworkDataContent(String networkDataContent) {
+        this.innerModel().withNetworkDataContent(networkDataContent);
+        return this;
+    }
+
     public VirtualMachineImpl withPlacementHints(List<VirtualMachinePlacementHint> placementHints) {
         this.innerModel().withPlacementHints(placementHints);
         return this;
@@ -437,6 +469,11 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
         return this;
     }
 
+    public VirtualMachineImpl withUserDataContent(String userDataContent) {
+        this.innerModel().withUserDataContent(userDataContent);
+        return this;
+    }
+
     public VirtualMachineImpl withVirtioInterface(VirtualMachineVirtioInterfaceType virtioInterface) {
         this.innerModel().withVirtioInterface(virtioInterface);
         return this;
@@ -447,8 +484,8 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
         return this;
     }
 
-    public VirtualMachineImpl withVmImageRepositoryCredentials(
-        ImageRepositoryCredentials vmImageRepositoryCredentials) {
+    public VirtualMachineImpl
+        withVmImageRepositoryCredentials(ImageRepositoryCredentials vmImageRepositoryCredentials) {
         if (isInCreateMode()) {
             this.innerModel().withVmImageRepositoryCredentials(vmImageRepositoryCredentials);
             return this;
@@ -458,7 +495,27 @@ public final class VirtualMachineImpl implements VirtualMachine, VirtualMachine.
         }
     }
 
+    public VirtualMachineImpl withIfMatch(String ifMatch) {
+        if (isInCreateMode()) {
+            this.createIfMatch = ifMatch;
+            return this;
+        } else {
+            this.updateIfMatch = ifMatch;
+            return this;
+        }
+    }
+
+    public VirtualMachineImpl withIfNoneMatch(String ifNoneMatch) {
+        if (isInCreateMode()) {
+            this.createIfNoneMatch = ifNoneMatch;
+            return this;
+        } else {
+            this.updateIfNoneMatch = ifNoneMatch;
+            return this;
+        }
+    }
+
     private boolean isInCreateMode() {
-        return this.innerModel().id() == null;
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

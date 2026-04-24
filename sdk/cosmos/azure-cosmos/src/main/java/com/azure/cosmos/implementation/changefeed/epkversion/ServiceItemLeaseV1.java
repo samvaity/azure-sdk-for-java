@@ -54,7 +54,7 @@ public class ServiceItemLeaseV1 implements Lease {
 
     public ServiceItemLeaseV1() {
         ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of("UTC"));
-        this.timestamp = currentTime.toString();
+        this.timestamp = currentTime.toInstant().toString();
         this._ts = String.valueOf(currentTime.getSecond());
         this.properties = new HashMap<>();
         //  By default, this is EPK_RANGE_BASED_LEASE version
@@ -262,13 +262,12 @@ public class ServiceItemLeaseV1 implements Lease {
         ServiceItemLeaseV1 lease = new ServiceItemLeaseV1()
             .withId(document.getId())
             .withETag(document.getETag())
-            .withTs(ModelBridgeInternal.getStringFromJsonSerializable(document, Constants.Properties.LAST_MODIFIED))
-            .withOwner(ModelBridgeInternal.getStringFromJsonSerializable(document,PROPERTY_NAME_OWNER))
-            .withLeaseToken(ModelBridgeInternal.getStringFromJsonSerializable(document,PROPERTY_NAME_LEASE_TOKEN))
-            .withContinuationToken(ModelBridgeInternal.getStringFromJsonSerializable(document,PROPERTY_NAME_CONTINUATION_TOKEN));
+            .withTs(document.getString(Constants.Properties.LAST_MODIFIED))
+            .withOwner(document.getString(PROPERTY_NAME_OWNER))
+            .withLeaseToken(document.getString(PROPERTY_NAME_LEASE_TOKEN))
+            .withContinuationToken(document.getString(PROPERTY_NAME_CONTINUATION_TOKEN));
 
-        Integer versionId = ModelBridgeInternal.getIntFromJsonSerializable(document,
-            PROPERTY_NAME_VERSION);
+        Integer versionId = document.getInt(PROPERTY_NAME_VERSION);
 
         if (versionId != null) {
             lease.withVersion(LeaseVersion.fromVersionId(versionId));
@@ -284,7 +283,7 @@ public class ServiceItemLeaseV1 implements Lease {
             }
         }
 
-        String leaseTimestamp = ModelBridgeInternal.getStringFromJsonSerializable(document,PROPERTY_NAME_TIMESTAMP);
+        String leaseTimestamp = document.getString(PROPERTY_NAME_TIMESTAMP);
         if (leaseTimestamp != null) {
             return lease.withTimestamp(ZonedDateTime.parse(leaseTimestamp).toInstant());
         } else {

@@ -5,57 +5,99 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity AmazonRdsForOracle source. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("AmazonRdsForOracleSource")
+/**
+ * A copy activity AmazonRdsForOracle source.
+ */
 @Fluent
 public final class AmazonRdsForOracleSource extends CopySource {
     /*
+     * Copy source type.
+     */
+    @Generated
+    private String type = "AmazonRdsForOracleSource";
+
+    /*
      * AmazonRdsForOracle reader query. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "oracleReaderQuery")
+    @Generated
     private Object oracleReaderQuery;
 
     /*
      * Query timeout. Type: string (or Expression with resultType string), pattern:
      * ((\d+)\.)?(\d\d):(60|([0-5][0-9])):(60|([0-5][0-9])).
      */
-    @JsonProperty(value = "queryTimeout")
+    @Generated
     private Object queryTimeout;
 
     /*
      * The partition mechanism that will be used for AmazonRdsForOracle read in parallel. Type: string (or Expression
      * with resultType string).
      */
-    @JsonProperty(value = "partitionOption")
+    @Generated
     private Object partitionOption;
 
     /*
      * The settings that will be leveraged for AmazonRdsForOracle source partitioning.
      */
-    @JsonProperty(value = "partitionSettings")
+    @Generated
     private AmazonRdsForOraclePartitionSettings partitionSettings;
 
     /*
      * Specifies the additional columns to be added to source data. Type: array of objects(AdditionalColumns) (or
      * Expression with resultType array of objects).
      */
-    @JsonProperty(value = "additionalColumns")
+    @Generated
     private Object additionalColumns;
 
-    /** Creates an instance of AmazonRdsForOracleSource class. */
-    public AmazonRdsForOracleSource() {}
+    /*
+     * The decimal precision used to represent Oracle NUMBER type without precision and scale. The range is 1 to 256 and
+     * default value is 256 if not specified. Type: integer (or Expression with resultType integer). Only used for
+     * Version 2.0.
+     */
+    @Generated
+    private Object numberPrecision;
+
+    /*
+     * The decimal scale used to represent Oracle NUMBER type without precision and scale. The range is 0 to 130 and
+     * default value is 130 if not specified. Type: integer (or Expression with resultType integer). Only used for
+     * Version 2.0.
+     */
+    @Generated
+    private Object numberScale;
+
+    /**
+     * Creates an instance of AmazonRdsForOracleSource class.
+     */
+    @Generated
+    public AmazonRdsForOracleSource() {
+    }
+
+    /**
+     * Get the type property: Copy source type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the oracleReaderQuery property: AmazonRdsForOracle reader query. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the oracleReaderQuery value.
      */
+    @Generated
     public Object getOracleReaderQuery() {
         return this.oracleReaderQuery;
     }
@@ -63,10 +105,11 @@ public final class AmazonRdsForOracleSource extends CopySource {
     /**
      * Set the oracleReaderQuery property: AmazonRdsForOracle reader query. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param oracleReaderQuery the oracleReaderQuery value to set.
      * @return the AmazonRdsForOracleSource object itself.
      */
+    @Generated
     public AmazonRdsForOracleSource setOracleReaderQuery(Object oracleReaderQuery) {
         this.oracleReaderQuery = oracleReaderQuery;
         return this;
@@ -75,9 +118,10 @@ public final class AmazonRdsForOracleSource extends CopySource {
     /**
      * Get the queryTimeout property: Query timeout. Type: string (or Expression with resultType string), pattern:
      * ((\d+)\.)?(\d\d):(60|([0-5][0-9])):(60|([0-5][0-9])).
-     *
+     * 
      * @return the queryTimeout value.
      */
+    @Generated
     public Object getQueryTimeout() {
         return this.queryTimeout;
     }
@@ -85,10 +129,11 @@ public final class AmazonRdsForOracleSource extends CopySource {
     /**
      * Set the queryTimeout property: Query timeout. Type: string (or Expression with resultType string), pattern:
      * ((\d+)\.)?(\d\d):(60|([0-5][0-9])):(60|([0-5][0-9])).
-     *
+     * 
      * @param queryTimeout the queryTimeout value to set.
      * @return the AmazonRdsForOracleSource object itself.
      */
+    @Generated
     public AmazonRdsForOracleSource setQueryTimeout(Object queryTimeout) {
         this.queryTimeout = queryTimeout;
         return this;
@@ -97,9 +142,10 @@ public final class AmazonRdsForOracleSource extends CopySource {
     /**
      * Get the partitionOption property: The partition mechanism that will be used for AmazonRdsForOracle read in
      * parallel. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the partitionOption value.
      */
+    @Generated
     public Object getPartitionOption() {
         return this.partitionOption;
     }
@@ -107,10 +153,11 @@ public final class AmazonRdsForOracleSource extends CopySource {
     /**
      * Set the partitionOption property: The partition mechanism that will be used for AmazonRdsForOracle read in
      * parallel. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param partitionOption the partitionOption value to set.
      * @return the AmazonRdsForOracleSource object itself.
      */
+    @Generated
     public AmazonRdsForOracleSource setPartitionOption(Object partitionOption) {
         this.partitionOption = partitionOption;
         return this;
@@ -119,9 +166,10 @@ public final class AmazonRdsForOracleSource extends CopySource {
     /**
      * Get the partitionSettings property: The settings that will be leveraged for AmazonRdsForOracle source
      * partitioning.
-     *
+     * 
      * @return the partitionSettings value.
      */
+    @Generated
     public AmazonRdsForOraclePartitionSettings getPartitionSettings() {
         return this.partitionSettings;
     }
@@ -129,10 +177,11 @@ public final class AmazonRdsForOracleSource extends CopySource {
     /**
      * Set the partitionSettings property: The settings that will be leveraged for AmazonRdsForOracle source
      * partitioning.
-     *
+     * 
      * @param partitionSettings the partitionSettings value to set.
      * @return the AmazonRdsForOracleSource object itself.
      */
+    @Generated
     public AmazonRdsForOracleSource setPartitionSettings(AmazonRdsForOraclePartitionSettings partitionSettings) {
         this.partitionSettings = partitionSettings;
         return this;
@@ -141,9 +190,10 @@ public final class AmazonRdsForOracleSource extends CopySource {
     /**
      * Get the additionalColumns property: Specifies the additional columns to be added to source data. Type: array of
      * objects(AdditionalColumns) (or Expression with resultType array of objects).
-     *
+     * 
      * @return the additionalColumns value.
      */
+    @Generated
     public Object getAdditionalColumns() {
         return this.additionalColumns;
     }
@@ -151,33 +201,193 @@ public final class AmazonRdsForOracleSource extends CopySource {
     /**
      * Set the additionalColumns property: Specifies the additional columns to be added to source data. Type: array of
      * objects(AdditionalColumns) (or Expression with resultType array of objects).
-     *
+     * 
      * @param additionalColumns the additionalColumns value to set.
      * @return the AmazonRdsForOracleSource object itself.
      */
+    @Generated
     public AmazonRdsForOracleSource setAdditionalColumns(Object additionalColumns) {
         this.additionalColumns = additionalColumns;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Get the numberPrecision property: The decimal precision used to represent Oracle NUMBER type without precision
+     * and scale. The range is 1 to 256 and default value is 256 if not specified. Type: integer (or Expression with
+     * resultType integer). Only used for Version 2.0.
+     * 
+     * @return the numberPrecision value.
+     */
+    @Generated
+    public Object getNumberPrecision() {
+        return this.numberPrecision;
+    }
+
+    /**
+     * Set the numberPrecision property: The decimal precision used to represent Oracle NUMBER type without precision
+     * and scale. The range is 1 to 256 and default value is 256 if not specified. Type: integer (or Expression with
+     * resultType integer). Only used for Version 2.0.
+     * 
+     * @param numberPrecision the numberPrecision value to set.
+     * @return the AmazonRdsForOracleSource object itself.
+     */
+    @Generated
+    public AmazonRdsForOracleSource setNumberPrecision(Object numberPrecision) {
+        this.numberPrecision = numberPrecision;
+        return this;
+    }
+
+    /**
+     * Get the numberScale property: The decimal scale used to represent Oracle NUMBER type without precision and scale.
+     * The range is 0 to 130 and default value is 130 if not specified. Type: integer (or Expression with resultType
+     * integer). Only used for Version 2.0.
+     * 
+     * @return the numberScale value.
+     */
+    @Generated
+    public Object getNumberScale() {
+        return this.numberScale;
+    }
+
+    /**
+     * Set the numberScale property: The decimal scale used to represent Oracle NUMBER type without precision and scale.
+     * The range is 0 to 130 and default value is 130 if not specified. Type: integer (or Expression with resultType
+     * integer). Only used for Version 2.0.
+     * 
+     * @param numberScale the numberScale value to set.
+     * @return the AmazonRdsForOracleSource object itself.
+     */
+    @Generated
+    public AmazonRdsForOracleSource setNumberScale(Object numberScale) {
+        this.numberScale = numberScale;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonRdsForOracleSource setSourceRetryCount(Object sourceRetryCount) {
         super.setSourceRetryCount(sourceRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonRdsForOracleSource setSourceRetryWait(Object sourceRetryWait) {
         super.setSourceRetryWait(sourceRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonRdsForOracleSource setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getSourceRetryCount() != null) {
+            jsonWriter.writeUntypedField("sourceRetryCount", getSourceRetryCount());
+        }
+        if (getSourceRetryWait() != null) {
+            jsonWriter.writeUntypedField("sourceRetryWait", getSourceRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.oracleReaderQuery != null) {
+            jsonWriter.writeUntypedField("oracleReaderQuery", this.oracleReaderQuery);
+        }
+        if (this.queryTimeout != null) {
+            jsonWriter.writeUntypedField("queryTimeout", this.queryTimeout);
+        }
+        if (this.partitionOption != null) {
+            jsonWriter.writeUntypedField("partitionOption", this.partitionOption);
+        }
+        jsonWriter.writeJsonField("partitionSettings", this.partitionSettings);
+        if (this.additionalColumns != null) {
+            jsonWriter.writeUntypedField("additionalColumns", this.additionalColumns);
+        }
+        if (this.numberPrecision != null) {
+            jsonWriter.writeUntypedField("numberPrecision", this.numberPrecision);
+        }
+        if (this.numberScale != null) {
+            jsonWriter.writeUntypedField("numberScale", this.numberScale);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AmazonRdsForOracleSource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AmazonRdsForOracleSource if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the AmazonRdsForOracleSource.
+     */
+    @Generated
+    public static AmazonRdsForOracleSource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AmazonRdsForOracleSource deserializedAmazonRdsForOracleSource = new AmazonRdsForOracleSource();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sourceRetryCount".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.setSourceRetryCount(reader.readUntyped());
+                } else if ("sourceRetryWait".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.setSourceRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.type = reader.getString();
+                } else if ("oracleReaderQuery".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.oracleReaderQuery = reader.readUntyped();
+                } else if ("queryTimeout".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.queryTimeout = reader.readUntyped();
+                } else if ("partitionOption".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.partitionOption = reader.readUntyped();
+                } else if ("partitionSettings".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.partitionSettings
+                        = AmazonRdsForOraclePartitionSettings.fromJson(reader);
+                } else if ("additionalColumns".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.additionalColumns = reader.readUntyped();
+                } else if ("numberPrecision".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.numberPrecision = reader.readUntyped();
+                } else if ("numberScale".equals(fieldName)) {
+                    deserializedAmazonRdsForOracleSource.numberScale = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAmazonRdsForOracleSource.setAdditionalProperties(additionalProperties);
+
+            return deserializedAmazonRdsForOracleSource;
+        });
     }
 }

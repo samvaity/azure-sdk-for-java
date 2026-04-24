@@ -14,6 +14,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class FeatureFilterEvaluationContext {
 
+    /**
+     * Creates an instance of {@link FeatureFilterEvaluationContext}
+     */
+    public FeatureFilterEvaluationContext() {
+    }
+
     private String name;
 
     @JsonProperty("parameters")
@@ -22,6 +28,7 @@ public final class FeatureFilterEvaluationContext {
     private String featureName;
 
     /**
+     * Return the name
      * @return the name
      */
     public String getName() {
@@ -29,13 +36,17 @@ public final class FeatureFilterEvaluationContext {
     }
 
     /**
+     * Set the name
      * @param name the name to set
+     * @return FeatureFilterEvaluationContext
      */
-    public void setName(String name) {
+    public FeatureFilterEvaluationContext setName(String name) {
         this.name = name;
+        return this;
     }
 
     /**
+     * Return the parameters
      * @return the parameters
      */
     public Map<String, Object> getParameters() {
@@ -47,13 +58,17 @@ public final class FeatureFilterEvaluationContext {
     }
 
     /**
+     * Set the parameters
      * @param parameters the parameters to set
+     * @return FeatureFilterEvaluationContext
      */
-    public void setParameters(Map<String, Object> parameters) {
+    public FeatureFilterEvaluationContext setParameters(Map<String, Object> parameters) {
         this.parameters = parameters;
+        return this;
     }
 
     /**
+     * Return the featureName
      * @return the featureName
      */
     public String getFeatureName() {
@@ -61,10 +76,13 @@ public final class FeatureFilterEvaluationContext {
     }
 
     /**
+     * Set the featureName
      * @param featureName the featureName to set
+     * @return FeatureFilterEvaluationContext
      */
-    public void setFeatureName(String featureName) {
+    public FeatureFilterEvaluationContext setFeatureName(String featureName) {
         this.featureName = featureName;
+        return this;
     }
 
 }

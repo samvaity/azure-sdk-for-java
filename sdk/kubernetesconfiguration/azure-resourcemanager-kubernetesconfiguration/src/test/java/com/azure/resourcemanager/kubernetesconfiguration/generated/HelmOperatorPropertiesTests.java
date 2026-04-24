@@ -11,19 +11,19 @@ import org.junit.jupiter.api.Assertions;
 public final class HelmOperatorPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        HelmOperatorProperties model =
-            BinaryData
-                .fromString("{\"chartVersion\":\"m\",\"chartValues\":\"yvshxmz\"}")
+        HelmOperatorProperties model
+            = BinaryData.fromString("{\"chartVersion\":\"oyrxvwfudwpzntxh\",\"chartValues\":\"hl\"}")
                 .toObject(HelmOperatorProperties.class);
-        Assertions.assertEquals("m", model.chartVersion());
-        Assertions.assertEquals("yvshxmz", model.chartValues());
+        Assertions.assertEquals("oyrxvwfudwpzntxh", model.chartVersion());
+        Assertions.assertEquals("hl", model.chartValues());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        HelmOperatorProperties model = new HelmOperatorProperties().withChartVersion("m").withChartValues("yvshxmz");
+        HelmOperatorProperties model
+            = new HelmOperatorProperties().withChartVersion("oyrxvwfudwpzntxh").withChartValues("hl");
         model = BinaryData.fromObject(model).toObject(HelmOperatorProperties.class);
-        Assertions.assertEquals("m", model.chartVersion());
-        Assertions.assertEquals("yvshxmz", model.chartValues());
+        Assertions.assertEquals("oyrxvwfudwpzntxh", model.chartVersion());
+        Assertions.assertEquals("hl", model.chartValues());
     }
 }

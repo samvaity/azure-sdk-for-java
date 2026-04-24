@@ -5,30 +5,37 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Linked service for Google Cloud Storage. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("GoogleCloudStorage")
-@JsonFlatten
+/**
+ * Linked service for Google Cloud Storage.
+ */
 @Fluent
 public class GoogleCloudStorageLinkedService extends LinkedService {
     /*
-     * The access key identifier of the Google Cloud Storage Identity and Access Management (IAM) user. Type: string
-     * (or Expression with resultType string).
+     * Type of linked service.
      */
-    @JsonProperty(value = "typeProperties.accessKeyId")
+    @Generated
+    private String type = "GoogleCloudStorage";
+
+    /*
+     * The access key identifier of the Google Cloud Storage Identity and Access Management (IAM) user. Type: string (or
+     * Expression with resultType string).
+     */
+    @Generated
     private Object accessKeyId;
 
     /*
      * The secret access key of the Google Cloud Storage Identity and Access Management (IAM) user.
      */
-    @JsonProperty(value = "typeProperties.secretAccessKey")
+    @Generated
     private SecretBase secretAccessKey;
 
     /*
@@ -36,25 +43,41 @@ public class GoogleCloudStorageLinkedService extends LinkedService {
      * property; change it only if you want to try a different service endpoint or want to switch between https and
      * http. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.serviceUrl")
+    @Generated
     private Object serviceUrl;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of GoogleCloudStorageLinkedService class. */
-    public GoogleCloudStorageLinkedService() {}
+    /**
+     * Creates an instance of GoogleCloudStorageLinkedService class.
+     */
+    @Generated
+    public GoogleCloudStorageLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the accessKeyId property: The access key identifier of the Google Cloud Storage Identity and Access
      * Management (IAM) user. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the accessKeyId value.
      */
+    @Generated
     public Object getAccessKeyId() {
         return this.accessKeyId;
     }
@@ -62,10 +85,11 @@ public class GoogleCloudStorageLinkedService extends LinkedService {
     /**
      * Set the accessKeyId property: The access key identifier of the Google Cloud Storage Identity and Access
      * Management (IAM) user. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param accessKeyId the accessKeyId value to set.
      * @return the GoogleCloudStorageLinkedService object itself.
      */
+    @Generated
     public GoogleCloudStorageLinkedService setAccessKeyId(Object accessKeyId) {
         this.accessKeyId = accessKeyId;
         return this;
@@ -74,9 +98,10 @@ public class GoogleCloudStorageLinkedService extends LinkedService {
     /**
      * Get the secretAccessKey property: The secret access key of the Google Cloud Storage Identity and Access
      * Management (IAM) user.
-     *
+     * 
      * @return the secretAccessKey value.
      */
+    @Generated
     public SecretBase getSecretAccessKey() {
         return this.secretAccessKey;
     }
@@ -84,10 +109,11 @@ public class GoogleCloudStorageLinkedService extends LinkedService {
     /**
      * Set the secretAccessKey property: The secret access key of the Google Cloud Storage Identity and Access
      * Management (IAM) user.
-     *
+     * 
      * @param secretAccessKey the secretAccessKey value to set.
      * @return the GoogleCloudStorageLinkedService object itself.
      */
+    @Generated
     public GoogleCloudStorageLinkedService setSecretAccessKey(SecretBase secretAccessKey) {
         this.secretAccessKey = secretAccessKey;
         return this;
@@ -97,9 +123,10 @@ public class GoogleCloudStorageLinkedService extends LinkedService {
      * Get the serviceUrl property: This value specifies the endpoint to access with the Google Cloud Storage Connector.
      * This is an optional property; change it only if you want to try a different service endpoint or want to switch
      * between https and http. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the serviceUrl value.
      */
+    @Generated
     public Object getServiceUrl() {
         return this.serviceUrl;
     }
@@ -108,10 +135,11 @@ public class GoogleCloudStorageLinkedService extends LinkedService {
      * Set the serviceUrl property: This value specifies the endpoint to access with the Google Cloud Storage Connector.
      * This is an optional property; change it only if you want to try a different service endpoint or want to switch
      * between https and http. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param serviceUrl the serviceUrl value to set.
      * @return the GoogleCloudStorageLinkedService object itself.
      */
+    @Generated
     public GoogleCloudStorageLinkedService setServiceUrl(Object serviceUrl) {
         this.serviceUrl = serviceUrl;
         return this;
@@ -120,9 +148,10 @@ public class GoogleCloudStorageLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -130,40 +159,163 @@ public class GoogleCloudStorageLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the GoogleCloudStorageLinkedService object itself.
      */
+    @Generated
     public GoogleCloudStorageLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public GoogleCloudStorageLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GoogleCloudStorageLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GoogleCloudStorageLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GoogleCloudStorageLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GoogleCloudStorageLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (accessKeyId != null || secretAccessKey != null || serviceUrl != null || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            if (this.accessKeyId != null) {
+                jsonWriter.writeUntypedField("accessKeyId", this.accessKeyId);
+            }
+            jsonWriter.writeJsonField("secretAccessKey", this.secretAccessKey);
+            if (this.serviceUrl != null) {
+                jsonWriter.writeUntypedField("serviceUrl", this.serviceUrl);
+            }
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of GoogleCloudStorageLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of GoogleCloudStorageLinkedService if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the GoogleCloudStorageLinkedService.
+     */
+    @Generated
+    public static GoogleCloudStorageLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            GoogleCloudStorageLinkedService deserializedGoogleCloudStorageLinkedService
+                = new GoogleCloudStorageLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedGoogleCloudStorageLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedGoogleCloudStorageLinkedService
+                        .setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedGoogleCloudStorageLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedGoogleCloudStorageLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedGoogleCloudStorageLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedGoogleCloudStorageLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("accessKeyId".equals(fieldName)) {
+                            deserializedGoogleCloudStorageLinkedService.accessKeyId = reader.readUntyped();
+                        } else if ("secretAccessKey".equals(fieldName)) {
+                            deserializedGoogleCloudStorageLinkedService.secretAccessKey = SecretBase.fromJson(reader);
+                        } else if ("serviceUrl".equals(fieldName)) {
+                            deserializedGoogleCloudStorageLinkedService.serviceUrl = reader.readUntyped();
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedGoogleCloudStorageLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedGoogleCloudStorageLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedGoogleCloudStorageLinkedService;
+        });
     }
 }

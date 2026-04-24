@@ -9,6 +9,14 @@ import com.azure.core.annotation.Immutable;
 /** Compose document model operation details */
 @Immutable
 public final class DocumentModelComposeOperationDetails extends OperationDetails {
+
+    /**
+     * Creates a DocumentModelComposeOperationDetails object.
+     */
+    public DocumentModelComposeOperationDetails() {
+        super();
+    }
+
     /*
      * Operation result upon success.
      */
@@ -33,10 +41,10 @@ public final class DocumentModelComposeOperationDetails extends OperationDetails
     }
 
     static {
-        DocumentModelComposeOperationDetailsHelper.setAccessor(
-            new DocumentModelComposeOperationDetailsHelper.DocumentModelComposeOperationDetailsAccessor() {
+        DocumentModelComposeOperationDetailsHelper
+            .setAccessor(new DocumentModelComposeOperationDetailsHelper.DocumentModelComposeOperationDetailsAccessor() {
                 public void setResult(DocumentModelComposeOperationDetails operationDetails,
-                                      DocumentModelDetails result) {
+                    DocumentModelDetails result) {
                     operationDetails.setResult(result);
                 }
             });

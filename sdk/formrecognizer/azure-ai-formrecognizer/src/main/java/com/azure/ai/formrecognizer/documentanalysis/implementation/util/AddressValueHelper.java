@@ -28,12 +28,19 @@ public final class AddressValueHelper {
      */
     public interface AddressValueAccessor {
         void setPoBox(AddressValue addressValue, String poBox);
+
         void setHouseNumber(AddressValue addressValue, String houseNumber);
+
         void setRoad(AddressValue addressValue, String road);
+
         void setCity(AddressValue addressValue, String city);
+
         void setState(AddressValue addressValue, String state);
+
         void setPostalCode(AddressValue addressValue, String postalCode);
+
         void setCountryRegion(AddressValue addressValue, String countryRegion);
+
         void setStreetAddress(AddressValue addressValue, String streetAddress);
 
         void setUnit(AddressValue addressValue, String unit);
@@ -48,6 +55,7 @@ public final class AddressValueHelper {
 
         void setLevel(AddressValue addressValue, String level);
     }
+
     static void setPoBox(AddressValue addressValue, String poBox) {
         accessor.setPoBox(addressValue, poBox);
     }
@@ -78,5 +86,29 @@ public final class AddressValueHelper {
 
     static void setStreetAddress(AddressValue addressValue, String streetAddress) {
         accessor.setStreetAddress(addressValue, streetAddress);
+    }
+
+    static void setUnit(AddressValue addressValue, String unit) {
+        accessor.setUnit(addressValue, unit);
+    }
+
+    static void setCityDistrict(AddressValue addressValue, String cityDistrict) {
+        accessor.setCityDistrict(addressValue, cityDistrict);
+    }
+
+    static void setStateDistrict(AddressValue addressValue, String stateDistrict) {
+        accessor.setStateDistrict(addressValue, stateDistrict);
+    }
+
+    static void setSuburb(AddressValue addressValue, String suburb) {
+        accessor.setSuburb(addressValue, suburb);
+    }
+
+    static void setHouse(AddressValue addressValue, String house) {
+        accessor.setHouse(addressValue, house);
+    }
+
+    static void setLevel(AddressValue addressValue, String level) {
+        accessor.setLevel(addressValue, level);
     }
 }

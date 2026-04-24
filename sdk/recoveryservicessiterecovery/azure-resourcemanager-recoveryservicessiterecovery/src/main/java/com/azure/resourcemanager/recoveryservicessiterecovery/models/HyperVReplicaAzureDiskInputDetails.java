@@ -5,42 +5,51 @@
 package com.azure.resourcemanager.recoveryservicessiterecovery.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Disk input details. */
+/**
+ * Disk input details.
+ */
 @Fluent
-public final class HyperVReplicaAzureDiskInputDetails {
+public final class HyperVReplicaAzureDiskInputDetails implements JsonSerializable<HyperVReplicaAzureDiskInputDetails> {
     /*
      * The DiskId.
      */
-    @JsonProperty(value = "diskId")
     private String diskId;
 
     /*
      * The LogStorageAccountId.
      */
-    @JsonProperty(value = "logStorageAccountId")
     private String logStorageAccountId;
 
     /*
-     * The DiskType.
+     * The disk type.
      */
-    @JsonProperty(value = "diskType")
     private DiskAccountType diskType;
 
     /*
      * The DiskEncryptionSet ARM ID.
      */
-    @JsonProperty(value = "diskEncryptionSetId")
     private String diskEncryptionSetId;
 
-    /** Creates an instance of HyperVReplicaAzureDiskInputDetails class. */
+    /*
+     * The logical sector size (in bytes), 512 by default.
+     */
+    private Integer sectorSizeInBytes;
+
+    /**
+     * Creates an instance of HyperVReplicaAzureDiskInputDetails class.
+     */
     public HyperVReplicaAzureDiskInputDetails() {
     }
 
     /**
      * Get the diskId property: The DiskId.
-     *
+     * 
      * @return the diskId value.
      */
     public String diskId() {
@@ -49,7 +58,7 @@ public final class HyperVReplicaAzureDiskInputDetails {
 
     /**
      * Set the diskId property: The DiskId.
-     *
+     * 
      * @param diskId the diskId value to set.
      * @return the HyperVReplicaAzureDiskInputDetails object itself.
      */
@@ -60,7 +69,7 @@ public final class HyperVReplicaAzureDiskInputDetails {
 
     /**
      * Get the logStorageAccountId property: The LogStorageAccountId.
-     *
+     * 
      * @return the logStorageAccountId value.
      */
     public String logStorageAccountId() {
@@ -69,7 +78,7 @@ public final class HyperVReplicaAzureDiskInputDetails {
 
     /**
      * Set the logStorageAccountId property: The LogStorageAccountId.
-     *
+     * 
      * @param logStorageAccountId the logStorageAccountId value to set.
      * @return the HyperVReplicaAzureDiskInputDetails object itself.
      */
@@ -79,8 +88,8 @@ public final class HyperVReplicaAzureDiskInputDetails {
     }
 
     /**
-     * Get the diskType property: The DiskType.
-     *
+     * Get the diskType property: The disk type.
+     * 
      * @return the diskType value.
      */
     public DiskAccountType diskType() {
@@ -88,8 +97,8 @@ public final class HyperVReplicaAzureDiskInputDetails {
     }
 
     /**
-     * Set the diskType property: The DiskType.
-     *
+     * Set the diskType property: The disk type.
+     * 
      * @param diskType the diskType value to set.
      * @return the HyperVReplicaAzureDiskInputDetails object itself.
      */
@@ -100,7 +109,7 @@ public final class HyperVReplicaAzureDiskInputDetails {
 
     /**
      * Get the diskEncryptionSetId property: The DiskEncryptionSet ARM ID.
-     *
+     * 
      * @return the diskEncryptionSetId value.
      */
     public String diskEncryptionSetId() {
@@ -109,7 +118,7 @@ public final class HyperVReplicaAzureDiskInputDetails {
 
     /**
      * Set the diskEncryptionSetId property: The DiskEncryptionSet ARM ID.
-     *
+     * 
      * @param diskEncryptionSetId the diskEncryptionSetId value to set.
      * @return the HyperVReplicaAzureDiskInputDetails object itself.
      */
@@ -119,10 +128,81 @@ public final class HyperVReplicaAzureDiskInputDetails {
     }
 
     /**
+     * Get the sectorSizeInBytes property: The logical sector size (in bytes), 512 by default.
+     * 
+     * @return the sectorSizeInBytes value.
+     */
+    public Integer sectorSizeInBytes() {
+        return this.sectorSizeInBytes;
+    }
+
+    /**
+     * Set the sectorSizeInBytes property: The logical sector size (in bytes), 512 by default.
+     * 
+     * @param sectorSizeInBytes the sectorSizeInBytes value to set.
+     * @return the HyperVReplicaAzureDiskInputDetails object itself.
+     */
+    public HyperVReplicaAzureDiskInputDetails withSectorSizeInBytes(Integer sectorSizeInBytes) {
+        this.sectorSizeInBytes = sectorSizeInBytes;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("diskId", this.diskId);
+        jsonWriter.writeStringField("logStorageAccountId", this.logStorageAccountId);
+        jsonWriter.writeStringField("diskType", this.diskType == null ? null : this.diskType.toString());
+        jsonWriter.writeStringField("diskEncryptionSetId", this.diskEncryptionSetId);
+        jsonWriter.writeNumberField("sectorSizeInBytes", this.sectorSizeInBytes);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of HyperVReplicaAzureDiskInputDetails from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of HyperVReplicaAzureDiskInputDetails if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the HyperVReplicaAzureDiskInputDetails.
+     */
+    public static HyperVReplicaAzureDiskInputDetails fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            HyperVReplicaAzureDiskInputDetails deserializedHyperVReplicaAzureDiskInputDetails
+                = new HyperVReplicaAzureDiskInputDetails();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("diskId".equals(fieldName)) {
+                    deserializedHyperVReplicaAzureDiskInputDetails.diskId = reader.getString();
+                } else if ("logStorageAccountId".equals(fieldName)) {
+                    deserializedHyperVReplicaAzureDiskInputDetails.logStorageAccountId = reader.getString();
+                } else if ("diskType".equals(fieldName)) {
+                    deserializedHyperVReplicaAzureDiskInputDetails.diskType
+                        = DiskAccountType.fromString(reader.getString());
+                } else if ("diskEncryptionSetId".equals(fieldName)) {
+                    deserializedHyperVReplicaAzureDiskInputDetails.diskEncryptionSetId = reader.getString();
+                } else if ("sectorSizeInBytes".equals(fieldName)) {
+                    deserializedHyperVReplicaAzureDiskInputDetails.sectorSizeInBytes
+                        = reader.getNullable(JsonReader::getInt);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedHyperVReplicaAzureDiskInputDetails;
+        });
     }
 }

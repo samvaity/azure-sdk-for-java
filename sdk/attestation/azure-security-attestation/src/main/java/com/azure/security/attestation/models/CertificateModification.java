@@ -4,30 +4,53 @@
 
 package com.azure.security.attestation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for CertificateModification. */
+/**
+ * The result of the operation.
+ */
 public final class CertificateModification extends ExpandableStringEnum<CertificateModification> {
-    /** Static value IsPresent for CertificateModification. */
+    /**
+     * After the operation was performed, the certificate is in the set of certificates.
+     */
+    @Generated
     public static final CertificateModification IS_PRESENT = fromString("IsPresent");
 
-    /** Static value IsAbsent for CertificateModification. */
+    /**
+     * After the operation was performed, the certificate is no longer present in the set of certificates.
+     */
+    @Generated
     public static final CertificateModification IS_ABSENT = fromString("IsAbsent");
 
     /**
+     * Creates a new instance of CertificateModification value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public CertificateModification() {
+    }
+
+    /**
      * Creates or finds a CertificateModification from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding CertificateModification.
      */
-    @JsonCreator
+    @Generated
     public static CertificateModification fromString(String name) {
         return fromString(name, CertificateModification.class);
     }
 
-    /** @return known CertificateModification values. */
+    /**
+     * Gets known CertificateModification values.
+     * 
+     * @return known CertificateModification values.
+     */
+    @Generated
     public static Collection<CertificateModification> values() {
         return values(CertificateModification.class);
     }

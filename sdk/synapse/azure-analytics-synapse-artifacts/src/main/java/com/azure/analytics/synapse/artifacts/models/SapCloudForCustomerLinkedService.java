@@ -5,55 +5,78 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Linked service for SAP Cloud for Customer. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("SapCloudForCustomer")
-@JsonFlatten
+/**
+ * Linked service for SAP Cloud for Customer.
+ */
 @Fluent
 public class SapCloudForCustomerLinkedService extends LinkedService {
+    /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "SapCloudForCustomer";
+
     /*
      * The URL of SAP Cloud for Customer OData API. For example,
      * '[https://[tenantname].crm.ondemand.com/sap/c4c/odata/v1]'. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.url", required = true)
+    @Generated
     private Object url;
 
     /*
      * The username for Basic authentication. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.username")
+    @Generated
     private Object username;
 
     /*
      * The password for Basic authentication.
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private SecretBase password;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
-     * credential manager. Either encryptedCredential or username/password must be provided. Type: string (or
-     * Expression with resultType string).
+     * credential manager. Either encryptedCredential or username/password must be provided. Type: string (or Expression
+     * with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of SapCloudForCustomerLinkedService class. */
-    public SapCloudForCustomerLinkedService() {}
+    /**
+     * Creates an instance of SapCloudForCustomerLinkedService class.
+     */
+    @Generated
+    public SapCloudForCustomerLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the url property: The URL of SAP Cloud for Customer OData API. For example,
      * '[https://[tenantname].crm.ondemand.com/sap/c4c/odata/v1]'. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the url value.
      */
+    @Generated
     public Object getUrl() {
         return this.url;
     }
@@ -61,10 +84,11 @@ public class SapCloudForCustomerLinkedService extends LinkedService {
     /**
      * Set the url property: The URL of SAP Cloud for Customer OData API. For example,
      * '[https://[tenantname].crm.ondemand.com/sap/c4c/odata/v1]'. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param url the url value to set.
      * @return the SapCloudForCustomerLinkedService object itself.
      */
+    @Generated
     public SapCloudForCustomerLinkedService setUrl(Object url) {
         this.url = url;
         return this;
@@ -73,9 +97,10 @@ public class SapCloudForCustomerLinkedService extends LinkedService {
     /**
      * Get the username property: The username for Basic authentication. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the username value.
      */
+    @Generated
     public Object getUsername() {
         return this.username;
     }
@@ -83,10 +108,11 @@ public class SapCloudForCustomerLinkedService extends LinkedService {
     /**
      * Set the username property: The username for Basic authentication. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param username the username value to set.
      * @return the SapCloudForCustomerLinkedService object itself.
      */
+    @Generated
     public SapCloudForCustomerLinkedService setUsername(Object username) {
         this.username = username;
         return this;
@@ -94,19 +120,21 @@ public class SapCloudForCustomerLinkedService extends LinkedService {
 
     /**
      * Get the password property: The password for Basic authentication.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: The password for Basic authentication.
-     *
+     * 
      * @param password the password value to set.
      * @return the SapCloudForCustomerLinkedService object itself.
      */
+    @Generated
     public SapCloudForCustomerLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -116,9 +144,10 @@ public class SapCloudForCustomerLinkedService extends LinkedService {
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Either encryptedCredential or username/password must be
      * provided. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -127,40 +156,162 @@ public class SapCloudForCustomerLinkedService extends LinkedService {
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Either encryptedCredential or username/password must be
      * provided. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the SapCloudForCustomerLinkedService object itself.
      */
+    @Generated
     public SapCloudForCustomerLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public SapCloudForCustomerLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (url != null || username != null || password != null || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("url", this.url);
+            if (this.username != null) {
+                jsonWriter.writeUntypedField("username", this.username);
+            }
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SapCloudForCustomerLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SapCloudForCustomerLinkedService if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SapCloudForCustomerLinkedService.
+     */
+    @Generated
+    public static SapCloudForCustomerLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SapCloudForCustomerLinkedService deserializedSapCloudForCustomerLinkedService
+                = new SapCloudForCustomerLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedSapCloudForCustomerLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedSapCloudForCustomerLinkedService
+                        .setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedSapCloudForCustomerLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedSapCloudForCustomerLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedSapCloudForCustomerLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedSapCloudForCustomerLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("url".equals(fieldName)) {
+                            deserializedSapCloudForCustomerLinkedService.url = reader.readUntyped();
+                        } else if ("username".equals(fieldName)) {
+                            deserializedSapCloudForCustomerLinkedService.username = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedSapCloudForCustomerLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedSapCloudForCustomerLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedSapCloudForCustomerLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedSapCloudForCustomerLinkedService;
+        });
     }
 }

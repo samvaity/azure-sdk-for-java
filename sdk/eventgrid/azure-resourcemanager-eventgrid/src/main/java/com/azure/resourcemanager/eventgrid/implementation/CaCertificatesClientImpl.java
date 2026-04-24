@@ -27,8 +27,10 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.management.polling.PollResult;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.resourcemanager.eventgrid.fluent.CaCertificatesClient;
@@ -38,22 +40,28 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in CaCertificatesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in CaCertificatesClient.
+ */
 public final class CaCertificatesClientImpl implements CaCertificatesClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final CaCertificatesService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final EventGridManagementClientImpl client;
 
     /**
      * Initializes an instance of CaCertificatesClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     CaCertificatesClientImpl(EventGridManagementClientImpl client) {
-        this.service =
-            RestProxy.create(CaCertificatesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(CaCertificatesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -62,86 +70,112 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * service to perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "EventGridManagementC")
+    @ServiceInterface(name = "EventGridManagementClientCaCertificates")
     public interface CaCertificatesService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates/{caCertificateName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates/{caCertificateName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<CaCertificateInner>> get(
-            @HostParam("$host") String endpoint,
+        Mono<Response<CaCertificateInner>> get(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("namespaceName") String namespaceName,
-            @PathParam("caCertificateName") String caCertificateName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("caCertificateName") String caCertificateName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates/{caCertificateName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<CaCertificateInner> getSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("caCertificateName") String caCertificateName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates/{caCertificateName}")
+        @ExpectedResponses({ 200, 201 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> createOrUpdate(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("caCertificateName") String caCertificateName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") CaCertificateInner caCertificateInfo, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates/{caCertificateName}")
-        @ExpectedResponses({200, 201})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates/{caCertificateName}")
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> createOrUpdate(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> createOrUpdateSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("namespaceName") String namespaceName,
-            @PathParam("caCertificateName") String caCertificateName,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") CaCertificateInner caCertificateInfo,
-            @HeaderParam("Accept") String accept,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("caCertificateName") String caCertificateName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") CaCertificateInner caCertificateInfo, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates/{caCertificateName}")
-        @ExpectedResponses({200, 202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates/{caCertificateName}")
+        @ExpectedResponses({ 200, 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> delete(
-            @HostParam("$host") String endpoint,
+        Mono<Response<Flux<ByteBuffer>>> delete(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("namespaceName") String namespaceName,
-            @PathParam("caCertificateName") String caCertificateName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("caCertificateName") String caCertificateName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates/{caCertificateName}")
+        @ExpectedResponses({ 200, 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<CaCertificatesListResult>> listByNamespace(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> deleteSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("namespaceName") String namespaceName,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$top") Integer top,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("caCertificateName") String caCertificateName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<CaCertificatesListResult>> listByNamespace(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$filter") String filter,
+            @QueryParam("$top") Integer top, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/caCertificates")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<CaCertificatesListResult> listByNamespaceSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$filter") String filter,
+            @QueryParam("$top") Integer top, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<CaCertificatesListResult>> listByNamespaceNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<CaCertificatesListResult> listByNamespaceNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Get a CA certificate.
-     *
-     * <p>Get properties of a CA certificate.
-     *
+     * 
+     * Get properties of a CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -151,19 +185,15 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return properties of a CA certificate along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<CaCertificateInner>> getWithResponseAsync(
-        String resourceGroupName, String namespaceName, String caCertificateName) {
+    private Mono<Response<CaCertificateInner>> getWithResponseAsync(String resourceGroupName, String namespaceName,
+        String caCertificateName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -178,80 +208,16 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            namespaceName,
-                            caCertificateName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, namespaceName, caCertificateName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get a CA certificate.
-     *
-     * <p>Get properties of a CA certificate.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param caCertificateName Name of the CA certificate.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties of a CA certificate along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<CaCertificateInner>> getWithResponseAsync(
-        String resourceGroupName, String namespaceName, String caCertificateName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (namespaceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
-        }
-        if (caCertificateName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter caCertificateName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                namespaceName,
-                caCertificateName,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Get a CA certificate.
-     *
-     * <p>Get properties of a CA certificate.
-     *
+     * 
+     * Get properties of a CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -261,17 +227,17 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return properties of a CA certificate on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<CaCertificateInner> getAsync(
-        String resourceGroupName, String namespaceName, String caCertificateName) {
+    private Mono<CaCertificateInner> getAsync(String resourceGroupName, String namespaceName,
+        String caCertificateName) {
         return getWithResponseAsync(resourceGroupName, namespaceName, caCertificateName)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Get a CA certificate.
-     *
-     * <p>Get properties of a CA certificate.
-     *
+     * 
+     * Get properties of a CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -282,16 +248,40 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return properties of a CA certificate along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<CaCertificateInner> getWithResponse(
-        String resourceGroupName, String namespaceName, String caCertificateName, Context context) {
-        return getWithResponseAsync(resourceGroupName, namespaceName, caCertificateName, context).block();
+    public Response<CaCertificateInner> getWithResponse(String resourceGroupName, String namespaceName,
+        String caCertificateName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (namespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+        }
+        if (caCertificateName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter caCertificateName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            namespaceName, caCertificateName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Get a CA certificate.
-     *
-     * <p>Get properties of a CA certificate.
-     *
+     * 
+     * Get properties of a CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -307,9 +297,9 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
 
     /**
      * Create or update a CA certificate.
-     *
-     * <p>Create or update a CA certificate with the specified parameters.
-     *
+     * 
+     * Create or update a CA certificate with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName The CA certificate name.
@@ -320,22 +310,15 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return the CA Certificate resource along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(
-        String resourceGroupName,
-        String namespaceName,
-        String caCertificateName,
-        CaCertificateInner caCertificateInfo) {
+    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(String resourceGroupName,
+        String namespaceName, String caCertificateName, CaCertificateInner caCertificateInfo) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -356,93 +339,118 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .createOrUpdate(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            namespaceName,
-                            caCertificateName,
-                            this.client.getApiVersion(),
-                            caCertificateInfo,
-                            accept,
-                            context))
+            .withContext(context -> service.createOrUpdate(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, namespaceName, caCertificateName, this.client.getApiVersion(), caCertificateInfo,
+                accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Create or update a CA certificate.
-     *
-     * <p>Create or update a CA certificate with the specified parameters.
-     *
+     * 
+     * Create or update a CA certificate with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName The CA certificate name.
      * @param caCertificateInfo CA certificate information.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the CA Certificate resource along with {@link Response} on successful completion of {@link Mono}.
+     * @return the CA Certificate resource along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(
-        String resourceGroupName,
-        String namespaceName,
-        String caCertificateName,
-        CaCertificateInner caCertificateInfo,
-        Context context) {
+    private Response<BinaryData> createOrUpdateWithResponse(String resourceGroupName, String namespaceName,
+        String caCertificateName, CaCertificateInner caCertificateInfo) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (namespaceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
         }
         if (caCertificateName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter caCertificateName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter caCertificateName is required and cannot be null."));
         }
         if (caCertificateInfo == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter caCertificateInfo is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter caCertificateInfo is required and cannot be null."));
         } else {
             caCertificateInfo.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .createOrUpdate(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                namespaceName,
-                caCertificateName,
-                this.client.getApiVersion(),
-                caCertificateInfo,
-                accept,
-                context);
+        return service.createOrUpdateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            namespaceName, caCertificateName, this.client.getApiVersion(), caCertificateInfo, accept, Context.NONE);
     }
 
     /**
      * Create or update a CA certificate.
-     *
-     * <p>Create or update a CA certificate with the specified parameters.
-     *
+     * 
+     * Create or update a CA certificate with the specified parameters.
+     * 
+     * @param resourceGroupName The name of the resource group within the user's subscription.
+     * @param namespaceName Name of the namespace.
+     * @param caCertificateName The CA certificate name.
+     * @param caCertificateInfo CA certificate information.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the CA Certificate resource along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createOrUpdateWithResponse(String resourceGroupName, String namespaceName,
+        String caCertificateName, CaCertificateInner caCertificateInfo, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (namespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+        }
+        if (caCertificateName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter caCertificateName is required and cannot be null."));
+        }
+        if (caCertificateInfo == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter caCertificateInfo is required and cannot be null."));
+        } else {
+            caCertificateInfo.validate();
+        }
+        final String accept = "application/json";
+        return service.createOrUpdateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            namespaceName, caCertificateName, this.client.getApiVersion(), caCertificateInfo, accept, context);
+    }
+
+    /**
+     * Create or update a CA certificate.
+     * 
+     * Create or update a CA certificate with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName The CA certificate name.
@@ -454,59 +462,19 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<CaCertificateInner>, CaCertificateInner> beginCreateOrUpdateAsync(
-        String resourceGroupName,
-        String namespaceName,
-        String caCertificateName,
+        String resourceGroupName, String namespaceName, String caCertificateName,
         CaCertificateInner caCertificateInfo) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateWithResponseAsync(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo);
-        return this
-            .client
-            .<CaCertificateInner, CaCertificateInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                CaCertificateInner.class,
-                CaCertificateInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = createOrUpdateWithResponseAsync(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo);
+        return this.client.<CaCertificateInner, CaCertificateInner>getLroResult(mono, this.client.getHttpPipeline(),
+            CaCertificateInner.class, CaCertificateInner.class, this.client.getContext());
     }
 
     /**
      * Create or update a CA certificate.
-     *
-     * <p>Create or update a CA certificate with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param caCertificateName The CA certificate name.
-     * @param caCertificateInfo CA certificate information.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of the CA Certificate resource.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<CaCertificateInner>, CaCertificateInner> beginCreateOrUpdateAsync(
-        String resourceGroupName,
-        String namespaceName,
-        String caCertificateName,
-        CaCertificateInner caCertificateInfo,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateWithResponseAsync(
-                resourceGroupName, namespaceName, caCertificateName, caCertificateInfo, context);
-        return this
-            .client
-            .<CaCertificateInner, CaCertificateInner>getLroResult(
-                mono, this.client.getHttpPipeline(), CaCertificateInner.class, CaCertificateInner.class, context);
-    }
-
-    /**
-     * Create or update a CA certificate.
-     *
-     * <p>Create or update a CA certificate with the specified parameters.
-     *
+     * 
+     * Create or update a CA certificate with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName The CA certificate name.
@@ -517,21 +485,19 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return the {@link SyncPoller} for polling of the CA Certificate resource.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<CaCertificateInner>, CaCertificateInner> beginCreateOrUpdate(
-        String resourceGroupName,
-        String namespaceName,
-        String caCertificateName,
-        CaCertificateInner caCertificateInfo) {
-        return this
-            .beginCreateOrUpdateAsync(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo)
-            .getSyncPoller();
+    public SyncPoller<PollResult<CaCertificateInner>, CaCertificateInner> beginCreateOrUpdate(String resourceGroupName,
+        String namespaceName, String caCertificateName, CaCertificateInner caCertificateInfo) {
+        Response<BinaryData> response
+            = createOrUpdateWithResponse(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo);
+        return this.client.<CaCertificateInner, CaCertificateInner>getLroResult(response, CaCertificateInner.class,
+            CaCertificateInner.class, Context.NONE);
     }
 
     /**
      * Create or update a CA certificate.
-     *
-     * <p>Create or update a CA certificate with the specified parameters.
-     *
+     * 
+     * Create or update a CA certificate with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName The CA certificate name.
@@ -543,22 +509,19 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return the {@link SyncPoller} for polling of the CA Certificate resource.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<CaCertificateInner>, CaCertificateInner> beginCreateOrUpdate(
-        String resourceGroupName,
-        String namespaceName,
-        String caCertificateName,
-        CaCertificateInner caCertificateInfo,
-        Context context) {
-        return this
-            .beginCreateOrUpdateAsync(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo, context)
-            .getSyncPoller();
+    public SyncPoller<PollResult<CaCertificateInner>, CaCertificateInner> beginCreateOrUpdate(String resourceGroupName,
+        String namespaceName, String caCertificateName, CaCertificateInner caCertificateInfo, Context context) {
+        Response<BinaryData> response = createOrUpdateWithResponse(resourceGroupName, namespaceName, caCertificateName,
+            caCertificateInfo, context);
+        return this.client.<CaCertificateInner, CaCertificateInner>getLroResult(response, CaCertificateInner.class,
+            CaCertificateInner.class, context);
     }
 
     /**
      * Create or update a CA certificate.
-     *
-     * <p>Create or update a CA certificate with the specified parameters.
-     *
+     * 
+     * Create or update a CA certificate with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName The CA certificate name.
@@ -569,48 +532,17 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return the CA Certificate resource on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<CaCertificateInner> createOrUpdateAsync(
-        String resourceGroupName,
-        String namespaceName,
-        String caCertificateName,
-        CaCertificateInner caCertificateInfo) {
-        return beginCreateOrUpdateAsync(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo)
-            .last()
+    private Mono<CaCertificateInner> createOrUpdateAsync(String resourceGroupName, String namespaceName,
+        String caCertificateName, CaCertificateInner caCertificateInfo) {
+        return beginCreateOrUpdateAsync(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Create or update a CA certificate.
-     *
-     * <p>Create or update a CA certificate with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param caCertificateName The CA certificate name.
-     * @param caCertificateInfo CA certificate information.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the CA Certificate resource on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<CaCertificateInner> createOrUpdateAsync(
-        String resourceGroupName,
-        String namespaceName,
-        String caCertificateName,
-        CaCertificateInner caCertificateInfo,
-        Context context) {
-        return beginCreateOrUpdateAsync(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Create or update a CA certificate.
-     *
-     * <p>Create or update a CA certificate with the specified parameters.
-     *
+     * 
+     * Create or update a CA certificate with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName The CA certificate name.
@@ -621,19 +553,17 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return the CA Certificate resource.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public CaCertificateInner createOrUpdate(
-        String resourceGroupName,
-        String namespaceName,
-        String caCertificateName,
+    public CaCertificateInner createOrUpdate(String resourceGroupName, String namespaceName, String caCertificateName,
         CaCertificateInner caCertificateInfo) {
-        return createOrUpdateAsync(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo).block();
+        return beginCreateOrUpdate(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo)
+            .getFinalResult();
     }
 
     /**
      * Create or update a CA certificate.
-     *
-     * <p>Create or update a CA certificate with the specified parameters.
-     *
+     * 
+     * Create or update a CA certificate with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName The CA certificate name.
@@ -645,21 +575,17 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return the CA Certificate resource.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public CaCertificateInner createOrUpdate(
-        String resourceGroupName,
-        String namespaceName,
-        String caCertificateName,
-        CaCertificateInner caCertificateInfo,
-        Context context) {
-        return createOrUpdateAsync(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo, context)
-            .block();
+    public CaCertificateInner createOrUpdate(String resourceGroupName, String namespaceName, String caCertificateName,
+        CaCertificateInner caCertificateInfo, Context context) {
+        return beginCreateOrUpdate(resourceGroupName, namespaceName, caCertificateName, caCertificateInfo, context)
+            .getFinalResult();
     }
 
     /**
      * Delete a CA certificate.
-     *
-     * <p>Delete an existing CA certificate.
-     *
+     * 
+     * Delete an existing CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -669,19 +595,15 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String namespaceName, String caCertificateName) {
+    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName, String namespaceName,
+        String caCertificateName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -696,80 +618,103 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            namespaceName,
-                            caCertificateName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, namespaceName, caCertificateName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Delete a CA certificate.
-     *
-     * <p>Delete an existing CA certificate.
-     *
+     * 
+     * Delete an existing CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String namespaceName, String caCertificateName, Context context) {
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String namespaceName,
+        String caCertificateName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (namespaceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
         }
         if (caCertificateName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter caCertificateName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter caCertificateName is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                namespaceName,
-                caCertificateName,
-                this.client.getApiVersion(),
-                accept,
-                context);
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            namespaceName, caCertificateName, this.client.getApiVersion(), accept, Context.NONE);
     }
 
     /**
      * Delete a CA certificate.
-     *
-     * <p>Delete an existing CA certificate.
-     *
+     * 
+     * Delete an existing CA certificate.
+     * 
+     * @param resourceGroupName The name of the resource group within the user's subscription.
+     * @param namespaceName Name of the namespace.
+     * @param caCertificateName Name of the CA certificate.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String namespaceName,
+        String caCertificateName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (namespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+        }
+        if (caCertificateName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter caCertificateName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            namespaceName, caCertificateName, this.client.getApiVersion(), accept, context);
+    }
+
+    /**
+     * Delete a CA certificate.
+     * 
+     * Delete an existing CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -779,46 +724,19 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceGroupName, String namespaceName, String caCertificateName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(resourceGroupName, namespaceName, caCertificateName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String namespaceName,
+        String caCertificateName) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = deleteWithResponseAsync(resourceGroupName, namespaceName, caCertificateName);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Delete a CA certificate.
-     *
-     * <p>Delete an existing CA certificate.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param caCertificateName Name of the CA certificate.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceGroupName, String namespaceName, String caCertificateName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(resourceGroupName, namespaceName, caCertificateName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Delete a CA certificate.
-     *
-     * <p>Delete an existing CA certificate.
-     *
+     * 
+     * Delete an existing CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -828,16 +746,17 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceGroupName, String namespaceName, String caCertificateName) {
-        return this.beginDeleteAsync(resourceGroupName, namespaceName, caCertificateName).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String namespaceName,
+        String caCertificateName) {
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, namespaceName, caCertificateName);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Delete a CA certificate.
-     *
-     * <p>Delete an existing CA certificate.
-     *
+     * 
+     * Delete an existing CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -848,16 +767,18 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceGroupName, String namespaceName, String caCertificateName, Context context) {
-        return this.beginDeleteAsync(resourceGroupName, namespaceName, caCertificateName, context).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String namespaceName,
+        String caCertificateName, Context context) {
+        Response<BinaryData> response
+            = deleteWithResponse(resourceGroupName, namespaceName, caCertificateName, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Delete a CA certificate.
-     *
-     * <p>Delete an existing CA certificate.
-     *
+     * 
+     * Delete an existing CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -868,38 +789,15 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Void> deleteAsync(String resourceGroupName, String namespaceName, String caCertificateName) {
-        return beginDeleteAsync(resourceGroupName, namespaceName, caCertificateName)
-            .last()
+        return beginDeleteAsync(resourceGroupName, namespaceName, caCertificateName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Delete a CA certificate.
-     *
-     * <p>Delete an existing CA certificate.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param caCertificateName Name of the CA certificate.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(
-        String resourceGroupName, String namespaceName, String caCertificateName, Context context) {
-        return beginDeleteAsync(resourceGroupName, namespaceName, caCertificateName, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Delete a CA certificate.
-     *
-     * <p>Delete an existing CA certificate.
-     *
+     * 
+     * Delete an existing CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -909,14 +807,14 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String namespaceName, String caCertificateName) {
-        deleteAsync(resourceGroupName, namespaceName, caCertificateName).block();
+        beginDelete(resourceGroupName, namespaceName, caCertificateName).getFinalResult();
     }
 
     /**
      * Delete a CA certificate.
-     *
-     * <p>Delete an existing CA certificate.
-     *
+     * 
+     * Delete an existing CA certificate.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param caCertificateName Name of the CA certificate.
@@ -927,44 +825,39 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String namespaceName, String caCertificateName, Context context) {
-        deleteAsync(resourceGroupName, namespaceName, caCertificateName, context).block();
+        beginDelete(resourceGroupName, namespaceName, caCertificateName, context).getFinalResult();
     }
 
     /**
      * List all CA certificates under a namespace.
-     *
-     * <p>Get all the CA certificates under a namespace.
-     *
+     * 
+     * Get all the CA certificates under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return all the CA certificates under a namespace along with {@link PagedResponse} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<CaCertificateInner>> listByNamespaceSinglePageAsync(
-        String resourceGroupName, String namespaceName, String filter, Integer top) {
+    private Mono<PagedResponse<CaCertificateInner>> listByNamespaceSinglePageAsync(String resourceGroupName,
+        String namespaceName, String filter, Integer top) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -975,132 +868,44 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listByNamespace(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            namespaceName,
-                            this.client.getApiVersion(),
-                            filter,
-                            top,
-                            accept,
-                            context))
-            .<PagedResponse<CaCertificateInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.listByNamespace(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, namespaceName, this.client.getApiVersion(), filter, top, accept, context))
+            .<PagedResponse<CaCertificateInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * List all CA certificates under a namespace.
-     *
-     * <p>Get all the CA certificates under a namespace.
-     *
+     * 
+     * Get all the CA certificates under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all the CA certificates under a namespace along with {@link PagedResponse} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<CaCertificateInner>> listByNamespaceSinglePageAsync(
-        String resourceGroupName, String namespaceName, String filter, Integer top, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (namespaceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByNamespace(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                namespaceName,
-                this.client.getApiVersion(),
-                filter,
-                top,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * List all CA certificates under a namespace.
-     *
-     * <p>Get all the CA certificates under a namespace.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
-     * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return all the CA certificates under a namespace as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<CaCertificateInner> listByNamespaceAsync(
-        String resourceGroupName, String namespaceName, String filter, Integer top) {
-        return new PagedFlux<>(
-            () -> listByNamespaceSinglePageAsync(resourceGroupName, namespaceName, filter, top),
+    private PagedFlux<CaCertificateInner> listByNamespaceAsync(String resourceGroupName, String namespaceName,
+        String filter, Integer top) {
+        return new PagedFlux<>(() -> listByNamespaceSinglePageAsync(resourceGroupName, namespaceName, filter, top),
             nextLink -> listByNamespaceNextSinglePageAsync(nextLink));
     }
 
     /**
      * List all CA certificates under a namespace.
-     *
-     * <p>Get all the CA certificates under a namespace.
-     *
+     * 
+     * Get all the CA certificates under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1112,45 +917,112 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
     private PagedFlux<CaCertificateInner> listByNamespaceAsync(String resourceGroupName, String namespaceName) {
         final String filter = null;
         final Integer top = null;
-        return new PagedFlux<>(
-            () -> listByNamespaceSinglePageAsync(resourceGroupName, namespaceName, filter, top),
+        return new PagedFlux<>(() -> listByNamespaceSinglePageAsync(resourceGroupName, namespaceName, filter, top),
             nextLink -> listByNamespaceNextSinglePageAsync(nextLink));
     }
 
     /**
      * List all CA certificates under a namespace.
-     *
-     * <p>Get all the CA certificates under a namespace.
-     *
+     * 
+     * Get all the CA certificates under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
-     * @param context The context to associate with this operation.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all the CA certificates under a namespace as paginated response with {@link PagedFlux}.
+     * @return all the CA certificates under a namespace along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<CaCertificateInner> listByNamespaceAsync(
-        String resourceGroupName, String namespaceName, String filter, Integer top, Context context) {
-        return new PagedFlux<>(
-            () -> listByNamespaceSinglePageAsync(resourceGroupName, namespaceName, filter, top, context),
-            nextLink -> listByNamespaceNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<CaCertificateInner> listByNamespaceSinglePage(String resourceGroupName, String namespaceName,
+        String filter, Integer top) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (namespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<CaCertificatesListResult> res
+            = service.listByNamespaceSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+                namespaceName, this.client.getApiVersion(), filter, top, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * List all CA certificates under a namespace.
-     *
-     * <p>Get all the CA certificates under a namespace.
-     *
+     * 
+     * Get all the CA certificates under a namespace.
+     * 
+     * @param resourceGroupName The name of the resource group within the user's subscription.
+     * @param namespaceName Name of the namespace.
+     * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
+     * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all the CA certificates under a namespace along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<CaCertificateInner> listByNamespaceSinglePage(String resourceGroupName, String namespaceName,
+        String filter, Integer top, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (namespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<CaCertificatesListResult> res
+            = service.listByNamespaceSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+                namespaceName, this.client.getApiVersion(), filter, top, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * List all CA certificates under a namespace.
+     * 
+     * Get all the CA certificates under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1162,24 +1034,24 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
     public PagedIterable<CaCertificateInner> listByNamespace(String resourceGroupName, String namespaceName) {
         final String filter = null;
         final Integer top = null;
-        return new PagedIterable<>(listByNamespaceAsync(resourceGroupName, namespaceName, filter, top));
+        return new PagedIterable<>(() -> listByNamespaceSinglePage(resourceGroupName, namespaceName, filter, top),
+            nextLink -> listByNamespaceNextSinglePage(nextLink));
     }
 
     /**
      * List all CA certificates under a namespace.
-     *
-     * <p>Get all the CA certificates under a namespace.
-     *
+     * 
+     * Get all the CA certificates under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1187,21 +1059,22 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
      * @return all the CA certificates under a namespace as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<CaCertificateInner> listByNamespace(
-        String resourceGroupName, String namespaceName, String filter, Integer top, Context context) {
-        return new PagedIterable<>(listByNamespaceAsync(resourceGroupName, namespaceName, filter, top, context));
+    public PagedIterable<CaCertificateInner> listByNamespace(String resourceGroupName, String namespaceName,
+        String filter, Integer top, Context context) {
+        return new PagedIterable<>(
+            () -> listByNamespaceSinglePage(resourceGroupName, namespaceName, filter, top, context),
+            nextLink -> listByNamespaceNextSinglePage(nextLink, context));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return result of the List CA Certificate operation along with {@link PagedResponse} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<CaCertificateInner>> listByNamespaceNextSinglePageAsync(String nextLink) {
@@ -1209,62 +1082,71 @@ public final class CaCertificatesClientImpl implements CaCertificatesClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(context -> service.listByNamespaceNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<CaCertificateInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<CaCertificateInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return result of the List CA Certificate operation along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<CaCertificateInner> listByNamespaceNextSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<CaCertificatesListResult> res
+            = service.listByNamespaceNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List CA Certificate operation along with {@link PagedResponse} on successful completion of
-     *     {@link Mono}.
+     * @return result of the List CA Certificate operation along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<CaCertificateInner>> listByNamespaceNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<CaCertificateInner> listByNamespaceNextSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByNamespaceNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<CaCertificatesListResult> res
+            = service.listByNamespaceNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(CaCertificatesClientImpl.class);
 }

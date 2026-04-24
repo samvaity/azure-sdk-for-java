@@ -12,26 +12,22 @@ import org.junit.jupiter.api.Assertions;
 public final class ForwardProxyTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ForwardProxy model =
-            BinaryData
-                .fromString(
-                    "{\"convention\":\"NoProxy\",\"customHostHeaderName\":\"bdxkqpxokaj\",\"customProtoHeaderName\":\"npime\"}")
-                .toObject(ForwardProxy.class);
-        Assertions.assertEquals(ForwardProxyConvention.NO_PROXY, model.convention());
-        Assertions.assertEquals("bdxkqpxokaj", model.customHostHeaderName());
-        Assertions.assertEquals("npime", model.customProtoHeaderName());
+        ForwardProxy model = BinaryData.fromString(
+            "{\"convention\":\"Standard\",\"customHostHeaderName\":\"whdsoifiyip\",\"customProtoHeaderName\":\"sqwpgrjb\"}")
+            .toObject(ForwardProxy.class);
+        Assertions.assertEquals(ForwardProxyConvention.STANDARD, model.convention());
+        Assertions.assertEquals("whdsoifiyip", model.customHostHeaderName());
+        Assertions.assertEquals("sqwpgrjb", model.customProtoHeaderName());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ForwardProxy model =
-            new ForwardProxy()
-                .withConvention(ForwardProxyConvention.NO_PROXY)
-                .withCustomHostHeaderName("bdxkqpxokaj")
-                .withCustomProtoHeaderName("npime");
+        ForwardProxy model = new ForwardProxy().withConvention(ForwardProxyConvention.STANDARD)
+            .withCustomHostHeaderName("whdsoifiyip")
+            .withCustomProtoHeaderName("sqwpgrjb");
         model = BinaryData.fromObject(model).toObject(ForwardProxy.class);
-        Assertions.assertEquals(ForwardProxyConvention.NO_PROXY, model.convention());
-        Assertions.assertEquals("bdxkqpxokaj", model.customHostHeaderName());
-        Assertions.assertEquals("npime", model.customProtoHeaderName());
+        Assertions.assertEquals(ForwardProxyConvention.STANDARD, model.convention());
+        Assertions.assertEquals("whdsoifiyip", model.customHostHeaderName());
+        Assertions.assertEquals("sqwpgrjb", model.customProtoHeaderName());
     }
 }

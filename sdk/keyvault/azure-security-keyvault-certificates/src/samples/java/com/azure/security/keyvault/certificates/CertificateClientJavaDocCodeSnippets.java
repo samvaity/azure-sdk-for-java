@@ -18,6 +18,7 @@ import com.azure.security.keyvault.certificates.models.CertificateIssuer;
 import com.azure.security.keyvault.certificates.models.CertificateOperation;
 import com.azure.security.keyvault.certificates.models.CertificatePolicy;
 import com.azure.security.keyvault.certificates.models.CertificateProperties;
+import com.azure.security.keyvault.certificates.models.CreateCertificateOptions;
 import com.azure.security.keyvault.certificates.models.DeletedCertificate;
 import com.azure.security.keyvault.certificates.models.ImportCertificateOptions;
 import com.azure.security.keyvault.certificates.models.IssuerProperties;
@@ -125,30 +126,62 @@ public final class CertificateClientJavaDocCodeSnippets {
     }
 
     /**
-     * Method to insert code snippets for {@link CertificateClient#beginCreateCertificate(String, CertificatePolicy,
-     * Boolean, Map)} and {@link CertificateClient#beginCreateCertificate(String, CertificatePolicy)}.
+     * Method to insert code snippets for {@link CertificateClient#beginCreateCertificate(String, CertificatePolicy)},
+     * {@link CertificateClient#beginCreateCertificate(String, CertificatePolicy, Boolean, Map)}, and
+     * {@link CertificateClient#beginCreateCertificate(CreateCertificateOptions)}.
      */
     public void createCertificateCodeSnippets() {
         CertificateClient certificateClient = getCertificateClient();
+
+        // BEGIN: com.azure.security.keyvault.certificates.CertificateClient.beginCreateCertificate#String-CertificatePolicy
+        CertificatePolicy certPolicy = new CertificatePolicy("Self", "CN=SelfSignedJavaPkcs12");
+
+        SyncPoller<CertificateOperation, KeyVaultCertificateWithPolicy> certPoller =
+            certificateClient.beginCreateCertificate("certificateName", certPolicy);
+
+        certPoller.waitUntil(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED);
+
+        KeyVaultCertificate cert = certPoller.getFinalResult();
+
+        System.out.printf("Certificate created with name %s%n", cert.getName());
+        // END: com.azure.security.keyvault.certificates.CertificateClient.beginCreateCertificate#String-CertificatePolicy
+
         // BEGIN: com.azure.security.keyvault.certificates.CertificateClient.beginCreateCertificate#String-CertificatePolicy-Boolean-Map
-        CertificatePolicy certificatePolicyPkcsSelf = new CertificatePolicy("Self",
-            "CN=SelfSignedJavaPkcs12");
-        SyncPoller<CertificateOperation, KeyVaultCertificateWithPolicy> certificateSyncPoller = certificateClient
-            .beginCreateCertificate("certificateName", certificatePolicyPkcsSelf, true, new HashMap<>());
+        CertificatePolicy policy = new CertificatePolicy("Self", "CN=SelfSignedJavaPkcs12");
+        Map<String, String> tags = new HashMap<>();
+
+        tags.put("foo", "bar");
+
+        SyncPoller<CertificateOperation, KeyVaultCertificateWithPolicy> certificateSyncPoller =
+            certificateClient.beginCreateCertificate("certificateName", policy, true, tags);
+
         certificateSyncPoller.waitUntil(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED);
+
         KeyVaultCertificate createdCertificate = certificateSyncPoller.getFinalResult();
+
         System.out.printf("Certificate created with name %s%n", createdCertificate.getName());
         // END: com.azure.security.keyvault.certificates.CertificateClient.beginCreateCertificate#String-CertificatePolicy-Boolean-Map
 
-        // BEGIN: com.azure.security.keyvault.certificates.CertificateClient.beginCreateCertificate#String-CertificatePolicy
-        CertificatePolicy certPolicy = new CertificatePolicy("Self",
-            "CN=SelfSignedJavaPkcs12");
-        SyncPoller<CertificateOperation, KeyVaultCertificateWithPolicy> certPoller = certificateClient
-            .beginCreateCertificate("certificateName", certPolicy);
-        certPoller.waitUntil(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED);
-        KeyVaultCertificate cert = certPoller.getFinalResult();
-        System.out.printf("Certificate created with name %s%n", cert.getName());
-        // END: com.azure.security.keyvault.certificates.CertificateClient.beginCreateCertificate#String-CertificatePolicy
+        // BEGIN: com.azure.security.keyvault.certificates.CertificateClient.beginCreateCertificate#CreateCertificateOptions
+        Map<String, String> certTags = new HashMap<>();
+
+        tags.put("foo", "bar");
+
+        CreateCertificateOptions createCertificateOptions =
+            new CreateCertificateOptions("certificateName", new CertificatePolicy("Self", "CN=SelfSignedJavaPkcs12"))
+                .setEnabled(true)
+                .setTags(certTags)
+                .setCertificateOrderPreserved(true);
+
+        SyncPoller<CertificateOperation, KeyVaultCertificateWithPolicy> poller =
+            certificateClient.beginCreateCertificate(createCertificateOptions);
+
+        poller.waitUntil(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED);
+
+        KeyVaultCertificate certificate = poller.getFinalResult();
+
+        System.out.printf("Certificate created with name %s%n", certificate.getName());
+        // END: com.azure.security.keyvault.certificates.CertificateClient.beginCreateCertificate#CreateCertificateOptions
     }
 
     /**
@@ -312,14 +345,14 @@ public final class CertificateClientJavaDocCodeSnippets {
     public void deleteCertificateIssuefrCodeSnippets() {
         CertificateClient certificateClient = getCertificateClient();
         // BEGIN: com.azure.security.keyvault.certificates.CertificateClient.deleteIssuerWithResponse#string-context
-        CertificateIssuer deletedIssuer = certificateClient.deleteIssuer("certificateName");
+        CertificateIssuer deletedIssuer = certificateClient.deleteIssuer("issuerName");
         System.out.printf("Deleted certificate issuer with name %s and provider id %s%n", deletedIssuer.getName(),
             deletedIssuer.getProvider());
         // END: com.azure.security.keyvault.certificates.CertificateClient.deleteIssuerWithResponse#string-context
 
         // BEGIN: com.azure.security.keyvault.certificates.CertificateClient.deleteIssuer#string
         Response<CertificateIssuer> deletedIssuerWithResponse = certificateClient.
-            deleteIssuerWithResponse("certificateName", new Context(key1, value1));
+            deleteIssuerWithResponse("issuerName", new Context(key1, value1));
         System.out.printf("Deleted certificate issuer with name %s and provider id %s%n",
             deletedIssuerWithResponse.getValue().getName(),
             deletedIssuerWithResponse.getValue().getProvider());

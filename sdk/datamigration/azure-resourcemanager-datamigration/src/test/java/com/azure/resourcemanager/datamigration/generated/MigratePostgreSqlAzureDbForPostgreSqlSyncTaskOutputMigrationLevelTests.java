@@ -6,24 +6,23 @@ package com.azure.resourcemanager.datamigration.generated;
 
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.datamigration.models.MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel;
+import org.junit.jupiter.api.Assertions;
 
 public final class MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevelTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"MigrationLevelOutput\",\"startedOn\":\"2021-08-16T09:13:32Z\",\"endedOn\":\"2021-04-06T04:39:54Z\",\"sourceServerVersion\":\"avvwxqi\",\"sourceServer\":\"qunyowxwlmdjr\",\"targetServerVersion\":\"fgbvfvpdbo\",\"targetServer\":\"cizsjqlhkrribdei\",\"id\":\"ipqkghvxndzwm\"}")
-                .toObject(MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel.class);
+        MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel model = BinaryData.fromString(
+            "{\"resultType\":\"MigrationLevelOutput\",\"startedOn\":\"2021-06-28T02:42:03Z\",\"endedOn\":\"2021-09-05T22:45:53Z\",\"sourceServerVersion\":\"pxtivhjk\",\"sourceServer\":\"dibgqjxgpnrhgov\",\"targetServerVersion\":\"pikqmh\",\"targetServer\":\"owjrmzvuporqz\",\"sourceServerType\":\"SQLRDS\",\"targetServerType\":\"AzureDBForPostgresSQL\",\"state\":\"FAILED\",\"databaseCount\":80.61733,\"id\":\"xcnqmxqpswokmvkh\"}")
+            .toObject(MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel.class);
+        Assertions.assertEquals(80.61733F, model.databaseCount());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel model =
-            new MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel();
-        model =
-            BinaryData
-                .fromObject(model)
-                .toObject(MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel.class);
+        MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel model
+            = new MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel().withDatabaseCount(80.61733F);
+        model = BinaryData.fromObject(model)
+            .toObject(MigratePostgreSqlAzureDbForPostgreSqlSyncTaskOutputMigrationLevel.class);
+        Assertions.assertEquals(80.61733F, model.databaseCount());
     }
 }

@@ -10,10 +10,9 @@ import com.azure.resourcemanager.networkcloud.models.KeySetUserStatus;
 public final class KeySetUserStatusTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        KeySetUserStatus model =
-            BinaryData
-                .fromString("{\"azureUserName\":\"zslzojhp\",\"status\":\"Active\",\"statusMessage\":\"mdxotngfdgu\"}")
-                .toObject(KeySetUserStatus.class);
+        KeySetUserStatus model = BinaryData
+            .fromString("{\"azureUserName\":\"guamlj\",\"status\":\"Invalid\",\"statusMessage\":\"msplzgaufcshhvn\"}")
+            .toObject(KeySetUserStatus.class);
     }
 
     @org.junit.jupiter.api.Test

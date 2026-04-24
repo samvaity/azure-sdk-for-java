@@ -5,41 +5,54 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The DataFeedDimension model. */
+/**
+ * The DataFeedDimension model.
+ */
 @Fluent
-public final class DataFeedDimension {
+public final class DataFeedDimension implements JsonSerializable<DataFeedDimension> {
     /*
      * dimension name
      */
-    @JsonProperty(value = "dimensionName", required = true)
+    @Generated
     private String dimensionName;
 
     /*
      * dimension display name
      */
-    @JsonProperty(value = "dimensionDisplayName")
+    @Generated
     private String dimensionDisplayName;
 
-    /** Creates an instance of DataFeedDimension class. */
-    public DataFeedDimension() {}
+    /**
+     * Creates an instance of DataFeedDimension class.
+     */
+    @Generated
+    public DataFeedDimension() {
+    }
 
     /**
      * Get the dimensionName property: dimension name.
-     *
+     * 
      * @return the dimensionName value.
      */
+    @Generated
     public String getDimensionName() {
         return this.dimensionName;
     }
 
     /**
      * Set the dimensionName property: dimension name.
-     *
+     * 
      * @param dimensionName the dimensionName value to set.
      * @return the DataFeedDimension object itself.
      */
+    @Generated
     public DataFeedDimension setDimensionName(String dimensionName) {
         this.dimensionName = dimensionName;
         return this;
@@ -47,21 +60,65 @@ public final class DataFeedDimension {
 
     /**
      * Get the dimensionDisplayName property: dimension display name.
-     *
+     * 
      * @return the dimensionDisplayName value.
      */
+    @Generated
     public String getDimensionDisplayName() {
         return this.dimensionDisplayName;
     }
 
     /**
      * Set the dimensionDisplayName property: dimension display name.
-     *
+     * 
      * @param dimensionDisplayName the dimensionDisplayName value to set.
      * @return the DataFeedDimension object itself.
      */
+    @Generated
     public DataFeedDimension setDimensionDisplayName(String dimensionDisplayName) {
         this.dimensionDisplayName = dimensionDisplayName;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("dimensionName", this.dimensionName);
+        jsonWriter.writeStringField("dimensionDisplayName", this.dimensionDisplayName);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DataFeedDimension from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DataFeedDimension if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DataFeedDimension.
+     */
+    @Generated
+    public static DataFeedDimension fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DataFeedDimension deserializedDataFeedDimension = new DataFeedDimension();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("dimensionName".equals(fieldName)) {
+                    deserializedDataFeedDimension.dimensionName = reader.getString();
+                } else if ("dimensionDisplayName".equals(fieldName)) {
+                    deserializedDataFeedDimension.dimensionDisplayName = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedDataFeedDimension;
+        });
     }
 }

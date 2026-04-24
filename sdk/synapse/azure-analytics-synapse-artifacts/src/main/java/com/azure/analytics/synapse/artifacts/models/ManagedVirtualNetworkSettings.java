@@ -5,48 +5,61 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** Managed Virtual Network Settings. */
+/**
+ * Managed Virtual Network Settings.
+ */
 @Fluent
-public final class ManagedVirtualNetworkSettings {
+public final class ManagedVirtualNetworkSettings implements JsonSerializable<ManagedVirtualNetworkSettings> {
     /*
      * Prevent Data Exfiltration
      */
-    @JsonProperty(value = "preventDataExfiltration")
+    @Generated
     private Boolean preventDataExfiltration;
 
     /*
      * Linked Access Check On Target Resource
      */
-    @JsonProperty(value = "linkedAccessCheckOnTargetResource")
+    @Generated
     private Boolean linkedAccessCheckOnTargetResource;
 
     /*
      * Allowed Aad Tenant Ids For Linking
      */
-    @JsonProperty(value = "allowedAadTenantIdsForLinking")
+    @Generated
     private List<String> allowedAadTenantIdsForLinking;
 
-    /** Creates an instance of ManagedVirtualNetworkSettings class. */
-    public ManagedVirtualNetworkSettings() {}
+    /**
+     * Creates an instance of ManagedVirtualNetworkSettings class.
+     */
+    @Generated
+    public ManagedVirtualNetworkSettings() {
+    }
 
     /**
      * Get the preventDataExfiltration property: Prevent Data Exfiltration.
-     *
+     * 
      * @return the preventDataExfiltration value.
      */
+    @Generated
     public Boolean isPreventDataExfiltration() {
         return this.preventDataExfiltration;
     }
 
     /**
      * Set the preventDataExfiltration property: Prevent Data Exfiltration.
-     *
+     * 
      * @param preventDataExfiltration the preventDataExfiltration value to set.
      * @return the ManagedVirtualNetworkSettings object itself.
      */
+    @Generated
     public ManagedVirtualNetworkSettings setPreventDataExfiltration(Boolean preventDataExfiltration) {
         this.preventDataExfiltration = preventDataExfiltration;
         return this;
@@ -54,42 +67,96 @@ public final class ManagedVirtualNetworkSettings {
 
     /**
      * Get the linkedAccessCheckOnTargetResource property: Linked Access Check On Target Resource.
-     *
+     * 
      * @return the linkedAccessCheckOnTargetResource value.
      */
+    @Generated
     public Boolean isLinkedAccessCheckOnTargetResource() {
         return this.linkedAccessCheckOnTargetResource;
     }
 
     /**
      * Set the linkedAccessCheckOnTargetResource property: Linked Access Check On Target Resource.
-     *
+     * 
      * @param linkedAccessCheckOnTargetResource the linkedAccessCheckOnTargetResource value to set.
      * @return the ManagedVirtualNetworkSettings object itself.
      */
-    public ManagedVirtualNetworkSettings setLinkedAccessCheckOnTargetResource(
-            Boolean linkedAccessCheckOnTargetResource) {
+    @Generated
+    public ManagedVirtualNetworkSettings
+        setLinkedAccessCheckOnTargetResource(Boolean linkedAccessCheckOnTargetResource) {
         this.linkedAccessCheckOnTargetResource = linkedAccessCheckOnTargetResource;
         return this;
     }
 
     /**
      * Get the allowedAadTenantIdsForLinking property: Allowed Aad Tenant Ids For Linking.
-     *
+     * 
      * @return the allowedAadTenantIdsForLinking value.
      */
+    @Generated
     public List<String> getAllowedAadTenantIdsForLinking() {
         return this.allowedAadTenantIdsForLinking;
     }
 
     /**
      * Set the allowedAadTenantIdsForLinking property: Allowed Aad Tenant Ids For Linking.
-     *
+     * 
      * @param allowedAadTenantIdsForLinking the allowedAadTenantIdsForLinking value to set.
      * @return the ManagedVirtualNetworkSettings object itself.
      */
+    @Generated
     public ManagedVirtualNetworkSettings setAllowedAadTenantIdsForLinking(List<String> allowedAadTenantIdsForLinking) {
         this.allowedAadTenantIdsForLinking = allowedAadTenantIdsForLinking;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeBooleanField("preventDataExfiltration", this.preventDataExfiltration);
+        jsonWriter.writeBooleanField("linkedAccessCheckOnTargetResource", this.linkedAccessCheckOnTargetResource);
+        jsonWriter.writeArrayField("allowedAadTenantIdsForLinking", this.allowedAadTenantIdsForLinking,
+            (writer, element) -> writer.writeString(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ManagedVirtualNetworkSettings from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ManagedVirtualNetworkSettings if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ManagedVirtualNetworkSettings.
+     */
+    @Generated
+    public static ManagedVirtualNetworkSettings fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ManagedVirtualNetworkSettings deserializedManagedVirtualNetworkSettings
+                = new ManagedVirtualNetworkSettings();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("preventDataExfiltration".equals(fieldName)) {
+                    deserializedManagedVirtualNetworkSettings.preventDataExfiltration
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("linkedAccessCheckOnTargetResource".equals(fieldName)) {
+                    deserializedManagedVirtualNetworkSettings.linkedAccessCheckOnTargetResource
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("allowedAadTenantIdsForLinking".equals(fieldName)) {
+                    List<String> allowedAadTenantIdsForLinking = reader.readArray(reader1 -> reader1.getString());
+                    deserializedManagedVirtualNetworkSettings.allowedAadTenantIdsForLinking
+                        = allowedAadTenantIdsForLinking;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedManagedVirtualNetworkSettings;
+        });
     }
 }

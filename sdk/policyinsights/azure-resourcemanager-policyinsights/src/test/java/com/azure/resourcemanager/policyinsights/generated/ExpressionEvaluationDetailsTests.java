@@ -7,34 +7,31 @@ package com.azure.resourcemanager.policyinsights.generated;
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.policyinsights.models.ExpressionEvaluationDetails;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public final class ExpressionEvaluationDetailsTests {
-    @Test
-    public void testDeserialize() {
-        ExpressionEvaluationDetails model =
-            BinaryData
-                .fromString(
-                    "{\"result\":\"euecivyhzceuoj\",\"expression\":\"rw\",\"expressionKind\":\"eiotwmcdytdx\",\"path\":\"txnrjaw\",\"operator\":\"xhniskxfbkpycgk\"}")
-                .toObject(ExpressionEvaluationDetails.class);
-        Assertions.assertEquals("euecivyhzceuoj", model.result());
-        Assertions.assertEquals("rw", model.expression());
-        Assertions.assertEquals("txnrjaw", model.path());
-        Assertions.assertEquals("xhniskxfbkpycgk", model.operator());
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        ExpressionEvaluationDetails model = BinaryData.fromString(
+            "{\"result\":\"irgzp\",\"expression\":\"lazszrn\",\"expressionKind\":\"iin\",\"path\":\"pwp\",\"expressionValue\":\"datalwbtlhf\",\"targetValue\":\"datajcdh\",\"operator\":\"fjvfbgofeljagr\"}")
+            .toObject(ExpressionEvaluationDetails.class);
+        Assertions.assertEquals("irgzp", model.result());
+        Assertions.assertEquals("lazszrn", model.expression());
+        Assertions.assertEquals("pwp", model.path());
+        Assertions.assertEquals("fjvfbgofeljagr", model.operator());
     }
 
-    @Test
-    public void testSerialize() {
-        ExpressionEvaluationDetails model =
-            new ExpressionEvaluationDetails()
-                .withResult("euecivyhzceuoj")
-                .withExpression("rw")
-                .withPath("txnrjaw")
-                .withOperator("xhniskxfbkpycgk");
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
+        ExpressionEvaluationDetails model = new ExpressionEvaluationDetails().withResult("irgzp")
+            .withExpression("lazszrn")
+            .withPath("pwp")
+            .withExpressionValue("datalwbtlhf")
+            .withTargetValue("datajcdh")
+            .withOperator("fjvfbgofeljagr");
         model = BinaryData.fromObject(model).toObject(ExpressionEvaluationDetails.class);
-        Assertions.assertEquals("euecivyhzceuoj", model.result());
-        Assertions.assertEquals("rw", model.expression());
-        Assertions.assertEquals("txnrjaw", model.path());
-        Assertions.assertEquals("xhniskxfbkpycgk", model.operator());
+        Assertions.assertEquals("irgzp", model.result());
+        Assertions.assertEquals("lazszrn", model.expression());
+        Assertions.assertEquals("pwp", model.path());
+        Assertions.assertEquals("fjvfbgofeljagr", model.operator());
     }
 }

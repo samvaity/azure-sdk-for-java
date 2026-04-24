@@ -13,26 +13,24 @@ import org.junit.jupiter.api.Assertions;
 public final class StorageAppliancePatchParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        StorageAppliancePatchParameters model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"serialNumber\":\"nekhenlusfnrdtj\"},\"tags\":{\"cq\":\"r\",\"uslvyjtcvuwkasi\":\"jvidttge\"}}")
-                .toObject(StorageAppliancePatchParameters.class);
-        Assertions.assertEquals("r", model.tags().get("cq"));
-        Assertions.assertEquals("nekhenlusfnrdtj", model.serialNumber());
+        StorageAppliancePatchParameters model = BinaryData.fromString(
+            "{\"properties\":{\"serialNumber\":\"ravjuq\"},\"tags\":{\"jjk\":\"xmrgchbapxkiy\",\"scgdu\":\"ajb\",\"jy\":\"sioycblevpmcl\"}}")
+            .toObject(StorageAppliancePatchParameters.class);
+        Assertions.assertEquals("xmrgchbapxkiy", model.tags().get("jjk"));
+        Assertions.assertEquals("ravjuq", model.serialNumber());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        StorageAppliancePatchParameters model =
-            new StorageAppliancePatchParameters()
-                .withTags(mapOf("cq", "r", "uslvyjtcvuwkasi", "jvidttge"))
-                .withSerialNumber("nekhenlusfnrdtj");
+        StorageAppliancePatchParameters model = new StorageAppliancePatchParameters()
+            .withTags(mapOf("jjk", "xmrgchbapxkiy", "scgdu", "ajb", "jy", "sioycblevpmcl"))
+            .withSerialNumber("ravjuq");
         model = BinaryData.fromObject(model).toObject(StorageAppliancePatchParameters.class);
-        Assertions.assertEquals("r", model.tags().get("cq"));
-        Assertions.assertEquals("nekhenlusfnrdtj", model.serialNumber());
+        Assertions.assertEquals("xmrgchbapxkiy", model.tags().get("jjk"));
+        Assertions.assertEquals("ravjuq", model.serialNumber());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

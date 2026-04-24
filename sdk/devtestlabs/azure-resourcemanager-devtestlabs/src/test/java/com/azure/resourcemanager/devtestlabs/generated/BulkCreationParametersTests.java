@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Assertions;
 public final class BulkCreationParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        BulkCreationParameters model =
-            BinaryData.fromString("{\"instanceCount\":129297763}").toObject(BulkCreationParameters.class);
-        Assertions.assertEquals(129297763, model.instanceCount());
+        BulkCreationParameters model
+            = BinaryData.fromString("{\"instanceCount\":84302397}").toObject(BulkCreationParameters.class);
+        Assertions.assertEquals(84302397, model.instanceCount());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        BulkCreationParameters model = new BulkCreationParameters().withInstanceCount(129297763);
+        BulkCreationParameters model = new BulkCreationParameters().withInstanceCount(84302397);
         model = BinaryData.fromObject(model).toObject(BulkCreationParameters.class);
-        Assertions.assertEquals(129297763, model.instanceCount());
+        Assertions.assertEquals(84302397, model.instanceCount());
     }
 }

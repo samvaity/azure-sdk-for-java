@@ -29,28 +29,21 @@
             "_justification": "Javadoc in azure-resourcemanager"
         },
         {
-            "placeholder": [
-                "h2AllowImplicitFlow",
-                "h2Permissions"
+            "file": [
+                "test-proxy.log"
             ],
-            "_justification": "Javadoc in azure resourcemanagerhybrid"
+            "_justification": "Transient test file that is locked by test-proxy and should not be scanned"
         },
         {
             "file": [
                 "eng/common/testproxy/dotnet-devcert.pfx",
+                "sdk/core/azure-core/target/test-classes/keystore.jks",
                 "sdk/cosmos/azure-cosmos-tests/src/test/resources/server.jks",
                 "sdk/cosmos/azure-cosmos-tests/src/test/resources/client.jks",
                 "sdk/identity/azure-identity/src/test/resources/cert-chain.pem",
                 "sdk/identity/azure-identity/src/test/resources/key.pem",
                 "sdk/identity/azure-identity/src/test/resources/keyStore.pfx",
-                "sdk/keyvault/azure-security-keyvault-certificates/src/test/resources/pemCert.pem",
-                "sdk/keyvault/microsoft-azure-keyvault/src/test/resources/pkcs12_base64_testdata.cer",
-                "sdk/keyvault/microsoft-azure-keyvault-cryptography/src/test/resources/p256key.pem",
-                "sdk/keyvault/microsoft-azure-keyvault-cryptography/src/test/resources/p256keynew.pem",
-                "sdk/keyvault/microsoft-azure-keyvault-cryptography/src/test/resources/p384keynew.pem",
-                "sdk/keyvault/microsoft-azure-keyvault-cryptography/src/test/resources/p521keynew.pem",
-                "sdk/keyvault/microsoft-azure-keyvault-cryptography/src/test/resources/SECP256key.pem",
-                "sdk/keyvault/microsoft-azure-keyvault-cryptography/src/test/resources/secp256keynew.pem"
+                "sdk/keyvault/azure-security-keyvault-certificates/src/test/resources/pemCert.pem"
             ],
             "_justification": "File contains private key used by test code."
         },
@@ -73,8 +66,14 @@
             "_justification": "File contains fake key used by test code."
         },
         {
+          "file":[
+            "sdk/identity/azure-identity/src/test/resources/pemCert.pem"
+          ],
+          "_justification": "Files contain private keys used by test code."
+        },
+        {
             "file": [
-              "sdk/core/azure-core-test/src/main/resources/keystore.jks"
+              "sdk/core/azure-core/src/test/resources/keystore.jks"
             ],
             "_justification": "Dummy keystore to enable HTTPS testing with LocalTestServer. Contains no real secrets."
         }

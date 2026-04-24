@@ -4,7 +4,14 @@
 package com.azure.cosmos.implementation.query;
 
 import com.azure.cosmos.CosmosDiagnostics;
+import com.azure.cosmos.implementation.CrossRegionAvailabilityContextForRxDocumentServiceRequest;
+import com.azure.cosmos.implementation.DocumentClientRetryPolicy;
+import com.azure.cosmos.implementation.FeedOperationContextForCircuitBreaker;
+import com.azure.cosmos.implementation.GlobalEndpointManager;
+import com.azure.cosmos.implementation.perPartitionCircuitBreaker.GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker;
+import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import com.azure.cosmos.implementation.RxDocumentServiceRequest;
+import com.azure.cosmos.implementation.routing.RegionalRoutingContext;
 import com.azure.cosmos.implementation.spark.OperationContextAndListenerTuple;
 import com.azure.cosmos.models.FeedResponse;
 import com.azure.cosmos.models.ModelBridgeInternal;
@@ -22,6 +29,10 @@ import java.util.function.Supplier;
 import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNotNull;
 
 abstract class Fetcher<T> {
+    private static ImplementationBridgeHelpers.CosmosDiagnosticsHelper.CosmosDiagnosticsAccessor diagAccessor() {
+        return ImplementationBridgeHelpers.CosmosDiagnosticsHelper.getCosmosDiagnosticsAccessor();
+    }
+
     private final static Logger logger = LoggerFactory.getLogger(Fetcher.class);
 
     private final Function<RxDocumentServiceRequest, Mono<FeedResponse<T>>> executeFunc;
@@ -33,6 +44,8 @@ abstract class Fetcher<T> {
     private final AtomicInteger maxItemCount;
     private final AtomicInteger top;
     private final List<CosmosDiagnostics> cancelledRequestDiagnosticsTracker;
+    private final GlobalEndpointManager globalEndpointManager;
+    private final GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker;
 
     public Fetcher(
         Function<RxDocumentServiceRequest, Mono<FeedResponse<T>>> executeFunc,
@@ -40,7 +53,9 @@ abstract class Fetcher<T> {
         int top,
         int maxItemCount,
         OperationContextAndListenerTuple operationContext,
-        List<CosmosDiagnostics> cancelledRequestDiagnosticsTracker) {
+        List<CosmosDiagnostics> cancelledRequestDiagnosticsTracker,
+        GlobalEndpointManager globalEndpointManager,
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker) {
 
         checkNotNull(executeFunc, "Argument 'executeFunc' must not be null.");
 
@@ -64,6 +79,8 @@ abstract class Fetcher<T> {
         }
         this.shouldFetchMore = new AtomicBoolean(true);
         this.cancelledRequestDiagnosticsTracker = cancelledRequestDiagnosticsTracker;
+        this.globalEndpointManager = globalEndpointManager;
+        this.globalPartitionEndpointManagerForPerPartitionCircuitBreaker = globalPartitionEndpointManagerForPerPartitionCircuitBreaker;
     }
 
     public final boolean shouldFetchMore() {
@@ -71,17 +88,18 @@ abstract class Fetcher<T> {
     }
 
     public Mono<FeedResponse<T>> nextPage() {
-        return this.nextPageCore();
+        return this.nextPageCore(null);
     }
 
-    protected final Mono<FeedResponse<T>> nextPageCore() {
-        RxDocumentServiceRequest request = createRequest();
+    protected final Mono<FeedResponse<T>> nextPageCore(DocumentClientRetryPolicy documentClientRetryPolicy) {
+        RxDocumentServiceRequest request = createRequest(documentClientRetryPolicy);
         return nextPage(request);
     }
 
     protected abstract String applyServerResponseContinuation(
         String serverContinuationToken,
-        RxDocumentServiceRequest request);
+        RxDocumentServiceRequest request,
+        FeedResponse<T> response);
 
     protected abstract boolean isFullyDrained(boolean isChangeFeed, FeedResponse<T> response);
 
@@ -93,7 +111,7 @@ abstract class Fetcher<T> {
 
     private void updateState(FeedResponse<T> response, RxDocumentServiceRequest request) {
         String transformedContinuation =
-            this.applyServerResponseContinuation(response.getContinuationToken(), request);
+            this.applyServerResponseContinuation(response.getContinuationToken(), request, response);
 
         ModelBridgeInternal.setFeedResponseContinuationToken(transformedContinuation, response);
         if (top.get() != -1) {
@@ -131,7 +149,11 @@ abstract class Fetcher<T> {
         this.shouldFetchMore.set(true);
     }
 
-    private RxDocumentServiceRequest createRequest() {
+    protected void disableShouldFetchMore() {
+        this.shouldFetchMore.set(false);
+    }
+
+    protected RxDocumentServiceRequest createRequest(DocumentClientRetryPolicy documentClientRetryPolicy) {
         if (!shouldFetchMore.get()) {
             // this should never happen
             logger.error(
@@ -140,10 +162,12 @@ abstract class Fetcher<T> {
             throw new IllegalStateException("INVALID state, trying to fetch more after completion");
         }
 
-        return this.createRequest(maxItemCount.get());
+        return this.createRequest(maxItemCount.get(), documentClientRetryPolicy);
     }
 
-    protected abstract RxDocumentServiceRequest createRequest(int maxItemCount);
+    protected abstract RxDocumentServiceRequest createRequest(
+        int maxItemCount,
+        DocumentClientRetryPolicy documentClientRetryPolicy);
 
     private Mono<FeedResponse<T>> nextPage(RxDocumentServiceRequest request) {
         AtomicBoolean completed = new AtomicBoolean(false);
@@ -154,7 +178,26 @@ abstract class Fetcher<T> {
                 updateState(rsp, request);
                 return rsp;
             })
-            .doOnNext(response -> completed.set(true))
+            .doOnNext(response -> {
+                completed.set(true);
+
+                if (this.globalPartitionEndpointManagerForPerPartitionCircuitBreaker.isPerPartitionLevelCircuitBreakingApplicable(request)) {
+
+                    checkNotNull(request.requestContext, "Argument 'request.requestContext' must not be null!");
+
+                    CrossRegionAvailabilityContextForRxDocumentServiceRequest crossRegionAvailabilityContext = request.requestContext.getCrossRegionAvailabilityContext();
+                    checkNotNull(crossRegionAvailabilityContext, "Argument 'crossRegionAvailabilityContext' must not be null!");
+
+                    FeedOperationContextForCircuitBreaker feedOperationContextForCircuitBreaker = crossRegionAvailabilityContext.getFeedOperationContextForCircuitBreaker();
+
+                    checkNotNull(feedOperationContextForCircuitBreaker, "Argument 'feedOperationContextForCircuitBreaker' must not be null!");
+
+                    if (!feedOperationContextForCircuitBreaker.isThresholdBasedAvailabilityStrategyEnabled()) {
+                        this.globalPartitionEndpointManagerForPerPartitionCircuitBreaker.handleLocationSuccessForPartitionKeyRange(request);
+                        feedOperationContextForCircuitBreaker.addPartitionKeyRangeWithSuccess(request.requestContext.resolvedPartitionKeyRange, request.getResourceId());
+                    }
+                }
+            })
             .doOnError(throwable -> completed.set(true))
             .doFinally(signalType -> {
                 // If the signal type is not cancel(which means success or error), we do not need to tracking the diagnostics here
@@ -169,9 +212,40 @@ abstract class Fetcher<T> {
                     return;
                 }
 
+                if (this.globalPartitionEndpointManagerForPerPartitionCircuitBreaker.isPerPartitionLevelCircuitBreakingApplicable(request)) {
+
+                    checkNotNull(request.requestContext, "Argument 'request.requestContext' must not be null!");
+
+                    CrossRegionAvailabilityContextForRxDocumentServiceRequest crossRegionAvailabilityContext = request.requestContext.getCrossRegionAvailabilityContext();
+
+                    checkNotNull(crossRegionAvailabilityContext, "Argument 'crossRegionAvailabilityContext' must not be null!");
+
+                    FeedOperationContextForCircuitBreaker feedOperationContextForCircuitBreaker = crossRegionAvailabilityContext.getFeedOperationContextForCircuitBreaker();
+
+                    checkNotNull(feedOperationContextForCircuitBreaker, "Argument 'feedOperationContextForCircuitBreaker' must not be null!");
+
+                    if (!feedOperationContextForCircuitBreaker.isThresholdBasedAvailabilityStrategyEnabled()) {
+                        if (this.globalEndpointManager != null) {
+                            this.handleCancellationExceptionForPartitionKeyRange(request);
+                        }
+                    }
+                }
+
                 if (request.requestContext != null && request.requestContext.cosmosDiagnostics != null) {
                     this.cancelledRequestDiagnosticsTracker.add(request.requestContext.cosmosDiagnostics);
                 }
             });
+    }
+
+    private void handleCancellationExceptionForPartitionKeyRange(RxDocumentServiceRequest failedRequest) {
+        RegionalRoutingContext firstContactedLocationEndpoint = diagAccessor().getFirstContactedLocationEndpoint(failedRequest.requestContext.cosmosDiagnostics);
+
+        if (firstContactedLocationEndpoint != null) {
+            this.globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+                .handleLocationExceptionForPartitionKeyRange(failedRequest, firstContactedLocationEndpoint, true);
+        } else {
+            this.globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+                .handleLocationExceptionForPartitionKeyRange(failedRequest, failedRequest.requestContext.regionalRoutingContextToRoute, true);
+        }
     }
 }

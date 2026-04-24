@@ -5,48 +5,60 @@
 package com.azure.resourcemanager.subscription.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Put subscription properties. */
+/**
+ * Put subscription properties.
+ */
 @Fluent
-public final class PutAliasRequestProperties {
+public final class PutAliasRequestProperties implements JsonSerializable<PutAliasRequestProperties> {
     /*
      * The friendly name of the subscription.
      */
-    @JsonProperty(value = "displayName")
     private String displayName;
 
     /*
      * The workload type of the subscription. It can be either Production or DevTest.
      */
-    @JsonProperty(value = "workload")
     private Workload workload;
 
     /*
-     * Determines whether subscription is fieldLed, partnerLed or LegacyEA
+     * Billing scope of the subscription.
+     * For CustomerLed and FieldLed -
+     * /billingAccounts/{billingAccountName}/billingProfiles/{billingProfileName}/invoiceSections/{invoiceSectionName}
+     * For PartnerLed - /billingAccounts/{billingAccountName}/customers/{customerName}
+     * For Legacy EA - /billingAccounts/{billingAccountName}/enrollmentAccounts/{enrollmentAccountName}
      */
-    @JsonProperty(value = "billingScope")
     private String billingScope;
 
     /*
      * This parameter can be used to create alias for existing subscription Id
      */
-    @JsonProperty(value = "subscriptionId")
     private String subscriptionId;
 
     /*
-     * Reseller ID, basically MPN Id
+     * Reseller Id
      */
-    @JsonProperty(value = "resellerId")
     private String resellerId;
 
-    /** Creates an instance of PutAliasRequestProperties class. */
+    /*
+     * Put alias request additional properties.
+     */
+    private PutAliasRequestAdditionalProperties additionalProperties;
+
+    /**
+     * Creates an instance of PutAliasRequestProperties class.
+     */
     public PutAliasRequestProperties() {
     }
 
     /**
      * Get the displayName property: The friendly name of the subscription.
-     *
+     * 
      * @return the displayName value.
      */
     public String displayName() {
@@ -55,7 +67,7 @@ public final class PutAliasRequestProperties {
 
     /**
      * Set the displayName property: The friendly name of the subscription.
-     *
+     * 
      * @param displayName the displayName value to set.
      * @return the PutAliasRequestProperties object itself.
      */
@@ -66,7 +78,7 @@ public final class PutAliasRequestProperties {
 
     /**
      * Get the workload property: The workload type of the subscription. It can be either Production or DevTest.
-     *
+     * 
      * @return the workload value.
      */
     public Workload workload() {
@@ -75,7 +87,7 @@ public final class PutAliasRequestProperties {
 
     /**
      * Set the workload property: The workload type of the subscription. It can be either Production or DevTest.
-     *
+     * 
      * @param workload the workload value to set.
      * @return the PutAliasRequestProperties object itself.
      */
@@ -85,8 +97,12 @@ public final class PutAliasRequestProperties {
     }
 
     /**
-     * Get the billingScope property: Determines whether subscription is fieldLed, partnerLed or LegacyEA.
-     *
+     * Get the billingScope property: Billing scope of the subscription.
+     * For CustomerLed and FieldLed -
+     * /billingAccounts/{billingAccountName}/billingProfiles/{billingProfileName}/invoiceSections/{invoiceSectionName}
+     * For PartnerLed - /billingAccounts/{billingAccountName}/customers/{customerName}
+     * For Legacy EA - /billingAccounts/{billingAccountName}/enrollmentAccounts/{enrollmentAccountName}.
+     * 
      * @return the billingScope value.
      */
     public String billingScope() {
@@ -94,8 +110,12 @@ public final class PutAliasRequestProperties {
     }
 
     /**
-     * Set the billingScope property: Determines whether subscription is fieldLed, partnerLed or LegacyEA.
-     *
+     * Set the billingScope property: Billing scope of the subscription.
+     * For CustomerLed and FieldLed -
+     * /billingAccounts/{billingAccountName}/billingProfiles/{billingProfileName}/invoiceSections/{invoiceSectionName}
+     * For PartnerLed - /billingAccounts/{billingAccountName}/customers/{customerName}
+     * For Legacy EA - /billingAccounts/{billingAccountName}/enrollmentAccounts/{enrollmentAccountName}.
+     * 
      * @param billingScope the billingScope value to set.
      * @return the PutAliasRequestProperties object itself.
      */
@@ -106,7 +126,7 @@ public final class PutAliasRequestProperties {
 
     /**
      * Get the subscriptionId property: This parameter can be used to create alias for existing subscription Id.
-     *
+     * 
      * @return the subscriptionId value.
      */
     public String subscriptionId() {
@@ -115,7 +135,7 @@ public final class PutAliasRequestProperties {
 
     /**
      * Set the subscriptionId property: This parameter can be used to create alias for existing subscription Id.
-     *
+     * 
      * @param subscriptionId the subscriptionId value to set.
      * @return the PutAliasRequestProperties object itself.
      */
@@ -125,8 +145,8 @@ public final class PutAliasRequestProperties {
     }
 
     /**
-     * Get the resellerId property: Reseller ID, basically MPN Id.
-     *
+     * Get the resellerId property: Reseller Id.
+     * 
      * @return the resellerId value.
      */
     public String resellerId() {
@@ -134,8 +154,8 @@ public final class PutAliasRequestProperties {
     }
 
     /**
-     * Set the resellerId property: Reseller ID, basically MPN Id.
-     *
+     * Set the resellerId property: Reseller Id.
+     * 
      * @param resellerId the resellerId value to set.
      * @return the PutAliasRequestProperties object itself.
      */
@@ -145,10 +165,86 @@ public final class PutAliasRequestProperties {
     }
 
     /**
+     * Get the additionalProperties property: Put alias request additional properties.
+     * 
+     * @return the additionalProperties value.
+     */
+    public PutAliasRequestAdditionalProperties additionalProperties() {
+        return this.additionalProperties;
+    }
+
+    /**
+     * Set the additionalProperties property: Put alias request additional properties.
+     * 
+     * @param additionalProperties the additionalProperties value to set.
+     * @return the PutAliasRequestProperties object itself.
+     */
+    public PutAliasRequestProperties
+        withAdditionalProperties(PutAliasRequestAdditionalProperties additionalProperties) {
+        this.additionalProperties = additionalProperties;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+        if (additionalProperties() != null) {
+            additionalProperties().validate();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("displayName", this.displayName);
+        jsonWriter.writeStringField("workload", this.workload == null ? null : this.workload.toString());
+        jsonWriter.writeStringField("billingScope", this.billingScope);
+        jsonWriter.writeStringField("subscriptionId", this.subscriptionId);
+        jsonWriter.writeStringField("resellerId", this.resellerId);
+        jsonWriter.writeJsonField("additionalProperties", this.additionalProperties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PutAliasRequestProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PutAliasRequestProperties if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the PutAliasRequestProperties.
+     */
+    public static PutAliasRequestProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PutAliasRequestProperties deserializedPutAliasRequestProperties = new PutAliasRequestProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("displayName".equals(fieldName)) {
+                    deserializedPutAliasRequestProperties.displayName = reader.getString();
+                } else if ("workload".equals(fieldName)) {
+                    deserializedPutAliasRequestProperties.workload = Workload.fromString(reader.getString());
+                } else if ("billingScope".equals(fieldName)) {
+                    deserializedPutAliasRequestProperties.billingScope = reader.getString();
+                } else if ("subscriptionId".equals(fieldName)) {
+                    deserializedPutAliasRequestProperties.subscriptionId = reader.getString();
+                } else if ("resellerId".equals(fieldName)) {
+                    deserializedPutAliasRequestProperties.resellerId = reader.getString();
+                } else if ("additionalProperties".equals(fieldName)) {
+                    deserializedPutAliasRequestProperties.additionalProperties
+                        = PutAliasRequestAdditionalProperties.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPutAliasRequestProperties;
+        });
     }
 }

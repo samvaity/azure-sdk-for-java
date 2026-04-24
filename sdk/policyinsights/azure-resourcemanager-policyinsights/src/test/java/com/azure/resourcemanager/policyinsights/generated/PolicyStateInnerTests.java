@@ -15,187 +15,160 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public final class PolicyStateInnerTests {
-    @Test
-    public void testDeserialize() {
-        PolicyStateInner model =
-            BinaryData
-                .fromString(
-                    "{\"@odata.id\":\"ue\",\"@odata.context\":\"ibx\",\"timestamp\":\"2021-07-09T02:08:19Z\",\"resourceId\":\"hqwa\",\"policyAssignmentId\":\"uzyoxaep\",\"policyDefinitionId\":\"zjancuxr\",\"effectiveParameters\":\"wbavxbniwdj\",\"isCompliant\":false,\"subscriptionId\":\"s\",\"resourceType\":\"pgn\",\"resourceLocation\":\"txhp\",\"resourceGroup\":\"bzpfzab\",\"resourceTags\":\"cuh\",\"policyAssignmentName\":\"tcty\",\"policyAssignmentOwner\":\"klbb\",\"policyAssignmentParameters\":\"plwzbhvgyugu\",\"policyAssignmentScope\":\"vmkfssxqu\",\"policyDefinitionName\":\"fpl\",\"policyDefinitionAction\":\"gsxnkjzkdeslpv\",\"policyDefinitionCategory\":\"pwiyig\",\"policySetDefinitionId\":\"pkdwzbai\",\"policySetDefinitionName\":\"bbaumnyquped\",\"policySetDefinitionOwner\":\"jn\",\"policySetDefinitionCategory\":\"ckhsmtxpsieb\",\"policySetDefinitionParameters\":\"hvpesapskrdqm\",\"managementGroupIds\":\"jdhtldwkyzxu\",\"policyDefinitionReferenceId\":\"kn\",\"complianceState\":\"scwsv\",\"policyEvaluationDetails\":{\"evaluatedExpressions\":[{\"result\":\"g\",\"expression\":\"rupqsxvnmicy\",\"expressionKind\":\"ceoveilovno\",\"path\":\"fj\",\"operator\":\"bkc\"}],\"ifNotExistsDetails\":{\"resourceId\":\"hbttkphyw\",\"totalResources\":1284749235}},\"policyDefinitionGroupNames\":[\"oqnermclfpl\"],\"components\":[{\"id\":\"uscrpabgyepsb\",\"type\":\"azqugxywpmueefj\",\"name\":\"fqkquj\",\"timestamp\":\"2021-07-14T16:34:27Z\",\"complianceState\":\"yonobgl\",\"\":{}},{\"id\":\"xtccmg\",\"type\":\"dxyt\",\"name\":\"oyrxvwfudwpzntxh\",\"timestamp\":\"2021-04-20T09:49:39Z\",\"complianceState\":\"rqjbhckfrl\",\"\":{}},{\"id\":\"bkyvp\",\"type\":\"anuzbpzkafkuw\",\"name\":\"rnwb\",\"timestamp\":\"2021-01-14T01:50:46Z\",\"complianceState\":\"seyvj\",\"\":{}},{\"id\":\"slhs\",\"type\":\"deemao\",\"name\":\"xagkvtmelmqkrh\",\"timestamp\":\"2020-12-23T09:00:51Z\",\"complianceState\":\"juahaquhcdhmdual\",\"\":{}}],\"policyDefinitionVersion\":\"pvfadmwsrcr\",\"policySetDefinitionVersion\":\"xpvgo\",\"policyAssignmentVersion\":\"lf\",\"\":{}}")
-                .toObject(PolicyStateInner.class);
-        Assertions.assertEquals(OffsetDateTime.parse("2021-07-09T02:08:19Z"), model.timestamp());
-        Assertions.assertEquals("hqwa", model.resourceId());
-        Assertions.assertEquals("uzyoxaep", model.policyAssignmentId());
-        Assertions.assertEquals("zjancuxr", model.policyDefinitionId());
-        Assertions.assertEquals("wbavxbniwdj", model.effectiveParameters());
-        Assertions.assertEquals(false, model.isCompliant());
-        Assertions.assertEquals("s", model.subscriptionId());
-        Assertions.assertEquals("pgn", model.resourceType());
-        Assertions.assertEquals("txhp", model.resourceLocation());
-        Assertions.assertEquals("bzpfzab", model.resourceGroup());
-        Assertions.assertEquals("cuh", model.resourceTags());
-        Assertions.assertEquals("tcty", model.policyAssignmentName());
-        Assertions.assertEquals("klbb", model.policyAssignmentOwner());
-        Assertions.assertEquals("plwzbhvgyugu", model.policyAssignmentParameters());
-        Assertions.assertEquals("vmkfssxqu", model.policyAssignmentScope());
-        Assertions.assertEquals("fpl", model.policyDefinitionName());
-        Assertions.assertEquals("gsxnkjzkdeslpv", model.policyDefinitionAction());
-        Assertions.assertEquals("pwiyig", model.policyDefinitionCategory());
-        Assertions.assertEquals("pkdwzbai", model.policySetDefinitionId());
-        Assertions.assertEquals("bbaumnyquped", model.policySetDefinitionName());
-        Assertions.assertEquals("jn", model.policySetDefinitionOwner());
-        Assertions.assertEquals("ckhsmtxpsieb", model.policySetDefinitionCategory());
-        Assertions.assertEquals("hvpesapskrdqm", model.policySetDefinitionParameters());
-        Assertions.assertEquals("jdhtldwkyzxu", model.managementGroupIds());
-        Assertions.assertEquals("kn", model.policyDefinitionReferenceId());
-        Assertions.assertEquals("scwsv", model.complianceState());
-        Assertions.assertEquals("g", model.policyEvaluationDetails().evaluatedExpressions().get(0).result());
-        Assertions
-            .assertEquals("rupqsxvnmicy", model.policyEvaluationDetails().evaluatedExpressions().get(0).expression());
-        Assertions.assertEquals("fj", model.policyEvaluationDetails().evaluatedExpressions().get(0).path());
-        Assertions.assertEquals("bkc", model.policyEvaluationDetails().evaluatedExpressions().get(0).operator());
-        Assertions.assertEquals("hbttkphyw", model.policyEvaluationDetails().ifNotExistsDetails().resourceId());
-        Assertions.assertEquals(1284749235, model.policyEvaluationDetails().ifNotExistsDetails().totalResources());
-        Assertions.assertEquals("oqnermclfpl", model.policyDefinitionGroupNames().get(0));
-        Assertions.assertEquals("uscrpabgyepsb", model.components().get(0).id());
-        Assertions.assertEquals("azqugxywpmueefj", model.components().get(0).type());
-        Assertions.assertEquals("fqkquj", model.components().get(0).name());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-07-14T16:34:27Z"), model.components().get(0).timestamp());
-        Assertions.assertEquals("yonobgl", model.components().get(0).complianceState());
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        PolicyStateInner model = BinaryData.fromString(
+            "{\"@odata.id\":\"hxx\",\"@odata.context\":\"yq\",\"timestamp\":\"2020-12-30T00:37:41Z\",\"resourceId\":\"eqz\",\"policyAssignmentId\":\"priolx\",\"policyDefinitionId\":\"jaltolmnc\",\"effectiveParameters\":\"obqwcsdbnwdcfh\",\"isCompliant\":true,\"subscriptionId\":\"pfuvglsbjjca\",\"resourceType\":\"xbvtvudu\",\"resourceLocation\":\"cormr\",\"resourceGroup\":\"qtvcofudflvkgj\",\"resourceTags\":\"gdknnqv\",\"policyAssignmentName\":\"znqntoru\",\"policyAssignmentOwner\":\"gsahmkycgrauw\",\"policyAssignmentParameters\":\"etaebu\",\"policyAssignmentScope\":\"vdmovsmzlxwabm\",\"policyDefinitionName\":\"efkifr\",\"policyDefinitionAction\":\"puqujmqlgkfbtn\",\"policyDefinitionCategory\":\"aongbj\",\"policySetDefinitionId\":\"tujitcjedft\",\"policySetDefinitionName\":\"ae\",\"policySetDefinitionOwner\":\"ojvdcpzfoqo\",\"policySetDefinitionCategory\":\"cybxa\",\"policySetDefinitionParameters\":\"gszufoxciqopid\",\"managementGroupIds\":\"mciodhkhazxkhn\",\"policyDefinitionReferenceId\":\"onlwntoeg\",\"complianceState\":\"dwbwhkszzcmrvexz\",\"policyEvaluationDetails\":{\"evaluatedExpressions\":[{\"result\":\"gsfraoyzkoow\",\"expression\":\"mnguxawqaldsyu\",\"expressionKind\":\"imerqfobwyznk\",\"path\":\"kutwpf\",\"expressionValue\":\"dataa\",\"targetValue\":\"datahrskdsnfd\",\"operator\":\"oakgtdlmkkzev\"}],\"ifNotExistsDetails\":{\"resourceId\":\"ewpusdsttwvogvb\",\"totalResources\":2086607804}},\"policyDefinitionGroupNames\":[\"ngqqmoakuf\",\"m\",\"zr\",\"rdgrtw\"],\"components\":[{\"id\":\"uzkopbminrfd\",\"type\":\"yuhhziu\",\"name\":\"fozbhdmsmlmzqhof\",\"timestamp\":\"2021-05-05T04:42:21Z\",\"complianceState\":\"equi\",\"piyylhalnswhccsp\":\"dataicslfaoq\",\"scywuggwoluhc\":\"datakaivwit\"},{\"id\":\"wem\",\"type\":\"i\",\"name\":\"brgz\",\"timestamp\":\"2021-06-14T04:59:44Z\",\"complianceState\":\"weyp\",\"tlstvlzywem\":\"dataxggicccnxqhuexmk\",\"lusiy\":\"datazrncsdt\",\"cy\":\"databsfgytguslfea\",\"xgfpelolppv\":\"dataqukyhejhzi\"},{\"id\":\"r\",\"type\":\"vu\",\"name\":\"raehtwdwrft\",\"timestamp\":\"2021-06-07T20:23:50Z\",\"complianceState\":\"yrcdlbhshfwprac\",\"cedcpnmdy\":\"dataitykhevx\"}],\"policyDefinitionVersion\":\"nwzxltjcv\",\"policySetDefinitionVersion\":\"ltiugcxnavv\",\"policyAssignmentVersion\":\"qiby\",\"wxwlmdjrkvfgb\":\"datay\",\"acizsjqlhkrr\":\"datafvpdbo\",\"hvxndzwmkrefajpj\":\"databdeibqipqk\",\"yhgbijtjivfx\":\"datarwkq\"}")
+            .toObject(PolicyStateInner.class);
+        Assertions.assertEquals(OffsetDateTime.parse("2020-12-30T00:37:41Z"), model.timestamp());
+        Assertions.assertEquals("eqz", model.resourceId());
+        Assertions.assertEquals("priolx", model.policyAssignmentId());
+        Assertions.assertEquals("jaltolmnc", model.policyDefinitionId());
+        Assertions.assertEquals("obqwcsdbnwdcfh", model.effectiveParameters());
+        Assertions.assertTrue(model.isCompliant());
+        Assertions.assertEquals("pfuvglsbjjca", model.subscriptionId());
+        Assertions.assertEquals("xbvtvudu", model.resourceType());
+        Assertions.assertEquals("cormr", model.resourceLocation());
+        Assertions.assertEquals("qtvcofudflvkgj", model.resourceGroup());
+        Assertions.assertEquals("gdknnqv", model.resourceTags());
+        Assertions.assertEquals("znqntoru", model.policyAssignmentName());
+        Assertions.assertEquals("gsahmkycgrauw", model.policyAssignmentOwner());
+        Assertions.assertEquals("etaebu", model.policyAssignmentParameters());
+        Assertions.assertEquals("vdmovsmzlxwabm", model.policyAssignmentScope());
+        Assertions.assertEquals("efkifr", model.policyDefinitionName());
+        Assertions.assertEquals("puqujmqlgkfbtn", model.policyDefinitionAction());
+        Assertions.assertEquals("aongbj", model.policyDefinitionCategory());
+        Assertions.assertEquals("tujitcjedft", model.policySetDefinitionId());
+        Assertions.assertEquals("ae", model.policySetDefinitionName());
+        Assertions.assertEquals("ojvdcpzfoqo", model.policySetDefinitionOwner());
+        Assertions.assertEquals("cybxa", model.policySetDefinitionCategory());
+        Assertions.assertEquals("gszufoxciqopid", model.policySetDefinitionParameters());
+        Assertions.assertEquals("mciodhkhazxkhn", model.managementGroupIds());
+        Assertions.assertEquals("onlwntoeg", model.policyDefinitionReferenceId());
+        Assertions.assertEquals("dwbwhkszzcmrvexz", model.complianceState());
+        Assertions.assertEquals("gsfraoyzkoow", model.policyEvaluationDetails().evaluatedExpressions().get(0).result());
+        Assertions.assertEquals("mnguxawqaldsyu",
+            model.policyEvaluationDetails().evaluatedExpressions().get(0).expression());
+        Assertions.assertEquals("kutwpf", model.policyEvaluationDetails().evaluatedExpressions().get(0).path());
+        Assertions.assertEquals("oakgtdlmkkzev",
+            model.policyEvaluationDetails().evaluatedExpressions().get(0).operator());
+        Assertions.assertEquals("ewpusdsttwvogvb", model.policyEvaluationDetails().ifNotExistsDetails().resourceId());
+        Assertions.assertEquals(2086607804, model.policyEvaluationDetails().ifNotExistsDetails().totalResources());
+        Assertions.assertEquals("ngqqmoakuf", model.policyDefinitionGroupNames().get(0));
+        Assertions.assertEquals("uzkopbminrfd", model.components().get(0).id());
+        Assertions.assertEquals("yuhhziu", model.components().get(0).type());
+        Assertions.assertEquals("fozbhdmsmlmzqhof", model.components().get(0).name());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-05-05T04:42:21Z"), model.components().get(0).timestamp());
+        Assertions.assertEquals("equi", model.components().get(0).complianceState());
     }
 
-    @Test
-    public void testSerialize() {
-        PolicyStateInner model =
-            new PolicyStateInner()
-                .withTimestamp(OffsetDateTime.parse("2021-07-09T02:08:19Z"))
-                .withResourceId("hqwa")
-                .withPolicyAssignmentId("uzyoxaep")
-                .withPolicyDefinitionId("zjancuxr")
-                .withEffectiveParameters("wbavxbniwdj")
-                .withIsCompliant(false)
-                .withSubscriptionId("s")
-                .withResourceType("pgn")
-                .withResourceLocation("txhp")
-                .withResourceGroup("bzpfzab")
-                .withResourceTags("cuh")
-                .withPolicyAssignmentName("tcty")
-                .withPolicyAssignmentOwner("klbb")
-                .withPolicyAssignmentParameters("plwzbhvgyugu")
-                .withPolicyAssignmentScope("vmkfssxqu")
-                .withPolicyDefinitionName("fpl")
-                .withPolicyDefinitionAction("gsxnkjzkdeslpv")
-                .withPolicyDefinitionCategory("pwiyig")
-                .withPolicySetDefinitionId("pkdwzbai")
-                .withPolicySetDefinitionName("bbaumnyquped")
-                .withPolicySetDefinitionOwner("jn")
-                .withPolicySetDefinitionCategory("ckhsmtxpsieb")
-                .withPolicySetDefinitionParameters("hvpesapskrdqm")
-                .withManagementGroupIds("jdhtldwkyzxu")
-                .withPolicyDefinitionReferenceId("kn")
-                .withComplianceState("scwsv")
-                .withPolicyEvaluationDetails(
-                    new PolicyEvaluationDetails()
-                        .withEvaluatedExpressions(
-                            Arrays
-                                .asList(
-                                    new ExpressionEvaluationDetails()
-                                        .withResult("g")
-                                        .withExpression("rupqsxvnmicy")
-                                        .withPath("fj")
-                                        .withOperator("bkc")))
-                        .withIfNotExistsDetails(
-                            new IfNotExistsEvaluationDetails()
-                                .withResourceId("hbttkphyw")
-                                .withTotalResources(1284749235)))
-                .withPolicyDefinitionGroupNames(Arrays.asList("oqnermclfpl"))
-                .withComponents(
-                    Arrays
-                        .asList(
-                            new ComponentStateDetails()
-                                .withId("uscrpabgyepsb")
-                                .withType("azqugxywpmueefj")
-                                .withName("fqkquj")
-                                .withTimestamp(OffsetDateTime.parse("2021-07-14T16:34:27Z"))
-                                .withComplianceState("yonobgl")
-                                .withAdditionalProperties(mapOf()),
-                            new ComponentStateDetails()
-                                .withId("xtccmg")
-                                .withType("dxyt")
-                                .withName("oyrxvwfudwpzntxh")
-                                .withTimestamp(OffsetDateTime.parse("2021-04-20T09:49:39Z"))
-                                .withComplianceState("rqjbhckfrl")
-                                .withAdditionalProperties(mapOf()),
-                            new ComponentStateDetails()
-                                .withId("bkyvp")
-                                .withType("anuzbpzkafkuw")
-                                .withName("rnwb")
-                                .withTimestamp(OffsetDateTime.parse("2021-01-14T01:50:46Z"))
-                                .withComplianceState("seyvj")
-                                .withAdditionalProperties(mapOf()),
-                            new ComponentStateDetails()
-                                .withId("slhs")
-                                .withType("deemao")
-                                .withName("xagkvtmelmqkrh")
-                                .withTimestamp(OffsetDateTime.parse("2020-12-23T09:00:51Z"))
-                                .withComplianceState("juahaquhcdhmdual")
-                                .withAdditionalProperties(mapOf())))
-                .withAdditionalProperties(
-                    mapOf(
-                        "policyDefinitionVersion",
-                        "pvfadmwsrcr",
-                        "@odata.id",
-                        "ue",
-                        "policyAssignmentVersion",
-                        "lf",
-                        "@odata.context",
-                        "ibx",
-                        "policySetDefinitionVersion",
-                        "xpvgo"));
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
+        PolicyStateInner model = new PolicyStateInner().withTimestamp(OffsetDateTime.parse("2020-12-30T00:37:41Z"))
+            .withResourceId("eqz")
+            .withPolicyAssignmentId("priolx")
+            .withPolicyDefinitionId("jaltolmnc")
+            .withEffectiveParameters("obqwcsdbnwdcfh")
+            .withIsCompliant(true)
+            .withSubscriptionId("pfuvglsbjjca")
+            .withResourceType("xbvtvudu")
+            .withResourceLocation("cormr")
+            .withResourceGroup("qtvcofudflvkgj")
+            .withResourceTags("gdknnqv")
+            .withPolicyAssignmentName("znqntoru")
+            .withPolicyAssignmentOwner("gsahmkycgrauw")
+            .withPolicyAssignmentParameters("etaebu")
+            .withPolicyAssignmentScope("vdmovsmzlxwabm")
+            .withPolicyDefinitionName("efkifr")
+            .withPolicyDefinitionAction("puqujmqlgkfbtn")
+            .withPolicyDefinitionCategory("aongbj")
+            .withPolicySetDefinitionId("tujitcjedft")
+            .withPolicySetDefinitionName("ae")
+            .withPolicySetDefinitionOwner("ojvdcpzfoqo")
+            .withPolicySetDefinitionCategory("cybxa")
+            .withPolicySetDefinitionParameters("gszufoxciqopid")
+            .withManagementGroupIds("mciodhkhazxkhn")
+            .withPolicyDefinitionReferenceId("onlwntoeg")
+            .withComplianceState("dwbwhkszzcmrvexz")
+            .withPolicyEvaluationDetails(new PolicyEvaluationDetails()
+                .withEvaluatedExpressions(Arrays.asList(new ExpressionEvaluationDetails().withResult("gsfraoyzkoow")
+                    .withExpression("mnguxawqaldsyu")
+                    .withPath("kutwpf")
+                    .withExpressionValue("dataa")
+                    .withTargetValue("datahrskdsnfd")
+                    .withOperator("oakgtdlmkkzev")))
+                .withIfNotExistsDetails(new IfNotExistsEvaluationDetails().withResourceId("ewpusdsttwvogvb")
+                    .withTotalResources(2086607804)))
+            .withPolicyDefinitionGroupNames(Arrays.asList("ngqqmoakuf", "m", "zr", "rdgrtw"))
+            .withComponents(Arrays.asList(new ComponentStateDetails().withId("uzkopbminrfd")
+                .withType("yuhhziu")
+                .withName("fozbhdmsmlmzqhof")
+                .withTimestamp(OffsetDateTime.parse("2021-05-05T04:42:21Z"))
+                .withComplianceState("equi")
+                .withAdditionalProperties(mapOf("piyylhalnswhccsp", "dataicslfaoq", "scywuggwoluhc", "datakaivwit")),
+                new ComponentStateDetails().withId("wem")
+                    .withType("i")
+                    .withName("brgz")
+                    .withTimestamp(OffsetDateTime.parse("2021-06-14T04:59:44Z"))
+                    .withComplianceState("weyp")
+                    .withAdditionalProperties(mapOf("lusiy", "datazrncsdt", "cy", "databsfgytguslfea", "tlstvlzywem",
+                        "dataxggicccnxqhuexmk", "xgfpelolppv", "dataqukyhejhzi")),
+                new ComponentStateDetails().withId("r")
+                    .withType("vu")
+                    .withName("raehtwdwrft")
+                    .withTimestamp(OffsetDateTime.parse("2021-06-07T20:23:50Z"))
+                    .withComplianceState("yrcdlbhshfwprac")
+                    .withAdditionalProperties(mapOf("cedcpnmdy", "dataitykhevx"))))
+            .withAdditionalProperties(mapOf("policyDefinitionVersion", "nwzxltjcv", "@odata.id", "hxx",
+                "hvxndzwmkrefajpj", "databdeibqipqk", "acizsjqlhkrr", "datafvpdbo", "wxwlmdjrkvfgb", "datay",
+                "yhgbijtjivfx", "datarwkq", "policyAssignmentVersion", "qiby", "@odata.context", "yq",
+                "policySetDefinitionVersion", "ltiugcxnavv"));
         model = BinaryData.fromObject(model).toObject(PolicyStateInner.class);
-        Assertions.assertEquals(OffsetDateTime.parse("2021-07-09T02:08:19Z"), model.timestamp());
-        Assertions.assertEquals("hqwa", model.resourceId());
-        Assertions.assertEquals("uzyoxaep", model.policyAssignmentId());
-        Assertions.assertEquals("zjancuxr", model.policyDefinitionId());
-        Assertions.assertEquals("wbavxbniwdj", model.effectiveParameters());
-        Assertions.assertEquals(false, model.isCompliant());
-        Assertions.assertEquals("s", model.subscriptionId());
-        Assertions.assertEquals("pgn", model.resourceType());
-        Assertions.assertEquals("txhp", model.resourceLocation());
-        Assertions.assertEquals("bzpfzab", model.resourceGroup());
-        Assertions.assertEquals("cuh", model.resourceTags());
-        Assertions.assertEquals("tcty", model.policyAssignmentName());
-        Assertions.assertEquals("klbb", model.policyAssignmentOwner());
-        Assertions.assertEquals("plwzbhvgyugu", model.policyAssignmentParameters());
-        Assertions.assertEquals("vmkfssxqu", model.policyAssignmentScope());
-        Assertions.assertEquals("fpl", model.policyDefinitionName());
-        Assertions.assertEquals("gsxnkjzkdeslpv", model.policyDefinitionAction());
-        Assertions.assertEquals("pwiyig", model.policyDefinitionCategory());
-        Assertions.assertEquals("pkdwzbai", model.policySetDefinitionId());
-        Assertions.assertEquals("bbaumnyquped", model.policySetDefinitionName());
-        Assertions.assertEquals("jn", model.policySetDefinitionOwner());
-        Assertions.assertEquals("ckhsmtxpsieb", model.policySetDefinitionCategory());
-        Assertions.assertEquals("hvpesapskrdqm", model.policySetDefinitionParameters());
-        Assertions.assertEquals("jdhtldwkyzxu", model.managementGroupIds());
-        Assertions.assertEquals("kn", model.policyDefinitionReferenceId());
-        Assertions.assertEquals("scwsv", model.complianceState());
-        Assertions.assertEquals("g", model.policyEvaluationDetails().evaluatedExpressions().get(0).result());
-        Assertions
-            .assertEquals("rupqsxvnmicy", model.policyEvaluationDetails().evaluatedExpressions().get(0).expression());
-        Assertions.assertEquals("fj", model.policyEvaluationDetails().evaluatedExpressions().get(0).path());
-        Assertions.assertEquals("bkc", model.policyEvaluationDetails().evaluatedExpressions().get(0).operator());
-        Assertions.assertEquals("hbttkphyw", model.policyEvaluationDetails().ifNotExistsDetails().resourceId());
-        Assertions.assertEquals(1284749235, model.policyEvaluationDetails().ifNotExistsDetails().totalResources());
-        Assertions.assertEquals("oqnermclfpl", model.policyDefinitionGroupNames().get(0));
-        Assertions.assertEquals("uscrpabgyepsb", model.components().get(0).id());
-        Assertions.assertEquals("azqugxywpmueefj", model.components().get(0).type());
-        Assertions.assertEquals("fqkquj", model.components().get(0).name());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-07-14T16:34:27Z"), model.components().get(0).timestamp());
-        Assertions.assertEquals("yonobgl", model.components().get(0).complianceState());
+        Assertions.assertEquals(OffsetDateTime.parse("2020-12-30T00:37:41Z"), model.timestamp());
+        Assertions.assertEquals("eqz", model.resourceId());
+        Assertions.assertEquals("priolx", model.policyAssignmentId());
+        Assertions.assertEquals("jaltolmnc", model.policyDefinitionId());
+        Assertions.assertEquals("obqwcsdbnwdcfh", model.effectiveParameters());
+        Assertions.assertTrue(model.isCompliant());
+        Assertions.assertEquals("pfuvglsbjjca", model.subscriptionId());
+        Assertions.assertEquals("xbvtvudu", model.resourceType());
+        Assertions.assertEquals("cormr", model.resourceLocation());
+        Assertions.assertEquals("qtvcofudflvkgj", model.resourceGroup());
+        Assertions.assertEquals("gdknnqv", model.resourceTags());
+        Assertions.assertEquals("znqntoru", model.policyAssignmentName());
+        Assertions.assertEquals("gsahmkycgrauw", model.policyAssignmentOwner());
+        Assertions.assertEquals("etaebu", model.policyAssignmentParameters());
+        Assertions.assertEquals("vdmovsmzlxwabm", model.policyAssignmentScope());
+        Assertions.assertEquals("efkifr", model.policyDefinitionName());
+        Assertions.assertEquals("puqujmqlgkfbtn", model.policyDefinitionAction());
+        Assertions.assertEquals("aongbj", model.policyDefinitionCategory());
+        Assertions.assertEquals("tujitcjedft", model.policySetDefinitionId());
+        Assertions.assertEquals("ae", model.policySetDefinitionName());
+        Assertions.assertEquals("ojvdcpzfoqo", model.policySetDefinitionOwner());
+        Assertions.assertEquals("cybxa", model.policySetDefinitionCategory());
+        Assertions.assertEquals("gszufoxciqopid", model.policySetDefinitionParameters());
+        Assertions.assertEquals("mciodhkhazxkhn", model.managementGroupIds());
+        Assertions.assertEquals("onlwntoeg", model.policyDefinitionReferenceId());
+        Assertions.assertEquals("dwbwhkszzcmrvexz", model.complianceState());
+        Assertions.assertEquals("gsfraoyzkoow", model.policyEvaluationDetails().evaluatedExpressions().get(0).result());
+        Assertions.assertEquals("mnguxawqaldsyu",
+            model.policyEvaluationDetails().evaluatedExpressions().get(0).expression());
+        Assertions.assertEquals("kutwpf", model.policyEvaluationDetails().evaluatedExpressions().get(0).path());
+        Assertions.assertEquals("oakgtdlmkkzev",
+            model.policyEvaluationDetails().evaluatedExpressions().get(0).operator());
+        Assertions.assertEquals("ewpusdsttwvogvb", model.policyEvaluationDetails().ifNotExistsDetails().resourceId());
+        Assertions.assertEquals(2086607804, model.policyEvaluationDetails().ifNotExistsDetails().totalResources());
+        Assertions.assertEquals("ngqqmoakuf", model.policyDefinitionGroupNames().get(0));
+        Assertions.assertEquals("uzkopbminrfd", model.components().get(0).id());
+        Assertions.assertEquals("yuhhziu", model.components().get(0).type());
+        Assertions.assertEquals("fozbhdmsmlmzqhof", model.components().get(0).name());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-05-05T04:42:21Z"), model.components().get(0).timestamp());
+        Assertions.assertEquals("equi", model.components().get(0).complianceState());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

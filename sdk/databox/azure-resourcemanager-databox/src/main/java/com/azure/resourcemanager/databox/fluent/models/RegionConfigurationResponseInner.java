@@ -5,39 +5,50 @@
 package com.azure.resourcemanager.databox.fluent.models;
 
 import com.azure.core.annotation.Immutable;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.databox.models.DatacenterAddressResponse;
+import com.azure.resourcemanager.databox.models.DeviceCapabilityResponse;
 import com.azure.resourcemanager.databox.models.ScheduleAvailabilityResponse;
 import com.azure.resourcemanager.databox.models.TransportAvailabilityResponse;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 
-/** Configuration response specific to a region. */
+/**
+ * Configuration response specific to a region.
+ */
 @Immutable
-public final class RegionConfigurationResponseInner {
+public final class RegionConfigurationResponseInner implements JsonSerializable<RegionConfigurationResponseInner> {
     /*
      * Schedule availability for given sku in a region.
      */
-    @JsonProperty(value = "scheduleAvailabilityResponse", access = JsonProperty.Access.WRITE_ONLY)
     private ScheduleAvailabilityResponse scheduleAvailabilityResponse;
 
     /*
      * Transport options available for given sku in a region.
      */
-    @JsonProperty(value = "transportAvailabilityResponse", access = JsonProperty.Access.WRITE_ONLY)
     private TransportAvailabilityResponse transportAvailabilityResponse;
 
     /*
      * Datacenter address for given sku in a region.
      */
-    @JsonProperty(value = "datacenterAddressResponse", access = JsonProperty.Access.WRITE_ONLY)
     private DatacenterAddressResponse datacenterAddressResponse;
 
-    /** Creates an instance of RegionConfigurationResponseInner class. */
+    /*
+     * Device capabilities available for a given sku in a region.
+     */
+    private DeviceCapabilityResponse deviceCapabilityResponse;
+
+    /**
+     * Creates an instance of RegionConfigurationResponseInner class.
+     */
     public RegionConfigurationResponseInner() {
     }
 
     /**
      * Get the scheduleAvailabilityResponse property: Schedule availability for given sku in a region.
-     *
+     * 
      * @return the scheduleAvailabilityResponse value.
      */
     public ScheduleAvailabilityResponse scheduleAvailabilityResponse() {
@@ -46,7 +57,7 @@ public final class RegionConfigurationResponseInner {
 
     /**
      * Get the transportAvailabilityResponse property: Transport options available for given sku in a region.
-     *
+     * 
      * @return the transportAvailabilityResponse value.
      */
     public TransportAvailabilityResponse transportAvailabilityResponse() {
@@ -55,7 +66,7 @@ public final class RegionConfigurationResponseInner {
 
     /**
      * Get the datacenterAddressResponse property: Datacenter address for given sku in a region.
-     *
+     * 
      * @return the datacenterAddressResponse value.
      */
     public DatacenterAddressResponse datacenterAddressResponse() {
@@ -63,8 +74,17 @@ public final class RegionConfigurationResponseInner {
     }
 
     /**
+     * Get the deviceCapabilityResponse property: Device capabilities available for a given sku in a region.
+     * 
+     * @return the deviceCapabilityResponse value.
+     */
+    public DeviceCapabilityResponse deviceCapabilityResponse() {
+        return this.deviceCapabilityResponse;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -77,5 +97,54 @@ public final class RegionConfigurationResponseInner {
         if (datacenterAddressResponse() != null) {
             datacenterAddressResponse().validate();
         }
+        if (deviceCapabilityResponse() != null) {
+            deviceCapabilityResponse().validate();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RegionConfigurationResponseInner from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RegionConfigurationResponseInner if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the RegionConfigurationResponseInner.
+     */
+    public static RegionConfigurationResponseInner fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RegionConfigurationResponseInner deserializedRegionConfigurationResponseInner
+                = new RegionConfigurationResponseInner();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("scheduleAvailabilityResponse".equals(fieldName)) {
+                    deserializedRegionConfigurationResponseInner.scheduleAvailabilityResponse
+                        = ScheduleAvailabilityResponse.fromJson(reader);
+                } else if ("transportAvailabilityResponse".equals(fieldName)) {
+                    deserializedRegionConfigurationResponseInner.transportAvailabilityResponse
+                        = TransportAvailabilityResponse.fromJson(reader);
+                } else if ("datacenterAddressResponse".equals(fieldName)) {
+                    deserializedRegionConfigurationResponseInner.datacenterAddressResponse
+                        = DatacenterAddressResponse.fromJson(reader);
+                } else if ("deviceCapabilityResponse".equals(fieldName)) {
+                    deserializedRegionConfigurationResponseInner.deviceCapabilityResponse
+                        = DeviceCapabilityResponse.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRegionConfigurationResponseInner;
+        });
     }
 }

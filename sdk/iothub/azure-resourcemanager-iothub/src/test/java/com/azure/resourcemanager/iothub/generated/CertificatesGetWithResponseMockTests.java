@@ -6,69 +6,36 @@ package com.azure.resourcemanager.iothub.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.iothub.IotHubManager;
 import com.azure.resourcemanager.iothub.models.CertificateDescription;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class CertificatesGetWithResponseMockTests {
     @Test
     public void testGetWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"properties\":{\"subject\":\"nrojlpijnkr\",\"expiry\":\"Sun, 27 Dec 2020 04:23:31 GMT\",\"thumbprint\":\"dhcrati\",\"isVerified\":true,\"created\":\"Wed, 20 Oct 2021 07:10:22 GMT\",\"updated\":\"Thu, 21 Jan 2021 03:47:46 GMT\",\"certificate\":\"i\",\"policyResourceId\":\"ozqyzh\"},\"etag\":\"wesgogczh\",\"id\":\"nnxk\",\"name\":\"lgnyhmo\",\"type\":\"sxkkg\"}";
 
-        String responseStr =
-            "{\"properties\":{\"subject\":\"lmv\",\"expiry\":\"Sun, 26 Sep 2021 11:18:34"
-                + " GMT\",\"thumbprint\":\"ktgplcr\",\"isVerified\":true,\"created\":\"Fri, 19 Nov 2021 13:53:17"
-                + " GMT\",\"updated\":\"Fri, 05 Mar 2021 15:11:27"
-                + " GMT\",\"certificate\":\"igbrnjw\"},\"etag\":\"kpnb\",\"id\":\"azej\",\"name\":\"oqkag\",\"type\":\"hsxttaugzxnf\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        IotHubManager manager = IotHubManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        CertificateDescription response = manager.certificates()
+            .getWithResponse("fiufx", "knpirgnepttwq", "sniffc", com.azure.core.util.Context.NONE)
+            .getValue();
 
-        IotHubManager manager =
-            IotHubManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        CertificateDescription response =
-            manager
-                .certificates()
-                .getWithResponse("waekrrjreafxtsgu", "hjglikk", "wslolbqp", com.azure.core.util.Context.NONE)
-                .getValue();
-
-        Assertions.assertEquals(true, response.properties().isVerified());
-        Assertions.assertEquals("igbrnjw", response.properties().certificate());
+        Assertions.assertTrue(response.properties().isVerified());
+        Assertions.assertEquals("i", response.properties().certificate());
+        Assertions.assertEquals("ozqyzh", response.properties().policyResourceId());
     }
 }

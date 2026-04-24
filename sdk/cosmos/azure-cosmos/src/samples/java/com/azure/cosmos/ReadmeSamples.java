@@ -410,6 +410,7 @@ public class ReadmeSamples {
     public void databaseCreateContainerIfNotExistsSample() {
         String containerId = "passengers";
         PartitionKeyDefinition partitionKeyDefinition = new PartitionKeyDefinition();
+        partitionKeyDefinition.setPaths(Collections.singletonList("/id"));
         // BEGIN: com.azure.cosmos.CosmosDatabase.createContainerIfNotExists
         CosmosContainerProperties containerProperties =
             new CosmosContainerProperties(containerId, partitionKeyDefinition);
@@ -421,6 +422,7 @@ public class ReadmeSamples {
     public void databaseCreateContainerIfNotExistsPropsSample() {
         String containerId = "passengers";
         PartitionKeyDefinition partitionKeyDefinition = new PartitionKeyDefinition();
+        partitionKeyDefinition.setPaths(Collections.singletonList("/id"));
         int autoScaleMaxThroughput = 1000;
 
         // BEGIN: com.azure.cosmos.CosmosDatabase.createContainerIfNotExistsProps
@@ -612,6 +614,10 @@ public class ReadmeSamples {
         String getId() {
             return id;
         }
+        public String getEmail() { return email; }
+        public String getName() { return name; }
+        public String getDeparture() { return departure; }
+        public String getDestination() { return destination; }
 
         void setDestination(String destination) {
             this.destination = destination;

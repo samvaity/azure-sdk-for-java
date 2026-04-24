@@ -12,18 +12,14 @@ import org.junit.jupiter.api.Assertions;
 public final class ForceUnlinkParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ForceUnlinkParameters model =
-            BinaryData
-                .fromString("{\"ids\":[\"udwtiukbl\",\"ngkpocipazy\",\"o\",\"gukgjnpiucgygevq\"]}")
-                .toObject(ForceUnlinkParameters.class);
-        Assertions.assertEquals("udwtiukbl", model.ids().get(0));
+        ForceUnlinkParameters model = BinaryData.fromString("{\"ids\":[\"f\"]}").toObject(ForceUnlinkParameters.class);
+        Assertions.assertEquals("f", model.ids().get(0));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ForceUnlinkParameters model =
-            new ForceUnlinkParameters().withIds(Arrays.asList("udwtiukbl", "ngkpocipazy", "o", "gukgjnpiucgygevq"));
+        ForceUnlinkParameters model = new ForceUnlinkParameters().withIds(Arrays.asList("f"));
         model = BinaryData.fromObject(model).toObject(ForceUnlinkParameters.class);
-        Assertions.assertEquals("udwtiukbl", model.ids().get(0));
+        Assertions.assertEquals("f", model.ids().get(0));
     }
 }

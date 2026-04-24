@@ -4,42 +4,53 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The destination of logs. Type: string. */
+/**
+ * The destination of logs. Type: string.
+ */
 public final class ScriptActivityLogDestination extends ExpandableStringEnum<ScriptActivityLogDestination> {
-    /** Static value ActivityOutput for ScriptActivityLogDestination. */
+    /**
+     * Static value ActivityOutput for ScriptActivityLogDestination.
+     */
+    @Generated
     public static final ScriptActivityLogDestination ACTIVITY_OUTPUT = fromString("ActivityOutput");
 
-    /** Static value ExternalStore for ScriptActivityLogDestination. */
+    /**
+     * Static value ExternalStore for ScriptActivityLogDestination.
+     */
+    @Generated
     public static final ScriptActivityLogDestination EXTERNAL_STORE = fromString("ExternalStore");
 
     /**
      * Creates a new instance of ScriptActivityLogDestination value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public ScriptActivityLogDestination() {}
+    public ScriptActivityLogDestination() {
+    }
 
     /**
      * Creates or finds a ScriptActivityLogDestination from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ScriptActivityLogDestination.
      */
-    @JsonCreator
+    @Generated
     public static ScriptActivityLogDestination fromString(String name) {
         return fromString(name, ScriptActivityLogDestination.class);
     }
 
     /**
      * Gets known ScriptActivityLogDestination values.
-     *
+     * 
      * @return known ScriptActivityLogDestination values.
      */
+    @Generated
     public static Collection<ScriptActivityLogDestination> values() {
         return values(ScriptActivityLogDestination.class);
     }

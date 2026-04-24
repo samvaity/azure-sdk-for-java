@@ -12,23 +12,19 @@ import org.junit.jupiter.api.Assertions;
 public final class DataConnectionValidationInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DataConnectionValidationInner model =
-            BinaryData
-                .fromString(
-                    "{\"dataConnectionName\":\"ujbypelmcuvhixb\",\"properties\":{\"kind\":\"DataConnection\",\"location\":\"fw\",\"id\":\"yl\",\"name\":\"coolsttpkiwkkb\",\"type\":\"ujrywvtyl\"}}")
-                .toObject(DataConnectionValidationInner.class);
-        Assertions.assertEquals("ujbypelmcuvhixb", model.dataConnectionName());
-        Assertions.assertEquals("fw", model.properties().location());
+        DataConnectionValidationInner model = BinaryData.fromString(
+            "{\"dataConnectionName\":\"gdxpg\",\"properties\":{\"kind\":\"DataConnection\",\"location\":\"hiszepnnbjcrxgib\",\"id\":\"daxconfozauorsuk\",\"name\":\"kwbqplhlvnuu\",\"type\":\"pzlrphw\"}}")
+            .toObject(DataConnectionValidationInner.class);
+        Assertions.assertEquals("gdxpg", model.dataConnectionName());
+        Assertions.assertEquals("hiszepnnbjcrxgib", model.properties().location());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        DataConnectionValidationInner model =
-            new DataConnectionValidationInner()
-                .withDataConnectionName("ujbypelmcuvhixb")
-                .withProperties(new DataConnectionInner().withLocation("fw"));
+        DataConnectionValidationInner model = new DataConnectionValidationInner().withDataConnectionName("gdxpg")
+            .withProperties(new DataConnectionInner().withLocation("hiszepnnbjcrxgib"));
         model = BinaryData.fromObject(model).toObject(DataConnectionValidationInner.class);
-        Assertions.assertEquals("ujbypelmcuvhixb", model.dataConnectionName());
-        Assertions.assertEquals("fw", model.properties().location());
+        Assertions.assertEquals("gdxpg", model.dataConnectionName());
+        Assertions.assertEquals("hiszepnnbjcrxgib", model.properties().location());
     }
 }

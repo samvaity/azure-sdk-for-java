@@ -4,31 +4,54 @@
 
 package com.azure.communication.callautomation.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for MediaStreamingAudioChannelTypeInternal. */
+/**
+ * The audio channel type to stream, e.g., unmixed audio, mixed audio.
+ */
 public final class MediaStreamingAudioChannelTypeInternal
-        extends ExpandableStringEnum<MediaStreamingAudioChannelTypeInternal> {
-    /** Static value mixed for MediaStreamingAudioChannelTypeInternal. */
+    extends ExpandableStringEnum<MediaStreamingAudioChannelTypeInternal> {
+    /**
+     * Static value mixed for MediaStreamingAudioChannelTypeInternal.
+     */
+    @Generated
     public static final MediaStreamingAudioChannelTypeInternal MIXED = fromString("mixed");
 
-    /** Static value unmixed for MediaStreamingAudioChannelTypeInternal. */
+    /**
+     * Static value unmixed for MediaStreamingAudioChannelTypeInternal.
+     */
+    @Generated
     public static final MediaStreamingAudioChannelTypeInternal UNMIXED = fromString("unmixed");
 
     /**
+     * Creates a new instance of MediaStreamingAudioChannelTypeInternal value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public MediaStreamingAudioChannelTypeInternal() {
+    }
+
+    /**
      * Creates or finds a MediaStreamingAudioChannelTypeInternal from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding MediaStreamingAudioChannelTypeInternal.
      */
-    @JsonCreator
+    @Generated
     public static MediaStreamingAudioChannelTypeInternal fromString(String name) {
         return fromString(name, MediaStreamingAudioChannelTypeInternal.class);
     }
 
-    /** @return known MediaStreamingAudioChannelTypeInternal values. */
+    /**
+     * Gets known MediaStreamingAudioChannelTypeInternal values.
+     * 
+     * @return known MediaStreamingAudioChannelTypeInternal values.
+     */
+    @Generated
     public static Collection<MediaStreamingAudioChannelTypeInternal> values() {
         return values(MediaStreamingAudioChannelTypeInternal.class);
     }

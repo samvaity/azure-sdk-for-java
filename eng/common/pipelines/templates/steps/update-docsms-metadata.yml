@@ -29,7 +29,10 @@ parameters:
   - name: PackageSourceOverride
     type: string
     default: ''
-  - name: DocValidationImageId
+  - name: NpmConfigUserConfig
+    type: string
+    default: ''
+  - name: NpmConfigRegistry
     type: string
     default: ''
 steps:
@@ -83,13 +86,6 @@ steps:
         parameters:
           WorkingDirectory: $(DocRepoLocation)
           DefaultBranchVariableName: TargetBranchName
-    # Pull and build the docker image.
-    - ${{ if ne(parameters.DocValidationImageId, '') }}:
-      - template: /eng/common/pipelines/templates/steps/docker-pull-image.yml
-        parameters:
-          ContainerRegistryClientId: $(azuresdkimages-cr-clientid)
-          ContainerRegistryClientSecret: $(azuresdkimages-cr-clientsecret)
-          ImageId: '${{ parameters.DocValidationImageId }}'
     - pwsh: |
         $packageInfoJson = '${{ convertToJson(parameters.PackageInfoLocations) }}'.Trim('"').Replace("\\", "/")
         # Without -NoEnumerate, a single element array[T] gets unwrapped as a single item T.
@@ -99,12 +95,13 @@ steps:
           -DocRepoLocation "$(DocRepoLocation)" `
           -Language '${{parameters.Language}}' `
           -RepoId '${{ parameters.RepoId }}' `
-          -DocValidationImageId '${{ parameters.DocValidationImageId }}' `
-          -PackageSourceOverride '${{ parameters.PackageSourceOverride }}' `
-          -TenantId '$(opensource-aad-tenant-id)' `
-          -ClientId '$(opensource-aad-app-id)' `
-          -ClientSecret '$(opensource-aad-secret)'
+          -PackageSourceOverride '${{ parameters.PackageSourceOverride }}'
       displayName: Apply Documentation Updates
+      env:
+        ${{ if ne(parameters.NpmConfigUserConfig, '') }}:
+          NPM_CONFIG_USERCONFIG: ${{ parameters.NpmConfigUserConfig }}
+        ${{ if ne(parameters.NpmConfigRegistry, '') }}:
+          NPM_CONFIG_REGISTRY: ${{ parameters.NpmConfigRegistry }}
 
     - template: /eng/common/pipelines/templates/steps/git-push-changes.yml
       parameters:

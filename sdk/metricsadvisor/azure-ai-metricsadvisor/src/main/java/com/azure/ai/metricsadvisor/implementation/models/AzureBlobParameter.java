@@ -5,47 +5,60 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The AzureBlobParameter model. */
+/**
+ * The AzureBlobParameter model.
+ */
 @Fluent
-public final class AzureBlobParameter {
+public final class AzureBlobParameter implements JsonSerializable<AzureBlobParameter> {
     /*
      * The connection string of this Azure Blob
      */
-    @JsonProperty(value = "connectionString")
+    @Generated
     private String connectionString;
 
     /*
      * The container name in this Azure Blob
      */
-    @JsonProperty(value = "container", required = true)
+    @Generated
     private String container;
 
     /*
      * The path template in this container
      */
-    @JsonProperty(value = "blobTemplate", required = true)
+    @Generated
     private String blobTemplate;
 
-    /** Creates an instance of AzureBlobParameter class. */
-    public AzureBlobParameter() {}
+    /**
+     * Creates an instance of AzureBlobParameter class.
+     */
+    @Generated
+    public AzureBlobParameter() {
+    }
 
     /**
      * Get the connectionString property: The connection string of this Azure Blob.
-     *
+     * 
      * @return the connectionString value.
      */
+    @Generated
     public String getConnectionString() {
         return this.connectionString;
     }
 
     /**
      * Set the connectionString property: The connection string of this Azure Blob.
-     *
+     * 
      * @param connectionString the connectionString value to set.
      * @return the AzureBlobParameter object itself.
      */
+    @Generated
     public AzureBlobParameter setConnectionString(String connectionString) {
         this.connectionString = connectionString;
         return this;
@@ -53,19 +66,21 @@ public final class AzureBlobParameter {
 
     /**
      * Get the container property: The container name in this Azure Blob.
-     *
+     * 
      * @return the container value.
      */
+    @Generated
     public String getContainer() {
         return this.container;
     }
 
     /**
      * Set the container property: The container name in this Azure Blob.
-     *
+     * 
      * @param container the container value to set.
      * @return the AzureBlobParameter object itself.
      */
+    @Generated
     public AzureBlobParameter setContainer(String container) {
         this.container = container;
         return this;
@@ -73,21 +88,68 @@ public final class AzureBlobParameter {
 
     /**
      * Get the blobTemplate property: The path template in this container.
-     *
+     * 
      * @return the blobTemplate value.
      */
+    @Generated
     public String getBlobTemplate() {
         return this.blobTemplate;
     }
 
     /**
      * Set the blobTemplate property: The path template in this container.
-     *
+     * 
      * @param blobTemplate the blobTemplate value to set.
      * @return the AzureBlobParameter object itself.
      */
+    @Generated
     public AzureBlobParameter setBlobTemplate(String blobTemplate) {
         this.blobTemplate = blobTemplate;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("container", this.container);
+        jsonWriter.writeStringField("blobTemplate", this.blobTemplate);
+        jsonWriter.writeStringField("connectionString", this.connectionString);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureBlobParameter from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureBlobParameter if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AzureBlobParameter.
+     */
+    @Generated
+    public static AzureBlobParameter fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureBlobParameter deserializedAzureBlobParameter = new AzureBlobParameter();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("container".equals(fieldName)) {
+                    deserializedAzureBlobParameter.container = reader.getString();
+                } else if ("blobTemplate".equals(fieldName)) {
+                    deserializedAzureBlobParameter.blobTemplate = reader.getString();
+                } else if ("connectionString".equals(fieldName)) {
+                    deserializedAzureBlobParameter.connectionString = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedAzureBlobParameter;
+        });
     }
 }

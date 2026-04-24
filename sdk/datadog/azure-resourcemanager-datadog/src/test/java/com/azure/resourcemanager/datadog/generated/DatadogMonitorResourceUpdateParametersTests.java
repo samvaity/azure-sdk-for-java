@@ -16,29 +16,29 @@ import org.junit.jupiter.api.Assertions;
 public final class DatadogMonitorResourceUpdateParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DatadogMonitorResourceUpdateParameters model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"monitoringStatus\":\"Disabled\"},\"tags\":{\"vxodpu\":\"fcp\",\"axbezyiuo\":\"zmyzydagf\",\"dxwzywqsmbsurexi\":\"ktwh\",\"yocf\":\"o\"},\"sku\":{\"name\":\"ksymd\"}}")
-                .toObject(DatadogMonitorResourceUpdateParameters.class);
-        Assertions.assertEquals(MonitoringStatus.DISABLED, model.properties().monitoringStatus());
-        Assertions.assertEquals("fcp", model.tags().get("vxodpu"));
-        Assertions.assertEquals("ksymd", model.sku().name());
+        DatadogMonitorResourceUpdateParameters model = BinaryData.fromString(
+            "{\"properties\":{\"monitoringStatus\":\"Enabled\",\"cspm\":true},\"tags\":{\"ebxetqgtzxdp\":\"ccfwnfnbacfion\",\"feallnwsu\":\"qbqqwxr\"},\"sku\":{\"name\":\"snjampmng\"}}")
+            .toObject(DatadogMonitorResourceUpdateParameters.class);
+        Assertions.assertEquals(MonitoringStatus.ENABLED, model.properties().monitoringStatus());
+        Assertions.assertEquals(true, model.properties().cspm());
+        Assertions.assertEquals("ccfwnfnbacfion", model.tags().get("ebxetqgtzxdp"));
+        Assertions.assertEquals("snjampmng", model.sku().name());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        DatadogMonitorResourceUpdateParameters model =
-            new DatadogMonitorResourceUpdateParameters()
-                .withProperties(new MonitorUpdateProperties().withMonitoringStatus(MonitoringStatus.DISABLED))
-                .withTags(mapOf("vxodpu", "fcp", "axbezyiuo", "zmyzydagf", "dxwzywqsmbsurexi", "ktwh", "yocf", "o"))
-                .withSku(new ResourceSku().withName("ksymd"));
+        DatadogMonitorResourceUpdateParameters model = new DatadogMonitorResourceUpdateParameters()
+            .withProperties(new MonitorUpdateProperties().withMonitoringStatus(MonitoringStatus.ENABLED).withCspm(true))
+            .withTags(mapOf("ebxetqgtzxdp", "ccfwnfnbacfion", "feallnwsu", "qbqqwxr"))
+            .withSku(new ResourceSku().withName("snjampmng"));
         model = BinaryData.fromObject(model).toObject(DatadogMonitorResourceUpdateParameters.class);
-        Assertions.assertEquals(MonitoringStatus.DISABLED, model.properties().monitoringStatus());
-        Assertions.assertEquals("fcp", model.tags().get("vxodpu"));
-        Assertions.assertEquals("ksymd", model.sku().name());
+        Assertions.assertEquals(MonitoringStatus.ENABLED, model.properties().monitoringStatus());
+        Assertions.assertEquals(true, model.properties().cspm());
+        Assertions.assertEquals("ccfwnfnbacfion", model.tags().get("ebxetqgtzxdp"));
+        Assertions.assertEquals("snjampmng", model.sku().name());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

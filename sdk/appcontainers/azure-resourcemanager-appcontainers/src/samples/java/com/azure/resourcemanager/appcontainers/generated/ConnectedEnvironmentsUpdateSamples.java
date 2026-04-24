@@ -4,18 +4,40 @@
 
 package com.azure.resourcemanager.appcontainers.generated;
 
-/** Samples for ConnectedEnvironments Update. */
+import com.azure.resourcemanager.appcontainers.models.ConnectedEnvironment;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Samples for ConnectedEnvironments Update.
+ */
 public final class ConnectedEnvironmentsUpdateSamples {
     /*
-     * x-ms-original-file: specification/app/resource-manager/Microsoft.App/preview/2022-11-01-preview/examples/ConnectedEnvironments_Patch.json
+     * x-ms-original-file: specification/app/resource-manager/Microsoft.App/ContainerApps/stable/2025-07-01/examples/
+     * ConnectedEnvironments_Patch.json
      */
     /**
      * Sample code: Patch Managed Environment.
-     *
+     * 
      * @param manager Entry point to ContainerAppsApiManager.
      */
-    public static void patchManagedEnvironment(
-        com.azure.resourcemanager.appcontainers.ContainerAppsApiManager manager) {
-        manager.connectedEnvironments().updateWithResponse("examplerg", "testenv", com.azure.core.util.Context.NONE);
+    public static void
+        patchManagedEnvironment(com.azure.resourcemanager.appcontainers.ContainerAppsApiManager manager) {
+        ConnectedEnvironment resource = manager.connectedEnvironments()
+            .getByResourceGroupWithResponse("examplerg", "testenv", com.azure.core.util.Context.NONE)
+            .getValue();
+        resource.update().withTags(mapOf("tag1", "value1", "tag2", "value2")).apply();
+    }
+
+    // Use "Map.of" if available
+    @SuppressWarnings("unchecked")
+    private static <T> Map<String, T> mapOf(Object... inputs) {
+        Map<String, T> map = new HashMap<>();
+        for (int i = 0; i < inputs.length; i += 2) {
+            String key = (String) inputs[i];
+            T value = (T) inputs[i + 1];
+            map.put(key, value);
+        }
+        return map;
     }
 }

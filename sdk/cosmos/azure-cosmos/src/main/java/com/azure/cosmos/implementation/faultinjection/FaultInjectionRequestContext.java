@@ -3,6 +3,8 @@
 
 package com.azure.cosmos.implementation.faultinjection;
 
+import com.azure.cosmos.implementation.routing.RegionalRoutingContext;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class FaultInjectionRequestContext {
     private final Map<Long, List<String>> transportRequestIdRuleEvaluationMap;
     private final AtomicBoolean addressForceRefreshed;
 
-    private volatile URI locationEndpointToRoute;
+    private volatile RegionalRoutingContext regionalRoutingContextToRoute;
 
     /***
      * This usually is called during retries.
@@ -80,21 +82,33 @@ public class FaultInjectionRequestContext {
     }
 
     public int getFaultInjectionRuleApplyCount(String ruleId) {
+        if (this.hitCountByRuleMap.isEmpty()) {
+            return 0;
+        }
+
         return this.hitCountByRuleMap.getOrDefault(ruleId, 0);
     }
     public String getFaultInjectionRuleId(long transportRequestId) {
+        if (this.transportRequestIdRuleIdMap.isEmpty()) {
+            return null;
+        }
+
         return this.transportRequestIdRuleIdMap.getOrDefault(transportRequestId, null);
     }
 
-    public void setLocationEndpointToRoute(URI locationEndpointToRoute) {
-        this.locationEndpointToRoute = locationEndpointToRoute;
+    public void setRegionalRoutingContextToRoute(RegionalRoutingContext regionalRoutingContextToRoute) {
+        this.regionalRoutingContextToRoute = regionalRoutingContextToRoute;
     }
 
-    public URI getLocationEndpointToRoute() {
-        return this.locationEndpointToRoute;
+    public RegionalRoutingContext getRegionalRoutingContextToRoute() {
+        return this.regionalRoutingContextToRoute;
     }
 
     public List<String> getFaultInjectionRuleEvaluationResults(long transportRequestId) {
+        if (this.transportRequestIdRuleEvaluationMap.isEmpty()) {
+            return null;
+        }
+
         return this.transportRequestIdRuleEvaluationMap.getOrDefault(transportRequestId, null);
     }
 }

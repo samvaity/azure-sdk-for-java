@@ -4,31 +4,47 @@
 
 package com.azure.maps.route.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for Report. */
+/**
+ * Defines values for Report.
+ */
 public final class Report extends ExpandableStringEnum<Report> {
-    /** Static value effectiveSettings for Report. */
+    /**
+     * Reports the effective parameters or data used when calling the API.
+     */
+    @Generated
     public static final Report EFFECTIVE_SETTINGS = fromString("effectiveSettings");
 
     /**
+     * Creates a new instance of Report value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public Report() {
+    }
+
+    /**
      * Creates or finds a Report from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding Report.
      */
-    @JsonCreator
+    @Generated
     public static Report fromString(String name) {
         return fromString(name, Report.class);
     }
 
     /**
      * Gets known Report values.
-     *
+     * 
      * @return known Report values.
      */
+    @Generated
     public static Collection<Report> values() {
         return values(Report.class);
     }

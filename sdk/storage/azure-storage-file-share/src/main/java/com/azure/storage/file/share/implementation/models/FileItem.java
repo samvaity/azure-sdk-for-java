@@ -5,61 +5,73 @@
 package com.azure.storage.file.share.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** A listed file item. */
-@JacksonXmlRootElement(localName = "File")
+/**
+ * A listed file item.
+ */
 @Fluent
-public final class FileItem {
+public final class FileItem implements XmlSerializable<FileItem> {
     /*
      * The Name property.
      */
-    @JsonProperty(value = "Name", required = true)
+    @Generated
     private StringEncoded name;
 
     /*
      * The FileId property.
      */
-    @JsonProperty(value = "FileId")
+    @Generated
     private String fileId;
 
     /*
      * File properties.
      */
-    @JsonProperty(value = "Properties", required = true)
+    @Generated
     private FileProperty properties;
 
     /*
      * The Attributes property.
      */
-    @JsonProperty(value = "Attributes")
+    @Generated
     private String attributes;
 
     /*
      * The PermissionKey property.
      */
-    @JsonProperty(value = "PermissionKey")
+    @Generated
     private String permissionKey;
 
-    /** Creates an instance of FileItem class. */
-    public FileItem() {}
+    /**
+     * Creates an instance of FileItem class.
+     */
+    @Generated
+    public FileItem() {
+    }
 
     /**
      * Get the name property: The Name property.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public StringEncoded getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The Name property.
-     *
+     * 
      * @param name the name value to set.
      * @return the FileItem object itself.
      */
+    @Generated
     public FileItem setName(StringEncoded name) {
         this.name = name;
         return this;
@@ -67,19 +79,21 @@ public final class FileItem {
 
     /**
      * Get the fileId property: The FileId property.
-     *
+     * 
      * @return the fileId value.
      */
+    @Generated
     public String getFileId() {
         return this.fileId;
     }
 
     /**
      * Set the fileId property: The FileId property.
-     *
+     * 
      * @param fileId the fileId value to set.
      * @return the FileItem object itself.
      */
+    @Generated
     public FileItem setFileId(String fileId) {
         this.fileId = fileId;
         return this;
@@ -87,19 +101,21 @@ public final class FileItem {
 
     /**
      * Get the properties property: File properties.
-     *
+     * 
      * @return the properties value.
      */
+    @Generated
     public FileProperty getProperties() {
         return this.properties;
     }
 
     /**
      * Set the properties property: File properties.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the FileItem object itself.
      */
+    @Generated
     public FileItem setProperties(FileProperty properties) {
         this.properties = properties;
         return this;
@@ -107,19 +123,21 @@ public final class FileItem {
 
     /**
      * Get the attributes property: The Attributes property.
-     *
+     * 
      * @return the attributes value.
      */
+    @Generated
     public String getAttributes() {
         return this.attributes;
     }
 
     /**
      * Set the attributes property: The Attributes property.
-     *
+     * 
      * @param attributes the attributes value to set.
      * @return the FileItem object itself.
      */
+    @Generated
     public FileItem setAttributes(String attributes) {
         this.attributes = attributes;
         return this;
@@ -127,21 +145,92 @@ public final class FileItem {
 
     /**
      * Get the permissionKey property: The PermissionKey property.
-     *
+     * 
      * @return the permissionKey value.
      */
+    @Generated
     public String getPermissionKey() {
         return this.permissionKey;
     }
 
     /**
      * Set the permissionKey property: The PermissionKey property.
-     *
+     * 
      * @param permissionKey the permissionKey value to set.
      * @return the FileItem object itself.
      */
+    @Generated
     public FileItem setPermissionKey(String permissionKey) {
         this.permissionKey = permissionKey;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "File" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeXml(this.name, "Name");
+        xmlWriter.writeStringElement("FileId", this.fileId);
+        xmlWriter.writeXml(this.properties, "Properties");
+        xmlWriter.writeStringElement("Attributes", this.attributes);
+        xmlWriter.writeStringElement("PermissionKey", this.permissionKey);
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of FileItem from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of FileItem if the XmlReader was pointing to an instance of it, or null if it was pointing to
+     * XML null.
+     * @throws XMLStreamException If an error occurs while reading the FileItem.
+     */
+    @Generated
+    public static FileItem fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of FileItem from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of FileItem if the XmlReader was pointing to an instance of it, or null if it was pointing to
+     * XML null.
+     * @throws XMLStreamException If an error occurs while reading the FileItem.
+     */
+    @Generated
+    public static FileItem fromXml(XmlReader xmlReader, String rootElementName) throws XMLStreamException {
+        String finalRootElementName = rootElementName == null || rootElementName.isEmpty() ? "File" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            FileItem deserializedFileItem = new FileItem();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Name".equals(elementName.getLocalPart())) {
+                    deserializedFileItem.name = StringEncoded.fromXml(reader, "Name");
+                } else if ("FileId".equals(elementName.getLocalPart())) {
+                    deserializedFileItem.fileId = reader.getStringElement();
+                } else if ("Properties".equals(elementName.getLocalPart())) {
+                    deserializedFileItem.properties = FileProperty.fromXml(reader, "Properties");
+                } else if ("Attributes".equals(elementName.getLocalPart())) {
+                    deserializedFileItem.attributes = reader.getStringElement();
+                } else if ("PermissionKey".equals(elementName.getLocalPart())) {
+                    deserializedFileItem.permissionKey = reader.getStringElement();
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedFileItem;
+        });
     }
 }

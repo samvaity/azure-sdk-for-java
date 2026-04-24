@@ -3,7 +3,10 @@
 
 package com.azure.cosmos.implementation.directconnectivity.rntbd;
 
+import com.azure.cosmos.implementation.ClientSideRequestStatistics;
+import com.azure.cosmos.implementation.CosmosDiagnosticsSystemUsageSnapshot;
 import com.azure.cosmos.implementation.apachecommons.lang.StringUtils;
+import com.azure.cosmos.implementation.clienttelemetry.ClientTelemetry;
 import com.azure.cosmos.implementation.cpu.CpuMemoryMonitor;
 import com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdEndpoint.Config;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,6 +36,13 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
 
     private static final Logger logger = LoggerFactory.getLogger(RntbdClientChannelHealthChecker.class);
 
+    // We need to keep a reference to client telemetry to reference the VM ID of the SDK
+    // client instance. We have this property in client diagnostics, but it can only be
+    // obtained if an operation fails or succeeds. If an operation hangs, the diagnostics
+    // will not be available. Floating this value to the health check logs will give us access
+    // to the client VM ID in scenarios where the operation hangs.
+    private final ClientTelemetry clientTelemetry;
+
     // A channel will be declared healthy if a read succeeded recently as defined by this value.
     private static final long recentReadWindowInNanos = 1_000_000_000L;
 
@@ -58,8 +68,6 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
     @JsonProperty
     private final long writeDelayLimitInNanos;
     @JsonProperty
-    private final long networkRequestTimeoutInNanos;
-    @JsonProperty
     private final boolean timeoutDetectionEnabled;
     @JsonProperty
     private final double timeoutDetectionDisableCPUThreshold;
@@ -73,12 +81,16 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
     private final int timeoutOnWriteThreshold;
     @JsonProperty
     private final long timeoutOnWriteTimeLimitInNanos;
+    @JsonProperty
+    private final long nonRespondingChannelReadDelayTimeLimitInNanos;
+    @JsonProperty
+    private final int cancellationCountSinceLastReadThreshold;
 
     // endregion
 
     // region Constructors
 
-    public RntbdClientChannelHealthChecker(final Config config) {
+    public RntbdClientChannelHealthChecker(final Config config, final ClientTelemetry clientTelemetry) {
 
         checkNotNull(config, "expected non-null config");
 
@@ -93,7 +105,6 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
         this.idleConnectionTimeoutInNanos = config.idleConnectionTimeoutInNanos();
         this.readDelayLimitInNanos = config.receiveHangDetectionTimeInNanos();
         this.writeDelayLimitInNanos = config.sendHangDetectionTimeInNanos();
-        this.networkRequestTimeoutInNanos = config.tcpNetworkRequestTimeoutInNanos();
         this.timeoutDetectionEnabled = config.timeoutDetectionEnabled();
         this.timeoutDetectionDisableCPUThreshold = config.timeoutDetectionDisableCPUThreshold();
         this.timeoutTimeLimitInNanos = config.timeoutDetectionTimeLimitInNanos();
@@ -101,6 +112,9 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
         this.timeoutHighFrequencyTimeLimitInNanos = config.timeoutDetectionHighFrequencyTimeLimitInNanos();
         this.timeoutOnWriteThreshold = config.timeoutDetectionOnWriteThreshold();
         this.timeoutOnWriteTimeLimitInNanos = config.timeoutDetectionOnWriteTimeLimitInNanos();
+        this.nonRespondingChannelReadDelayTimeLimitInNanos = config.nonRespondingChannelReadDelayTimeLimitInNanos();
+        this.cancellationCountSinceLastReadThreshold = config.cancellationCountSinceLastReadThreshold();
+        this.clientTelemetry = clientTelemetry;
     }
 
     // endregion
@@ -220,6 +234,11 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
             return promise.setSuccess(idleConnectionValidationMessage);
         }
 
+        String isCancellationProneChannelMessage = this.isCancellationProneChannel(timestamps, currentTime, requestManager, channel);
+        if (StringUtils.isNotEmpty(isCancellationProneChannelMessage)) {
+            return promise.setSuccess(isCancellationProneChannelMessage);
+        }
+
         channel.writeAndFlush(RntbdHealthCheckRequest.MESSAGE).addListener(completed -> {
             if (completed.isSuccess()) {
                 promise.setSuccess(RntbdHealthCheckResults.SuccessValue);
@@ -255,17 +274,21 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
             final Optional<RntbdContext> rntbdContext = requestManager.rntbdContext();
             final int pendingRequestCount = requestManager.pendingRequestCount();
 
+            CosmosDiagnosticsSystemUsageSnapshot systemInfo = ClientSideRequestStatistics.fetchSystemInformation();
+
             writeHangMessage = MessageFormat.format(
                     "{0} health check failed due to non-responding write: [lastChannelWriteAttemptTime: {1}, " +
                             "lastChannelWriteTime: {2}, writeDelayInNanos: {3}, writeDelayLimitInNanos: {4}, " +
-                            "rntbdContext: {5}, pendingRequestCount: {6}]",
+                            "rntbdContext: {5}, pendingRequestCount: {6}, clientVmId: {7}, {8}]",
                     channel,
                     timestamps.lastChannelWriteAttemptTime(),
                     timestamps.lastChannelWriteTime(),
                     writeDelayInNanos,
                     this.writeDelayLimitInNanos,
                     rntbdContext,
-                    pendingRequestCount);
+                    pendingRequestCount,
+                    clientTelemetry.getClientTelemetryInfo().getMachineId(),
+                    getSystemDiagnostics());
 
             logger.warn(writeHangMessage);
         }
@@ -290,14 +313,16 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
 
             readHangMessage = MessageFormat.format(
                     "{0} health check failed due to non-responding read: [lastChannelWrite: {1}, lastChannelRead: {2}, "
-                            + "readDelay: {3}, readDelayLimit: {4}, rntbdContext: {5}, pendingRequestCount: {6}]",
+                            + "readDelay: {3}, readDelayLimit: {4}, rntbdContext: {5}, pendingRequestCount: {6}, clientVmId: {7}, {8}]",
                     channel,
                     timestamps.lastChannelWriteTime(),
                     timestamps.lastChannelReadTime(),
                     readDelay,
                     this.readDelayLimitInNanos,
                     rntbdContext,
-                    pendingRequestCount);
+                    pendingRequestCount,
+                    clientTelemetry.getClientTelemetryInfo().getMachineId(),
+                    getSystemDiagnostics());
 
 
             logger.warn(readHangMessage);
@@ -315,6 +340,9 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
             // When request timeout due to high CPU,
             // close the existing the connection and re-establish a new one will not help the issue but rather make it worse, return fast
             if (CpuMemoryMonitor.getCpuLoad().isCpuOverThreshold(this.timeoutDetectionDisableCPUThreshold)) {
+                // reset the transit timeout here
+                // else when the CPU back to below the threshold, the connection may still trigger a connection close right away
+                timestamps.resetTransitTimeout();
                 return transitTimeoutValidationMessage;
             }
 
@@ -326,11 +354,13 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
             if (readDelay >= this.timeoutTimeLimitInNanos) {
                 transitTimeoutValidationMessage = MessageFormat.format(
                     "{0} health check failed due to transit timeout detection time limit: [rntbdContext: {1},"
-                        + "lastChannelRead: {2}, timeoutTimeLimitInNanos: {3}]",
+                        + "lastChannelRead: {2}, timeoutTimeLimitInNanos: {3}, clientVmId: {4}, {5}]",
                     channel,
                     rntbdContext,
                     timestamps.lastReadTime,
-                    this.timeoutTimeLimitInNanos);
+                    this.timeoutTimeLimitInNanos,
+                    clientTelemetry.getClientTelemetryInfo().getMachineId(),
+                    getSystemDiagnostics());
 
                 logger.warn(transitTimeoutValidationMessage);
                 return transitTimeoutValidationMessage;
@@ -342,13 +372,16 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
                 && readDelay >= this.timeoutHighFrequencyTimeLimitInNanos) {
                 transitTimeoutValidationMessage = MessageFormat.format(
                     "{0} health check failed due to transit timeout high frequency threshold hit: [rntbdContext: {1},"
-                        + "lastChannelRead: {2}, transitTimeoutCount: {3}, timeoutHighFrequencyThreshold: {4}, timeoutHighFrequencyTimeLimitInNanos: {5}]",
+                        + "lastChannelRead: {2}, transitTimeoutCount: {3}, timeoutHighFrequencyThreshold: {4}, timeoutHighFrequencyTimeLimitInNanos: {5}"
+                        + "clientVmId: {6}, {7}]",
                     channel,
                     rntbdContext,
                     timestamps.lastReadTime,
                     timestamps.transitTimeoutCount,
                     this.timeoutHighFrequencyThreshold,
-                    this.timeoutHighFrequencyTimeLimitInNanos);
+                    this.timeoutHighFrequencyTimeLimitInNanos,
+                    clientTelemetry.getClientTelemetryInfo().getMachineId(),
+                    getSystemDiagnostics());
 
                 logger.warn(transitTimeoutValidationMessage);
                 return transitTimeoutValidationMessage;
@@ -360,13 +393,16 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
                 && readDelay >= this.timeoutOnWriteTimeLimitInNanos) {
                 transitTimeoutValidationMessage = MessageFormat.format(
                     "{0} health check failed due to transit timeout on write threshold hit: [rntbdContext: {1},"
-                        + "lastChannelRead: {2}, transitTimeoutWriteCount: {3}, timeoutOnWriteThreshold: {4}, timeoutOnWriteTimeLimitInNanos: {5}]",
+                        + "lastChannelRead: {2}, transitTimeoutWriteCount: {3}, timeoutOnWriteThreshold: {4}, timeoutOnWriteTimeLimitInNanos: {5}]"
+                        + "clientVmId: {6}, {7}]",
                     channel,
                     rntbdContext,
                     timestamps.lastReadTime,
                     timestamps.transitTimeoutWriteCount,
                     this.timeoutOnWriteThreshold,
-                    this.timeoutOnWriteTimeLimitInNanos);
+                    this.timeoutOnWriteTimeLimitInNanos,
+                    clientTelemetry.getClientTelemetryInfo().getMachineId(),
+                    getSystemDiagnostics());
 
                 logger.warn(transitTimeoutValidationMessage);
                 return transitTimeoutValidationMessage;
@@ -383,18 +419,70 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
             if (Duration.between(timestamps.lastChannelReadTime(), currentTime).toNanos() > this.idleConnectionTimeoutInNanos) {
                 errorMessage = MessageFormat.format(
                         "{0} health check failed due to idle connection timeout: [lastChannelWrite: {1}, lastChannelRead: {2}, "
-                                + "idleConnectionTimeout: {3}, currentTime: {4}]",
+                                + "idleConnectionTimeout: {3}, currentTime: {4}, clientVmId: {5}, {6}]",
                         channel,
                         timestamps.lastChannelWriteTime(),
                         timestamps.lastChannelReadTime(),
                         idleConnectionTimeoutInNanos,
-                        currentTime);
+                        currentTime,
+                        clientTelemetry.getClientTelemetryInfo().getMachineId(),
+                        getSystemDiagnostics());
 
                 logger.warn(errorMessage);
             }
         }
 
         return errorMessage;
+    }
+
+    private String isCancellationProneChannel(Timestamps timestamps, Instant currentTime, RntbdRequestManager requestManager, Channel channel) {
+        String errorMessage = StringUtils.EMPTY;
+
+        if (timestamps.cancellationCount() >= this.cancellationCountSinceLastReadThreshold) {
+
+            // Request cancellations could be a normal symptom under high CPU load.
+            // When request cancellations are due to high CPU,
+            // close the existing the connection and re-establish a new one will not help the issue but rather make it worse, return fast
+            if (CpuMemoryMonitor.getCpuLoad().isCpuOverThreshold(this.timeoutDetectionDisableCPUThreshold)) {
+                // reset the cancellation count here
+                // else when the CPU back to below the threshold, the connection may still trigger a connection close right away
+                timestamps.resetCancellationCount();
+                return errorMessage;
+            }
+
+            final long readSuccessRecency = Duration.between(timestamps.lastChannelReadTime(), currentTime).toNanos();
+
+            if (readSuccessRecency >= this.nonRespondingChannelReadDelayTimeLimitInNanos) {
+
+                final Optional<RntbdContext> rntbdContext = requestManager.rntbdContext();
+
+                errorMessage = MessageFormat.format(
+                    "{0} health check failed due to channel being cancellation prone: [rntbdContext: {1}, lastChannelWrite: {2}, lastChannelRead: {3},"
+                        + "cancellationCountSinceLastSuccessfulRead: {4}, currentTime: {5}, clientVmId: {6}, {7}]",
+                    channel,
+                    rntbdContext,
+                    timestamps.lastChannelWriteTime(),
+                    timestamps.lastChannelReadTime(),
+                    timestamps.cancellationCount(),
+                    currentTime,
+                    clientTelemetry.getClientTelemetryInfo().getMachineId(),
+                    getSystemDiagnostics());
+
+                logger.warn(errorMessage);
+                return errorMessage;
+            }
+        }
+
+        return errorMessage;
+    }
+
+    private String getSystemDiagnostics() {
+        CosmosDiagnosticsSystemUsageSnapshot systemInfo = ClientSideRequestStatistics.fetchSystemInformation();
+        return MessageFormat.format("clientUsedMemory: {0}, clientAvailableMemory: {1}, clientSystemCpuLoad: {2}, clientAvailableProcessors: {3}",
+            systemInfo.getUsedMemory(),
+            systemInfo.getAvailableMemory(),
+            systemInfo.getSystemCpuLoad(),
+            systemInfo.getAvailableProcessors());
     }
 
     @Override
@@ -429,6 +517,9 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
         private static final AtomicReferenceFieldUpdater<Timestamps, Instant> transitTimeoutStartingTimeUpdater =
             newUpdater(Timestamps.class, Instant.class, "transitTimeoutStartingTime");
 
+        private static final AtomicIntegerFieldUpdater<Timestamps> cancellationCountUpdater =
+            AtomicIntegerFieldUpdater.newUpdater(Timestamps.class, "cancellationCount");
+
         private volatile Instant lastPingTime;
         private volatile Instant lastReadTime;
         private volatile Instant lastWriteTime;
@@ -436,12 +527,13 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
         private volatile int transitTimeoutCount;
         private volatile int transitTimeoutWriteCount;
         private volatile Instant transitTimeoutStartingTime;
-
+        private volatile int cancellationCount;
         public Timestamps() {
-            lastPingUpdater.set(this, Instant.now());
-            lastReadUpdater.set(this, Instant.now());
-            lastWriteUpdater.set(this, Instant.now());
-            lastWriteAttemptUpdater.set(this, Instant.now());
+            Instant nowSnapshot = Instant.now();
+            lastPingUpdater.set(this, nowSnapshot);
+            lastReadUpdater.set(this, nowSnapshot);
+            lastWriteUpdater.set(this, nowSnapshot);
+            lastWriteAttemptUpdater.set(this, nowSnapshot);
         }
 
         @SuppressWarnings("CopyConstructorMissesField")
@@ -454,6 +546,7 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
             this.transitTimeoutCount = transitTimeoutCountUpdater.get(other);
             this.transitTimeoutWriteCount = transitTimeoutWriteCountUpdater.get(other);
             this.transitTimeoutStartingTime = transitTimeoutStartingTimeUpdater.get(other);
+            this.cancellationCount = cancellationCountUpdater.get(other);
         }
 
         public void channelPingCompleted() {
@@ -463,6 +556,7 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
         public void channelReadCompleted() {
             lastReadUpdater.set(this, Instant.now());
             this.resetTransitTimeout(); // we have got a successful read, so reset the transitTimeout count.
+            this.resetCancellationCount();
         }
 
         public void channelWriteAttempted() {
@@ -486,6 +580,10 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
             transitTimeoutCountUpdater.set(this, 0);
             transitTimeoutWriteCountUpdater.set(this, 0);
             transitTimeoutStartingTimeUpdater.set(this, null);
+        }
+
+        public void resetCancellationCount() {
+            cancellationCountUpdater.set(this, 0);
         }
 
         @JsonProperty
@@ -521,6 +619,16 @@ public final class RntbdClientChannelHealthChecker implements ChannelHealthCheck
         @JsonProperty
         public Instant transitTimeoutStartingTime() {
             return transitTimeoutStartingTimeUpdater.get(this);
+        }
+
+        @JsonProperty
+        public int cancellationCount() {
+            return cancellationCountUpdater.get(this);
+        }
+
+        @JsonProperty
+        public void cancellation() {
+            cancellationCountUpdater.incrementAndGet(this);
         }
 
         @Override

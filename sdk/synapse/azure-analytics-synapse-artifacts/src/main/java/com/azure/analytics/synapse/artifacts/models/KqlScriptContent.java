@@ -5,47 +5,60 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The KqlScriptContent model. */
+/**
+ * The KqlScriptContent model.
+ */
 @Fluent
-public final class KqlScriptContent {
+public final class KqlScriptContent implements JsonSerializable<KqlScriptContent> {
     /*
      * The query property.
      */
-    @JsonProperty(value = "query")
+    @Generated
     private String query;
 
     /*
      * The metadata property.
      */
-    @JsonProperty(value = "metadata")
+    @Generated
     private KqlScriptContentMetadata metadata;
 
     /*
      * The currentConnection property.
      */
-    @JsonProperty(value = "currentConnection")
+    @Generated
     private KqlScriptContentCurrentConnection currentConnection;
 
-    /** Creates an instance of KqlScriptContent class. */
-    public KqlScriptContent() {}
+    /**
+     * Creates an instance of KqlScriptContent class.
+     */
+    @Generated
+    public KqlScriptContent() {
+    }
 
     /**
      * Get the query property: The query property.
-     *
+     * 
      * @return the query value.
      */
+    @Generated
     public String getQuery() {
         return this.query;
     }
 
     /**
      * Set the query property: The query property.
-     *
+     * 
      * @param query the query value to set.
      * @return the KqlScriptContent object itself.
      */
+    @Generated
     public KqlScriptContent setQuery(String query) {
         this.query = query;
         return this;
@@ -53,19 +66,21 @@ public final class KqlScriptContent {
 
     /**
      * Get the metadata property: The metadata property.
-     *
+     * 
      * @return the metadata value.
      */
+    @Generated
     public KqlScriptContentMetadata getMetadata() {
         return this.metadata;
     }
 
     /**
      * Set the metadata property: The metadata property.
-     *
+     * 
      * @param metadata the metadata value to set.
      * @return the KqlScriptContent object itself.
      */
+    @Generated
     public KqlScriptContent setMetadata(KqlScriptContentMetadata metadata) {
         this.metadata = metadata;
         return this;
@@ -73,21 +88,67 @@ public final class KqlScriptContent {
 
     /**
      * Get the currentConnection property: The currentConnection property.
-     *
+     * 
      * @return the currentConnection value.
      */
+    @Generated
     public KqlScriptContentCurrentConnection getCurrentConnection() {
         return this.currentConnection;
     }
 
     /**
      * Set the currentConnection property: The currentConnection property.
-     *
+     * 
      * @param currentConnection the currentConnection value to set.
      * @return the KqlScriptContent object itself.
      */
+    @Generated
     public KqlScriptContent setCurrentConnection(KqlScriptContentCurrentConnection currentConnection) {
         this.currentConnection = currentConnection;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("query", this.query);
+        jsonWriter.writeJsonField("metadata", this.metadata);
+        jsonWriter.writeJsonField("currentConnection", this.currentConnection);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of KqlScriptContent from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of KqlScriptContent if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the KqlScriptContent.
+     */
+    @Generated
+    public static KqlScriptContent fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            KqlScriptContent deserializedKqlScriptContent = new KqlScriptContent();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("query".equals(fieldName)) {
+                    deserializedKqlScriptContent.query = reader.getString();
+                } else if ("metadata".equals(fieldName)) {
+                    deserializedKqlScriptContent.metadata = KqlScriptContentMetadata.fromJson(reader);
+                } else if ("currentConnection".equals(fieldName)) {
+                    deserializedKqlScriptContent.currentConnection = KqlScriptContentCurrentConnection.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedKqlScriptContent;
+        });
     }
 }

@@ -12,6 +12,7 @@ import com.azure.resourcemanager.cognitiveservices.models.DeploymentModel;
 import com.azure.resourcemanager.cognitiveservices.models.ModelDeprecationInfo;
 import com.azure.resourcemanager.cognitiveservices.models.ModelLifecycleStatus;
 import com.azure.resourcemanager.cognitiveservices.models.ModelSku;
+import com.azure.resourcemanager.cognitiveservices.models.ReplacementConfig;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +22,14 @@ public final class AccountModelImpl implements AccountModel {
 
     private final com.azure.resourcemanager.cognitiveservices.CognitiveServicesManager serviceManager;
 
-    AccountModelImpl(
-        AccountModelInner innerObject,
+    AccountModelImpl(AccountModelInner innerObject,
         com.azure.resourcemanager.cognitiveservices.CognitiveServicesManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
+    }
+
+    public String publisher() {
+        return this.innerModel().publisher();
     }
 
     public String format() {
@@ -42,6 +46,10 @@ public final class AccountModelImpl implements AccountModel {
 
     public String source() {
         return this.innerModel().source();
+    }
+
+    public String sourceAccount() {
+        return this.innerModel().sourceAccount();
     }
 
     public CallRateLimit callRateLimit() {
@@ -89,6 +97,14 @@ public final class AccountModelImpl implements AccountModel {
 
     public ModelDeprecationInfo deprecation() {
         return this.innerModel().deprecation();
+    }
+
+    public ReplacementConfig replacementConfig() {
+        return this.innerModel().replacementConfig();
+    }
+
+    public String modelCatalogAssetId() {
+        return this.innerModel().modelCatalogAssetId();
     }
 
     public ModelLifecycleStatus lifecycleStatus() {

@@ -5,83 +5,112 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-/** The HookInfo model. */
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "hookType",
-        defaultImpl = HookInfo.class)
-@JsonTypeName("HookInfo")
-@JsonSubTypes({
-    @JsonSubTypes.Type(name = "Email", value = EmailHookInfo.class),
-    @JsonSubTypes.Type(name = "Webhook", value = WebhookHookInfo.class)
-})
+/**
+ * The HookInfo model.
+ */
 @Fluent
-public class HookInfo {
+public class HookInfo implements JsonSerializable<HookInfo> {
+    /*
+     * hook type
+     */
+    @Generated
+    private HookType hookType = HookType.fromString("HookInfo");
+
     /*
      * Hook unique id
      */
-    @JsonProperty(value = "hookId", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private UUID hookId;
 
     /*
      * hook unique name
      */
-    @JsonProperty(value = "hookName", required = true)
+    @Generated
     private String hookName;
 
     /*
      * hook description
      */
-    @JsonProperty(value = "description")
+    @Generated
     private String description;
 
     /*
      * hook external link
      */
-    @JsonProperty(value = "externalLink")
+    @Generated
     private String externalLink;
 
     /*
      * hook administrators
      */
-    @JsonProperty(value = "admins")
+    @Generated
     private List<String> admins;
 
-    /** Creates an instance of HookInfo class. */
-    public HookInfo() {}
+    /**
+     * Creates an instance of HookInfo class.
+     */
+    @Generated
+    public HookInfo() {
+    }
+
+    /**
+     * Get the hookType property: hook type.
+     * 
+     * @return the hookType value.
+     */
+    @Generated
+    public HookType getHookType() {
+        return this.hookType;
+    }
 
     /**
      * Get the hookId property: Hook unique id.
-     *
+     * 
      * @return the hookId value.
      */
+    @Generated
     public UUID getHookId() {
         return this.hookId;
     }
 
     /**
+     * Set the hookId property: Hook unique id.
+     * 
+     * @param hookId the hookId value to set.
+     * @return the HookInfo object itself.
+     */
+    @Generated
+    HookInfo setHookId(UUID hookId) {
+        this.hookId = hookId;
+        return this;
+    }
+
+    /**
      * Get the hookName property: hook unique name.
-     *
+     * 
      * @return the hookName value.
      */
+    @Generated
     public String getHookName() {
         return this.hookName;
     }
 
     /**
      * Set the hookName property: hook unique name.
-     *
+     * 
      * @param hookName the hookName value to set.
      * @return the HookInfo object itself.
      */
+    @Generated
     public HookInfo setHookName(String hookName) {
         this.hookName = hookName;
         return this;
@@ -89,19 +118,21 @@ public class HookInfo {
 
     /**
      * Get the description property: hook description.
-     *
+     * 
      * @return the description value.
      */
+    @Generated
     public String getDescription() {
         return this.description;
     }
 
     /**
      * Set the description property: hook description.
-     *
+     * 
      * @param description the description value to set.
      * @return the HookInfo object itself.
      */
+    @Generated
     public HookInfo setDescription(String description) {
         this.description = description;
         return this;
@@ -109,19 +140,21 @@ public class HookInfo {
 
     /**
      * Get the externalLink property: hook external link.
-     *
+     * 
      * @return the externalLink value.
      */
+    @Generated
     public String getExternalLink() {
         return this.externalLink;
     }
 
     /**
      * Set the externalLink property: hook external link.
-     *
+     * 
      * @param externalLink the externalLink value to set.
      * @return the HookInfo object itself.
      */
+    @Generated
     public HookInfo setExternalLink(String externalLink) {
         this.externalLink = externalLink;
         return this;
@@ -129,21 +162,106 @@ public class HookInfo {
 
     /**
      * Get the admins property: hook administrators.
-     *
+     * 
      * @return the admins value.
      */
+    @Generated
     public List<String> getAdmins() {
         return this.admins;
     }
 
     /**
      * Set the admins property: hook administrators.
-     *
+     * 
      * @param admins the admins value to set.
      * @return the HookInfo object itself.
      */
+    @Generated
     public HookInfo setAdmins(List<String> admins) {
         this.admins = admins;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("hookName", this.hookName);
+        jsonWriter.writeStringField("hookType", this.hookType == null ? null : this.hookType.toString());
+        jsonWriter.writeStringField("description", this.description);
+        jsonWriter.writeStringField("externalLink", this.externalLink);
+        jsonWriter.writeArrayField("admins", this.admins, (writer, element) -> writer.writeString(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of HookInfo from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of HookInfo if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the HookInfo.
+     */
+    @Generated
+    public static HookInfo fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            String discriminatorValue = null;
+            try (JsonReader readerToUse = reader.bufferObject()) {
+                readerToUse.nextToken(); // Prepare for reading
+                while (readerToUse.nextToken() != JsonToken.END_OBJECT) {
+                    String fieldName = readerToUse.getFieldName();
+                    readerToUse.nextToken();
+                    if ("hookType".equals(fieldName)) {
+                        discriminatorValue = readerToUse.getString();
+                        break;
+                    } else {
+                        readerToUse.skipChildren();
+                    }
+                }
+                // Use the discriminator value to determine which subtype should be deserialized.
+                if ("Email".equals(discriminatorValue)) {
+                    return EmailHookInfo.fromJson(readerToUse.reset());
+                } else if ("Webhook".equals(discriminatorValue)) {
+                    return WebhookHookInfo.fromJson(readerToUse.reset());
+                } else {
+                    return fromJsonKnownDiscriminator(readerToUse.reset());
+                }
+            }
+        });
+    }
+
+    @Generated
+    static HookInfo fromJsonKnownDiscriminator(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            HookInfo deserializedHookInfo = new HookInfo();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("hookName".equals(fieldName)) {
+                    deserializedHookInfo.hookName = reader.getString();
+                } else if ("hookType".equals(fieldName)) {
+                    deserializedHookInfo.hookType = HookType.fromString(reader.getString());
+                } else if ("hookId".equals(fieldName)) {
+                    deserializedHookInfo.hookId
+                        = reader.getNullable(nonNullReader -> UUID.fromString(nonNullReader.getString()));
+                } else if ("description".equals(fieldName)) {
+                    deserializedHookInfo.description = reader.getString();
+                } else if ("externalLink".equals(fieldName)) {
+                    deserializedHookInfo.externalLink = reader.getString();
+                } else if ("admins".equals(fieldName)) {
+                    List<String> admins = reader.readArray(reader1 -> reader1.getString());
+                    deserializedHookInfo.admins = admins;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedHookInfo;
+        });
     }
 }

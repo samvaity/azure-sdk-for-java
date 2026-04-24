@@ -30,22 +30,28 @@ import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in Metastores. */
+/**
+ * An instance of this class provides access to all the operations defined in Metastores.
+ */
 public final class MetastoresImpl {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final MetastoresService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final ArtifactsClientImpl client;
 
     /**
      * Initializes an instance of MetastoresImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     MetastoresImpl(ArtifactsClientImpl client) {
-        this.service =
-                RestProxy.create(MetastoresService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(MetastoresService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -54,56 +60,44 @@ public final class MetastoresImpl {
      * REST calls.
      */
     @Host("{endpoint}")
-    @ServiceInterface(name = "ArtifactsClientMetas")
+    @ServiceInterface(name = "ArtifactsClientMetastores")
     public interface MetastoresService {
         @Put("/metastore/create-database-operations/{id}")
-        @ExpectedResponses({201})
+        @ExpectedResponses({ 201 })
         @UnexpectedResponseExceptionType(ErrorContractException.class)
-        Mono<Response<MetastoreRegistrationResponse>> register(
-                @HostParam("endpoint") String endpoint,
-                @QueryParam("api-version") String apiVersion,
-                @PathParam("id") String id,
-                @BodyParam("application/json") MetastoreRegisterObject registerBody,
-                @HeaderParam("Accept") String accept,
-                Context context);
+        Mono<Response<MetastoreRegistrationResponse>> register(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("id") String id,
+            @BodyParam("application/json") MetastoreRegisterObject registerBody, @HeaderParam("Accept") String accept,
+            Context context);
 
         @Get("/metastore/create-database-operations/{id}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ErrorContractException.class)
-        Mono<Response<MetastoreRequestSuccessResponse>> getDatabaseOperations(
-                @HostParam("endpoint") String endpoint,
-                @QueryParam("api-version") String apiVersion,
-                @PathParam("id") String id,
-                @HeaderParam("Accept") String accept,
-                Context context);
+        Mono<Response<MetastoreRequestSuccessResponse>> getDatabaseOperations(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("id") String id,
+            @HeaderParam("Accept") String accept, Context context);
 
         @Put("/metastore/update-database-operations/{id}")
-        @ExpectedResponses({201})
+        @ExpectedResponses({ 201 })
         @UnexpectedResponseExceptionType(ErrorContractException.class)
-        Mono<Response<MetastoreUpdationResponse>> update(
-                @HostParam("endpoint") String endpoint,
-                @QueryParam("api-version") String apiVersion,
-                @PathParam("id") String id,
-                @BodyParam("application/json") MetastoreUpdateObject updateBody,
-                @HeaderParam("Accept") String accept,
-                Context context);
+        Mono<Response<MetastoreUpdationResponse>> update(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("id") String id,
+            @BodyParam("application/json") MetastoreUpdateObject updateBody, @HeaderParam("Accept") String accept,
+            Context context);
 
         @Delete("/metastore/databases/{id}")
-        @ExpectedResponses({204})
+        @ExpectedResponses({ 204 })
         @UnexpectedResponseExceptionType(ErrorContractException.class)
-        Mono<Response<Void>> delete(
-                @HostParam("endpoint") String endpoint,
-                @QueryParam("api-version") String apiVersion,
-                @PathParam("id") String id,
-                @HeaderParam("Accept") String accept,
-                Context context);
+        Mono<Response<Void>> delete(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("id") String id,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Register files in Syms.
-     *
+     * 
      * @param id The name of the database to be created. The name can contain only alphanumeric characters and should
-     *     not exceed 24 characters.
+     * not exceed 24 characters.
      * @param registerBody The body for the register request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -111,19 +105,16 @@ public final class MetastoresImpl {
      * @return the response body along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MetastoreRegistrationResponse>> registerWithResponseAsync(
-            String id, MetastoreRegisterObject registerBody) {
-        final String apiVersion = "2021-07-01-preview";
-        final String accept = "application/json";
-        return FluxUtil.withContext(
-                context -> service.register(this.client.getEndpoint(), apiVersion, id, registerBody, accept, context));
+    public Mono<Response<MetastoreRegistrationResponse>> registerWithResponseAsync(String id,
+        MetastoreRegisterObject registerBody) {
+        return FluxUtil.withContext(context -> registerWithResponseAsync(id, registerBody, context));
     }
 
     /**
      * Register files in Syms.
-     *
+     * 
      * @param id The name of the database to be created. The name can contain only alphanumeric characters and should
-     *     not exceed 24 characters.
+     * not exceed 24 characters.
      * @param registerBody The body for the register request.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -132,8 +123,8 @@ public final class MetastoresImpl {
      * @return the response body along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MetastoreRegistrationResponse>> registerWithResponseAsync(
-            String id, MetastoreRegisterObject registerBody, Context context) {
+    public Mono<Response<MetastoreRegistrationResponse>> registerWithResponseAsync(String id,
+        MetastoreRegisterObject registerBody, Context context) {
         final String apiVersion = "2021-07-01-preview";
         final String accept = "application/json";
         return service.register(this.client.getEndpoint(), apiVersion, id, registerBody, accept, context);
@@ -141,9 +132,9 @@ public final class MetastoresImpl {
 
     /**
      * Register files in Syms.
-     *
+     * 
      * @param id The name of the database to be created. The name can contain only alphanumeric characters and should
-     *     not exceed 24 characters.
+     * not exceed 24 characters.
      * @param registerBody The body for the register request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -157,9 +148,9 @@ public final class MetastoresImpl {
 
     /**
      * Register files in Syms.
-     *
+     * 
      * @param id The name of the database to be created. The name can contain only alphanumeric characters and should
-     *     not exceed 24 characters.
+     * not exceed 24 characters.
      * @param registerBody The body for the register request.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -168,16 +159,16 @@ public final class MetastoresImpl {
      * @return the response body on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MetastoreRegistrationResponse> registerAsync(
-            String id, MetastoreRegisterObject registerBody, Context context) {
+    public Mono<MetastoreRegistrationResponse> registerAsync(String id, MetastoreRegisterObject registerBody,
+        Context context) {
         return registerWithResponseAsync(id, registerBody, context).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Register files in Syms.
-     *
+     * 
      * @param id The name of the database to be created. The name can contain only alphanumeric characters and should
-     *     not exceed 24 characters.
+     * not exceed 24 characters.
      * @param registerBody The body for the register request.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -186,16 +177,16 @@ public final class MetastoresImpl {
      * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MetastoreRegistrationResponse> registerWithResponse(
-            String id, MetastoreRegisterObject registerBody, Context context) {
+    public Response<MetastoreRegistrationResponse> registerWithResponse(String id, MetastoreRegisterObject registerBody,
+        Context context) {
         return registerWithResponseAsync(id, registerBody, context).block();
     }
 
     /**
      * Register files in Syms.
-     *
+     * 
      * @param id The name of the database to be created. The name can contain only alphanumeric characters and should
-     *     not exceed 24 characters.
+     * not exceed 24 characters.
      * @param registerBody The body for the register request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -209,7 +200,7 @@ public final class MetastoresImpl {
 
     /**
      * Gets status of the database.
-     *
+     * 
      * @param id The id parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -218,15 +209,12 @@ public final class MetastoresImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<MetastoreRequestSuccessResponse>> getDatabaseOperationsWithResponseAsync(String id) {
-        final String apiVersion = "2021-07-01-preview";
-        final String accept = "application/json";
-        return FluxUtil.withContext(
-                context -> service.getDatabaseOperations(this.client.getEndpoint(), apiVersion, id, accept, context));
+        return FluxUtil.withContext(context -> getDatabaseOperationsWithResponseAsync(id, context));
     }
 
     /**
      * Gets status of the database.
-     *
+     * 
      * @param id The id parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -235,8 +223,8 @@ public final class MetastoresImpl {
      * @return status of the database along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MetastoreRequestSuccessResponse>> getDatabaseOperationsWithResponseAsync(
-            String id, Context context) {
+    public Mono<Response<MetastoreRequestSuccessResponse>> getDatabaseOperationsWithResponseAsync(String id,
+        Context context) {
         final String apiVersion = "2021-07-01-preview";
         final String accept = "application/json";
         return service.getDatabaseOperations(this.client.getEndpoint(), apiVersion, id, accept, context);
@@ -244,7 +232,7 @@ public final class MetastoresImpl {
 
     /**
      * Gets status of the database.
-     *
+     * 
      * @param id The id parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -258,7 +246,7 @@ public final class MetastoresImpl {
 
     /**
      * Gets status of the database.
-     *
+     * 
      * @param id The id parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -273,7 +261,7 @@ public final class MetastoresImpl {
 
     /**
      * Gets status of the database.
-     *
+     * 
      * @param id The id parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -288,7 +276,7 @@ public final class MetastoresImpl {
 
     /**
      * Gets status of the database.
-     *
+     * 
      * @param id The id parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -302,7 +290,7 @@ public final class MetastoresImpl {
 
     /**
      * Update files in Syms.
-     *
+     * 
      * @param id The name of the database to be updated.
      * @param updateBody The body for the update request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -311,17 +299,14 @@ public final class MetastoresImpl {
      * @return the response body along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MetastoreUpdationResponse>> updateWithResponseAsync(
-            String id, MetastoreUpdateObject updateBody) {
-        final String apiVersion = "2021-07-01-preview";
-        final String accept = "application/json";
-        return FluxUtil.withContext(
-                context -> service.update(this.client.getEndpoint(), apiVersion, id, updateBody, accept, context));
+    public Mono<Response<MetastoreUpdationResponse>> updateWithResponseAsync(String id,
+        MetastoreUpdateObject updateBody) {
+        return FluxUtil.withContext(context -> updateWithResponseAsync(id, updateBody, context));
     }
 
     /**
      * Update files in Syms.
-     *
+     * 
      * @param id The name of the database to be updated.
      * @param updateBody The body for the update request.
      * @param context The context to associate with this operation.
@@ -331,8 +316,8 @@ public final class MetastoresImpl {
      * @return the response body along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MetastoreUpdationResponse>> updateWithResponseAsync(
-            String id, MetastoreUpdateObject updateBody, Context context) {
+    public Mono<Response<MetastoreUpdationResponse>> updateWithResponseAsync(String id,
+        MetastoreUpdateObject updateBody, Context context) {
         final String apiVersion = "2021-07-01-preview";
         final String accept = "application/json";
         return service.update(this.client.getEndpoint(), apiVersion, id, updateBody, accept, context);
@@ -340,7 +325,7 @@ public final class MetastoresImpl {
 
     /**
      * Update files in Syms.
-     *
+     * 
      * @param id The name of the database to be updated.
      * @param updateBody The body for the update request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -355,7 +340,7 @@ public final class MetastoresImpl {
 
     /**
      * Update files in Syms.
-     *
+     * 
      * @param id The name of the database to be updated.
      * @param updateBody The body for the update request.
      * @param context The context to associate with this operation.
@@ -371,7 +356,7 @@ public final class MetastoresImpl {
 
     /**
      * Update files in Syms.
-     *
+     * 
      * @param id The name of the database to be updated.
      * @param updateBody The body for the update request.
      * @param context The context to associate with this operation.
@@ -381,14 +366,14 @@ public final class MetastoresImpl {
      * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MetastoreUpdationResponse> updateWithResponse(
-            String id, MetastoreUpdateObject updateBody, Context context) {
+    public Response<MetastoreUpdationResponse> updateWithResponse(String id, MetastoreUpdateObject updateBody,
+        Context context) {
         return updateWithResponseAsync(id, updateBody, context).block();
     }
 
     /**
      * Update files in Syms.
-     *
+     * 
      * @param id The name of the database to be updated.
      * @param updateBody The body for the update request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -403,7 +388,7 @@ public final class MetastoresImpl {
 
     /**
      * Remove files in Syms.
-     *
+     * 
      * @param id The id parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -412,15 +397,12 @@ public final class MetastoresImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Void>> deleteWithResponseAsync(String id) {
-        final String apiVersion = "2021-07-01-preview";
-        final String accept = "application/json";
-        return FluxUtil.withContext(
-                context -> service.delete(this.client.getEndpoint(), apiVersion, id, accept, context));
+        return FluxUtil.withContext(context -> deleteWithResponseAsync(id, context));
     }
 
     /**
      * Remove files in Syms.
-     *
+     * 
      * @param id The id parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -437,7 +419,7 @@ public final class MetastoresImpl {
 
     /**
      * Remove files in Syms.
-     *
+     * 
      * @param id The id parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -451,7 +433,7 @@ public final class MetastoresImpl {
 
     /**
      * Remove files in Syms.
-     *
+     * 
      * @param id The id parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -466,7 +448,7 @@ public final class MetastoresImpl {
 
     /**
      * Remove files in Syms.
-     *
+     * 
      * @param id The id parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -481,7 +463,7 @@ public final class MetastoresImpl {
 
     /**
      * Remove files in Syms.
-     *
+     * 
      * @param id The id parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.

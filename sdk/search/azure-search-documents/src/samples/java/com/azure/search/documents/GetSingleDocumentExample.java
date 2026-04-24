@@ -5,6 +5,8 @@ package com.azure.search.documents;
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.util.Configuration;
 
+import java.util.Map;
+
 /**
  * Get a single document based on its key
  * This sample is based on the hotels-sample index available to install from the portal.
@@ -13,7 +15,7 @@ import com.azure.core.util.Configuration;
 public class GetSingleDocumentExample {
 
     /**
-     * From the Azure portal, get your Azure Cognitive Search service URL and API key,
+     * From the Azure portal, get your Azure AI Search service URL and API key,
      * and set the values of these environment variables:
      */
     private static final String ENDPOINT = Configuration.getGlobalConfiguration().get("AZURE_COGNITIVE_SEARCH_ENDPOINT");
@@ -29,7 +31,7 @@ public class GetSingleDocumentExample {
             .buildClient();
 
         // Retrieve a single document by key
-        SearchDocument document = client.getDocument("3", SearchDocument.class);
+        Map<String, Object> document = client.getDocument("3").getAdditionalProperties();
 
         document.forEach((key, value) -> System.out.println(key + ":" + value));
     }

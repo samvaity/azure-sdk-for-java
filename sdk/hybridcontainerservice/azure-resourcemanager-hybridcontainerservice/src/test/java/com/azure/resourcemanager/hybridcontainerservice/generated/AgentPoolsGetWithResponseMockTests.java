@@ -6,84 +6,51 @@ package com.azure.resourcemanager.hybridcontainerservice.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.hybridcontainerservice.HybridContainerServiceManager;
 import com.azure.resourcemanager.hybridcontainerservice.models.AgentPool;
-import com.azure.resourcemanager.hybridcontainerservice.models.Mode;
+import com.azure.resourcemanager.hybridcontainerservice.models.ExtendedLocationTypes;
 import com.azure.resourcemanager.hybridcontainerservice.models.OsType;
-import java.nio.ByteBuffer;
+import com.azure.resourcemanager.hybridcontainerservice.models.Ossku;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class AgentPoolsGetWithResponseMockTests {
     @Test
     public void testGetWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"properties\":{\"count\":443965325,\"vmSize\":\"youlp\",\"kubernetesVersion\":\"v\",\"provisioningState\":\"Creating\",\"status\":{\"currentState\":\"Succeeded\",\"errorMessage\":\"mjwosytx\",\"readyReplicas\":[{\"count\":2142879113,\"vmSize\":\"cktqumiekkezzi\",\"kubernetesVersion\":\"ly\"},{\"count\":1943663819,\"vmSize\":\"gqggebdunygae\",\"kubernetesVersion\":\"db\"},{\"count\":1233334035,\"vmSize\":\"pxllrx\",\"kubernetesVersion\":\"jmoadsuv\"},{\"count\":171529990,\"vmSize\":\"wdmjsjqbjhhyx\",\"kubernetesVersion\":\"wlycoduhpkxkg\"}]},\"osType\":\"Windows\",\"osSKU\":\"Windows2019\",\"nodeLabels\":{\"gjhkycubeddg\":\"ajxq\"},\"nodeTaints\":[\"fwqmzqalkrmn\"],\"maxCount\":1174672424,\"minCount\":988494266,\"enableAutoScaling\":false,\"maxPods\":935480812},\"tags\":{\"yxbaaabjyvayf\":\"fn\",\"exn\":\"imrzrtuzqog\",\"zsoibjudpfrxtr\":\"vfdnwnwmewzsyyce\",\"ytdw\":\"hzv\"},\"extendedLocation\":{\"type\":\"CustomLocation\",\"name\":\"ubpaxhe\"},\"id\":\"i\",\"name\":\"ivpdtiir\",\"type\":\"tdqoaxoruzfgsq\"}";
 
-        String responseStr =
-            "{\"properties\":{\"provisioningState\":\"Succeeded\",\"status\":{\"errorMessage\":\"gtczheydb\",\"readyReplicas\":568921197,\"replicas\":298651884},\"count\":839107227,\"availabilityZones\":[\"hvbbxuripltfnh\",\"baxk\",\"xywr\"],\"maxCount\":1619197472,\"maxPods\":479149992,\"minCount\":2090411231,\"mode\":\"User\",\"nodeLabels\":{\"hostgktstvdxecl\":\"odpvruudlgzib\",\"hzlhplodqkdlww\":\"edqbc\"},\"nodeTaints\":[\"u\"],\"osType\":\"Linux\",\"nodeImageVersion\":\"trqjfsmlmbtx\",\"vmSize\":\"gfwsrtaw\",\"cloudProviderProfile\":{}},\"extendedLocation\":{\"type\":\"ubskhudygoookkq\",\"name\":\"jb\"},\"location\":\"leorfmluiqtqz\",\"tags\":{\"kq\":\"yvnqqybaryeuay\",\"tiewdj\":\"bqgzslesjcbhern\"},\"id\":\"vbquwr\",\"name\":\"ehwagoh\",\"type\":\"uffkmrqemvvh\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        HybridContainerServiceManager manager = HybridContainerServiceManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureEnvironment.AZURE));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        AgentPool response
+            = manager.agentPools().getWithResponse("atklddxbjhwuaa", "oz", com.azure.core.util.Context.NONE).getValue();
 
-        HybridContainerServiceManager manager =
-            HybridContainerServiceManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        AgentPool response =
-            manager
-                .agentPools()
-                .getWithResponse("knssxmojm", "vpkjpr", "kwcf", com.azure.core.util.Context.NONE)
-                .getValue();
-
-        Assertions.assertEquals("leorfmluiqtqz", response.location());
-        Assertions.assertEquals("yvnqqybaryeuay", response.tags().get("kq"));
-        Assertions.assertEquals("ubskhudygoookkq", response.extendedLocation().type());
-        Assertions.assertEquals("jb", response.extendedLocation().name());
-        Assertions.assertEquals("gtczheydb", response.status().errorMessage());
-        Assertions.assertEquals(568921197, response.status().readyReplicas());
-        Assertions.assertEquals(298651884, response.status().replicas());
-        Assertions.assertEquals(839107227, response.count());
-        Assertions.assertEquals("hvbbxuripltfnh", response.availabilityZones().get(0));
-        Assertions.assertEquals(1619197472, response.maxCount());
-        Assertions.assertEquals(479149992, response.maxPods());
-        Assertions.assertEquals(2090411231, response.minCount());
-        Assertions.assertEquals(Mode.USER, response.mode());
-        Assertions.assertEquals("odpvruudlgzib", response.nodeLabels().get("hostgktstvdxecl"));
-        Assertions.assertEquals("u", response.nodeTaints().get(0));
-        Assertions.assertEquals(OsType.LINUX, response.osType());
-        Assertions.assertEquals("trqjfsmlmbtx", response.nodeImageVersion());
-        Assertions.assertEquals("gfwsrtaw", response.vmSize());
+        Assertions.assertEquals(OsType.WINDOWS, response.properties().osType());
+        Assertions.assertEquals(Ossku.WINDOWS2019, response.properties().osSku());
+        Assertions.assertEquals("ajxq", response.properties().nodeLabels().get("gjhkycubeddg"));
+        Assertions.assertEquals("fwqmzqalkrmn", response.properties().nodeTaints().get(0));
+        Assertions.assertEquals(1174672424, response.properties().maxCount());
+        Assertions.assertEquals(988494266, response.properties().minCount());
+        Assertions.assertEquals(false, response.properties().enableAutoScaling());
+        Assertions.assertEquals(935480812, response.properties().maxPods());
+        Assertions.assertEquals(443965325, response.properties().count());
+        Assertions.assertEquals("youlp", response.properties().vmSize());
+        Assertions.assertEquals("mjwosytx", response.properties().status().errorMessage());
+        Assertions.assertEquals(2142879113, response.properties().status().readyReplicas().get(0).count());
+        Assertions.assertEquals("cktqumiekkezzi", response.properties().status().readyReplicas().get(0).vmSize());
+        Assertions.assertEquals("fn", response.tags().get("yxbaaabjyvayf"));
+        Assertions.assertEquals(ExtendedLocationTypes.CUSTOM_LOCATION, response.extendedLocation().type());
+        Assertions.assertEquals("ubpaxhe", response.extendedLocation().name());
     }
 }

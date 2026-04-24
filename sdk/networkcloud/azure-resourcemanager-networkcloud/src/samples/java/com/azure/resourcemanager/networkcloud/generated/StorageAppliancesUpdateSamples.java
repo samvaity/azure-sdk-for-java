@@ -8,26 +8,32 @@ import com.azure.resourcemanager.networkcloud.models.StorageAppliance;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for StorageAppliances Update. */
+/**
+ * Samples for StorageAppliances Update.
+ */
 public final class StorageAppliancesUpdateSamples {
     /*
-     * x-ms-original-file: specification/networkcloud/resource-manager/Microsoft.NetworkCloud/preview/2023-05-01-preview/examples/StorageAppliances_Patch.json
+     * x-ms-original-file:
+     * specification/networkcloud/resource-manager/Microsoft.NetworkCloud/stable/2025-09-01/examples/
+     * StorageAppliances_Patch.json
      */
     /**
      * Sample code: Patch storage appliance.
-     *
+     * 
      * @param manager Entry point to NetworkCloudManager.
      */
     public static void patchStorageAppliance(com.azure.resourcemanager.networkcloud.NetworkCloudManager manager) {
-        StorageAppliance resource =
-            manager
-                .storageAppliances()
-                .getByResourceGroupWithResponse(
-                    "resourceGroupName", "storageApplianceName", com.azure.core.util.Context.NONE)
-                .getValue();
-        resource.update().withTags(mapOf("key1", "myvalue1", "key2", "myvalue2")).withSerialNumber("BM1219XXX").apply();
+        StorageAppliance resource = manager.storageAppliances()
+            .getByResourceGroupWithResponse("resourceGroupName", "storageApplianceName",
+                com.azure.core.util.Context.NONE)
+            .getValue();
+        resource.update()
+            .withTags(mapOf("key1", "fakeTokenPlaceholder", "key2", "fakeTokenPlaceholder"))
+            .withSerialNumber("BM1219XXX")
+            .apply();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

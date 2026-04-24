@@ -4,17 +4,20 @@
 
 package com.azure.resourcemanager.subscription.generated;
 
-/** Samples for Alias List. */
+/**
+ * Samples for Alias List.
+ */
 public final class AliasListSamples {
     /*
-     * x-ms-original-file: specification/subscription/resource-manager/Microsoft.Subscription/stable/2020-09-01/examples/listAlias.json
+     * x-ms-original-file:
+     * specification/subscription/resource-manager/Microsoft.Subscription/stable/2021-10-01/examples/listAlias.json
      */
     /**
-     * Sample code: GetAlias.
-     *
+     * Sample code: ListAlias.
+     * 
      * @param manager Entry point to SubscriptionManager.
      */
-    public static void getAlias(com.azure.resourcemanager.subscription.SubscriptionManager manager) {
+    public static void listAlias(com.azure.resourcemanager.subscription.SubscriptionManager manager) {
         manager.alias().listWithResponse(com.azure.core.util.Context.NONE);
     }
 }

@@ -5,42 +5,55 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** A list of linked service resources. */
+/**
+ * A list of linked service resources.
+ */
 @Fluent
-public final class LinkedServiceListResponse {
+public final class LinkedServiceListResponse implements JsonSerializable<LinkedServiceListResponse> {
     /*
      * List of linked services.
      */
-    @JsonProperty(value = "value", required = true)
+    @Generated
     private List<LinkedServiceResource> value;
 
     /*
      * The link to the next page of results, if any remaining results exist.
      */
-    @JsonProperty(value = "nextLink")
+    @Generated
     private String nextLink;
 
-    /** Creates an instance of LinkedServiceListResponse class. */
-    public LinkedServiceListResponse() {}
+    /**
+     * Creates an instance of LinkedServiceListResponse class.
+     */
+    @Generated
+    public LinkedServiceListResponse() {
+    }
 
     /**
      * Get the value property: List of linked services.
-     *
+     * 
      * @return the value value.
      */
+    @Generated
     public List<LinkedServiceResource> getValue() {
         return this.value;
     }
 
     /**
      * Set the value property: List of linked services.
-     *
+     * 
      * @param value the value value to set.
      * @return the LinkedServiceListResponse object itself.
      */
+    @Generated
     public LinkedServiceListResponse setValue(List<LinkedServiceResource> value) {
         this.value = value;
         return this;
@@ -48,21 +61,67 @@ public final class LinkedServiceListResponse {
 
     /**
      * Get the nextLink property: The link to the next page of results, if any remaining results exist.
-     *
+     * 
      * @return the nextLink value.
      */
+    @Generated
     public String getNextLink() {
         return this.nextLink;
     }
 
     /**
      * Set the nextLink property: The link to the next page of results, if any remaining results exist.
-     *
+     * 
      * @param nextLink the nextLink value to set.
      * @return the LinkedServiceListResponse object itself.
      */
+    @Generated
     public LinkedServiceListResponse setNextLink(String nextLink) {
         this.nextLink = nextLink;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("value", this.value, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("nextLink", this.nextLink);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of LinkedServiceListResponse from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of LinkedServiceListResponse if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the LinkedServiceListResponse.
+     */
+    @Generated
+    public static LinkedServiceListResponse fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            LinkedServiceListResponse deserializedLinkedServiceListResponse = new LinkedServiceListResponse();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("value".equals(fieldName)) {
+                    List<LinkedServiceResource> value
+                        = reader.readArray(reader1 -> LinkedServiceResource.fromJson(reader1));
+                    deserializedLinkedServiceListResponse.value = value;
+                } else if ("nextLink".equals(fieldName)) {
+                    deserializedLinkedServiceListResponse.nextLink = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedLinkedServiceListResponse;
+        });
     }
 }

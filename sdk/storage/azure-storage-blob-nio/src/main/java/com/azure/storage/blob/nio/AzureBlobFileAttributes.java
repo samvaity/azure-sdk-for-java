@@ -53,10 +53,12 @@ public final class AzureBlobFileAttributes implements BasicFileAttributes {
         try {
             props = resource.getBlobClient().getProperties();
         } catch (BlobStorageException e) {
-            if (e.getStatusCode() == 404 && this.resource.checkVirtualDirectoryExists()) {
+            if (e.getStatusCode() == 404 && this.resource.isVirtualDirectory()) {
                 this.isVirtualDirectory = true;
                 this.properties = null;
                 return;
+            } else if (e.getStatusCode() == 404) {
+                throw new IOException("Path: " + path.toString(), e);
             } else {
                 throw LoggingUtility.logError(LOGGER, new IOException("Path: " + path.toString(), e));
             }
@@ -137,8 +139,7 @@ public final class AzureBlobFileAttributes implements BasicFileAttributes {
         that accepts a string argument for the name of the property. Returning them individually would mean we have to
         support setting them individually as well, which is not possible due to service constraints.
          */
-        return new BlobHttpHeaders()
-            .setContentType(this.properties.getContentType())
+        return new BlobHttpHeaders().setContentType(this.properties.getContentType())
             .setContentLanguage(this.properties.getContentLanguage())
             .setContentMd5(this.properties.getContentMd5())
             .setContentDisposition(this.properties.getContentDisposition())

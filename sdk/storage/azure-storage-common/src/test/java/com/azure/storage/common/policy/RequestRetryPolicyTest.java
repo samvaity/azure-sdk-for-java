@@ -3,6 +3,7 @@
 
 package com.azure.storage.common.policy;
 
+import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpMethod;
 import com.azure.core.http.HttpPipeline;
@@ -35,87 +36,79 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Tests for {@link RequestRetryPolicy}.
  */
 public class RequestRetryPolicyTest {
-    static RequestRetryOptions retryTestOptions = new RequestRetryOptions(RetryPolicyType.EXPONENTIAL, 4, 2,
-        100L, 1000L, "SecondaryHost");
+    static RequestRetryOptions retryTestOptions
+        = new RequestRetryOptions(RetryPolicyType.EXPONENTIAL, 4, 2, 100L, 1000L, "SecondaryHost");
 
     @SyncAsyncTest
     public void requestRetryPolicySuccessMaxRetries() {
-        HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy())
-            .httpClient(new NoOpHttpClient() {
-                int count = -1;
-                HttpResponse response;
-                private void beforeSendingRequest(HttpRequest request) {
-                    if (count++ < 3) {
-                        response = new MockHttpResponse(request, 503);
-                    } else if (count++ == 4) {
-                        response = new MockHttpResponse(request, 200);
-                    } else {
-                        // Too many requests have been made.
-                        response = new MockHttpResponse(request, 400);
-                    }
-                }
+        HttpPipeline pipeline = new HttpPipelineBuilder().policies(new RetryPolicy()).httpClient(new NoOpHttpClient() {
+            int count = -1;
+            HttpResponse response;
 
-                @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
-                    beforeSendingRequest(request);
-                    return response;
+            private void beforeSendingRequest(HttpRequest request) {
+                if (count++ < 3) {
+                    response = new MockHttpResponse(request, 503);
+                } else if (count++ == 4) {
+                    response = new MockHttpResponse(request, 200);
+                } else {
+                    // Too many requests have been made.
+                    response = new MockHttpResponse(request, 400);
                 }
+            }
 
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    beforeSendingRequest(request);
-                    return Mono.just(response);
-                }
-            })
-            .policies(new RequestRetryPolicy(retryTestOptions))
-            .build();
+            @Override
+            public HttpResponse sendSync(HttpRequest request, Context context) {
+                beforeSendingRequest(request);
+                return response;
+            }
 
-        HttpResponse response = SyncAsyncExtension.execute(
-            () -> sendRequestSync(pipeline),
-            () -> sendRequest(pipeline)
-        );
+            @Override
+            public Mono<HttpResponse> send(HttpRequest request) {
+                beforeSendingRequest(request);
+                return Mono.just(response);
+            }
+        }).policies(new RequestRetryPolicy(retryTestOptions)).build();
+
+        HttpResponse response
+            = SyncAsyncExtension.execute(() -> sendRequestSync(pipeline), () -> sendRequest(pipeline));
         assertEquals(200, response.getStatusCode());
     }
 
     @Test
     public void requestRetryPolicyRetriesTimeoutSync() {
-        HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy())
-            .httpClient(new NoOpHttpClient() {
-                int count = -1;
-                long previousAttemptMadeAt = -1;
-                HttpResponse response;
-                private void beforeSendingRequest(HttpRequest request) {
-                    if (count > 0) {
-                        Assertions.assertTrue(System.currentTimeMillis() >= previousAttemptMadeAt + retryTestOptions.getTryTimeoutDuration().toMillis());
-                    }
-                    Assertions.assertTrue(count++ < retryTestOptions.getMaxTries());
-                    previousAttemptMadeAt = System.currentTimeMillis();
-                    if (count < 3) {
-                        response = new MockHttpResponse(request, 503);
-                    } else if (count == 3) {
-                        response = new MockHttpResponse(request, 200);
-                    } else {
-                        // Too many requests have been made.
-                        response = new MockHttpResponse(request, 400);
-                    }
-                }
+        HttpPipeline pipeline = new HttpPipelineBuilder().policies(new RetryPolicy()).httpClient(new NoOpHttpClient() {
+            int count = -1;
+            long previousAttemptMadeAt = -1;
+            HttpResponse response;
 
-                @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
-                    beforeSendingRequest(request);
-                    return response;
+            private void beforeSendingRequest(HttpRequest request) {
+                if (count > 0) {
+                    Assertions.assertTrue(System.currentTimeMillis()
+                        >= previousAttemptMadeAt + retryTestOptions.getTryTimeoutDuration().toMillis());
                 }
+                Assertions.assertTrue(count++ < retryTestOptions.getMaxTries());
+                previousAttemptMadeAt = System.currentTimeMillis();
+                if (count < 3) {
+                    response = new MockHttpResponse(request, 503);
+                } else if (count == 3) {
+                    response = new MockHttpResponse(request, 200);
+                } else {
+                    // Too many requests have been made.
+                    response = new MockHttpResponse(request, 400);
+                }
+            }
 
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    beforeSendingRequest(request);
-                    return Mono.just(response);
-                }
-            })
-            .policies(new RequestRetryPolicy(retryTestOptions))
-            .build();
+            @Override
+            public HttpResponse sendSync(HttpRequest request, Context context) {
+                return send(request).block();
+            }
+
+            @Override
+            public Mono<HttpResponse> send(HttpRequest request) {
+                beforeSendingRequest(request);
+                return count < 3 ? Mono.just(response).delaySubscription(Duration.ofSeconds(5)) : Mono.just(response);
+            }
+        }).policies(new RequestRetryPolicy(retryTestOptions)).build();
 
         HttpResponse response = sendRequestSync(pipeline);
 
@@ -133,8 +126,7 @@ public class RequestRetryPolicyTest {
             }
         };
 
-        final HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RequestRetryPolicy(retryTestOptions))
+        final HttpPipeline pipeline = new HttpPipelineBuilder().policies(new RequestRetryPolicy(retryTestOptions))
             .httpClient(new NoOpHttpClient() {
 
                 @Override
@@ -149,10 +141,7 @@ public class RequestRetryPolicyTest {
             })
             .build();
 
-        SyncAsyncExtension.execute(
-            () -> sendRequestSync(pipeline),
-            () -> sendRequest(pipeline)
-        );
+        SyncAsyncExtension.execute(() -> sendRequestSync(pipeline), () -> sendRequest(pipeline));
 
         assertEquals(3, closeCalls.get());
     }
@@ -161,40 +150,36 @@ public class RequestRetryPolicyTest {
     public void fixedDelayRetry() {
         final int maxRetries = 5;
         final long delayMillis = 500;
-        final HttpPipeline pipeline = new HttpPipelineBuilder()
-            .httpClient(new NoOpHttpClient() {
-                int count = -1;
-                long previousAttemptMadeAt = -1;
+        final HttpPipeline pipeline = new HttpPipelineBuilder().httpClient(new NoOpHttpClient() {
+            int count = -1;
+            long previousAttemptMadeAt = -1;
 
-                private void beforeSendingRequest() {
-                    if (count > 0) {
-                        Assertions.assertTrue(System.currentTimeMillis() >= previousAttemptMadeAt + delayMillis);
-                    }
-                    Assertions.assertTrue(count++ < maxRetries);
-                    previousAttemptMadeAt = System.currentTimeMillis();
+            private void beforeSendingRequest() {
+                if (count > 0) {
+                    Assertions.assertTrue(System.currentTimeMillis() >= previousAttemptMadeAt + delayMillis);
                 }
+                Assertions.assertTrue(count++ < maxRetries);
+                previousAttemptMadeAt = System.currentTimeMillis();
+            }
 
-                @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
-                    beforeSendingRequest();
-                    return new MockHttpResponse(request, 500);
-                }
+            @Override
+            public HttpResponse sendSync(HttpRequest request, Context context) {
+                beforeSendingRequest();
+                return new MockHttpResponse(request, 500);
+            }
 
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    beforeSendingRequest();
-                    return Mono.just(new MockHttpResponse(request, 500));
-                }
-            })
-            .policies(new RequestRetryPolicy(
-                new RequestRetryOptions(RetryPolicyType.FIXED, maxRetries, null, Duration.ofMillis(delayMillis),
-                    Duration.ofMillis(delayMillis), null)))
+            @Override
+            public Mono<HttpResponse> send(HttpRequest request) {
+                beforeSendingRequest();
+                return Mono.just(new MockHttpResponse(request, 500));
+            }
+        })
+            .policies(new RequestRetryPolicy(new RequestRetryOptions(RetryPolicyType.FIXED, maxRetries, null,
+                Duration.ofMillis(delayMillis), Duration.ofMillis(delayMillis), null)))
             .build();
 
-        HttpResponse response = SyncAsyncExtension.execute(
-            () -> sendRequestSync(pipeline),
-            () -> sendRequest(pipeline)
-        );
+        HttpResponse response
+            = SyncAsyncExtension.execute(() -> sendRequestSync(pipeline), () -> sendRequest(pipeline));
         assertEquals(500, response.getStatusCode());
     }
 
@@ -203,37 +188,35 @@ public class RequestRetryPolicyTest {
         final int maxRetries = 5;
         final long retryDelayMillis = 100;
         final long maxDelayMillis = 1000;
-        final HttpPipeline pipeline = new HttpPipelineBuilder()
-            .httpClient(new NoOpHttpClient() {
-                int count = -1;
-                long previousAttemptMadeAt = -1;
+        final HttpPipeline pipeline = new HttpPipelineBuilder().httpClient(new NoOpHttpClient() {
+            int count = -1;
+            long previousAttemptMadeAt = -1;
 
-                private void beforeSendingRequest() {
-                    if (count > 0) {
-                        long requestMadeAt = System.currentTimeMillis();
-                        long expectedToBeMadeAt =
-                            previousAttemptMadeAt + (((powOfTwo(count - 1) - 1L)) * (retryDelayMillis));
-                        Assertions.assertTrue(requestMadeAt >= expectedToBeMadeAt);
-                    }
-                    Assertions.assertTrue(count++ < maxRetries);
-                    previousAttemptMadeAt = System.currentTimeMillis();
+            private void beforeSendingRequest() {
+                if (count > 0) {
+                    long requestMadeAt = System.currentTimeMillis();
+                    long expectedToBeMadeAt
+                        = previousAttemptMadeAt + (((powOfTwo(count - 1) - 1L)) * (retryDelayMillis));
+                    Assertions.assertTrue(requestMadeAt >= expectedToBeMadeAt);
                 }
+                Assertions.assertTrue(count++ < maxRetries);
+                previousAttemptMadeAt = System.currentTimeMillis();
+            }
 
-                @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
-                    beforeSendingRequest();
-                    return new MockHttpResponse(request, 503);
-                }
+            @Override
+            public HttpResponse sendSync(HttpRequest request, Context context) {
+                beforeSendingRequest();
+                return new MockHttpResponse(request, 503);
+            }
 
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    beforeSendingRequest();
-                    return Mono.just(new MockHttpResponse(request, 503));
-                }
-            })
-            .policies(new RequestRetryPolicy(
-                new RequestRetryOptions(RetryPolicyType.EXPONENTIAL, 6, 2, retryDelayMillis, maxDelayMillis,
-                    "SecondaryHost")))
+            @Override
+            public Mono<HttpResponse> send(HttpRequest request) {
+                beforeSendingRequest();
+                return Mono.just(new MockHttpResponse(request, 503));
+            }
+        })
+            .policies(new RequestRetryPolicy(new RequestRetryOptions(RetryPolicyType.EXPONENTIAL, 6, 2,
+                retryDelayMillis, maxDelayMillis, "SecondaryHost")))
             .build();
 
         HttpResponse response = sendRequestSync(pipeline);
@@ -250,7 +233,37 @@ public class RequestRetryPolicyTest {
     @ParameterizedTest
     @MethodSource("retryPolicyRetriesStatusCodeSupplier")
     public void retryPolicyRetriesStatusCode(int statusCode, boolean isPrimary, boolean shouldBeRetried) {
-        assertEquals(shouldBeRetried, RequestRetryPolicy.shouldStatusCodeBeRetried(statusCode, isPrimary));
+        assertEquals(shouldBeRetried, RequestRetryPolicy.shouldStatusCodeBeRetried(statusCode, isPrimary, null));
+    }
+
+    @ParameterizedTest
+    @MethodSource("retryPolicyRetriesStatusCodeSupplier")
+    public void retryPolicyRetriesResponse(int statusCode, boolean isPrimary, boolean shouldBeRetried) {
+        MockHttpResponse response = new MockHttpResponse(null, 404,
+            new HttpHeaders().set(HttpHeaderName.fromString("x-ms-copy-source-error-code"), "" + statusCode));
+
+        assertEquals(shouldBeRetried, RequestRetryPolicy.shouldStatusCodeBeRetried(statusCode, isPrimary, response));
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("retryPolicyRetriesErrorCodeSupplier")
+    public void retryPolicyRetriesHeaderBasedResponse(String errorCodeHeader, String statusCodeHeader,
+        boolean isPrimary, boolean shouldBeRetried) {
+
+        HttpHeaders headers = new HttpHeaders();
+
+        if (errorCodeHeader != null) {
+            headers.set(HttpHeaderName.fromString("x-ms-copy-source-error-code"), errorCodeHeader);
+        }
+
+        if (statusCodeHeader != null) {
+            headers.set(HttpHeaderName.fromString("x-ms-copy-source-status-code"), statusCodeHeader);
+        }
+
+        MockHttpResponse response = new MockHttpResponse(null, 200, headers);
+
+        assertEquals(shouldBeRetried, RequestRetryPolicy.shouldStatusCodeBeRetried(0, isPrimary, response));
     }
 
     private static Mono<HttpResponse> sendRequest(HttpPipeline pipeline) {
@@ -271,11 +284,8 @@ public class RequestRetryPolicyTest {
     }
 
     static Stream<Arguments> retryPolicyRetriesExceptionsSupplier() {
-        return Stream.of(
-            Arguments.of(new IOException(), true),
-            Arguments.of(new TimeoutException(), true),
-            Arguments.of(new RuntimeException(), false),
-            Arguments.of(Exceptions.propagate(new IOException()), true),
+        return Stream.of(Arguments.of(new IOException(), true), Arguments.of(new TimeoutException(), true),
+            Arguments.of(new RuntimeException(), false), Arguments.of(Exceptions.propagate(new IOException()), true),
             Arguments.of(Exceptions.propagate(new TimeoutException()), true),
             Arguments.of(Exceptions.propagate(new RuntimeException()), false),
             Arguments.of(new Exception(new IOException()), true),
@@ -283,21 +293,19 @@ public class RequestRetryPolicyTest {
             Arguments.of(new Exception(new RuntimeException()), false),
             Arguments.of(Exceptions.propagate(new Exception(new IOException())), true),
             Arguments.of(Exceptions.propagate(new Exception(new TimeoutException())), true),
-            Arguments.of(Exceptions.propagate(new Exception(new RuntimeException())), false)
-        );
+            Arguments.of(Exceptions.propagate(new Exception(new RuntimeException())), false));
     }
 
     static Stream<Arguments> retryPolicyRetriesStatusCodeSupplier() {
-        return Stream.of(
-            Arguments.of(429, true, true),
-            Arguments.of(429, false, true),
-            Arguments.of(500, true, true),
-            Arguments.of(500, false, true),
-            Arguments.of(503, true, true),
-            Arguments.of(503, false, true),
-            Arguments.of(404, true, false),
-            Arguments.of(404, false, true),
-            Arguments.of(400, true, false)
-            );
+        return Stream.of(Arguments.of(429, true, true), Arguments.of(429, false, true), Arguments.of(500, true, true),
+            Arguments.of(500, false, true), Arguments.of(503, true, true), Arguments.of(503, false, true),
+            Arguments.of(404, true, false), Arguments.of(404, false, true), Arguments.of(400, true, false));
+    }
+
+    static Stream<Arguments> retryPolicyRetriesErrorCodeSupplier() {
+        return Stream.of(Arguments.of("InternalError", null, true, true),
+            Arguments.of("OperationTimedOut", null, true, true), Arguments.of("ServerBusy", null, true, true),
+            Arguments.of(null, "404", false, true), Arguments.of(null, "404", true, false),
+            Arguments.of("SomeOtherError", null, true, false), Arguments.of(null, null, true, false));
     }
 }

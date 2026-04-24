@@ -5,62 +5,87 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** A copy activity SQL server sink. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("SqlServerSink")
+/**
+ * A copy activity SQL server sink.
+ */
 @Fluent
 public final class SqlServerSink extends CopySink {
     /*
+     * Copy sink type.
+     */
+    @Generated
+    private String type = "SqlServerSink";
+
+    /*
      * SQL writer stored procedure name. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "sqlWriterStoredProcedureName")
+    @Generated
     private Object sqlWriterStoredProcedureName;
 
     /*
      * SQL writer table type. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "sqlWriterTableType")
+    @Generated
     private Object sqlWriterTableType;
 
     /*
      * SQL pre-copy script. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "preCopyScript")
+    @Generated
     private Object preCopyScript;
 
     /*
      * SQL stored procedure parameters.
      */
-    @JsonProperty(value = "storedProcedureParameters")
-    private Map<String, StoredProcedureParameter> storedProcedureParameters;
+    @Generated
+    private Object storedProcedureParameters;
 
     /*
      * The stored procedure parameter name of the table type. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "storedProcedureTableTypeParameterName")
+    @Generated
     private Object storedProcedureTableTypeParameterName;
 
     /*
      * The option to handle sink table, such as autoCreate. For now only 'autoCreate' value is supported. Type: string
      * (or Expression with resultType string).
      */
-    @JsonProperty(value = "tableOption")
+    @Generated
     private Object tableOption;
 
-    /** Creates an instance of SqlServerSink class. */
-    public SqlServerSink() {}
+    /**
+     * Creates an instance of SqlServerSink class.
+     */
+    @Generated
+    public SqlServerSink() {
+    }
+
+    /**
+     * Get the type property: Copy sink type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the sqlWriterStoredProcedureName property: SQL writer stored procedure name. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the sqlWriterStoredProcedureName value.
      */
+    @Generated
     public Object getSqlWriterStoredProcedureName() {
         return this.sqlWriterStoredProcedureName;
     }
@@ -68,10 +93,11 @@ public final class SqlServerSink extends CopySink {
     /**
      * Set the sqlWriterStoredProcedureName property: SQL writer stored procedure name. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param sqlWriterStoredProcedureName the sqlWriterStoredProcedureName value to set.
      * @return the SqlServerSink object itself.
      */
+    @Generated
     public SqlServerSink setSqlWriterStoredProcedureName(Object sqlWriterStoredProcedureName) {
         this.sqlWriterStoredProcedureName = sqlWriterStoredProcedureName;
         return this;
@@ -79,19 +105,21 @@ public final class SqlServerSink extends CopySink {
 
     /**
      * Get the sqlWriterTableType property: SQL writer table type. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the sqlWriterTableType value.
      */
+    @Generated
     public Object getSqlWriterTableType() {
         return this.sqlWriterTableType;
     }
 
     /**
      * Set the sqlWriterTableType property: SQL writer table type. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param sqlWriterTableType the sqlWriterTableType value to set.
      * @return the SqlServerSink object itself.
      */
+    @Generated
     public SqlServerSink setSqlWriterTableType(Object sqlWriterTableType) {
         this.sqlWriterTableType = sqlWriterTableType;
         return this;
@@ -99,19 +127,21 @@ public final class SqlServerSink extends CopySink {
 
     /**
      * Get the preCopyScript property: SQL pre-copy script. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the preCopyScript value.
      */
+    @Generated
     public Object getPreCopyScript() {
         return this.preCopyScript;
     }
 
     /**
      * Set the preCopyScript property: SQL pre-copy script. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param preCopyScript the preCopyScript value to set.
      * @return the SqlServerSink object itself.
      */
+    @Generated
     public SqlServerSink setPreCopyScript(Object preCopyScript) {
         this.preCopyScript = preCopyScript;
         return this;
@@ -119,20 +149,22 @@ public final class SqlServerSink extends CopySink {
 
     /**
      * Get the storedProcedureParameters property: SQL stored procedure parameters.
-     *
+     * 
      * @return the storedProcedureParameters value.
      */
-    public Map<String, StoredProcedureParameter> getStoredProcedureParameters() {
+    @Generated
+    public Object getStoredProcedureParameters() {
         return this.storedProcedureParameters;
     }
 
     /**
      * Set the storedProcedureParameters property: SQL stored procedure parameters.
-     *
+     * 
      * @param storedProcedureParameters the storedProcedureParameters value to set.
      * @return the SqlServerSink object itself.
      */
-    public SqlServerSink setStoredProcedureParameters(Map<String, StoredProcedureParameter> storedProcedureParameters) {
+    @Generated
+    public SqlServerSink setStoredProcedureParameters(Object storedProcedureParameters) {
         this.storedProcedureParameters = storedProcedureParameters;
         return this;
     }
@@ -140,9 +172,10 @@ public final class SqlServerSink extends CopySink {
     /**
      * Get the storedProcedureTableTypeParameterName property: The stored procedure parameter name of the table type.
      * Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the storedProcedureTableTypeParameterName value.
      */
+    @Generated
     public Object getStoredProcedureTableTypeParameterName() {
         return this.storedProcedureTableTypeParameterName;
     }
@@ -150,10 +183,11 @@ public final class SqlServerSink extends CopySink {
     /**
      * Set the storedProcedureTableTypeParameterName property: The stored procedure parameter name of the table type.
      * Type: string (or Expression with resultType string).
-     *
+     * 
      * @param storedProcedureTableTypeParameterName the storedProcedureTableTypeParameterName value to set.
      * @return the SqlServerSink object itself.
      */
+    @Generated
     public SqlServerSink setStoredProcedureTableTypeParameterName(Object storedProcedureTableTypeParameterName) {
         this.storedProcedureTableTypeParameterName = storedProcedureTableTypeParameterName;
         return this;
@@ -162,9 +196,10 @@ public final class SqlServerSink extends CopySink {
     /**
      * Get the tableOption property: The option to handle sink table, such as autoCreate. For now only 'autoCreate'
      * value is supported. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the tableOption value.
      */
+    @Generated
     public Object getTableOption() {
         return this.tableOption;
     }
@@ -172,47 +207,168 @@ public final class SqlServerSink extends CopySink {
     /**
      * Set the tableOption property: The option to handle sink table, such as autoCreate. For now only 'autoCreate'
      * value is supported. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param tableOption the tableOption value to set.
      * @return the SqlServerSink object itself.
      */
+    @Generated
     public SqlServerSink setTableOption(Object tableOption) {
         this.tableOption = tableOption;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SqlServerSink setWriteBatchSize(Object writeBatchSize) {
         super.setWriteBatchSize(writeBatchSize);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SqlServerSink setWriteBatchTimeout(Object writeBatchTimeout) {
         super.setWriteBatchTimeout(writeBatchTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SqlServerSink setSinkRetryCount(Object sinkRetryCount) {
         super.setSinkRetryCount(sinkRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SqlServerSink setSinkRetryWait(Object sinkRetryWait) {
         super.setSinkRetryWait(sinkRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SqlServerSink setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getWriteBatchSize() != null) {
+            jsonWriter.writeUntypedField("writeBatchSize", getWriteBatchSize());
+        }
+        if (getWriteBatchTimeout() != null) {
+            jsonWriter.writeUntypedField("writeBatchTimeout", getWriteBatchTimeout());
+        }
+        if (getSinkRetryCount() != null) {
+            jsonWriter.writeUntypedField("sinkRetryCount", getSinkRetryCount());
+        }
+        if (getSinkRetryWait() != null) {
+            jsonWriter.writeUntypedField("sinkRetryWait", getSinkRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.sqlWriterStoredProcedureName != null) {
+            jsonWriter.writeUntypedField("sqlWriterStoredProcedureName", this.sqlWriterStoredProcedureName);
+        }
+        if (this.sqlWriterTableType != null) {
+            jsonWriter.writeUntypedField("sqlWriterTableType", this.sqlWriterTableType);
+        }
+        if (this.preCopyScript != null) {
+            jsonWriter.writeUntypedField("preCopyScript", this.preCopyScript);
+        }
+        if (this.storedProcedureParameters != null) {
+            jsonWriter.writeUntypedField("storedProcedureParameters", this.storedProcedureParameters);
+        }
+        if (this.storedProcedureTableTypeParameterName != null) {
+            jsonWriter.writeUntypedField("storedProcedureTableTypeParameterName",
+                this.storedProcedureTableTypeParameterName);
+        }
+        if (this.tableOption != null) {
+            jsonWriter.writeUntypedField("tableOption", this.tableOption);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SqlServerSink from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SqlServerSink if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the SqlServerSink.
+     */
+    @Generated
+    public static SqlServerSink fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SqlServerSink deserializedSqlServerSink = new SqlServerSink();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("writeBatchSize".equals(fieldName)) {
+                    deserializedSqlServerSink.setWriteBatchSize(reader.readUntyped());
+                } else if ("writeBatchTimeout".equals(fieldName)) {
+                    deserializedSqlServerSink.setWriteBatchTimeout(reader.readUntyped());
+                } else if ("sinkRetryCount".equals(fieldName)) {
+                    deserializedSqlServerSink.setSinkRetryCount(reader.readUntyped());
+                } else if ("sinkRetryWait".equals(fieldName)) {
+                    deserializedSqlServerSink.setSinkRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedSqlServerSink.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedSqlServerSink.type = reader.getString();
+                } else if ("sqlWriterStoredProcedureName".equals(fieldName)) {
+                    deserializedSqlServerSink.sqlWriterStoredProcedureName = reader.readUntyped();
+                } else if ("sqlWriterTableType".equals(fieldName)) {
+                    deserializedSqlServerSink.sqlWriterTableType = reader.readUntyped();
+                } else if ("preCopyScript".equals(fieldName)) {
+                    deserializedSqlServerSink.preCopyScript = reader.readUntyped();
+                } else if ("storedProcedureParameters".equals(fieldName)) {
+                    deserializedSqlServerSink.storedProcedureParameters = reader.readUntyped();
+                } else if ("storedProcedureTableTypeParameterName".equals(fieldName)) {
+                    deserializedSqlServerSink.storedProcedureTableTypeParameterName = reader.readUntyped();
+                } else if ("tableOption".equals(fieldName)) {
+                    deserializedSqlServerSink.tableOption = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedSqlServerSink.setAdditionalProperties(additionalProperties);
+
+            return deserializedSqlServerSink;
+        });
     }
 }

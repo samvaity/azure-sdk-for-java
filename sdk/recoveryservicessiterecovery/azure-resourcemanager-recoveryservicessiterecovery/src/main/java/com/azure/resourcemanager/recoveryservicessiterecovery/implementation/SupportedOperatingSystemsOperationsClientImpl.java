@@ -29,24 +29,24 @@ import reactor.core.publisher.Mono;
  * An instance of this class provides access to all the operations defined in SupportedOperatingSystemsOperationsClient.
  */
 public final class SupportedOperatingSystemsOperationsClientImpl implements SupportedOperatingSystemsOperationsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final SupportedOperatingSystemsOperationsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final SiteRecoveryManagementClientImpl client;
 
     /**
      * Initializes an instance of SupportedOperatingSystemsOperationsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     SupportedOperatingSystemsOperationsClientImpl(SiteRecoveryManagementClientImpl client) {
-        this.service =
-            RestProxy
-                .create(
-                    SupportedOperatingSystemsOperationsService.class,
-                    client.getHttpPipeline(),
-                    client.getSerializerAdapter());
+        this.service = RestProxy.create(SupportedOperatingSystemsOperationsService.class, client.getHttpPipeline(),
+            client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -57,145 +57,112 @@ public final class SupportedOperatingSystemsOperationsClientImpl implements Supp
     @Host("{$host}")
     @ServiceInterface(name = "SiteRecoveryManageme")
     public interface SupportedOperatingSystemsOperationsService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationSupportedOperatingSystems")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationSupportedOperatingSystems")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<SupportedOperatingSystemsInner>> get(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @QueryParam("instanceType") String instanceType,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<SupportedOperatingSystemsInner>> get(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @QueryParam("instanceType") String instanceType, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets the data of supported operating systems by SRS.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param instanceType The instance type.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the data of supported operating systems by SRS along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<SupportedOperatingSystemsInner>> getWithResponseAsync(
-        String resourceName, String resourceGroupName, String instanceType) {
+    private Mono<Response<SupportedOperatingSystemsInner>> getWithResponseAsync(String resourceGroupName,
+        String resourceName, String instanceType) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            instanceType,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), instanceType, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the data of supported operating systems by SRS.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param instanceType The instance type.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the data of supported operating systems by SRS along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<SupportedOperatingSystemsInner>> getWithResponseAsync(
-        String resourceName, String resourceGroupName, String instanceType, Context context) {
+    private Mono<Response<SupportedOperatingSystemsInner>> getWithResponseAsync(String resourceGroupName,
+        String resourceName, String instanceType, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                instanceType,
-                accept,
-                context);
+        return service.get(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), instanceType, accept, context);
     }
 
     /**
      * Gets the data of supported operating systems by SRS.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the data of supported operating systems by SRS on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<SupportedOperatingSystemsInner> getAsync(String resourceName, String resourceGroupName) {
+    private Mono<SupportedOperatingSystemsInner> getAsync(String resourceGroupName, String resourceName) {
         final String instanceType = null;
-        return getWithResponseAsync(resourceName, resourceGroupName, instanceType)
+        return getWithResponseAsync(resourceGroupName, resourceName, instanceType)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the data of supported operating systems by SRS.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param instanceType The instance type.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -204,24 +171,24 @@ public final class SupportedOperatingSystemsOperationsClientImpl implements Supp
      * @return the data of supported operating systems by SRS along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SupportedOperatingSystemsInner> getWithResponse(
-        String resourceName, String resourceGroupName, String instanceType, Context context) {
-        return getWithResponseAsync(resourceName, resourceGroupName, instanceType, context).block();
+    public Response<SupportedOperatingSystemsInner> getWithResponse(String resourceGroupName, String resourceName,
+        String instanceType, Context context) {
+        return getWithResponseAsync(resourceGroupName, resourceName, instanceType, context).block();
     }
 
     /**
      * Gets the data of supported operating systems by SRS.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the data of supported operating systems by SRS.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public SupportedOperatingSystemsInner get(String resourceName, String resourceGroupName) {
+    public SupportedOperatingSystemsInner get(String resourceGroupName, String resourceName) {
         final String instanceType = null;
-        return getWithResponse(resourceName, resourceGroupName, instanceType, Context.NONE).getValue();
+        return getWithResponse(resourceGroupName, resourceName, instanceType, Context.NONE).getValue();
     }
 }

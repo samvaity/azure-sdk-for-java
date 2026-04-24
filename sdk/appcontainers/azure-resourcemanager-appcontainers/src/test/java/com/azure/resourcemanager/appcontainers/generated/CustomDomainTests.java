@@ -12,22 +12,22 @@ import org.junit.jupiter.api.Assertions;
 public final class CustomDomainTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CustomDomain model =
-            BinaryData
-                .fromString("{\"name\":\"fouyf\",\"bindingType\":\"Disabled\",\"certificateId\":\"cpwi\"}")
-                .toObject(CustomDomain.class);
-        Assertions.assertEquals("fouyf", model.name());
-        Assertions.assertEquals(BindingType.DISABLED, model.bindingType());
-        Assertions.assertEquals("cpwi", model.certificateId());
+        CustomDomain model = BinaryData
+            .fromString("{\"name\":\"joya\",\"bindingType\":\"SniEnabled\",\"certificateId\":\"yjpkiidzyexz\"}")
+            .toObject(CustomDomain.class);
+        Assertions.assertEquals("joya", model.name());
+        Assertions.assertEquals(BindingType.SNI_ENABLED, model.bindingType());
+        Assertions.assertEquals("yjpkiidzyexz", model.certificateId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CustomDomain model =
-            new CustomDomain().withName("fouyf").withBindingType(BindingType.DISABLED).withCertificateId("cpwi");
+        CustomDomain model = new CustomDomain().withName("joya")
+            .withBindingType(BindingType.SNI_ENABLED)
+            .withCertificateId("yjpkiidzyexz");
         model = BinaryData.fromObject(model).toObject(CustomDomain.class);
-        Assertions.assertEquals("fouyf", model.name());
-        Assertions.assertEquals(BindingType.DISABLED, model.bindingType());
-        Assertions.assertEquals("cpwi", model.certificateId());
+        Assertions.assertEquals("joya", model.name());
+        Assertions.assertEquals(BindingType.SNI_ENABLED, model.bindingType());
+        Assertions.assertEquals("yjpkiidzyexz", model.certificateId());
     }
 }

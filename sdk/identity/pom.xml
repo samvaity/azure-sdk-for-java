@@ -7,11 +7,13 @@
   <groupId>com.azure</groupId>
   <artifactId>azure-identity-service</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.0</version><!-- Need not change for every release-->
+  <version>1.0.0</version> <!-- Need not change for every release-->
 
   <modules>
-      <module>azure-identity</module>
-      <module>azure-identity-perf</module>
-      <module>azure-identity-extensions</module>
+    <module>azure-identity</module>
+    <module>azure-identity-perf</module>
+    <module>azure-identity-extensions</module>
+    <module>azure-identity-broker</module>
+    <module>azure-identity-broker-samples</module>
   </modules>
 </project>

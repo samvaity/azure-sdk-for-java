@@ -5,6 +5,9 @@ package com.azure.storage.file.share.options;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.storage.file.share.FileSmbProperties;
+import com.azure.storage.file.share.models.FilePermissionFormat;
+import com.azure.storage.file.share.models.FilePosixProperties;
+import com.azure.storage.file.share.models.FilePropertySemantics;
 
 import java.util.Map;
 
@@ -13,12 +16,22 @@ import java.util.Map;
  */
 @Fluent
 public class ShareDirectoryCreateOptions {
-
     private FileSmbProperties smbProperties;
     private String filePermission;
+    private FilePermissionFormat filePermissionFormat;
     private Map<String, String> metadata;
+    private FilePosixProperties posixProperties;
+    private FilePropertySemantics filePropertySemantics;
 
     /**
+     * Creates a new instance of {@link ShareDirectoryCreateOptions}.
+     */
+    public ShareDirectoryCreateOptions() {
+    }
+
+    /**
+     * Gets the file permission key.
+     *
      * @return The file's permission key.
      */
     public String getFilePermission() {
@@ -37,6 +50,8 @@ public class ShareDirectoryCreateOptions {
     }
 
     /**
+     * Gets the SMB properties to set on the destination directory.
+     *
      * @return Optional SMB properties to set on the destination file or directory. The only properties that are
      * considered are file attributes, file creation time, file last write time, and file permission key. The rest are
      * ignored.
@@ -46,6 +61,8 @@ public class ShareDirectoryCreateOptions {
     }
 
     /**
+     * Sets the SMB properties to set on the destination directory.
+     *
      * @param smbProperties Optional SMB properties to set on the destination file or directory. The only properties
      * that are  considered are file attributes, file creation time, file last write time, and file permission key. The
      * rest are ignored.
@@ -57,19 +74,93 @@ public class ShareDirectoryCreateOptions {
     }
 
     /**
-     * @return Metadata to associate with the share
+     * Gets the metadata to associate with the directory.
+     *
+     * @return Metadata to associate with the directory.
      */
     public Map<String, String> getMetadata() {
         return metadata;
     }
 
     /**
-     * @param metadata Metadata to associate with the share. If there is leading or trailing whitespace in any
+     * Sets the metadata to associate with the directory.
+     *
+     * @param metadata Metadata to associate with the directory. If there is leading or trailing whitespace in any
      * metadata key or value, it must be removed or encoded.
      * @return The updated options.
      */
     public ShareDirectoryCreateOptions setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
+        return this;
+    }
+
+    /**
+     * Gets the file permission format.
+     *
+     * @return file permission format.
+     */
+    public FilePermissionFormat getFilePermissionFormat() {
+        return filePermissionFormat;
+    }
+
+    /**
+     * Sets the file permission format.
+     *
+     * @param filePermissionFormat the file permission format.
+     * @return The updated options.
+     */
+    public ShareDirectoryCreateOptions setFilePermissionFormat(FilePermissionFormat filePermissionFormat) {
+        this.filePermissionFormat = filePermissionFormat;
+        return this;
+    }
+
+    /**
+     *  Optional properties to set on NFS directories.
+     *  Note that this property is only applicable to directories created in NFS shares.
+     *
+     * @return {@link FilePosixProperties}
+     */
+    public FilePosixProperties getPosixProperties() {
+        return posixProperties;
+    }
+
+    /**
+     *  Optional properties to set on NFS directories.
+     *  Note that this property is only applicable to directories created in NFS shares.
+     *
+     * @param posixProperties {@link FilePosixProperties}
+     * @return The updated options.
+     */
+    public ShareDirectoryCreateOptions setPosixProperties(FilePosixProperties posixProperties) {
+        this.posixProperties = posixProperties;
+        return this;
+    }
+
+    /**
+     * Optional, only applicable to SMB directories. Gets how attributes and permissions should be set on the file.
+     * New: automatically adds the ARCHIVE file attribute flag to the file and uses Windows create file permissions
+     * semantics (ex: inherit from parent).
+     * Restore: does not modify file attribute flag and uses Windows update file permissions semantics.
+     * If Restore is specified, the file permission must also be provided, otherwise PropertySemantics will default to New.
+     *
+     * @return {@link FilePropertySemantics}
+    */
+    public FilePropertySemantics getFilePropertySemantics() {
+        return filePropertySemantics;
+    }
+
+    /**
+     * Optional, only applicable to SMB directories. Sets how attributes and permissions should be set on the file.
+     * New: automatically adds the ARCHIVE file attribute flag to the file and uses Windows create file permissions
+     * semantics (ex: inherit from parent).
+     * Restore: does not modify file attribute flag and uses Windows update file permissions semantics.
+     * If Restore is specified, the file permission must also be provided, otherwise PropertySemantics will default to New.
+     *
+     * @param filePropertySemantics {@link FilePropertySemantics}
+     * @return The updated options.
+     */
+    public ShareDirectoryCreateOptions setFilePropertySemantics(FilePropertySemantics filePropertySemantics) {
+        this.filePropertySemantics = filePropertySemantics;
         return this;
     }
 }

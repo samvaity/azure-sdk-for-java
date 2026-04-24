@@ -30,7 +30,37 @@ If you are an existing user of the older version of Azure management library for
 - [Azure Subscription][azure_subscription]
 
 ### Include the package
+#### Include the BOM file
+From 1.2.36 and above, azure-sdk-bom includes `azure-resourcemanager`.
 
+Please include the azure-sdk-bom to your project to take dependency on the General Availability (GA) version of the library. In the following snippet, replace the {bom_version_to_target} placeholder with the version number.
+To learn more about the BOM, see the [AZURE SDK BOM README](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/boms/azure-sdk-bom/README.md).
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-sdk-bom</artifactId>
+            <version>{bom_version_to_target}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+and then include the direct dependency in the dependencies section without the version tag.
+
+```xml
+<dependencies>
+  <dependency>
+    <groupId>com.azure.resourcemanager</groupId>
+    <artifactId>azure-resourcemanager</artifactId>
+  </dependency>
+</dependencies>
+```
+
+#### Include direct dependency
 For your convenience, we have provided a multi-service package that includes some of the most highly used Azure services. We recommend using this package when you are dealing with multiple services.
 
 [//]: # ({x-version-update-start;com.azure.resourcemanager:azure-resourcemanager;current})
@@ -38,7 +68,7 @@ For your convenience, we have provided a multi-service package that includes som
 <dependency>
   <groupId>com.azure.resourcemanager</groupId>
   <artifactId>azure-resourcemanager</artifactId>
-  <version>2.29.0</version>
+  <version>2.60.0</version>
 </dependency>
 ```
 [//]: # ({x-version-update-end})
@@ -75,12 +105,12 @@ The services available via `azure-resourcemanager` are listed as below:
 
 In the case where you are interested in certain service above or the service not included in the multi-service package, you can choose to use the single-service package for each service. Those packages follow the same naming patterns and design principals. For example, the package for Media Services has the following artifact information.
 
-[//]: # ({x-version-update-start;com.azure.resourcemanager:azure-resourcemanager-mediaservices;dependency})
+[//]: # ({x-version-update-start;com.azure.resourcemanager:azure-resourcemanager-resourcegraph;dependency})
 ```xml
 <dependency>
   <groupId>com.azure.resourcemanager</groupId>
-  <artifactId>azure-resourcemanager-mediaservices</artifactId>
-  <version>2.3.0</version>
+  <artifactId>azure-resourcemanager-resourcegraph</artifactId>
+  <version>1.1.0</version> <!-- {x-version-update;com.azure.resourcemanager:azure-resourcemanager-resourcegraph;dependency} -->
 </dependency>
 ```
 [//]: # ({x-version-update-end})
@@ -93,14 +123,14 @@ Azure Management Libraries require a `TokenCredential` implementation for authen
 
 `azure-identity` package and `azure-core-http-netty` package provide the default implementation.
 
-[Azure Identity][azure_identity] provides Azure Active Directory token authentication support across the Azure SDK.
+[Azure Identity][azure_identity] provides Microsoft Entra ID token authentication support across the Azure SDK.
 
 [//]: # ({x-version-update-start;com.azure:azure-identity;dependency})
 ```xml
 <dependency>
   <groupId>com.azure</groupId>
   <artifactId>azure-identity</artifactId>
-  <version>1.9.2</version>
+  <version>1.18.2</version>
 </dependency>
 ```
 [//]: # ({x-version-update-end})
@@ -112,7 +142,7 @@ Azure Management Libraries require a `TokenCredential` implementation for authen
 <dependency>
   <groupId>com.azure</groupId>
   <artifactId>azure-core-http-netty</artifactId>
-  <version>1.13.5</version>
+  <version>1.16.3</version>
 </dependency>
 ```
 [//]: # ({x-version-update-end})
@@ -121,15 +151,12 @@ Alternatively, [Azure Core OkHttp HTTP client][azure_core_http_okhttp] is anothe
 
 ### Authentication
 
-By default, Azure Active Directory token authentication depends on correct configure of following environment variables.
+Microsoft Entra ID token authentication relies on the [credential class][azure_identity_credentials] from [Azure Identity][azure_identity] package.
 
-- `AZURE_CLIENT_ID` for Azure client ID.
-- `AZURE_TENANT_ID` for Azure tenant ID.
-- `AZURE_CLIENT_SECRET` or `AZURE_CLIENT_CERTIFICATE_PATH` for client secret or client certificate.
+Azure subscription ID can be configured via `AZURE_SUBSCRIPTION_ID` environment variable.
+Azure tenant ID can be configured via `AZURE_TENANT_ID` environment variable.
 
-In addition, Azure subscription ID can be configured via environment variable `AZURE_SUBSCRIPTION_ID`.
-
-With above configuration, the manager class can be authenticated by following code:
+Assuming the use of the `DefaultAzureCredential` credential class, the client can be authenticated using the following code:
 
 ```java readme-sample-authenticate
 AzureProfile profile = new AzureProfile(AzureEnvironment.AZURE);
@@ -298,15 +325,23 @@ Instead of include the complete Azure Management Libraries, you can choose to in
 
 For example, here is sample maven dependency for Compute package.
 
-[//]: # ({x-version-update-start;com.azure.resourcemanager:azure-resourcemanager-compute;current})
+[//]: # ({x-version-update-start;com.azure.resourcemanager:azure-resourcemanager-compute;dependency})
 ```xml
 <dependency>
   <groupId>com.azure.resourcemanager</groupId>
   <artifactId>azure-resourcemanager-compute</artifactId>
-  <version>2.29.0</version>
+  <version>2.56.2</version>
 </dependency>
 ```
 [//]: # ({x-version-update-end})
+
+Or if you are using BOM:
+```xml
+<dependency>
+  <groupId>com.azure.resourcemanager</groupId>
+  <artifactId>azure-resourcemanager-compute</artifactId>
+</dependency>
+```
 
 Sample code to create the authenticated client.
 
@@ -334,7 +369,7 @@ Azure SDKs for Java offer a consistent logging story to help aid in troubleshoot
 their resolution. The logs produced will capture the flow of an application before reaching the terminal state to help
 locate the root issue. View the [configure logging][logging] for guidance on package required and its configuration.
 
-Sample code to enable logging in Azure Management Libraries for Java.
+Sample code to enable logging in Azure Management Libraries for Java. If you want to troubleshoot HTTP request and response details, you can use `.withLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS)`.
 
 ```java readme-sample-configureWithLogging
 AzureResourceManager azure = AzureResourceManager
@@ -353,6 +388,8 @@ As Azure Management Libraries for Java uses Fluent interface extensively, it tak
 Samples can be found [here](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/resourcemanager/azure-resourcemanager/src/samples/java/com/azure/resourcemanager/MockSdkSamples.java).
 
 ### Dependency management
+
+We now recommend using azure-sdk-bom for easier dependency management. See [Include the BOM file](#include-the-bom-file).
 
 [Azure Core][azure_core] (`azure-core`) is the shared library for  all packages under `com.azure`.
 It guarantees backward compatibility.
@@ -434,6 +471,28 @@ For example, `azure-resourcemanager` 2.6.0 would require `azure-core-management`
 Azure Resource Manager applies throttling on the number of requests sent from client within certain span of time.
 For details, please refer to [Guidance on ARM throttling][throttling].
 
+### HTTP header is larger than 8192 bytes
+
+If you are seeing this error message, please upgrade `azure-core-http-netty` to 1.15.12 or above. If you are using BOM, take 1.2.36 or above.
+
+[reactor-netty-http](https://projectreactor.io/docs/netty/release/reference/http-client.html) has a default max response header limit of 8192 bytes, configured by `io.netty.handler.codec.http.HttpResponseDecoder`.
+
+Azure Resource Manager will now append cryptographic token to the LRO (long-running-operation) URL returned in response header.
+This will make [LRO URLs](https://learn.microsoft.com/azure/azure-resource-manager/management/async-operations#url-to-monitor-status) significantly larger, which sometimes contributes to an HTTP response header over 8192 bytes size in total.
+
+In this case, Netty's HttpClient will throw:
+```
+io.netty.handler.codec.http.TooLongHttpHeaderException: HTTP header is larger than 8192 bytes.
+```
+
+From `azure-core-http-netty` 1.15.12 and above, we increased the limit to 256 KB to allow for these large LRO headers.
+[Increase HTTP header size limit in Netty-based HttpClients](https://github.com/Azure/azure-sdk-for-java/pull/45291)
+
+### Duplicate request sent out seconds apart
+
+It is likely caused by [HTTP response header larger than 8192 bytes](#http-header-is-larger-than-8192-bytes).
+Our `RetryPolicy` would retry and send out new request upon above failure. One way to diagnose this would be to remove the `RetryPolicy`.
+
 ## Next steps
 
 ## Contributing
@@ -448,13 +507,14 @@ For details on contributing to this repository, see the [contributing guide](htt
 
 <!-- LINKS -->
 [docs]: https://azure.github.io/azure-sdk-for-java/
-[jdk]: https://docs.microsoft.com/java/azure/jdk/
+[jdk]: https://learn.microsoft.com/azure/developer/java/fundamentals/
 [azure_subscription]: https://azure.microsoft.com/free/
 [azure_identity]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/identity/azure-identity
+[azure_identity_credentials]: https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/identity/azure-identity#credentials
 [azure_core_http_netty]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/core/azure-core-http-netty
 [azure_core_http_okhttp]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/core/azure-core-http-okhttp
 [azure_core]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/core/azure-core
-[logging]: https://docs.microsoft.com/azure/developer/java/sdk/logging-overview
+[logging]: https://learn.microsoft.com/azure/developer/java/sdk/logging-overview
 [single_service_packages]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/resourcemanager/docs/SINGLE_SERVICE_PACKAGES.md
 [authenticate]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/resourcemanager/docs/AUTH.md
 [sample]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/resourcemanager/docs/SAMPLE.md

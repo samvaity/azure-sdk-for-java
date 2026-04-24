@@ -27,6 +27,12 @@ public final class CreateRoomOptions {
     private OffsetDateTime validUntil;
 
     /*
+     * Set this flag to true if, at the time of the call, dial out to a PSTN number is enabled in a particular room. By
+     * default, this flag is set to false.
+     */
+    private Boolean pstnDialOutEnabled;
+
+    /*
      * (Optional) Participants to be invited to the room.
      */
     private Iterable<RoomParticipant> participants;
@@ -49,15 +55,27 @@ public final class CreateRoomOptions {
         return this;
     }
 
-     /**
-     * Set the validUntil property: The timestamp from when the room can no longer be joined. The timestamp is in
-     * RFC3339 format: `yyyy-MM-ddTHH:mm:ssZ`. The default value is the current date time plus 180 days.
-     *
-     * @param validUntil The end time of the room.
-     * @return The CreateRoomOptions object itself.
-     */
+    /**
+    * Set the validUntil property: The timestamp from when the room can no longer be joined. The timestamp is in
+    * RFC3339 format: `yyyy-MM-ddTHH:mm:ssZ`. The default value is the current date time plus 180 days.
+    *
+    * @param validUntil The end time of the room.
+    * @return The CreateRoomOptions object itself.
+    */
     public CreateRoomOptions setValidUntil(OffsetDateTime validUntil) {
         this.validUntil = validUntil;
+        return this;
+    }
+
+    /**
+     * Set the pstnDialOutEnabled property: Set this flag to true if, at the time of the call, dial out to a PSTN number
+     * is enabled in a particular room. By default, this flag is set to false.
+     *
+     * @param pstnDialOutEnabled the pstnDialOutEnabled value to set.
+     * @return the CreateRoomRequest object itself.
+     */
+    public CreateRoomOptions setPstnDialOutEnabled(Boolean pstnDialOutEnabled) {
+        this.pstnDialOutEnabled = pstnDialOutEnabled;
         return this;
     }
 
@@ -82,14 +100,24 @@ public final class CreateRoomOptions {
         return validFrom;
     }
 
-     /**
-     * Get the validUntil property: The timestamp from when the room can no longer be joined. The timestamp is in
-     * RFC3339 format: `yyyy-MM-ddTHH:mm:ssZ`. The default value is the current date time plus 180 days.
-     *
-     * @return The end time of the room.
-     */
+    /**
+    * Get the validUntil property: The timestamp from when the room can no longer be joined. The timestamp is in
+    * RFC3339 format: `yyyy-MM-ddTHH:mm:ssZ`. The default value is the current date time plus 180 days.
+    *
+    * @return The end time of the room.
+    */
     public OffsetDateTime getValidUntil() {
         return validUntil;
+    }
+
+    /**
+     * Get the pstnDialOutEnabled property: Set this flag to true if, at the time of the call, dial out to a PSTN number
+     * is enabled in a particular room. By default, this flag is set to false.
+     *
+     * @return the pstnDialOutEnabled value.
+     */
+    public Boolean isPstnDialOutEnabled() {
+        return this.pstnDialOutEnabled;
     }
 
     /**

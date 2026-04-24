@@ -12,19 +12,17 @@ import org.junit.jupiter.api.Assertions;
 public final class ReadOnlyFollowingDatabasePropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ReadOnlyFollowingDatabaseProperties model =
-            BinaryData
-                .fromString(
-                    "{\"provisioningState\":\"Failed\",\"softDeletePeriod\":\"PT16H20M50S\",\"hotCachePeriod\":\"PT105H24M9S\",\"statistics\":{\"size\":88.15698},\"leaderClusterResourceId\":\"utr\",\"attachedDatabaseConfigurationName\":\"upauut\",\"principalsModificationKind\":\"Replace\",\"tableLevelSharingProperties\":{\"tablesToInclude\":[\"hej\"],\"tablesToExclude\":[\"zpnfqntcypsxj\"],\"externalTablesToInclude\":[\"imwkslircizj\",\"vydfceacvlhvygdy\",\"t\"],\"externalTablesToExclude\":[\"twnawjslbiwkojgc\",\"ztsfmznbaeqp\",\"chqnrnrpxehuwry\"],\"materializedViewsToInclude\":[\"aifmvikl\",\"ydv\"],\"materializedViewsToExclude\":[\"ejd\",\"nxcvds\",\"hnjivo\"],\"functionsToInclude\":[\"novqfzge\",\"jdftuljltd\",\"ceamtm\",\"zuo\"],\"functionsToExclude\":[\"wcw\"]},\"originalDatabaseName\":\"ioknssxmoj\",\"databaseShareOrigin\":\"Direct\",\"suspensionDetails\":{\"suspensionStartDate\":\"2021-02-27T14:03:02Z\"}}")
-                .toObject(ReadOnlyFollowingDatabaseProperties.class);
-        Assertions.assertEquals(Duration.parse("PT105H24M9S"), model.hotCachePeriod());
+        ReadOnlyFollowingDatabaseProperties model = BinaryData.fromString(
+            "{\"provisioningState\":\"Canceled\",\"softDeletePeriod\":\"PT133H19M40S\",\"hotCachePeriod\":\"PT125H19M50S\",\"statistics\":{\"size\":27.006971},\"leaderClusterResourceId\":\"dncj\",\"attachedDatabaseConfigurationName\":\"onbzoggculapzwy\",\"principalsModificationKind\":\"None\",\"tableLevelSharingProperties\":{\"tablesToInclude\":[\"qxepnylbfuaj\",\"yjt\"],\"tablesToExclude\":[\"fqzhv\"],\"externalTablesToInclude\":[\"byfmowuxr\",\"jpvd\"],\"externalTablesToExclude\":[\"zwiivwzjbhyzs\",\"jrkambtrnegvmnv\",\"q\",\"qvldspastjbkkd\"],\"materializedViewsToInclude\":[\"vestmjl\"],\"materializedViewsToExclude\":[\"ilozapeewchpxlk\"],\"functionsToInclude\":[\"uziycsl\",\"vu\",\"uztcktyhjtqed\"],\"functionsToExclude\":[\"ulwm\",\"rqzz\",\"rjvpglydzgkrvqee\",\"toepryu\"]},\"originalDatabaseName\":\"wytpzdmovz\",\"databaseShareOrigin\":\"Direct\",\"suspensionDetails\":{\"suspensionStartDate\":\"2021-06-08T04:09:14Z\"}}")
+            .toObject(ReadOnlyFollowingDatabaseProperties.class);
+        Assertions.assertEquals(Duration.parse("PT125H19M50S"), model.hotCachePeriod());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ReadOnlyFollowingDatabaseProperties model =
-            new ReadOnlyFollowingDatabaseProperties().withHotCachePeriod(Duration.parse("PT105H24M9S"));
+        ReadOnlyFollowingDatabaseProperties model
+            = new ReadOnlyFollowingDatabaseProperties().withHotCachePeriod(Duration.parse("PT125H19M50S"));
         model = BinaryData.fromObject(model).toObject(ReadOnlyFollowingDatabaseProperties.class);
-        Assertions.assertEquals(Duration.parse("PT105H24M9S"), model.hotCachePeriod());
+        Assertions.assertEquals(Duration.parse("PT125H19M50S"), model.hotCachePeriod());
     }
 }

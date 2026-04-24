@@ -13,7 +13,7 @@ Licensed under the MIT License.
 
   <groupId>com.azure</groupId>
   <artifactId>azure-cosmos-test</artifactId>
-  <version>1.0.0-beta.5</version> <!-- {x-version-update;com.azure:azure-cosmos-test;current} -->
+  <version>1.0.0-beta.19</version> <!-- {x-version-update;com.azure:azure-cosmos-test;current} -->
   <name>Microsoft Azure Java Cosmos Test Library</name>
   <description>This package contains core fault injection types for Azure Java Cosmos client.</description>
   <packaging>jar</packaging>
@@ -48,13 +48,18 @@ Licensed under the MIT License.
       --add-opens com.azure.cosmos/com.azure.cosmos.implementation=ALL-UNNAMED
       --add-opens com.azure.cosmos/com.azure.cosmos.implementation.directconnectivity=ALL-UNNAMED
     </javaModulesSurefireArgLine>
+
+    <jacoco.skip>true</jacoco.skip> <!-- project has no tests -->
+
+    <doclintMissingInclusion>-</doclintMissingInclusion>
+    <spotless.skip>true</spotless.skip>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.azure</groupId>
       <artifactId>azure-cosmos</artifactId>
-      <version>4.49.0-beta.1</version> <!-- {x-version-update;com.azure:azure-cosmos;current} -->
+      <version>4.80.0-beta.1</version> <!-- {x-version-update;com.azure:azure-cosmos;current} -->
     </dependency>
 
     <dependency>
@@ -92,7 +97,7 @@ Licensed under the MIT License.
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.22.0</version> <!-- {x-version-update;org.assertj:assertj-core;external_dependency} -->
+      <version>3.27.7</version> <!-- {x-version-update;org.assertj:assertj-core;external_dependency} -->
       <scope>test</scope>
     </dependency>
 
@@ -123,6 +128,20 @@ Licensed under the MIT License.
       <version>4.11.0</version> <!-- {x-version-update;org.mockito:mockito-core;external_dependency} -->
       <scope>test</scope>
     </dependency>
+    <!-- bytebuddy dependencies are required for mockito 4.11.0 to work with Java 21. Mockito 4.11.0 is the last release -->
+    <!-- of Mockito supporting Java 8 as a baseline. -->
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>1.17.7</version> <!-- {x-version-update;testdep_net.bytebuddy:byte-buddy;external_dependency} -->
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy-agent</artifactId>
+      <version>1.17.7</version> <!-- {x-version-update;testdep_net.bytebuddy:byte-buddy-agent;external_dependency} -->
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -130,9 +149,15 @@ Licensed under the MIT License.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.0</version> <!-- {x-version-update;org.apache.maven.plugins:maven-surefire-plugin;external_dependency} -->
+        <version>3.5.3</version> <!-- {x-version-update;org.apache.maven.plugins:maven-surefire-plugin;external_dependency} -->
         <configuration>
           <groups>unit</groups>
+          <systemPropertyVariables>
+            <COSMOS.CLIENT_LEAK_DETECTION_ENABLED>true</COSMOS.CLIENT_LEAK_DETECTION_ENABLED>
+            <io.netty.leakDetection.samplingInterval>1</io.netty.leakDetection.samplingInterval>
+            <io.netty.leakDetection.targetRecords>256</io.netty.leakDetection.targetRecords>
+            <io.netty.leakDetection.level>paranoid</io.netty.leakDetection.level>
+          </systemPropertyVariables>
           <includes>
             <include>%regex[.*]</include>
           </includes>
@@ -141,13 +166,18 @@ Licensed under the MIT License.
               <name>surefire.testng.verbose</name>
               <value>2</value>
             </property>
+            <property>
+              <name>listener</name>
+              <value>com.azure.cosmos.CosmosNettyLeakDetectorFactory</value>
+            </property>
           </properties>
+          <skipTests>true</skipTests>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M3</version> <!-- {x-version-update;org.apache.maven.plugins:maven-enforcer-plugin;external_dependency} -->
+        <version>3.6.1</version> <!-- {x-version-update;org.apache.maven.plugins:maven-enforcer-plugin;external_dependency} -->
         <configuration>
           <rules>
             <bannedDependencies>
@@ -160,70 +190,4 @@ Licensed under the MIT License.
       </plugin>
     </plugins>
   </build>
-  <profiles>
-    <profile>
-      <!-- unit test -->
-      <id>unit</id>
-      <properties>
-        <env>default</env>
-        <test.groups>unit</test.groups>
-      </properties>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>3.1.0</version> <!-- {x-version-update;org.apache.maven.plugins:maven-surefire-plugin;external_dependency} -->
-            <configuration>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <!-- integration tests, requires Cosmos DB endpoint with multi region support -->
-      <id>multi-region</id>
-      <properties>
-        <test.groups>multi-region</test.groups>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>3.1.0</version> <!-- {x-version-update;org.apache.maven.plugins:maven-failsafe-plugin;external_dependency} -->
-            <configuration>
-              <suiteXmlFiles>
-                <suiteXmlFile>src/test/resources/multi-region-testng.xml</suiteXmlFile>
-              </suiteXmlFiles>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <!-- integration tests, requires Cosmos DB endpoint -->
-      <id>fast</id>
-      <properties>
-        <test.groups>simple</test.groups>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>3.1.0</version> <!-- {x-version-update;org.apache.maven.plugins:maven-failsafe-plugin;external_dependency} -->
-            <configuration>
-              <suiteXmlFiles>
-                <suiteXmlFile>src/test/resources/fast-testng.xml</suiteXmlFile>
-              </suiteXmlFiles>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>

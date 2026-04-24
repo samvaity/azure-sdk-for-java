@@ -5,52 +5,63 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
 /**
  * Sku
- *
- * <p>SQL pool SKU.
+ * 
+ * SQL pool SKU.
  */
 @Fluent
-public final class Sku {
+public final class Sku implements JsonSerializable<Sku> {
     /*
      * The service tier
      */
-    @JsonProperty(value = "tier")
+    @Generated
     private String tier;
 
     /*
      * The SKU name
      */
-    @JsonProperty(value = "name")
+    @Generated
     private String name;
 
     /*
      * If the SKU supports scale out/in then the capacity integer should be included. If scale out/in is not possible
      * for the resource this may be omitted.
      */
-    @JsonProperty(value = "capacity")
+    @Generated
     private Integer capacity;
 
-    /** Creates an instance of Sku class. */
-    public Sku() {}
+    /**
+     * Creates an instance of Sku class.
+     */
+    @Generated
+    public Sku() {
+    }
 
     /**
      * Get the tier property: The service tier.
-     *
+     * 
      * @return the tier value.
      */
+    @Generated
     public String getTier() {
         return this.tier;
     }
 
     /**
      * Set the tier property: The service tier.
-     *
+     * 
      * @param tier the tier value to set.
      * @return the Sku object itself.
      */
+    @Generated
     public Sku setTier(String tier) {
         this.tier = tier;
         return this;
@@ -58,19 +69,21 @@ public final class Sku {
 
     /**
      * Get the name property: The SKU name.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The SKU name.
-     *
+     * 
      * @param name the name value to set.
      * @return the Sku object itself.
      */
+    @Generated
     public Sku setName(String name) {
         this.name = name;
         return this;
@@ -79,9 +92,10 @@ public final class Sku {
     /**
      * Get the capacity property: If the SKU supports scale out/in then the capacity integer should be included. If
      * scale out/in is not possible for the resource this may be omitted.
-     *
+     * 
      * @return the capacity value.
      */
+    @Generated
     public Integer getCapacity() {
         return this.capacity;
     }
@@ -89,12 +103,57 @@ public final class Sku {
     /**
      * Set the capacity property: If the SKU supports scale out/in then the capacity integer should be included. If
      * scale out/in is not possible for the resource this may be omitted.
-     *
+     * 
      * @param capacity the capacity value to set.
      * @return the Sku object itself.
      */
+    @Generated
     public Sku setCapacity(Integer capacity) {
         this.capacity = capacity;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("tier", this.tier);
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeNumberField("capacity", this.capacity);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of Sku from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of Sku if the JsonReader was pointing to an instance of it, or null if it was pointing to
+     * JSON null.
+     * @throws IOException If an error occurs while reading the Sku.
+     */
+    @Generated
+    public static Sku fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            Sku deserializedSku = new Sku();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("tier".equals(fieldName)) {
+                    deserializedSku.tier = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedSku.name = reader.getString();
+                } else if ("capacity".equals(fieldName)) {
+                    deserializedSku.capacity = reader.getNullable(JsonReader::getInt);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSku;
+        });
     }
 }

@@ -5,33 +5,45 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Azure ML WebService Input/Output file. */
+/**
+ * Azure ML WebService Input/Output file.
+ */
 @Fluent
-public final class AzureMLWebServiceFile {
+public final class AzureMLWebServiceFile implements JsonSerializable<AzureMLWebServiceFile> {
     /*
-     * The relative file path, including container name, in the Azure Blob Storage specified by the LinkedService.
-     * Type: string (or Expression with resultType string).
+     * The relative file path, including container name, in the Azure Blob Storage specified by the LinkedService. Type:
+     * string (or Expression with resultType string).
      */
-    @JsonProperty(value = "filePath", required = true)
+    @Generated
     private Object filePath;
 
     /*
      * Reference to an Azure Storage LinkedService, where Azure ML WebService Input/Output file located.
      */
-    @JsonProperty(value = "linkedServiceName", required = true)
+    @Generated
     private LinkedServiceReference linkedServiceName;
 
-    /** Creates an instance of AzureMLWebServiceFile class. */
-    public AzureMLWebServiceFile() {}
+    /**
+     * Creates an instance of AzureMLWebServiceFile class.
+     */
+    @Generated
+    public AzureMLWebServiceFile() {
+    }
 
     /**
      * Get the filePath property: The relative file path, including container name, in the Azure Blob Storage specified
      * by the LinkedService. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the filePath value.
      */
+    @Generated
     public Object getFilePath() {
         return this.filePath;
     }
@@ -39,10 +51,11 @@ public final class AzureMLWebServiceFile {
     /**
      * Set the filePath property: The relative file path, including container name, in the Azure Blob Storage specified
      * by the LinkedService. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param filePath the filePath value to set.
      * @return the AzureMLWebServiceFile object itself.
      */
+    @Generated
     public AzureMLWebServiceFile setFilePath(Object filePath) {
         this.filePath = filePath;
         return this;
@@ -51,9 +64,10 @@ public final class AzureMLWebServiceFile {
     /**
      * Get the linkedServiceName property: Reference to an Azure Storage LinkedService, where Azure ML WebService
      * Input/Output file located.
-     *
+     * 
      * @return the linkedServiceName value.
      */
+    @Generated
     public LinkedServiceReference getLinkedServiceName() {
         return this.linkedServiceName;
     }
@@ -61,12 +75,55 @@ public final class AzureMLWebServiceFile {
     /**
      * Set the linkedServiceName property: Reference to an Azure Storage LinkedService, where Azure ML WebService
      * Input/Output file located.
-     *
+     * 
      * @param linkedServiceName the linkedServiceName value to set.
      * @return the AzureMLWebServiceFile object itself.
      */
+    @Generated
     public AzureMLWebServiceFile setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         this.linkedServiceName = linkedServiceName;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeUntypedField("filePath", this.filePath);
+        jsonWriter.writeJsonField("linkedServiceName", this.linkedServiceName);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureMLWebServiceFile from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureMLWebServiceFile if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AzureMLWebServiceFile.
+     */
+    @Generated
+    public static AzureMLWebServiceFile fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureMLWebServiceFile deserializedAzureMLWebServiceFile = new AzureMLWebServiceFile();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("filePath".equals(fieldName)) {
+                    deserializedAzureMLWebServiceFile.filePath = reader.readUntyped();
+                } else if ("linkedServiceName".equals(fieldName)) {
+                    deserializedAzureMLWebServiceFile.linkedServiceName = LinkedServiceReference.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedAzureMLWebServiceFile;
+        });
     }
 }

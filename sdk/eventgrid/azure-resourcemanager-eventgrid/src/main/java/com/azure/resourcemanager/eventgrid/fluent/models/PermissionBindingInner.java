@@ -7,32 +7,52 @@ package com.azure.resourcemanager.eventgrid.fluent.models;
 import com.azure.core.annotation.Fluent;
 import com.azure.core.management.ProxyResource;
 import com.azure.core.management.SystemData;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.eventgrid.models.PermissionBindingProvisioningState;
 import com.azure.resourcemanager.eventgrid.models.PermissionType;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 
-/** The Permission binding resource. */
+/**
+ * The Permission binding resource.
+ */
 @Fluent
 public final class PermissionBindingInner extends ProxyResource {
     /*
      * The properties of permission binding.
      */
-    @JsonProperty(value = "properties")
     private PermissionBindingProperties innerProperties;
 
     /*
-     * The system metadata relating to the PermissionBinding resource.
+     * The system metadata relating to the Event Grid resource.
      */
-    @JsonProperty(value = "systemData", access = JsonProperty.Access.WRITE_ONLY)
     private SystemData systemData;
 
-    /** Creates an instance of PermissionBindingInner class. */
+    /*
+     * The type of the resource.
+     */
+    private String type;
+
+    /*
+     * The name of the resource.
+     */
+    private String name;
+
+    /*
+     * Fully qualified resource Id for the resource.
+     */
+    private String id;
+
+    /**
+     * Creates an instance of PermissionBindingInner class.
+     */
     public PermissionBindingInner() {
     }
 
     /**
      * Get the innerProperties property: The properties of permission binding.
-     *
+     * 
      * @return the innerProperties value.
      */
     private PermissionBindingProperties innerProperties() {
@@ -40,8 +60,8 @@ public final class PermissionBindingInner extends ProxyResource {
     }
 
     /**
-     * Get the systemData property: The system metadata relating to the PermissionBinding resource.
-     *
+     * Get the systemData property: The system metadata relating to the Event Grid resource.
+     * 
      * @return the systemData value.
      */
     public SystemData systemData() {
@@ -49,8 +69,38 @@ public final class PermissionBindingInner extends ProxyResource {
     }
 
     /**
+     * Get the type property: The type of the resource.
+     * 
+     * @return the type value.
+     */
+    @Override
+    public String type() {
+        return this.type;
+    }
+
+    /**
+     * Get the name property: The name of the resource.
+     * 
+     * @return the name value.
+     */
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    /**
+     * Get the id property: Fully qualified resource Id for the resource.
+     * 
+     * @return the id value.
+     */
+    @Override
+    public String id() {
+        return this.id;
+    }
+
+    /**
      * Get the description property: Description for the Permission Binding resource.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -59,7 +109,7 @@ public final class PermissionBindingInner extends ProxyResource {
 
     /**
      * Set the description property: Description for the Permission Binding resource.
-     *
+     * 
      * @param description the description value to set.
      * @return the PermissionBindingInner object itself.
      */
@@ -72,9 +122,9 @@ public final class PermissionBindingInner extends ProxyResource {
     }
 
     /**
-     * Get the topicSpaceName property: The name of the Topic Space resource that the permission is bound to. The Topic
-     * space needs to be a resource under the same namespace the permission binding is a part of.
-     *
+     * Get the topicSpaceName property: The name of the Topic Space resource that the permission is bound to.
+     * The Topic space needs to be a resource under the same namespace the permission binding is a part of.
+     * 
      * @return the topicSpaceName value.
      */
     public String topicSpaceName() {
@@ -82,9 +132,9 @@ public final class PermissionBindingInner extends ProxyResource {
     }
 
     /**
-     * Set the topicSpaceName property: The name of the Topic Space resource that the permission is bound to. The Topic
-     * space needs to be a resource under the same namespace the permission binding is a part of.
-     *
+     * Set the topicSpaceName property: The name of the Topic Space resource that the permission is bound to.
+     * The Topic space needs to be a resource under the same namespace the permission binding is a part of.
+     * 
      * @param topicSpaceName the topicSpaceName value to set.
      * @return the PermissionBindingInner object itself.
      */
@@ -98,7 +148,7 @@ public final class PermissionBindingInner extends ProxyResource {
 
     /**
      * Get the permission property: The allowed permission.
-     *
+     * 
      * @return the permission value.
      */
     public PermissionType permission() {
@@ -107,7 +157,7 @@ public final class PermissionBindingInner extends ProxyResource {
 
     /**
      * Set the permission property: The allowed permission.
-     *
+     * 
      * @param permission the permission value to set.
      * @return the PermissionBindingInner object itself.
      */
@@ -120,9 +170,9 @@ public final class PermissionBindingInner extends ProxyResource {
     }
 
     /**
-     * Get the clientGroupName property: The name of the client group resource that the permission is bound to. The
-     * client group needs to be a resource under the same namespace the permission binding is a part of.
-     *
+     * Get the clientGroupName property: The name of the client group resource that the permission is bound to.
+     * The client group needs to be a resource under the same namespace the permission binding is a part of.
+     * 
      * @return the clientGroupName value.
      */
     public String clientGroupName() {
@@ -130,9 +180,9 @@ public final class PermissionBindingInner extends ProxyResource {
     }
 
     /**
-     * Set the clientGroupName property: The name of the client group resource that the permission is bound to. The
-     * client group needs to be a resource under the same namespace the permission binding is a part of.
-     *
+     * Set the clientGroupName property: The name of the client group resource that the permission is bound to.
+     * The client group needs to be a resource under the same namespace the permission binding is a part of.
+     * 
      * @param clientGroupName the clientGroupName value to set.
      * @return the PermissionBindingInner object itself.
      */
@@ -146,7 +196,7 @@ public final class PermissionBindingInner extends ProxyResource {
 
     /**
      * Get the provisioningState property: Provisioning state of the PermissionBinding resource.
-     *
+     * 
      * @return the provisioningState value.
      */
     public PermissionBindingProvisioningState provisioningState() {
@@ -155,12 +205,57 @@ public final class PermissionBindingInner extends ProxyResource {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (innerProperties() != null) {
             innerProperties().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("properties", this.innerProperties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PermissionBindingInner from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PermissionBindingInner if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the PermissionBindingInner.
+     */
+    public static PermissionBindingInner fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PermissionBindingInner deserializedPermissionBindingInner = new PermissionBindingInner();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedPermissionBindingInner.id = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedPermissionBindingInner.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedPermissionBindingInner.type = reader.getString();
+                } else if ("properties".equals(fieldName)) {
+                    deserializedPermissionBindingInner.innerProperties = PermissionBindingProperties.fromJson(reader);
+                } else if ("systemData".equals(fieldName)) {
+                    deserializedPermissionBindingInner.systemData = SystemData.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPermissionBindingInner;
+        });
     }
 }

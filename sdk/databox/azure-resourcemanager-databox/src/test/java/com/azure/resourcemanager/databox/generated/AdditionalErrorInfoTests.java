@@ -11,17 +11,15 @@ import org.junit.jupiter.api.Assertions;
 public final class AdditionalErrorInfoTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        AdditionalErrorInfo model =
-            BinaryData
-                .fromString("{\"info\":\"datakujysvlejuvfq\",\"type\":\"rlyxwjkcprbnw\"}")
-                .toObject(AdditionalErrorInfo.class);
-        Assertions.assertEquals("rlyxwjkcprbnw", model.type());
+        AdditionalErrorInfo model = BinaryData.fromString("{\"info\":\"datalxxwrljdouskc\",\"type\":\"kocrcjdkwtnhx\"}")
+            .toObject(AdditionalErrorInfo.class);
+        Assertions.assertEquals("kocrcjdkwtnhx", model.type());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        AdditionalErrorInfo model = new AdditionalErrorInfo().withInfo("datakujysvlejuvfq").withType("rlyxwjkcprbnw");
+        AdditionalErrorInfo model = new AdditionalErrorInfo().withInfo("datalxxwrljdouskc").withType("kocrcjdkwtnhx");
         model = BinaryData.fromObject(model).toObject(AdditionalErrorInfo.class);
-        Assertions.assertEquals("rlyxwjkcprbnw", model.type());
+        Assertions.assertEquals("kocrcjdkwtnhx", model.type());
     }
 }

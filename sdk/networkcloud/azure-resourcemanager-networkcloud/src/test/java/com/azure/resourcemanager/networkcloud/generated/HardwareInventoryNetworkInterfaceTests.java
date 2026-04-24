@@ -10,11 +10,9 @@ import com.azure.resourcemanager.networkcloud.models.HardwareInventoryNetworkInt
 public final class HardwareInventoryNetworkInterfaceTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        HardwareInventoryNetworkInterface model =
-            BinaryData
-                .fromString(
-                    "{\"linkStatus\":\"algbquxigjyjg\",\"macAddress\":\"aoyfhrtxilnerkuj\",\"name\":\"vlejuvfqa\",\"networkInterfaceId\":\"lyxwjkcprbnwbx\"}")
-                .toObject(HardwareInventoryNetworkInterface.class);
+        HardwareInventoryNetworkInterface model = BinaryData.fromString(
+            "{\"linkStatus\":\"zrkgqhcjrefovg\",\"macAddress\":\"qsl\",\"name\":\"yvxyqjp\",\"networkInterfaceId\":\"attpngjcrcczsq\"}")
+            .toObject(HardwareInventoryNetworkInterface.class);
     }
 
     @org.junit.jupiter.api.Test

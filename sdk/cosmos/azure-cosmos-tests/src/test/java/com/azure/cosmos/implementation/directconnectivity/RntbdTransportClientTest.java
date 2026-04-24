@@ -37,6 +37,7 @@ import com.azure.cosmos.implementation.UnauthorizedException;
 import com.azure.cosmos.implementation.UserAgentContainer;
 import com.azure.cosmos.implementation.Utils;
 import com.azure.cosmos.implementation.apachecommons.lang.NotImplementedException;
+import com.azure.cosmos.implementation.clienttelemetry.ClientTelemetry;
 import com.azure.cosmos.implementation.clienttelemetry.TagName;
 import com.azure.cosmos.implementation.directconnectivity.rntbd.AsyncRntbdRequestRecord;
 import com.azure.cosmos.implementation.directconnectivity.rntbd.OpenConnectionRntbdRequestRecord;
@@ -58,9 +59,9 @@ import com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdResponse;
 import com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdResponseDecoder;
 import com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdServiceEndpoint;
 import com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdUUID;
-import com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdUtils;
 import com.azure.cosmos.implementation.guava25.base.Strings;
 import com.azure.cosmos.implementation.guava25.collect.ImmutableMap;
+import com.azure.cosmos.implementation.routing.RegionalRoutingContext;
 import io.micrometer.core.instrument.Tag;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -70,7 +71,6 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
-import io.reactivex.subscribers.TestSubscriber;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.mockito.Mockito;
@@ -78,6 +78,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import reactor.test.StepVerifier;
 
 import javax.net.ssl.SSLException;
 import java.io.IOException;
@@ -90,13 +91,11 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static com.azure.cosmos.implementation.HttpConstants.HttpHeaders;
 import static com.azure.cosmos.implementation.HttpConstants.SubStatusCodes;
 import static com.azure.cosmos.implementation.TestUtils.mockDiagnosticsClientContext;
-import static com.azure.cosmos.implementation.guava27.Strings.lenientFormat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.testng.Assert.assertEquals;
@@ -118,6 +117,7 @@ public final class RntbdTransportClientTest {
     private static final int timeoutDetectionOnWriteThreshold = 1;
     private static final Duration timeoutDetectionOnWriteTimeLimit = Duration.ofSeconds(6L);
     private static final double timeoutDetectionDisableCPUThreshold = 90.0;
+    private static final double  channelAcquisitionContextLatencyThresholdInMillis = 1000;
 
     @DataProvider(name = "fromMockedNetworkFailureToExpectedDocumentClientException")
     public Object[][] fromMockedNetworkFailureToExpectedDocumentClientException() {
@@ -761,6 +761,7 @@ public final class RntbdTransportClientTest {
         assertEquals(options.timeoutDetectionOnWriteThreshold(), timeoutDetectionOnWriteThreshold);
         assertEquals(options.timeoutDetectionOnWriteTimeLimit(), timeoutDetectionOnWriteTimeLimit);
         assertEquals(options.timeoutDetectionDisableCPUThreshold(), timeoutDetectionDisableCPUThreshold);
+        assertEquals(options.channelAcquisitionContextLatencyThresholdInMillis(), channelAcquisitionContextLatencyThresholdInMillis);
     }
 
     // TODO: add validations for other properties
@@ -774,7 +775,8 @@ public final class RntbdTransportClientTest {
                 "{\"sslHandshakeTimeoutMinDuration\":\"PT15S\"," +
                     "\"timeoutDetectionTimeLimit\":\"PT61S\", \"timeoutDetectionHighFrequencyThreshold\":\"4\", " +
                     "\"timeoutDetectionHighFrequencyTimeLimit\":\"PT11S\", \"timeoutDetectionOnWriteThreshold\":\"2\"," +
-                    "\"timeoutDetectionOnWriteTimeLimit\":\"PT7S\", \"timeoutDetectionDisableCPUThreshold\":\"80.0\"}");
+                    "\"timeoutDetectionOnWriteTimeLimit\":\"PT7S\", \"timeoutDetectionDisableCPUThreshold\":\"80.0\"," +
+                        "\"channelAcquisitionContextLatencyThresholdInMillis\":\"2000\"}");
 
             ConnectionPolicy connectionPolicy = new ConnectionPolicy(DirectConnectionConfig.getDefaultConfig());
             UserAgentContainer userAgentContainer = new UserAgentContainer();
@@ -791,6 +793,7 @@ public final class RntbdTransportClientTest {
             assertEquals(options.timeoutDetectionOnWriteThreshold(), 2);
             assertEquals(options.timeoutDetectionOnWriteTimeLimit(), Duration.ofSeconds(7));
             assertEquals(options.timeoutDetectionDisableCPUThreshold(), 80.0);
+            assertEquals(options.channelAcquisitionContextLatencyThresholdInMillis(), 2000);
 
         } finally {
             System.clearProperty("azure.cosmos.directTcp.defaultOptions");
@@ -835,7 +838,9 @@ public final class RntbdTransportClientTest {
         ConnectionPolicy connectionPolicy = new ConnectionPolicy(DirectConnectionConfig.getDefaultConfig());
         RntbdTransportClient.Options options = new RntbdTransportClient.Options.Builder(connectionPolicy).build();
         final SslContext sslContext = SslContextBuilder.forClient().build();
-        request.requestContext.locationEndpointToRoute = locationToRoute;
+
+        request.requestContext.regionalRoutingContextToRoute = new RegionalRoutingContext(locationToRoute);
+
         RntbdRequestArgs requestArgs = new RntbdRequestArgs(request, addressUri);
         RntbdRequestTimer requestTimer = new RntbdRequestTimer(5000, 5000);
         RntbdRequestRecord rntbdRequestRecord = new AsyncRntbdRequestRecord(requestArgs, requestTimer);
@@ -901,17 +906,8 @@ public final class RntbdTransportClientTest {
     }
 
     private static void validateFailure(
-        final Mono<? extends StoreResponse> mono, final FailureValidator validator, final long timeout
-    ) {
-
-        final TestSubscriber<StoreResponse> subscriber = new TestSubscriber<>();
-        mono.subscribe(subscriber);
-
-        subscriber.awaitTerminalEvent(timeout, TimeUnit.MILLISECONDS);
-        assertThat(subscriber.errorCount()).isEqualTo(1);
-        subscriber.assertSubscribed();
-        subscriber.assertNoValues();
-        validator.validate(subscriber.errors().get(0));
+        final Mono<? extends StoreResponse> mono, final FailureValidator validator, final long timeout) {
+        StepVerifier.create(mono).expectErrorSatisfies(validator::validate).verify(Duration.ofMillis(timeout));
     }
 
     // region Types
@@ -980,7 +976,7 @@ public final class RntbdTransportClientTest {
         private final RntbdDurableEndpointMetrics durableEndpointMetrics;
 
         private FakeEndpoint(
-            final Config config, final RntbdRequestTimer timer, final Uri addressUri,
+            final Config config, final ClientTelemetry clientTelemetry, RntbdRequestTimer timer, final Uri addressUri,
             final RntbdResponse... expected
         ) {
 
@@ -1000,7 +996,7 @@ public final class RntbdTransportClientTest {
                 this.durableEndpointMetrics.setEndpoint(this);
             } catch (URISyntaxException error) {
                 throw new IllegalArgumentException(
-                    lenientFormat("addressUri %s cannot be parsed as a server-based authority", addressUri),
+                    String.format("addressUri %s cannot be parsed as a server-based authority", addressUri),
                     error);
             }
 
@@ -1009,12 +1005,10 @@ public final class RntbdTransportClientTest {
             );
 
             RntbdRequestManager requestManager = new RntbdRequestManager(
-                    new RntbdClientChannelHealthChecker(config),
-                    30,
+                    new RntbdClientChannelHealthChecker(config, clientTelemetry),
+                    config,
                     null,
-                    Duration.ofMillis(100).toNanos(),
-                    null,
-                    config.tcpNetworkRequestTimeoutInNanos());
+                    null);
             this.requestTimer = timer;
 
             this.fakeChannel = new FakeChannel(responses,
@@ -1134,6 +1128,11 @@ public final class RntbdTransportClientTest {
         }
 
         @Override
+        public URI serverKeyUsedAsActualRemoteAddress() {
+            return this.remoteURI;
+        }
+
+        @Override
         public void injectConnectionErrors(String ruleId, double threshold, Class<?> eventType) {
             throw new NotImplementedException("injectConnectionErrors is not supported in FakeEndpoint");
         }
@@ -1181,12 +1180,14 @@ public final class RntbdTransportClientTest {
         static class Provider implements RntbdEndpoint.Provider {
 
             final Config config;
+            final ClientTelemetry clientTelemetry;
             final RntbdResponse expected;
             final RntbdRequestTimer timer;
             final IAddressResolver addressResolver;
 
             Provider(RntbdTransportClient.Options options, SslContext sslContext, RntbdResponse expected, IAddressResolver addressResolver) {
                 this.config = new Config(options, sslContext, LogLevel.WARN);
+                this.clientTelemetry = new ClientTelemetry(mockDiagnosticsClientContext(), false, null, null, null, null, null, null, null, null, null);
                 this.timer = new RntbdRequestTimer(
                     config.tcpNetworkRequestTimeoutInNanos(),
                     config.requestTimerResolutionInNanos());
@@ -1216,12 +1217,12 @@ public final class RntbdTransportClientTest {
 
             @Override
             public RntbdEndpoint createIfAbsent(URI serviceEndpoint, Uri addressUri, ProactiveOpenConnectionsProcessor proactiveOpenConnectionsProcessor, int minRequiredChannelsForEndpoint, AddressSelector addressSelector) {
-                return new FakeEndpoint(config, timer, addressUri, expected);
+                return new FakeEndpoint(config, clientTelemetry, timer, addressUri, expected);
             }
 
             @Override
             public RntbdEndpoint get(URI physicalAddress) {
-                return new FakeEndpoint(config, timer, new Uri(physicalAddress.toString()), expected);
+                return new FakeEndpoint(config, clientTelemetry, timer, new Uri(physicalAddress.toString()), expected);
             }
 
             @Override

@@ -4,8 +4,13 @@
 
 package com.azure.maps.route.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
 /**
  * Groups a sequence of instruction elements which are related to each other. The sequence range is constrained with
@@ -13,40 +18,45 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * (instructionType=text or tagged), then the instructionGroup has a summary message returned when available.
  */
 @Immutable
-public final class RouteInstructionGroup {
+public final class RouteInstructionGroup implements JsonSerializable<RouteInstructionGroup> {
     /*
-     * Index of the first instruction in the instructions and belonging to this
-     * group.
+     * Index of the first instruction in the instructions and belonging to this group.
      */
-    @JsonProperty(value = "firstInstructionIndex", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Integer firstInstructionIndex;
 
     /*
-     * Index of the last instruction in the instructions and belonging to this
-     * group.
+     * Index of the last instruction in the instructions and belonging to this group.
      */
-    @JsonProperty(value = "lastInstructionIndex", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Integer lastInstructionIndex;
 
     /*
      * Length of the group.
      */
-    @JsonProperty(value = "groupLengthInMeters", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Integer groupLengthInMeters;
 
     /*
-     * Summary message when human-readable text messages are requested for
-     * guidance (instructionType=text or tagged).
+     * Summary message when human-readable text messages are requested for guidance (instructionType=text or tagged).
      */
-    @JsonProperty(value = "groupMessage", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private String groupMessage;
+
+    /**
+     * Creates an instance of RouteInstructionGroup class.
+     */
+    @Generated
+    public RouteInstructionGroup() {
+    }
 
     /**
      * Get the firstInstructionIndex property: Index of the first instruction in the instructions and belonging to this
      * group.
-     *
+     * 
      * @return the firstInstructionIndex value.
      */
+    @Generated
     public Integer getFirstInstructionIndex() {
         return this.firstInstructionIndex;
     }
@@ -54,18 +64,20 @@ public final class RouteInstructionGroup {
     /**
      * Get the lastInstructionIndex property: Index of the last instruction in the instructions and belonging to this
      * group.
-     *
+     * 
      * @return the lastInstructionIndex value.
      */
+    @Generated
     public Integer getLastInstructionIndex() {
         return this.lastInstructionIndex;
     }
 
     /**
      * Get the groupLengthInMeters property: Length of the group.
-     *
+     * 
      * @return the groupLengthInMeters value.
      */
+    @Generated
     public Integer getGroupLengthInMeters() {
         return this.groupLengthInMeters;
     }
@@ -73,10 +85,54 @@ public final class RouteInstructionGroup {
     /**
      * Get the groupMessage property: Summary message when human-readable text messages are requested for guidance
      * (instructionType=text or tagged).
-     *
+     * 
      * @return the groupMessage value.
      */
+    @Generated
     public String getGroupMessage() {
         return this.groupMessage;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RouteInstructionGroup from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RouteInstructionGroup if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the RouteInstructionGroup.
+     */
+    @Generated
+    public static RouteInstructionGroup fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RouteInstructionGroup deserializedRouteInstructionGroup = new RouteInstructionGroup();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("firstInstructionIndex".equals(fieldName)) {
+                    deserializedRouteInstructionGroup.firstInstructionIndex = reader.getNullable(JsonReader::getInt);
+                } else if ("lastInstructionIndex".equals(fieldName)) {
+                    deserializedRouteInstructionGroup.lastInstructionIndex = reader.getNullable(JsonReader::getInt);
+                } else if ("groupLengthInMeters".equals(fieldName)) {
+                    deserializedRouteInstructionGroup.groupLengthInMeters = reader.getNullable(JsonReader::getInt);
+                } else if ("groupMessage".equals(fieldName)) {
+                    deserializedRouteInstructionGroup.groupMessage = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRouteInstructionGroup;
+        });
     }
 }

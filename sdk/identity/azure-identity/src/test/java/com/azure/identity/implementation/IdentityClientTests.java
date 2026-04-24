@@ -3,13 +3,22 @@
 
 package com.azure.identity.implementation;
 
-import com.azure.core.credential.AccessToken;
 import com.azure.core.credential.TokenRequestContext;
 import com.azure.core.exception.ClientAuthenticationException;
+import com.azure.core.http.HttpClient;
+import com.azure.core.http.HttpRequest;
+import com.azure.core.http.HttpResponse;
+import com.azure.core.http.policy.FixedDelayOptions;
+import com.azure.core.http.policy.RetryOptions;
+import com.azure.core.http.policy.RetryPolicy;
+import com.azure.core.http.policy.FixedDelay;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.core.test.utils.TestConfigurationSource;
 import com.azure.core.util.Configuration;
+import com.azure.core.util.Context;
+import com.azure.identity.DefaultAzureCredential;
+import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.identity.implementation.util.CertificateUtil;
-import com.azure.identity.implementation.util.IdentityConstants;
 import com.azure.identity.util.TestUtils;
 import com.microsoft.aad.msal4j.AuthorizationCodeParameters;
 import com.microsoft.aad.msal4j.ClientCredentialFactory;
@@ -23,14 +32,14 @@ import com.microsoft.aad.msal4j.MsalServiceException;
 import com.microsoft.aad.msal4j.PublicClientApplication;
 import com.microsoft.aad.msal4j.SilentParameters;
 import com.microsoft.aad.msal4j.UserNamePasswordParameters;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalMatchers;
-import org.mockito.ArgumentMatchers;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.exceptions.misusing.InvalidUseOfMatchersException;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -43,24 +52,29 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.anyBoolean;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.argThat;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class IdentityClientTests {
@@ -79,17 +93,13 @@ public class IdentityClientTests {
         // mock
         mockForClientSecret(secret, request, accessToken, expiresOn, () -> {
             // test
-            IdentityClient client = new IdentityClientBuilder()
-                .tenantId(TENANT_ID).clientId(CLIENT_ID).clientSecret(secret).build();
-            StepVerifier.create(client.authenticateWithConfidentialClient(request))
-                .assertNext(token -> {
-                    Assert.assertEquals(accessToken, token.getToken());
-                    Assert.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
-                })
-                .verifyComplete();
+            IdentityClient client
+                = new IdentityClientBuilder().tenantId(TENANT_ID).clientId(CLIENT_ID).clientSecret(secret).build();
+            StepVerifier.create(client.authenticateWithConfidentialClient(request)).assertNext(token -> {
+                Assertions.assertEquals(accessToken, token.getToken());
+                Assertions.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
+            }).verifyComplete();
         });
-
-
     }
 
     @Test
@@ -104,36 +114,44 @@ public class IdentityClientTests {
         mockForClientSecret(secret, request, accessToken, expiresOn, () -> {
             // test
             try {
-                IdentityClient client = new IdentityClientBuilder()
-                    .tenantId(TENANT_ID).clientId(CLIENT_ID).clientSecret("bad secret").build();
+                IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID)
+                    .clientId(CLIENT_ID)
+                    .clientSecret("bad secret")
+                    .build();
                 client.authenticateWithConfidentialClient(request).block();
                 fail();
             } catch (MsalServiceException e) {
-                Assert.assertEquals("Invalid clientSecret", e.getMessage());
+                Assertions.assertEquals("Invalid clientSecret", e.getMessage());
             }
         });
-
 
     }
 
     @Test
     public void testValidCertificate() {
         // setup
-        String pfxPath = getClass().getResource("/keyStore.pfx").getPath();
+        URL pfxUrl = getClass().getResource("/keyStore.pfx");
+        String pfxPath;
+        if (pfxUrl.getPath().contains(":")) {
+            pfxPath = pfxUrl.getPath().substring(1);
+        } else {
+            pfxPath = pfxUrl.getPath();
+        }
         String accessToken = "token";
         TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com");
         OffsetDateTime expiresOn = OffsetDateTime.now(ZoneOffset.UTC).plusHours(1);
 
         // mock
         mockForClientCertificate(request, accessToken, expiresOn, () -> {
-            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID).clientId(CLIENT_ID)
-                .certificatePath(pfxPath).certificatePassword("StrongPass!123").build();
-            StepVerifier.create(client.authenticateWithConfidentialClient(request))
-                .assertNext(token -> {
-                    Assert.assertEquals(accessToken, token.getToken());
-                    Assert.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
-                })
-                .verifyComplete();
+            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID)
+                .clientId(CLIENT_ID)
+                .certificatePath(pfxPath)
+                .certificatePassword("StrongPass!123")
+                .build();
+            StepVerifier.create(client.authenticateWithConfidentialClient(request)).assertNext(token -> {
+                Assertions.assertEquals(accessToken, token.getToken());
+                Assertions.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
+            }).verifyComplete();
         });
     }
 
@@ -154,14 +172,12 @@ public class IdentityClientTests {
         // mock
         mockForClientPemCertificate(accessToken, request, expiresOn, () -> {
             // test
-            IdentityClient client = new IdentityClientBuilder()
-                .tenantId(TENANT_ID).clientId(CLIENT_ID).certificatePath(pemPath).build();
-            StepVerifier.create(client.authenticateWithConfidentialClient(request))
-                .assertNext(token -> {
-                    Assert.assertEquals(accessToken, token.getToken());
-                    Assert.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
-                })
-                .verifyComplete();
+            IdentityClient client
+                = new IdentityClientBuilder().tenantId(TENANT_ID).clientId(CLIENT_ID).certificatePath(pemPath).build();
+            StepVerifier.create(client.authenticateWithConfidentialClient(request)).assertNext(token -> {
+                Assertions.assertEquals(accessToken, token.getToken());
+                Assertions.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
+            }).verifyComplete();
         });
 
     }
@@ -169,7 +185,13 @@ public class IdentityClientTests {
     @Test
     public void testInvalidCertificatePassword() {
         // setup
-        String pfxPath = getClass().getResource("/keyStore.pfx").getPath();
+        URL pfxUrl = getClass().getResource("/keyStore.pfx");
+        String pfxPath;
+        if (pfxUrl.getPath().contains(":")) {
+            pfxPath = pfxUrl.getPath().substring(1);
+        } else {
+            pfxPath = pfxUrl.getPath();
+        }
         String accessToken = "token";
         TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com");
         OffsetDateTime expiresOn = OffsetDateTime.now(ZoneOffset.UTC).plusHours(1);
@@ -177,10 +199,13 @@ public class IdentityClientTests {
         // mock
         mockForClientCertificate(request, accessToken, expiresOn, () -> {
             // test
-            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID).clientId(CLIENT_ID)
-                .certificatePath(pfxPath).certificatePassword("BadPassword").build();
+            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID)
+                .clientId(CLIENT_ID)
+                .certificatePath(pfxPath)
+                .certificatePassword("BadPassword")
+                .build();
             StepVerifier.create(client.authenticateWithConfidentialClient(request))
-                .verifyErrorSatisfies(e -> Assert.assertTrue(e.getMessage().contains("password was incorrect")));
+                .verifyErrorSatisfies(e -> assertTrue(e.getMessage().contains("password was incorrect")));
         });
     }
 
@@ -194,177 +219,16 @@ public class IdentityClientTests {
         // mock
         mockForDeviceCodeFlow(request, accessToken, expiresOn, () -> {
             IdentityClientOptions options = new IdentityClientOptions();
-            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID).clientId(CLIENT_ID)
+            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID)
+                .clientId(CLIENT_ID)
                 .identityClientOptions(options)
                 .build();
 
-            StepVerifier.create(client.authenticateWithDeviceCode(request, deviceCodeChallenge -> { /* do nothing */ }))
-                .assertNext(token -> {
-                    Assert.assertEquals(accessToken, token.getToken());
-                    Assert.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
-                })
-                .verifyComplete();
-        });
-    }
-
-
-    @Test
-    public void testValidServiceFabricCodeFlow() throws Exception {
-        // setup
-        String endpoint = "http://localhost";
-        String secret = "secret";
-        String thumbprint = "950a2c88d57b5e19ac5119315f9ec199ff3cb823";
-        TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com");
-        OffsetDateTime expiresOn = OffsetDateTime.now(ZoneOffset.UTC).plusHours(1);
-        Configuration configuration = TestUtils.createTestConfiguration(new TestConfigurationSource()
-            .put("IDENTITY_ENDPOINT", endpoint)
-            .put("IDENTITY_HEADER", secret)
-            .put("IDENTITY_SERVER_THUMBPRINT", thumbprint));
-        String tokenJson = "{ \"access_token\" : \"token1\", \"expires_on\" : \"" + expiresOn.toEpochSecond() + "\" }";
-
-        // mock
-        IdentityClientOptions options = new IdentityClientOptions()
-            .setManagedIdentityType(ManagedIdentityType.SERVICE_FABRIC)
-            .setManagedIdentityParameters(new ManagedIdentityParameters()
-                .setIdentityEndpoint(endpoint)
-                .setIdentityHeader(secret)
-                .setIdentityServerThumbprint(thumbprint))
-            .setConfiguration(configuration);
-        IdentityClient client = new IdentityClientBuilder().identityClientOptions(options).build();
-        mockForServiceFabricCodeFlow(tokenJson, () -> {
-            // test
-            StepVerifier.create(client.getTokenFromTargetManagedIdentity(request))
-                .assertNext(token -> {
-                    Assert.assertEquals("token1", token.getToken());
-                    Assert.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
-                })
-                .verifyComplete();
-        });
-    }
-
-    @Test
-    public void testValidIdentityEndpointMSICodeFlow() throws Exception {
-        // setup
-        String endpoint = "http://localhost";
-        String secret = "secret";
-        Configuration configuration = TestUtils.createTestConfiguration(new TestConfigurationSource()
-            .put("IDENTITY_ENDPOINT", endpoint)
-            .put("IDENTITY_HEADER", secret));
-        TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com");
-        OffsetDateTime expiresOn = OffsetDateTime.now(ZoneOffset.UTC).plusHours(1);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss XXX");
-        String tokenJson = "{ \"access_token\" : \"token1\", \"expires_on\" : \"" + expiresOn.format(dtf) + "\" }";
-
-        // mock
-        IdentityClientOptions options = new IdentityClientOptions()
-            .setManagedIdentityType(ManagedIdentityType.APP_SERVICE)
-            .setManagedIdentityParameters(new ManagedIdentityParameters()
-                .setIdentityEndpoint(endpoint)
-                .setIdentityHeader(secret))
-            .setConfiguration(configuration);
-        IdentityClient client = new IdentityClientBuilder().identityClientOptions(options).build();
-        mockForMSICodeFlow(tokenJson, () -> {
-            // test
-            StepVerifier.create(client.getTokenFromTargetManagedIdentity(request))
-                .assertNext(token -> {
-                    Assert.assertEquals("token1", token.getToken());
-                    Assert.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
-                })
-                .verifyComplete();
-        });
-    }
-
-    @Test(expected = ClientAuthenticationException.class)
-    public void testInValidIdentityEndpointSecretArcCodeFlow() throws Exception {
-        // setup
-        String endpoint = "http://localhost";
-        Configuration configuration = TestUtils.createTestConfiguration(new TestConfigurationSource()
-            .put("IDENTITY_ENDPOINT", endpoint));
-        TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com");
-        // mock
-        IdentityClientOptions options = new IdentityClientOptions()
-            .setManagedIdentityType(ManagedIdentityType.ARC)
-            .setManagedIdentityParameters(new ManagedIdentityParameters()
-                .setIdentityEndpoint(endpoint))
-            .setConfiguration(configuration);
-        IdentityClient client = new IdentityClientBuilder().identityClientOptions(options).build();
-        mockForArcCodeFlow(401, () -> {
-            client.getTokenFromTargetManagedIdentity(request).block();
-        });
-    }
-
-    @Test(expected = ClientAuthenticationException.class)
-    public void testInValidIdentityEndpointResponseCodeArcCodeFlow() throws Exception {
-        // setup
-        String endpoint = "http://localhost";
-        Configuration configuration = TestUtils.createTestConfiguration(new TestConfigurationSource()
-            .put("IDENTITY_ENDPOINT", endpoint));
-        TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com");
-        IdentityClientOptions options = new IdentityClientOptions()
-            .setManagedIdentityType(ManagedIdentityType.ARC)
-            .setManagedIdentityParameters(new ManagedIdentityParameters()
-                .setIdentityEndpoint(endpoint))
-            .setConfiguration(configuration);
-        IdentityClient client = new IdentityClientBuilder().identityClientOptions(options).build();
-        // mock
-        mockForArcCodeFlow(200, () -> client.getTokenFromTargetManagedIdentity(request).block());
-    }
-
-    @Test
-    public void testValidIMDSCodeFlow() throws Exception {
-        // setup
-        String endpoint = "http://localhost";
-        String secret = "secret";
-        Configuration configuration = TestUtils.createTestConfiguration(new TestConfigurationSource()
-            .put("MSI_ENDPOINT", endpoint)
-            .put("MSI_SECRET", secret));
-        TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com");
-        OffsetDateTime expiresOn = OffsetDateTime.now(ZoneOffset.UTC).plusHours(1);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss XXX");
-        String tokenJson = "{ \"access_token\" : \"token1\", \"expires_on\" : \"" + expiresOn.format(dtf) + "\" }";
-
-
-        IdentityClientOptions options = new IdentityClientOptions()
-            .setManagedIdentityType(ManagedIdentityType.VM)
-            .setConfiguration(configuration);
-        IdentityClient client = new IdentityClientBuilder().identityClientOptions(options).build();
-        // mock
-        mockForIMDSCodeFlow(IdentityConstants.DEFAULT_IMDS_ENDPOINT, tokenJson, () -> {
-            // test
-            StepVerifier.create(client.getTokenFromTargetManagedIdentity(request))
-                .assertNext(token -> {
-                    Assert.assertEquals("token1", token.getToken());
-                    Assert.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
-                })
-                .verifyComplete();
-        });
-    }
-
-    @Test
-    public void testCustomIMDSCodeFlow() throws Exception {
-        // setup
-        String endpoint = "http://awesome.pod.url";
-        Configuration configuration = TestUtils.createTestConfiguration(new TestConfigurationSource()
-            .put(Configuration.PROPERTY_AZURE_POD_IDENTITY_TOKEN_URL, endpoint));
-        TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com");
-        OffsetDateTime expiresOn = OffsetDateTime.now(ZoneOffset.UTC).plusHours(1);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss XXX");
-        String tokenJson = "{ \"access_token\" : \"token1\", \"expires_on\" : \"" + expiresOn.format(dtf) + "\" }";
-
-
-        IdentityClientOptions options = new IdentityClientOptions()
-            .setManagedIdentityType(ManagedIdentityType.VM)
-            .setConfiguration(configuration);
-        IdentityClient client = new IdentityClientBuilder().identityClientOptions(options).build();
-        // mock
-        mockForIMDSCodeFlow(endpoint, tokenJson, () -> {
-            // test
-            StepVerifier.create(client.getTokenFromTargetManagedIdentity(request))
-                .assertNext(token -> {
-                    Assert.assertEquals("token1", token.getToken());
-                    Assert.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
-                })
-                .verifyComplete();
+            StepVerifier.create(client.authenticateWithDeviceCode(request, deviceCodeChallenge -> {
+                /* do nothing */ })).assertNext(token -> {
+                    Assertions.assertEquals(accessToken, token.getToken());
+                    Assertions.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
+                }).verifyComplete();
         });
     }
 
@@ -381,7 +245,10 @@ public class IdentityClientTests {
         mockForAuthorizationCodeFlow(token1, request, expiresAt, () -> {
             // test
             IdentityClientOptions options = new IdentityClientOptions();
-            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID).clientId(CLIENT_ID).identityClientOptions(options).build();
+            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID)
+                .clientId(CLIENT_ID)
+                .identityClientOptions(options)
+                .build();
             StepVerifier.create(client.authenticateWithAuthorizationCode(request, authCode1, redirectUri))
                 .expectNextMatches(accessToken -> token1.equals(accessToken.getToken())
                     && expiresAt.getSecond() == accessToken.getExpiresAt().getSecond())
@@ -401,8 +268,13 @@ public class IdentityClientTests {
         mockForUserRefreshTokenFlow(token2, request2, expiresAt, () -> {
             // test
             IdentityClientOptions options = new IdentityClientOptions();
-            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID).clientId(CLIENT_ID).identityClientOptions(options).build();
-            StepVerifier.create(client.authenticateWithPublicClientCache(request2, TestUtils.getMockMsalAccount(token1, expiresAt).block()))
+            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID)
+                .clientId(CLIENT_ID)
+                .identityClientOptions(options)
+                .build();
+            StepVerifier
+                .create(client.authenticateWithPublicClientCache(request2,
+                    TestUtils.getMockMsalAccount(token1, expiresAt).block()))
                 .expectNextMatches(accessToken -> token2.equals(accessToken.getToken())
                     && expiresAt.getSecond() == accessToken.getExpiresAt().getSecond())
                 .verifyComplete();
@@ -422,7 +294,10 @@ public class IdentityClientTests {
         mockForUsernamePasswordCodeFlow(token, request, expiresOn, () -> {
             // test
             IdentityClientOptions options = new IdentityClientOptions();
-            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID).clientId(CLIENT_ID).identityClientOptions(options).build();
+            IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID)
+                .clientId(CLIENT_ID)
+                .identityClientOptions(options)
+                .build();
             StepVerifier.create(client.authenticateWithUsernamePassword(request, username, password))
                 .expectNextMatches(accessToken -> token.equals(accessToken.getToken())
                     && expiresOn.getSecond() == accessToken.getExpiresAt().getSecond())
@@ -440,7 +315,10 @@ public class IdentityClientTests {
         OffsetDateTime expiresOn = OffsetDateTime.now(ZoneOffset.UTC).plusHours(1);
 
         IdentityClientOptions options = new IdentityClientOptions();
-        IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID).clientId(CLIENT_ID).identityClientOptions(options).build();
+        IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID)
+            .clientId(CLIENT_ID)
+            .identityClientOptions(options)
+            .build();
         // mock
         mockForBrowserAuthenticationCodeFlow(token, request, expiresOn, () -> {
             // test
@@ -451,197 +329,184 @@ public class IdentityClientTests {
         });
     }
 
-
-    @Test
-    public void testOpenUrl() throws Exception {
-        try (MockedStatic<Runtime> runtimeMockedStatic = mockStatic(Runtime.class)) {
-            Runtime runtimeMock = mock(Runtime.class);
-            runtimeMockedStatic.when(Runtime::getRuntime).thenReturn(runtimeMock);
-            when(runtimeMock.exec(anyString())).thenReturn(null);
-            // test
-            IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
-            client.openUrl("https://localhost.com");
-            verify(runtimeMock).exec(ArgumentMatchers.contains("https://localhost.com"));
-        }
-    }
-
-    @Test
-    public void testAuthWithManagedIdentityFlow() {
-        // setup
-        String secret = "SYSTEM-ASSIGNED-CLIENT-SECRET";
-        String clientId = "SYSTEM-ASSIGNED-CLIENT-ID";
-        String accessToken = "token";
-        TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com");
-        OffsetDateTime expiresOn = OffsetDateTime.now(ZoneOffset.UTC).plusHours(1);
-
-        // mock
-        mockForManagedIdentityFlow(secret, clientId, request, accessToken, expiresOn, () -> {
-            // test
-            IdentityClient client = new IdentityClientBuilder()
-                .tenantId(TENANT_ID)
-                .clientId(clientId)
-                .clientSecret(secret)
-                .identityClientOptions(new IdentityClientOptions()
-                    .setManagedIdentityType(ManagedIdentityType.VM))
-                .build();
-            AccessToken token = client.authenticateWithManagedIdentityConfidentialClient(request).block();
-            Assert.assertEquals(accessToken, token.getToken());
-            Assert.assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
-        });
-    }
-
     /****** mocks ******/
-    private void mockForManagedIdentityFlow(String secret, String clientId, TokenRequestContext request, String accessToken, OffsetDateTime expiresOn, Runnable test) {
 
-        try (MockedStatic<ConfidentialClientApplication> staticConfidentialClientApplicationMock = mockStatic(ConfidentialClientApplication.class); MockedConstruction<ConfidentialClientApplication.Builder> confidentialClientApplicationBuilderMock = mockConstruction(ConfidentialClientApplication.Builder.class, (builder, context) -> {
+    private void mockForClientSecret(String secret, TokenRequestContext request, String accessToken,
+        OffsetDateTime expiresOn, Runnable test) {
 
-            when(builder.authority(any())).thenReturn(builder);
-            when(builder.httpClient(any())).thenReturn(builder);
-            when(builder.appTokenProvider(any())).thenReturn(builder);
-            ConfidentialClientApplication application = Mockito.mock(ConfidentialClientApplication.class);
-            when(application.acquireToken(any(ClientCredentialParameters.class))).thenAnswer(invocation -> {
-                ClientCredentialParameters argument = (ClientCredentialParameters) invocation.getArguments()[0];
-                if (argument.scopes().size() == 1 && request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
-                    return TestUtils.getMockAuthenticationResult(accessToken, expiresOn);
-                } else {
-                    return CompletableFuture.runAsync(() -> {
-                        throw new MsalServiceException("Invalid request", "InvalidScopes");
+        try (
+            MockedStatic<ConfidentialClientApplication> staticConfidentialClientApplicationMock
+                = mockStatic(ConfidentialClientApplication.class);
+            MockedConstruction<ConfidentialClientApplication.Builder> confidentialClientApplicationBuilderMock
+                = mockConstruction(ConfidentialClientApplication.Builder.class, (builder, context) -> {
+
+                    when(builder.authority(any())).thenReturn(builder);
+                    when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
+                    when(builder.disableInternalRetries()).thenReturn(builder);
+                    when(builder.httpClient(any())).thenReturn(builder);
+                    when(builder.logPii(anyBoolean())).thenReturn(builder);
+                    ConfidentialClientApplication application = Mockito.mock(ConfidentialClientApplication.class);
+                    when(application.acquireToken(any(ClientCredentialParameters.class))).thenAnswer(invocation -> {
+                        ClientCredentialParameters argument = (ClientCredentialParameters) invocation.getArguments()[0];
+                        if (argument.scopes().size() == 1
+                            && request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
+                            return TestUtils.getMockAuthenticationResult(accessToken, expiresOn);
+                        } else {
+                            return CompletableFuture.runAsync(() -> {
+                                throw new MsalServiceException("Invalid request", "InvalidScopes");
+                            });
+                        }
                     });
-                }
-            });
-            when(builder.logPii(anyBoolean())).thenReturn(builder);
-            when(builder.validateAuthority(anyBoolean())).thenReturn(builder);
-            when(builder.build()).thenReturn(application);
-        })) {
+                    when(builder.build()).thenReturn(application);
+                })) {
             // Mocking the static builder to ensure we pass the right thing to it.
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(eq(clientId), argThat(cred -> ((IClientSecret) cred).clientSecret().equals(secret)))).thenCallRealMethod();
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(anyString(), argThat(cred -> !((IClientSecret) cred).clientSecret().equals(secret)))).thenThrow(new MsalServiceException("Invalid clientSecret", "InvalidClientSecret"));
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(AdditionalMatchers.not(eq(clientId)), any(IClientSecret.class))).thenThrow(new MsalServiceException("Invalid CLIENT_ID", "InvalidClientId"));
+            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(eq(CLIENT_ID),
+                argThat(cred -> ((IClientSecret) cred).clientSecret().equals(secret)))).thenCallRealMethod();
+            staticConfidentialClientApplicationMock
+                .when(() -> ConfidentialClientApplication.builder(anyString(),
+                    argThat(cred -> !((IClientSecret) cred).clientSecret().equals(secret))))
+                .thenThrow(new MsalServiceException("Invalid clientSecret", "InvalidClientSecret"));
+            staticConfidentialClientApplicationMock
+                .when(() -> ConfidentialClientApplication.builder(AdditionalMatchers.not(eq(CLIENT_ID)),
+                    any(IClientSecret.class)))
+                .thenThrow(new MsalServiceException("Invalid CLIENT_ID", "InvalidClientId"));
 
             test.run();
-            Assert.assertNotNull(confidentialClientApplicationBuilderMock);
+            Assertions.assertNotNull(confidentialClientApplicationBuilderMock);
         }
     }
 
-    private void mockForClientSecret(String secret, TokenRequestContext request, String accessToken, OffsetDateTime expiresOn, Runnable test) {
+    private void mockForClientCertificate(TokenRequestContext request, String accessToken, OffsetDateTime expiresOn,
+        Runnable test) {
 
-        try (MockedStatic<ConfidentialClientApplication> staticConfidentialClientApplicationMock = mockStatic(ConfidentialClientApplication.class); MockedConstruction<ConfidentialClientApplication.Builder> confidentialClientApplicationBuilderMock = mockConstruction(ConfidentialClientApplication.Builder.class, (builder, context) -> {
+        try (
+            MockedStatic<ConfidentialClientApplication> staticConfidentialClientApplicationMock
+                = mockStatic(ConfidentialClientApplication.class);
+            MockedConstruction<ConfidentialClientApplication.Builder> confidentialClientApplicationBuilderMock
+                = mockConstruction(ConfidentialClientApplication.Builder.class, (builder, context) -> {
+                    when(builder.authority(any())).thenReturn(builder);
+                    when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
+                    when(builder.disableInternalRetries()).thenReturn(builder);
+                    when(builder.httpClient(any())).thenReturn(builder);
+                    when(builder.logPii(anyBoolean())).thenReturn(builder);
+                    ConfidentialClientApplication application = Mockito.mock(ConfidentialClientApplication.class);
+                    when(application.acquireToken(any(ClientCredentialParameters.class))).thenAnswer(invocation -> {
+                        ClientCredentialParameters argument = (ClientCredentialParameters) invocation.getArguments()[0];
+                        if (argument.scopes().size() == 1
+                            && request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
+                            return TestUtils.getMockAuthenticationResult(accessToken, expiresOn);
+                        } else {
+                            return CompletableFuture.runAsync(() -> {
+                                throw new MsalServiceException("Invalid request", "InvalidScopes");
+                            });
+                        }
+                    });
+                    when(builder.build()).thenReturn(application);
+                })) {
+            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(eq(CLIENT_ID),
+                argThat(cred -> ((IClientCertificate) cred) != null))).thenCallRealMethod();
+            staticConfidentialClientApplicationMock
+                .when(() -> ConfidentialClientApplication.builder(anyString(),
+                    argThat(cred -> ((IClientCertificate) cred) == null)))
+                .thenThrow(new MsalServiceException("Invalid clientCertificate", "InvalidClientCertificate"));
+            staticConfidentialClientApplicationMock
+                .when(() -> ConfidentialClientApplication.builder(AdditionalMatchers.not(eq(CLIENT_ID)),
+                    any(IClientCertificate.class)))
+                .thenThrow(new MsalServiceException("Invalid CLIENT_ID", "InvalidClientId"));
+            test.run();
+            Assertions.assertNotNull(confidentialClientApplicationBuilderMock);
+        }
+    }
 
-            when(builder.authority(any())).thenReturn(builder);
-            when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
-            when(builder.httpClient(any())).thenReturn(builder);
-            when(builder.logPii(anyBoolean())).thenReturn(builder);
-            ConfidentialClientApplication application = Mockito.mock(ConfidentialClientApplication.class);
-            when(application.acquireToken(any(ClientCredentialParameters.class))).thenAnswer(invocation -> {
-                ClientCredentialParameters argument = (ClientCredentialParameters) invocation.getArguments()[0];
-                if (argument.scopes().size() == 1 && request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
+    @Test
+    public void validateRedaction() {
+        String s
+            = "        WARNING: Could not retrieve credential from local cache for service principal *** under tenant organizations. Trying credential under tenant 72f988bf-86f1-41af-91ab-2d7cd011db47, assuming that is an app credential.\n"
+                + "        {\n" + "            \"accessToken\": \"ANACCESSTOKEN\",\n"
+                + "            \"expiresOn\": \"2023-08-03 12:29:07.000000\",\n"
+                + "            \"subscription\": \"subscription\",\n" + "            \"tenant\": \"tenant\",\n"
+                + "            \"tokenType\": \"Bearer\"\n" + "        }";
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String redacted = client.redactInfo(s);
+        assertTrue(redacted.contains("****"));
+        assertFalse(redacted.contains("accessToken"));
+    }
+
+    private void mockForDeviceCodeFlow(TokenRequestContext request, String accessToken, OffsetDateTime expiresOn,
+        Runnable test) {
+        try (MockedConstruction<PublicClientApplication.Builder> publicClientApplicationMock
+            = mockConstruction(PublicClientApplication.Builder.class, (builder, context) -> {
+                when(builder.authority(any())).thenReturn(builder);
+                when(builder.disableInternalRetries()).thenReturn(builder);
+                when(builder.httpClient(any())).thenReturn(builder);
+                when(builder.logPii(anyBoolean())).thenReturn(builder);
+                PublicClientApplication application = Mockito.mock(PublicClientApplication.class);
+                when(application.acquireToken(any(DeviceCodeFlowParameters.class))).thenAnswer(invocation -> {
+                    DeviceCodeFlowParameters argument = (DeviceCodeFlowParameters) invocation.getArguments()[0];
+                    if (argument.scopes().size() != 1
+                        || !request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
+                        return CompletableFuture.runAsync(() -> {
+                            throw new MsalServiceException("Invalid request", "InvalidScopes");
+                        });
+                    }
+                    if (argument.deviceCodeConsumer() == null) {
+                        return CompletableFuture.runAsync(() -> {
+                            throw new MsalServiceException("Invalid device code consumer", "InvalidDeviceCodeConsumer");
+                        });
+                    }
                     return TestUtils.getMockAuthenticationResult(accessToken, expiresOn);
-                } else {
-                    return CompletableFuture.runAsync(() -> {
-                        throw new MsalServiceException("Invalid request", "InvalidScopes");
-                    });
-                }
-            });
-            when(builder.build()).thenReturn(application);
-        })) {
-            // Mocking the static builder to ensure we pass the right thing to it.
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(eq(CLIENT_ID), argThat(cred -> ((IClientSecret) cred).clientSecret().equals(secret)))).thenCallRealMethod();
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(anyString(), argThat(cred -> !((IClientSecret) cred).clientSecret().equals(secret)))).thenThrow(new MsalServiceException("Invalid clientSecret", "InvalidClientSecret"));
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(AdditionalMatchers.not(eq(CLIENT_ID)), any(IClientSecret.class))).thenThrow(new MsalServiceException("Invalid CLIENT_ID", "InvalidClientId"));
-
+                });
+                when(builder.build()).thenReturn(application);
+                when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
+            })) {
             test.run();
-            Assert.assertNotNull(confidentialClientApplicationBuilderMock);
+            Assertions.assertNotNull(publicClientApplicationMock);
         }
     }
 
-    private void mockForClientCertificate(TokenRequestContext request, String accessToken, OffsetDateTime expiresOn, Runnable test) {
-
-        try (MockedStatic<ConfidentialClientApplication> staticConfidentialClientApplicationMock = mockStatic(ConfidentialClientApplication.class); MockedConstruction<ConfidentialClientApplication.Builder> confidentialClientApplicationBuilderMock = mockConstruction(ConfidentialClientApplication.Builder.class, (builder, context) -> {
-            when(builder.authority(any())).thenReturn(builder);
-            when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
-            when(builder.httpClient(any())).thenReturn(builder);
-            when(builder.logPii(anyBoolean())).thenReturn(builder);
-            ConfidentialClientApplication application = Mockito.mock(ConfidentialClientApplication.class);
-            when(application.acquireToken(any(ClientCredentialParameters.class))).thenAnswer(invocation -> {
-                ClientCredentialParameters argument = (ClientCredentialParameters) invocation.getArguments()[0];
-                if (argument.scopes().size() == 1 && request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
-                    return TestUtils.getMockAuthenticationResult(accessToken, expiresOn);
-                } else {
-                    return CompletableFuture.runAsync(() -> {
-                        throw new MsalServiceException("Invalid request", "InvalidScopes");
-                    });
-                }
-            });
-            when(builder.build()).thenReturn(application);
-        })) {
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(eq(CLIENT_ID), argThat(cred -> ((IClientCertificate) cred) != null))).thenCallRealMethod();
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(anyString(), argThat(cred -> ((IClientCertificate) cred) == null))).thenThrow(new MsalServiceException("Invalid clientCertificate", "InvalidClientCertificate"));
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(AdditionalMatchers.not(eq(CLIENT_ID)), any(IClientCertificate.class))).thenThrow(new MsalServiceException("Invalid CLIENT_ID", "InvalidClientId"));
-            test.run();
-            Assert.assertNotNull(confidentialClientApplicationBuilderMock);
-        }
-    }
-
-    private void mockForDeviceCodeFlow(TokenRequestContext request, String accessToken, OffsetDateTime expiresOn, Runnable test) {
-        try (MockedConstruction<PublicClientApplication.Builder> publicClientApplicationMock = mockConstruction(PublicClientApplication.Builder.class, (builder, context) -> {
-            when(builder.authority(any())).thenReturn(builder);
-            when(builder.httpClient(any())).thenReturn(builder);
-            when(builder.logPii(anyBoolean())).thenReturn(builder);
-            PublicClientApplication application = Mockito.mock(PublicClientApplication.class);
-            when(application.acquireToken(any(DeviceCodeFlowParameters.class))).thenAnswer(invocation -> {
-                DeviceCodeFlowParameters argument = (DeviceCodeFlowParameters) invocation.getArguments()[0];
-                if (argument.scopes().size() != 1 || !request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
-                    return CompletableFuture.runAsync(() -> {
-                        throw new MsalServiceException("Invalid request", "InvalidScopes");
-                    });
-                }
-                if (argument.deviceCodeConsumer() == null) {
-                    return CompletableFuture.runAsync(() -> {
-                        throw new MsalServiceException("Invalid device code consumer", "InvalidDeviceCodeConsumer");
-                    });
-                }
-                return TestUtils.getMockAuthenticationResult(accessToken, expiresOn);
-            });
-            when(builder.build()).thenReturn(application);
-            when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
-        })) {
-            test.run();
-            Assert.assertNotNull(publicClientApplicationMock);
-        }
-    }
-
-    private void mockForClientPemCertificate(String accessToken, TokenRequestContext request, OffsetDateTime expiresOn, Runnable test) {
+    private void mockForClientPemCertificate(String accessToken, TokenRequestContext request, OffsetDateTime expiresOn,
+        Runnable test) {
 
         try (MockedStatic<CertificateUtil> certificateUtilMock = mockStatic(CertificateUtil.class);
-             MockedStatic<ClientCredentialFactory> clientCredentialFactoryMock = mockStatic(ClientCredentialFactory.class);
-             MockedStatic<ConfidentialClientApplication> staticConfidentialClientApplicationMock = mockStatic(ConfidentialClientApplication.class);
-             MockedConstruction<ConfidentialClientApplication.Builder> builderMock = mockConstruction(ConfidentialClientApplication.Builder.class, (builder, context) -> {
-                 ConfidentialClientApplication application = mock(ConfidentialClientApplication.class);
-                 when(application.acquireToken(any(ClientCredentialParameters.class))).thenAnswer(invocation -> {
-                     ClientCredentialParameters argument = (ClientCredentialParameters) invocation.getArguments()[0];
-                     if (argument.scopes().size() == 1 && request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
-                         return TestUtils.getMockAuthenticationResult(accessToken, expiresOn);
-                     } else {
-                         return CompletableFuture.runAsync(() -> {
-                             throw new MsalServiceException("Invalid request", "InvalidScopes");
-                         });
-                     }
-                 });
-                 when(builder.build()).thenReturn(application);
-                 when(builder.authority(any())).thenReturn(builder);
-                 when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
-                 when(builder.httpClient(any())).thenReturn(builder);
-                 when(builder.logPii(anyBoolean())).thenReturn(builder);
-             })
-        ) {
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(eq(CLIENT_ID), any())).thenCallRealMethod();
-            staticConfidentialClientApplicationMock.when(() -> ConfidentialClientApplication.builder(AdditionalMatchers.not(eq(CLIENT_ID)), any())).thenThrow(new MsalServiceException("Invalid CLIENT_ID", "InvalidClientId"));
+            MockedStatic<ClientCredentialFactory> clientCredentialFactoryMock
+                = mockStatic(ClientCredentialFactory.class);
+            MockedStatic<ConfidentialClientApplication> staticConfidentialClientApplicationMock
+                = mockStatic(ConfidentialClientApplication.class);
+            MockedConstruction<ConfidentialClientApplication.Builder> builderMock
+                = mockConstruction(ConfidentialClientApplication.Builder.class, (builder, context) -> {
+                    ConfidentialClientApplication application = mock(ConfidentialClientApplication.class);
+                    when(application.acquireToken(any(ClientCredentialParameters.class))).thenAnswer(invocation -> {
+                        ClientCredentialParameters argument = (ClientCredentialParameters) invocation.getArguments()[0];
+                        if (argument.scopes().size() == 1
+                            && request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
+                            return TestUtils.getMockAuthenticationResult(accessToken, expiresOn);
+                        } else {
+                            return CompletableFuture.runAsync(() -> {
+                                throw new MsalServiceException("Invalid request", "InvalidScopes");
+                            });
+                        }
+                    });
+                    when(builder.build()).thenReturn(application);
+                    when(builder.authority(any())).thenReturn(builder);
+                    when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
+                    when(builder.disableInternalRetries()).thenReturn(builder);
+                    when(builder.httpClient(any())).thenReturn(builder);
+                    when(builder.logPii(anyBoolean())).thenReturn(builder);
+                })) {
+            staticConfidentialClientApplicationMock
+                .when(() -> ConfidentialClientApplication.builder(eq(CLIENT_ID), any()))
+                .thenCallRealMethod();
+            staticConfidentialClientApplicationMock
+                .when(() -> ConfidentialClientApplication.builder(AdditionalMatchers.not(eq(CLIENT_ID)), any()))
+                .thenThrow(new MsalServiceException("Invalid CLIENT_ID", "InvalidClientId"));
             PrivateKey privateKey = mock(PrivateKey.class);
             IClientCertificate clientCertificate = mock(IClientCertificate.class);
             certificateUtilMock.when(() -> CertificateUtil.privateKeyFromPem(any())).thenReturn(privateKey);
-            clientCredentialFactoryMock.when(() -> ClientCredentialFactory.createFromCertificate(any(PrivateKey.class), any(X509Certificate.class))).thenReturn(clientCertificate);
+            clientCredentialFactoryMock.when(
+                () -> ClientCredentialFactory.createFromCertificate(any(PrivateKey.class), any(X509Certificate.class)))
+                .thenReturn(clientCertificate);
             test.run();
-            Assert.assertNotNull(builderMock);
+            Assertions.assertNotNull(builderMock);
         }
     }
 
@@ -707,102 +572,574 @@ public class IdentityClientTests {
         }
     }
 
-    private void mockForBrowserAuthenticationCodeFlow(String token, TokenRequestContext request, OffsetDateTime expiresOn, Runnable test) {
-        try (MockedConstruction<PublicClientApplication.Builder> publicClientApplicationMock = mockConstruction(PublicClientApplication.Builder.class, (builder, context) -> {
-            PublicClientApplication application = Mockito.mock(PublicClientApplication.class);
-            when(application.acquireToken(any(InteractiveRequestParameters.class))).thenAnswer(invocation -> {
-                InteractiveRequestParameters argument = (InteractiveRequestParameters) invocation.getArguments()[0];
-                if (argument.scopes().size() != 1 || request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
-                    return TestUtils.getMockAuthenticationResult(token, expiresOn);
-                } else {
-                    throw new InvalidUseOfMatchersException(String.format("Argument %s does not match", (Object) argument));
-                }
-            });
-            when(builder.build()).thenReturn(application);
-            when(builder.authority(any())).thenReturn(builder);
-            when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
-            when(builder.httpClient(any())).thenReturn(builder);
-            when(builder.logPii(anyBoolean())).thenReturn(builder);
-        })) {
+    private void mockForBrowserAuthenticationCodeFlow(String token, TokenRequestContext request,
+        OffsetDateTime expiresOn, Runnable test) {
+        try (MockedConstruction<PublicClientApplication.Builder> publicClientApplicationMock
+            = mockConstruction(PublicClientApplication.Builder.class, (builder, context) -> {
+                PublicClientApplication application = Mockito.mock(PublicClientApplication.class);
+                when(application.acquireToken(any(InteractiveRequestParameters.class))).thenAnswer(invocation -> {
+                    InteractiveRequestParameters argument = (InteractiveRequestParameters) invocation.getArguments()[0];
+                    if (argument.scopes().size() != 1
+                        || request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
+                        return TestUtils.getMockAuthenticationResult(token, expiresOn);
+                    } else {
+                        throw new InvalidUseOfMatchersException(
+                            String.format("Argument %s does not match", (Object) argument));
+                    }
+                });
+                when(builder.build()).thenReturn(application);
+                when(builder.authority(any())).thenReturn(builder);
+                when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
+                when(builder.disableInternalRetries()).thenReturn(builder);
+                when(builder.httpClient(any())).thenReturn(builder);
+                when(builder.logPii(anyBoolean())).thenReturn(builder);
+            })) {
             test.run();
-            Assert.assertNotNull(publicClientApplicationMock);
+            Assertions.assertNotNull(publicClientApplicationMock);
         }
     }
 
-    private void mockForAuthorizationCodeFlow(String token1, TokenRequestContext request, OffsetDateTime expiresAt, Runnable test) {
-        try (MockedConstruction<PublicClientApplication.Builder> publicClientApplicationMock = mockConstruction(PublicClientApplication.Builder.class, (builder, context) -> {
-            PublicClientApplication application = Mockito.mock(PublicClientApplication.class);
-            when(application.acquireToken(any(AuthorizationCodeParameters.class))).thenAnswer(invocation -> {
-                AuthorizationCodeParameters argument = (AuthorizationCodeParameters) invocation.getArguments()[0];
-                if (argument.scopes().size() != 1 || !request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
-                    return CompletableFuture.runAsync(() -> {
-                        throw new MsalServiceException("Invalid request", "InvalidScopes");
-                    });
-                }
-                if (argument.redirectUri() == null) {
-                    return CompletableFuture.runAsync(() -> {
-                        throw new MsalServiceException("Invalid redirect uri", "InvalidAuthorizationCodeRedirectUri");
-                    });
-                }
-                if (argument.authorizationCode() == null) {
-                    return CompletableFuture.runAsync(() -> {
-                        throw new MsalServiceException("Invalid authorization code", "InvalidAuthorizationCode");
-                    });
-                }
-                return TestUtils.getMockAuthenticationResult(token1, expiresAt);
-            });
-            when(builder.build()).thenReturn(application);
-            when(builder.authority(any())).thenReturn(builder);
-            when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
-            when(builder.httpClient(any())).thenReturn(builder);
-            when(builder.logPii(anyBoolean())).thenReturn(builder);
-        })) {
+    private void mockForAuthorizationCodeFlow(String token1, TokenRequestContext request, OffsetDateTime expiresAt,
+        Runnable test) {
+        try (MockedConstruction<PublicClientApplication.Builder> publicClientApplicationMock
+            = mockConstruction(PublicClientApplication.Builder.class, (builder, context) -> {
+                PublicClientApplication application = Mockito.mock(PublicClientApplication.class);
+                when(application.acquireToken(any(AuthorizationCodeParameters.class))).thenAnswer(invocation -> {
+                    AuthorizationCodeParameters argument = (AuthorizationCodeParameters) invocation.getArguments()[0];
+                    if (argument.scopes().size() != 1
+                        || !request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
+                        return CompletableFuture.runAsync(() -> {
+                            throw new MsalServiceException("Invalid request", "InvalidScopes");
+                        });
+                    }
+                    if (argument.redirectUri() == null) {
+                        return CompletableFuture.runAsync(() -> {
+                            throw new MsalServiceException("Invalid redirect uri",
+                                "InvalidAuthorizationCodeRedirectUri");
+                        });
+                    }
+                    if (argument.authorizationCode() == null) {
+                        return CompletableFuture.runAsync(() -> {
+                            throw new MsalServiceException("Invalid authorization code", "InvalidAuthorizationCode");
+                        });
+                    }
+                    return TestUtils.getMockAuthenticationResult(token1, expiresAt);
+                });
+                when(builder.build()).thenReturn(application);
+                when(builder.authority(any())).thenReturn(builder);
+                when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
+                when(builder.disableInternalRetries()).thenReturn(builder);
+                when(builder.httpClient(any())).thenReturn(builder);
+                when(builder.logPii(anyBoolean())).thenReturn(builder);
+            })) {
             test.run();
-            Assert.assertNotNull(publicClientApplicationMock);
+            Assertions.assertNotNull(publicClientApplicationMock);
         }
     }
 
-    private void mockForUsernamePasswordCodeFlow(String token, TokenRequestContext request, OffsetDateTime expiresOn, Runnable test) {
-        try (MockedConstruction<PublicClientApplication.Builder> publicClientApplicationMock = mockConstruction(PublicClientApplication.Builder.class, (builder, context) -> {
-            PublicClientApplication application = Mockito.mock(PublicClientApplication.class);
-            when(application.acquireToken(any(UserNamePasswordParameters.class))).thenAnswer(invocation -> {
-                UserNamePasswordParameters argument = (UserNamePasswordParameters) invocation.getArguments()[0];
-                if (argument.scopes().size() != 1 || request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
-                    return TestUtils.getMockAuthenticationResult(token, expiresOn);
-                } else {
-                    throw new InvalidUseOfMatchersException(String.format("Argument %s does not match", (Object) argument));
-                }
-            });
-            when(builder.build()).thenReturn(application);
-            when(builder.authority(any())).thenReturn(builder);
-            when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
-            when(builder.httpClient(any())).thenReturn(builder);
-            when(builder.logPii(anyBoolean())).thenReturn(builder);
-        })) {
+    private void mockForUsernamePasswordCodeFlow(String token, TokenRequestContext request, OffsetDateTime expiresOn,
+        Runnable test) {
+        try (MockedConstruction<PublicClientApplication.Builder> publicClientApplicationMock
+            = mockConstruction(PublicClientApplication.Builder.class, (builder, context) -> {
+                PublicClientApplication application = Mockito.mock(PublicClientApplication.class);
+                when(application.acquireToken(any(UserNamePasswordParameters.class))).thenAnswer(invocation -> {
+                    UserNamePasswordParameters argument = (UserNamePasswordParameters) invocation.getArguments()[0];
+                    if (argument.scopes().size() != 1
+                        || request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
+                        return TestUtils.getMockAuthenticationResult(token, expiresOn);
+                    } else {
+                        throw new InvalidUseOfMatchersException(
+                            String.format("Argument %s does not match", (Object) argument));
+                    }
+                });
+                when(builder.build()).thenReturn(application);
+                when(builder.authority(any())).thenReturn(builder);
+                when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
+                when(builder.disableInternalRetries()).thenReturn(builder);
+                when(builder.httpClient(any())).thenReturn(builder);
+                when(builder.logPii(anyBoolean())).thenReturn(builder);
+            })) {
             test.run();
-            Assert.assertNotNull(publicClientApplicationMock);
+            Assertions.assertNotNull(publicClientApplicationMock);
         }
     }
 
-    private void mockForUserRefreshTokenFlow(String token, TokenRequestContext request, OffsetDateTime expiresOn, Runnable test) {
-        try (MockedConstruction<PublicClientApplication.Builder> publicClientApplicationMock = mockConstruction(PublicClientApplication.Builder.class, (builder, context) -> {
-            PublicClientApplication application = Mockito.mock(PublicClientApplication.class);
-            when(application.acquireTokenSilently(any())).thenAnswer(invocation -> {
-                SilentParameters argument = (SilentParameters) invocation.getArguments()[0];
-                if (argument.scopes().size() != 1 || request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
-                    return TestUtils.getMockAuthenticationResult(token, expiresOn);
-                } else {
-                    throw new InvalidUseOfMatchersException(String.format("Argument %s does not match", (Object) argument));
-                }
-            });
-            when(builder.build()).thenReturn(application);
-            when(builder.authority(any())).thenReturn(builder);
-            when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
-            when(builder.httpClient(any())).thenReturn(builder);
-            when(builder.logPii(anyBoolean())).thenReturn(builder);
-        })) {
+    private void mockForUserRefreshTokenFlow(String token, TokenRequestContext request, OffsetDateTime expiresOn,
+        Runnable test) {
+        try (MockedConstruction<PublicClientApplication.Builder> publicClientApplicationMock
+            = mockConstruction(PublicClientApplication.Builder.class, (builder, context) -> {
+                PublicClientApplication application = Mockito.mock(PublicClientApplication.class);
+                when(application.acquireTokenSilently(any())).thenAnswer(invocation -> {
+                    SilentParameters argument = (SilentParameters) invocation.getArguments()[0];
+                    if (argument.scopes().size() != 1
+                        || request.getScopes().get(0).equals(argument.scopes().iterator().next())) {
+                        return TestUtils.getMockAuthenticationResult(token, expiresOn);
+                    } else {
+                        throw new InvalidUseOfMatchersException(
+                            String.format("Argument %s does not match", (Object) argument));
+                    }
+                });
+                when(builder.build()).thenReturn(application);
+                when(builder.authority(any())).thenReturn(builder);
+                when(builder.instanceDiscovery(anyBoolean())).thenReturn(builder);
+                when(builder.disableInternalRetries()).thenReturn(builder);
+                when(builder.httpClient(any())).thenReturn(builder);
+                when(builder.logPii(anyBoolean())).thenReturn(builder);
+            })) {
             test.run();
-            Assert.assertNotNull(publicClientApplicationMock);
+            Assertions.assertNotNull(publicClientApplicationMock);
         }
     }
+
+    @Test
+    public void testExtractSuggestionMessagePreferred() {
+        // Should prefer messages containing 'Suggestion' (case-insensitive)
+        String output
+            = "{\"type\":\"consoleMessage\",\"timestamp\":\"2025-08-18T15:08:14.4849845-07:00\",\"data\":{\"message\":\"\\nERROR: fetching token: AADSTS50076: Due to a configuration change made by your administrator, or because you moved to a new location, you must use multi-factor authentication to access 'tenant-id'. Trace ID: trace-id Correlation ID: correlation-id Timestamp: 2025-08-18 22:08:14Z\\n\"}}\n"
+                + "{\"type\":\"consoleMessage\",\"timestamp\":\"2025-08-18T15:08:14.4849845-07:00\",\"data\":{\"message\":\"Suggestion: re-authentication required, run `azd auth login` to acquire a new token.\\n\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Suggestion: re-authentication required, run `azd auth login` to acquire a new token.", result);
+    }
+
+    @Test
+    public void testExtractSuggestionCaseInsensitive() {
+        // Should find 'suggestion' in any case
+        String output = "{\"type\":\"consoleMessage\",\"data\":{\"message\":\"First message\"}}\n"
+            + "{\"type\":\"consoleMessage\",\"data\":{\"message\":\"SUGGESTION: Try running azd auth login\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("SUGGESTION: Try running azd auth login", result);
+    }
+
+    @Test
+    public void testExtractLastMessageWhenNoSuggestion() {
+        // Should return last message when multiple messages but no suggestion
+        String output = "{\"type\":\"consoleMessage\",\"data\":{\"message\":\"First error message\"}}\n"
+            + "{\"type\":\"consoleMessage\",\"data\":{\"message\":\"Second error message\"}}\n"
+            + "{\"type\":\"consoleMessage\",\"data\":{\"message\":\"Third error message\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Third error message", result);
+    }
+
+    @Test
+    public void testExtractFirstMessageWhenOnlyOne() {
+        // Should return first message when only one exists
+        String output = "{\"type\":\"consoleMessage\",\"data\":{\"message\":\"Only error message\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Only error message", result);
+    }
+
+    @Test
+    public void testExtractMessageFromNestedData() {
+        // Should extract message from nested data structure
+        String output = "{\"type\":\"consoleMessage\",\"data\":{\"message\":\"Error in nested data\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Error in nested data", result);
+    }
+
+    @Test
+    public void testExtractMessageFromRootLevel() {
+        // Should extract message from root level of JSON
+        String output = "{\"message\":\"Root level error message\"}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Root level error message", result);
+    }
+
+    @Test
+    public void testExtractMixedMessageLocations() {
+        // Should handle messages at different JSON levels
+        String output = "{\"message\":\"Root level message\"}\n" + "{\"data\":{\"message\":\"Nested message\"}}\n"
+            + "{\"data\":{\"message\":\"suggestion: Use this suggestion\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("suggestion: Use this suggestion", result);
+    }
+
+    @Test
+    public void testIgnoreEmptyMessages() {
+        // Should ignore empty or whitespace-only messages
+        String output = "{\"data\":{\"message\":\"   \"}}\n" + "{\"data\":{\"message\":\"\"}}\n"
+            + "{\"data\":{\"message\":\"Valid message\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Valid message", result);
+    }
+
+    @Test
+    public void testIgnoreNonJsonLines() {
+        // Should ignore lines that are not valid JSON
+        String output = "This is not JSON\n" + "{\"data\":{\"message\":\"Valid JSON message\"}}\n"
+            + "Another non-JSON line\n" + "{\"data\":{\"message\":\"Suggestion: Another valid message\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Suggestion: Another valid message", result);
+    }
+
+    @Test
+    public void testIgnoreNonStringMessages() {
+        // Should ignore messages that are not strings
+        String output = "{\"data\":{\"message\":123}}\n" + "{\"data\":{\"message\":{\"nested\":\"object\"}}}\n"
+            + "{\"data\":{\"message\":\"Valid string message\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Valid string message", result);
+    }
+
+    @Test
+    public void testIgnoreEmptyLines() {
+        // Should ignore empty lines and whitespace-only lines
+        String output
+            = "{\"data\":{\"message\":\"First message\"}}\n" + "\n" + "{\"data\":{\"message\":\"Second message\"}}\n";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Second message", result);
+    }
+
+    @Test
+    public void testSanitizeTokenInOutput() {
+        // Should sanitize tokens in the extracted message
+        String output = "{\"data\":{\"message\":\"Error with token: abc123token in message\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertNotNull(result);
+        // Note: The actual redaction behavior depends on IdentityUtil.redactInfo implementation
+        // This test just verifies the method doesn't return null and processes the input
+        assertTrue(result.length() > 0);
+    }
+
+    @Test
+    public void testReturnNullForNoValidMessages() {
+        // Should return null when no valid messages found
+        String output = "{\"data\":{\"notamessage\":\"Not a message\"}}\n" + "{\"nomessage\":\"Also not a message\"}\n"
+            + "This is not JSON";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertNull(result);
+    }
+
+    @Test
+    public void testReturnNullForEmptyOutput() {
+        // Should return null for empty output
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput("");
+        assertNull(result);
+    }
+
+    @Test
+    public void testReturnNullForNullOutput() {
+        // Should return null for null output
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(null);
+        assertNull(result);
+    }
+
+    @Test
+    public void testReturnNullForWhitespaceOnlyOutput() {
+        // Should return null for whitespace-only output
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput("   \n\n   \t  ");
+        assertNull(result);
+    }
+
+    @Test
+    public void testComplexRealWorldExample() {
+        // Should handle complex real-world azd output
+        String output
+            = "{\"type\":\"consoleMessage\",\"timestamp\":\"2025-08-18T15:08:14.4849845-07:00\",\"data\":{\"message\":\"\\nERROR: fetching token: AADSTS50076: Due to a configuration change made by your administrator, or because you moved to a new location, you must use multi-factor authentication to access 'tenant-id'. Trace ID: trace-id Correlation ID: correlation-id Timestamp: 2025-08-18 22:08:14Z\\n\"}}\n"
+                + "{\"type\":\"consoleMessage\",\"timestamp\":\"2025-08-18T15:08:14.4849845-07:00\",\"data\":{\"message\":\"Suggestion: re-authentication required, run `azd auth login` to acquire a new token.\\n\"}}\n"
+                + "{\"type\":\"progress\",\"data\":{\"activity\":\"Cleaning up\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Suggestion: re-authentication required, run `azd auth login` to acquire a new token.", result);
+    }
+
+    @Test
+    public void testStripWhitespaceFromMessages() {
+        // Should strip leading and trailing whitespace from messages
+        String output = "{\"data\":{\"message\":\"  \\n  Error message with whitespace  \\n  \"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Error message with whitespace", result);
+    }
+
+    @Test
+    public void testHandleMalformedJsonGracefully() {
+        // Should handle malformed JSON lines gracefully
+        String output = "{\"data\":{\"message\":\"First valid message\"}}\n"
+            + "{\"malformed\":\"json\"without\"closing\"brace\"\n"
+            + "{\"data\":{\"message\":\"suggestion: This should be found\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("suggestion: This should be found", result);
+    }
+
+    @Test
+    public void testMultipleSuggestionMessages() {
+        // Should return the first suggestion message found
+        String output = "{\"data\":{\"message\":\"First message\"}}\n"
+            + "{\"data\":{\"message\":\"Suggestion: First suggestion\"}}\n"
+            + "{\"data\":{\"message\":\"Another suggestion: Second suggestion\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Suggestion: First suggestion", result);
+    }
+
+    @Test
+    public void testSuggestionWithDifferentCasing() {
+        // Should find suggestion with various casing
+        String output = "{\"data\":{\"message\":\"Regular message\"}}\n"
+            + "{\"data\":{\"message\":\"sUgGeStIoN: Mixed case suggestion\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("sUgGeStIoN: Mixed case suggestion", result);
+    }
+
+    @Test
+    public void testNestedJsonObjects() {
+        // Should handle nested JSON structures properly
+        String output = "{\"outer\":{\"data\":{\"message\":\"This should not be found\"}}}\n"
+            + "{\"data\":{\"message\":\"This should be found\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("This should be found", result);
+    }
+
+    @Test
+    public void testMessageWithSpecialCharacters() {
+        // Should handle messages with special characters
+        String output = "{\"data\":{\"message\":\"Error: Special chars !@#$%^&*()+ message\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Error: Special chars !@#$%^&*()+ message", result);
+    }
+
+    @Test
+    public void testMessageWithUnicodeCharacters() {
+        // Should handle messages with Unicode characters
+        String output = "{\"data\":{\"message\":\"Erreur: Caractères unicode éñ message\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Erreur: Caractères unicode éñ message", result);
+    }
+
+    @Test
+    public void testEmptyDataObject() {
+        // Should handle empty data objects
+        String output = "{\"data\":{}}\n" + "{\"data\":{\"message\":\"Valid message\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Valid message", result);
+    }
+
+    @Test
+    public void testMixedValidAndInvalidJson() {
+        // Should handle mix of valid and invalid JSON gracefully
+        String output = "{\"data\":{\"message\":\"First valid message\"}}\n" + "not json at all\n"
+            + "{\"incomplete\": \"json\n" + "{\"data\":{\"message\":\"Suggestion: Final message\"}}";
+
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.extractUserFriendlyErrorFromAzdOutput(output);
+        assertEquals("Suggestion: Final message", result);
+    }
+
+    @Test
+    public void testGetAzdErrorMessageReturnsExtractedMessage() {
+        // Should return extracted user-friendly message when available
+        String output = "{\"data\":{\"message\":\"run azd auth login\"}}";
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.getAzdErrorMessage(output);
+        assertEquals("run azd auth login", result);
+    }
+
+    @Test
+    public void testGetAzdErrorMessageFallsBackForNoValidMessages() {
+        // Should return the raw input when extractUserFriendlyErrorFromAzdOutput returns null
+        String output = "{\"data\":{\"notamessage\":\"Not a message\"}}\n" + "This is not JSON";
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.getAzdErrorMessage(output);
+        assertEquals(output, result);
+    }
+
+    @Test
+    public void testGetAzdErrorMessageFallsBackForWhitespaceOnlyInput() {
+        // Should return the whitespace string when extraction returns null
+        String output = "   \n\n   \t  ";
+        IdentityClient client = new IdentityClientBuilder().clientId("dummy").build();
+        String result = client.getAzdErrorMessage(output);
+        assertEquals(output, result);
+    }
+
+    @Test
+    public void testManagedCredentialSkipsImdsProbing() {
+        String accessToken = "token";
+        TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com");
+        OffsetDateTime expiresOn = OffsetDateTime.now(ZoneOffset.UTC).plusHours(1);
+
+        // Create isolated configuration without affecting global system properties
+        Configuration configuration = TestUtils.createTestConfiguration(
+            new TestConfigurationSource().put("AZURE_TOKEN_CREDENTIALS", "managedidentitycredential"));
+
+        try (MockedConstruction<IdentityClient> identityClientMock
+            = mockConstruction(IdentityClient.class, (identityClient, context) -> {
+
+                when(identityClient.authenticateWithManagedIdentityMsalClient(request))
+                    .thenReturn(TestUtils.getMockAccessToken(accessToken, expiresOn));
+            })) {
+            assertNotNull(identityClientMock);
+
+            DefaultAzureCredential credential
+                = new DefaultAzureCredentialBuilder().configuration(configuration).build();
+
+            StepVerifier.create(credential.getToken(request)).assertNext(token -> {
+                assertEquals(accessToken, token.getToken());
+                assertEquals(expiresOn.getSecond(), token.getExpiresAt().getSecond());
+            }).verifyComplete();
+
+            // Verify that only one IdentityClient was created (for ManagedIdentityCredential only)
+            // This indirectly proves that probing is skipped since the full credential chain isn't created
+            assertEquals(1, identityClientMock.constructed().size(),
+                "Should create only one IdentityClient when AZURE_TOKEN_CREDENTIALS=managedidentitycredential");
+        }
+    }
+
+    @Test
+    public void testConfidentialClientRetryCountWithDisabledMsalInternalRetries() {
+        AtomicInteger requestCount = new AtomicInteger(0);
+        final int retryCount = 2;
+
+        HttpClient mockHttpClient = new HttpClient() {
+            @Override
+            public HttpResponse sendSync(HttpRequest request, Context context) {
+                requestCount.incrementAndGet();
+                return new MockHttpResponse(request, 500);
+            }
+
+            @Override
+            public Mono<HttpResponse> send(HttpRequest request) {
+                requestCount.incrementAndGet();
+                return Mono.just(new MockHttpResponse(request, 500));
+            }
+        };
+
+        IdentityClientOptions options = new IdentityClientOptions().setHttpClient(mockHttpClient)
+            .disableInstanceDiscovery()
+            .setRetryPolicy(new RetryPolicy(new FixedDelay(retryCount, Duration.ofMillis(1))));
+
+        IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID)
+            .clientId(CLIENT_ID)
+            .clientSecret("test-secret")
+            .identityClientOptions(options)
+            .build();
+
+        TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com/.default");
+
+        StepVerifier.create(client.authenticateWithConfidentialClient(request))
+            .expectErrorMatches(e -> e instanceof MsalServiceException)
+            .verify();
+
+        assertEquals(retryCount + 1, requestCount.get(), "With maxRetries=" + retryCount + ", total requests should be "
+            + (retryCount + 1) + " (1 initial + " + retryCount + " retries)");
+    }
+
+    @Test
+    public void testPublicClientRetryCountWithDisabledMsalInternalRetries() {
+        AtomicInteger requestCount = new AtomicInteger(0);
+        final int retryCount = 2;
+
+        HttpClient mockHttpClient = new HttpClient() {
+            @Override
+            public HttpResponse sendSync(HttpRequest request, Context context) {
+                requestCount.incrementAndGet();
+                return new MockHttpResponse(request, 503);
+            }
+
+            @Override
+            public Mono<HttpResponse> send(HttpRequest request) {
+                requestCount.incrementAndGet();
+                return Mono.just(new MockHttpResponse(request, 503));
+            }
+        };
+
+        IdentityClientOptions options = new IdentityClientOptions().setHttpClient(mockHttpClient)
+            .disableInstanceDiscovery()
+            .setRetryOptions(new RetryOptions(new FixedDelayOptions(retryCount, Duration.ofMillis(1))));
+
+        IdentityClient client = new IdentityClientBuilder().tenantId(TENANT_ID)
+            .clientId(CLIENT_ID)
+            .identityClientOptions(options)
+            .build();
+
+        TokenRequestContext request = new TokenRequestContext().addScopes("https://management.azure.com/.default");
+
+        StepVerifier.create(client.authenticateWithUsernamePassword(request, "test-username", "test-password"))
+            .expectErrorMatches(e -> e instanceof ClientAuthenticationException)
+            .verify();
+
+        assertEquals(retryCount + 1, requestCount.get(), "With maxRetries=" + retryCount + ", total requests should be "
+            + (retryCount + 1) + " (1 initial + " + retryCount + " retries)");
+    }
+
+    @Test
+    public void testManagedIdentityClientRetryCountWithDisabledMsalInternalRetries() {
+        AtomicInteger requestCount = new AtomicInteger(0);
+        final int retryCount = 2;
+
+        HttpClient mockHttpClient = new HttpClient() {
+            @Override
+            public HttpResponse sendSync(HttpRequest request, Context context) {
+                requestCount.incrementAndGet();
+                return new MockHttpResponse(request, 500);
+            }
+
+            @Override
+            public Mono<HttpResponse> send(HttpRequest request) {
+                requestCount.incrementAndGet();
+                return Mono.just(new MockHttpResponse(request, 500));
+            }
+        };
+
+        RetryPolicy retryPolicy = new RetryPolicy(new FixedDelay(retryCount, Duration.ofMillis(1)));
+
+        IdentityClientOptions options
+            = new IdentityClientOptions().setHttpClient(mockHttpClient).setRetryPolicy(retryPolicy);
+
+        IdentityClient client = new IdentityClientBuilder().identityClientOptions(options).build();
+
+        StepVerifier
+            .create(client.authenticateWithManagedIdentityMsalClient(
+                new TokenRequestContext().addScopes("https://management.azure.com/.default")))
+            .expectErrorMatches(e -> e instanceof ClientAuthenticationException)
+            .verify();
+
+        assertEquals(retryCount + 1, requestCount.get(), "With maxRetries=" + retryCount + ", total requests should be "
+            + (retryCount + 1) + " (1 initial + " + retryCount + " retries)");
+    }
+
 }

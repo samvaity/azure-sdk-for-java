@@ -5,98 +5,110 @@
 package com.azure.storage.file.share.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** An enumeration of directories and files. */
-@JacksonXmlRootElement(localName = "EnumerationResults")
+/**
+ * An enumeration of directories and files.
+ */
 @Fluent
-public final class ListFilesAndDirectoriesSegmentResponse {
+public final class ListFilesAndDirectoriesSegmentResponse
+    implements XmlSerializable<ListFilesAndDirectoriesSegmentResponse> {
     /*
      * The ServiceEndpoint property.
      */
-    @JacksonXmlProperty(localName = "ServiceEndpoint", isAttribute = true)
+    @Generated
     private String serviceEndpoint;
 
     /*
      * The ShareName property.
      */
-    @JacksonXmlProperty(localName = "ShareName", isAttribute = true)
+    @Generated
     private String shareName;
 
     /*
      * The ShareSnapshot property.
      */
-    @JacksonXmlProperty(localName = "ShareSnapshot", isAttribute = true)
+    @Generated
     private String shareSnapshot;
 
     /*
      * The Encoded property.
      */
-    @JacksonXmlProperty(localName = "Encoded", isAttribute = true)
+    @Generated
     private Boolean encoded;
 
     /*
      * The DirectoryPath property.
      */
-    @JacksonXmlProperty(localName = "DirectoryPath", isAttribute = true)
+    @Generated
     private String directoryPath;
 
     /*
      * The Prefix property.
      */
-    @JsonProperty(value = "Prefix", required = true)
+    @Generated
     private StringEncoded prefix;
 
     /*
      * The Marker property.
      */
-    @JsonProperty(value = "Marker")
+    @Generated
     private String marker;
 
     /*
      * The MaxResults property.
      */
-    @JsonProperty(value = "MaxResults")
+    @Generated
     private Integer maxResults;
 
     /*
      * Abstract for entries that can be listed from Directory.
      */
-    @JsonProperty(value = "Entries", required = true)
+    @Generated
     private FilesAndDirectoriesListSegment segment;
 
     /*
      * The NextMarker property.
      */
-    @JsonProperty(value = "NextMarker", required = true)
+    @Generated
     private String nextMarker;
 
     /*
      * The DirectoryId property.
      */
-    @JsonProperty(value = "DirectoryId")
+    @Generated
     private String directoryId;
 
-    /** Creates an instance of ListFilesAndDirectoriesSegmentResponse class. */
-    public ListFilesAndDirectoriesSegmentResponse() {}
+    /**
+     * Creates an instance of ListFilesAndDirectoriesSegmentResponse class.
+     */
+    @Generated
+    public ListFilesAndDirectoriesSegmentResponse() {
+    }
 
     /**
      * Get the serviceEndpoint property: The ServiceEndpoint property.
-     *
+     * 
      * @return the serviceEndpoint value.
      */
+    @Generated
     public String getServiceEndpoint() {
         return this.serviceEndpoint;
     }
 
     /**
      * Set the serviceEndpoint property: The ServiceEndpoint property.
-     *
+     * 
      * @param serviceEndpoint the serviceEndpoint value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setServiceEndpoint(String serviceEndpoint) {
         this.serviceEndpoint = serviceEndpoint;
         return this;
@@ -104,19 +116,21 @@ public final class ListFilesAndDirectoriesSegmentResponse {
 
     /**
      * Get the shareName property: The ShareName property.
-     *
+     * 
      * @return the shareName value.
      */
+    @Generated
     public String getShareName() {
         return this.shareName;
     }
 
     /**
      * Set the shareName property: The ShareName property.
-     *
+     * 
      * @param shareName the shareName value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setShareName(String shareName) {
         this.shareName = shareName;
         return this;
@@ -124,19 +138,21 @@ public final class ListFilesAndDirectoriesSegmentResponse {
 
     /**
      * Get the shareSnapshot property: The ShareSnapshot property.
-     *
+     * 
      * @return the shareSnapshot value.
      */
+    @Generated
     public String getShareSnapshot() {
         return this.shareSnapshot;
     }
 
     /**
      * Set the shareSnapshot property: The ShareSnapshot property.
-     *
+     * 
      * @param shareSnapshot the shareSnapshot value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setShareSnapshot(String shareSnapshot) {
         this.shareSnapshot = shareSnapshot;
         return this;
@@ -144,19 +160,21 @@ public final class ListFilesAndDirectoriesSegmentResponse {
 
     /**
      * Get the encoded property: The Encoded property.
-     *
+     * 
      * @return the encoded value.
      */
+    @Generated
     public Boolean isEncoded() {
         return this.encoded;
     }
 
     /**
      * Set the encoded property: The Encoded property.
-     *
+     * 
      * @param encoded the encoded value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setEncoded(Boolean encoded) {
         this.encoded = encoded;
         return this;
@@ -164,19 +182,21 @@ public final class ListFilesAndDirectoriesSegmentResponse {
 
     /**
      * Get the directoryPath property: The DirectoryPath property.
-     *
+     * 
      * @return the directoryPath value.
      */
+    @Generated
     public String getDirectoryPath() {
         return this.directoryPath;
     }
 
     /**
      * Set the directoryPath property: The DirectoryPath property.
-     *
+     * 
      * @param directoryPath the directoryPath value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setDirectoryPath(String directoryPath) {
         this.directoryPath = directoryPath;
         return this;
@@ -184,19 +204,21 @@ public final class ListFilesAndDirectoriesSegmentResponse {
 
     /**
      * Get the prefix property: The Prefix property.
-     *
+     * 
      * @return the prefix value.
      */
+    @Generated
     public StringEncoded getPrefix() {
         return this.prefix;
     }
 
     /**
      * Set the prefix property: The Prefix property.
-     *
+     * 
      * @param prefix the prefix value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setPrefix(StringEncoded prefix) {
         this.prefix = prefix;
         return this;
@@ -204,19 +226,21 @@ public final class ListFilesAndDirectoriesSegmentResponse {
 
     /**
      * Get the marker property: The Marker property.
-     *
+     * 
      * @return the marker value.
      */
+    @Generated
     public String getMarker() {
         return this.marker;
     }
 
     /**
      * Set the marker property: The Marker property.
-     *
+     * 
      * @param marker the marker value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setMarker(String marker) {
         this.marker = marker;
         return this;
@@ -224,19 +248,21 @@ public final class ListFilesAndDirectoriesSegmentResponse {
 
     /**
      * Get the maxResults property: The MaxResults property.
-     *
+     * 
      * @return the maxResults value.
      */
+    @Generated
     public Integer getMaxResults() {
         return this.maxResults;
     }
 
     /**
      * Set the maxResults property: The MaxResults property.
-     *
+     * 
      * @param maxResults the maxResults value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setMaxResults(Integer maxResults) {
         this.maxResults = maxResults;
         return this;
@@ -244,19 +270,21 @@ public final class ListFilesAndDirectoriesSegmentResponse {
 
     /**
      * Get the segment property: Abstract for entries that can be listed from Directory.
-     *
+     * 
      * @return the segment value.
      */
+    @Generated
     public FilesAndDirectoriesListSegment getSegment() {
         return this.segment;
     }
 
     /**
      * Set the segment property: Abstract for entries that can be listed from Directory.
-     *
+     * 
      * @param segment the segment value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setSegment(FilesAndDirectoriesListSegment segment) {
         this.segment = segment;
         return this;
@@ -264,19 +292,21 @@ public final class ListFilesAndDirectoriesSegmentResponse {
 
     /**
      * Get the nextMarker property: The NextMarker property.
-     *
+     * 
      * @return the nextMarker value.
      */
+    @Generated
     public String getNextMarker() {
         return this.nextMarker;
     }
 
     /**
      * Set the nextMarker property: The NextMarker property.
-     *
+     * 
      * @param nextMarker the nextMarker value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setNextMarker(String nextMarker) {
         this.nextMarker = nextMarker;
         return this;
@@ -284,21 +314,114 @@ public final class ListFilesAndDirectoriesSegmentResponse {
 
     /**
      * Get the directoryId property: The DirectoryId property.
-     *
+     * 
      * @return the directoryId value.
      */
+    @Generated
     public String getDirectoryId() {
         return this.directoryId;
     }
 
     /**
      * Set the directoryId property: The DirectoryId property.
-     *
+     * 
      * @param directoryId the directoryId value to set.
      * @return the ListFilesAndDirectoriesSegmentResponse object itself.
      */
+    @Generated
     public ListFilesAndDirectoriesSegmentResponse setDirectoryId(String directoryId) {
         this.directoryId = directoryId;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "EnumerationResults" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeStringAttribute("ServiceEndpoint", this.serviceEndpoint);
+        xmlWriter.writeStringAttribute("ShareName", this.shareName);
+        xmlWriter.writeStringAttribute("ShareSnapshot", this.shareSnapshot);
+        xmlWriter.writeBooleanAttribute("Encoded", this.encoded);
+        xmlWriter.writeStringAttribute("DirectoryPath", this.directoryPath);
+        xmlWriter.writeXml(this.prefix, "Prefix");
+        xmlWriter.writeStringElement("Marker", this.marker);
+        xmlWriter.writeNumberElement("MaxResults", this.maxResults);
+        xmlWriter.writeXml(this.segment, "Entries");
+        xmlWriter.writeStringElement("NextMarker", this.nextMarker);
+        xmlWriter.writeStringElement("DirectoryId", this.directoryId);
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of ListFilesAndDirectoriesSegmentResponse from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of ListFilesAndDirectoriesSegmentResponse if the XmlReader was pointing to an instance of it,
+     * or null if it was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the ListFilesAndDirectoriesSegmentResponse.
+     */
+    @Generated
+    public static ListFilesAndDirectoriesSegmentResponse fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of ListFilesAndDirectoriesSegmentResponse from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of ListFilesAndDirectoriesSegmentResponse if the XmlReader was pointing to an instance of it,
+     * or null if it was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the ListFilesAndDirectoriesSegmentResponse.
+     */
+    @Generated
+    public static ListFilesAndDirectoriesSegmentResponse fromXml(XmlReader xmlReader, String rootElementName)
+        throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "EnumerationResults" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            ListFilesAndDirectoriesSegmentResponse deserializedListFilesAndDirectoriesSegmentResponse
+                = new ListFilesAndDirectoriesSegmentResponse();
+            deserializedListFilesAndDirectoriesSegmentResponse.serviceEndpoint
+                = reader.getStringAttribute(null, "ServiceEndpoint");
+            deserializedListFilesAndDirectoriesSegmentResponse.shareName = reader.getStringAttribute(null, "ShareName");
+            deserializedListFilesAndDirectoriesSegmentResponse.shareSnapshot
+                = reader.getStringAttribute(null, "ShareSnapshot");
+            deserializedListFilesAndDirectoriesSegmentResponse.encoded
+                = reader.getNullableAttribute(null, "Encoded", Boolean::parseBoolean);
+            deserializedListFilesAndDirectoriesSegmentResponse.directoryPath
+                = reader.getStringAttribute(null, "DirectoryPath");
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Prefix".equals(elementName.getLocalPart())) {
+                    deserializedListFilesAndDirectoriesSegmentResponse.prefix = StringEncoded.fromXml(reader, "Prefix");
+                } else if ("Marker".equals(elementName.getLocalPart())) {
+                    deserializedListFilesAndDirectoriesSegmentResponse.marker = reader.getStringElement();
+                } else if ("MaxResults".equals(elementName.getLocalPart())) {
+                    deserializedListFilesAndDirectoriesSegmentResponse.maxResults
+                        = reader.getNullableElement(Integer::parseInt);
+                } else if ("Entries".equals(elementName.getLocalPart())) {
+                    deserializedListFilesAndDirectoriesSegmentResponse.segment
+                        = FilesAndDirectoriesListSegment.fromXml(reader, "Entries");
+                } else if ("NextMarker".equals(elementName.getLocalPart())) {
+                    deserializedListFilesAndDirectoriesSegmentResponse.nextMarker = reader.getStringElement();
+                } else if ("DirectoryId".equals(elementName.getLocalPart())) {
+                    deserializedListFilesAndDirectoriesSegmentResponse.directoryId = reader.getStringElement();
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedListFilesAndDirectoriesSegmentResponse;
+        });
     }
 }

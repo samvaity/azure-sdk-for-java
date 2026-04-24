@@ -5,60 +5,73 @@
 package com.azure.monitor.query.implementation.logs.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The related metadata items for the category. */
+/**
+ * The related metadata items for the category.
+ */
 @Fluent
-public final class MetadataCategoryRelated {
+public final class MetadataCategoryRelated implements JsonSerializable<MetadataCategoryRelated> {
     /*
      * The tables related to the category
      */
-    @JsonProperty(value = "tables")
+    @Generated
     private List<String> tables;
 
     /*
      * The functions related to the category
      */
-    @JsonProperty(value = "functions")
+    @Generated
     private List<String> functions;
 
     /*
      * The resource types related to the category
      */
-    @JsonProperty(value = "resourceTypes")
+    @Generated
     private List<String> resourceTypes;
 
     /*
      * The saved queries related to the category
      */
-    @JsonProperty(value = "queries")
+    @Generated
     private List<String> queries;
 
     /*
      * The Log Analytics solutions related to the category
      */
-    @JsonProperty(value = "solutions")
+    @Generated
     private List<String> solutions;
 
-    /** Creates an instance of MetadataCategoryRelated class. */
-    public MetadataCategoryRelated() {}
+    /**
+     * Creates an instance of MetadataCategoryRelated class.
+     */
+    @Generated
+    public MetadataCategoryRelated() {
+    }
 
     /**
      * Get the tables property: The tables related to the category.
-     *
+     * 
      * @return the tables value.
      */
+    @Generated
     public List<String> getTables() {
         return this.tables;
     }
 
     /**
      * Set the tables property: The tables related to the category.
-     *
+     * 
      * @param tables the tables value to set.
      * @return the MetadataCategoryRelated object itself.
      */
+    @Generated
     public MetadataCategoryRelated setTables(List<String> tables) {
         this.tables = tables;
         return this;
@@ -66,19 +79,21 @@ public final class MetadataCategoryRelated {
 
     /**
      * Get the functions property: The functions related to the category.
-     *
+     * 
      * @return the functions value.
      */
+    @Generated
     public List<String> getFunctions() {
         return this.functions;
     }
 
     /**
      * Set the functions property: The functions related to the category.
-     *
+     * 
      * @param functions the functions value to set.
      * @return the MetadataCategoryRelated object itself.
      */
+    @Generated
     public MetadataCategoryRelated setFunctions(List<String> functions) {
         this.functions = functions;
         return this;
@@ -86,19 +101,21 @@ public final class MetadataCategoryRelated {
 
     /**
      * Get the resourceTypes property: The resource types related to the category.
-     *
+     * 
      * @return the resourceTypes value.
      */
+    @Generated
     public List<String> getResourceTypes() {
         return this.resourceTypes;
     }
 
     /**
      * Set the resourceTypes property: The resource types related to the category.
-     *
+     * 
      * @param resourceTypes the resourceTypes value to set.
      * @return the MetadataCategoryRelated object itself.
      */
+    @Generated
     public MetadataCategoryRelated setResourceTypes(List<String> resourceTypes) {
         this.resourceTypes = resourceTypes;
         return this;
@@ -106,19 +123,21 @@ public final class MetadataCategoryRelated {
 
     /**
      * Get the queries property: The saved queries related to the category.
-     *
+     * 
      * @return the queries value.
      */
+    @Generated
     public List<String> getQueries() {
         return this.queries;
     }
 
     /**
      * Set the queries property: The saved queries related to the category.
-     *
+     * 
      * @param queries the queries value to set.
      * @return the MetadataCategoryRelated object itself.
      */
+    @Generated
     public MetadataCategoryRelated setQueries(List<String> queries) {
         this.queries = queries;
         return this;
@@ -126,28 +145,79 @@ public final class MetadataCategoryRelated {
 
     /**
      * Get the solutions property: The Log Analytics solutions related to the category.
-     *
+     * 
      * @return the solutions value.
      */
+    @Generated
     public List<String> getSolutions() {
         return this.solutions;
     }
 
     /**
      * Set the solutions property: The Log Analytics solutions related to the category.
-     *
+     * 
      * @param solutions the solutions value to set.
      * @return the MetadataCategoryRelated object itself.
      */
+    @Generated
     public MetadataCategoryRelated setSolutions(List<String> solutions) {
         this.solutions = solutions;
         return this;
     }
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * {@inheritDoc}
      */
-    public void validate() {}
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("tables", this.tables, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeArrayField("functions", this.functions, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeArrayField("resourceTypes", this.resourceTypes,
+            (writer, element) -> writer.writeString(element));
+        jsonWriter.writeArrayField("queries", this.queries, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeArrayField("solutions", this.solutions, (writer, element) -> writer.writeString(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of MetadataCategoryRelated from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of MetadataCategoryRelated if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the MetadataCategoryRelated.
+     */
+    @Generated
+    public static MetadataCategoryRelated fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            MetadataCategoryRelated deserializedMetadataCategoryRelated = new MetadataCategoryRelated();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("tables".equals(fieldName)) {
+                    List<String> tables = reader.readArray(reader1 -> reader1.getString());
+                    deserializedMetadataCategoryRelated.tables = tables;
+                } else if ("functions".equals(fieldName)) {
+                    List<String> functions = reader.readArray(reader1 -> reader1.getString());
+                    deserializedMetadataCategoryRelated.functions = functions;
+                } else if ("resourceTypes".equals(fieldName)) {
+                    List<String> resourceTypes = reader.readArray(reader1 -> reader1.getString());
+                    deserializedMetadataCategoryRelated.resourceTypes = resourceTypes;
+                } else if ("queries".equals(fieldName)) {
+                    List<String> queries = reader.readArray(reader1 -> reader1.getString());
+                    deserializedMetadataCategoryRelated.queries = queries;
+                } else if ("solutions".equals(fieldName)) {
+                    List<String> solutions = reader.readArray(reader1 -> reader1.getString());
+                    deserializedMetadataCategoryRelated.solutions = solutions;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedMetadataCategoryRelated;
+        });
+    }
 }

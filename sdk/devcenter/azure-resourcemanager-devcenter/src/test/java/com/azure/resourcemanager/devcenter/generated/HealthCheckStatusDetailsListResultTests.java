@@ -10,11 +10,9 @@ import com.azure.resourcemanager.devcenter.models.HealthCheckStatusDetailsListRe
 public final class HealthCheckStatusDetailsListResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        HealthCheckStatusDetailsListResult model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"properties\":{\"startDateTime\":\"2021-12-10T01:46:10Z\",\"endDateTime\":\"2021-11-22T00:26:44Z\",\"healthChecks\":[]},\"id\":\"bxarzgszufoxci\",\"name\":\"opidoamciodh\",\"type\":\"haz\"},{\"properties\":{\"startDateTime\":\"2021-11-22T06:47:21Z\",\"endDateTime\":\"2021-03-10T21:25:05Z\",\"healthChecks\":[]},\"id\":\"lwntoego\",\"name\":\"dwbwhkszzcmrvexz\",\"type\":\"vbtqgsfraoyzk\"},{\"properties\":{\"startDateTime\":\"2021-06-11T18:07:16Z\",\"endDateTime\":\"2021-01-01T04:06:13Z\",\"healthChecks\":[]},\"id\":\"ux\",\"name\":\"wqaldsyu\",\"type\":\"ximerqfobwyznk\"}],\"nextLink\":\"kutwpf\"}")
-                .toObject(HealthCheckStatusDetailsListResult.class);
+        HealthCheckStatusDetailsListResult model = BinaryData.fromString(
+            "{\"value\":[{\"properties\":{\"startDateTime\":\"2021-03-30T06:07:22Z\",\"endDateTime\":\"2021-04-15T08:04:43Z\",\"healthChecks\":[{\"status\":\"Failed\",\"displayName\":\"ybvpay\",\"startDateTime\":\"2021-11-06T02:11:56Z\",\"endDateTime\":\"2021-10-08T16:55:36Z\",\"errorType\":\"px\",\"recommendedAction\":\"jplmagstcy\",\"additionalDetails\":\"pfkyrkdbdgiogsj\"},{\"status\":\"Running\",\"displayName\":\"qjnobaiyhddviac\",\"startDateTime\":\"2021-08-12T15:52:34Z\",\"endDateTime\":\"2021-04-14T23:17:33Z\",\"errorType\":\"tfpmvmemfnczdw\",\"recommendedAction\":\"b\",\"additionalDetails\":\"xlllchp\"}]},\"id\":\"bzevwrd\",\"name\":\"hfuk\",\"type\":\"vsjcswsmystuluqy\"},{\"properties\":{\"startDateTime\":\"2021-11-06T06:25:44Z\",\"endDateTime\":\"2021-09-07T13:40:13Z\",\"healthChecks\":[{\"status\":\"Passed\",\"displayName\":\"bm\",\"startDateTime\":\"2021-04-13T14:15:11Z\",\"endDateTime\":\"2021-10-29T18:16:53Z\",\"errorType\":\"widf\",\"recommendedAction\":\"sspuunnoxyhkx\",\"additionalDetails\":\"ddrihpf\"},{\"status\":\"Warning\",\"displayName\":\"aaewdaomdjv\",\"startDateTime\":\"2021-11-23T13:46:31Z\",\"endDateTime\":\"2021-04-29T09:29:01Z\",\"errorType\":\"zb\",\"recommendedAction\":\"sgeivsiy\",\"additionalDetails\":\"kdncj\"},{\"status\":\"Failed\",\"displayName\":\"bzo\",\"startDateTime\":\"2021-06-25T22:16:14Z\",\"endDateTime\":\"2021-06-09T08:37:48Z\",\"errorType\":\"p\",\"recommendedAction\":\"y\",\"additionalDetails\":\"gogtqxepnylbf\"}]},\"id\":\"jlyjtlvofq\",\"name\":\"hvfcibyfmow\",\"type\":\"xrkjpvdw\"}],\"nextLink\":\"zwiivwzjbhyzs\"}")
+            .toObject(HealthCheckStatusDetailsListResult.class);
     }
 
     @org.junit.jupiter.api.Test

@@ -4,45 +4,59 @@
 
 package com.azure.messaging.servicebus.administration.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The SKU for the messaging entity. */
+/**
+ * The SKU for the messaging entity.
+ */
 public final class MessagingSku extends ExpandableStringEnum<MessagingSku> {
-    /** Static value Basic for MessagingSku. */
+    /**
+     * Static value Basic for MessagingSku.
+     */
+    @Generated
     public static final MessagingSku BASIC = fromString("Basic");
 
-    /** Static value Standard for MessagingSku. */
+    /**
+     * Static value Standard for MessagingSku.
+     */
+    @Generated
     public static final MessagingSku STANDARD = fromString("Standard");
 
-    /** Static value Premium for MessagingSku. */
+    /**
+     * Static value Premium for MessagingSku.
+     */
+    @Generated
     public static final MessagingSku PREMIUM = fromString("Premium");
 
     /**
      * Creates a new instance of MessagingSku value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public MessagingSku() {}
+    public MessagingSku() {
+    }
 
     /**
      * Creates or finds a MessagingSku from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding MessagingSku.
      */
-    @JsonCreator
+    @Generated
     public static MessagingSku fromString(String name) {
         return fromString(name, MessagingSku.class);
     }
 
     /**
      * Gets known MessagingSku values.
-     *
+     * 
      * @return known MessagingSku values.
      */
+    @Generated
     public static Collection<MessagingSku> values() {
         return values(MessagingSku.class);
     }

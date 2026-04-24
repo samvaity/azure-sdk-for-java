@@ -14,50 +14,47 @@ import org.junit.jupiter.api.Assertions;
 public final class EventGridConnectionPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        EventGridConnectionProperties model =
-            BinaryData
-                .fromString(
-                    "{\"storageAccountResourceId\":\"goo\",\"eventGridResourceId\":\"kqfqjbvl\",\"eventHubResourceId\":\"orfmluiqt\",\"consumerGroup\":\"zf\",\"tableName\":\"yvnqqybaryeuay\",\"mappingRuleName\":\"qabqgzslesjcb\",\"dataFormat\":\"AVRO\",\"ignoreFirstRecord\":false,\"blobStorageEventType\":\"Microsoft.Storage.BlobCreated\",\"managedIdentityResourceId\":\"w\",\"managedIdentityObjectId\":\"cv\",\"databaseRouting\":\"Multi\",\"provisioningState\":\"Succeeded\"}")
-                .toObject(EventGridConnectionProperties.class);
-        Assertions.assertEquals("goo", model.storageAccountResourceId());
-        Assertions.assertEquals("kqfqjbvl", model.eventGridResourceId());
-        Assertions.assertEquals("orfmluiqt", model.eventHubResourceId());
-        Assertions.assertEquals("zf", model.consumerGroup());
-        Assertions.assertEquals("yvnqqybaryeuay", model.tableName());
-        Assertions.assertEquals("qabqgzslesjcb", model.mappingRuleName());
-        Assertions.assertEquals(EventGridDataFormat.AVRO, model.dataFormat());
+        EventGridConnectionProperties model = BinaryData.fromString(
+            "{\"storageAccountResourceId\":\"gnjdgkynscliqhz\",\"eventGridResourceId\":\"xnkomtkubo\",\"eventHubResourceId\":\"ppnvdxz\",\"consumerGroup\":\"hihfrbbcevqagtlt\",\"tableName\":\"lfkqojpy\",\"mappingRuleName\":\"gtrd\",\"dataFormat\":\"PSV\",\"ignoreFirstRecord\":false,\"blobStorageEventType\":\"Microsoft.Storage.BlobRenamed\",\"managedIdentityResourceId\":\"dymbrny\",\"managedIdentityObjectId\":\"xmprafwg\",\"databaseRouting\":\"Multi\",\"provisioningState\":\"Creating\"}")
+            .toObject(EventGridConnectionProperties.class);
+        Assertions.assertEquals("gnjdgkynscliqhz", model.storageAccountResourceId());
+        Assertions.assertEquals("xnkomtkubo", model.eventGridResourceId());
+        Assertions.assertEquals("ppnvdxz", model.eventHubResourceId());
+        Assertions.assertEquals("hihfrbbcevqagtlt", model.consumerGroup());
+        Assertions.assertEquals("lfkqojpy", model.tableName());
+        Assertions.assertEquals("gtrd", model.mappingRuleName());
+        Assertions.assertEquals(EventGridDataFormat.PSV, model.dataFormat());
         Assertions.assertEquals(false, model.ignoreFirstRecord());
-        Assertions.assertEquals(BlobStorageEventType.MICROSOFT_STORAGE_BLOB_CREATED, model.blobStorageEventType());
-        Assertions.assertEquals("w", model.managedIdentityResourceId());
+        Assertions.assertEquals(BlobStorageEventType.MICROSOFT_STORAGE_BLOB_RENAMED, model.blobStorageEventType());
+        Assertions.assertEquals("dymbrny", model.managedIdentityResourceId());
         Assertions.assertEquals(DatabaseRouting.MULTI, model.databaseRouting());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        EventGridConnectionProperties model =
-            new EventGridConnectionProperties()
-                .withStorageAccountResourceId("goo")
-                .withEventGridResourceId("kqfqjbvl")
-                .withEventHubResourceId("orfmluiqt")
-                .withConsumerGroup("zf")
-                .withTableName("yvnqqybaryeuay")
-                .withMappingRuleName("qabqgzslesjcb")
-                .withDataFormat(EventGridDataFormat.AVRO)
+        EventGridConnectionProperties model
+            = new EventGridConnectionProperties().withStorageAccountResourceId("gnjdgkynscliqhz")
+                .withEventGridResourceId("xnkomtkubo")
+                .withEventHubResourceId("ppnvdxz")
+                .withConsumerGroup("hihfrbbcevqagtlt")
+                .withTableName("lfkqojpy")
+                .withMappingRuleName("gtrd")
+                .withDataFormat(EventGridDataFormat.PSV)
                 .withIgnoreFirstRecord(false)
-                .withBlobStorageEventType(BlobStorageEventType.MICROSOFT_STORAGE_BLOB_CREATED)
-                .withManagedIdentityResourceId("w")
+                .withBlobStorageEventType(BlobStorageEventType.MICROSOFT_STORAGE_BLOB_RENAMED)
+                .withManagedIdentityResourceId("dymbrny")
                 .withDatabaseRouting(DatabaseRouting.MULTI);
         model = BinaryData.fromObject(model).toObject(EventGridConnectionProperties.class);
-        Assertions.assertEquals("goo", model.storageAccountResourceId());
-        Assertions.assertEquals("kqfqjbvl", model.eventGridResourceId());
-        Assertions.assertEquals("orfmluiqt", model.eventHubResourceId());
-        Assertions.assertEquals("zf", model.consumerGroup());
-        Assertions.assertEquals("yvnqqybaryeuay", model.tableName());
-        Assertions.assertEquals("qabqgzslesjcb", model.mappingRuleName());
-        Assertions.assertEquals(EventGridDataFormat.AVRO, model.dataFormat());
+        Assertions.assertEquals("gnjdgkynscliqhz", model.storageAccountResourceId());
+        Assertions.assertEquals("xnkomtkubo", model.eventGridResourceId());
+        Assertions.assertEquals("ppnvdxz", model.eventHubResourceId());
+        Assertions.assertEquals("hihfrbbcevqagtlt", model.consumerGroup());
+        Assertions.assertEquals("lfkqojpy", model.tableName());
+        Assertions.assertEquals("gtrd", model.mappingRuleName());
+        Assertions.assertEquals(EventGridDataFormat.PSV, model.dataFormat());
         Assertions.assertEquals(false, model.ignoreFirstRecord());
-        Assertions.assertEquals(BlobStorageEventType.MICROSOFT_STORAGE_BLOB_CREATED, model.blobStorageEventType());
-        Assertions.assertEquals("w", model.managedIdentityResourceId());
+        Assertions.assertEquals(BlobStorageEventType.MICROSOFT_STORAGE_BLOB_RENAMED, model.blobStorageEventType());
+        Assertions.assertEquals("dymbrny", model.managedIdentityResourceId());
         Assertions.assertEquals(DatabaseRouting.MULTI, model.databaseRouting());
     }
 }

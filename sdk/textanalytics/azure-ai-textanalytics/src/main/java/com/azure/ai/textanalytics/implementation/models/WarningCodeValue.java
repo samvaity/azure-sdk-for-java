@@ -4,42 +4,53 @@
 
 package com.azure.ai.textanalytics.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Error code. */
+/**
+ * Error code.
+ */
 public final class WarningCodeValue extends ExpandableStringEnum<WarningCodeValue> {
-    /** Static value LongWordsInDocument for WarningCodeValue. */
+    /**
+     * Static value LongWordsInDocument for WarningCodeValue.
+     */
+    @Generated
     public static final WarningCodeValue LONG_WORDS_IN_DOCUMENT = fromString("LongWordsInDocument");
 
-    /** Static value DocumentTruncated for WarningCodeValue. */
+    /**
+     * Static value DocumentTruncated for WarningCodeValue.
+     */
+    @Generated
     public static final WarningCodeValue DOCUMENT_TRUNCATED = fromString("DocumentTruncated");
 
     /**
      * Creates a new instance of WarningCodeValue value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public WarningCodeValue() {}
+    public WarningCodeValue() {
+    }
 
     /**
      * Creates or finds a WarningCodeValue from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding WarningCodeValue.
      */
-    @JsonCreator
+    @Generated
     public static WarningCodeValue fromString(String name) {
         return fromString(name, WarningCodeValue.class);
     }
 
     /**
      * Gets known WarningCodeValue values.
-     *
+     * 
      * @return known WarningCodeValue values.
      */
+    @Generated
     public static Collection<WarningCodeValue> values() {
         return values(WarningCodeValue.class);
     }

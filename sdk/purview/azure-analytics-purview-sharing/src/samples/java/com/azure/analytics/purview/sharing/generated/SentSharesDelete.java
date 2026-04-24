@@ -13,15 +13,14 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 
 public class SentSharesDelete {
     public static void main(String[] args) {
-        SentSharesClient sentSharesClient =
-                new SentSharesClientBuilder()
-                        .credential(new DefaultAzureCredentialBuilder().build())
-                        .endpoint("accountName.purview.azure.com/share")
-                        .buildClient();
-        // BEGIN:com.azure.analytics.purview.sharing.generated.sentsharesdeletesentshare.sentsharesdelete
+        SentSharesClient sentSharesClient
+            = new SentSharesClientBuilder().credential(new DefaultAzureCredentialBuilder().build())
+                .endpoint("accountName.purview.azure.com/share")
+                .buildClient();
+        // BEGIN:com.azure.analytics.purview.sharing.generated.sent-shares-delete-sent-share.sent-shares-delete
         RequestOptions requestOptions = new RequestOptions();
-        SyncPoller<BinaryData, Void> response =
-                sentSharesClient.beginDeleteSentShare("FF4A2AAE-8755-47BB-9C00-A774B5A7006E", requestOptions);
-        // END:com.azure.analytics.purview.sharing.generated.sentsharesdeletesentshare.sentsharesdelete
+        SyncPoller<BinaryData, Void> response
+            = sentSharesClient.beginDeleteSentShare("FF4A2AAE-8755-47BB-9C00-A774B5A7006E", requestOptions);
+        // END:com.azure.analytics.purview.sharing.generated.sent-shares-delete-sent-share.sent-shares-delete
     }
 }

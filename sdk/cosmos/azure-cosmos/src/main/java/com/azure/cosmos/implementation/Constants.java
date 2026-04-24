@@ -3,6 +3,7 @@
 
 package com.azure.cosmos.implementation;
 
+
 /**
  * Used internally. Constants in the Azure Cosmos DB database service Java SDK.
  */
@@ -119,6 +120,41 @@ public final class Constants {
         public static final String ORDER = "order";
         public static final String SPATIAL_INDEXES = "spatialIndexes";
         public static final String TYPES = "types";
+        public static final String QUANTIZER_TYPE = "quantizerType";
+
+        // Full text search
+        public static final String FULL_TEXT_INDEXES = "fullTextIndexes";
+        public static final String DEFAULT_LANGUAGE = "defaultLanguage";
+        public static final String LANGUAGE = "language";
+        public static final String FULL_TEXT_POLICY = "fullTextPolicy";
+        public static final String FULL_TEXT_PATHS = "fullTextPaths";
+
+        // Hybrid Search Query
+        public static final String GLOBAL_STATISTICS_QUERY = "globalStatisticsQuery";
+        public static final String COMPONENT_QUERY_INFOS = "componentQueryInfos";
+        public static final String COMPONENT_WEIGHTS = "componentWeights";
+        public static final String PROJECTION_QUERY_INFO = "projectionQueryInfo";
+        public static final String SKIP = "skip";
+        public static final String TAKE = "take";
+        public static final String REQUIRES_GLOBAL_STATISTICS = "requiresGlobalStatistics";
+        public static final String TOTAL_WORD_COUNT = "totalWordCount";
+        public static final String HIT_COUNTS = "hitCounts";
+        public static final String DOCUMENT_COUNT = "documentCount";
+        public static final String FULL_TEXT_QUERY_STATISTICS = "fullTextStatistics";
+        public static final String PAYLOAD = "payload";
+        public static final String COMPONENT_SCORES = "componentScores";
+
+        // Vector Embedding Policy
+        public static final String VECTOR_EMBEDDING_POLICY = "vectorEmbeddingPolicy";
+        public static final String VECTOR_INDEXES = "vectorIndexes";
+        public static final String VECTOR_EMBEDDINGS = "vectorEmbeddings";
+        public static final String VECTOR_INDEX_TYPE = "type";
+        public static final String VECTOR_DATA_TYPE = "dataType";
+        public static final String VECTOR_DIMENSIONS = "dimensions";
+        public static final String DISTANCE_FUNCTION = "distanceFunction";
+        public static final String VECTOR_QUANTIZATION_SIZE_IN_BYTES = "quantizationByteSize";
+        public static final String VECTOR_INDEXING_SEARCH_LIST_SIZE =  "indexingSearchListSize";
+        public static final String VECTOR_INDEX_SHARD_KEYS = "vectorIndexShardKeys";
 
         // Unique index.
         public static final String UNIQUE_KEY_POLICY = "uniqueKeyPolicy";
@@ -165,7 +201,11 @@ public final class Constants {
         public static final String Name = "name";
         public static final String WRITABLE_LOCATIONS = "writableLocations";
         public static final String READABLE_LOCATIONS = "readableLocations";
+        public static final String THINCLIENT_WRITABLE_LOCATIONS = "thinClientWritableLocations";
+        public static final String THINCLIENT_READABLE_LOCATIONS = "thinClientReadableLocations";
         public static final String DATABASE_ACCOUNT_ENDPOINT = "databaseAccountEndpoint";
+        public static final String ENABLE_PER_PARTITION_FAILOVER_BEHAVIOR = "enablePerPartitionFailoverBehavior";
+        public static final String ENABLE_N_REGION_SYNCHRONOUS_COMMIT = "enableNRegionSynchronousCommit";
 
       //Authorization
         public static final String MASTER_TOKEN = "master";
@@ -253,4 +293,5 @@ public final class Constants {
     }
 
     public static final int QUERYPLAN_CACHE_SIZE = 5000;
+    public static final String AAD_DEFAULT_SCOPE = "https://cosmos.azure.com/.default";
 }

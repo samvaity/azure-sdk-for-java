@@ -11,20 +11,18 @@ import org.junit.jupiter.api.Assertions;
 public final class ProxyResourceReferenceTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ProxyResourceReference model =
-            BinaryData
-                .fromString("{\"name\":\"rzpwvlqdqgbiq\",\"sourceArmResourceId\":\"lihkaetcktvfc\"}")
-                .toObject(ProxyResourceReference.class);
-        Assertions.assertEquals("lihkaetcktvfc", model.sourceArmResourceId());
-        Assertions.assertEquals("rzpwvlqdqgbiq", model.name());
+        ProxyResourceReference model = BinaryData.fromString("{\"name\":\"axibxujw\",\"sourceArmResourceId\":\"hqwa\"}")
+            .toObject(ProxyResourceReference.class);
+        Assertions.assertEquals("hqwa", model.sourceArmResourceId());
+        Assertions.assertEquals("axibxujw", model.name());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ProxyResourceReference model =
-            new ProxyResourceReference().withSourceArmResourceId("lihkaetcktvfc").withName("rzpwvlqdqgbiq");
+        ProxyResourceReference model
+            = new ProxyResourceReference().withSourceArmResourceId("hqwa").withName("axibxujw");
         model = BinaryData.fromObject(model).toObject(ProxyResourceReference.class);
-        Assertions.assertEquals("lihkaetcktvfc", model.sourceArmResourceId());
-        Assertions.assertEquals("rzpwvlqdqgbiq", model.name());
+        Assertions.assertEquals("hqwa", model.sourceArmResourceId());
+        Assertions.assertEquals("axibxujw", model.name());
     }
 }

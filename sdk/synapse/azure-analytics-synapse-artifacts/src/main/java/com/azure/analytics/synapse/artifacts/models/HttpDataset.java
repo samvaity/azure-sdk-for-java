@@ -5,36 +5,43 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** A file in an HTTP web server. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("HttpFile")
-@JsonFlatten
+/**
+ * A file in an HTTP web server.
+ */
 @Fluent
 public class HttpDataset extends Dataset {
+    /*
+     * Type of dataset.
+     */
+    @Generated
+    private String type = "HttpFile";
+
     /*
      * The relative URL based on the URL in the HttpLinkedService refers to an HTTP file Type: string (or Expression
      * with resultType string).
      */
-    @JsonProperty(value = "typeProperties.relativeUrl")
+    @Generated
     private Object relativeUrl;
 
     /*
      * The HTTP method for the HTTP request. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.requestMethod")
+    @Generated
     private Object requestMethod;
 
     /*
      * The body for the HTTP request. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.requestBody")
+    @Generated
     private Object requestBody;
 
     /*
@@ -42,30 +49,46 @@ public class HttpDataset extends Dataset {
      * ...
      * request-header-name-n:request-header-value-n Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.additionalHeaders")
+    @Generated
     private Object additionalHeaders;
 
     /*
      * The format of files.
      */
-    @JsonProperty(value = "typeProperties.format")
+    @Generated
     private DatasetStorageFormat format;
 
     /*
      * The data compression method used on files.
      */
-    @JsonProperty(value = "typeProperties.compression")
+    @Generated
     private DatasetCompression compression;
 
-    /** Creates an instance of HttpDataset class. */
-    public HttpDataset() {}
+    /**
+     * Creates an instance of HttpDataset class.
+     */
+    @Generated
+    public HttpDataset() {
+    }
+
+    /**
+     * Get the type property: Type of dataset.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the relativeUrl property: The relative URL based on the URL in the HttpLinkedService refers to an HTTP file
      * Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the relativeUrl value.
      */
+    @Generated
     public Object getRelativeUrl() {
         return this.relativeUrl;
     }
@@ -73,10 +96,11 @@ public class HttpDataset extends Dataset {
     /**
      * Set the relativeUrl property: The relative URL based on the URL in the HttpLinkedService refers to an HTTP file
      * Type: string (or Expression with resultType string).
-     *
+     * 
      * @param relativeUrl the relativeUrl value to set.
      * @return the HttpDataset object itself.
      */
+    @Generated
     public HttpDataset setRelativeUrl(Object relativeUrl) {
         this.relativeUrl = relativeUrl;
         return this;
@@ -85,9 +109,10 @@ public class HttpDataset extends Dataset {
     /**
      * Get the requestMethod property: The HTTP method for the HTTP request. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the requestMethod value.
      */
+    @Generated
     public Object getRequestMethod() {
         return this.requestMethod;
     }
@@ -95,10 +120,11 @@ public class HttpDataset extends Dataset {
     /**
      * Set the requestMethod property: The HTTP method for the HTTP request. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param requestMethod the requestMethod value to set.
      * @return the HttpDataset object itself.
      */
+    @Generated
     public HttpDataset setRequestMethod(Object requestMethod) {
         this.requestMethod = requestMethod;
         return this;
@@ -106,19 +132,21 @@ public class HttpDataset extends Dataset {
 
     /**
      * Get the requestBody property: The body for the HTTP request. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the requestBody value.
      */
+    @Generated
     public Object getRequestBody() {
         return this.requestBody;
     }
 
     /**
      * Set the requestBody property: The body for the HTTP request. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param requestBody the requestBody value to set.
      * @return the HttpDataset object itself.
      */
+    @Generated
     public HttpDataset setRequestBody(Object requestBody) {
         this.requestBody = requestBody;
         return this;
@@ -126,23 +154,27 @@ public class HttpDataset extends Dataset {
 
     /**
      * Get the additionalHeaders property: The headers for the HTTP Request. e.g.
-     * request-header-name-1:request-header-value-1 ... request-header-name-n:request-header-value-n Type: string (or
-     * Expression with resultType string).
-     *
+     * request-header-name-1:request-header-value-1
+     * ...
+     * request-header-name-n:request-header-value-n Type: string (or Expression with resultType string).
+     * 
      * @return the additionalHeaders value.
      */
+    @Generated
     public Object getAdditionalHeaders() {
         return this.additionalHeaders;
     }
 
     /**
      * Set the additionalHeaders property: The headers for the HTTP Request. e.g.
-     * request-header-name-1:request-header-value-1 ... request-header-name-n:request-header-value-n Type: string (or
-     * Expression with resultType string).
-     *
+     * request-header-name-1:request-header-value-1
+     * ...
+     * request-header-name-n:request-header-value-n Type: string (or Expression with resultType string).
+     * 
      * @param additionalHeaders the additionalHeaders value to set.
      * @return the HttpDataset object itself.
      */
+    @Generated
     public HttpDataset setAdditionalHeaders(Object additionalHeaders) {
         this.additionalHeaders = additionalHeaders;
         return this;
@@ -150,19 +182,21 @@ public class HttpDataset extends Dataset {
 
     /**
      * Get the format property: The format of files.
-     *
+     * 
      * @return the format value.
      */
+    @Generated
     public DatasetStorageFormat getFormat() {
         return this.format;
     }
 
     /**
      * Set the format property: The format of files.
-     *
+     * 
      * @param format the format value to set.
      * @return the HttpDataset object itself.
      */
+    @Generated
     public HttpDataset setFormat(DatasetStorageFormat format) {
         this.format = format;
         return this;
@@ -170,70 +204,215 @@ public class HttpDataset extends Dataset {
 
     /**
      * Get the compression property: The data compression method used on files.
-     *
+     * 
      * @return the compression value.
      */
+    @Generated
     public DatasetCompression getCompression() {
         return this.compression;
     }
 
     /**
      * Set the compression property: The data compression method used on files.
-     *
+     * 
      * @param compression the compression value to set.
      * @return the HttpDataset object itself.
      */
+    @Generated
     public HttpDataset setCompression(DatasetCompression compression) {
         this.compression = compression;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpDataset setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpDataset setStructure(Object structure) {
         super.setStructure(structure);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpDataset setSchema(Object schema) {
         super.setSchema(schema);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpDataset setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         super.setLinkedServiceName(linkedServiceName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpDataset setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpDataset setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HttpDataset setFolder(DatasetFolder folder) {
         super.setFolder(folder);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("linkedServiceName", getLinkedServiceName());
+        jsonWriter.writeStringField("description", getDescription());
+        if (getStructure() != null) {
+            jsonWriter.writeUntypedField("structure", getStructure());
+        }
+        if (getSchema() != null) {
+            jsonWriter.writeUntypedField("schema", getSchema());
+        }
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeJsonField("folder", getFolder());
+        jsonWriter.writeStringField("type", this.type);
+        if (relativeUrl != null
+            || requestMethod != null
+            || requestBody != null
+            || additionalHeaders != null
+            || format != null
+            || compression != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            if (this.relativeUrl != null) {
+                jsonWriter.writeUntypedField("relativeUrl", this.relativeUrl);
+            }
+            if (this.requestMethod != null) {
+                jsonWriter.writeUntypedField("requestMethod", this.requestMethod);
+            }
+            if (this.requestBody != null) {
+                jsonWriter.writeUntypedField("requestBody", this.requestBody);
+            }
+            if (this.additionalHeaders != null) {
+                jsonWriter.writeUntypedField("additionalHeaders", this.additionalHeaders);
+            }
+            jsonWriter.writeJsonField("format", this.format);
+            jsonWriter.writeJsonField("compression", this.compression);
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of HttpDataset from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of HttpDataset if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the HttpDataset.
+     */
+    @Generated
+    public static HttpDataset fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            HttpDataset deserializedHttpDataset = new HttpDataset();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("linkedServiceName".equals(fieldName)) {
+                    deserializedHttpDataset.setLinkedServiceName(LinkedServiceReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedHttpDataset.setDescription(reader.getString());
+                } else if ("structure".equals(fieldName)) {
+                    deserializedHttpDataset.setStructure(reader.readUntyped());
+                } else if ("schema".equals(fieldName)) {
+                    deserializedHttpDataset.setSchema(reader.readUntyped());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedHttpDataset.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedHttpDataset.setAnnotations(annotations);
+                } else if ("folder".equals(fieldName)) {
+                    deserializedHttpDataset.setFolder(DatasetFolder.fromJson(reader));
+                } else if ("type".equals(fieldName)) {
+                    deserializedHttpDataset.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("relativeUrl".equals(fieldName)) {
+                            deserializedHttpDataset.relativeUrl = reader.readUntyped();
+                        } else if ("requestMethod".equals(fieldName)) {
+                            deserializedHttpDataset.requestMethod = reader.readUntyped();
+                        } else if ("requestBody".equals(fieldName)) {
+                            deserializedHttpDataset.requestBody = reader.readUntyped();
+                        } else if ("additionalHeaders".equals(fieldName)) {
+                            deserializedHttpDataset.additionalHeaders = reader.readUntyped();
+                        } else if ("format".equals(fieldName)) {
+                            deserializedHttpDataset.format = DatasetStorageFormat.fromJson(reader);
+                        } else if ("compression".equals(fieldName)) {
+                            deserializedHttpDataset.compression = DatasetCompression.fromJson(reader);
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedHttpDataset.setAdditionalProperties(additionalProperties);
+
+            return deserializedHttpDataset;
+        });
     }
 }

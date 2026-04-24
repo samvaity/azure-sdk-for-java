@@ -6,80 +6,50 @@ package com.azure.resourcemanager.databox.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.databox.DataBoxManager;
 import com.azure.resourcemanager.databox.models.DatacenterAddressRequest;
+import com.azure.resourcemanager.databox.models.DeviceCapabilityRequest;
+import com.azure.resourcemanager.databox.models.ModelName;
 import com.azure.resourcemanager.databox.models.RegionConfigurationRequest;
 import com.azure.resourcemanager.databox.models.RegionConfigurationResponse;
 import com.azure.resourcemanager.databox.models.ScheduleAvailabilityRequest;
 import com.azure.resourcemanager.databox.models.SkuName;
 import com.azure.resourcemanager.databox.models.TransportAvailabilityRequest;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class ServicesRegionConfigurationWithResponseMockTests {
     @Test
     public void testRegionConfigurationWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"scheduleAvailabilityResponse\":{\"availableDates\":[\"2021-07-10T01:21:20Z\",\"2021-10-13T21:08:10Z\",\"2021-06-29T12:35:18Z\"]},\"transportAvailabilityResponse\":{\"transportAvailabilityDetails\":[{\"shipmentType\":\"MicrosoftManaged\"},{\"shipmentType\":\"MicrosoftManaged\"},{\"shipmentType\":\"CustomerManaged\"}]},\"datacenterAddressResponse\":{\"datacenterAddressType\":\"DatacenterAddressResponse\",\"supportedCarriersForReturnShipment\":[\"ntps\",\"wgioilqukry\",\"xtqmieoxor\",\"gufhyaomtbg\"],\"dataCenterAzureLocation\":\"avgrvkffovjz\"},\"deviceCapabilityResponse\":{\"deviceCapabilityDetails\":[{\"hardwareEncryption\":\"Enabled\"},{\"hardwareEncryption\":\"Enabled\"},{\"hardwareEncryption\":\"Enabled\"}]}}";
 
-        String responseStr =
-            "{\"scheduleAvailabilityResponse\":{\"availableDates\":[\"2021-04-10T22:21:20Z\"]},\"transportAvailabilityResponse\":{\"transportAvailabilityDetails\":[]},\"datacenterAddressResponse\":{\"datacenterAddressType\":\"DatacenterAddressResponse\",\"supportedCarriersForReturnShipment\":[\"xccedcpnmdyodn\",\"zxltjcvn\"],\"dataCenterAzureLocation\":\"tiugcxnav\"}}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        DataBoxManager manager = DataBoxManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        RegionConfigurationResponse response = manager.services()
+            .regionConfigurationWithResponse("gh", new RegionConfigurationRequest()
+                .withScheduleAvailabilityRequest(new ScheduleAvailabilityRequest().withStorageLocation("bdhqxvcxgf")
+                    .withCountry("dsofbshrns")
+                    .withModel(ModelName.DATA_BOX_DISK))
+                .withTransportAvailabilityRequest(new TransportAvailabilityRequest().withSkuName(SkuName.DATA_BOX_HEAVY)
+                    .withModel(ModelName.DATA_BOX_DISK))
+                .withDatacenterAddressRequest(new DatacenterAddressRequest().withStorageLocation("ybycnunvj")
+                    .withSkuName(SkuName.DATA_BOX_HEAVY)
+                    .withModel(ModelName.DATA_BOX_DISK))
+                .withDeviceCapabilityRequest(new DeviceCapabilityRequest().withSkuName(SkuName.DATA_BOX_CUSTOMER_DISK)
+                    .withModel(ModelName.DATA_BOX_DISK)),
+                com.azure.core.util.Context.NONE)
+            .getValue();
 
-        DataBoxManager manager =
-            DataBoxManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        RegionConfigurationResponse response =
-            manager
-                .services()
-                .regionConfigurationWithResponse(
-                    "yhejhzisxgfp",
-                    new RegionConfigurationRequest()
-                        .withScheduleAvailabilityRequest(
-                            new ScheduleAvailabilityRequest()
-                                .withStorageLocation("olppvksrpqvujz")
-                                .withCountry("ehtwdwrft"))
-                        .withTransportAvailabilityRequest(
-                            new TransportAvailabilityRequest().withSkuName(SkuName.DATA_BOX_CUSTOMER_DISK))
-                        .withDatacenterAddressRequest(
-                            new DatacenterAddressRequest()
-                                .withStorageLocation("rcdlbhshfwpr")
-                                .withSkuName(SkuName.DATA_BOX_DISK)),
-                    com.azure.core.util.Context.NONE)
-                .getValue();
     }
 }

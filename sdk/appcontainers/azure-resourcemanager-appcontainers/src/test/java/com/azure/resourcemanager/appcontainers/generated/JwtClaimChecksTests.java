@@ -12,24 +12,20 @@ import org.junit.jupiter.api.Assertions;
 public final class JwtClaimChecksTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        JwtClaimChecks model =
-            BinaryData
-                .fromString(
-                    "{\"allowedGroups\":[\"gxsabkyq\",\"uujitcjc\"],\"allowedClientApplications\":[\"evndh\",\"rwpdappdsbdkvwrw\",\"feusnhut\",\"eltmrldhugjzzdat\"]}")
-                .toObject(JwtClaimChecks.class);
-        Assertions.assertEquals("gxsabkyq", model.allowedGroups().get(0));
-        Assertions.assertEquals("evndh", model.allowedClientApplications().get(0));
+        JwtClaimChecks model = BinaryData.fromString(
+            "{\"allowedGroups\":[\"wzo\",\"xjtfelluwfzit\",\"np\",\"qfpjk\"],\"allowedClientApplications\":[\"ofpdvh\",\"fxxypininmayhuy\",\"bkpodepooginuv\",\"mihe\"]}")
+            .toObject(JwtClaimChecks.class);
+        Assertions.assertEquals("wzo", model.allowedGroups().get(0));
+        Assertions.assertEquals("ofpdvh", model.allowedClientApplications().get(0));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        JwtClaimChecks model =
-            new JwtClaimChecks()
-                .withAllowedGroups(Arrays.asList("gxsabkyq", "uujitcjc"))
-                .withAllowedClientApplications(
-                    Arrays.asList("evndh", "rwpdappdsbdkvwrw", "feusnhut", "eltmrldhugjzzdat"));
+        JwtClaimChecks model
+            = new JwtClaimChecks().withAllowedGroups(Arrays.asList("wzo", "xjtfelluwfzit", "np", "qfpjk"))
+                .withAllowedClientApplications(Arrays.asList("ofpdvh", "fxxypininmayhuy", "bkpodepooginuv", "mihe"));
         model = BinaryData.fromObject(model).toObject(JwtClaimChecks.class);
-        Assertions.assertEquals("gxsabkyq", model.allowedGroups().get(0));
-        Assertions.assertEquals("evndh", model.allowedClientApplications().get(0));
+        Assertions.assertEquals("wzo", model.allowedGroups().get(0));
+        Assertions.assertEquals("ofpdvh", model.allowedClientApplications().get(0));
     }
 }

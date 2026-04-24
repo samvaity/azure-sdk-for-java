@@ -8,6 +8,7 @@ import com.azure.cosmos.implementation.ConnectionPolicy;
 import com.azure.cosmos.implementation.CosmosError;
 import com.azure.cosmos.implementation.DiagnosticsClientContext;
 import com.azure.cosmos.implementation.Document;
+import com.azure.cosmos.implementation.DocumentClientRetryPolicy;
 import com.azure.cosmos.implementation.GlobalEndpointManager;
 import com.azure.cosmos.implementation.HttpConstants;
 import com.azure.cosmos.implementation.IRetryPolicyFactory;
@@ -23,13 +24,15 @@ import com.azure.cosmos.implementation.guava25.base.Strings;
 import com.azure.cosmos.implementation.guava25.collect.ImmutableList;
 import com.azure.cosmos.implementation.guava25.collect.Iterables;
 import com.azure.cosmos.implementation.guava25.collect.LinkedListMultimap;
+import com.azure.cosmos.implementation.perPartitionAutomaticFailover.GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover;
+import com.azure.cosmos.implementation.perPartitionCircuitBreaker.GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker;
 import com.azure.cosmos.implementation.query.orderbyquery.OrderByRowResult;
 import com.azure.cosmos.implementation.query.orderbyquery.OrderbyRowComparer;
 import com.azure.cosmos.implementation.routing.PartitionKeyRangeIdentity;
 import com.azure.cosmos.implementation.routing.Range;
+import com.azure.cosmos.implementation.routing.RegionalRoutingContext;
 import com.azure.cosmos.models.FeedResponse;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.reactivex.subscribers.TestSubscriber;
 import org.assertj.core.api.Assertions;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -38,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.net.URI;
 import java.time.Duration;
@@ -50,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -63,6 +68,7 @@ import static com.azure.cosmos.implementation.query.DocumentProducerTest.Request
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -108,17 +114,22 @@ public class DocumentProducerTest {
     }
 
     private IRetryPolicyFactory mockDocumentClientIRetryPolicyFactory() {
-        URI url;
+        RegionalRoutingContext regionalRoutingContext;
         try {
-            url = new URI("http://localhost");
+            regionalRoutingContext = new RegionalRoutingContext(new URI("http://localhost"));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
 
         GlobalEndpointManager globalEndpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(url).when(globalEndpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito.doReturn(regionalRoutingContext).when(globalEndpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
         doReturn(false).when(globalEndpointManager).isClosed();
-        return new RetryPolicy(mockDiagnosticsClientContext(), globalEndpointManager, ConnectionPolicy.getDefaultPolicy());
+        return new RetryPolicy(mockDiagnosticsClientContext(), globalEndpointManager, ConnectionPolicy.getDefaultPolicy(), globalPartitionEndpointManagerForPerPartitionCircuitBreaker, globalPartitionEndpointManagerForPerPartitionAutomaticFailover);
     }
 
         @Test(groups = {"unit"}, dataProvider = "splitParamProvider", timeOut = TIMEOUT)
@@ -191,7 +202,7 @@ public class DocumentProducerTest {
                     requestCreator,
                     requestExecutor,
                     collectionLink,
-                    () -> mockDocumentClientIRetryPolicyFactory().getRequestPolicy(),
+                    () -> mockDocumentClientIRetryPolicyFactory().getRequestPolicy(null),
                     Document.class,
                     null,
                     initialPageSize,
@@ -200,13 +211,10 @@ public class DocumentProducerTest {
                     range1,
                     () -> "n/a");
 
-            TestSubscriber<DocumentProducer<Document>.DocumentProducerFeedResponse> subscriber = new TestSubscriber<>();
-
-            documentProducer.produceAsync().subscribe(subscriber);
-            subscriber.awaitTerminalEvent();
-
-            subscriber.assertNoErrors();
-            subscriber.assertComplete();
+            AtomicReference<List<DocumentProducer<Document>.DocumentProducerFeedResponse>> value = new AtomicReference<>();
+            StepVerifier.create(documentProducer.produceAsync().collectList())
+                .consumeNextWith(value::set)
+                .verifyComplete();
 
             validateSplitCaptureRequests(
                     requestCreator.invocations,
@@ -223,7 +231,7 @@ public class DocumentProducerTest {
                     .distinct().collect(Collectors.toList())).containsExactlyElementsOf(Collections.singleton(initialPageSize));
 
             // expected results
-            validateSplitResults(subscriber.values(),
+            validateSplitResults(value.get(),
                                  parentPartitionId, leftChildPartitionId,
                                  rightChildPartitionId, resultFromParentPartition, resultFromLeftChildPartition,
                                  resultFromRightChildPartition, false);
@@ -317,13 +325,10 @@ public class DocumentProducerTest {
                         new HashMap<>(),
                         () -> "n/a");
 
-            TestSubscriber<DocumentProducer<Document>.DocumentProducerFeedResponse> subscriber = new TestSubscriber<>();
-
-            documentProducer.produceAsync().subscribe(subscriber);
-            subscriber.awaitTerminalEvent();
-
-            subscriber.assertNoErrors();
-            subscriber.assertComplete();
+            AtomicReference<List<DocumentProducer<Document>.DocumentProducerFeedResponse>> value = new AtomicReference<>();
+            StepVerifier.create(documentProducer.produceAsync().collectList())
+                .consumeNextWith(value::set)
+                .verifyComplete();
 
             validateSplitCaptureRequests(requestCreator.invocations, initialContinuationToken, parentPartitionId,
                                          leftChildPartitionId, rightChildPartitionId, resultFromParentPartition,
@@ -334,7 +339,7 @@ public class DocumentProducerTest {
             assertThat(requestCreator.invocations.stream().map(i -> i.maxItemCount).distinct().collect(Collectors.toList())).containsExactlyElementsOf(Collections.singleton(initialPageSize));
 
             // expected results
-            validateSplitResults(subscriber.values(),
+            validateSplitResults(value.get(),
                                  parentPartitionId, leftChildPartitionId,
                                  rightChildPartitionId, resultFromParentPartition, resultFromLeftChildPartition,
                                  resultFromRightChildPartition, true);
@@ -401,7 +406,7 @@ public class DocumentProducerTest {
             requestCreator,
             requestExecutor,
             collectionLink,
-            () -> mockDocumentClientIRetryPolicyFactory().getRequestPolicy(),
+            () -> mockDocumentClientIRetryPolicyFactory().getRequestPolicy(null),
             Document.class,
             null,
             initialPageSize,
@@ -410,13 +415,10 @@ public class DocumentProducerTest {
             currentFeedRange,
             () -> "n/a");
 
-        TestSubscriber<DocumentProducer<Document>.DocumentProducerFeedResponse> subscriber = new TestSubscriber<>();
-
-        documentProducer.produceAsync().subscribe(subscriber);
-        subscriber.awaitTerminalEvent();
-
-        subscriber.assertNoErrors();
-        subscriber.assertComplete();
+        AtomicReference<List<DocumentProducer<Document>.DocumentProducerFeedResponse>> value = new AtomicReference<>();
+        StepVerifier.create(documentProducer.produceAsync().collectList())
+            .consumeNextWith(value::set)
+            .verifyComplete();
 
         validateMergeCaptureRequests(
             requestCreator.invocations,
@@ -500,13 +502,10 @@ public class DocumentProducerTest {
                 new HashMap<>(),
                 () -> "n/a");
 
-        TestSubscriber<DocumentProducer<Document>.DocumentProducerFeedResponse> subscriber = new TestSubscriber<>();
-
-        documentProducer.produceAsync().subscribe(subscriber);
-        subscriber.awaitTerminalEvent();
-
-        subscriber.assertNoErrors();
-        subscriber.assertComplete();
+        AtomicReference<List<DocumentProducer<Document>.DocumentProducerFeedResponse>> value = new AtomicReference<>();
+        StepVerifier.create(documentProducer.produceAsync().collectList())
+            .consumeNextWith(value::set)
+            .verifyComplete();
 
         validateMergeCaptureRequests(
             requestCreator.invocations,
@@ -542,6 +541,30 @@ public class DocumentProducerTest {
                     , responses));
 
             IDocumentQueryClient queryClient = Mockito.mock(IDocumentQueryClient.class);
+            GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+
+            doAnswer(invocation -> {
+                Supplier<DocumentClientRetryPolicy> retryPolicyFactory = invocation.getArgument(2);
+                RxDocumentServiceRequest req = invocation.getArgument(3);
+                BiFunction<Supplier<DocumentClientRetryPolicy>, RxDocumentServiceRequest, Mono<FeedResponse<?>>> feedOperation =
+                    invocation.getArgument(4);
+
+                return feedOperation.apply(retryPolicyFactory, req);
+            }).when(queryClient).executeFeedOperationWithAvailabilityStrategy(any(), any(), any(), any(), any(), any());
+
+            doAnswer(invocation -> {
+                RxDocumentServiceRequest req = invocation.getArgument(0);
+                return Mono.just(req);
+            }).when(queryClient).populateFeedRangeHeader(any());
+
+            doAnswer(invocation -> {
+                RxDocumentServiceRequest req = invocation.getArgument(0);
+                return Mono.just(req);
+            }).when(queryClient).addPartitionLevelUnavailableRegionsOnRequest(any(), any(), any());
+
+            doReturn(globalPartitionEndpointManagerForPerPartitionCircuitBreaker).when(queryClient).getGlobalPartitionEndpointManagerForCircuitBreaker();
+            doReturn(false).when(globalPartitionEndpointManagerForPerPartitionCircuitBreaker).isPerPartitionLevelCircuitBreakingApplicable(any());
+
             String initialContinuationToken = "initial-cp";
             DocumentProducer<Document> documentProducer =
                 new DocumentProducer<>(
@@ -551,7 +574,7 @@ public class DocumentProducerTest {
                     requestCreator,
                     requestExecutor,
                     collectionLink,
-                    () -> mockDocumentClientIRetryPolicyFactory().getRequestPolicy(),
+                    () -> mockDocumentClientIRetryPolicyFactory().getRequestPolicy(null),
                     Document.class,
                     null,
                     initialPageSize,
@@ -560,15 +583,9 @@ public class DocumentProducerTest {
                     range1,
                     () -> "n/a");
 
-            TestSubscriber<DocumentProducer<Document>.DocumentProducerFeedResponse> subscriber = new TestSubscriber<>();
-
-            documentProducer.produceAsync().subscribe(subscriber);
-            subscriber.awaitTerminalEvent();
-
-            subscriber.assertNoErrors();
-            subscriber.assertComplete();
-
-            subscriber.assertValueCount(responses.size());
+            StepVerifier.create(documentProducer.produceAsync())
+                .expectNextCount(responses.size())
+                .verifyComplete();
 
             // requests match
             assertThat(requestCreator.invocations.stream().map(i -> i.invocationResult).collect(Collectors.toList()))
@@ -620,6 +637,30 @@ public class DocumentProducerTest {
                                                                                   behaviourAfterException);
 
             IDocumentQueryClient queryClient = Mockito.mock(IDocumentQueryClient.class);
+            GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+
+            doAnswer(invocation -> {
+                Supplier<DocumentClientRetryPolicy> retryPolicyFactory = invocation.getArgument(2);
+                RxDocumentServiceRequest req = invocation.getArgument(3);
+                BiFunction<Supplier<DocumentClientRetryPolicy>, RxDocumentServiceRequest, Mono<FeedResponse<?>>> feedOperation =
+                    invocation.getArgument(4);
+
+                return feedOperation.apply(retryPolicyFactory, req);
+            }).when(queryClient).executeFeedOperationWithAvailabilityStrategy(any(), any(), any(), any(), any(), any());
+
+            doAnswer(invocation -> {
+                RxDocumentServiceRequest req = invocation.getArgument(0);
+                return Mono.just(req);
+            }).when(queryClient).populateFeedRangeHeader(any());
+
+            doAnswer(invocation -> {
+                RxDocumentServiceRequest req = invocation.getArgument(0);
+                return Mono.just(req);
+            }).when(queryClient).addPartitionLevelUnavailableRegionsOnRequest(any(), any(), any());
+
+            doReturn(globalPartitionEndpointManagerForPerPartitionCircuitBreaker).when(queryClient).getGlobalPartitionEndpointManagerForCircuitBreaker();
+            doReturn(false).when(globalPartitionEndpointManagerForPerPartitionCircuitBreaker).isPerPartitionLevelCircuitBreakingApplicable(any());
+
             String initialContinuationToken = "initial-cp";
             DocumentProducer<Document> documentProducer =
                 new DocumentProducer<>(
@@ -629,7 +670,7 @@ public class DocumentProducerTest {
                     requestCreator,
                     requestExecutor,
                     collectionLink,
-                    () -> mockDocumentClientIRetryPolicyFactory().getRequestPolicy(),
+                    () -> mockDocumentClientIRetryPolicyFactory().getRequestPolicy(null),
                     Document.class,
                     null,
                     initialPageSize,
@@ -638,15 +679,13 @@ public class DocumentProducerTest {
                     feedRangeEpk,
                     () -> "n/a");
 
-            TestSubscriber<DocumentProducer<Document>.DocumentProducerFeedResponse> subscriber = new TestSubscriber<>();
+            AtomicReference<List<DocumentProducer<Document>.DocumentProducerFeedResponse>> value = new AtomicReference<>();
+            StepVerifier.create(documentProducer.produceAsync().collectList())
+                .consumeNextWith(value::set)
+                .verifyComplete();
 
-            documentProducer.produceAsync().subscribe(subscriber);
-            subscriber.awaitTerminalEvent();
-
-            subscriber.assertNoErrors();
-            subscriber.assertComplete();
-
-            subscriber.assertValueCount(responsesBeforeThrottle.size() + responsesAfterThrottle.size());
+            Assertions.assertThat(value.get().size())
+                .isEqualTo(responsesBeforeThrottle.size() + responsesAfterThrottle.size());
 
             // requested max page size match
             assertThat(requestCreator.invocations.stream().map(i -> i.maxItemCount).distinct().collect(Collectors.toList())).containsExactlyElementsOf(Collections.singleton(7));
@@ -661,7 +700,7 @@ public class DocumentProducerTest {
                 .containsExactlyElementsOf(Collections.singletonList(feedRangeEpk));
 
             List<String> resultContinuationToken =
-                    subscriber.values().stream().map(r -> r.pageResult.getContinuationToken()).collect(Collectors.toList());
+                    value.get().stream().map(r -> r.pageResult.getContinuationToken()).collect(Collectors.toList());
             List<String> beforeExceptionContinuationTokens =
                     responsesBeforeThrottle.stream().map(FeedResponse::getContinuationToken).collect(Collectors.toList());
             List<String> afterExceptionContinuationTokens =
@@ -702,6 +741,30 @@ public class DocumentProducerTest {
                                                                                   exceptionBehaviour);
 
             IDocumentQueryClient queryClient = Mockito.mock(IDocumentQueryClient.class);
+            GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+
+            doAnswer(invocation -> {
+                Supplier<DocumentClientRetryPolicy> retryPolicyFactory = invocation.getArgument(2);
+                RxDocumentServiceRequest req = invocation.getArgument(3);
+                BiFunction<Supplier<DocumentClientRetryPolicy>, RxDocumentServiceRequest, Mono<FeedResponse<?>>> feedOperation =
+                    invocation.getArgument(4);
+
+                return feedOperation.apply(retryPolicyFactory, req);
+            }).when(queryClient).executeFeedOperationWithAvailabilityStrategy(any(), any(), any(), any(), any(), any());
+
+            doAnswer(invocation -> {
+                RxDocumentServiceRequest req = invocation.getArgument(0);
+                return Mono.just(req);
+            }).when(queryClient).populateFeedRangeHeader(any());
+
+            doAnswer(invocation -> {
+                RxDocumentServiceRequest req = invocation.getArgument(0);
+                return Mono.just(req);
+            }).when(queryClient).addPartitionLevelUnavailableRegionsOnRequest(any(), any(), any());
+
+            doReturn(globalPartitionEndpointManagerForPerPartitionCircuitBreaker).when(queryClient).getGlobalPartitionEndpointManagerForCircuitBreaker();
+            doReturn(false).when(globalPartitionEndpointManagerForPerPartitionCircuitBreaker).isPerPartitionLevelCircuitBreakingApplicable(any());
+
             String initialContinuationToken = "initial-cp";
             DocumentProducer<Document> documentProducer =
                 new DocumentProducer<Document>(
@@ -711,7 +774,7 @@ public class DocumentProducerTest {
                     requestCreator,
                     requestExecutor,
                     collectionRid,
-                    () -> mockDocumentClientIRetryPolicyFactory().getRequestPolicy(),
+                    () -> mockDocumentClientIRetryPolicyFactory().getRequestPolicy(null),
                     Document.class,
                     null,
                     initialPageSize,
@@ -720,13 +783,10 @@ public class DocumentProducerTest {
                     feedRangeEpk,
                     () -> "n/a");
 
-            TestSubscriber<DocumentProducer<Document>.DocumentProducerFeedResponse> subscriber = new TestSubscriber<>();
-
-            documentProducer.produceAsync().subscribe(subscriber);
-            subscriber.awaitTerminalEvent();
-
-            subscriber.assertError(throttlingException);
-            subscriber.assertValueCount(responsesBeforeThrottle.size());
+            List<DocumentProducer<Document>.DocumentProducerFeedResponse> values = new ArrayList<>();
+            StepVerifier.create(documentProducer.produceAsync())
+                .thenConsumeWhile(values::add)
+                .verifyErrorMatches(throttlingException::equals);
         }
 
     private CosmosException mockThrottlingException(Duration retriesAfterDuration) {
@@ -762,12 +822,12 @@ public class DocumentProducerTest {
 
                 Document d = getDocumentDefinition();
                 if (isOrderby) {
-                    BridgeInternal.setProperty(d, OrderByIntFieldName, orderByFieldInitialVal + RandomUtils.nextInt(0, 3));
-                    BridgeInternal.setProperty(d, DocumentPartitionKeyRangeIdFieldName, feedRangeEpk.getRange().toString());
+                    d.set(OrderByIntFieldName, orderByFieldInitialVal + RandomUtils.nextInt(0, 3));
+                    d.set(DocumentPartitionKeyRangeIdFieldName, feedRangeEpk.getRange().toString());
                     PartitionKeyRange pkr = mockPartitionKeyRange(feedRangeEpk.getRange().toString(), feedRangeEpk.getRange());
 
-                    BridgeInternal.setProperty(d, DocumentPartitionKeyRangeMinInclusiveFieldName, pkr.getMinInclusive());
-                    BridgeInternal.setProperty(d, DocumentPartitionKeyRangeMaxExclusiveFieldName, pkr.getMaxExclusive());
+                    d.set(DocumentPartitionKeyRangeMinInclusiveFieldName, pkr.getMinInclusive());
+                    d.set(DocumentPartitionKeyRangeMaxExclusiveFieldName, pkr.getMaxExclusive());
 
                     QueryItem qi = new QueryItem("{ \"item\": " + d.getInt(OrderByIntFieldName) +
                         " }");
@@ -815,9 +875,35 @@ public class DocumentProducerTest {
     private IDocumentQueryClient mockQueryClient(List<PartitionKeyRange> replacementRanges) {
         IDocumentQueryClient client = Mockito.mock(IDocumentQueryClient.class);
         RxPartitionKeyRangeCache cache = Mockito.mock(RxPartitionKeyRangeCache.class);
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+
+        doAnswer(invocation -> {
+            Supplier<DocumentClientRetryPolicy> retryPolicyFactory = invocation.getArgument(2);
+            RxDocumentServiceRequest req = invocation.getArgument(3);
+            BiFunction<Supplier<DocumentClientRetryPolicy>, RxDocumentServiceRequest, Mono<FeedResponse<?>>> feedOperation =
+                invocation.getArgument(4);
+
+            return feedOperation.apply(retryPolicyFactory, req);
+        }).when(client).executeFeedOperationWithAvailabilityStrategy(any(), any(), any(), any(), any(), any());
+
         doReturn(cache).when(client).getPartitionKeyRangeCache();
+
         doReturn(Mono.just(new Utils.ValueHolder<>(replacementRanges)))
             .when(cache).tryGetOverlappingRangesAsync(any(), any(), any(), anyBoolean(), ArgumentMatchers.any());
+
+        doAnswer(invocation -> {
+            RxDocumentServiceRequest req = invocation.getArgument(0);
+            return Mono.just(req);
+        }).when(client).populateFeedRangeHeader(any());
+
+        doAnswer(invocation -> {
+            RxDocumentServiceRequest req = invocation.getArgument(0);
+            return Mono.just(req);
+        }).when(client).addPartitionLevelUnavailableRegionsOnRequest(any(), any(), any());
+
+        doReturn(globalPartitionEndpointManagerForPerPartitionCircuitBreaker).when(client).getGlobalPartitionEndpointManagerForCircuitBreaker();
+        doReturn(false).when(globalPartitionEndpointManagerForPerPartitionCircuitBreaker).isPerPartitionLevelCircuitBreakingApplicable(any());
+
         return client;
     }
 

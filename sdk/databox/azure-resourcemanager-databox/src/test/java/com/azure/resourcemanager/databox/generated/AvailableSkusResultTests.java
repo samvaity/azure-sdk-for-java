@@ -11,18 +11,16 @@ import org.junit.jupiter.api.Assertions;
 public final class AvailableSkusResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        AvailableSkusResult model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"sku\":{\"name\":\"DataBox\",\"displayName\":\"p\",\"family\":\"g\"},\"enabled\":true,\"properties\":{\"dataLocationToServiceLocationMap\":[],\"costs\":[],\"apiVersions\":[],\"disabledReason\":\"Region\",\"disabledReasonMessage\":\"honowkgshwank\",\"requiredFeature\":\"zbinjeputtm\",\"countriesWithinCommerceBoundary\":[]}},{\"sku\":{\"name\":\"DataBox\",\"displayName\":\"zoqftiyqzrnkcqvy\",\"family\":\"whzlsicohoq\"},\"enabled\":false,\"properties\":{\"dataLocationToServiceLocationMap\":[],\"costs\":[],\"apiVersions\":[],\"disabledReason\":\"NoSubscriptionInfo\",\"disabledReasonMessage\":\"heun\",\"requiredFeature\":\"qhgyxzkonocukok\",\"countriesWithinCommerceBoundary\":[]}}],\"nextLink\":\"xuconu\"}")
-                .toObject(AvailableSkusResult.class);
-        Assertions.assertEquals("xuconu", model.nextLink());
+        AvailableSkusResult model = BinaryData.fromString(
+            "{\"value\":[{\"sku\":{\"name\":\"DataBoxDisk\",\"displayName\":\"de\",\"family\":\"jzicwifsjt\",\"model\":\"DataBox\"},\"enabled\":true,\"properties\":{\"dataLocationToServiceLocationMap\":[{\"dataLocation\":\"bkh\",\"serviceLocation\":\"deyeamdphagalpbu\"},{\"dataLocation\":\"gipwhonowkg\",\"serviceLocation\":\"wankixzbi\"},{\"dataLocation\":\"eputtmrywnuzoqf\",\"serviceLocation\":\"yqzrnkcqvyxlw\"}],\"capacity\":{\"usable\":\"sicohoqqnwvlry\",\"maximum\":\"w\",\"individualSkuUsable\":\"eun\"},\"costs\":[{\"meterId\":\"gyxzk\",\"meterType\":\"ocukoklyax\",\"multiplier\":20.767156204407467},{\"meterId\":\"qszf\",\"meterType\":\"eyp\",\"multiplier\":74.21012779160806},{\"meterId\":\"mwvvjektcxsenhw\",\"meterType\":\"s\",\"multiplier\":77.02938198483662},{\"meterId\":\"wvlqdqgb\",\"meterType\":\"ylihkaetckt\",\"multiplier\":77.05295281811806}],\"apiVersions\":[\"snkymuctq\",\"jf\",\"ebrjcxe\"],\"disabledReason\":\"Country\",\"disabledReasonMessage\":\"utttxfvjrbirp\",\"requiredFeature\":\"epcyvahfnlj\",\"countriesWithinCommerceBoundary\":[\"xjvuujqgidokg\"]}},{\"sku\":{\"name\":\"DataBoxHeavy\",\"displayName\":\"oxgvclt\",\"family\":\"sncghkjeszz\",\"model\":\"DataBoxDisk\"},\"enabled\":true,\"properties\":{\"dataLocationToServiceLocationMap\":[{\"dataLocation\":\"gx\",\"serviceLocation\":\"smx\"},{\"dataLocation\":\"hmpvecx\",\"serviceLocation\":\"debfqkkrbmpukgri\"},{\"dataLocation\":\"lzlfbxzpuz\",\"serviceLocation\":\"ispnqzahmgkbrp\"}],\"capacity\":{\"usable\":\"hibnuqqkpika\",\"maximum\":\"gvtqagnbuynh\",\"individualSkuUsable\":\"gg\"},\"costs\":[{\"meterId\":\"siarbutrcvpn\",\"meterType\":\"zmhjrunmp\",\"multiplier\":50.4320274119209}],\"apiVersions\":[\"rbnlankxmyskp\",\"henbtkcxywnytn\",\"synlqidybyxczfc\",\"haaxdbabphl\"],\"disabledReason\":\"Feature\",\"disabledReasonMessage\":\"fkts\",\"requiredFeature\":\"sucocmnyyazttbtw\",\"countriesWithinCommerceBoundary\":[\"puedckzywbiexzf\",\"yueaxibxujwb\",\"qwalmuzyoxaepd\",\"zjancuxr\"]}}],\"nextLink\":\"wbavxbniwdj\"}")
+            .toObject(AvailableSkusResult.class);
+        Assertions.assertEquals("wbavxbniwdj", model.nextLink());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        AvailableSkusResult model = new AvailableSkusResult().withNextLink("xuconu");
+        AvailableSkusResult model = new AvailableSkusResult().withNextLink("wbavxbniwdj");
         model = BinaryData.fromObject(model).toObject(AvailableSkusResult.class);
-        Assertions.assertEquals("xuconu", model.nextLink());
+        Assertions.assertEquals("wbavxbniwdj", model.nextLink());
     }
 }

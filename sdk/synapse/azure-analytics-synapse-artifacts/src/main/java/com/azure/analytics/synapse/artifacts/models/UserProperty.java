@@ -5,41 +5,54 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** User property. */
+/**
+ * User property.
+ */
 @Fluent
-public final class UserProperty {
+public final class UserProperty implements JsonSerializable<UserProperty> {
     /*
      * User property name.
      */
-    @JsonProperty(value = "name", required = true)
+    @Generated
     private String name;
 
     /*
      * User property value. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "value", required = true)
+    @Generated
     private Object value;
 
-    /** Creates an instance of UserProperty class. */
-    public UserProperty() {}
+    /**
+     * Creates an instance of UserProperty class.
+     */
+    @Generated
+    public UserProperty() {
+    }
 
     /**
      * Get the name property: User property name.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: User property name.
-     *
+     * 
      * @param name the name value to set.
      * @return the UserProperty object itself.
      */
+    @Generated
     public UserProperty setName(String name) {
         this.name = name;
         return this;
@@ -47,21 +60,65 @@ public final class UserProperty {
 
     /**
      * Get the value property: User property value. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the value value.
      */
+    @Generated
     public Object getValue() {
         return this.value;
     }
 
     /**
      * Set the value property: User property value. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param value the value value to set.
      * @return the UserProperty object itself.
      */
+    @Generated
     public UserProperty setValue(Object value) {
         this.value = value;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeUntypedField("value", this.value);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of UserProperty from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of UserProperty if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the UserProperty.
+     */
+    @Generated
+    public static UserProperty fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            UserProperty deserializedUserProperty = new UserProperty();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedUserProperty.name = reader.getString();
+                } else if ("value".equals(fieldName)) {
+                    deserializedUserProperty.value = reader.readUntyped();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedUserProperty;
+        });
     }
 }

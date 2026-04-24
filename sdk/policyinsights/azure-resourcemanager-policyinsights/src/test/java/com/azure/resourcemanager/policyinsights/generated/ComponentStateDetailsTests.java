@@ -10,41 +10,38 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public final class ComponentStateDetailsTests {
-    @Test
-    public void testDeserialize() {
-        ComponentStateDetails model =
-            BinaryData
-                .fromString(
-                    "{\"id\":\"hvylwzbt\",\"type\":\"xujznbmpowu\",\"name\":\"rzqlveu\",\"timestamp\":\"2021-02-19T06:27:55Z\",\"complianceState\":\"j\",\"\":{}}")
-                .toObject(ComponentStateDetails.class);
-        Assertions.assertEquals("hvylwzbt", model.id());
-        Assertions.assertEquals("xujznbmpowu", model.type());
-        Assertions.assertEquals("rzqlveu", model.name());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-02-19T06:27:55Z"), model.timestamp());
-        Assertions.assertEquals("j", model.complianceState());
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        ComponentStateDetails model = BinaryData.fromString(
+            "{\"id\":\"iiojnal\",\"type\":\"fk\",\"name\":\"vsexsowuelu\",\"timestamp\":\"2021-01-18T04:02:59Z\",\"complianceState\":\"hhxvrhmzkwpj\",\"ujxukndxd\":\"dataspughftqsxhq\",\"syqtfi\":\"datagrjguufzd\",\"phoszqz\":\"datawhbotzingamv\",\"kfwynw\":\"datadphqamv\"}")
+            .toObject(ComponentStateDetails.class);
+        Assertions.assertEquals("iiojnal", model.id());
+        Assertions.assertEquals("fk", model.type());
+        Assertions.assertEquals("vsexsowuelu", model.name());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-01-18T04:02:59Z"), model.timestamp());
+        Assertions.assertEquals("hhxvrhmzkwpj", model.complianceState());
     }
 
-    @Test
-    public void testSerialize() {
-        ComponentStateDetails model =
-            new ComponentStateDetails()
-                .withId("hvylwzbt")
-                .withType("xujznbmpowu")
-                .withName("rzqlveu")
-                .withTimestamp(OffsetDateTime.parse("2021-02-19T06:27:55Z"))
-                .withComplianceState("j")
-                .withAdditionalProperties(mapOf());
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
+        ComponentStateDetails model = new ComponentStateDetails().withId("iiojnal")
+            .withType("fk")
+            .withName("vsexsowuelu")
+            .withTimestamp(OffsetDateTime.parse("2021-01-18T04:02:59Z"))
+            .withComplianceState("hhxvrhmzkwpj")
+            .withAdditionalProperties(mapOf("phoszqz", "datawhbotzingamv", "ujxukndxd", "dataspughftqsxhq", "syqtfi",
+                "datagrjguufzd", "kfwynw", "datadphqamv"));
         model = BinaryData.fromObject(model).toObject(ComponentStateDetails.class);
-        Assertions.assertEquals("hvylwzbt", model.id());
-        Assertions.assertEquals("xujznbmpowu", model.type());
-        Assertions.assertEquals("rzqlveu", model.name());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-02-19T06:27:55Z"), model.timestamp());
-        Assertions.assertEquals("j", model.complianceState());
+        Assertions.assertEquals("iiojnal", model.id());
+        Assertions.assertEquals("fk", model.type());
+        Assertions.assertEquals("vsexsowuelu", model.name());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-01-18T04:02:59Z"), model.timestamp());
+        Assertions.assertEquals("hhxvrhmzkwpj", model.complianceState());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

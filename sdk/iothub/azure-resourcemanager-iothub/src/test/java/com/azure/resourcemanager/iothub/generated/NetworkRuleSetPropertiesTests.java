@@ -15,13 +15,11 @@ import org.junit.jupiter.api.Assertions;
 public final class NetworkRuleSetPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        NetworkRuleSetProperties model =
-            BinaryData
-                .fromString(
-                    "{\"defaultAction\":\"Allow\",\"applyToBuiltInEventHubEndpoint\":true,\"ipRules\":[{\"filterName\":\"pqxu\",\"action\":\"Allow\",\"ipMask\":\"y\"},{\"filterName\":\"n\",\"action\":\"Allow\",\"ipMask\":\"ybrk\"}]}")
-                .toObject(NetworkRuleSetProperties.class);
+        NetworkRuleSetProperties model = BinaryData.fromString(
+            "{\"defaultAction\":\"Allow\",\"applyToBuiltInEventHubEndpoint\":true,\"ipRules\":[{\"filterName\":\"pqxu\",\"action\":\"Allow\",\"ipMask\":\"y\"},{\"filterName\":\"n\",\"action\":\"Allow\",\"ipMask\":\"ybrk\"}]}")
+            .toObject(NetworkRuleSetProperties.class);
         Assertions.assertEquals(DefaultAction.ALLOW, model.defaultAction());
-        Assertions.assertEquals(true, model.applyToBuiltInEventHubEndpoint());
+        Assertions.assertTrue(model.applyToBuiltInEventHubEndpoint());
         Assertions.assertEquals("pqxu", model.ipRules().get(0).filterName());
         Assertions.assertEquals(NetworkRuleIpAction.ALLOW, model.ipRules().get(0).action());
         Assertions.assertEquals("y", model.ipRules().get(0).ipMask());
@@ -29,24 +27,16 @@ public final class NetworkRuleSetPropertiesTests {
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        NetworkRuleSetProperties model =
-            new NetworkRuleSetProperties()
-                .withDefaultAction(DefaultAction.ALLOW)
-                .withApplyToBuiltInEventHubEndpoint(true)
-                .withIpRules(
-                    Arrays
-                        .asList(
-                            new NetworkRuleSetIpRule()
-                                .withFilterName("pqxu")
-                                .withAction(NetworkRuleIpAction.ALLOW)
-                                .withIpMask("y"),
-                            new NetworkRuleSetIpRule()
-                                .withFilterName("n")
-                                .withAction(NetworkRuleIpAction.ALLOW)
-                                .withIpMask("ybrk")));
+        NetworkRuleSetProperties model = new NetworkRuleSetProperties().withDefaultAction(DefaultAction.ALLOW)
+            .withApplyToBuiltInEventHubEndpoint(true)
+            .withIpRules(Arrays.asList(
+                new NetworkRuleSetIpRule().withFilterName("pqxu").withAction(NetworkRuleIpAction.ALLOW).withIpMask("y"),
+                new NetworkRuleSetIpRule().withFilterName("n")
+                    .withAction(NetworkRuleIpAction.ALLOW)
+                    .withIpMask("ybrk")));
         model = BinaryData.fromObject(model).toObject(NetworkRuleSetProperties.class);
         Assertions.assertEquals(DefaultAction.ALLOW, model.defaultAction());
-        Assertions.assertEquals(true, model.applyToBuiltInEventHubEndpoint());
+        Assertions.assertTrue(model.applyToBuiltInEventHubEndpoint());
         Assertions.assertEquals("pqxu", model.ipRules().get(0).filterName());
         Assertions.assertEquals(NetworkRuleIpAction.ALLOW, model.ipRules().get(0).action());
         Assertions.assertEquals("y", model.ipRules().get(0).ipMask());

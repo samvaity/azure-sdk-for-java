@@ -13,15 +13,14 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 
 public class CollectionsListChildCollectionNames {
     public static void main(String[] args) {
-        CollectionsClient collectionsClient =
-                new CollectionsClientBuilder()
-                        .credential(new DefaultAzureCredentialBuilder().build())
-                        .endpoint("{endpoint}")
-                        .buildClient();
-        // BEGIN:com.azure.analytics.purview.administration.generated.collectionslistchildcollectionnames.collectionslistchildcollectionnames
+        CollectionsClient collectionsClient
+            = new CollectionsClientBuilder().credential(new DefaultAzureCredentialBuilder().build())
+                .endpoint("{endpoint}")
+                .buildClient();
+        // BEGIN:com.azure.analytics.purview.administration.generated.collections-list-child-collection-names.collections-list-child-collection-names
         RequestOptions requestOptions = new RequestOptions();
-        PagedIterable<BinaryData> response =
-                collectionsClient.listChildCollectionNames("myCollection1", requestOptions);
-        // END:com.azure.analytics.purview.administration.generated.collectionslistchildcollectionnames.collectionslistchildcollectionnames
+        PagedIterable<BinaryData> response
+            = collectionsClient.listChildCollectionNames("myCollection1", requestOptions);
+        // END:com.azure.analytics.purview.administration.generated.collections-list-child-collection-names.collections-list-child-collection-names
     }
 }

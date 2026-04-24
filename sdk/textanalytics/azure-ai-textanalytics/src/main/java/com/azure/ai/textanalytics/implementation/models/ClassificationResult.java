@@ -5,41 +5,54 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The ClassificationResult model. */
+/**
+ * The ClassificationResult model.
+ */
 @Fluent
-public final class ClassificationResult {
+public final class ClassificationResult implements JsonSerializable<ClassificationResult> {
     /*
      * Classification type.
      */
-    @JsonProperty(value = "category", required = true)
+    @Generated
     private String category;
 
     /*
      * Confidence score between 0 and 1 of the recognized class.
      */
-    @JsonProperty(value = "confidenceScore", required = true)
+    @Generated
     private double confidenceScore;
 
-    /** Creates an instance of ClassificationResult class. */
-    public ClassificationResult() {}
+    /**
+     * Creates an instance of ClassificationResult class.
+     */
+    @Generated
+    public ClassificationResult() {
+    }
 
     /**
      * Get the category property: Classification type.
-     *
+     * 
      * @return the category value.
      */
+    @Generated
     public String getCategory() {
         return this.category;
     }
 
     /**
      * Set the category property: Classification type.
-     *
+     * 
      * @param category the category value to set.
      * @return the ClassificationResult object itself.
      */
+    @Generated
     public ClassificationResult setCategory(String category) {
         this.category = category;
         return this;
@@ -47,21 +60,65 @@ public final class ClassificationResult {
 
     /**
      * Get the confidenceScore property: Confidence score between 0 and 1 of the recognized class.
-     *
+     * 
      * @return the confidenceScore value.
      */
+    @Generated
     public double getConfidenceScore() {
         return this.confidenceScore;
     }
 
     /**
      * Set the confidenceScore property: Confidence score between 0 and 1 of the recognized class.
-     *
+     * 
      * @param confidenceScore the confidenceScore value to set.
      * @return the ClassificationResult object itself.
      */
+    @Generated
     public ClassificationResult setConfidenceScore(double confidenceScore) {
         this.confidenceScore = confidenceScore;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("category", this.category);
+        jsonWriter.writeDoubleField("confidenceScore", this.confidenceScore);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ClassificationResult from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ClassificationResult if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ClassificationResult.
+     */
+    @Generated
+    public static ClassificationResult fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ClassificationResult deserializedClassificationResult = new ClassificationResult();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("category".equals(fieldName)) {
+                    deserializedClassificationResult.category = reader.getString();
+                } else if ("confidenceScore".equals(fieldName)) {
+                    deserializedClassificationResult.confidenceScore = reader.getDouble();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedClassificationResult;
+        });
     }
 }

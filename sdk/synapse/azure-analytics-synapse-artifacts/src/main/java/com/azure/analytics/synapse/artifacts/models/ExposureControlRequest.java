@@ -5,41 +5,54 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The exposure control request. */
+/**
+ * The exposure control request.
+ */
 @Fluent
-public final class ExposureControlRequest {
+public final class ExposureControlRequest implements JsonSerializable<ExposureControlRequest> {
     /*
      * The feature name.
      */
-    @JsonProperty(value = "featureName")
+    @Generated
     private String featureName;
 
     /*
      * The feature type.
      */
-    @JsonProperty(value = "featureType")
+    @Generated
     private String featureType;
 
-    /** Creates an instance of ExposureControlRequest class. */
-    public ExposureControlRequest() {}
+    /**
+     * Creates an instance of ExposureControlRequest class.
+     */
+    @Generated
+    public ExposureControlRequest() {
+    }
 
     /**
      * Get the featureName property: The feature name.
-     *
+     * 
      * @return the featureName value.
      */
+    @Generated
     public String getFeatureName() {
         return this.featureName;
     }
 
     /**
      * Set the featureName property: The feature name.
-     *
+     * 
      * @param featureName the featureName value to set.
      * @return the ExposureControlRequest object itself.
      */
+    @Generated
     public ExposureControlRequest setFeatureName(String featureName) {
         this.featureName = featureName;
         return this;
@@ -47,21 +60,64 @@ public final class ExposureControlRequest {
 
     /**
      * Get the featureType property: The feature type.
-     *
+     * 
      * @return the featureType value.
      */
+    @Generated
     public String getFeatureType() {
         return this.featureType;
     }
 
     /**
      * Set the featureType property: The feature type.
-     *
+     * 
      * @param featureType the featureType value to set.
      * @return the ExposureControlRequest object itself.
      */
+    @Generated
     public ExposureControlRequest setFeatureType(String featureType) {
         this.featureType = featureType;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("featureName", this.featureName);
+        jsonWriter.writeStringField("featureType", this.featureType);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ExposureControlRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ExposureControlRequest if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ExposureControlRequest.
+     */
+    @Generated
+    public static ExposureControlRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ExposureControlRequest deserializedExposureControlRequest = new ExposureControlRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("featureName".equals(fieldName)) {
+                    deserializedExposureControlRequest.featureName = reader.getString();
+                } else if ("featureType".equals(fieldName)) {
+                    deserializedExposureControlRequest.featureType = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedExposureControlRequest;
+        });
     }
 }

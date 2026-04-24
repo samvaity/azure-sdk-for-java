@@ -7,33 +7,31 @@ import com.azure.spring.data.cosmos.common.TestConstants;
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.azure.spring.data.cosmos.domain.PersistableEntity;
 import com.azure.spring.data.cosmos.exception.CosmosAccessException;
+import com.azure.spring.data.cosmos.exception.CosmosConflictException;
 import com.azure.spring.data.cosmos.repository.TestRepositoryConfig;
 import com.azure.spring.data.cosmos.repository.repository.PersistableEntityRepository;
 import com.azure.spring.data.cosmos.repository.repository.ReactivePersistableEntityRepository;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestRepositoryConfig.class)
 public class PersistableIT {
 
-    @ClassRule
+
     public static final IntegrationTestCollectionManager collectionManager = new IntegrationTestCollectionManager();
 
     @Autowired
@@ -45,10 +43,9 @@ public class PersistableIT {
     @Autowired
     private CosmosTemplate template;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
-    @Before
+
+    @BeforeEach
     public void setUp() {
         collectionManager.ensureContainersCreatedAndEmpty(template, PersistableEntity.class);
     }
@@ -91,7 +88,7 @@ public class PersistableIT {
 
         final Mono<PersistableEntity> saveSecond = reactiveRepository.save(entity);
         StepVerifier.create(saveSecond)
-            .expectErrorMatches(ex -> ex instanceof CosmosAccessException && ((CosmosAccessException) ex).getCosmosException().getStatusCode() == TestConstants.CONFLICT_STATUS_CODE)
+            .expectErrorMatches(ex -> ex instanceof CosmosConflictException && ((CosmosAccessException) ex).getCosmosException().getStatusCode() == TestConstants.CONFLICT_STATUS_CODE)
             .verify();
     }
 

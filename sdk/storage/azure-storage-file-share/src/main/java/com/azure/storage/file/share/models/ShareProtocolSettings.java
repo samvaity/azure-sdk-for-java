@@ -5,39 +5,140 @@
 package com.azure.storage.file.share.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** Protocol settings. */
-@JacksonXmlRootElement(localName = "ProtocolSettings")
+/**
+ * Protocol settings.
+ */
 @Fluent
-public final class ShareProtocolSettings {
+public final class ShareProtocolSettings implements XmlSerializable<ShareProtocolSettings> {
     /*
      * Settings for SMB protocol.
      */
-    @JsonProperty(value = "SMB")
+    @Generated
     private ShareSmbSettings smb;
 
-    /** Creates an instance of ShareProtocolSettings class. */
-    public ShareProtocolSettings() {}
+    /*
+     * Settings for NFS protocol.
+     */
+    @Generated
+    private ShareNfsSettings nfs;
+
+    /**
+     * Creates an instance of ShareProtocolSettings class.
+     */
+    @Generated
+    public ShareProtocolSettings() {
+    }
 
     /**
      * Get the smb property: Settings for SMB protocol.
-     *
+     * 
      * @return the smb value.
      */
+    @Generated
     public ShareSmbSettings getSmb() {
         return this.smb;
     }
 
     /**
      * Set the smb property: Settings for SMB protocol.
-     *
+     * 
      * @param smb the smb value to set.
      * @return the ShareProtocolSettings object itself.
      */
+    @Generated
     public ShareProtocolSettings setSmb(ShareSmbSettings smb) {
         this.smb = smb;
         return this;
+    }
+
+    /**
+     * Get the nfs property: Settings for NFS protocol.
+     * 
+     * @return the nfs value.
+     */
+    @Generated
+    public ShareNfsSettings getNfs() {
+        return this.nfs;
+    }
+
+    /**
+     * Set the nfs property: Settings for NFS protocol.
+     * 
+     * @param nfs the nfs value to set.
+     * @return the ShareProtocolSettings object itself.
+     */
+    @Generated
+    public ShareProtocolSettings setNfs(ShareNfsSettings nfs) {
+        this.nfs = nfs;
+        return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "ProtocolSettings" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeXml(this.smb, "SMB");
+        xmlWriter.writeXml(this.nfs, "NFS");
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of ShareProtocolSettings from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of ShareProtocolSettings if the XmlReader was pointing to an instance of it, or null if it
+     * was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the ShareProtocolSettings.
+     */
+    @Generated
+    public static ShareProtocolSettings fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of ShareProtocolSettings from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of ShareProtocolSettings if the XmlReader was pointing to an instance of it, or null if it
+     * was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the ShareProtocolSettings.
+     */
+    @Generated
+    public static ShareProtocolSettings fromXml(XmlReader xmlReader, String rootElementName) throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "ProtocolSettings" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            ShareProtocolSettings deserializedShareProtocolSettings = new ShareProtocolSettings();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("SMB".equals(elementName.getLocalPart())) {
+                    deserializedShareProtocolSettings.smb = ShareSmbSettings.fromXml(reader, "SMB");
+                } else if ("NFS".equals(elementName.getLocalPart())) {
+                    deserializedShareProtocolSettings.nfs = ShareNfsSettings.fromXml(reader, "NFS");
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedShareProtocolSettings;
+        });
     }
 }

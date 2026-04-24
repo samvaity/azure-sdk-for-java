@@ -5,41 +5,54 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** if showStats=true was specified in the request this field will contain information about the document payload. */
+/**
+ * if showStats=true was specified in the request this field will contain information about the document payload.
+ */
 @Fluent
-public final class DocumentStatistics {
+public final class DocumentStatistics implements JsonSerializable<DocumentStatistics> {
     /*
      * Number of text elements recognized in the document.
      */
-    @JsonProperty(value = "charactersCount", required = true)
+    @Generated
     private int charactersCount;
 
     /*
      * Number of transactions for the document.
      */
-    @JsonProperty(value = "transactionsCount", required = true)
+    @Generated
     private int transactionsCount;
 
-    /** Creates an instance of DocumentStatistics class. */
-    public DocumentStatistics() {}
+    /**
+     * Creates an instance of DocumentStatistics class.
+     */
+    @Generated
+    public DocumentStatistics() {
+    }
 
     /**
      * Get the charactersCount property: Number of text elements recognized in the document.
-     *
+     * 
      * @return the charactersCount value.
      */
+    @Generated
     public int getCharactersCount() {
         return this.charactersCount;
     }
 
     /**
      * Set the charactersCount property: Number of text elements recognized in the document.
-     *
+     * 
      * @param charactersCount the charactersCount value to set.
      * @return the DocumentStatistics object itself.
      */
+    @Generated
     public DocumentStatistics setCharactersCount(int charactersCount) {
         this.charactersCount = charactersCount;
         return this;
@@ -47,21 +60,65 @@ public final class DocumentStatistics {
 
     /**
      * Get the transactionsCount property: Number of transactions for the document.
-     *
+     * 
      * @return the transactionsCount value.
      */
+    @Generated
     public int getTransactionsCount() {
         return this.transactionsCount;
     }
 
     /**
      * Set the transactionsCount property: Number of transactions for the document.
-     *
+     * 
      * @param transactionsCount the transactionsCount value to set.
      * @return the DocumentStatistics object itself.
      */
+    @Generated
     public DocumentStatistics setTransactionsCount(int transactionsCount) {
         this.transactionsCount = transactionsCount;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeIntField("charactersCount", this.charactersCount);
+        jsonWriter.writeIntField("transactionsCount", this.transactionsCount);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DocumentStatistics from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DocumentStatistics if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DocumentStatistics.
+     */
+    @Generated
+    public static DocumentStatistics fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DocumentStatistics deserializedDocumentStatistics = new DocumentStatistics();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("charactersCount".equals(fieldName)) {
+                    deserializedDocumentStatistics.charactersCount = reader.getInt();
+                } else if ("transactionsCount".equals(fieldName)) {
+                    deserializedDocumentStatistics.transactionsCount = reader.getInt();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedDocumentStatistics;
+        });
     }
 }

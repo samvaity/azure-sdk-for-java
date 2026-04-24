@@ -5,46 +5,73 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity Salesforce source. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("SalesforceSource")
+/**
+ * A copy activity Salesforce source.
+ */
 @Fluent
 public final class SalesforceSource extends TabularSource {
     /*
+     * Copy source type.
+     */
+    @Generated
+    private String type = "SalesforceSource";
+
+    /*
      * Database query. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "query")
+    @Generated
     private Object query;
 
     /*
      * The read behavior for the operation. Default is Query. Allowed values: Query/QueryAll. Type: string (or
      * Expression with resultType string).
      */
-    @JsonProperty(value = "readBehavior")
+    @Generated
     private Object readBehavior;
 
-    /** Creates an instance of SalesforceSource class. */
-    public SalesforceSource() {}
+    /**
+     * Creates an instance of SalesforceSource class.
+     */
+    @Generated
+    public SalesforceSource() {
+    }
+
+    /**
+     * Get the type property: Copy source type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the query property: Database query. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the query value.
      */
+    @Generated
     public Object getQuery() {
         return this.query;
     }
 
     /**
      * Set the query property: Database query. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param query the query value to set.
      * @return the SalesforceSource object itself.
      */
+    @Generated
     public SalesforceSource setQuery(Object query) {
         this.query = query;
         return this;
@@ -53,9 +80,10 @@ public final class SalesforceSource extends TabularSource {
     /**
      * Get the readBehavior property: The read behavior for the operation. Default is Query. Allowed values:
      * Query/QueryAll. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the readBehavior value.
      */
+    @Generated
     public Object getReadBehavior() {
         return this.readBehavior;
     }
@@ -63,47 +91,147 @@ public final class SalesforceSource extends TabularSource {
     /**
      * Set the readBehavior property: The read behavior for the operation. Default is Query. Allowed values:
      * Query/QueryAll. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param readBehavior the readBehavior value to set.
      * @return the SalesforceSource object itself.
      */
+    @Generated
     public SalesforceSource setReadBehavior(Object readBehavior) {
         this.readBehavior = readBehavior;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SalesforceSource setQueryTimeout(Object queryTimeout) {
         super.setQueryTimeout(queryTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SalesforceSource setAdditionalColumns(Object additionalColumns) {
         super.setAdditionalColumns(additionalColumns);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SalesforceSource setSourceRetryCount(Object sourceRetryCount) {
         super.setSourceRetryCount(sourceRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SalesforceSource setSourceRetryWait(Object sourceRetryWait) {
         super.setSourceRetryWait(sourceRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SalesforceSource setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getSourceRetryCount() != null) {
+            jsonWriter.writeUntypedField("sourceRetryCount", getSourceRetryCount());
+        }
+        if (getSourceRetryWait() != null) {
+            jsonWriter.writeUntypedField("sourceRetryWait", getSourceRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        if (getQueryTimeout() != null) {
+            jsonWriter.writeUntypedField("queryTimeout", getQueryTimeout());
+        }
+        if (getAdditionalColumns() != null) {
+            jsonWriter.writeUntypedField("additionalColumns", getAdditionalColumns());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.query != null) {
+            jsonWriter.writeUntypedField("query", this.query);
+        }
+        if (this.readBehavior != null) {
+            jsonWriter.writeUntypedField("readBehavior", this.readBehavior);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SalesforceSource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SalesforceSource if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the SalesforceSource.
+     */
+    @Generated
+    public static SalesforceSource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SalesforceSource deserializedSalesforceSource = new SalesforceSource();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sourceRetryCount".equals(fieldName)) {
+                    deserializedSalesforceSource.setSourceRetryCount(reader.readUntyped());
+                } else if ("sourceRetryWait".equals(fieldName)) {
+                    deserializedSalesforceSource.setSourceRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedSalesforceSource.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("queryTimeout".equals(fieldName)) {
+                    deserializedSalesforceSource.setQueryTimeout(reader.readUntyped());
+                } else if ("additionalColumns".equals(fieldName)) {
+                    deserializedSalesforceSource.setAdditionalColumns(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedSalesforceSource.type = reader.getString();
+                } else if ("query".equals(fieldName)) {
+                    deserializedSalesforceSource.query = reader.readUntyped();
+                } else if ("readBehavior".equals(fieldName)) {
+                    deserializedSalesforceSource.readBehavior = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedSalesforceSource.setAdditionalProperties(additionalProperties);
+
+            return deserializedSalesforceSource;
+        });
     }
 }

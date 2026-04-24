@@ -5,48 +5,61 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.Map;
 
-/** Linked service reference type. */
+/**
+ * Linked service reference type.
+ */
 @Fluent
-public final class LinkedServiceReference {
+public final class LinkedServiceReference implements JsonSerializable<LinkedServiceReference> {
     /*
      * Linked service reference type.
      */
-    @JsonProperty(value = "type", required = true)
+    @Generated
     private Type type;
 
     /*
      * Reference LinkedService name.
      */
-    @JsonProperty(value = "referenceName", required = true)
+    @Generated
     private String referenceName;
 
     /*
      * Arguments for LinkedService.
      */
-    @JsonProperty(value = "parameters")
+    @Generated
     private Map<String, Object> parameters;
 
-    /** Creates an instance of LinkedServiceReference class. */
-    public LinkedServiceReference() {}
+    /**
+     * Creates an instance of LinkedServiceReference class.
+     */
+    @Generated
+    public LinkedServiceReference() {
+    }
 
     /**
      * Get the type property: Linked service reference type.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public Type getType() {
         return this.type;
     }
 
     /**
      * Set the type property: Linked service reference type.
-     *
+     * 
      * @param type the type value to set.
      * @return the LinkedServiceReference object itself.
      */
+    @Generated
     public LinkedServiceReference setType(Type type) {
         this.type = type;
         return this;
@@ -54,19 +67,21 @@ public final class LinkedServiceReference {
 
     /**
      * Get the referenceName property: Reference LinkedService name.
-     *
+     * 
      * @return the referenceName value.
      */
+    @Generated
     public String getReferenceName() {
         return this.referenceName;
     }
 
     /**
      * Set the referenceName property: Reference LinkedService name.
-     *
+     * 
      * @param referenceName the referenceName value to set.
      * @return the LinkedServiceReference object itself.
      */
+    @Generated
     public LinkedServiceReference setReferenceName(String referenceName) {
         this.referenceName = referenceName;
         return this;
@@ -74,21 +89,69 @@ public final class LinkedServiceReference {
 
     /**
      * Get the parameters property: Arguments for LinkedService.
-     *
+     * 
      * @return the parameters value.
      */
+    @Generated
     public Map<String, Object> getParameters() {
         return this.parameters;
     }
 
     /**
      * Set the parameters property: Arguments for LinkedService.
-     *
+     * 
      * @param parameters the parameters value to set.
      * @return the LinkedServiceReference object itself.
      */
+    @Generated
     public LinkedServiceReference setParameters(Map<String, Object> parameters) {
         this.parameters = parameters;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("type", this.type == null ? null : this.type.toString());
+        jsonWriter.writeStringField("referenceName", this.referenceName);
+        jsonWriter.writeMapField("parameters", this.parameters, (writer, element) -> writer.writeUntyped(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of LinkedServiceReference from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of LinkedServiceReference if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the LinkedServiceReference.
+     */
+    @Generated
+    public static LinkedServiceReference fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            LinkedServiceReference deserializedLinkedServiceReference = new LinkedServiceReference();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("type".equals(fieldName)) {
+                    deserializedLinkedServiceReference.type = Type.fromString(reader.getString());
+                } else if ("referenceName".equals(fieldName)) {
+                    deserializedLinkedServiceReference.referenceName = reader.getString();
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, Object> parameters = reader.readMap(reader1 -> reader1.readUntyped());
+                    deserializedLinkedServiceReference.parameters = parameters;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedLinkedServiceReference;
+        });
     }
 }

@@ -6,68 +6,39 @@ package com.azure.resourcemanager.appcontainers.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.appcontainers.ContainerAppsApiManager;
 import com.azure.resourcemanager.appcontainers.models.OperationDetail;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class OperationsListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"name\":\"yjdeolctaebfs\",\"isDataAction\":true,\"display\":{\"provider\":\"jcustbvtq\",\"resource\":\"d\",\"operation\":\"vsgeafgf\",\"description\":\"ehxlzsxezppk\"},\"origin\":\"aaeskyfjlpze\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"name\":\"aoypny\",\"isDataAction\":true,\"display\":{\"provider\":\"cyl\",\"resource\":\"gmnsghpxy\",\"operation\":\"hdrwjjkh\",\"description\":\"omacluzvxnqmhr\"},\"origin\":\"pd\"}]}";
-
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
-
-        ContainerAppsApiManager manager =
-            ContainerAppsApiManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        ContainerAppsApiManager manager = ContainerAppsApiManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
         PagedIterable<OperationDetail> response = manager.operations().list(com.azure.core.util.Context.NONE);
 
-        Assertions.assertEquals("aoypny", response.iterator().next().name());
-        Assertions.assertEquals(true, response.iterator().next().isDataAction());
-        Assertions.assertEquals("cyl", response.iterator().next().display().provider());
-        Assertions.assertEquals("gmnsghpxy", response.iterator().next().display().resource());
-        Assertions.assertEquals("hdrwjjkh", response.iterator().next().display().operation());
-        Assertions.assertEquals("omacluzvxnqmhr", response.iterator().next().display().description());
-        Assertions.assertEquals("pd", response.iterator().next().origin());
+        Assertions.assertEquals("yjdeolctaebfs", response.iterator().next().name());
+        Assertions.assertTrue(response.iterator().next().isDataAction());
+        Assertions.assertEquals("jcustbvtq", response.iterator().next().display().provider());
+        Assertions.assertEquals("d", response.iterator().next().display().resource());
+        Assertions.assertEquals("vsgeafgf", response.iterator().next().display().operation());
+        Assertions.assertEquals("ehxlzsxezppk", response.iterator().next().display().description());
+        Assertions.assertEquals("aaeskyfjlpze", response.iterator().next().origin());
     }
 }

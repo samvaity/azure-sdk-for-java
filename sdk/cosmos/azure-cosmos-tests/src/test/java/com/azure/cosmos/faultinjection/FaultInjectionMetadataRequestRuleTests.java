@@ -8,17 +8,21 @@ import com.azure.cosmos.CosmosAsyncClient;
 import com.azure.cosmos.CosmosAsyncContainer;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.cosmos.CosmosDiagnostics;
+import com.azure.cosmos.CosmosEndToEndOperationLatencyPolicyConfigBuilder;
 import com.azure.cosmos.CosmosException;
+import com.azure.cosmos.TestObject;
 import com.azure.cosmos.implementation.AsyncDocumentClient;
 import com.azure.cosmos.implementation.DatabaseAccount;
 import com.azure.cosmos.implementation.DatabaseAccountLocation;
 import com.azure.cosmos.implementation.GlobalEndpointManager;
+import com.azure.cosmos.implementation.HttpConstants;
+import com.azure.cosmos.implementation.MetadataDiagnosticsContext;
+import com.azure.cosmos.implementation.OperationType;
 import com.azure.cosmos.implementation.Utils;
-import com.azure.cosmos.implementation.throughputControl.TestItem;
+import com.azure.cosmos.models.CosmosItemResponse;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.FeedRange;
 import com.azure.cosmos.models.PartitionKey;
-import com.azure.cosmos.rx.TestSuiteBase;
 import com.azure.cosmos.test.faultinjection.CosmosFaultInjectionHelper;
 import com.azure.cosmos.test.faultinjection.FaultInjectionConditionBuilder;
 import com.azure.cosmos.test.faultinjection.FaultInjectionEndpointBuilder;
@@ -33,25 +37,28 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.testng.AssertJUnit.fail;
 
-public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
+public class FaultInjectionMetadataRequestRuleTests extends FaultInjectionTestBase {
     private CosmosAsyncClient client;
     private CosmosAsyncContainer cosmosAsyncContainer;
-    private List<String> preferredLocations;
+    private List<String> readPreferredLocations;
+    private List<String> writePreferredLocations;
 
     @Factory(dataProvider = "simpleClientBuildersWithJustDirectTcp")
     public FaultInjectionMetadataRequestRuleTests(CosmosClientBuilder clientBuilder) {
@@ -59,21 +66,80 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
         this.subscriberValidationTimeout = TIMEOUT;
     }
 
-    @BeforeClass(groups = { "multi-region" }, timeOut = TIMEOUT)
+    @DataProvider(name = "operationTypeProvider")
+    public static Object[][] operationTypeProvider() {
+        return new Object[][]{
+            // FaultInjectionOperationType, OperationType, shouldInjectPreferredRegionsOnClient
+            { FaultInjectionOperationType.READ_ITEM, OperationType.Read, true },
+            { FaultInjectionOperationType.REPLACE_ITEM, OperationType.Replace, true },
+            { FaultInjectionOperationType.CREATE_ITEM, OperationType.Create, true },
+            { FaultInjectionOperationType.UPSERT_ITEM, OperationType.Upsert, true },
+            { FaultInjectionOperationType.DELETE_ITEM, OperationType.Delete, true },
+            { FaultInjectionOperationType.QUERY_ITEM, OperationType.Query, true },
+            { FaultInjectionOperationType.PATCH_ITEM, OperationType.Patch, true },
+            { FaultInjectionOperationType.READ_ITEM, OperationType.Read, false },
+            { FaultInjectionOperationType.REPLACE_ITEM, OperationType.Replace, false },
+            { FaultInjectionOperationType.CREATE_ITEM, OperationType.Create, false },
+            { FaultInjectionOperationType.UPSERT_ITEM, OperationType.Upsert, false },
+            { FaultInjectionOperationType.DELETE_ITEM, OperationType.Delete, false },
+            { FaultInjectionOperationType.QUERY_ITEM, OperationType.Query, false },
+            { FaultInjectionOperationType.PATCH_ITEM, OperationType.Patch, false }
+        };
+    }
+
+    @DataProvider(name = "partitionKeyRangesArgProvider")
+    public static Object[][] partitionKeyRangesArgProvider() {
+        return new Object[][]{
+            // FaultInjectionServerErrorType, delay duration, ruleApplyLimitPerOperation, shouldInjectPreferredRegionsOnClient
+            { FaultInjectionServerErrorType.CONNECTION_DELAY, Duration.ofSeconds(50), 1, true },
+            { FaultInjectionServerErrorType.CONNECTION_DELAY, Duration.ofSeconds(50), Integer.MAX_VALUE, true },
+            { FaultInjectionServerErrorType.RESPONSE_DELAY, Duration.ofSeconds(11), 1, true },
+            { FaultInjectionServerErrorType.RESPONSE_DELAY, Duration.ofSeconds(11), Integer.MAX_VALUE, true },
+            { FaultInjectionServerErrorType.CONNECTION_DELAY, Duration.ofSeconds(50), 1, false },
+            { FaultInjectionServerErrorType.CONNECTION_DELAY, Duration.ofSeconds(50), Integer.MAX_VALUE, false },
+            { FaultInjectionServerErrorType.RESPONSE_DELAY, Duration.ofSeconds(11), 1, false },
+            { FaultInjectionServerErrorType.RESPONSE_DELAY, Duration.ofSeconds(11), Integer.MAX_VALUE, false }
+        };
+    }
+
+    @DataProvider(name = "preferredRegionsConfigProvider")
+    public static Object[] preferredRegionsConfigProvider() {
+        // shouldInjectPreferredRegionsOnClient
+        return new Object[] {false, true};
+    }
+
+    @BeforeClass(groups = { "multi-region", "multi-master" }, timeOut = TIMEOUT)
     public void beforeClass() {
         this.client = getClientBuilder().buildAsyncClient();
         AsyncDocumentClient asyncDocumentClient = BridgeInternal.getContextClient(this.client);
         GlobalEndpointManager globalEndpointManager = asyncDocumentClient.getGlobalEndpointManager();
 
         DatabaseAccount databaseAccount = globalEndpointManager.getLatestDatabaseAccount();
-        Map<String, String> readRegionMap = this.getRegionMap(databaseAccount, false);
+
+        AccountLevelLocationContext accountLevelReadableLocationContext
+            = getAccountLevelLocationContext(databaseAccount, false);
+        AccountLevelLocationContext accountLevelWriteableLocationContext
+            = getAccountLevelLocationContext(databaseAccount, true);
+
+        validate(accountLevelReadableLocationContext, false);
+        validate(accountLevelWriteableLocationContext, true);
+
         this.cosmosAsyncContainer = getSharedMultiPartitionCosmosContainerWithIdAsPartitionKey(this.client);
-        // create a client with preferred regions
-        this.preferredLocations = readRegionMap.keySet().stream().collect(Collectors.toList());
+
+        // This test runs against a real account
+        // Creating collections can take some time in the remote region
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        this.readPreferredLocations = accountLevelReadableLocationContext.serviceOrderedReadableRegions;
+        this.writePreferredLocations = accountLevelWriteableLocationContext.serviceOrderedWriteableRegions;
     }
 
-    @Test(groups = { "multi-region" }, timeOut = 4 * TIMEOUT)
-    public void faultInjectionServerErrorRuleTests_AddressRefresh_ConnectionDelay() throws JsonProcessingException {
+    @Test(groups = { "multi-region" }, dataProvider = "preferredRegionsConfigProvider", timeOut = 20 * TIMEOUT)
+    public void faultInjectionServerErrorRuleTests_AddressRefresh_ConnectionDelay(boolean shouldInjectPreferredRegionsOnClient) throws JsonProcessingException {
 
         // Test to validate if there is http connection exception for address refresh,
         // SDK will make the region unavailable and retry the request in another region.
@@ -82,7 +148,7 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
         // which can impact the test result
         CosmosAsyncClient testClient = getClientBuilder()
             .contentResponseOnWriteEnabled(true)
-            .preferredRegions(preferredLocations)
+            .preferredRegions(shouldInjectPreferredRegionsOnClient ? this.readPreferredLocations : Collections.emptyList())
             .buildAsyncClient();
 
         CosmosAsyncContainer container =
@@ -95,7 +161,7 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
             new FaultInjectionRuleBuilder(addressRefreshConnectionDelay)
                 .condition(
                     new FaultInjectionConditionBuilder()
-                        .region(this.preferredLocations.get(0))
+                        .region(this.readPreferredLocations.get(0))
                         .operationType(FaultInjectionOperationType.METADATA_REQUEST_ADDRESS_REFRESH)
                         .build()
                 )
@@ -103,17 +169,17 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
                     FaultInjectionResultBuilders
                         .getResultBuilder(FaultInjectionServerErrorType.CONNECTION_DELAY)
                         .delay(Duration.ofSeconds(50)) // to simulate http connection timeout
-                        .times(2)
+                        .times(4) // make sure to exhaust local region retries
                         .build()
                 )
-                .duration(Duration.ofMinutes(5))
+                .duration(Duration.ofMinutes(10))
                 .build();
 
         FaultInjectionRule dataOperationGoneRule =
             new FaultInjectionRuleBuilder("DataOperation-gone-" + UUID.randomUUID())
                 .condition(
                     new FaultInjectionConditionBuilder()
-                        .region(this.preferredLocations.get(0))
+                        .region(this.readPreferredLocations.get(0))
                         .operationType(FaultInjectionOperationType.READ_ITEM)
                         .build())
                 .result(
@@ -124,7 +190,7 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
                 .duration(Duration.ofMinutes(5))
                 .build();
         try {
-            TestItem createdItem = TestItem.createNewItem();
+            TestObject createdItem = TestObject.create();
             container.createItem(createdItem).block();
 
             CosmosFaultInjectionHelper.configureFaultInjectionRules(
@@ -139,7 +205,14 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
                         .block()
                         .getDiagnostics();
                 assertThat(cosmosDiagnostics.getContactedRegionNames().size()).isEqualTo(2);
-                validateFaultInjectionRuleAppliedForAddressResolution(cosmosDiagnostics, addressRefreshConnectionDelay, 2);
+                if (this.readPreferredLocations.size() == 2) {
+                    // when preferred regions is 2
+                    // Due to issue https://github.com/Azure/azure-sdk-for-java/issues/35779, the request mark the region unavailable will retry
+                    // in the unavailable region again, hence the addressRefresh fault injection will be happened 4 times
+                    validateFaultInjectionRuleAppliedForAddressResolution(cosmosDiagnostics, addressRefreshConnectionDelay, 4, false);
+                } else {
+                    validateFaultInjectionRuleAppliedForAddressResolution(cosmosDiagnostics, addressRefreshConnectionDelay, 3, false);
+                }
             } catch (CosmosException e) {
                 fail("Request should be able to succeed by retrying in another region. " + e.getDiagnostics());
             }
@@ -157,7 +230,7 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
             assertThat(
                 cosmosDiagnostics
                     .getContactedRegionNames()
-                    .containsAll(Arrays.asList(this.preferredLocations.get(1).toLowerCase())))
+                    .containsAll(Arrays.asList(this.readPreferredLocations.get(1).toLowerCase())))
                 .isTrue();
         } finally {
             addressRefreshConnectionDelayRule.disable();
@@ -166,17 +239,20 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
         }
     }
 
-    @Test(groups = { "multi-region" }, timeOut = 4 * TIMEOUT)
-    public void faultInjectionServerErrorRuleTests_AddressRefresh_ResponseDelay() throws JsonProcessingException {
+    @Test(groups = { "multi-master" }, dataProvider = "operationTypeProvider", timeOut = 4 * TIMEOUT)
+    public void faultInjectionServerErrorRuleTests_AddressRefresh_ResponseDelay(
+        FaultInjectionOperationType faultInjectionOperationType,
+        OperationType operationType,
+        boolean shouldInjectPreferredRegionsOnClient) throws JsonProcessingException {
 
         // Test to validate if there is http request timeout for address refresh,
-        // SDK will retry 3 times before fail the request
+        // SDK will retry at least 2 times, and SDK will fail the request as no cross region retry for addressRefresh on timeout
 
         // We need to create a new client because client may have marked region unavailable in other tests
         // which can impact the test result
         CosmosAsyncClient testClient = getClientBuilder()
             .contentResponseOnWriteEnabled(true)
-            .preferredRegions(preferredLocations)
+            .preferredRegions(shouldInjectPreferredRegionsOnClient ? this.writePreferredLocations : Collections.emptyList())
             .buildAsyncClient();
 
         CosmosAsyncContainer container =
@@ -189,15 +265,15 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
             new FaultInjectionRuleBuilder(addressRefreshResponseDelay)
                 .condition(
                     new FaultInjectionConditionBuilder()
-                        .region(this.preferredLocations.get(0))
+                        .region(this.readPreferredLocations.get(0))
                         .operationType(FaultInjectionOperationType.METADATA_REQUEST_ADDRESS_REFRESH)
                         .build()
                 )
                 .result(
                     FaultInjectionResultBuilders
                         .getResultBuilder(FaultInjectionServerErrorType.RESPONSE_DELAY)
-                        .delay(Duration.ofSeconds(6)) // to simulate http request timeout
-                        .times(4)
+                        .delay(Duration.ofSeconds(11)) // to simulate http request timeout
+                        .times(3)
                         .build()
                 )
                 .duration(Duration.ofMinutes(5))
@@ -207,8 +283,8 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
             new FaultInjectionRuleBuilder("DataOperation-gone-" + UUID.randomUUID())
                 .condition(
                     new FaultInjectionConditionBuilder()
-                        .region(this.preferredLocations.get(0))
-                        .operationType(FaultInjectionOperationType.READ_ITEM)
+                        .region(this.readPreferredLocations.get(0))
+                        .operationType(faultInjectionOperationType)
                         .build())
                 .result(
                     FaultInjectionResultBuilders
@@ -219,7 +295,7 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
                 .build();
         try {
 
-            TestItem createdItem = TestItem.createNewItem();
+            TestObject createdItem = TestObject.create();
             container.createItem(createdItem).block();
 
             CosmosFaultInjectionHelper.configureFaultInjectionRules(
@@ -227,20 +303,37 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
                     Arrays.asList(addressRefreshResponseDelayRule, dataOperationGoneRule))
                 .block();
 
-            try {
-                CosmosDiagnostics cosmosDiagnostics =
-                    container
-                        .readItem(createdItem.getId(), new PartitionKey(createdItem.getId()), JsonNode.class)
-                        .block()
-                        .getDiagnostics();
+            CosmosDiagnostics cosmosDiagnostics =
+                this.performDocumentOperation(container, operationType, createdItem, false);
 
-                fail("request should have failed due to http request timeout on address resolution. " + cosmosDiagnostics);
-            } catch (CosmosException e) {
-                CosmosDiagnostics cosmosDiagnostics = e.getDiagnostics();
+
+            if (isNonWriteDocumentOperation(operationType)) {
+                assertThat(cosmosDiagnostics.getContactedRegionNames().size()).isEqualTo(2);
+                assertThat(
+                    cosmosDiagnostics
+                        .getContactedRegionNames()
+                        .containsAll(Arrays.asList(this.readPreferredLocations.get(0).toLowerCase(), this.readPreferredLocations.get(0).toLowerCase())))
+                    .isTrue();
+
+                assertThat(cosmosDiagnostics.getDiagnosticsContext().getStatusCode())
+                    .isNotEqualTo(HttpConstants.StatusCodes.REQUEST_TIMEOUT);
+                assertThat(cosmosDiagnostics.getDiagnosticsContext().getSubStatusCode())
+                    .isNotEqualTo(HttpConstants.SubStatusCodes.GATEWAY_ENDPOINT_READ_TIMEOUT);
+            } else {
                 assertThat(cosmosDiagnostics.getContactedRegionNames().size()).isEqualTo(1);
-                assertThat(cosmosDiagnostics.getContactedRegionNames().containsAll(Arrays.asList(this.preferredLocations.get(0).toLowerCase()))).isTrue();
-                validateFaultInjectionRuleAppliedForAddressResolution(cosmosDiagnostics, addressRefreshResponseDelay, 4);
+                assertThat(
+                    cosmosDiagnostics
+                        .getContactedRegionNames()
+                        .containsAll(Arrays.asList(this.readPreferredLocations.get(0).toLowerCase())))
+                    .isTrue();
+
+                assertThat(cosmosDiagnostics.getDiagnosticsContext().getStatusCode())
+                    .isEqualTo(HttpConstants.StatusCodes.REQUEST_TIMEOUT);
+                assertThat(cosmosDiagnostics.getDiagnosticsContext().getSubStatusCode())
+                    .isEqualTo(HttpConstants.SubStatusCodes.GATEWAY_ENDPOINT_READ_TIMEOUT);
             }
+
+            validateFaultInjectionRuleAppliedForAddressResolution(cosmosDiagnostics, addressRefreshResponseDelay, 3, operationType == OperationType.Query);
         } finally {
             addressRefreshResponseDelayRule.disable();
             dataOperationGoneRule.disable();
@@ -248,14 +341,14 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
         }
     }
 
-    @Test(groups = { "multi-region" }, timeOut = 4 * TIMEOUT)
-    public void faultInjectionServerErrorRuleTests_AddressRefresh_byPartition() {
+    @Test(groups = { "multi-region" }, dataProvider = "preferredRegionsConfigProvider", timeOut = 4 * TIMEOUT)
+    public void faultInjectionServerErrorRuleTests_AddressRefresh_byPartition(boolean shouldInjectPreferredRegionsOnClient) {
 
         // We need to create a new client because client may have marked region unavailable in other tests
         // which can impact the test result
         CosmosAsyncClient testClient = getClientBuilder()
             .contentResponseOnWriteEnabled(true)
-            .preferredRegions(preferredLocations)
+            .preferredRegions(shouldInjectPreferredRegionsOnClient ? this.readPreferredLocations : Collections.emptyList())
             .buildAsyncClient();
 
         CosmosAsyncContainer container =
@@ -265,7 +358,7 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
 
         // first create few documents
         for (int i = 0; i < 10; i++) {
-            container.createItem(TestItem.createNewItem()).block();
+            container.createItem(TestObject.create()).block();
         }
 
         List<FeedRange> feedRanges = container.getFeedRanges().block();
@@ -274,14 +367,14 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
         CosmosQueryRequestOptions cosmosQueryRequestOptions = new CosmosQueryRequestOptions();
         cosmosQueryRequestOptions.setFeedRange(feedRanges.get(0));
         String query = "select * from c";
-        TestItem itemOnFeedRange1 = container.queryItems(query, cosmosQueryRequestOptions, TestItem.class)
+        TestObject itemOnFeedRange1 = container.queryItems(query, cosmosQueryRequestOptions, TestObject.class)
             .byPage(1)
             .blockFirst()
             .getResults()
             .get(0);
 
         cosmosQueryRequestOptions.setFeedRange(feedRanges.get(1));
-        TestItem itemOnFeedRange2 = container.queryItems(query, cosmosQueryRequestOptions, TestItem.class)
+        TestObject itemOnFeedRange2 = container.queryItems(query, cosmosQueryRequestOptions, TestObject.class)
             .byPage(1)
             .blockFirst()
             .getResults()
@@ -300,8 +393,8 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
                 .result(
                     FaultInjectionResultBuilders
                         .getResultBuilder(FaultInjectionServerErrorType.RESPONSE_DELAY)
-                        .delay(Duration.ofSeconds(6)) // to simulate http request timeout
-                        .times(4)
+                        .delay(Duration.ofSeconds(11)) // to simulate http request timeout
+                        .times(3)
                         .build()
                 )
                 .duration(Duration.ofMinutes(5))
@@ -328,17 +421,25 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
                     Arrays.asList(addressRefreshResponseDelayRule, dataOperationGoneRule))
                 .block();
 
-            // validate for request on feed range 0, it will fail
+            // validate for request on feed range 0, address refresh request failures will happen but request will succeed in second region as request is Document read
             try {
-                CosmosDiagnostics cosmosDiagnostics =
+                CosmosItemResponse<JsonNode> itemResponse =
                     container
                         .readItem(itemOnFeedRange1.getId(), new PartitionKey(itemOnFeedRange1.getId()), JsonNode.class)
-                        .block()
-                        .getDiagnostics();
+                        .block();
 
-                fail("Item on feed range 1 should have failed. " + cosmosDiagnostics);
+                assertThat(itemResponse).isNotNull();
+
+                CosmosDiagnostics cosmosDiagnostics = itemResponse.getDiagnostics();
+
+                assertThat(addressRefreshResponseDelayRule.getHitCount()).isGreaterThan(0);
+
+                assertThat(cosmosDiagnostics).isNotNull();
+                assertThat(cosmosDiagnostics.getDiagnosticsContext()).isNotNull();
+                assertThat(cosmosDiagnostics.getDiagnosticsContext().getContactedRegionNames()).isNotNull();
+                assertThat(cosmosDiagnostics.getDiagnosticsContext().getContactedRegionNames().size()).isEqualTo(2);
             } catch (CosmosException e) {
-                // no-op
+                fail("Item on feed range 1 should have succeeded. " + e.getDiagnostics());
             }
 
             try {
@@ -358,14 +459,14 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
         }
     }
 
-    @Test(groups = { "multi-region" }, timeOut = 4 * TIMEOUT)
-    public void faultInjectionServerErrorRuleTests_AddressRefresh_TooManyRequest() throws JsonProcessingException {
+    @Test(groups = { "multi-region" }, dataProvider = "preferredRegionsConfigProvider", timeOut = 4 * TIMEOUT)
+    public void faultInjectionServerErrorRuleTests_AddressRefresh_TooManyRequest(boolean shouldInjectPreferredRegionsOnClient) throws JsonProcessingException {
 
         // We need to create a new client because client may have marked region unavailable in other tests
         // which can impact the test result
         CosmosAsyncClient testClient = getClientBuilder()
             .contentResponseOnWriteEnabled(true)
-            .preferredRegions(preferredLocations)
+            .preferredRegions(shouldInjectPreferredRegionsOnClient ? this.readPreferredLocations : Collections.emptyList())
             .buildAsyncClient();
 
         CosmosAsyncContainer container =
@@ -379,7 +480,7 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
             new FaultInjectionRuleBuilder(addressRefreshTooManyRequest)
                 .condition(
                     new FaultInjectionConditionBuilder()
-                        .region(this.preferredLocations.get(0))
+                        .region(this.readPreferredLocations.get(0))
                         .operationType(FaultInjectionOperationType.METADATA_REQUEST_ADDRESS_REFRESH)
                         .build()
                 )
@@ -396,7 +497,7 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
             new FaultInjectionRuleBuilder("DataOperation-gone-" + UUID.randomUUID())
                 .condition(
                     new FaultInjectionConditionBuilder()
-                        .region(this.preferredLocations.get(0))
+                        .region(this.readPreferredLocations.get(0))
                         .operationType(FaultInjectionOperationType.READ_ITEM)
                         .build())
                 .result(
@@ -408,7 +509,7 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
                 .duration(Duration.ofMinutes(5))
                 .build();
         try {
-            TestItem createdItem = TestItem.createNewItem();
+            TestObject createdItem = TestObject.create();
             container.createItem(createdItem).block();
 
             CosmosFaultInjectionHelper.configureFaultInjectionRules(
@@ -420,8 +521,8 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
                 container.readItem(createdItem.getId(), new PartitionKey(createdItem.getId()), JsonNode.class).block().getDiagnostics();
 
             assertThat(cosmosDiagnostics.getContactedRegionNames().size()).isEqualTo(1);
-            assertThat(cosmosDiagnostics.getContactedRegionNames().containsAll(Arrays.asList(this.preferredLocations.get(0).toLowerCase()))).isTrue();
-            validateFaultInjectionRuleAppliedForAddressResolution(cosmosDiagnostics, addressRefreshTooManyRequest, 1);
+            assertThat(cosmosDiagnostics.getContactedRegionNames().containsAll(Arrays.asList(this.readPreferredLocations.get(0).toLowerCase()))).isTrue();
+            validateFaultInjectionRuleAppliedForAddressResolution(cosmosDiagnostics, addressRefreshTooManyRequest, 1, false);
         } finally {
             addressRefreshTooManyRequestRule.disable();
             dataOperationGoneRule.disable();
@@ -429,14 +530,20 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
         }
     }
 
-    @Test(groups = { "multi-region" }, timeOut = 40 * TIMEOUT)
-    public void faultInjectionServerErrorRuleTests_PartitionKeyRanges_ConnectionDelay() throws JsonProcessingException {
+    @Test(groups = { "multi-master" }, dataProvider = "partitionKeyRangesArgProvider", timeOut = 40 * TIMEOUT)
+    public void faultInjectionServerErrorRuleTests_PartitionKeyRanges_DelayError(
+        FaultInjectionServerErrorType faultInjectionServerErrorType,
+        Duration delay,
+        int applyLimit,
+        boolean shouldInjectPreferredRegionsOnClient) throws JsonProcessingException {
 
         // We need to create a new client because client may have marked region unavailable in other tests
         // which can impact the test result
         CosmosAsyncClient testClient = getClientBuilder()
             .contentResponseOnWriteEnabled(true)
-            .preferredRegions(preferredLocations)
+            .preferredRegions(shouldInjectPreferredRegionsOnClient ? this.writePreferredLocations : Collections.emptyList())
+            .endToEndOperationLatencyPolicyConfig(
+                new CosmosEndToEndOperationLatencyPolicyConfigBuilder(Duration.ofMinutes(10)).build())
             .buildAsyncClient();
 
         CosmosAsyncContainer container =
@@ -450,8 +557,113 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
             new FaultInjectionRuleBuilder(pkRangesConnectionDelay)
                 .condition(
                     new FaultInjectionConditionBuilder()
-                        .region(this.preferredLocations.get(0))
+                        .region(this.writePreferredLocations.get(0))
                         .operationType(FaultInjectionOperationType.METADATA_REQUEST_PARTITION_KEY_RANGES)
+                        .build()
+                )
+                .result(
+                    FaultInjectionResultBuilders
+                        .getResultBuilder(faultInjectionServerErrorType)
+                        .delay(delay) // to simulate http connection timeout
+                        .times(applyLimit)
+                        .build()
+                )
+                .duration(Duration.ofMinutes(5))
+                .build();
+
+        FaultInjectionRule dataOperationGoneRule =
+            new FaultInjectionRuleBuilder("DataOperation-gone-" + UUID.randomUUID())
+                .condition(
+                    new FaultInjectionConditionBuilder()
+                        .operationType(FaultInjectionOperationType.CREATE_ITEM)
+                        .region(this.writePreferredLocations.get(0))
+                        .build())
+                .result(
+                    FaultInjectionResultBuilders
+                        .getResultBuilder(FaultInjectionServerErrorType.PARTITION_IS_SPLITTING)
+                        .times(1)// using partition split to trigger routing map refresh flow
+                        .build()
+                )
+                .duration(Duration.ofMinutes(5))
+                .build();
+        try {
+            // create few items to first make sure the collection cache, pkRanges cache is being populated
+            for (int i = 0; i < 10; i++) {
+                container.createItem(TestObject.create()).block();
+            }
+
+            CosmosFaultInjectionHelper.configureFaultInjectionRules(
+                    container,
+                    Arrays.asList(pkRangesConnectionDelayRule, dataOperationGoneRule))
+                .block();
+
+            try {
+                CosmosDiagnostics cosmosDiagnostics = container.createItem(TestObject.create()).block().getDiagnostics();
+                // The PkRanges requests may have retried in another region,
+                // but the create request will only be retried locally for PARTITION_IS_SPLITTING
+                assertThat(cosmosDiagnostics.getContactedRegionNames().size()).isEqualTo(1);
+
+                // validate PARTITION_KEY_RANGE_LOOK_UP
+                ObjectNode diagnosticsNode = (ObjectNode) Utils.getSimpleObjectMapper().readTree(cosmosDiagnostics.toString());
+                JsonNode metadataDiagnosticsContext = diagnosticsNode.get("metadataDiagnosticsContext");
+                ArrayNode metadataDiagnosticList = (ArrayNode) metadataDiagnosticsContext.get("metadataDiagnosticList");
+
+                assertThat(metadataDiagnosticList.size()).isGreaterThan(0);
+
+                JsonNode pkRangesLookup = null;
+                for (int i = 0; i < metadataDiagnosticList.size(); i++) {
+                    if (metadataDiagnosticList
+                        .get(i)
+                        .get("metaDataName")
+                        .asText()
+                        .equalsIgnoreCase(MetadataDiagnosticsContext.MetadataType.PARTITION_KEY_RANGE_LOOK_UP.name())) {
+                        pkRangesLookup = metadataDiagnosticList.get(i);
+                        break;
+                    }
+                }
+
+                assertThat(pkRangesLookup).isNotNull();
+                if (faultInjectionServerErrorType == FaultInjectionServerErrorType.CONNECTION_DELAY) {
+                    assertThat(pkRangesLookup.get("durationinMS").asLong()).isGreaterThanOrEqualTo(45 * 1000 * Math.min(applyLimit, 3)); // the duration will be at least one connection timeout
+                }
+
+                if (faultInjectionServerErrorType == FaultInjectionServerErrorType.RESPONSE_DELAY) {
+                    assertThat(pkRangesLookup.get("durationinMS").asLong()).isGreaterThanOrEqualTo(500 * Math.min(applyLimit, 3)); // the duration will be at least one response timeout
+                }
+
+            } catch (CosmosException cosmosException) {
+                fail("CreateItem should have succeeded. " + cosmosException.getDiagnostics());
+            }
+        } finally {
+            pkRangesConnectionDelayRule.disable();
+            dataOperationGoneRule.disable();
+            safeClose(testClient);
+        }
+    }
+
+    @Test(groups = { "multi-master" }, dataProvider = "preferredRegionsConfigProvider", timeOut = 40 * TIMEOUT)
+    public void faultInjectionServerErrorRuleTests_CollectionRead_ConnectionDelay(boolean shouldInjectPreferredRegionsOnClient) throws JsonProcessingException {
+
+        // We need to create a new client because client may have marked region unavailable in other tests
+        // which can impact the test result
+        CosmosAsyncClient testClient = getClientBuilder()
+            .contentResponseOnWriteEnabled(true)
+            .preferredRegions(shouldInjectPreferredRegionsOnClient ? this.writePreferredLocations : Collections.emptyList())
+            .buildAsyncClient();
+
+        CosmosAsyncContainer container =
+            testClient
+                .getDatabase(this.cosmosAsyncContainer.getDatabase().getId())
+                .getContainer(this.cosmosAsyncContainer.getId());
+
+        // Test to validate partition key ranges request is being injected connection timeout
+        String collectionReadConnectionDelay = "CollectionRead-connectionDelay-" + UUID.randomUUID();
+        FaultInjectionRule collectionReadConnectionDelayRule =
+            new FaultInjectionRuleBuilder(collectionReadConnectionDelay)
+                .condition(
+                    new FaultInjectionConditionBuilder()
+                        .region(this.writePreferredLocations.get(0))
+                        .operationType(FaultInjectionOperationType.METADATA_REQUEST_CONTAINER)
                         .build()
                 )
                 .result(
@@ -464,58 +676,62 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
                 .duration(Duration.ofMinutes(5))
                 .build();
 
-        FaultInjectionRule dataOperationGoneRule =
-            new FaultInjectionRuleBuilder("DataOperation-gone-" + UUID.randomUUID())
+        FaultInjectionRule dataOperationStaledCacheRule =
+            new FaultInjectionRuleBuilder("DataOperation-staledCache-" + UUID.randomUUID())
                 .condition(
                     new FaultInjectionConditionBuilder()
                         .operationType(FaultInjectionOperationType.CREATE_ITEM)
-                        .region(this.preferredLocations.get(0))
+                        .region(this.writePreferredLocations.get(0))
                         .build())
                 .result(
                     FaultInjectionResultBuilders
-                        .getResultBuilder(FaultInjectionServerErrorType.PARTITION_IS_SPLITTING) // using partition split to trigger routing map refresh flow
+                        .getResultBuilder(FaultInjectionServerErrorType.NAME_CACHE_IS_STALE)
+                        .times(1)// using staled cache to trigger collection cache refresh flow
                         .build()
                 )
                 .duration(Duration.ofMinutes(5))
                 .build();
         try {
-            // create few items to first make sure the collection cache, pkRanges cache is being populated
+            // issue few requests to first populate all the necessary caches
+            // as connection delay will impact all other operations, and in this test, we want to limit the scope to only collection read
             for (int i = 0; i < 10; i++) {
-                container.createItem(TestItem.createNewItem()).block();
+                container.createItem(TestObject.create()).block();
             }
 
             CosmosFaultInjectionHelper.configureFaultInjectionRules(
                     container,
-                    Arrays.asList(pkRangesConnectionDelayRule, dataOperationGoneRule))
+                    Arrays.asList(collectionReadConnectionDelayRule, dataOperationStaledCacheRule))
                 .block();
 
             try {
-                CosmosDiagnostics cosmosDiagnostics = container.createItem(TestItem.createNewItem()).block().getDiagnostics();
-                fail("CreateItem should have failed. " + cosmosDiagnostics);
-            } catch (CosmosException cosmosException) {
-                CosmosDiagnostics cosmosDiagnostics = cosmosException.getDiagnostics();
+                CosmosDiagnostics cosmosDiagnostics = container.createItem(TestObject.create()).block().getDiagnostics();
 
-                // validate PARTITION_KEY_RANGE_LOOK_UP
+                // validate CONTAINER_LOOK_UP
                 ObjectNode diagnosticsNode = (ObjectNode) Utils.getSimpleObjectMapper().readTree(cosmosDiagnostics.toString());
                 JsonNode metadataDiagnosticsContext = diagnosticsNode.get("metadataDiagnosticsContext");
                 ArrayNode metadataDiagnosticList = (ArrayNode) metadataDiagnosticsContext.get("metadataDiagnosticList");
 
                 assertThat(metadataDiagnosticList.size()).isGreaterThan(0);
 
-                JsonNode pkRangesLookup = null;
+                JsonNode containerLookup = null;
                 for (int i = 0; i < metadataDiagnosticList.size(); i++) {
-                    if (metadataDiagnosticList.get(i).get("metaDataName").asText().equalsIgnoreCase("PARTITION_KEY_RANGE_LOOK_UP")) {
-                        pkRangesLookup = metadataDiagnosticList.get(i);
+                    if (metadataDiagnosticList.get(i)
+                        .get("metaDataName")
+                        .asText()
+                        .equalsIgnoreCase(MetadataDiagnosticsContext.MetadataType.CONTAINER_LOOK_UP.name())) {
+                        containerLookup = metadataDiagnosticList.get(i);
                         break;
                     }
                 }
 
-                assertThat(pkRangesLookup).isNotNull();
-                assertThat(pkRangesLookup.get("durationinMS").asLong()).isGreaterThanOrEqualTo(45000); // the duration will be at least one timeout
+                assertThat(containerLookup).isNotNull();
+                assertThat(containerLookup.get("durationinMS").asLong()).isGreaterThanOrEqualTo(45000); // the duration will be at least one timeout
+            } catch (CosmosException cosmosException) {
+                fail("CreateItem should have succeeded. " + cosmosException.getDiagnostics());
             }
         } finally {
-            pkRangesConnectionDelayRule.disable();
-            dataOperationGoneRule.disable();
+            collectionReadConnectionDelayRule.disable();
+            dataOperationStaledCacheRule.disable();
             safeClose(testClient);
         }
     }
@@ -525,26 +741,27 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
         safeClose(this.client);
     }
 
-    private Map<String, String> getRegionMap(DatabaseAccount databaseAccount, boolean writeOnly) {
-        Iterator<DatabaseAccountLocation> locationIterator =
-            writeOnly ? databaseAccount.getWritableLocations().iterator() : databaseAccount.getReadableLocations().iterator();
-        Map<String, String> regionMap = new ConcurrentHashMap<>();
-
-        while (locationIterator.hasNext()) {
-            DatabaseAccountLocation accountLocation = locationIterator.next();
-            regionMap.put(accountLocation.getName(), accountLocation.getEndpoint());
-        }
-
-        return regionMap;
-    }
-
     private void validateFaultInjectionRuleAppliedForAddressResolution(
         CosmosDiagnostics cosmosDiagnostics,
         String ruleId,
-        int failureInjectedExpectedCount) throws JsonProcessingException {
+        int failureInjectedExpectedCount,
+        boolean isQueryOperation) throws JsonProcessingException {
 
         ObjectNode diagnosticsNode = (ObjectNode) Utils.getSimpleObjectMapper().readTree(cosmosDiagnostics.toString());
-        JsonNode addressResolutionStatistics = diagnosticsNode.get("addressResolutionStatistics");
+        JsonNode addressResolutionStatistics;
+
+        if (isQueryOperation) {
+
+            ArrayNode arrayNode = (ArrayNode) diagnosticsNode.get("clientSideRequestStatistics");
+
+            assertThat(arrayNode).isNotNull();
+            assertThat(arrayNode.get(0)).isNotNull();
+
+            addressResolutionStatistics = arrayNode.get(0).get("addressResolutionStatistics");
+        } else {
+            addressResolutionStatistics = diagnosticsNode.get("addressResolutionStatistics");
+        }
+
         Iterator<Map.Entry<String, JsonNode>> addressResolutionIterator = addressResolutionStatistics.fields();
         int failureInjectedCount = 0;
         while (addressResolutionIterator.hasNext()) {
@@ -556,5 +773,65 @@ public class FaultInjectionMetadataRequestRuleTests extends TestSuiteBase {
         }
 
         assertThat(failureInjectedCount).isEqualTo(failureInjectedExpectedCount);
+    }
+
+    private static boolean isNonWriteDocumentOperation(OperationType operationType) {
+        return operationType == OperationType.Read ||
+            operationType == OperationType.Query ||
+            operationType == OperationType.ReadFeed;
+    }
+
+    private static AccountLevelLocationContext getAccountLevelLocationContext(DatabaseAccount databaseAccount, boolean writeOnly) {
+        Iterator<DatabaseAccountLocation> locationIterator =
+            writeOnly ? databaseAccount.getWritableLocations().iterator() : databaseAccount.getReadableLocations().iterator();
+
+        List<String> serviceOrderedReadableRegions = new ArrayList<>();
+        List<String> serviceOrderedWriteableRegions = new ArrayList<>();
+        Map<String, String> regionMap = new ConcurrentHashMap<>();
+
+        while (locationIterator.hasNext()) {
+            DatabaseAccountLocation accountLocation = locationIterator.next();
+            regionMap.put(accountLocation.getName(), accountLocation.getEndpoint());
+
+            if (writeOnly) {
+                serviceOrderedWriteableRegions.add(accountLocation.getName());
+            } else {
+                serviceOrderedReadableRegions.add(accountLocation.getName());
+            }
+        }
+
+        return new AccountLevelLocationContext(
+            serviceOrderedReadableRegions,
+            serviceOrderedWriteableRegions,
+            regionMap);
+    }
+
+    private static void validate(AccountLevelLocationContext accountLevelLocationContext, boolean isWriteOnly) {
+
+        assertThat(accountLevelLocationContext).isNotNull();
+
+        if (isWriteOnly) {
+            assertThat(accountLevelLocationContext.serviceOrderedWriteableRegions).isNotNull();
+            assertThat(accountLevelLocationContext.serviceOrderedWriteableRegions.size()).isGreaterThanOrEqualTo(1);
+        } else {
+            assertThat(accountLevelLocationContext.serviceOrderedReadableRegions).isNotNull();
+            assertThat(accountLevelLocationContext.serviceOrderedReadableRegions.size()).isGreaterThanOrEqualTo(1);
+        }
+    }
+
+    private static class AccountLevelLocationContext {
+        private final List<String> serviceOrderedReadableRegions;
+        private final List<String> serviceOrderedWriteableRegions;
+        private final Map<String, String> regionNameToEndpoint;
+
+        public AccountLevelLocationContext(
+            List<String> serviceOrderedReadableRegions,
+            List<String> serviceOrderedWriteableRegions,
+            Map<String, String> regionNameToEndpoint) {
+
+            this.serviceOrderedReadableRegions = serviceOrderedReadableRegions;
+            this.serviceOrderedWriteableRegions = serviceOrderedWriteableRegions;
+            this.regionNameToEndpoint = regionNameToEndpoint;
+        }
     }
 }

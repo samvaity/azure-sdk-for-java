@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Assertions;
 public final class IngressStickySessionsTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        IngressStickySessions model =
-            BinaryData.fromString("{\"affinity\":\"sticky\"}").toObject(IngressStickySessions.class);
+        IngressStickySessions model
+            = BinaryData.fromString("{\"affinity\":\"sticky\"}").toObject(IngressStickySessions.class);
         Assertions.assertEquals(Affinity.STICKY, model.affinity());
     }
 

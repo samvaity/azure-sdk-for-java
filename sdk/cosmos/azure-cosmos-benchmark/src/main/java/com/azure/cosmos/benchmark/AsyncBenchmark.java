@@ -3,143 +3,157 @@
 
 package com.azure.cosmos.benchmark;
 
+import com.azure.core.credential.TokenCredential;
 import com.azure.cosmos.ConnectionMode;
 import com.azure.cosmos.CosmosAsyncClient;
 import com.azure.cosmos.CosmosAsyncContainer;
 import com.azure.cosmos.CosmosAsyncDatabase;
 import com.azure.cosmos.CosmosClientBuilder;
-import com.azure.cosmos.CosmosDiagnosticsHandler;
 import com.azure.cosmos.CosmosDiagnosticsThresholds;
 import com.azure.cosmos.CosmosContainerProactiveInitConfigBuilder;
 import com.azure.cosmos.CosmosException;
 import com.azure.cosmos.DirectConnectionConfig;
 import com.azure.cosmos.GatewayConnectionConfig;
+import com.azure.cosmos.Http2ConnectionConfig;
 import com.azure.cosmos.implementation.HttpConstants;
+import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import com.azure.cosmos.models.CosmosClientTelemetryConfig;
-import com.azure.cosmos.models.CosmosContainerIdentity;
 import com.azure.cosmos.models.CosmosMicrometerMetricsOptions;
+import com.azure.cosmos.models.CosmosContainerIdentity;
 import com.azure.cosmos.models.PartitionKey;
+import com.azure.cosmos.models.CosmosBulkExecutionOptions;
+import com.azure.cosmos.models.CosmosBulkOperationResponse;
+import com.azure.cosmos.models.CosmosBulkOperations;
+import com.azure.cosmos.models.CosmosItemOperation;
 import com.azure.cosmos.models.ThroughputProperties;
-import com.codahale.metrics.ConsoleReporter;
-import com.codahale.metrics.CsvReporter;
-import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricFilter;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.ScheduledReporter;
-import com.codahale.metrics.Timer;
-import com.codahale.metrics.graphite.Graphite;
-import com.codahale.metrics.graphite.GraphiteReporter;
-import com.codahale.metrics.jvm.CachedThreadStatesGaugeSet;
-import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
-import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
+
 import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.mpierce.metrics.reservoir.hdrhistogram.HdrHistogramResetOnSnapshotReservoir;
-import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.retry.Retry;
-
-import java.net.InetSocketAddress;
+import reactor.core.scheduler.Scheduler;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-abstract class AsyncBenchmark<T> {
-    private final MetricRegistry metricsRegistry = new MetricRegistry();
-    private final ScheduledReporter reporter;
+abstract class AsyncBenchmark<T> implements Benchmark {
 
-    private volatile Meter successMeter;
-    private volatile Meter failureMeter;
+    private static final ImplementationBridgeHelpers.CosmosClientBuilderHelper.CosmosClientBuilderAccessor clientBuilderAccessor
+        = ImplementationBridgeHelpers.CosmosClientBuilderHelper.getCosmosClientBuilderAccessor();
+
+    // Shared Reactor scheduler for benchmark workload dispatch.
+    // Uses Schedulers.parallel() (global shared singleton). Must NOT be disposed by the benchmark.
+    final Scheduler benchmarkScheduler;
+
     private boolean databaseCreated;
     private boolean collectionCreated;
 
-    final Logger logger;
-    final CosmosAsyncClient cosmosClient;
+    static final Logger logger = LoggerFactory.getLogger(AsyncBenchmark.class);
+    final CosmosAsyncClient benchmarkWorkloadClient;
     CosmosAsyncContainer cosmosAsyncContainer;
     CosmosAsyncDatabase cosmosAsyncDatabase;
     final String partitionKey;
-    final Configuration configuration;
+    final TenantWorkloadConfig workloadConfig;
     final List<PojoizedJson> docsToRead;
-    final Semaphore concurrencyControlSemaphore;
-    Timer latency;
 
-    private static final String SUCCESS_COUNTER_METER_NAME = "#Successful Operations";
-    private static final String FAILURE_COUNTER_METER_NAME = "#Unsuccessful Operations";
-    private static final String LATENCY_METER_NAME = "latency";
+    AsyncBenchmark(TenantWorkloadConfig cfg, Scheduler scheduler) {
 
-    private AtomicBoolean warmupMode = new AtomicBoolean(false);
+        workloadConfig = cfg;
+        this.benchmarkScheduler = scheduler;
 
-    AsyncBenchmark(Configuration cfg) {
+        final TokenCredential credential = cfg.isManagedIdentityRequired()
+            ? cfg.buildTokenCredential()
+            : null;
 
-        logger = LoggerFactory.getLogger(this.getClass());
-        configuration = cfg;
+        boolean isManagedIdentityRequired = cfg.isManagedIdentityRequired();
 
-        CosmosClientBuilder cosmosClientBuilder = new CosmosClientBuilder()
-            .endpoint(cfg.getServiceEndpoint())
-            .key(cfg.getMasterKey())
-            .preferredRegions(cfg.getPreferredRegionsList())
-            .consistencyLevel(cfg.getConsistencyLevel())
-            .userAgentSuffix(configuration.getApplicationName())
-            .contentResponseOnWriteEnabled(cfg.isContentResponseOnWriteEnabled());
+        CosmosClientBuilder benchmarkSpecificClientBuilder = isManagedIdentityRequired ?
+                new CosmosClientBuilder()
+                        .credential(credential) :
+                new CosmosClientBuilder()
+                        .key(cfg.getMasterKey());
+
+        benchmarkSpecificClientBuilder = benchmarkSpecificClientBuilder
+                .endpoint(cfg.getServiceEndpoint())
+                .preferredRegions(cfg.getPreferredRegionsList())
+                .consistencyLevel(cfg.getConsistencyLevel())
+                .userAgentSuffix(cfg.getApplicationName())
+                .contentResponseOnWriteEnabled(cfg.isContentResponseOnWriteEnabled())
+                .connectionSharingAcrossClientsEnabled(cfg.isConnectionSharingAcrossClientsEnabled());
+
+        clientBuilderAccessor
+            .setRegionScopedSessionCapturingEnabled(benchmarkSpecificClientBuilder, cfg.isRegionScopedSessionContainerEnabled());
 
         CosmosClientTelemetryConfig telemetryConfig = new CosmosClientTelemetryConfig()
-            .sendClientTelemetryToService(cfg.isClientTelemetryEnabled())
             .diagnosticsThresholds(
                 new CosmosDiagnosticsThresholds()
                     .setPointOperationLatencyThreshold(cfg.getPointOperationThreshold())
                     .setNonPointOperationLatencyThreshold(cfg.getNonPointOperationThreshold())
             );
 
-        if (configuration.isDefaultLog4jLoggerEnabled()) {
-            telemetryConfig.diagnosticsHandler(CosmosDiagnosticsHandler.DEFAULT_LOGGING_HANDLER);
+        if (cfg.isDefaultLog4jLoggerEnabled()) {
+            logger.info("Diagnostics thresholds Point: {}, Non-Point: {}",
+                cfg.getPointOperationThreshold(),
+                cfg.getNonPointOperationThreshold());
+            telemetryConfig.diagnosticsHandler(
+                new CosmosSamplingDiagnosticsLogger(10, 10_000)
+            );
         }
 
-        MeterRegistry registry = configuration.getAzureMonitorMeterRegistry();
-        if (registry != null) {
-            logger.info("USING AZURE METRIC REGISTRY - isClientTelemetryEnabled {}", cfg.isClientTelemetryEnabled());
-            telemetryConfig.metricsOptions(new CosmosMicrometerMetricsOptions().meterRegistry(registry));
+        // Cosmos SDK micrometer metrics registry (injected by orchestrator)
+        MeterRegistry micrometerRegistry = cfg.getCosmosMicrometerRegistry();
+        if (micrometerRegistry != null) {
+            logger.info("Using injected Cosmos micrometer registry: {}", micrometerRegistry.getClass().getSimpleName());
+            CosmosMicrometerMetricsOptions metricOptions = new CosmosMicrometerMetricsOptions()
+                .meterRegistry(micrometerRegistry)
+                .applyDiagnosticThresholdsForTransportLevelMeters(true)
+                .setEnabled(true);
+            telemetryConfig.metricsOptions(metricOptions);
         } else {
-            registry = configuration.getGraphiteMeterRegistry();
-
-            if (registry != null) {
-                logger.info("USING GRAPHITE METRIC REGISTRY - isClientTelemetryEnabled {}", cfg.isClientTelemetryEnabled());
-                telemetryConfig.metricsOptions(new CosmosMicrometerMetricsOptions().meterRegistry(registry));
-            } else {
-                logger.info("USING DEFAULT/GLOBAL METRIC REGISTRY - isClientTelemetryEnabled {}", cfg.isClientTelemetryEnabled());
-                telemetryConfig.metricsOptions(
-                    new CosmosMicrometerMetricsOptions().meterRegistry(null));
-            }
+            telemetryConfig.metricsOptions(
+                new CosmosMicrometerMetricsOptions().meterRegistry(null));
         }
 
-        cosmosClientBuilder.clientTelemetryConfig(telemetryConfig);
+        benchmarkSpecificClientBuilder.clientTelemetryConfig(telemetryConfig);
 
         if (cfg.getConnectionMode().equals(ConnectionMode.DIRECT)) {
-            cosmosClientBuilder = cosmosClientBuilder.directMode(DirectConnectionConfig.getDefaultConfig());
+            benchmarkSpecificClientBuilder = benchmarkSpecificClientBuilder.directMode(DirectConnectionConfig.getDefaultConfig());
         } else {
             GatewayConnectionConfig gatewayConnectionConfig = new GatewayConnectionConfig();
             gatewayConnectionConfig.setMaxConnectionPoolSize(cfg.getMaxConnectionPoolSize());
-            cosmosClientBuilder = cosmosClientBuilder.gatewayMode(gatewayConnectionConfig);
+            if (cfg.isHttp2Enabled()) {
+                Http2ConnectionConfig http2Config = gatewayConnectionConfig.getHttp2ConnectionConfig();
+                http2Config.setEnabled(true);
+                if (cfg.getHttp2MaxConcurrentStreams() != null) {
+                    http2Config.setMaxConcurrentStreams(cfg.getHttp2MaxConcurrentStreams());
+                }
+                logger.info("HTTP/2 enabled with maxConcurrentStreams: {}",
+                    http2Config.getMaxConcurrentStreams());
+            }
+            benchmarkSpecificClientBuilder = benchmarkSpecificClientBuilder.gatewayMode(gatewayConnectionConfig);
         }
-        cosmosClient = cosmosClientBuilder.buildAsyncClient();
+
+        benchmarkWorkloadClient = benchmarkSpecificClientBuilder.buildAsyncClient();
 
         try {
-            cosmosAsyncDatabase = cosmosClient.getDatabase(this.configuration.getDatabaseId());
+            cosmosAsyncDatabase = benchmarkWorkloadClient.getDatabase(cfg.getDatabaseId());
             cosmosAsyncDatabase.read().block();
         } catch (CosmosException e) {
             if (e.getStatusCode() == HttpConstants.StatusCodes.NOTFOUND) {
-                cosmosClient.createDatabase(cfg.getDatabaseId()).block();
-                cosmosAsyncDatabase = cosmosClient.getDatabase(cfg.getDatabaseId());
-                logger.info("Database {} is created for this test", this.configuration.getDatabaseId());
+
+                if (isManagedIdentityRequired) {
+                    throw new IllegalStateException("If managed identity is required, " +
+                        "either pre-create a database and a container or use the management SDK.");
+                }
+
+                benchmarkWorkloadClient.createDatabase(cfg.getDatabaseId()).block();
+                cosmosAsyncDatabase = benchmarkWorkloadClient.getDatabase(cfg.getDatabaseId());
+                logger.info("Database {} is created for this test", cfg.getDatabaseId());
                 databaseCreated = true;
             } else {
                 throw e;
@@ -147,19 +161,32 @@ abstract class AsyncBenchmark<T> {
         }
 
         try {
-            cosmosAsyncContainer = cosmosAsyncDatabase.getContainer(this.configuration.getCollectionId());
+            cosmosAsyncContainer = cosmosAsyncDatabase.getContainer(cfg.getContainerId());
             cosmosAsyncContainer.read().block();
 
         } catch (CosmosException e) {
             if (e.getStatusCode() == HttpConstants.StatusCodes.NOTFOUND) {
+
+                if (isManagedIdentityRequired) {
+                    throw new IllegalStateException("If managed identity is required, " +
+                        "either pre-create a database and a container or use the management SDK.");
+                }
+
                 cosmosAsyncDatabase.createContainer(
-                    this.configuration.getCollectionId(),
-                    Configuration.DEFAULT_PARTITION_KEY_PATH,
-                    ThroughputProperties.createManualThroughput(this.configuration.getThroughput())
+                    cfg.getContainerId(),
+                    TenantWorkloadConfig.DEFAULT_PARTITION_KEY_PATH,
+                    ThroughputProperties.createManualThroughput(cfg.getThroughput())
                 ).block();
 
-                cosmosAsyncContainer = cosmosAsyncDatabase.getContainer(this.configuration.getCollectionId());
-                logger.info("Collection {} is created for this test", this.configuration.getCollectionId());
+                cosmosAsyncContainer = cosmosAsyncDatabase.getContainer(cfg.getContainerId());
+
+                try {
+                    Thread.sleep(30_000);
+                } catch (Exception exception) {
+                    throw new RuntimeException(exception);
+                }
+
+                logger.info("Collection {} is created for this test", cfg.getContainerId());
                 collectionCreated = true;
             } else {
                 throw e;
@@ -169,334 +196,218 @@ abstract class AsyncBenchmark<T> {
         partitionKey = cosmosAsyncContainer.read().block().getProperties().getPartitionKeyDefinition()
             .getPaths().iterator().next().split("/")[1];
 
-        concurrencyControlSemaphore = new Semaphore(cfg.getConcurrency());
-
-        ArrayList<Flux<PojoizedJson>> createDocumentObservables = new ArrayList<>();
-
-        if (configuration.getOperationType() != Configuration.Operation.WriteLatency
-                && configuration.getOperationType() != Configuration.Operation.WriteThroughput
-                && configuration.getOperationType() != Configuration.Operation.ReadMyWrites) {
+        if (cfg.getOperationType() != Operation.WriteThroughput
+            && cfg.getOperationType() != Operation.ReadMyWrites) {
             logger.info("PRE-populating {} documents ....", cfg.getNumberOfPreCreatedDocuments());
             String dataFieldValue = RandomStringUtils.randomAlphabetic(cfg.getDocumentDataFieldSize());
-            for (int i = 0; i < cfg.getNumberOfPreCreatedDocuments(); i++) {
-                String uuid = UUID.randomUUID().toString();
-                PojoizedJson newDoc = BenchmarkHelper.generateDocument(uuid,
-                    dataFieldValue,
-                    partitionKey,
-                    configuration.getDocumentDataFieldCount());
-                Flux<PojoizedJson> obs = cosmosAsyncContainer
-                    .createItem(newDoc)
-                    .retryWhen(Retry.max(5).filter((error) -> {
-                        if (!(error instanceof CosmosException)) {
-                            return false;
-                        }
-                        final CosmosException cosmosException = (CosmosException)error;
-                        if (cosmosException.getStatusCode() == 410 ||
-                                cosmosException.getStatusCode() == 408 ||
-                                cosmosException.getStatusCode() == 429 ||
-                                cosmosException.getStatusCode() == 503) {
-                            return true;
-                        }
+            List<PojoizedJson> generatedDocs = new ArrayList<>();
 
-                        return false;
-                    }))
-                    .onErrorResume(
-                        (error) -> {
-                            if (!(error instanceof CosmosException)) {
-                                return false;
-                            }
-                            final CosmosException cosmosException = (CosmosException)error;
-                            if (cosmosException.getStatusCode() == 409) {
-                                return true;
-                            }
+            Flux<CosmosItemOperation> bulkOperationFlux = Flux.range(0, cfg.getNumberOfPreCreatedDocuments())
+                .map(i -> {
+                    String uuid = UUID.randomUUID().toString();
+                    PojoizedJson newDoc = BenchmarkHelper.generateDocument(uuid,
+                        dataFieldValue,
+                        partitionKey,
+                        cfg.getDocumentDataFieldCount());
+                    generatedDocs.add(newDoc);
+                    return CosmosBulkOperations.getCreateItemOperation(newDoc, new PartitionKey(uuid));
+                });
 
-                            return false;
-                        },
-                        (conflictException) -> cosmosAsyncContainer.readItem(
-                            uuid, new PartitionKey(partitionKey), PojoizedJson.class)
-                    )
-                    .map(resp -> {
-                        PojoizedJson x =
-                            resp.getItem();
-                        return x;
-                    })
-                    .flux();
-                createDocumentObservables.add(obs);
-            }
+            CosmosBulkExecutionOptions bulkExecutionOptions = new CosmosBulkExecutionOptions();
+            List<CosmosBulkOperationResponse<Object>> failedResponses = Collections.synchronizedList(new ArrayList<>());
+            cosmosAsyncContainer
+                .executeBulkOperations(bulkOperationFlux, bulkExecutionOptions)
+                .doOnNext(response -> {
+                    if (response.getResponse() == null || !response.getResponse().isSuccessStatusCode()) {
+                        failedResponses.add(response);
+                    }
+                })
+                .blockLast(Duration.ofMinutes(10));
+
+            BenchmarkHelper.retryFailedBulkOperations(failedResponses, cosmosAsyncContainer,
+                cfg.getConcurrency());
+
+            docsToRead = generatedDocs;
+        } else {
+            docsToRead = new ArrayList<>();
         }
-
-        docsToRead = Flux.merge(Flux.fromIterable(createDocumentObservables), 100).collectList().block();
         logger.info("Finished pre-populating {} documents", cfg.getNumberOfPreCreatedDocuments());
 
         init();
 
-        if (configuration.isEnableJvmStats()) {
-            metricsRegistry.register("gc", new GarbageCollectorMetricSet());
-            metricsRegistry.register("threads", new CachedThreadStatesGaugeSet(10, TimeUnit.SECONDS));
-            metricsRegistry.register("memory", new MemoryUsageGaugeSet());
-        }
-
-        if (configuration.getGraphiteEndpoint() != null) {
-            final Graphite graphite = new Graphite(new InetSocketAddress(
-                    configuration.getGraphiteEndpoint(),
-                    configuration.getGraphiteEndpointPort()));
-            reporter = GraphiteReporter.forRegistry(metricsRegistry)
-                .prefixedWith(configuration.getOperationType().name())
-                .convertDurationsTo(TimeUnit.MILLISECONDS)
-                .convertRatesTo(TimeUnit.SECONDS)
-                .filter(MetricFilter.ALL)
-                .build(graphite);
-        } else if (configuration.getReportingDirectory() != null) {
-            reporter = CsvReporter.forRegistry(metricsRegistry)
-                .convertDurationsTo(TimeUnit.MILLISECONDS)
-                .convertRatesTo(TimeUnit.SECONDS)
-                .build(configuration.getReportingDirectory());
-        } else {
-            reporter = ConsoleReporter.forRegistry(metricsRegistry)
-                .convertDurationsTo(TimeUnit.MILLISECONDS)
-                .convertRatesTo(TimeUnit.SECONDS)
-                .build();
-        }
-
-        boolean shouldOpenConnectionsAndInitCaches = configuration.getConnectionMode() == ConnectionMode.DIRECT
-                && configuration.isProactiveConnectionManagementEnabled()
-                && !configuration.isUseUnWarmedUpContainer();
-
-        CosmosClientBuilder cosmosClientBuilderForOpeningConnections = new CosmosClientBuilder()
-                .endpoint(configuration.getServiceEndpoint())
-                .key(configuration.getMasterKey())
-                .preferredRegions(configuration.getPreferredRegionsList())
-                .directMode();
+        // Proactive connection management (Direct mode only)
+        boolean shouldOpenConnectionsAndInitCaches = cfg.getConnectionMode() == ConnectionMode.DIRECT
+                && cfg.isProactiveConnectionManagementEnabled()
+                && !cfg.isUseUnWarmedUpContainer();
 
         if (shouldOpenConnectionsAndInitCaches) {
-
             logger.info("Proactively establishing connections...");
 
             List<CosmosContainerIdentity> cosmosContainerIdentities = new ArrayList<>();
-            CosmosContainerIdentity cosmosContainerIdentity = new CosmosContainerIdentity(
-                    configuration.getDatabaseId(),
-                    configuration.getCollectionId()
-            );
-            cosmosContainerIdentities.add(cosmosContainerIdentity);
-            CosmosContainerProactiveInitConfigBuilder cosmosContainerProactiveInitConfigBuilder = new
-                    CosmosContainerProactiveInitConfigBuilder(cosmosContainerIdentities)
-                    .setProactiveConnectionRegionsCount(configuration.getProactiveConnectionRegionsCount());
+            cosmosContainerIdentities.add(new CosmosContainerIdentity(
+                cfg.getDatabaseId(), cfg.getContainerId()));
 
-            if (configuration.getAggressiveWarmupDuration() == Duration.ZERO) {
+            CosmosContainerProactiveInitConfigBuilder proactiveInitConfigBuilder =
+                new CosmosContainerProactiveInitConfigBuilder(cosmosContainerIdentities)
+                    .setProactiveConnectionRegionsCount(cfg.getProactiveConnectionRegionsCount());
 
-                cosmosClientBuilder = cosmosClientBuilderForOpeningConnections
-                        .openConnectionsAndInitCaches(cosmosContainerProactiveInitConfigBuilder.build())
-                        .endpointDiscoveryEnabled(true);
+            CosmosClientBuilder proactiveClientBuilder = isManagedIdentityRequired ?
+                new CosmosClientBuilder().credential(credential) :
+                new CosmosClientBuilder().key(cfg.getMasterKey());
+            proactiveClientBuilder = proactiveClientBuilder
+                .endpoint(cfg.getServiceEndpoint())
+                .preferredRegions(cfg.getPreferredRegionsList())
+                .directMode();
+
+            if (cfg.getAggressiveWarmupDuration().equals(Duration.ZERO)) {
+                proactiveClientBuilder = proactiveClientBuilder
+                    .openConnectionsAndInitCaches(proactiveInitConfigBuilder.build())
+                    .endpointDiscoveryEnabled(true);
             } else {
-
-                logger.info("Setting an aggressive proactive connection establishment duration of {}", configuration.getAggressiveWarmupDuration());
-
-                cosmosContainerProactiveInitConfigBuilder = cosmosContainerProactiveInitConfigBuilder
-                        .setAggressiveWarmupDuration(configuration.getAggressiveWarmupDuration());
-
-                cosmosClientBuilder = cosmosClientBuilder
-                        .openConnectionsAndInitCaches(cosmosContainerProactiveInitConfigBuilder.build())
-                        .endpointDiscoveryEnabled(true);
+                logger.info("Setting aggressive proactive connection establishment duration: {}",
+                    cfg.getAggressiveWarmupDuration());
+                proactiveInitConfigBuilder.setAggressiveWarmupDuration(cfg.getAggressiveWarmupDuration());
+                benchmarkSpecificClientBuilder = benchmarkSpecificClientBuilder
+                    .openConnectionsAndInitCaches(proactiveInitConfigBuilder.build())
+                    .endpointDiscoveryEnabled(true);
             }
 
-            if (configuration.getMinConnectionPoolSizePerEndpoint() >= 1) {
-                System.setProperty("COSMOS.MIN_CONNECTION_POOL_SIZE_PER_ENDPOINT", configuration.getMinConnectionPoolSizePerEndpoint().toString());
-                logger.info("Min connection pool size per endpoint : {}", System.getProperty("COSMOS.MIN_CONNECTION_POOL_SIZE_PER_ENDPOINT"));
+            try (CosmosAsyncClient openConnectionsClient = proactiveClientBuilder.buildAsyncClient()) {
+                if (!isManagedIdentityRequired) {
+                    openConnectionsClient.createDatabaseIfNotExists(cosmosAsyncDatabase.getId()).block();
+                }
+                CosmosAsyncDatabase dbForProactive = openConnectionsClient.getDatabase(cosmosAsyncDatabase.getId());
+                if (!isManagedIdentityRequired) {
+                    dbForProactive.createContainerIfNotExists(cfg.getContainerId(), "/id").block();
+                }
+                cosmosAsyncContainer = dbForProactive.getContainer(cfg.getContainerId());
             }
-
-            CosmosAsyncClient openConnectionsAsyncClient = cosmosClientBuilder.buildAsyncClient();
-            openConnectionsAsyncClient.createDatabaseIfNotExists(cosmosAsyncDatabase.getId()).block();
-            CosmosAsyncDatabase databaseForProactiveConnectionManagement = openConnectionsAsyncClient.getDatabase(cosmosAsyncDatabase.getId());
-            databaseForProactiveConnectionManagement.createContainerIfNotExists(configuration.getCollectionId(), "/id").block();
-            cosmosAsyncContainer = databaseForProactiveConnectionManagement.getContainer(configuration.getCollectionId());
         }
 
-        if (!configuration.isProactiveConnectionManagementEnabled() && configuration.isUseUnWarmedUpContainer()) {
-
+        // Unwarmed container mode (Direct mode only)
+        if (!cfg.isProactiveConnectionManagementEnabled() && cfg.isUseUnWarmedUpContainer()) {
             logger.info("Creating unwarmed container");
 
-            CosmosAsyncClient clientForUnwarmedContainer = new CosmosClientBuilder()
-                    .endpoint(configuration.getServiceEndpoint())
-                    .key(configuration.getMasterKey())
-                    .preferredRegions(configuration.getPreferredRegionsList())
-                    .directMode()
-                    .buildAsyncClient();
+            CosmosClientBuilder unwarmedBuilder = isManagedIdentityRequired ?
+                new CosmosClientBuilder().credential(credential) :
+                new CosmosClientBuilder().key(cfg.getMasterKey());
 
-            clientForUnwarmedContainer.createDatabaseIfNotExists(configuration.getDatabaseId()).block();
-            CosmosAsyncDatabase databaseForUnwarmedContainer = clientForUnwarmedContainer.getDatabase(configuration.getDatabaseId());
-            databaseForUnwarmedContainer.createContainerIfNotExists(configuration.getCollectionId(), "/id").block();
-            cosmosAsyncContainer = databaseForUnwarmedContainer.getContainer(configuration.getCollectionId());
+            try (CosmosAsyncClient unwarmedClient = unwarmedBuilder
+                    .endpoint(cfg.getServiceEndpoint())
+                    .preferredRegions(cfg.getPreferredRegionsList())
+                    .directMode()
+                    .buildAsyncClient()) {
+
+                if (!isManagedIdentityRequired) {
+                    unwarmedClient.createDatabaseIfNotExists(cfg.getDatabaseId()).block();
+                }
+                CosmosAsyncDatabase dbForUnwarmed = unwarmedClient.getDatabase(cfg.getDatabaseId());
+                if (!isManagedIdentityRequired) {
+                    dbForUnwarmed.createContainerIfNotExists(cfg.getContainerId(), "/id").block();
+                }
+                cosmosAsyncContainer = dbForUnwarmed.getContainer(cfg.getContainerId());
+            }
         }
     }
 
     protected void init() {
     }
 
-    void shutdown() {
-        if (this.databaseCreated) {
+    public void shutdown() {
+        if (workloadConfig.isSuppressCleanup()) {
+            logger.info("Skipping cleanup of database/container (suppressCleanup=true)");
+        } else if (this.databaseCreated) {
             cosmosAsyncDatabase.delete().block();
-            logger.info("Deleted temporary database {} created for this test", this.configuration.getDatabaseId());
+            logger.info("Deleted temporary database {} created for this test", workloadConfig.getDatabaseId());
         } else if (this.collectionCreated) {
             cosmosAsyncContainer.delete().block();
-            logger.info("Deleted temporary collection {} created for this test", this.configuration.getCollectionId());
+            logger.info("Deleted temporary collection {} created for this test", workloadConfig.getContainerId());
         }
 
-        cosmosClient.close();
+        benchmarkWorkloadClient.close();
     }
 
     protected void onSuccess() {
     }
 
-    protected void initializeMetersIfSkippedEnoughOperations(AtomicLong count) {
-        if (configuration.getSkipWarmUpOperations() > 0) {
-            if (count.get() >= configuration.getSkipWarmUpOperations()) {
-                if (warmupMode.get()) {
-                    synchronized (this) {
-                        if (warmupMode.get()) {
-                            logger.info("Warmup phase finished. Starting capturing perf numbers ....");
-                            resetMeters();
-                            initializeMeter();
-                            reporter.start(configuration.getPrintingInterval(), TimeUnit.SECONDS);
-                            warmupMode.set(false);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     protected void onError(Throwable throwable) {
     }
 
-    protected abstract void performWorkload(BaseSubscriber<T> baseSubscriber, long i) throws Exception;
+    protected abstract Mono<T> performWorkload(long i);
 
-    private void resetMeters() {
-        metricsRegistry.remove(SUCCESS_COUNTER_METER_NAME);
-        metricsRegistry.remove(FAILURE_COUNTER_METER_NAME);
-        if (latencyAwareOperations(configuration.getOperationType())) {
-            metricsRegistry.remove(LATENCY_METER_NAME);
-        }
-    }
-
-    private void initializeMeter() {
-        successMeter = metricsRegistry.meter(SUCCESS_COUNTER_METER_NAME);
-        failureMeter = metricsRegistry.meter(FAILURE_COUNTER_METER_NAME);
-        if (latencyAwareOperations(configuration.getOperationType())) {
-            latency = metricsRegistry.register(LATENCY_METER_NAME, new Timer(new HdrHistogramResetOnSnapshotReservoir()));
-        }
-    }
-
-    private boolean latencyAwareOperations(Configuration.Operation operation) {
-        switch (configuration.getOperationType()) {
-            case ReadLatency:
-            case WriteLatency:
-            case QueryInClauseParallel:
-            case QueryCross:
-            case QuerySingle:
-            case QuerySingleMany:
-            case QueryParallel:
-            case QueryOrderby:
-            case QueryAggregate:
-            case QueryAggregateTopOrderby:
-            case QueryTopOrderby:
-            case Mixed:
-            case ReadAllItemsOfLogicalPartition:
-            case ReadManyLatency:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    void run() throws Exception {
-        initializeMeter();
-        if (configuration.getSkipWarmUpOperations() > 0) {
-            logger.info("Starting warm up phase. Executing {} operations to warm up ...", configuration.getSkipWarmUpOperations());
-            warmupMode.set(true);
-        } else {
-            reporter.start(configuration.getPrintingInterval(), TimeUnit.SECONDS);
-        }
+    @SuppressWarnings("unchecked")
+    public void run() throws Exception {
 
         long startTime = System.currentTimeMillis();
+        int concurrency = workloadConfig.getConcurrency();
 
-        AtomicLong count = new AtomicLong(0);
-        long i;
-
-        for ( i = 0; BenchmarkHelper.shouldContinue(startTime, i, configuration); i++) {
-
-            BaseSubscriber<T> baseSubscriber = new BaseSubscriber<T>() {
-                @Override
-                protected void hookOnSubscribe(Subscription subscription) {
-                    super.hookOnSubscribe(subscription);
-                }
-
-                @Override
-                protected void hookOnNext(T value) {
-                    logger.debug("hookOnNext: {}, count:{}", value, count.get());
-                }
-
-                @Override
-                protected void hookOnCancel() {
-                    this.hookOnError(new CancellationException());
-                }
-
-                @Override
-                protected void hookOnComplete() {
-                    initializeMetersIfSkippedEnoughOperations(count);
-                    successMeter.mark();
-                    concurrencyControlSemaphore.release();
-                    AsyncBenchmark.this.onSuccess();
-
-                    synchronized (count) {
-                        count.incrementAndGet();
-                        count.notify();
+        Flux<Long> source;
+        Duration maxDuration = workloadConfig.getMaxRunningTimeDuration();
+        if (maxDuration != null) {
+            // Time-based termination
+            final long deadline = startTime + maxDuration.toMillis();
+            source = Flux.generate(
+                AtomicLong::new,
+                (state, sink) -> {
+                    if (System.currentTimeMillis() < deadline) {
+                        sink.next(state.getAndIncrement());
+                    } else {
+                        sink.complete();
                     }
-                }
-
-                @Override
-                protected void hookOnError(Throwable throwable) {
-                    initializeMetersIfSkippedEnoughOperations(count);
-                    failureMeter.mark();
-
-                    logger.error("Encountered failure {} on thread {}" ,
-                        throwable.getMessage(), Thread.currentThread().getName(), throwable);
-                    concurrencyControlSemaphore.release();
-                    AsyncBenchmark.this.onError(throwable);
-
-                    synchronized (count) {
-                        count.incrementAndGet();
-                        count.notify();
+                    return state;
+                });
+        } else {
+            // Count-based termination using Flux.generate to avoid long-to-int truncation
+            long numberOfOps = workloadConfig.getNumberOfOperations();
+            source = Flux.generate(
+                AtomicLong::new,
+                (state, sink) -> {
+                    long current = state.getAndIncrement();
+                    if (current < numberOfOps) {
+                        sink.next(current);
+                    } else {
+                        sink.complete();
                     }
-                }
-            };
-
-            performWorkload(baseSubscriber, i);
+                    return state;
+                });
         }
 
-        synchronized (count) {
-            while (count.get() < i) {
-                count.wait();
-            }
-        }
+        AtomicLong completedCount = new AtomicLong(0);
+
+        source
+            .flatMap(i -> {
+                Mono<T> workload = performWorkload(i);
+                Mono<T> delayed = sparsityMono(i);
+                if (delayed != null) {
+                    workload = delayed.then(workload);
+                }
+                return workload
+                    .subscribeOn(benchmarkScheduler)
+                    .doOnSuccess(v -> {
+                        completedCount.incrementAndGet();
+                        AsyncBenchmark.this.onSuccess();
+                    })
+                    .doOnError(e -> {
+                        completedCount.incrementAndGet();
+                        logger.error("Encountered failure {} on thread {}",
+                            e.getMessage(), Thread.currentThread().getName(), e);
+                        AsyncBenchmark.this.onError(e);
+                    })
+                    .onErrorResume(e -> Mono.empty());
+            }, concurrency)
+            .blockLast();
 
         long endTime = System.currentTimeMillis();
         logger.info("[{}] operations performed in [{}] seconds.",
-            configuration.getNumberOfOperations(), (int) ((endTime - startTime) / 1000));
-
-        reporter.report();
-        reporter.close();
+            completedCount.get(), (int) ((endTime - startTime) / 1000));
     }
 
     protected Mono sparsityMono(long i) {
-        Duration duration = configuration.getSparsityWaitTime();
+        Duration duration = workloadConfig.getSparsityWaitTime();
         if (duration != null && !duration.isZero()) {
-            if (configuration.getSkipWarmUpOperations() > i) {
-                // don't wait on the initial warm up time.
-                return null;
-            }
-
             return Mono.delay(duration);
         }
-        else return null;
+        return null;
     }
+
 }

@@ -1,14 +1,2957 @@
 # Release History
 
-## 1.2.0-beta.1 (Unreleased)
+## 1.7.0-beta.1 (2026-02-25)
 
-### Features Added
+- Azure Resource Manager Recovery Services Backup client library for Java. This package contains Microsoft Azure SDK for Recovery Services Backup Management SDK. Open API 2.0 Specs for Azure RecoveryServices Backup service. Package api-version 2026-01-01-preview. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
 
 ### Breaking Changes
 
-### Bugs Fixed
+#### `models.ProtectionIntentResourceList` was removed
 
-### Other Changes
+#### `models.ResourceGuardProxies` was removed
+
+#### `models.JobResourceList` was removed
+
+#### `models.RecoveryPointResourceList` was removed
+
+#### `models.ProtectableContainerResourceList` was removed
+
+#### `models.WorkloadItemResourceList` was removed
+
+#### `models.ResourceGuardProxyBaseResourceList` was removed
+
+#### `models.ProtectedItemResourceList` was removed
+
+#### `models.ProtectionContainerResourceList` was removed
+
+#### `models.BackupManagementUsageList` was removed
+
+#### `models.ProtectionPolicyResourceList` was removed
+
+#### `models.BackupEngineBaseResourceList` was removed
+
+#### `models.IaaSvmProtectableItem` was removed
+
+#### `models.WorkloadProtectableItemResourceList` was removed
+
+#### `models.ClientDiscoveryResponse` was removed
+
+#### `models.AzureWorkloadSqlPointInTimeRecoveryPoint` was modified
+
+* `AzureWorkloadSqlPointInTimeRecoveryPoint()` was changed to private access
+* `withRecoveryPointMoveReadinessInfo(java.util.Map)` was removed
+* `withRecoveryPointProperties(models.RecoveryPointProperties)` was removed
+* `withRecoveryPointTimeInUtc(java.time.OffsetDateTime)` was removed
+* `withExtendedInfo(models.AzureWorkloadSqlRecoveryPointExtendedInfo)` was removed
+* `withRecoveryPointTierDetails(java.util.List)` was removed
+* `withTimeRanges(java.util.List)` was removed
+* `withType(models.RestorePointType)` was removed
+* `validate()` was removed
+
+#### `models.MabJobTaskDetails` was modified
+
+* `MabJobTaskDetails()` was changed to private access
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `validate()` was removed
+* `withTaskId(java.lang.String)` was removed
+* `withStatus(java.lang.String)` was removed
+* `withDuration(java.time.Duration)` was removed
+
+#### `models.AzureIaaSClassicComputeVMContainer` was modified
+
+* `validate()` was removed
+
+#### `models.IaaSvmContainer` was modified
+
+* `validate()` was removed
+
+#### `models.OperationStatusExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.TargetRestoreInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSapAsePointInTimeRestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.RestoreFileSpecs` was modified
+
+* `validate()` was removed
+
+#### `models.AzureIaaSComputeVMProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.AzureWorkloadPointInTimeRecoveryPoint` was modified
+
+* `withRecoveryPointProperties(models.RecoveryPointProperties)` was removed
+* `validate()` was removed
+* `withType(models.RestorePointType)` was removed
+* `models.AzureWorkloadPointInTimeRecoveryPoint withTimeRanges(java.util.List)` -> `models.AzureWorkloadPointInTimeRecoveryPoint withTimeRanges(java.util.List)`
+* `withRecoveryPointTierDetails(java.util.List)` was removed
+* `withRecoveryPointTimeInUtc(java.time.OffsetDateTime)` was removed
+* `withRecoveryPointMoveReadinessInfo(java.util.Map)` was removed
+
+#### `models.AzureFileShareProvisionIlrRequest` was modified
+
+* `validate()` was removed
+
+#### `models.RetentionDuration` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSapHanaHsr` was modified
+
+* `AzureVmWorkloadSapHanaHsr()` was changed to private access
+* `withBackupManagementType(java.lang.String)` was removed
+* `withSubprotectableitemcount(java.lang.Integer)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withParentUniqueName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withIsAutoProtected(java.lang.Boolean)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `validate()` was removed
+* `withServerName(java.lang.String)` was removed
+* `withIsProtectable(java.lang.Boolean)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withParentName(java.lang.String)` was removed
+* `withPrebackupvalidation(models.PreBackupValidation)` was removed
+
+#### `models.AzureWorkloadRecoveryPoint` was modified
+
+* `models.AzureWorkloadRecoveryPoint withRecoveryPointTimeInUtc(java.time.OffsetDateTime)` -> `models.AzureWorkloadRecoveryPoint withRecoveryPointTimeInUtc(java.time.OffsetDateTime)`
+* `models.AzureWorkloadRecoveryPoint withRecoveryPointMoveReadinessInfo(java.util.Map)` -> `models.AzureWorkloadRecoveryPoint withRecoveryPointMoveReadinessInfo(java.util.Map)`
+* `models.AzureWorkloadRecoveryPoint withRecoveryPointTierDetails(java.util.List)` -> `models.AzureWorkloadRecoveryPoint withRecoveryPointTierDetails(java.util.List)`
+* `models.AzureWorkloadRecoveryPoint withType(models.RestorePointType)` -> `models.AzureWorkloadRecoveryPoint withType(models.RestorePointType)`
+* `models.AzureWorkloadRecoveryPoint withRecoveryPointProperties(models.RecoveryPointProperties)` -> `models.AzureWorkloadRecoveryPoint withRecoveryPointProperties(models.RecoveryPointProperties)`
+* `validate()` was removed
+
+#### `models.OperationStatusValidateOperationExtendedInfo` was modified
+
+* `OperationStatusValidateOperationExtendedInfo()` was changed to private access
+* `withValidateOperationResponse(models.ValidateOperationResponse)` was removed
+* `validate()` was removed
+
+#### `models.AzureVMAppContainerProtectableContainer` was modified
+
+* `AzureVMAppContainerProtectableContainer()` was changed to private access
+* `validate()` was removed
+* `withHealthStatus(java.lang.String)` was removed
+* `withContainerId(java.lang.String)` was removed
+* `withBackupManagementType(models.BackupManagementType)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+
+#### `models.AzureVmWorkloadSapHanaSystemWorkloadItem` was modified
+
+* `AzureVmWorkloadSapHanaSystemWorkloadItem()` was changed to private access
+* `withServerName(java.lang.String)` was removed
+* `validate()` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withParentName(java.lang.String)` was removed
+* `withSubWorkloadItemCount(java.lang.Integer)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+
+#### `models.IaasVMRestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.OperationStatusProvisionIlrExtendedInfo` was modified
+
+* `OperationStatusProvisionIlrExtendedInfo()` was changed to private access
+* `withRecoveryTarget(models.InstantItemRecoveryTarget)` was removed
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSapHanaDatabaseWorkloadItem` was modified
+
+* `AzureVmWorkloadSapHanaDatabaseWorkloadItem()` was changed to private access
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withServerName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `validate()` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withSubWorkloadItemCount(java.lang.Integer)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withParentName(java.lang.String)` was removed
+
+#### `models.MabFileFolderProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.GenericRecoveryPoint` was modified
+
+* `GenericRecoveryPoint()` was changed to private access
+* `withRecoveryPointType(java.lang.String)` was removed
+* `withRecoveryPointAdditionalInfo(java.lang.String)` was removed
+* `withRecoveryPointTime(java.time.OffsetDateTime)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withRecoveryPointProperties(models.RecoveryPointProperties)` was removed
+* `validate()` was removed
+
+#### `models.IaasVMBackupRequest` was modified
+
+* `validate()` was removed
+
+#### `models.ListRecoveryPointsRecommendedForMoveRequest` was modified
+
+* `validate()` was removed
+
+#### `models.DpmBackupEngine` was modified
+
+* `DpmBackupEngine()` was changed to private access
+* `withDpmVersion(java.lang.String)` was removed
+* `withBackupManagementType(models.BackupManagementType)` was removed
+* `withRegistrationStatus(java.lang.String)` was removed
+* `withHealthStatus(java.lang.String)` was removed
+* `withIsAzureBackupAgentUpgradeAvailable(java.lang.Boolean)` was removed
+* `withAzureBackupAgentVersion(java.lang.String)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withIsDpmUpgradeAvailable(java.lang.Boolean)` was removed
+* `withCanReRegister(java.lang.Boolean)` was removed
+* `withBackupEngineState(java.lang.String)` was removed
+* `withExtendedInfo(models.BackupEngineExtendedInfo)` was removed
+* `validate()` was removed
+* `withBackupEngineId(java.lang.String)` was removed
+
+#### `models.MabContainerExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSqlRecoveryPoint` was modified
+
+* `withType(models.RestorePointType)` was removed
+* `withRecoveryPointMoveReadinessInfo(java.util.Map)` was removed
+* `withRecoveryPointTierDetails(java.util.List)` was removed
+* `withRecoveryPointTimeInUtc(java.time.OffsetDateTime)` was removed
+* `validate()` was removed
+* `models.AzureWorkloadSqlRecoveryPoint withExtendedInfo(models.AzureWorkloadSqlRecoveryPointExtendedInfo)` -> `models.AzureWorkloadSqlRecoveryPoint withExtendedInfo(models.AzureWorkloadSqlRecoveryPointExtendedInfo)`
+* `withRecoveryPointProperties(models.RecoveryPointProperties)` was removed
+
+#### `models.GenericContainerExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureStorageProtectableContainer` was modified
+
+* `AzureStorageProtectableContainer()` was changed to private access
+* `withFriendlyName(java.lang.String)` was removed
+* `withHealthStatus(java.lang.String)` was removed
+* `withContainerId(java.lang.String)` was removed
+* `validate()` was removed
+* `withBackupManagementType(models.BackupManagementType)` was removed
+
+#### `models.NameInfo` was modified
+
+* `NameInfo()` was changed to private access
+* `withValue(java.lang.String)` was removed
+* `withLocalizedValue(java.lang.String)` was removed
+* `validate()` was removed
+
+#### `models.MoveRPAcrossTiersRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSapHanaDBInstance` was modified
+
+* `AzureVmWorkloadSapHanaDBInstance()` was changed to private access
+* `withSubprotectableitemcount(java.lang.Integer)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withParentName(java.lang.String)` was removed
+* `withPrebackupvalidation(models.PreBackupValidation)` was removed
+* `withIsAutoProtected(java.lang.Boolean)` was removed
+* `withServerName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withIsProtectable(java.lang.Boolean)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withParentUniqueName(java.lang.String)` was removed
+* `validate()` was removed
+* `withFriendlyName(java.lang.String)` was removed
+
+#### `models.FetchTieringCostInfoForRehydrationRequest` was modified
+
+* `validate()` was removed
+
+#### `models.BackupEngineBase` was modified
+
+* `models.BackupEngineBase withExtendedInfo(models.BackupEngineExtendedInfo)` -> `models.BackupEngineBase withExtendedInfo(models.BackupEngineExtendedInfo)`
+* `models.BackupEngineBase withAzureBackupAgentVersion(java.lang.String)` -> `models.BackupEngineBase withAzureBackupAgentVersion(java.lang.String)`
+* `models.BackupEngineBase withBackupEngineState(java.lang.String)` -> `models.BackupEngineBase withBackupEngineState(java.lang.String)`
+* `validate()` was removed
+* `models.BackupEngineBase withFriendlyName(java.lang.String)` -> `models.BackupEngineBase withFriendlyName(java.lang.String)`
+* `models.BackupEngineBase withBackupEngineId(java.lang.String)` -> `models.BackupEngineBase withBackupEngineId(java.lang.String)`
+* `models.BackupEngineBase withCanReRegister(java.lang.Boolean)` -> `models.BackupEngineBase withCanReRegister(java.lang.Boolean)`
+* `models.BackupEngineBase withDpmVersion(java.lang.String)` -> `models.BackupEngineBase withDpmVersion(java.lang.String)`
+* `models.BackupEngineBase withHealthStatus(java.lang.String)` -> `models.BackupEngineBase withHealthStatus(java.lang.String)`
+* `models.BackupEngineBase withIsDpmUpgradeAvailable(java.lang.Boolean)` -> `models.BackupEngineBase withIsDpmUpgradeAvailable(java.lang.Boolean)`
+* `models.BackupEngineBase withBackupManagementType(models.BackupManagementType)` -> `models.BackupEngineBase withBackupManagementType(models.BackupManagementType)`
+* `models.BackupEngineBase withIsAzureBackupAgentUpgradeAvailable(java.lang.Boolean)` -> `models.BackupEngineBase withIsAzureBackupAgentUpgradeAvailable(java.lang.Boolean)`
+* `models.BackupEngineBase withRegistrationStatus(java.lang.String)` -> `models.BackupEngineBase withRegistrationStatus(java.lang.String)`
+
+#### `models.OperationWorkerResponse` was modified
+
+* `validate()` was removed
+* `models.OperationWorkerResponse withStatusCode(models.HttpStatusCode)` -> `models.OperationWorkerResponse withStatusCode(models.HttpStatusCode)`
+* `models.OperationWorkerResponse withHeaders(java.util.Map)` -> `models.OperationWorkerResponse withHeaders(java.util.Map)`
+
+#### `models.RestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.ProtectableContainer` was modified
+
+* `models.ProtectableContainer withFriendlyName(java.lang.String)` -> `models.ProtectableContainer withFriendlyName(java.lang.String)`
+* `validate()` was removed
+* `models.ProtectableContainer withBackupManagementType(models.BackupManagementType)` -> `models.ProtectableContainer withBackupManagementType(models.BackupManagementType)`
+* `models.ProtectableContainer withHealthStatus(java.lang.String)` -> `models.ProtectableContainer withHealthStatus(java.lang.String)`
+* `models.ProtectableContainer withContainerId(java.lang.String)` -> `models.ProtectableContainer withContainerId(java.lang.String)`
+
+#### `models.PrepareDataMoveRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureFileShareBackupRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSapHanaPointInTimeRestoreWithRehydrateRequest` was modified
+
+* `validate()` was removed
+
+#### `models.IdentityInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSapHanaDatabaseProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.LongTermSchedulePolicy` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSqlInstanceProtectableItem` was modified
+
+* `AzureVmWorkloadSqlInstanceProtectableItem()` was changed to private access
+* `withWorkloadType(java.lang.String)` was removed
+* `withParentUniqueName(java.lang.String)` was removed
+* `withSubprotectableitemcount(java.lang.Integer)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withIsProtectable(java.lang.Boolean)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withPrebackupvalidation(models.PreBackupValidation)` was removed
+* `withIsAutoProtected(java.lang.Boolean)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withParentName(java.lang.String)` was removed
+* `withServerName(java.lang.String)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSqlAvailabilityGroupProtectableItem` was modified
+
+* `AzureVmWorkloadSqlAvailabilityGroupProtectableItem()` was changed to private access
+* `withSubprotectableitemcount(java.lang.Integer)` was removed
+* `withParentUniqueName(java.lang.String)` was removed
+* `withIsAutoProtected(java.lang.Boolean)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withPrebackupvalidation(models.PreBackupValidation)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withParentName(java.lang.String)` was removed
+* `validate()` was removed
+* `withServerName(java.lang.String)` was removed
+* `withIsProtectable(java.lang.Boolean)` was removed
+* `withNodesList(java.util.List)` was removed
+
+#### `models.YearlyRetentionSchedule` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSapAseDatabaseProtectedItem` was modified
+
+* `validate()` was removed
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+
+#### `models.AzureFileShareProtectableItem` was modified
+
+* `AzureFileShareProtectableItem()` was changed to private access
+* `withAzureFileShareType(models.AzureFileShareType)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withParentContainerFriendlyName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `validate()` was removed
+* `withParentContainerFabricId(java.lang.String)` was removed
+
+#### `models.RecoveryPointMoveReadinessInfo` was modified
+
+* `RecoveryPointMoveReadinessInfo()` was changed to private access
+* `withIsReadyForMove(java.lang.Boolean)` was removed
+* `validate()` was removed
+* `withAdditionalInfo(java.lang.String)` was removed
+
+#### `models.PointInTimeRange` was modified
+
+* `PointInTimeRange()` was changed to private access
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `validate()` was removed
+
+#### `models.AzureWorkloadErrorInfo` was modified
+
+* `AzureWorkloadErrorInfo()` was changed to private access
+* `validate()` was removed
+* `withErrorTitle(java.lang.String)` was removed
+* `withErrorString(java.lang.String)` was removed
+* `withAdditionalDetails(java.lang.String)` was removed
+* `withErrorCode(java.lang.Integer)` was removed
+* `withRecommendations(java.util.List)` was removed
+
+#### `models.AzureWorkloadSqlRestoreWithRehydrateRequest` was modified
+
+* `validate()` was removed
+
+#### `models.MabContainer` was modified
+
+* `validate()` was removed
+
+#### `models.UserAssignedIdentityProperties` was modified
+
+* `validate()` was removed
+
+#### `models.AzureIaaSvmJobExtendedInfo` was modified
+
+* `AzureIaaSvmJobExtendedInfo()` was changed to private access
+* `withPropertyBag(java.util.Map)` was removed
+* `withTasksList(java.util.List)` was removed
+* `withEstimatedRemainingDuration(java.lang.String)` was removed
+* `withInternalPropertyBag(java.util.Map)` was removed
+* `validate()` was removed
+* `withProgressPercentage(java.lang.Double)` was removed
+* `withDynamicErrorMessage(java.lang.String)` was removed
+
+#### `models.ResourceHealthDetails` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadJobTaskDetails` was modified
+
+* `AzureWorkloadJobTaskDetails()` was changed to private access
+* `withStatus(java.lang.String)` was removed
+* `validate()` was removed
+* `withTaskId(java.lang.String)` was removed
+
+#### `models.AzureIaaSvmErrorInfo` was modified
+
+* `AzureIaaSvmErrorInfo()` was changed to private access
+* `validate()` was removed
+
+#### `models.BackupResourceVaultConfig` was modified
+
+* `validate()` was removed
+
+#### `models.GenericProtectionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.SqlDataDirectory` was modified
+
+* `SqlDataDirectory()` was changed to private access
+* `validate()` was removed
+* `withPath(java.lang.String)` was removed
+* `withType(models.SqlDataDirectoryType)` was removed
+* `withLogicalName(java.lang.String)` was removed
+
+#### `models.BackupResourceEncryptionConfig` was modified
+
+* `validate()` was removed
+
+#### `models.ClientDiscoveryForServiceSpecification` was modified
+
+* `ClientDiscoveryForServiceSpecification()` was changed to private access
+* `withLogSpecifications(java.util.List)` was removed
+* `validate()` was removed
+
+#### `models.IaasVMRestoreWithRehydrationRequest` was modified
+
+* `validate()` was removed
+
+#### `models.ValidateOperationRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSapHanaPointInTimeRestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSqlPointInTimeRestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSqlAutoProtectionIntent` was modified
+
+* `validate()` was removed
+
+#### `models.BackupRequest` was modified
+
+* `validate()` was removed
+
+#### `models.ResourceGuardOperationDetail` was modified
+
+* `validate()` was removed
+
+#### `models.SubProtectionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.DpmContainerExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.MabJob` was modified
+
+* `MabJob()` was changed to private access
+* `withBackupManagementType(models.BackupManagementType)` was removed
+* `withExtendedInfo(models.MabJobExtendedInfo)` was removed
+* `withMabServerType(models.MabServerType)` was removed
+* `withActivityId(java.lang.String)` was removed
+* `withEntityFriendlyName(java.lang.String)` was removed
+* `withOperation(java.lang.String)` was removed
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `withStatus(java.lang.String)` was removed
+* `withMabServerName(java.lang.String)` was removed
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `withErrorDetails(java.util.List)` was removed
+* `validate()` was removed
+* `withActionsInfo(java.util.List)` was removed
+* `withDuration(java.time.Duration)` was removed
+* `withWorkloadType(models.WorkloadType)` was removed
+
+#### `models.AzureStorageJobTaskDetails` was modified
+
+* `AzureStorageJobTaskDetails()` was changed to private access
+* `validate()` was removed
+* `withTaskId(java.lang.String)` was removed
+* `withStatus(java.lang.String)` was removed
+
+#### `models.AzureFileShareRestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.KeyAndSecretDetails` was modified
+
+* `KeyAndSecretDetails()` was changed to private access
+* `withKekDetails(models.KekDetails)` was removed
+* `withBekDetails(models.BekDetails)` was removed
+* `withEncryptionMechanism(java.lang.String)` was removed
+* `validate()` was removed
+
+#### `models.ErrorDetail` was modified
+
+* `validate()` was removed
+
+#### `models.ProtectionContainer` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadContainerExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSapHanaPointInTimeRecoveryPoint` was modified
+
+* `AzureWorkloadSapHanaPointInTimeRecoveryPoint()` was changed to private access
+* `withRecoveryPointMoveReadinessInfo(java.util.Map)` was removed
+* `validate()` was removed
+* `withTimeRanges(java.util.List)` was removed
+* `withRecoveryPointTimeInUtc(java.time.OffsetDateTime)` was removed
+* `withRecoveryPointTierDetails(java.util.List)` was removed
+* `withType(models.RestorePointType)` was removed
+* `withRecoveryPointProperties(models.RecoveryPointProperties)` was removed
+
+#### `models.AzureWorkloadSapAseRestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureIaaSComputeVMProtectableItem` was modified
+
+* `AzureIaaSComputeVMProtectableItem()` was changed to private access
+* `validate()` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withResourceGroup(java.lang.String)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withVirtualMachineId(java.lang.String)` was removed
+* `withVirtualMachineVersion(java.lang.String)` was removed
+
+#### `models.MonthlyRetentionSchedule` was modified
+
+* `validate()` was removed
+
+#### `models.RetentionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.TargetDiskNetworkAccessSettings` was modified
+
+* `validate()` was removed
+
+#### `models.PrivateEndpoint` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSapHanaRestoreWithRehydrateRequest` was modified
+
+* `validate()` was removed
+
+#### `models.BackupResourceEncryptionConfigExtended` was modified
+
+* `BackupResourceEncryptionConfigExtended()` was changed to private access
+* `withInfrastructureEncryptionState(models.InfrastructureEncryptionState)` was removed
+* `withUserAssignedIdentity(java.lang.String)` was removed
+* `withSubscriptionId(java.lang.String)` was removed
+* `withEncryptionAtRestType(models.EncryptionAtRestType)` was removed
+* `withKeyUri(java.lang.String)` was removed
+* `withUseSystemAssignedIdentity(java.lang.Boolean)` was removed
+* `validate()` was removed
+* `withLastUpdateStatus(models.LastUpdateStatus)` was removed
+
+#### `models.MabErrorInfo` was modified
+
+* `MabErrorInfo()` was changed to private access
+* `validate()` was removed
+
+#### `models.Settings` was modified
+
+* `validate()` was removed
+
+#### `models.AzureIaaSvmProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.ContainerIdentityInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadContainerAutoProtectionIntent` was modified
+
+* `validate()` was removed
+
+#### `models.InstantItemRecoveryTarget` was modified
+
+* `InstantItemRecoveryTarget()` was changed to private access
+* `validate()` was removed
+* `withClientScripts(java.util.List)` was removed
+
+#### `models.WorkloadProtectableItemResource` was modified
+
+* `etag()` was removed
+
+#### `models.ProtectionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.ValidateOperationResponse` was modified
+
+* `ValidateOperationResponse()` was changed to private access
+* `validate()` was removed
+* `withValidationResults(java.util.List)` was removed
+
+#### `models.DpmErrorInfo` was modified
+
+* `DpmErrorInfo()` was changed to private access
+* `withErrorString(java.lang.String)` was removed
+* `validate()` was removed
+* `withRecommendations(java.util.List)` was removed
+
+#### `models.InstantRPAdditionalDetails` was modified
+
+* `validate()` was removed
+
+#### `models.WorkloadItem` was modified
+
+* `models.WorkloadItem withBackupManagementType(java.lang.String)` -> `models.WorkloadItem withBackupManagementType(java.lang.String)`
+* `models.WorkloadItem withProtectionState(models.ProtectionStatus)` -> `models.WorkloadItem withProtectionState(models.ProtectionStatus)`
+* `models.WorkloadItem withFriendlyName(java.lang.String)` -> `models.WorkloadItem withFriendlyName(java.lang.String)`
+* `validate()` was removed
+* `models.WorkloadItem withWorkloadType(java.lang.String)` -> `models.WorkloadItem withWorkloadType(java.lang.String)`
+
+#### `models.HourlySchedule` was modified
+
+* `validate()` was removed
+
+#### `models.VaultJobExtendedInfo` was modified
+
+* `VaultJobExtendedInfo()` was changed to private access
+* `validate()` was removed
+* `withPropertyBag(java.util.Map)` was removed
+
+#### `models.RecoveryPointProperties` was modified
+
+* `RecoveryPointProperties()` was changed to private access
+* `validate()` was removed
+* `withIsSoftDeleted(java.lang.Boolean)` was removed
+* `withExpiryTime(java.lang.String)` was removed
+* `withRuleName(java.lang.String)` was removed
+
+#### `models.AzureWorkloadJob` was modified
+
+* `AzureWorkloadJob()` was changed to private access
+* `withBackupManagementType(models.BackupManagementType)` was removed
+* `validate()` was removed
+* `withOperation(java.lang.String)` was removed
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `withDuration(java.time.Duration)` was removed
+* `withExtendedInfo(models.AzureWorkloadJobExtendedInfo)` was removed
+* `withActivityId(java.lang.String)` was removed
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `withStatus(java.lang.String)` was removed
+* `withEntityFriendlyName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withErrorDetails(java.util.List)` was removed
+* `withActionsInfo(java.util.List)` was removed
+
+#### `models.OperationResultInfoBase` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSapAseDatabaseProtectableItem` was modified
+
+* `AzureVmWorkloadSapAseDatabaseProtectableItem()` was changed to private access
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withPrebackupvalidation(models.PreBackupValidation)` was removed
+* `withIsProtectable(java.lang.Boolean)` was removed
+* `withServerName(java.lang.String)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withParentUniqueName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withSubprotectableitemcount(java.lang.Integer)` was removed
+* `withParentName(java.lang.String)` was removed
+* `withIsAutoProtected(java.lang.Boolean)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `validate()` was removed
+
+#### `models.DpmProtectedItemExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureIaaSvmJob` was modified
+
+* `AzureIaaSvmJob()` was changed to private access
+* `withBackupManagementType(models.BackupManagementType)` was removed
+* `validate()` was removed
+* `withActivityId(java.lang.String)` was removed
+* `withOperation(java.lang.String)` was removed
+* `withStatus(java.lang.String)` was removed
+* `withEntityFriendlyName(java.lang.String)` was removed
+* `withIsUserTriggered(java.lang.Boolean)` was removed
+* `withContainerName(java.lang.String)` was removed
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `withExtendedInfo(models.AzureIaaSvmJobExtendedInfo)` was removed
+* `withActionsInfo(java.util.List)` was removed
+* `withVirtualMachineVersion(java.lang.String)` was removed
+* `withErrorDetails(java.util.List)` was removed
+* `withDuration(java.time.Duration)` was removed
+
+#### `models.FetchTieringCostSavingsInfoForVaultRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSapAsePointInTimeRecoveryPoint` was modified
+
+* `AzureWorkloadSapAsePointInTimeRecoveryPoint()` was changed to private access
+* `withRecoveryPointTierDetails(java.util.List)` was removed
+* `validate()` was removed
+* `withType(models.RestorePointType)` was removed
+* `withRecoveryPointTimeInUtc(java.time.OffsetDateTime)` was removed
+* `withRecoveryPointMoveReadinessInfo(java.util.Map)` was removed
+* `withRecoveryPointProperties(models.RecoveryPointProperties)` was removed
+* `withTimeRanges(java.util.List)` was removed
+
+#### `models.AzureStorageErrorInfo` was modified
+
+* `AzureStorageErrorInfo()` was changed to private access
+* `withErrorCode(java.lang.Integer)` was removed
+* `validate()` was removed
+* `withErrorString(java.lang.String)` was removed
+* `withRecommendations(java.util.List)` was removed
+
+#### `models.ExtendedProperties` was modified
+
+* `validate()` was removed
+
+#### `models.DailyRetentionFormat` was modified
+
+* `validate()` was removed
+
+#### `models.SimpleRetentionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.BackupStatusRequest` was modified
+
+* `validate()` was removed
+
+#### `models.WorkloadInquiryDetails` was modified
+
+* `validate()` was removed
+
+#### `models.DpmJobExtendedInfo` was modified
+
+* `DpmJobExtendedInfo()` was changed to private access
+* `withTasksList(java.util.List)` was removed
+* `withPropertyBag(java.util.Map)` was removed
+* `validate()` was removed
+* `withDynamicErrorMessage(java.lang.String)` was removed
+
+#### `models.EncryptionDetails` was modified
+
+* `validate()` was removed
+
+#### `models.PreBackupValidation` was modified
+
+* `PreBackupValidation()` was changed to private access
+* `validate()` was removed
+* `withCode(java.lang.String)` was removed
+* `withMessage(java.lang.String)` was removed
+* `withStatus(models.InquiryStatus)` was removed
+
+#### `models.UserAssignedManagedIdentityDetails` was modified
+
+* `validate()` was removed
+
+#### `models.AzureIaaSvmProtectionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.LongTermRetentionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSapAseSystemWorkloadItem` was modified
+
+* `AzureVmWorkloadSapAseSystemWorkloadItem()` was changed to private access
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withSubWorkloadItemCount(java.lang.Integer)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `validate()` was removed
+* `withServerName(java.lang.String)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withParentName(java.lang.String)` was removed
+
+#### `models.IaasVmilrRegistrationRequest` was modified
+
+* `validate()` was removed
+
+#### `models.InquiryValidation` was modified
+
+* `validate()` was removed
+
+#### `models.DpmJobTaskDetails` was modified
+
+* `DpmJobTaskDetails()` was changed to private access
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `validate()` was removed
+* `withTaskId(java.lang.String)` was removed
+* `withStatus(java.lang.String)` was removed
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `withDuration(java.time.Duration)` was removed
+
+#### `models.MabFileFolderProtectedItemExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureSqlProtectedItemExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.DailyRetentionSchedule` was modified
+
+* `validate()` was removed
+
+#### `models.RecoveryPointDiskConfiguration` was modified
+
+* `RecoveryPointDiskConfiguration()` was changed to private access
+* `withNumberOfDisksAttachedToVm(java.lang.Integer)` was removed
+* `withIncludedDiskList(java.util.List)` was removed
+* `withNumberOfDisksIncludedInBackup(java.lang.Integer)` was removed
+* `withExcludedDiskList(java.util.List)` was removed
+* `validate()` was removed
+
+#### `models.RestoreRequestResource` was modified
+
+* `withLocation(java.lang.String)` was removed
+* `withEtag(java.lang.String)` was removed
+* `withTags(java.util.Map)` was removed
+* `validate()` was removed
+* `etag()` was removed
+
+#### `models.UnlockDeleteRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureSqlProtectionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.ValidateIaasVMRestoreOperationRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureStorageJob` was modified
+
+* `AzureStorageJob()` was changed to private access
+* `withStatus(java.lang.String)` was removed
+* `withOperation(java.lang.String)` was removed
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `withStorageAccountName(java.lang.String)` was removed
+* `withIsUserTriggered(java.lang.Boolean)` was removed
+* `withEntityFriendlyName(java.lang.String)` was removed
+* `withExtendedInfo(models.AzureStorageJobExtendedInfo)` was removed
+* `withDuration(java.time.Duration)` was removed
+* `withActionsInfo(java.util.List)` was removed
+* `withBackupManagementType(models.BackupManagementType)` was removed
+* `validate()` was removed
+* `withActivityId(java.lang.String)` was removed
+* `withStorageAccountVersion(java.lang.String)` was removed
+* `withErrorDetails(java.util.List)` was removed
+
+#### `models.WeeklyRetentionSchedule` was modified
+
+* `validate()` was removed
+
+#### `models.WeeklySchedule` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSqlDatabaseProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.RecoveryPointRehydrationInfo` was modified
+
+* `validate()` was removed
+
+#### `models.WorkloadProtectableItem` was modified
+
+* `validate()` was removed
+* `models.WorkloadProtectableItem withWorkloadType(java.lang.String)` -> `models.WorkloadProtectableItem withWorkloadType(java.lang.String)`
+* `models.WorkloadProtectableItem withBackupManagementType(java.lang.String)` -> `models.WorkloadProtectableItem withBackupManagementType(java.lang.String)`
+* `models.WorkloadProtectableItem withFriendlyName(java.lang.String)` -> `models.WorkloadProtectableItem withFriendlyName(java.lang.String)`
+* `models.WorkloadProtectableItem withProtectionState(models.ProtectionStatus)` -> `models.WorkloadProtectableItem withProtectionState(models.ProtectionStatus)`
+
+#### `models.SimpleSchedulePolicyV2` was modified
+
+* `validate()` was removed
+
+#### `models.VaultRetentionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadItem` was modified
+
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `models.AzureVmWorkloadItem withParentName(java.lang.String)` -> `models.AzureVmWorkloadItem withParentName(java.lang.String)`
+* `withWorkloadType(java.lang.String)` was removed
+* `models.AzureVmWorkloadItem withSubinquireditemcount(java.lang.Integer)` -> `models.AzureVmWorkloadItem withSubinquireditemcount(java.lang.Integer)`
+* `models.AzureVmWorkloadItem withIsAutoProtectable(java.lang.Boolean)` -> `models.AzureVmWorkloadItem withIsAutoProtectable(java.lang.Boolean)`
+* `models.AzureVmWorkloadItem withSubWorkloadItemCount(java.lang.Integer)` -> `models.AzureVmWorkloadItem withSubWorkloadItemCount(java.lang.Integer)`
+* `models.AzureVmWorkloadItem withServerName(java.lang.String)` -> `models.AzureVmWorkloadItem withServerName(java.lang.String)`
+* `withFriendlyName(java.lang.String)` was removed
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSqlInstanceWorkloadItem` was modified
+
+* `AzureVmWorkloadSqlInstanceWorkloadItem()` was changed to private access
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `validate()` was removed
+* `withParentName(java.lang.String)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withSubWorkloadItemCount(java.lang.Integer)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withServerName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withDataDirectoryPaths(java.util.List)` was removed
+
+#### `models.IdentityBasedRestoreDetails` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadProtectionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.SchedulePolicy` was modified
+
+* `validate()` was removed
+
+#### `models.ProtectionIntent` was modified
+
+* `validate()` was removed
+
+#### `models.AzureResourceProtectionIntent` was modified
+
+* `validate()` was removed
+
+#### `models.SecurityPinBase` was modified
+
+* `validate()` was removed
+
+#### `models.ProtectedItem` was modified
+
+* `softDeleteRetentionPeriod()` was removed
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.AzureSqlContainer` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSapHanaSystemProtectableItem` was modified
+
+* `AzureVmWorkloadSapHanaSystemProtectableItem()` was changed to private access
+* `withSubprotectableitemcount(java.lang.Integer)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withIsAutoProtected(java.lang.Boolean)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withPrebackupvalidation(models.PreBackupValidation)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `validate()` was removed
+* `withIsProtectable(java.lang.Boolean)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withParentName(java.lang.String)` was removed
+* `withServerName(java.lang.String)` was removed
+* `withParentUniqueName(java.lang.String)` was removed
+
+#### `models.AzureSqlagWorkloadContainerProtectionContainer` was modified
+
+* `validate()` was removed
+
+#### `models.RecoveryPointTierInformationV2` was modified
+
+* `RecoveryPointTierInformationV2()` was changed to private access
+* `withType(models.RecoveryPointTierType)` was removed
+* `withExtendedInfo(java.util.Map)` was removed
+* `validate()` was removed
+* `withStatus(models.RecoveryPointTierStatus)` was removed
+
+#### `models.BackupResourceEncryptionConfigResource` was modified
+
+* `validate()` was removed
+* `withLocation(java.lang.String)` was removed
+* `withTags(java.util.Map)` was removed
+
+#### `models.AzureWorkloadSqlRecoveryPointExtendedInfo` was modified
+
+* `AzureWorkloadSqlRecoveryPointExtendedInfo()` was changed to private access
+* `withDataDirectoryPaths(java.util.List)` was removed
+* `validate()` was removed
+* `withDataDirectoryTimeInUtc(java.time.OffsetDateTime)` was removed
+
+#### `models.AzureIaaSvmJobTaskDetails` was modified
+
+* `AzureIaaSvmJobTaskDetails()` was changed to private access
+* `withProgressPercentage(java.lang.Double)` was removed
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `withStatus(java.lang.String)` was removed
+* `withInstanceId(java.lang.String)` was removed
+* `validate()` was removed
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `withTaskExecutionDetails(java.lang.String)` was removed
+* `withTaskId(java.lang.String)` was removed
+* `withDuration(java.time.Duration)` was removed
+
+#### `models.InquiryInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSapAseDatabaseWorkloadItem` was modified
+
+* `AzureVmWorkloadSapAseDatabaseWorkloadItem()` was changed to private access
+* `validate()` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withParentName(java.lang.String)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withServerName(java.lang.String)` was removed
+* `withSubWorkloadItemCount(java.lang.Integer)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+
+#### `models.KekDetails` was modified
+
+* `KekDetails()` was changed to private access
+* `validate()` was removed
+* `withKeyVaultId(java.lang.String)` was removed
+* `withKeyUrl(java.lang.String)` was removed
+* `withKeyBackupData(java.lang.String)` was removed
+
+#### `models.MabJobExtendedInfo` was modified
+
+* `MabJobExtendedInfo()` was changed to private access
+* `withPropertyBag(java.util.Map)` was removed
+* `withDynamicErrorMessage(java.lang.String)` was removed
+* `withTasksList(java.util.List)` was removed
+* `validate()` was removed
+
+#### `models.TriggerDataMoveRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadRestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.VaultJob` was modified
+
+* `VaultJob()` was changed to private access
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `withBackupManagementType(models.BackupManagementType)` was removed
+* `withActionsInfo(java.util.List)` was removed
+* `withOperation(java.lang.String)` was removed
+* `validate()` was removed
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `withDuration(java.time.Duration)` was removed
+* `withEntityFriendlyName(java.lang.String)` was removed
+* `withStatus(java.lang.String)` was removed
+* `withActivityId(java.lang.String)` was removed
+* `withExtendedInfo(models.VaultJobExtendedInfo)` was removed
+* `withErrorDetails(java.util.List)` was removed
+
+#### `models.IlrRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSqlDatabaseWorkloadItem` was modified
+
+* `AzureVmWorkloadSqlDatabaseWorkloadItem()` was changed to private access
+* `withParentName(java.lang.String)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withServerName(java.lang.String)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withSubWorkloadItemCount(java.lang.Integer)` was removed
+* `validate()` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+
+#### `models.AzureVmWorkloadProtectableItem` was modified
+
+* `models.AzureVmWorkloadProtectableItem withIsAutoProtected(java.lang.Boolean)` -> `models.AzureVmWorkloadProtectableItem withIsAutoProtected(java.lang.Boolean)`
+* `models.AzureVmWorkloadProtectableItem withServerName(java.lang.String)` -> `models.AzureVmWorkloadProtectableItem withServerName(java.lang.String)`
+* `validate()` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `models.AzureVmWorkloadProtectableItem withIsAutoProtectable(java.lang.Boolean)` -> `models.AzureVmWorkloadProtectableItem withIsAutoProtectable(java.lang.Boolean)`
+* `models.AzureVmWorkloadProtectableItem withPrebackupvalidation(models.PreBackupValidation)` -> `models.AzureVmWorkloadProtectableItem withPrebackupvalidation(models.PreBackupValidation)`
+* `models.AzureVmWorkloadProtectableItem withIsProtectable(java.lang.Boolean)` -> `models.AzureVmWorkloadProtectableItem withIsProtectable(java.lang.Boolean)`
+* `models.AzureVmWorkloadProtectableItem withSubprotectableitemcount(java.lang.Integer)` -> `models.AzureVmWorkloadProtectableItem withSubprotectableitemcount(java.lang.Integer)`
+* `models.AzureVmWorkloadProtectableItem withParentName(java.lang.String)` -> `models.AzureVmWorkloadProtectableItem withParentName(java.lang.String)`
+* `models.AzureVmWorkloadProtectableItem withParentUniqueName(java.lang.String)` -> `models.AzureVmWorkloadProtectableItem withParentUniqueName(java.lang.String)`
+* `models.AzureVmWorkloadProtectableItem withSubinquireditemcount(java.lang.Integer)` -> `models.AzureVmWorkloadProtectableItem withSubinquireditemcount(java.lang.Integer)`
+
+#### `models.SecuredVMDetails` was modified
+
+* `validate()` was removed
+
+#### `models.GenericContainer` was modified
+
+* `validate()` was removed
+
+#### `models.ResourceProviders` was modified
+
+* `void bmsPrepareDataMove(java.lang.String,java.lang.String,models.PrepareDataMoveRequest)` -> `models.OkResponse bmsPrepareDataMove(java.lang.String,java.lang.String,models.PrepareDataMoveRequest)`
+* `void bmsTriggerDataMove(java.lang.String,java.lang.String,models.TriggerDataMoveRequest)` -> `models.OkResponse bmsTriggerDataMove(java.lang.String,java.lang.String,models.TriggerDataMoveRequest)`
+* `void bmsTriggerDataMove(java.lang.String,java.lang.String,models.TriggerDataMoveRequest,com.azure.core.util.Context)` -> `models.OkResponse bmsTriggerDataMove(java.lang.String,java.lang.String,models.TriggerDataMoveRequest,com.azure.core.util.Context)`
+* `void bmsPrepareDataMove(java.lang.String,java.lang.String,models.PrepareDataMoveRequest,com.azure.core.util.Context)` -> `models.OkResponse bmsPrepareDataMove(java.lang.String,java.lang.String,models.PrepareDataMoveRequest,com.azure.core.util.Context)`
+
+#### `models.AzureVMAppContainerProtectionContainer` was modified
+
+* `validate()` was removed
+
+#### `models.ClientDiscoveryDisplay` was modified
+
+* `ClientDiscoveryDisplay()` was changed to private access
+* `validate()` was removed
+* `withOperation(java.lang.String)` was removed
+* `withProvider(java.lang.String)` was removed
+* `withResource(java.lang.String)` was removed
+* `withDescription(java.lang.String)` was removed
+
+#### `models.TieringCostRehydrationInfo` was modified
+
+* `TieringCostRehydrationInfo()` was changed to private access
+* `withRehydrationSizeInBytes(long)` was removed
+* `withRetailRehydrationCostPerGBPerMonth(double)` was removed
+* `validate()` was removed
+
+#### `models.IaasVMRecoveryPoint` was modified
+
+* `IaasVMRecoveryPoint()` was changed to private access
+* `withOsType(java.lang.String)` was removed
+* `withIsSourceVMEncrypted(java.lang.Boolean)` was removed
+* `withZones(java.util.List)` was removed
+* `withExtendedLocation(models.ExtendedLocation)` was removed
+* `withRecoveryPointType(java.lang.String)` was removed
+* `withOriginalStorageAccountOption(java.lang.Boolean)` was removed
+* `withRecoveryPointTime(java.time.OffsetDateTime)` was removed
+* `withRecoveryPointAdditionalInfo(java.lang.String)` was removed
+* `withSecurityType(java.lang.String)` was removed
+* `withIsInstantIlrSessionActive(java.lang.Boolean)` was removed
+* `withSourceVMStorageType(java.lang.String)` was removed
+* `withRecoveryPointTierDetails(java.util.List)` was removed
+* `withRecoveryPointMoveReadinessInfo(java.util.Map)` was removed
+* `validate()` was removed
+* `withVirtualMachineSize(java.lang.String)` was removed
+* `withIsManagedVirtualMachine(java.lang.Boolean)` was removed
+* `withRecoveryPointProperties(models.RecoveryPointProperties)` was removed
+* `withIsPrivateAccessEnabledOnAnyDisk(java.lang.Boolean)` was removed
+* `withKeyAndSecret(models.KeyAndSecretDetails)` was removed
+* `withRecoveryPointDiskConfiguration(models.RecoveryPointDiskConfiguration)` was removed
+
+#### `models.ClientDiscoveryForProperties` was modified
+
+* `ClientDiscoveryForProperties()` was changed to private access
+* `validate()` was removed
+* `withServiceSpecification(models.ClientDiscoveryForServiceSpecification)` was removed
+
+#### `models.IlrRequestResource` was modified
+
+* `withLocation(java.lang.String)` was removed
+* `withTags(java.util.Map)` was removed
+* `validate()` was removed
+* `withEtag(java.lang.String)` was removed
+* `etag()` was removed
+
+#### `models.AzureVmWorkloadSapHanaDBInstanceProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.AzureBackupServerContainer` was modified
+
+* `validate()` was removed
+
+#### `models.AzureBackupServerEngine` was modified
+
+* `AzureBackupServerEngine()` was changed to private access
+* `withAzureBackupAgentVersion(java.lang.String)` was removed
+* `withBackupEngineId(java.lang.String)` was removed
+* `withBackupEngineState(java.lang.String)` was removed
+* `withBackupManagementType(models.BackupManagementType)` was removed
+* `withIsAzureBackupAgentUpgradeAvailable(java.lang.Boolean)` was removed
+* `withCanReRegister(java.lang.Boolean)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withDpmVersion(java.lang.String)` was removed
+* `withHealthStatus(java.lang.String)` was removed
+* `withRegistrationStatus(java.lang.String)` was removed
+* `validate()` was removed
+* `withExtendedInfo(models.BackupEngineExtendedInfo)` was removed
+* `withIsDpmUpgradeAvailable(java.lang.Boolean)` was removed
+
+#### `models.DailySchedule` was modified
+
+* `validate()` was removed
+
+#### `models.AzureIaaSClassicComputeVMProtectableItem` was modified
+
+* `AzureIaaSClassicComputeVMProtectableItem()` was changed to private access
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withVirtualMachineVersion(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withVirtualMachineId(java.lang.String)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `validate()` was removed
+* `withResourceGroup(java.lang.String)` was removed
+
+#### `models.ExportJobsOperationResultInfo` was modified
+
+* `ExportJobsOperationResultInfo()` was changed to private access
+* `withExcelFileBlobSasKey(java.lang.String)` was removed
+* `withBlobUrl(java.lang.String)` was removed
+* `validate()` was removed
+* `withBlobSasKey(java.lang.String)` was removed
+* `withExcelFileBlobUrl(java.lang.String)` was removed
+
+#### `models.TieringPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.ValidateOperationRequestResource` was modified
+
+* `validate()` was removed
+
+#### `models.AzureFileShareRecoveryPoint` was modified
+
+* `AzureFileShareRecoveryPoint()` was changed to private access
+* `withFileShareSnapshotUri(java.lang.String)` was removed
+* `withRecoveryPointTierDetails(java.util.List)` was removed
+* `withRecoveryPointType(java.lang.String)` was removed
+* `validate()` was removed
+* `withRecoveryPointSizeInGB(java.lang.Integer)` was removed
+* `withRecoveryPointTime(java.time.OffsetDateTime)` was removed
+* `withRecoveryPointProperties(models.RecoveryPointProperties)` was removed
+
+#### `models.OperationStatusJobExtendedInfo` was modified
+
+* `OperationStatusJobExtendedInfo()` was changed to private access
+* `validate()` was removed
+* `withJobId(java.lang.String)` was removed
+
+#### `models.ResourceList` was modified
+
+* `models.ResourceList withNextLink(java.lang.String)` -> `models.ResourceList withNextLink(java.lang.String)`
+* `validate()` was removed
+
+#### `models.AzureWorkloadBackupRequest` was modified
+
+* `validate()` was removed
+
+#### `models.WorkloadItemResource` was modified
+
+* `etag()` was removed
+
+#### `models.AzureWorkloadContainer` was modified
+
+* `validate()` was removed
+
+#### `models.ResourceGuardProxyBase` was modified
+
+* `validate()` was removed
+
+#### `models.FeatureSupportRequest` was modified
+
+* `validate()` was removed
+
+#### `models.ValidateRestoreOperationRequest` was modified
+
+* `validate()` was removed
+
+#### `models.RecoveryPointTierInformation` was modified
+
+* `models.RecoveryPointTierInformation withType(models.RecoveryPointTierType)` -> `models.RecoveryPointTierInformation withType(models.RecoveryPointTierType)`
+* `validate()` was removed
+* `models.RecoveryPointTierInformation withExtendedInfo(java.util.Map)` -> `models.RecoveryPointTierInformation withExtendedInfo(java.util.Map)`
+* `models.RecoveryPointTierInformation withStatus(models.RecoveryPointTierStatus)` -> `models.RecoveryPointTierInformation withStatus(models.RecoveryPointTierStatus)`
+
+#### `models.AzureWorkloadAutoProtectionIntent` was modified
+
+* `validate()` was removed
+
+#### `models.FetchTieringCostInfoRequest` was modified
+
+* `validate()` was removed
+
+#### `models.Day` was modified
+
+* `validate()` was removed
+
+#### `models.DpmJob` was modified
+
+* `DpmJob()` was changed to private access
+* `withEntityFriendlyName(java.lang.String)` was removed
+* `withContainerType(java.lang.String)` was removed
+* `withStatus(java.lang.String)` was removed
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `validate()` was removed
+* `withExtendedInfo(models.DpmJobExtendedInfo)` was removed
+* `withOperation(java.lang.String)` was removed
+* `withActionsInfo(java.util.List)` was removed
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `withActivityId(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withBackupManagementType(models.BackupManagementType)` was removed
+* `withDuration(java.time.Duration)` was removed
+* `withDpmServerName(java.lang.String)` was removed
+* `withContainerName(java.lang.String)` was removed
+* `withErrorDetails(java.util.List)` was removed
+
+#### `models.AzureVMResourceFeatureSupportRequest` was modified
+
+* `validate()` was removed
+
+#### `models.BackupEngineExtendedInfo` was modified
+
+* `BackupEngineExtendedInfo()` was changed to private access
+* `withProtectedServersCount(java.lang.Integer)` was removed
+* `withUsedDiskSpace(java.lang.Double)` was removed
+* `withAzureProtectedInstances(java.lang.Integer)` was removed
+* `validate()` was removed
+* `withDatabaseName(java.lang.String)` was removed
+* `withProtectedItemsCount(java.lang.Integer)` was removed
+* `withDiskCount(java.lang.Integer)` was removed
+* `withRefreshedAt(java.time.OffsetDateTime)` was removed
+* `withAvailableDiskSpace(java.lang.Double)` was removed
+
+#### `models.AzureIaaSvmHealthDetails` was modified
+
+* `validate()` was removed
+
+#### `models.RecoveryPointTierStatus` was modified
+
+* `valueOf(java.lang.String)` was removed
+* `models.RecoveryPointTierStatus[] values()` -> `java.util.Collection values()`
+* `toString()` was removed
+
+#### `models.PrivateLinkServiceConnectionState` was modified
+
+* `validate()` was removed
+
+#### `models.SnapshotRestoreParameters` was modified
+
+* `validate()` was removed
+
+#### `models.AzureIaaSClassicComputeVMProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `RecoveryServicesBackupManager` was modified
+
+* `fluent.RecoveryServicesBackupClient serviceClient()` -> `fluent.RecoveryServicesBackupManagementClient serviceClient()`
+* `resourceGuardProxies()` was removed
+
+#### `models.GenericProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.VaultJobErrorInfo` was modified
+
+* `VaultJobErrorInfo()` was changed to private access
+* `validate()` was removed
+* `withErrorString(java.lang.String)` was removed
+* `withErrorCode(java.lang.Integer)` was removed
+* `withRecommendations(java.util.List)` was removed
+
+#### `models.AzureVmWorkloadProtectedItemExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSapHanaRecoveryPoint` was modified
+
+* `AzureWorkloadSapHanaRecoveryPoint()` was changed to private access
+* `withRecoveryPointTimeInUtc(java.time.OffsetDateTime)` was removed
+* `withRecoveryPointProperties(models.RecoveryPointProperties)` was removed
+* `withType(models.RestorePointType)` was removed
+* `withRecoveryPointTierDetails(java.util.List)` was removed
+* `withRecoveryPointMoveReadinessInfo(java.util.Map)` was removed
+* `validate()` was removed
+
+#### `models.OperationStatusJobsExtendedInfo` was modified
+
+* `OperationStatusJobsExtendedInfo()` was changed to private access
+* `validate()` was removed
+* `withFailedJobsError(java.util.Map)` was removed
+* `withJobIds(java.util.List)` was removed
+
+#### `models.RecoveryPoint` was modified
+
+* `validate()` was removed
+
+#### `models.OperationStatusError` was modified
+
+* `OperationStatusError()` was changed to private access
+* `validate()` was removed
+* `withCode(java.lang.String)` was removed
+* `withMessage(java.lang.String)` was removed
+
+#### `models.PrivateEndpointConnection` was modified
+
+* `validate()` was removed
+
+#### `models.AzureBackupGoalFeatureSupportRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSqlDatabaseProtectableItem` was modified
+
+* `AzureVmWorkloadSqlDatabaseProtectableItem()` was changed to private access
+* `withIsProtectable(java.lang.Boolean)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withIsAutoProtected(java.lang.Boolean)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withSubprotectableitemcount(java.lang.Integer)` was removed
+* `withParentName(java.lang.String)` was removed
+* `validate()` was removed
+* `withPrebackupvalidation(models.PreBackupValidation)` was removed
+* `withParentUniqueName(java.lang.String)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withServerName(java.lang.String)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+
+#### `models.SimpleSchedulePolicy` was modified
+
+* `validate()` was removed
+
+#### `models.SqlDataDirectoryMapping` was modified
+
+* `validate()` was removed
+
+#### `models.AzureVmWorkloadSapAseSystemProtectableItem` was modified
+
+* `AzureVmWorkloadSapAseSystemProtectableItem()` was changed to private access
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withSubprotectableitemcount(java.lang.Integer)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withPrebackupvalidation(models.PreBackupValidation)` was removed
+* `withWorkloadType(java.lang.String)` was removed
+* `withIsProtectable(java.lang.Boolean)` was removed
+* `withParentName(java.lang.String)` was removed
+* `withParentUniqueName(java.lang.String)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `validate()` was removed
+* `withServerName(java.lang.String)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withIsAutoProtected(java.lang.Boolean)` was removed
+
+#### `models.ClientScriptForConnect` was modified
+
+* `ClientScriptForConnect()` was changed to private access
+* `withScriptContent(java.lang.String)` was removed
+* `withOsType(java.lang.String)` was removed
+* `withScriptExtension(java.lang.String)` was removed
+* `validate()` was removed
+* `withUrl(java.lang.String)` was removed
+* `withScriptNameSuffix(java.lang.String)` was removed
+
+#### `models.MabProtectionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.SnapshotBackupAdditionalDetails` was modified
+
+* `validate()` was removed
+
+#### `models.AzureFileshareProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.AzureStorageJobExtendedInfo` was modified
+
+* `AzureStorageJobExtendedInfo()` was changed to private access
+* `withDynamicErrorMessage(java.lang.String)` was removed
+* `withTasksList(java.util.List)` was removed
+* `validate()` was removed
+* `withPropertyBag(java.util.Map)` was removed
+
+#### `models.Job` was modified
+
+* `models.Job withActivityId(java.lang.String)` -> `models.Job withActivityId(java.lang.String)`
+* `models.Job withOperation(java.lang.String)` -> `models.Job withOperation(java.lang.String)`
+* `models.Job withEntityFriendlyName(java.lang.String)` -> `models.Job withEntityFriendlyName(java.lang.String)`
+* `models.Job withStatus(java.lang.String)` -> `models.Job withStatus(java.lang.String)`
+* `models.Job withBackupManagementType(models.BackupManagementType)` -> `models.Job withBackupManagementType(models.BackupManagementType)`
+* `validate()` was removed
+* `models.Job withEndTime(java.time.OffsetDateTime)` -> `models.Job withEndTime(java.time.OffsetDateTime)`
+* `models.Job withStartTime(java.time.OffsetDateTime)` -> `models.Job withStartTime(java.time.OffsetDateTime)`
+
+#### `models.PreValidateEnableBackupRequest` was modified
+
+* `validate()` was removed
+
+#### `models.KpiResourceHealthDetails` was modified
+
+* `validate()` was removed
+
+#### `models.WeeklyRetentionFormat` was modified
+
+* `validate()` was removed
+
+#### `models.DistributedNodesInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadJobExtendedInfo` was modified
+
+* `AzureWorkloadJobExtendedInfo()` was changed to private access
+* `withPropertyBag(java.util.Map)` was removed
+* `withTasksList(java.util.List)` was removed
+* `validate()` was removed
+* `withDynamicErrorMessage(java.lang.String)` was removed
+
+#### `models.AzureRecoveryServiceVaultProtectionIntent` was modified
+
+* `validate()` was removed
+
+#### `models.AzureFileshareProtectedItemExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureFileShareProtectionPolicy` was modified
+
+* `validate()` was removed
+
+#### `models.DiskExclusionProperties` was modified
+
+* `validate()` was removed
+
+#### `models.FetchTieringCostSavingsInfoForProtectedItemRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureSqlProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+* `validate()` was removed
+
+#### `models.BackupRequestResource` was modified
+
+* `withTags(java.util.Map)` was removed
+* `withLocation(java.lang.String)` was removed
+* `etag()` was removed
+* `validate()` was removed
+* `withEtag(java.lang.String)` was removed
+
+#### `models.AzureIaaSvmProtectedItemExtendedInfo` was modified
+
+* `validate()` was removed
+
+#### `models.OperationResultInfo` was modified
+
+* `OperationResultInfo()` was changed to private access
+* `withJobList(java.util.List)` was removed
+* `validate()` was removed
+
+#### `models.ClientDiscoveryForLogSpecification` was modified
+
+* `ClientDiscoveryForLogSpecification()` was changed to private access
+* `withName(java.lang.String)` was removed
+* `validate()` was removed
+* `withBlobDuration(java.lang.String)` was removed
+* `withDisplayName(java.lang.String)` was removed
+
+#### `models.AzureWorkloadSapHanaRestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.LogSchedulePolicy` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSqlPointInTimeRestoreWithRehydrateRequest` was modified
+
+* `validate()` was removed
+
+#### `models.ExtendedLocation` was modified
+
+* `validate()` was removed
+
+#### `models.DiskInformation` was modified
+
+* `DiskInformation()` was changed to private access
+* `validate()` was removed
+* `withName(java.lang.String)` was removed
+* `withLun(java.lang.Integer)` was removed
+
+#### `models.AzureWorkloadPointInTimeRestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSqlRestoreRequest` was modified
+
+* `validate()` was removed
+
+#### `models.AzureWorkloadSapAseRecoveryPoint` was modified
+
+* `AzureWorkloadSapAseRecoveryPoint()` was changed to private access
+* `withRecoveryPointProperties(models.RecoveryPointProperties)` was removed
+* `withType(models.RestorePointType)` was removed
+* `withRecoveryPointTimeInUtc(java.time.OffsetDateTime)` was removed
+* `withRecoveryPointTierDetails(java.util.List)` was removed
+* `withRecoveryPointMoveReadinessInfo(java.util.Map)` was removed
+* `validate()` was removed
+
+#### `models.BekDetails` was modified
+
+* `BekDetails()` was changed to private access
+* `withSecretVaultId(java.lang.String)` was removed
+* `validate()` was removed
+* `withSecretUrl(java.lang.String)` was removed
+* `withSecretData(java.lang.String)` was removed
+
+#### `models.AzureIaaSvmJobV2` was modified
+
+* `AzureIaaSvmJobV2()` was changed to private access
+* `withEndTime(java.time.OffsetDateTime)` was removed
+* `withDuration(java.time.Duration)` was removed
+* `withExtendedInfo(models.AzureIaaSvmJobExtendedInfo)` was removed
+* `withEntityFriendlyName(java.lang.String)` was removed
+* `validate()` was removed
+* `withOperation(java.lang.String)` was removed
+* `withStatus(java.lang.String)` was removed
+* `withActivityId(java.lang.String)` was removed
+* `withBackupManagementType(models.BackupManagementType)` was removed
+* `withErrorDetails(java.util.List)` was removed
+* `withStartTime(java.time.OffsetDateTime)` was removed
+* `withActionsInfo(java.util.List)` was removed
+* `withContainerName(java.lang.String)` was removed
+* `withVirtualMachineVersion(java.lang.String)` was removed
+
+#### `models.PrepareDataMoveResponse` was modified
+
+* `PrepareDataMoveResponse()` was changed to private access
+* `validate()` was removed
+* `withCorrelationId(java.lang.String)` was removed
+* `withSourceVaultProperties(java.util.Map)` was removed
+
+#### `models.AzureStorageContainer` was modified
+
+* `validate()` was removed
+
+#### `models.TieringCostSavingInfo` was modified
+
+* `TieringCostSavingInfo()` was changed to private access
+* `withRetailSourceTierCostPerGBPerMonth(double)` was removed
+* `validate()` was removed
+* `withSourceTierSizeReductionInBytes(long)` was removed
+* `withRetailTargetTierCostPerGBPerMonth(double)` was removed
+* `withTargetTierSizeIncreaseInBytes(long)` was removed
+
+#### `models.FetchTieringCostSavingsInfoForPolicyRequest` was modified
+
+* `validate()` was removed
+
+#### `models.ProtectableContainerResource` was modified
+
+* `etag()` was removed
+
+#### `models.MabContainerHealthDetails` was modified
+
+* `validate()` was removed
+
+#### `models.TargetAfsRestoreInfo` was modified
+
+* `validate()` was removed
+
+#### `models.AzureIaaSComputeVMContainer` was modified
+
+* `validate()` was removed
+
+#### `models.DpmContainer` was modified
+
+* `validate()` was removed
+
+#### `models.BackupResourceConfig` was modified
+
+* `validate()` was removed
+
+#### `models.DpmProtectedItem` was modified
+
+* `validate()` was removed
+* `withSoftDeleteRetentionPeriod(java.lang.Integer)` was removed
+
+#### `models.AzureVmWorkloadSapHanaDatabaseProtectableItem` was modified
+
+* `AzureVmWorkloadSapHanaDatabaseProtectableItem()` was changed to private access
+* `withWorkloadType(java.lang.String)` was removed
+* `withIsAutoProtectable(java.lang.Boolean)` was removed
+* `withFriendlyName(java.lang.String)` was removed
+* `withBackupManagementType(java.lang.String)` was removed
+* `withServerName(java.lang.String)` was removed
+* `withSubinquireditemcount(java.lang.Integer)` was removed
+* `withPrebackupvalidation(models.PreBackupValidation)` was removed
+* `withParentUniqueName(java.lang.String)` was removed
+* `withSubprotectableitemcount(java.lang.Integer)` was removed
+* `withProtectionState(models.ProtectionStatus)` was removed
+* `withIsAutoProtected(java.lang.Boolean)` was removed
+* `withParentName(java.lang.String)` was removed
+* `withIsProtectable(java.lang.Boolean)` was removed
+* `validate()` was removed
+
+### Features Added
+
+* `models.DatabaseInRP` was added
+
+* `models.ThreatInfo` was added
+
+* `models.IaasVmProtectableItem` was added
+
+* `models.InstanceProtectionReadiness` was added
+
+* `models.SourceSideScanSummary` was added
+
+* `models.OkResponse` was added
+
+* `models.VMWorkloadPolicyType` was added
+
+* `models.ProtectionLevel` was added
+
+* `models.AzureVmWorkloadSAPHanaScaleoutProtectableItem` was added
+
+* `models.ThreatStatus` was added
+
+* `models.ThreatSeverity` was added
+
+* `models.SourceSideScanStatus` was added
+
+* `models.SourceSideScanInfo` was added
+
+* `models.UpdateRecoveryPointRequest` was added
+
+* `models.ThreatState` was added
+
+* `models.PatchRecoveryPointPropertiesInput` was added
+
+* `models.AzureVmWorkloadSQLInstanceProtectedItem` was added
+
+* `models.PatchRecoveryPointInput` was added
+
+#### `models.AzureIaaSComputeVMProtectedItem` was modified
+
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+
+#### `models.MabFileFolderProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+
+#### `models.RecoveryPoints` was modified
+
+* `update(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,models.UpdateRecoveryPointRequest)` was added
+* `updateWithResponse(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,models.UpdateRecoveryPointRequest,com.azure.core.util.Context)` was added
+
+#### `models.AzureVmWorkloadSapHanaDatabaseProtectedItem` was modified
+
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+
+#### `models.BackupResourceVaultConfigResource` was modified
+
+* `systemData()` was added
+
+#### `models.AzureVmWorkloadSapAseDatabaseProtectedItem` was modified
+
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+
+#### `models.BackupEngineBaseResource` was modified
+
+* `systemData()` was added
+
+#### `models.BackupResourceEncryptionConfigExtendedResource` was modified
+
+* `systemData()` was added
+
+#### `models.ProtectedItemResource` was modified
+
+* `systemData()` was added
+
+#### `models.AzureIaaSvmProtectedItem` was modified
+
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+
+#### `models.WorkloadProtectableItemResource` was modified
+
+* `eTag()` was added
+* `systemData()` was added
+
+#### `models.RecoveryPointResource` was modified
+
+* `systemData()` was added
+
+#### `models.PrivateEndpointConnectionResource` was modified
+
+* `systemData()` was added
+
+#### `models.RestoreRequestResource` was modified
+
+* `systemData()` was added
+* `tags()` was added
+* `location()` was added
+* `withETag(java.lang.String)` was added
+* `eTag()` was added
+
+#### `models.AzureVmWorkloadSqlDatabaseProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+* `parentProtectedItem()` was added
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+* `withParentProtectedItem(java.lang.String)` was added
+* `protectionLevel()` was added
+* `withProtectionLevel(models.ProtectionLevel)` was added
+
+#### `models.AzureVmWorkloadProtectedItem` was modified
+
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+
+#### `models.ResourceGuardProxyBaseResource` was modified
+
+* `systemData()` was added
+
+#### `models.AzureVmWorkloadProtectionPolicy` was modified
+
+* `vmWorkloadPolicyType()` was added
+* `withVmWorkloadPolicyType(models.VMWorkloadPolicyType)` was added
+
+#### `models.ProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+* `softDeleteRetentionPeriodInDays()` was added
+* `sourceSideScanInfo()` was added
+
+#### `models.RecoveryPointTierInformationV2` was modified
+
+* `type()` was added
+* `extendedInfo()` was added
+* `status()` was added
+
+#### `models.BackupResourceEncryptionConfigResource` was modified
+
+* `location()` was added
+* `systemData()` was added
+* `tags()` was added
+
+#### `models.AzureWorkloadSqlRecoveryPointExtendedInfo` was modified
+
+* `includedDatabases()` was added
+
+#### `models.IlrRequestResource` was modified
+
+* `location()` was added
+* `systemData()` was added
+* `eTag()` was added
+* `tags()` was added
+* `withETag(java.lang.String)` was added
+
+#### `models.AzureVmWorkloadSapHanaDBInstanceProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+
+#### `models.WorkloadItemResource` was modified
+
+* `eTag()` was added
+* `systemData()` was added
+
+#### `models.RecoveryPointTierStatus` was modified
+
+* `RecoveryPointTierStatus()` was added
+
+#### `models.AzureIaaSClassicComputeVMProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+
+#### `models.GenericProtectedItem` was modified
+
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+
+#### `models.RecoveryPoint` was modified
+
+* `threatInfo()` was added
+* `threatStatus()` was added
+
+#### `models.JobResource` was modified
+
+* `systemData()` was added
+
+#### `models.AzureFileshareProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+
+#### `models.ProtectionIntentResource` was modified
+
+* `systemData()` was added
+
+#### `models.ProtectionContainerResource` was modified
+
+* `systemData()` was added
+
+#### `models.AzureSqlProtectedItem` was modified
+
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+
+#### `models.BackupRequestResource` was modified
+
+* `eTag()` was added
+* `tags()` was added
+* `systemData()` was added
+* `location()` was added
+* `withETag(java.lang.String)` was added
+
+#### `models.BackupResourceConfigResource` was modified
+
+* `systemData()` was added
+
+#### `models.ProtectionPolicyResource` was modified
+
+* `systemData()` was added
+
+#### `models.ProtectableContainerResource` was modified
+
+* `systemData()` was added
+* `eTag()` was added
+
+#### `models.ResourceGuardProxyOperations` was modified
+
+* `list(java.lang.String,java.lang.String)` was added
+* `list(java.lang.String,java.lang.String,com.azure.core.util.Context)` was added
+
+#### `models.DpmProtectedItem` was modified
+
+* `withSourceSideScanInfo(models.SourceSideScanInfo)` was added
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+
+## 1.6.0 (2025-04-17)
+
+- Azure Resource Manager RecoveryServicesBackup client library for Java. This package contains Microsoft Azure SDK for RecoveryServicesBackup Management SDK. Open API 2.0 Specs for Azure RecoveryServices Backup service. Package tag package-2025-02-01. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Features Added
+
+* `models.AzureWorkloadSapAsePointInTimeRestoreRequest` was added
+
+* `models.AzureWorkloadSapAseRestoreRequest` was added
+
+* `models.AzureVmWorkloadSapAseDatabaseProtectableItem` was added
+
+* `models.AzureWorkloadSapAsePointInTimeRecoveryPoint` was added
+
+* `models.AzureWorkloadSapAseRecoveryPoint` was added
+
+#### `models.AzureIaaSvmProtectedItem` was modified
+
+* `policyType()` was added
+
+#### `models.AzureFileShareRecoveryPoint` was modified
+
+* `recoveryPointTierDetails()` was added
+* `withRecoveryPointTierDetails(java.util.List)` was added
+
+#### `models.AzureStorageContainer` was modified
+
+* `operationType()` was added
+* `withOperationType(models.OperationType)` was added
+
+## 1.5.0 (2024-12-19)
+
+- Azure Resource Manager RecoveryServicesBackup client library for Java. This package contains Microsoft Azure SDK for RecoveryServicesBackup Management SDK. Open API 2.0 Specs for Azure RecoveryServices Backup service. Package tag package-2024-04. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Breaking Changes
+
+#### Serialization/Deserialization change
+
+- `Jackson` is removed from dependency and no longer supported.
+
+##### Migration Guide
+
+If you are using `Jackson`/`ObjectMapper` for manual serialization/deserialization, configure your `ObjectMapper` for backward compatibility:
+```java
+objectMapper.registerModule(com.azure.core.serializer.json.jackson.JacksonJsonProvider.getJsonSerializableDatabindModule());
+```
+
+### Features Added
+
+#### `models.RestoreRequestResource` was modified
+
+* `name()` was added
+* `id()` was added
+* `type()` was added
+
+#### `models.BackupResourceEncryptionConfigResource` was modified
+
+* `id()` was added
+* `type()` was added
+* `name()` was added
+
+#### `models.IlrRequestResource` was modified
+
+* `type()` was added
+* `id()` was added
+* `name()` was added
+
+#### `models.AzureIaaSvmHealthDetails` was modified
+
+* `message()` was added
+* `recommendations()` was added
+* `title()` was added
+* `code()` was added
+
+#### `models.BackupRequestResource` was modified
+
+* `id()` was added
+* `name()` was added
+* `type()` was added
+
+## 1.4.0 (2024-05-23)
+
+- Azure Resource Manager RecoveryServicesBackup client library for Java. This package contains Microsoft Azure SDK for RecoveryServicesBackup Management SDK. Open API 2.0 Specs for Azure RecoveryServices Backup service. Package tag package-2024-04. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+- IMPORTANT: use `AuxiliaryAuthenticationPolicy` from "azure-resourcemanager-resources" module via `RecoveryServicesBackupManager.configure().withPolicy(..)`, for setting "x-ms-authorization-auxiliary" header.
+
+### Features Added
+
+* `models.IaasVMSnapshotConsistencyType` was added
+
+#### `models.AzureWorkloadSqlPointInTimeRecoveryPoint` was modified
+
+* `objectType()` was added
+
+#### `models.AzureIaaSClassicComputeVMContainer` was modified
+
+* `containerType()` was added
+
+#### `models.IaaSvmContainer` was modified
+
+* `containerType()` was added
+
+#### `models.OperationStatusExtendedInfo` was modified
+
+* `objectType()` was added
+
+#### `models.AzureIaaSComputeVMProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.AzureWorkloadPointInTimeRecoveryPoint` was modified
+
+* `objectType()` was added
+
+#### `models.AzureFileShareProvisionIlrRequest` was modified
+
+* `objectType()` was added
+
+#### `models.AzureVmWorkloadSapHanaHsr` was modified
+
+* `protectableItemType()` was added
+
+#### `models.AzureWorkloadRecoveryPoint` was modified
+
+* `objectType()` was added
+
+#### `models.OperationStatusValidateOperationExtendedInfo` was modified
+
+* `objectType()` was added
+
+#### `models.AzureVMAppContainerProtectableContainer` was modified
+
+* `protectableContainerType()` was added
+
+#### `models.AzureVmWorkloadSapHanaSystemWorkloadItem` was modified
+
+* `workloadItemType()` was added
+
+#### `models.IaasVMRestoreRequest` was modified
+
+* `withResourceGuardOperationRequests(java.util.List)` was added
+* `objectType()` was added
+
+#### `models.OperationStatusProvisionIlrExtendedInfo` was modified
+
+* `objectType()` was added
+
+#### `models.AzureVmWorkloadSapHanaDatabaseWorkloadItem` was modified
+
+* `workloadItemType()` was added
+
+#### `models.MabFileFolderProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.GenericRecoveryPoint` was modified
+
+* `objectType()` was added
+
+#### `models.IaasVMBackupRequest` was modified
+
+* `objectType()` was added
+
+#### `models.DpmBackupEngine` was modified
+
+* `backupEngineType()` was added
+
+#### `models.AzureWorkloadSqlRecoveryPoint` was modified
+
+* `objectType()` was added
+
+#### `models.AzureStorageProtectableContainer` was modified
+
+* `protectableContainerType()` was added
+
+#### `models.AzureVmWorkloadSapHanaDBInstance` was modified
+
+* `protectableItemType()` was added
+
+#### `models.FetchTieringCostInfoForRehydrationRequest` was modified
+
+* `objectType()` was added
+
+#### `models.BackupEngineBase` was modified
+
+* `backupEngineType()` was added
+
+#### `models.RestoreRequest` was modified
+
+* `objectType()` was added
+* `resourceGuardOperationRequests()` was added
+* `withResourceGuardOperationRequests(java.util.List)` was added
+
+#### `models.ProtectableContainer` was modified
+
+* `protectableContainerType()` was added
+
+#### `models.AzureFileShareBackupRequest` was modified
+
+* `objectType()` was added
+
+#### `models.AzureWorkloadSapHanaPointInTimeRestoreWithRehydrateRequest` was modified
+
+* `withResourceGuardOperationRequests(java.util.List)` was added
+* `objectType()` was added
+
+#### `models.AzureVmWorkloadSapHanaDatabaseProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.LongTermSchedulePolicy` was modified
+
+* `schedulePolicyType()` was added
+
+#### `models.AzureVmWorkloadSqlInstanceProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.AzureVmWorkloadSqlAvailabilityGroupProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.AzureVmWorkloadSapAseDatabaseProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.AzureFileShareProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.AzureWorkloadSqlRestoreWithRehydrateRequest` was modified
+
+* `withResourceGuardOperationRequests(java.util.List)` was added
+* `objectType()` was added
+
+#### `models.MabContainer` was modified
+
+* `containerType()` was added
+
+#### `models.GenericProtectionPolicy` was modified
+
+* `backupManagementType()` was added
+
+#### `models.IaasVMRestoreWithRehydrationRequest` was modified
+
+* `withResourceGuardOperationRequests(java.util.List)` was added
+* `objectType()` was added
+
+#### `models.ValidateOperationRequest` was modified
+
+* `objectType()` was added
+
+#### `models.AzureWorkloadSapHanaPointInTimeRestoreRequest` was modified
+
+* `withResourceGuardOperationRequests(java.util.List)` was added
+* `objectType()` was added
+
+#### `models.AzureWorkloadSqlPointInTimeRestoreRequest` was modified
+
+* `objectType()` was added
+* `withResourceGuardOperationRequests(java.util.List)` was added
+
+#### `models.AzureWorkloadSqlAutoProtectionIntent` was modified
+
+* `protectionIntentItemType()` was added
+
+#### `models.BackupRequest` was modified
+
+* `objectType()` was added
+
+#### `models.TieringCostInfo` was modified
+
+* `objectType()` was added
+
+#### `models.MabJob` was modified
+
+* `jobType()` was added
+
+#### `models.AzureFileShareRestoreRequest` was modified
+
+* `withResourceGuardOperationRequests(java.util.List)` was added
+* `objectType()` was added
+
+#### `models.ProtectionContainer` was modified
+
+* `containerType()` was added
+
+#### `models.AzureWorkloadSapHanaPointInTimeRecoveryPoint` was modified
+
+* `objectType()` was added
+
+#### `models.AzureIaaSComputeVMProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.RetentionPolicy` was modified
+
+* `retentionPolicyType()` was added
+
+#### `models.AzureWorkloadSapHanaRestoreWithRehydrateRequest` was modified
+
+* `objectType()` was added
+* `withResourceGuardOperationRequests(java.util.List)` was added
+
+#### `models.AzureIaaSvmProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.AzureWorkloadContainerAutoProtectionIntent` was modified
+
+* `protectionIntentItemType()` was added
+
+#### `models.ProtectionPolicy` was modified
+
+* `backupManagementType()` was added
+
+#### `models.WorkloadItem` was modified
+
+* `workloadItemType()` was added
+
+#### `models.AzureWorkloadJob` was modified
+
+* `jobType()` was added
+
+#### `models.OperationResultInfoBase` was modified
+
+* `objectType()` was added
+
+#### `models.AzureIaaSvmJob` was modified
+
+* `jobType()` was added
+
+#### `models.FetchTieringCostSavingsInfoForVaultRequest` was modified
+
+* `objectType()` was added
+
+#### `models.SimpleRetentionPolicy` was modified
+
+* `retentionPolicyType()` was added
+
+#### `models.AzureIaaSvmProtectionPolicy` was modified
+
+* `snapshotConsistencyType()` was added
+* `backupManagementType()` was added
+* `withSnapshotConsistencyType(models.IaasVMSnapshotConsistencyType)` was added
+
+#### `models.LongTermRetentionPolicy` was modified
+
+* `retentionPolicyType()` was added
+
+#### `models.AzureVmWorkloadSapAseSystemWorkloadItem` was modified
+
+* `workloadItemType()` was added
+
+#### `models.IaasVmilrRegistrationRequest` was modified
+
+* `objectType()` was added
+
+#### `models.AzureSqlProtectionPolicy` was modified
+
+* `backupManagementType()` was added
+
+#### `models.ValidateIaasVMRestoreOperationRequest` was modified
+
+* `objectType()` was added
+
+#### `models.AzureStorageJob` was modified
+
+* `jobType()` was added
+
+#### `models.AzureVmWorkloadSqlDatabaseProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.WorkloadProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.SimpleSchedulePolicyV2` was modified
+
+* `schedulePolicyType()` was added
+
+#### `models.AzureVmWorkloadProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.AzureVmWorkloadItem` was modified
+
+* `workloadItemType()` was added
+
+#### `models.AzureVmWorkloadSqlInstanceWorkloadItem` was modified
+
+* `workloadItemType()` was added
+
+#### `models.AzureVmWorkloadProtectionPolicy` was modified
+
+* `backupManagementType()` was added
+
+#### `models.SchedulePolicy` was modified
+
+* `schedulePolicyType()` was added
+
+#### `models.ProtectionIntent` was modified
+
+* `protectionIntentItemType()` was added
+
+#### `models.AzureResourceProtectionIntent` was modified
+
+* `protectionIntentItemType()` was added
+
+#### `models.ProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.AzureSqlContainer` was modified
+
+* `containerType()` was added
+
+#### `models.AzureVmWorkloadSapHanaSystemProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.AzureSqlagWorkloadContainerProtectionContainer` was modified
+
+* `containerType()` was added
+
+#### `models.AzureVmWorkloadSapAseDatabaseWorkloadItem` was modified
+
+* `workloadItemType()` was added
+
+#### `models.AzureWorkloadRestoreRequest` was modified
+
+* `withResourceGuardOperationRequests(java.util.List)` was added
+* `objectType()` was added
+
+#### `models.VaultJob` was modified
+
+* `jobType()` was added
+
+#### `models.IlrRequest` was modified
+
+* `objectType()` was added
+
+#### `models.AzureVmWorkloadSqlDatabaseWorkloadItem` was modified
+
+* `workloadItemType()` was added
+
+#### `models.AzureVmWorkloadProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.GenericContainer` was modified
+
+* `containerType()` was added
+
+#### `models.AzureVMAppContainerProtectionContainer` was modified
+
+* `containerType()` was added
+
+#### `models.TieringCostRehydrationInfo` was modified
+
+* `objectType()` was added
+
+#### `models.IaasVMRecoveryPoint` was modified
+
+* `objectType()` was added
+
+#### `models.AzureVmWorkloadSapHanaDBInstanceProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.IaaSvmProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.AzureBackupServerContainer` was modified
+
+* `containerType()` was added
+
+#### `models.AzureBackupServerEngine` was modified
+
+* `backupEngineType()` was added
+
+#### `models.AzureIaaSClassicComputeVMProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.ExportJobsOperationResultInfo` was modified
+
+* `objectType()` was added
+
+#### `models.AzureFileShareRecoveryPoint` was modified
+
+* `objectType()` was added
+
+#### `models.OperationStatusJobExtendedInfo` was modified
+
+* `objectType()` was added
+
+#### `models.AzureWorkloadBackupRequest` was modified
+
+* `objectType()` was added
+
+#### `models.AzureWorkloadContainer` was modified
+
+* `containerType()` was added
+
+#### `models.FeatureSupportRequest` was modified
+
+* `featureType()` was added
+
+#### `models.ValidateRestoreOperationRequest` was modified
+
+* `objectType()` was added
+
+#### `models.AzureWorkloadAutoProtectionIntent` was modified
+
+* `protectionIntentItemType()` was added
+
+#### `models.FetchTieringCostInfoRequest` was modified
+
+* `objectType()` was added
+
+#### `models.DpmJob` was modified
+
+* `jobType()` was added
+
+#### `models.AzureVMResourceFeatureSupportRequest` was modified
+
+* `featureType()` was added
+
+#### `models.AzureIaaSClassicComputeVMProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.GenericProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.AzureWorkloadSapHanaRecoveryPoint` was modified
+
+* `objectType()` was added
+
+#### `models.OperationStatusJobsExtendedInfo` was modified
+
+* `objectType()` was added
+
+#### `models.RecoveryPoint` was modified
+
+* `objectType()` was added
+
+#### `models.AzureBackupGoalFeatureSupportRequest` was modified
+
+* `featureType()` was added
+
+#### `models.AzureVmWorkloadSqlDatabaseProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.SimpleSchedulePolicy` was modified
+
+* `schedulePolicyType()` was added
+
+#### `models.AzureVmWorkloadSapAseSystemProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+#### `models.MabProtectionPolicy` was modified
+
+* `backupManagementType()` was added
+
+#### `models.AzureFileshareProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.Job` was modified
+
+* `jobType()` was added
+
+#### `models.AzureRecoveryServiceVaultProtectionIntent` was modified
+
+* `protectionIntentItemType()` was added
+
+#### `models.AzureFileShareProtectionPolicy` was modified
+
+* `backupManagementType()` was added
+
+#### `models.FetchTieringCostSavingsInfoForProtectedItemRequest` was modified
+
+* `objectType()` was added
+
+#### `models.AzureSqlProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.OperationResultInfo` was modified
+
+* `objectType()` was added
+
+#### `models.AzureWorkloadSapHanaRestoreRequest` was modified
+
+* `withResourceGuardOperationRequests(java.util.List)` was added
+* `objectType()` was added
+
+#### `models.LogSchedulePolicy` was modified
+
+* `schedulePolicyType()` was added
+
+#### `models.AzureWorkloadSqlPointInTimeRestoreWithRehydrateRequest` was modified
+
+* `objectType()` was added
+* `withResourceGuardOperationRequests(java.util.List)` was added
+
+#### `models.VaultStorageConfigOperationResultResponse` was modified
+
+* `objectType()` was added
+
+#### `models.AzureWorkloadPointInTimeRestoreRequest` was modified
+
+* `objectType()` was added
+* `withResourceGuardOperationRequests(java.util.List)` was added
+
+#### `models.AzureWorkloadSqlRestoreRequest` was modified
+
+* `objectType()` was added
+* `withResourceGuardOperationRequests(java.util.List)` was added
+
+#### `models.AzureIaaSvmJobV2` was modified
+
+* `jobType()` was added
+
+#### `models.PrepareDataMoveResponse` was modified
+
+* `objectType()` was added
+
+#### `models.AzureStorageContainer` was modified
+
+* `containerType()` was added
+
+#### `models.TieringCostSavingInfo` was modified
+
+* `objectType()` was added
+
+#### `models.FetchTieringCostSavingsInfoForPolicyRequest` was modified
+
+* `objectType()` was added
+
+#### `models.AzureIaaSComputeVMContainer` was modified
+
+* `containerType()` was added
+
+#### `models.DpmContainer` was modified
+
+* `containerType()` was added
+
+#### `models.DpmProtectedItem` was modified
+
+* `protectedItemType()` was added
+
+#### `models.AzureVmWorkloadSapHanaDatabaseProtectableItem` was modified
+
+* `protectableItemType()` was added
+
+## 1.3.0 (2024-01-24)
+
+- Azure Resource Manager RecoveryServicesBackup client library for Java. This package contains Microsoft Azure SDK for RecoveryServicesBackup Management SDK. Open API 2.0 Specs for Azure RecoveryServices Backup service. Package tag package-2023-06. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Breaking Changes
+
+#### `models.ValidateOperations` was modified
+
+* `trigger(java.lang.String,java.lang.String,models.ValidateOperationRequest)` was removed
+* `trigger(java.lang.String,java.lang.String,models.ValidateOperationRequest,com.azure.core.util.Context)` was removed
+
+#### `models.OperationOperations` was modified
+
+* `validate(java.lang.String,java.lang.String,models.ValidateOperationRequest)` was removed
+* `validateWithResponse(java.lang.String,java.lang.String,models.ValidateOperationRequest,com.azure.core.util.Context)` was removed
+
+### Features Added
+
+* `models.TieringCostOperationStatus` was added
+
+* `models.FetchTieringCostInfoForRehydrationRequest` was added
+
+* `models.UserAssignedIdentityProperties` was added
+
+* `models.TieringCostInfo` was added
+
+* `models.GetTieringCostOperationResults` was added
+
+* `models.FetchTieringCostSavingsInfoForVaultRequest` was added
+
+* `models.UserAssignedManagedIdentityDetails` was added
+
+* `models.VaultRetentionPolicy` was added
+
+* `models.FetchTieringCosts` was added
+
+* `models.TieringCostRehydrationInfo` was added
+
+* `models.ValidateOperationRequestResource` was added
+
+* `models.FetchTieringCostInfoRequest` was added
+
+* `models.SnapshotRestoreParameters` was added
+
+* `models.SnapshotBackupAdditionalDetails` was added
+
+* `models.FetchTieringCostSavingsInfoForProtectedItemRequest` was added
+
+* `models.TieringCostSavingInfo` was added
+
+* `models.FetchTieringCostSavingsInfoForPolicyRequest` was added
+
+#### `models.AzureWorkloadSapHanaPointInTimeRestoreWithRehydrateRequest` was modified
+
+* `withUserAssignedManagedIdentityDetails(models.UserAssignedManagedIdentityDetails)` was added
+* `withTargetResourceGroupName(java.lang.String)` was added
+* `withSnapshotRestoreParameters(models.SnapshotRestoreParameters)` was added
+
+#### `models.AzureWorkloadSqlRestoreWithRehydrateRequest` was modified
+
+* `withSnapshotRestoreParameters(models.SnapshotRestoreParameters)` was added
+* `withTargetResourceGroupName(java.lang.String)` was added
+* `withUserAssignedManagedIdentityDetails(models.UserAssignedManagedIdentityDetails)` was added
+
+#### `models.AzureWorkloadSapHanaPointInTimeRestoreRequest` was modified
+
+* `withUserAssignedManagedIdentityDetails(models.UserAssignedManagedIdentityDetails)` was added
+* `withSnapshotRestoreParameters(models.SnapshotRestoreParameters)` was added
+* `withTargetResourceGroupName(java.lang.String)` was added
+
+#### `models.AzureWorkloadSqlPointInTimeRestoreRequest` was modified
+
+* `withUserAssignedManagedIdentityDetails(models.UserAssignedManagedIdentityDetails)` was added
+* `withSnapshotRestoreParameters(models.SnapshotRestoreParameters)` was added
+* `withTargetResourceGroupName(java.lang.String)` was added
+
+#### `models.SubProtectionPolicy` was modified
+
+* `withSnapshotBackupAdditionalDetails(models.SnapshotBackupAdditionalDetails)` was added
+* `snapshotBackupAdditionalDetails()` was added
+
+#### `models.AzureWorkloadSapHanaRestoreWithRehydrateRequest` was modified
+
+* `withUserAssignedManagedIdentityDetails(models.UserAssignedManagedIdentityDetails)` was added
+* `withSnapshotRestoreParameters(models.SnapshotRestoreParameters)` was added
+* `withTargetResourceGroupName(java.lang.String)` was added
+
+#### `models.ProtectedItem` was modified
+
+* `vaultId()` was added
+
+#### `models.AzureWorkloadRestoreRequest` was modified
+
+* `snapshotRestoreParameters()` was added
+* `targetResourceGroupName()` was added
+* `withTargetResourceGroupName(java.lang.String)` was added
+* `withUserAssignedManagedIdentityDetails(models.UserAssignedManagedIdentityDetails)` was added
+* `userAssignedManagedIdentityDetails()` was added
+* `withSnapshotRestoreParameters(models.SnapshotRestoreParameters)` was added
+
+#### `models.ValidateOperations` was modified
+
+* `trigger(java.lang.String,java.lang.String,models.ValidateOperationRequestResource,com.azure.core.util.Context)` was added
+* `trigger(java.lang.String,java.lang.String,models.ValidateOperationRequestResource)` was added
+
+#### `RecoveryServicesBackupManager` was modified
+
+* `fetchTieringCosts()` was added
+* `tieringCostOperationStatus()` was added
+* `getTieringCostOperationResults()` was added
+
+#### `models.AzureFileShareProtectionPolicy` was modified
+
+* `vaultRetentionPolicy()` was added
+* `withVaultRetentionPolicy(models.VaultRetentionPolicy)` was added
+
+#### `models.AzureWorkloadSapHanaRestoreRequest` was modified
+
+* `withUserAssignedManagedIdentityDetails(models.UserAssignedManagedIdentityDetails)` was added
+* `withSnapshotRestoreParameters(models.SnapshotRestoreParameters)` was added
+* `withTargetResourceGroupName(java.lang.String)` was added
+
+#### `models.AzureWorkloadSqlPointInTimeRestoreWithRehydrateRequest` was modified
+
+* `withUserAssignedManagedIdentityDetails(models.UserAssignedManagedIdentityDetails)` was added
+* `withTargetResourceGroupName(java.lang.String)` was added
+* `withSnapshotRestoreParameters(models.SnapshotRestoreParameters)` was added
+
+#### `models.AzureWorkloadPointInTimeRestoreRequest` was modified
+
+* `withUserAssignedManagedIdentityDetails(models.UserAssignedManagedIdentityDetails)` was added
+* `withTargetResourceGroupName(java.lang.String)` was added
+* `withSnapshotRestoreParameters(models.SnapshotRestoreParameters)` was added
+
+#### `models.AzureWorkloadSqlRestoreRequest` was modified
+
+* `withSnapshotRestoreParameters(models.SnapshotRestoreParameters)` was added
+* `withUserAssignedManagedIdentityDetails(models.UserAssignedManagedIdentityDetails)` was added
+* `withTargetResourceGroupName(java.lang.String)` was added
+
+#### `models.OperationOperations` was modified
+
+* `validate(java.lang.String,java.lang.String,models.ValidateOperationRequestResource)` was added
+* `validateWithResponse(java.lang.String,java.lang.String,models.ValidateOperationRequestResource,com.azure.core.util.Context)` was added
+
+## 1.2.0 (2023-10-12)
+
+- Azure Resource Manager RecoveryServicesBackup client library for Java. This package contains Microsoft Azure SDK for RecoveryServicesBackup Management SDK. Open API 2.0 Specs for Azure RecoveryServices Backup service. Package tag package-2023-04. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Features Added
+
+* `models.VaultSubResourceType` was added
+
+#### `models.AzureVmWorkloadSapHanaHsr` was modified
+
+* `withIsProtectable(java.lang.Boolean)` was added
+
+#### `models.AzureVmWorkloadSapHanaDBInstance` was modified
+
+* `withIsProtectable(java.lang.Boolean)` was added
+
+#### `models.AzureVmWorkloadSapHanaDatabaseProtectedItem` was modified
+
+* `withNodesList(java.util.List)` was added
+
+#### `models.AzureVmWorkloadSqlInstanceProtectableItem` was modified
+
+* `withIsProtectable(java.lang.Boolean)` was added
+
+#### `models.AzureVmWorkloadSqlAvailabilityGroupProtectableItem` was modified
+
+* `withNodesList(java.util.List)` was added
+* `withIsProtectable(java.lang.Boolean)` was added
+* `nodesList()` was added
+
+#### `models.AzureVmWorkloadSapAseDatabaseProtectedItem` was modified
+
+* `withNodesList(java.util.List)` was added
+
+#### `models.BackupStatusResponse` was modified
+
+* `protectedItemsCount()` was added
+* `acquireStorageAccountLock()` was added
+
+#### `models.BackupResourceVaultConfig` was modified
+
+* `softDeleteRetentionPeriodInDays()` was added
+* `withSoftDeleteRetentionPeriodInDays(java.lang.Integer)` was added
+
+#### `models.InquiryValidation` was modified
+
+* `protectableItemCount()` was added
+
+#### `models.AzureVmWorkloadSqlDatabaseProtectedItem` was modified
+
+* `withNodesList(java.util.List)` was added
+
+#### `models.AzureVmWorkloadProtectedItem` was modified
+
+* `withNodesList(java.util.List)` was added
+* `nodesList()` was added
+
+#### `models.AzureVmWorkloadSapHanaSystemProtectableItem` was modified
+
+* `withIsProtectable(java.lang.Boolean)` was added
+
+#### `models.AzureVmWorkloadProtectableItem` was modified
+
+* `isProtectable()` was added
+* `withIsProtectable(java.lang.Boolean)` was added
+
+#### `models.IaasVMRecoveryPoint` was modified
+
+* `extendedLocation()` was added
+* `withExtendedLocation(models.ExtendedLocation)` was added
+
+#### `models.AzureVmWorkloadSapHanaDBInstanceProtectedItem` was modified
+
+* `withNodesList(java.util.List)` was added
+
+#### `models.PrivateEndpointConnection` was modified
+
+* `withGroupIds(java.util.List)` was added
+* `groupIds()` was added
+
+#### `models.AzureVmWorkloadSqlDatabaseProtectableItem` was modified
+
+* `withIsProtectable(java.lang.Boolean)` was added
+
+#### `models.AzureVmWorkloadSapAseSystemProtectableItem` was modified
+
+* `withIsProtectable(java.lang.Boolean)` was added
+
+#### `models.DistributedNodesInfo` was modified
+
+* `withSourceResourceId(java.lang.String)` was added
+* `sourceResourceId()` was added
+
+#### `models.AzureVmWorkloadSapHanaDatabaseProtectableItem` was modified
+
+* `withIsProtectable(java.lang.Boolean)` was added
 
 ## 1.1.0 (2023-03-16)
 

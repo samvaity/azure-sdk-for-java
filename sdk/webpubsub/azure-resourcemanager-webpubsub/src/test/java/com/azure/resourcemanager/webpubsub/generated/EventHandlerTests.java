@@ -15,34 +15,28 @@ import org.junit.jupiter.api.Assertions;
 public final class EventHandlerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        EventHandler model =
-            BinaryData
-                .fromString(
-                    "{\"urlTemplate\":\"myhgfipnsxkmc\",\"userEventPattern\":\"ekrrjr\",\"systemEvents\":[\"xt\",\"gumhjglikkxws\"],\"auth\":{\"type\":\"None\",\"managedIdentity\":{\"resource\":\"vuzlm\"}}}")
-                .toObject(EventHandler.class);
-        Assertions.assertEquals("myhgfipnsxkmc", model.urlTemplate());
-        Assertions.assertEquals("ekrrjr", model.userEventPattern());
-        Assertions.assertEquals("xt", model.systemEvents().get(0));
+        EventHandler model = BinaryData.fromString(
+            "{\"urlTemplate\":\"coolsttpkiwkkb\",\"userEventPattern\":\"jrywvtylbfpnc\",\"systemEvents\":[\"oiwiithtywub\",\"cbihwqk\"],\"auth\":{\"type\":\"None\",\"managedIdentity\":{\"resource\":\"jchrdgoihxumw\"}}}")
+            .toObject(EventHandler.class);
+        Assertions.assertEquals("coolsttpkiwkkb", model.urlTemplate());
+        Assertions.assertEquals("jrywvtylbfpnc", model.userEventPattern());
+        Assertions.assertEquals("oiwiithtywub", model.systemEvents().get(0));
         Assertions.assertEquals(UpstreamAuthType.NONE, model.auth().type());
-        Assertions.assertEquals("vuzlm", model.auth().managedIdentity().resource());
+        Assertions.assertEquals("jchrdgoihxumw", model.auth().managedIdentity().resource());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        EventHandler model =
-            new EventHandler()
-                .withUrlTemplate("myhgfipnsxkmc")
-                .withUserEventPattern("ekrrjr")
-                .withSystemEvents(Arrays.asList("xt", "gumhjglikkxws"))
-                .withAuth(
-                    new UpstreamAuthSettings()
-                        .withType(UpstreamAuthType.NONE)
-                        .withManagedIdentity(new ManagedIdentitySettings().withResource("vuzlm")));
+        EventHandler model = new EventHandler().withUrlTemplate("coolsttpkiwkkb")
+            .withUserEventPattern("jrywvtylbfpnc")
+            .withSystemEvents(Arrays.asList("oiwiithtywub", "cbihwqk"))
+            .withAuth(new UpstreamAuthSettings().withType(UpstreamAuthType.NONE)
+                .withManagedIdentity(new ManagedIdentitySettings().withResource("jchrdgoihxumw")));
         model = BinaryData.fromObject(model).toObject(EventHandler.class);
-        Assertions.assertEquals("myhgfipnsxkmc", model.urlTemplate());
-        Assertions.assertEquals("ekrrjr", model.userEventPattern());
-        Assertions.assertEquals("xt", model.systemEvents().get(0));
+        Assertions.assertEquals("coolsttpkiwkkb", model.urlTemplate());
+        Assertions.assertEquals("jrywvtylbfpnc", model.userEventPattern());
+        Assertions.assertEquals("oiwiithtywub", model.systemEvents().get(0));
         Assertions.assertEquals(UpstreamAuthType.NONE, model.auth().type());
-        Assertions.assertEquals("vuzlm", model.auth().managedIdentity().resource());
+        Assertions.assertEquals("jchrdgoihxumw", model.auth().managedIdentity().resource());
     }
 }

@@ -16,48 +16,29 @@ import org.junit.jupiter.api.Assertions;
 public final class UserSessionListTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        UserSessionList model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"properties\":{\"objectId\":\"obyu\",\"userPrincipalName\":\"rpqlp\",\"applicationType\":\"Desktop\",\"sessionState\":\"Disconnected\",\"activeDirectoryUserName\":\"qgbdbuta\",\"createTime\":\"2021-06-13T06:16:01Z\"},\"id\":\"btkuwhh\",\"name\":\"hykojoxafnndlpic\",\"type\":\"koymkcd\"},{\"properties\":{\"objectId\":\"kkpwdreqnovvq\",\"userPrincipalName\":\"vljxywsu\",\"applicationType\":\"RemoteApp\",\"sessionState\":\"Active\",\"activeDirectoryUserName\":\"dsytgadgvr\",\"createTime\":\"2021-05-05T10:23:30Z\"},\"id\":\"en\",\"name\":\"qnzarrwl\",\"type\":\"uu\"},{\"properties\":{\"objectId\":\"kacewiipfp\",\"userPrincipalName\":\"ji\",\"applicationType\":\"RemoteApp\",\"sessionState\":\"Disconnected\",\"activeDirectoryUserName\":\"ohqkvpuvksgpls\",\"createTime\":\"2021-01-28T10:41:26Z\"},\"id\":\"ynfs\",\"name\":\"n\",\"type\":\"jphuopxodlqi\"}],\"nextLink\":\"torzih\"}")
-                .toObject(UserSessionList.class);
-        Assertions.assertEquals("rpqlp", model.value().get(0).userPrincipalName());
-        Assertions.assertEquals(ApplicationType.DESKTOP, model.value().get(0).applicationType());
-        Assertions.assertEquals(SessionState.DISCONNECTED, model.value().get(0).sessionState());
-        Assertions.assertEquals("qgbdbuta", model.value().get(0).activeDirectoryUsername());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-06-13T06:16:01Z"), model.value().get(0).createTime());
+        UserSessionList model = BinaryData.fromString(
+            "{\"value\":[{\"properties\":{\"objectId\":\"cirgzp\",\"userPrincipalName\":\"lazszrn\",\"applicationType\":\"RemoteApp\",\"sessionState\":\"Unknown\",\"activeDirectoryUserName\":\"fpwpjylwbt\",\"createTime\":\"2021-03-02T06:04:37Z\"},\"id\":\"sj\",\"name\":\"dhszfjv\",\"type\":\"bgofeljag\"}],\"nextLink\":\"mqhldvrii\"}")
+            .toObject(UserSessionList.class);
+        Assertions.assertEquals("lazszrn", model.value().get(0).userPrincipalName());
+        Assertions.assertEquals(ApplicationType.REMOTE_APP, model.value().get(0).applicationType());
+        Assertions.assertEquals(SessionState.UNKNOWN, model.value().get(0).sessionState());
+        Assertions.assertEquals("fpwpjylwbt", model.value().get(0).activeDirectoryUsername());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-03-02T06:04:37Z"), model.value().get(0).createTime());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        UserSessionList model =
-            new UserSessionList()
-                .withValue(
-                    Arrays
-                        .asList(
-                            new UserSessionInner()
-                                .withUserPrincipalName("rpqlp")
-                                .withApplicationType(ApplicationType.DESKTOP)
-                                .withSessionState(SessionState.DISCONNECTED)
-                                .withActiveDirectoryUsername("qgbdbuta")
-                                .withCreateTime(OffsetDateTime.parse("2021-06-13T06:16:01Z")),
-                            new UserSessionInner()
-                                .withUserPrincipalName("vljxywsu")
-                                .withApplicationType(ApplicationType.REMOTE_APP)
-                                .withSessionState(SessionState.ACTIVE)
-                                .withActiveDirectoryUsername("dsytgadgvr")
-                                .withCreateTime(OffsetDateTime.parse("2021-05-05T10:23:30Z")),
-                            new UserSessionInner()
-                                .withUserPrincipalName("ji")
-                                .withApplicationType(ApplicationType.REMOTE_APP)
-                                .withSessionState(SessionState.DISCONNECTED)
-                                .withActiveDirectoryUsername("ohqkvpuvksgpls")
-                                .withCreateTime(OffsetDateTime.parse("2021-01-28T10:41:26Z"))));
+        UserSessionList model
+            = new UserSessionList().withValue(Arrays.asList(new UserSessionInner().withUserPrincipalName("lazszrn")
+                .withApplicationType(ApplicationType.REMOTE_APP)
+                .withSessionState(SessionState.UNKNOWN)
+                .withActiveDirectoryUsername("fpwpjylwbt")
+                .withCreateTime(OffsetDateTime.parse("2021-03-02T06:04:37Z"))));
         model = BinaryData.fromObject(model).toObject(UserSessionList.class);
-        Assertions.assertEquals("rpqlp", model.value().get(0).userPrincipalName());
-        Assertions.assertEquals(ApplicationType.DESKTOP, model.value().get(0).applicationType());
-        Assertions.assertEquals(SessionState.DISCONNECTED, model.value().get(0).sessionState());
-        Assertions.assertEquals("qgbdbuta", model.value().get(0).activeDirectoryUsername());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-06-13T06:16:01Z"), model.value().get(0).createTime());
+        Assertions.assertEquals("lazszrn", model.value().get(0).userPrincipalName());
+        Assertions.assertEquals(ApplicationType.REMOTE_APP, model.value().get(0).applicationType());
+        Assertions.assertEquals(SessionState.UNKNOWN, model.value().get(0).sessionState());
+        Assertions.assertEquals("fpwpjylwbt", model.value().get(0).activeDirectoryUsername());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-03-02T06:04:37Z"), model.value().get(0).createTime());
     }
 }

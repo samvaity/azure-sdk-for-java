@@ -6,6 +6,7 @@ package com.azure.storage.file.share.specialized;
 import com.azure.core.annotation.ServiceClientBuilder;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpPipeline;
+import com.azure.core.util.CoreUtils;
 import com.azure.storage.file.share.ShareAsyncClient;
 import com.azure.storage.file.share.ShareClient;
 import com.azure.storage.file.share.ShareFileAsyncClient;
@@ -84,6 +85,12 @@ public final class ShareLeaseClientBuilder {
     private ShareTokenIntent shareTokenIntent;
     private boolean allowSourceTrailingDot;
     private boolean allowTrailingDot;
+
+    /**
+     * Creates a new instance of {@link ShareLeaseClientBuilder}.
+     */
+    public ShareLeaseClientBuilder() {
+    }
 
     /**
      * Creates a {@link ShareLeaseClient} based on the configurations set in the builder.
@@ -199,9 +206,8 @@ public final class ShareLeaseClientBuilder {
     }
 
     private String getLeaseId() {
-        return (leaseId == null) ? UUID.randomUUID().toString() : leaseId;
+        return (leaseId == null) ? CoreUtils.randomUuid().toString() : leaseId;
     }
-
 
     /**
      * Set the trailing dot property to specify whether trailing dot will be trimmed or not from the source URI.

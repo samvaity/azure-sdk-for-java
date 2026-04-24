@@ -5,53 +5,66 @@
 package com.azure.containers.containerregistry.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.json.JsonReader;
 import com.azure.json.JsonSerializable;
 import com.azure.json.JsonToken;
 import com.azure.json.JsonWriter;
 import java.io.IOException;
 
-/** Changeable attributes. */
+/**
+ * Changeable attributes.
+ */
 @Fluent
 public final class TagWriteableProperties implements JsonSerializable<TagWriteableProperties> {
     /*
      * Delete enabled
      */
+    @Generated
     private Boolean deleteEnabled;
 
     /*
      * Write enabled
      */
+    @Generated
     private Boolean writeEnabled;
 
     /*
      * List enabled
      */
+    @Generated
     private Boolean listEnabled;
 
     /*
      * Read enabled
      */
+    @Generated
     private Boolean readEnabled;
 
-    /** Creates an instance of TagWriteableProperties class. */
-    public TagWriteableProperties() {}
+    /**
+     * Creates an instance of TagWriteableProperties class.
+     */
+    @Generated
+    public TagWriteableProperties() {
+    }
 
     /**
      * Get the deleteEnabled property: Delete enabled.
-     *
+     * 
      * @return the deleteEnabled value.
      */
+    @Generated
     public Boolean isDeleteEnabled() {
         return this.deleteEnabled;
     }
 
     /**
      * Set the deleteEnabled property: Delete enabled.
-     *
+     * 
      * @param deleteEnabled the deleteEnabled value to set.
      * @return the TagWriteableProperties object itself.
      */
+    @Generated
     public TagWriteableProperties setDeleteEnabled(Boolean deleteEnabled) {
         this.deleteEnabled = deleteEnabled;
         return this;
@@ -59,19 +72,21 @@ public final class TagWriteableProperties implements JsonSerializable<TagWriteab
 
     /**
      * Get the writeEnabled property: Write enabled.
-     *
+     * 
      * @return the writeEnabled value.
      */
+    @Generated
     public Boolean isWriteEnabled() {
         return this.writeEnabled;
     }
 
     /**
      * Set the writeEnabled property: Write enabled.
-     *
+     * 
      * @param writeEnabled the writeEnabled value to set.
      * @return the TagWriteableProperties object itself.
      */
+    @Generated
     public TagWriteableProperties setWriteEnabled(Boolean writeEnabled) {
         this.writeEnabled = writeEnabled;
         return this;
@@ -79,19 +94,21 @@ public final class TagWriteableProperties implements JsonSerializable<TagWriteab
 
     /**
      * Get the listEnabled property: List enabled.
-     *
+     * 
      * @return the listEnabled value.
      */
+    @Generated
     public Boolean isListEnabled() {
         return this.listEnabled;
     }
 
     /**
      * Set the listEnabled property: List enabled.
-     *
+     * 
      * @param listEnabled the listEnabled value to set.
      * @return the TagWriteableProperties object itself.
      */
+    @Generated
     public TagWriteableProperties setListEnabled(Boolean listEnabled) {
         this.listEnabled = listEnabled;
         return this;
@@ -99,24 +116,30 @@ public final class TagWriteableProperties implements JsonSerializable<TagWriteab
 
     /**
      * Get the readEnabled property: Read enabled.
-     *
+     * 
      * @return the readEnabled value.
      */
+    @Generated
     public Boolean isReadEnabled() {
         return this.readEnabled;
     }
 
     /**
      * Set the readEnabled property: Read enabled.
-     *
+     * 
      * @param readEnabled the readEnabled value to set.
      * @return the TagWriteableProperties object itself.
      */
+    @Generated
     public TagWriteableProperties setReadEnabled(Boolean readEnabled) {
         this.readEnabled = readEnabled;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
         jsonWriter.writeStartObject();
@@ -129,36 +152,34 @@ public final class TagWriteableProperties implements JsonSerializable<TagWriteab
 
     /**
      * Reads an instance of TagWriteableProperties from the JsonReader.
-     *
+     * 
      * @param jsonReader The JsonReader being read.
      * @return An instance of TagWriteableProperties if the JsonReader was pointing to an instance of it, or null if it
-     *     was pointing to JSON null.
+     * was pointing to JSON null.
      * @throws IOException If an error occurs while reading the TagWriteableProperties.
      */
+    @Generated
     public static TagWriteableProperties fromJson(JsonReader jsonReader) throws IOException {
-        return jsonReader.readObject(
-                reader -> {
-                    TagWriteableProperties deserializedTagWriteableProperties = new TagWriteableProperties();
-                    while (reader.nextToken() != JsonToken.END_OBJECT) {
-                        String fieldName = reader.getFieldName();
-                        reader.nextToken();
+        return jsonReader.readObject(reader -> {
+            TagWriteableProperties deserializedTagWriteableProperties = new TagWriteableProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
 
-                        if ("deleteEnabled".equals(fieldName)) {
-                            deserializedTagWriteableProperties.deleteEnabled =
-                                    reader.getNullable(JsonReader::getBoolean);
-                        } else if ("writeEnabled".equals(fieldName)) {
-                            deserializedTagWriteableProperties.writeEnabled =
-                                    reader.getNullable(JsonReader::getBoolean);
-                        } else if ("listEnabled".equals(fieldName)) {
-                            deserializedTagWriteableProperties.listEnabled = reader.getNullable(JsonReader::getBoolean);
-                        } else if ("readEnabled".equals(fieldName)) {
-                            deserializedTagWriteableProperties.readEnabled = reader.getNullable(JsonReader::getBoolean);
-                        } else {
-                            reader.skipChildren();
-                        }
-                    }
+                if ("deleteEnabled".equals(fieldName)) {
+                    deserializedTagWriteableProperties.deleteEnabled = reader.getNullable(JsonReader::getBoolean);
+                } else if ("writeEnabled".equals(fieldName)) {
+                    deserializedTagWriteableProperties.writeEnabled = reader.getNullable(JsonReader::getBoolean);
+                } else if ("listEnabled".equals(fieldName)) {
+                    deserializedTagWriteableProperties.listEnabled = reader.getNullable(JsonReader::getBoolean);
+                } else if ("readEnabled".equals(fieldName)) {
+                    deserializedTagWriteableProperties.readEnabled = reader.getNullable(JsonReader::getBoolean);
+                } else {
+                    reader.skipChildren();
+                }
+            }
 
-                    return deserializedTagWriteableProperties;
-                });
+            return deserializedTagWriteableProperties;
+        });
     }
 }

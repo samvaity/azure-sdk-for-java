@@ -4,75 +4,120 @@
 
 package com.azure.monitor.query.implementation.metricsdefinitions.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The unit of the metric. */
+/**
+ * The unit of the metric.
+ */
 public final class MetricUnit extends ExpandableStringEnum<MetricUnit> {
-    /** Static value Count for MetricUnit. */
+    /**
+     * Unit of raw quantity.
+     */
+    @Generated
     public static final MetricUnit COUNT = fromString("Count");
 
-    /** Static value Bytes for MetricUnit. */
+    /**
+     * Unit of memory in bytes.
+     */
+    @Generated
     public static final MetricUnit BYTES = fromString("Bytes");
 
-    /** Static value Seconds for MetricUnit. */
+    /**
+     * Unit of time in seconds.
+     */
+    @Generated
     public static final MetricUnit SECONDS = fromString("Seconds");
 
-    /** Static value CountPerSecond for MetricUnit. */
+    /**
+     * Rate unit of raw quantity per second.
+     */
+    @Generated
     public static final MetricUnit COUNT_PER_SECOND = fromString("CountPerSecond");
 
-    /** Static value BytesPerSecond for MetricUnit. */
+    /**
+     * Rate unit of memory in bytes per second.
+     */
+    @Generated
     public static final MetricUnit BYTES_PER_SECOND = fromString("BytesPerSecond");
 
-    /** Static value Percent for MetricUnit. */
+    /**
+     * Percentage unit.
+     */
+    @Generated
     public static final MetricUnit PERCENT = fromString("Percent");
 
-    /** Static value MilliSeconds for MetricUnit. */
+    /**
+     * Unit of time in 1/1000th of a second.
+     */
+    @Generated
     public static final MetricUnit MILLI_SECONDS = fromString("MilliSeconds");
 
-    /** Static value ByteSeconds for MetricUnit. */
+    /**
+     * Unit of data transfer or storage. It is the size of the data in bytes multiplied by the time it takes to transfer
+     * or store the data in seconds.
+     */
+    @Generated
     public static final MetricUnit BYTE_SECONDS = fromString("ByteSeconds");
 
-    /** Static value Unspecified for MetricUnit. */
+    /**
+     * No specified unit.
+     */
+    @Generated
     public static final MetricUnit UNSPECIFIED = fromString("Unspecified");
 
-    /** Static value Cores for MetricUnit. */
+    /**
+     * Unit of processing power.
+     */
+    @Generated
     public static final MetricUnit CORES = fromString("Cores");
 
-    /** Static value MilliCores for MetricUnit. */
+    /**
+     * Unit of processing power in 1/1000th of a CPU core.
+     */
+    @Generated
     public static final MetricUnit MILLI_CORES = fromString("MilliCores");
 
-    /** Static value NanoCores for MetricUnit. */
+    /**
+     * Unit of processing power in one billionth of a CPU core.
+     */
+    @Generated
     public static final MetricUnit NANO_CORES = fromString("NanoCores");
 
-    /** Static value BitsPerSecond for MetricUnit. */
+    /**
+     * Rate unit of binary digits per second.
+     */
+    @Generated
     public static final MetricUnit BITS_PER_SECOND = fromString("BitsPerSecond");
 
     /**
      * Creates a new instance of MetricUnit value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public MetricUnit() {}
+    public MetricUnit() {
+    }
 
     /**
      * Creates or finds a MetricUnit from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding MetricUnit.
      */
-    @JsonCreator
+    @Generated
     public static MetricUnit fromString(String name) {
         return fromString(name, MetricUnit.class);
     }
 
     /**
      * Gets known MetricUnit values.
-     *
+     * 
      * @return known MetricUnit values.
      */
+    @Generated
     public static Collection<MetricUnit> values() {
         return values(MetricUnit.class);
     }

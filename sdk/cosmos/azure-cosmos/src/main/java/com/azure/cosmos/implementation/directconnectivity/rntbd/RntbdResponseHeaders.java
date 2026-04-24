@@ -26,10 +26,11 @@ import static com.azure.cosmos.implementation.HttpConstants.HttpHeaders;
 import static com.azure.cosmos.implementation.directconnectivity.WFConstants.BackendHeaders;
 import static com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdConstants.RntbdIndexingDirective;
 import static com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdConstants.RntbdResponseHeader;
+import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNotNull;
 
 @SuppressWarnings("UnstableApiUsage")
 @JsonFilter("RntbdToken")
-class RntbdResponseHeaders extends RntbdTokenStream<RntbdResponseHeader> {
+public class RntbdResponseHeaders extends RntbdTokenStream<RntbdResponseHeader> {
 
     // region Fields
 
@@ -139,12 +140,16 @@ class RntbdResponseHeaders extends RntbdTokenStream<RntbdResponseHeader> {
     private final RntbdToken backendRequestDurationMilliseconds;
     @JsonProperty
     private final RntbdToken correlatedActivityId;
+    @JsonProperty
+    private final RntbdToken queryAdvice;
+    @JsonProperty
+    private final RntbdToken globalNRegionCommittedGLSN;
 
     // endregion
 
     private RntbdResponseHeaders(ByteBuf in) {
 
-        super(RntbdResponseHeader.set, RntbdResponseHeader.map, in);
+        super(RntbdResponseHeader.set, RntbdResponseHeader.map, in, RntbdResponseHeader.class);
 
         this.LSN = this.get(RntbdResponseHeader.LSN);
         this.collectionLazyIndexProgress = this.get(RntbdResponseHeader.CollectionLazyIndexProgress);
@@ -199,31 +204,36 @@ class RntbdResponseHeaders extends RntbdTokenStream<RntbdResponseHeader> {
         this.xpRole = this.get(RntbdResponseHeader.XPRole);
         this.backendRequestDurationMilliseconds = this.get(RntbdResponseHeader.BackendRequestDurationMilliseconds);
         this.correlatedActivityId = this.get(RntbdResponseHeader.CorrelatedActivityId);
+        this.queryAdvice = this.get(RntbdResponseHeader.QueryAdvice);
+        this.globalNRegionCommittedGLSN = this.get(RntbdResponseHeader.GlobalNRegionCommittedGLSN);
     }
 
     boolean isPayloadPresent() {
         return this.payloadPresent.isPresent() && this.payloadPresent.getValue(Byte.class) != 0x00;
     }
 
-    List<Map.Entry<String, String>> asList(final RntbdContext context, final UUID activityId) {
+    public Map<String, String> asMap(final String serverVersion, final UUID activityId) {
 
-        final ImmutableList.Builder<Map.Entry<String, String>> builder = ImmutableList.builderWithExpectedSize(this.computeCount() + 2);
-        builder.add(new Entry(HttpHeaders.SERVER_VERSION, context.serverVersion()));
-        builder.add(new Entry(HttpHeaders.ACTIVITY_ID, activityId.toString()));
+        checkNotNull(serverVersion, "Argument 'serverVersion' must not be null.");
+        checkNotNull(activityId, "Argument 'activityId' must not be null.");
+
+        final ImmutableMap.Builder<String, String> builder = ImmutableMap.builderWithExpectedSize(
+            this.computeCount(false) + 2);
+        builder.put(new Entry(HttpHeaders.SERVER_VERSION, serverVersion));
+        builder.put(new Entry(HttpHeaders.ACTIVITY_ID, activityId.toString()));
 
         this.collectEntries((token, toEntry) -> {
             if (token.isPresent()) {
-                builder.add(toEntry.apply(token));
+                builder.put(toEntry.apply(token));
             }
         });
 
         return builder.build();
     }
 
-    public Map<String, String> asMap(final RntbdContext context, final UUID activityId) {
+    public Map<String, String> asMap(final UUID activityId) {
 
-        final ImmutableMap.Builder<String, String> builder = ImmutableMap.builderWithExpectedSize(this.computeCount() + 2);
-        builder.put(new Entry(HttpHeaders.SERVER_VERSION, context.serverVersion()));
+        final ImmutableMap.Builder<String, String> builder = ImmutableMap.builderWithExpectedSize(this.computeCount(false) + 1);
         builder.put(new Entry(HttpHeaders.ACTIVITY_ID, activityId.toString()));
 
         this.collectEntries((token, toEntry) -> {
@@ -300,6 +310,8 @@ class RntbdResponseHeaders extends RntbdTokenStream<RntbdResponseHeader> {
         this.mapValue(this.xpRole, BackendHeaders.XP_ROLE, Integer::parseInt, headers);
         this.mapValue(this.backendRequestDurationMilliseconds, BackendHeaders.BACKEND_REQUEST_DURATION_MILLISECONDS, Double::parseDouble, headers);
         this.mapValue(this.correlatedActivityId, HttpHeaders.CORRELATED_ACTIVITY_ID, UUID::fromString, headers);
+        this.mapValue(this.queryAdvice, BackendHeaders.QUERY_ADVICE, String::toString, headers);
+        this.mapValue(this.globalNRegionCommittedGLSN, BackendHeaders.GLOBAL_N_REGION_COMMITTED_GLSN, Long::parseLong, headers);
     }
 
     @Override
@@ -499,6 +511,14 @@ class RntbdResponseHeaders extends RntbdTokenStream<RntbdResponseHeader> {
 
         collector.accept(this.correlatedActivityId, token ->
             toUuidEntry(HttpHeaders.CORRELATED_ACTIVITY_ID, token));
+
+        collector.accept(this.queryAdvice, token ->
+            toStringEntry(BackendHeaders.QUERY_ADVICE, token)
+        );
+
+        collector.accept(this.globalNRegionCommittedGLSN, token ->
+            toLongEntry(BackendHeaders.GLOBAL_N_REGION_COMMITTED_GLSN, token)
+        );
     }
 
     private void mapValue(final RntbdToken token, final String name, final Function<String, Object> parse, final Map<String, String> headers) {

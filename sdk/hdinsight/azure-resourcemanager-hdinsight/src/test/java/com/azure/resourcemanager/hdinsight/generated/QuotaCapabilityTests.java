@@ -13,36 +13,38 @@ import org.junit.jupiter.api.Assertions;
 public final class QuotaCapabilityTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        QuotaCapability model =
-            BinaryData
-                .fromString(
-                    "{\"coresUsed\":5551569076358580820,\"maxCoresAllowed\":3267053393250008871,\"regionalQuotas\":[{\"regionName\":\"grauwjuetaebur\",\"coresUsed\":6667663712851473070,\"coresAvailable\":308370800789582415}]}")
-                .toObject(QuotaCapability.class);
-        Assertions.assertEquals(5551569076358580820L, model.coresUsed());
-        Assertions.assertEquals(3267053393250008871L, model.maxCoresAllowed());
-        Assertions.assertEquals("grauwjuetaebur", model.regionalQuotas().get(0).regionName());
-        Assertions.assertEquals(6667663712851473070L, model.regionalQuotas().get(0).coresUsed());
-        Assertions.assertEquals(308370800789582415L, model.regionalQuotas().get(0).coresAvailable());
+        QuotaCapability model = BinaryData.fromString(
+            "{\"coresUsed\":5312783206880341268,\"maxCoresAllowed\":6849457451153472340,\"regionalQuotas\":[{\"regionName\":\"yvpnqicvinvkjj\",\"coresUsed\":2589593210312984687,\"coresAvailable\":4841685687030485565},{\"regionName\":\"zclewyhmlw\",\"coresUsed\":4550643593085904235,\"coresAvailable\":7583753681353365970},{\"regionName\":\"ncckw\",\"coresUsed\":8886702787587006414,\"coresAvailable\":3042520873756069098},{\"regionName\":\"buy\",\"coresUsed\":3879488324332332971,\"coresAvailable\":3336688530797945721}]}")
+            .toObject(QuotaCapability.class);
+        Assertions.assertEquals(5312783206880341268L, model.coresUsed());
+        Assertions.assertEquals(6849457451153472340L, model.maxCoresAllowed());
+        Assertions.assertEquals("yvpnqicvinvkjj", model.regionalQuotas().get(0).regionName());
+        Assertions.assertEquals(2589593210312984687L, model.regionalQuotas().get(0).coresUsed());
+        Assertions.assertEquals(4841685687030485565L, model.regionalQuotas().get(0).coresAvailable());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        QuotaCapability model =
-            new QuotaCapability()
-                .withCoresUsed(5551569076358580820L)
-                .withMaxCoresAllowed(3267053393250008871L)
-                .withRegionalQuotas(
-                    Arrays
-                        .asList(
-                            new RegionalQuotaCapability()
-                                .withRegionName("grauwjuetaebur")
-                                .withCoresUsed(6667663712851473070L)
-                                .withCoresAvailable(308370800789582415L)));
+        QuotaCapability model = new QuotaCapability().withCoresUsed(5312783206880341268L)
+            .withMaxCoresAllowed(6849457451153472340L)
+            .withRegionalQuotas(Arrays.asList(
+                new RegionalQuotaCapability().withRegionName("yvpnqicvinvkjj")
+                    .withCoresUsed(2589593210312984687L)
+                    .withCoresAvailable(4841685687030485565L),
+                new RegionalQuotaCapability().withRegionName("zclewyhmlw")
+                    .withCoresUsed(4550643593085904235L)
+                    .withCoresAvailable(7583753681353365970L),
+                new RegionalQuotaCapability().withRegionName("ncckw")
+                    .withCoresUsed(8886702787587006414L)
+                    .withCoresAvailable(3042520873756069098L),
+                new RegionalQuotaCapability().withRegionName("buy")
+                    .withCoresUsed(3879488324332332971L)
+                    .withCoresAvailable(3336688530797945721L)));
         model = BinaryData.fromObject(model).toObject(QuotaCapability.class);
-        Assertions.assertEquals(5551569076358580820L, model.coresUsed());
-        Assertions.assertEquals(3267053393250008871L, model.maxCoresAllowed());
-        Assertions.assertEquals("grauwjuetaebur", model.regionalQuotas().get(0).regionName());
-        Assertions.assertEquals(6667663712851473070L, model.regionalQuotas().get(0).coresUsed());
-        Assertions.assertEquals(308370800789582415L, model.regionalQuotas().get(0).coresAvailable());
+        Assertions.assertEquals(5312783206880341268L, model.coresUsed());
+        Assertions.assertEquals(6849457451153472340L, model.maxCoresAllowed());
+        Assertions.assertEquals("yvpnqicvinvkjj", model.regionalQuotas().get(0).regionName());
+        Assertions.assertEquals(2589593210312984687L, model.regionalQuotas().get(0).coresUsed());
+        Assertions.assertEquals(4841685687030485565L, model.regionalQuotas().get(0).coresAvailable());
     }
 }

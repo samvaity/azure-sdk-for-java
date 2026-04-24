@@ -16,6 +16,7 @@ import com.azure.spring.messaging.servicebus.core.properties.NamespaceProperties
 import com.azure.spring.messaging.servicebus.core.properties.ProducerProperties;
 import com.azure.spring.messaging.servicebus.implementation.properties.merger.SenderPropertiesParentMerger;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
@@ -36,13 +37,17 @@ import static com.azure.spring.messaging.implementation.config.AzureMessagingBoo
  * take advantage.
  * </p>
  */
+@SuppressWarnings("deprecation")
 public final class DefaultServiceBusNamespaceProducerFactory implements ServiceBusProducerFactory, DisposableBean {
 
     private final List<Listener> listeners = new ArrayList<>();
+    private ApplicationContext applicationContext;
     private final NamespaceProperties namespaceProperties;
     private final PropertiesSupplier<String, ProducerProperties> propertiesSupplier;
     private final Map<String, ServiceBusSenderAsyncClient> clients = new ConcurrentHashMap<>();
     private final SenderPropertiesParentMerger parentMerger = new SenderPropertiesParentMerger();
+
+    private final List<AzureServiceClientBuilderCustomizer<ServiceBusClientBuilder>> serviceBusClientBuilderCustomizers = new ArrayList<>();
     private final List<AzureServiceClientBuilderCustomizer<ServiceBusClientBuilder.ServiceBusSenderClientBuilder>> customizers = new ArrayList<>();
     private final Map<String, List<AzureServiceClientBuilderCustomizer<ServiceBusClientBuilder.ServiceBusSenderClientBuilder>>> dedicatedCustomizers = new HashMap<>();
     private AzureCredentialResolver<TokenCredential> tokenCredentialResolver = null;
@@ -76,7 +81,10 @@ public final class DefaultServiceBusNamespaceProducerFactory implements ServiceB
     public ServiceBusSenderAsyncClient createProducer(String name, ServiceBusEntityType entityType) {
         ProducerProperties producerProperties = this.propertiesSupplier.getProperties(name) != null
             ? this.propertiesSupplier.getProperties(name) : new ProducerProperties();
-        if (entityType != null) {
+        // Assign the entityType from the method parameter to producerProperties only if
+        // producerProperties' entityType is null. This ensures that the method parameter
+        // has a lower priority compared to an already set entityType in producerProperties.
+        if (producerProperties.getEntityType() == null && entityType != null) {
             producerProperties.setEntityType(entityType);
         }
         return doCreateProducer(name, producerProperties);
@@ -107,11 +115,12 @@ public final class DefaultServiceBusNamespaceProducerFactory implements ServiceB
             ProducerProperties producerProperties = parentMerger.merge(properties, this.namespaceProperties);
             producerProperties.setEntityName(entityName);
 
-            ServiceBusSenderClientBuilderFactory factory = new ServiceBusSenderClientBuilderFactory(producerProperties);
+            ServiceBusSenderClientBuilderFactory factory = new ServiceBusSenderClientBuilderFactory(producerProperties, this.serviceBusClientBuilderCustomizers);
 
             factory.setDefaultTokenCredential(this.defaultCredential);
             factory.setTokenCredentialResolver(this.tokenCredentialResolver);
             factory.setSpringIdentifier(AzureSpringIdentifier.AZURE_SPRING_INTEGRATION_SERVICE_BUS);
+            factory.setApplicationContext(this.applicationContext);
 
             ServiceBusClientBuilder.ServiceBusSenderClientBuilder builder = factory.build();
             customizeBuilder(name, builder);
@@ -141,13 +150,28 @@ public final class DefaultServiceBusNamespaceProducerFactory implements ServiceB
     }
 
     /**
+     * Add a {@link com.azure.messaging.servicebus.ServiceBusClientBuilder}
+     * customizer to customize the shared client builder created in this factory, it's used to build other sender clients.
+     *
+     * @param customizer the provided builder customizer.
+     */
+    public void addServiceBusClientBuilderCustomizer(AzureServiceClientBuilderCustomizer<ServiceBusClientBuilder> customizer) {
+        if (customizer == null) {
+            LOGGER.debug("The provided '{}' customizer is null, will ignore it.", ServiceBusClientBuilder.class.getName());
+        } else {
+            this.serviceBusClientBuilderCustomizers.add(customizer);
+        }
+    }
+
+    /**
      * Add a service client builder customizer to customize all the clients created from this factory.
      *
      * @param customizer the provided customizer.
      */
     public void addBuilderCustomizer(AzureServiceClientBuilderCustomizer<ServiceBusClientBuilder.ServiceBusSenderClientBuilder> customizer) {
         if (customizer == null) {
-            LOGGER.debug("The provided customizer is null, will ignore it.");
+            LOGGER.debug("The provided '{}' customizer is null, will ignore it.",
+                ServiceBusClientBuilder.ServiceBusSenderClientBuilder.class.getName());
             return;
         }
         this.customizers.add(customizer);
@@ -163,7 +187,8 @@ public final class DefaultServiceBusNamespaceProducerFactory implements ServiceB
     public void addBuilderCustomizer(String entityName,
                                      AzureServiceClientBuilderCustomizer<ServiceBusClientBuilder.ServiceBusSenderClientBuilder> customizer) {
         if (customizer == null) {
-            LOGGER.debug("The provided customizer is null, will ignore it.");
+            LOGGER.debug("The provided '{}' dedicated customizer is null, will ignore it.",
+                ServiceBusClientBuilder.ServiceBusSenderClientBuilder.class.getName());
             return;
         }
         this.dedicatedCustomizers
@@ -177,4 +202,11 @@ public final class DefaultServiceBusNamespaceProducerFactory implements ServiceB
                                  .forEach(customizer -> customizer.customize(builder));
     }
 
+    /**
+     * Set the application context.
+     * @param applicationContext the application context.
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 }

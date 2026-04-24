@@ -5,6 +5,7 @@ package com.azure.identity.implementation;
 
 import com.azure.core.exception.ClientAuthenticationException;
 import com.azure.core.util.logging.ClientLogger;
+import com.azure.identity.implementation.util.IdentityUtil;
 import com.microsoft.aad.msal4j.ITokenCacheAccessAspect;
 import com.microsoft.aad.msal4j.ITokenCacheAccessContext;
 import com.microsoft.aad.msal4jextensions.PersistenceSettings;
@@ -61,8 +62,8 @@ public class PersistentTokenCacheImpl implements ITokenCacheAccessAspect {
             cacheAccessAspect = new PersistenceTokenCacheAccessAspect(persistenceSettings);
             return true;
         } catch (Throwable t) {
-            throw LOGGER.logExceptionAsError(new ClientAuthenticationException(
-                "Shared token cache is unavailable in this environment.", null, t));
+            throw LOGGER.logExceptionAsError(
+                new ClientAuthenticationException("Shared token cache is unavailable in this environment.", null, t));
         }
     }
 
@@ -75,24 +76,27 @@ public class PersistentTokenCacheImpl implements ITokenCacheAccessAspect {
     }
 
     private PersistenceSettings getPersistenceSettings() {
-        PersistenceSettings.Builder persistenceSettingsBuilder = PersistenceSettings.builder(
-            getCacheName(name != null ? name : DEFAULT_CACHE_FILE_NAME), DEFAULT_CACHE_FILE_PATH);
+        PersistenceSettings.Builder persistenceSettingsBuilder = PersistenceSettings
+            .builder(getCacheName(name != null ? name : DEFAULT_CACHE_FILE_NAME), DEFAULT_CACHE_FILE_PATH);
         if (Platform.isMac()) {
-            persistenceSettingsBuilder.setMacKeychain(
-                DEFAULT_KEYCHAIN_SERVICE, getCacheName(name != null ? name : DEFAULT_KEYCHAIN_ACCOUNT));
+            persistenceSettingsBuilder.setMacKeychain(DEFAULT_KEYCHAIN_SERVICE,
+                getCacheName(name != null ? name : DEFAULT_KEYCHAIN_ACCOUNT));
             return persistenceSettingsBuilder.build();
         } else if (Platform.isLinux()) {
             try {
-                persistenceSettingsBuilder
-                    .setLinuxKeyring(DEFAULT_KEYRING_NAME, DEFAULT_KEYRING_SCHEMA,
-                        getCacheName(name != null ? name : DEFAULT_KEYRING_ITEM_NAME), DEFAULT_KEYRING_ATTR_NAME,
-                        DEFAULT_KEYRING_ATTR_VALUE, null, null);
+                persistenceSettingsBuilder.setLinuxKeyring(DEFAULT_KEYRING_NAME, DEFAULT_KEYRING_SCHEMA,
+                    getCacheName(name != null ? name : DEFAULT_KEYRING_ITEM_NAME), DEFAULT_KEYRING_ATTR_NAME,
+                    DEFAULT_KEYRING_ATTR_VALUE, null, null);
                 return persistenceSettingsBuilder.build();
-            } catch (KeyRingAccessException e) {
-                if (!allowUnencryptedStorage) {
-                    throw LOGGER.logExceptionAsError(e);
+            } catch (Exception e) {
+                if (e instanceof KeyRingAccessException || !IdentityUtil.isKeyRingAccessible()) {
+                    if (!allowUnencryptedStorage) {
+                        throw LOGGER.logExceptionAsError(e instanceof KeyRingAccessException
+                            ? ((KeyRingAccessException) e)
+                            : new RuntimeException(e));
+                    }
+                    persistenceSettingsBuilder.setLinuxUseUnprotectedFileAsCacheStorage(true);
                 }
-                persistenceSettingsBuilder.setLinuxUseUnprotectedFileAsCacheStorage(true);
                 return persistenceSettingsBuilder.build();
             }
         }

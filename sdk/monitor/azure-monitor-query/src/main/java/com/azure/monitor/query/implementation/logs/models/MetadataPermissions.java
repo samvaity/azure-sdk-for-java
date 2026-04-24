@@ -5,70 +5,76 @@
 package com.azure.monitor.query.implementation.logs.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
 /**
  * Permission information.
- *
- * <p>Permission information for the metadata call, includes apps/workspaces/resource the user didn't have access to.
+ * 
+ * Permission information for the metadata call, includes apps/workspaces/resource the user didn't have access to.
  */
 @Fluent
-public final class MetadataPermissions {
+public final class MetadataPermissions implements JsonSerializable<MetadataPermissions> {
     /*
      * The permission indication for the workspaces on the metadata request.
      */
-    @JsonProperty(value = "workspaces", required = true)
-    private List<MetadataPermissionsWorkspacesItem> workspaces;
+    @Generated
+    private final List<MetadataPermissionsWorkspacesItem> workspaces;
 
     /*
      * The permission indication for the Azure resources on the metadata request.
      */
-    @JsonProperty(value = "resources")
+    @Generated
     private List<MetadataPermissionsResourcesItem> resources;
 
     /*
      * The permission indication for the Application Insights apps on the metadata request.
      */
-    @JsonProperty(value = "applications")
+    @Generated
     private List<MetadataPermissionsApplicationsItem> applications;
 
     /**
      * Creates an instance of MetadataPermissions class.
-     *
+     * 
      * @param workspaces the workspaces value to set.
      */
-    @JsonCreator
-    public MetadataPermissions(
-            @JsonProperty(value = "workspaces", required = true) List<MetadataPermissionsWorkspacesItem> workspaces) {
+    @Generated
+    public MetadataPermissions(List<MetadataPermissionsWorkspacesItem> workspaces) {
         this.workspaces = workspaces;
     }
 
     /**
      * Get the workspaces property: The permission indication for the workspaces on the metadata request.
-     *
+     * 
      * @return the workspaces value.
      */
+    @Generated
     public List<MetadataPermissionsWorkspacesItem> getWorkspaces() {
         return this.workspaces;
     }
 
     /**
      * Get the resources property: The permission indication for the Azure resources on the metadata request.
-     *
+     * 
      * @return the resources value.
      */
+    @Generated
     public List<MetadataPermissionsResourcesItem> getResources() {
         return this.resources;
     }
 
     /**
      * Set the resources property: The permission indication for the Azure resources on the metadata request.
-     *
+     * 
      * @param resources the resources value to set.
      * @return the MetadataPermissions object itself.
      */
+    @Generated
     public MetadataPermissions setResources(List<MetadataPermissionsResourcesItem> resources) {
         this.resources = resources;
         return this;
@@ -77,9 +83,10 @@ public final class MetadataPermissions {
     /**
      * Get the applications property: The permission indication for the Application Insights apps on the metadata
      * request.
-     *
+     * 
      * @return the applications value.
      */
+    @Generated
     public List<MetadataPermissionsApplicationsItem> getApplications() {
         return this.applications;
     }
@@ -87,31 +94,68 @@ public final class MetadataPermissions {
     /**
      * Set the applications property: The permission indication for the Application Insights apps on the metadata
      * request.
-     *
+     * 
      * @param applications the applications value to set.
      * @return the MetadataPermissions object itself.
      */
+    @Generated
     public MetadataPermissions setApplications(List<MetadataPermissionsApplicationsItem> applications) {
         this.applications = applications;
         return this;
     }
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * {@inheritDoc}
      */
-    public void validate() {
-        if (getWorkspaces() == null) {
-            throw new IllegalArgumentException("Missing required property workspaces in model MetadataPermissions");
-        } else {
-            getWorkspaces().forEach(e -> e.validate());
-        }
-        if (getResources() != null) {
-            getResources().forEach(e -> e.validate());
-        }
-        if (getApplications() != null) {
-            getApplications().forEach(e -> e.validate());
-        }
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("workspaces", this.workspaces, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("resources", this.resources, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("applications", this.applications, (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of MetadataPermissions from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of MetadataPermissions if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the MetadataPermissions.
+     */
+    @Generated
+    public static MetadataPermissions fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            boolean workspacesFound = false;
+            List<MetadataPermissionsWorkspacesItem> workspaces = null;
+            List<MetadataPermissionsResourcesItem> resources = null;
+            List<MetadataPermissionsApplicationsItem> applications = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("workspaces".equals(fieldName)) {
+                    workspaces = reader.readArray(reader1 -> MetadataPermissionsWorkspacesItem.fromJson(reader1));
+                    workspacesFound = true;
+                } else if ("resources".equals(fieldName)) {
+                    resources = reader.readArray(reader1 -> MetadataPermissionsResourcesItem.fromJson(reader1));
+                } else if ("applications".equals(fieldName)) {
+                    applications = reader.readArray(reader1 -> MetadataPermissionsApplicationsItem.fromJson(reader1));
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (workspacesFound) {
+                MetadataPermissions deserializedMetadataPermissions = new MetadataPermissions(workspaces);
+                deserializedMetadataPermissions.resources = resources;
+                deserializedMetadataPermissions.applications = applications;
+
+                return deserializedMetadataPermissions;
+            }
+            throw new IllegalStateException("Missing required property: workspaces");
+        });
     }
 }

@@ -24,17 +24,23 @@ import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in SqlPools. */
+/**
+ * An instance of this class provides access to all the operations defined in SqlPools.
+ */
 public final class SqlPoolsImpl {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final SqlPoolsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final ArtifactsClientImpl client;
 
     /**
      * Initializes an instance of SqlPoolsImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     SqlPoolsImpl(ArtifactsClientImpl client) {
@@ -47,45 +53,37 @@ public final class SqlPoolsImpl {
      * REST calls.
      */
     @Host("{endpoint}")
-    @ServiceInterface(name = "ArtifactsClientSqlPo")
+    @ServiceInterface(name = "ArtifactsClientSqlPools")
     public interface SqlPoolsService {
         @Get("/sqlPools")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ErrorContractException.class)
-        Mono<Response<SqlPoolInfoListResult>> list(
-                @HostParam("endpoint") String endpoint,
-                @QueryParam("api-version") String apiVersion,
-                @HeaderParam("Accept") String accept,
-                Context context);
+        Mono<Response<SqlPoolInfoListResult>> list(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
         @Get("/sqlPools/{sqlPoolName}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ErrorContractException.class)
-        Mono<Response<SqlPool>> get(
-                @HostParam("endpoint") String endpoint,
-                @QueryParam("api-version") String apiVersion,
-                @PathParam("sqlPoolName") String sqlPoolName,
-                @HeaderParam("Accept") String accept,
-                Context context);
+        Mono<Response<SqlPool>> get(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("sqlPoolName") String sqlPoolName,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * List Sql Pools.
-     *
+     * 
      * @throws ErrorContractException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return sQL pool collection along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SqlPoolInfoListResult>> listWithResponseAsync() {
-        final String apiVersion = "2020-12-01";
-        final String accept = "application/json";
-        return FluxUtil.withContext(context -> service.list(this.client.getEndpoint(), apiVersion, accept, context));
+        return FluxUtil.withContext(context -> listWithResponseAsync(context));
     }
 
     /**
      * List Sql Pools.
-     *
+     * 
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -101,7 +99,7 @@ public final class SqlPoolsImpl {
 
     /**
      * List Sql Pools.
-     *
+     * 
      * @throws ErrorContractException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return sQL pool collection on successful completion of {@link Mono}.
@@ -113,7 +111,7 @@ public final class SqlPoolsImpl {
 
     /**
      * List Sql Pools.
-     *
+     * 
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -127,7 +125,7 @@ public final class SqlPoolsImpl {
 
     /**
      * List Sql Pools.
-     *
+     * 
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -141,7 +139,7 @@ public final class SqlPoolsImpl {
 
     /**
      * List Sql Pools.
-     *
+     * 
      * @throws ErrorContractException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return sQL pool collection.
@@ -153,7 +151,7 @@ public final class SqlPoolsImpl {
 
     /**
      * Get Sql Pool.
-     *
+     * 
      * @param sqlPoolName The Sql Pool name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -162,15 +160,12 @@ public final class SqlPoolsImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SqlPool>> getWithResponseAsync(String sqlPoolName) {
-        final String apiVersion = "2020-12-01";
-        final String accept = "application/json";
-        return FluxUtil.withContext(
-                context -> service.get(this.client.getEndpoint(), apiVersion, sqlPoolName, accept, context));
+        return FluxUtil.withContext(context -> getWithResponseAsync(sqlPoolName, context));
     }
 
     /**
      * Get Sql Pool.
-     *
+     * 
      * @param sqlPoolName The Sql Pool name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -187,7 +182,7 @@ public final class SqlPoolsImpl {
 
     /**
      * Get Sql Pool.
-     *
+     * 
      * @param sqlPoolName The Sql Pool name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.
@@ -201,7 +196,7 @@ public final class SqlPoolsImpl {
 
     /**
      * Get Sql Pool.
-     *
+     * 
      * @param sqlPoolName The Sql Pool name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -216,7 +211,7 @@ public final class SqlPoolsImpl {
 
     /**
      * Get Sql Pool.
-     *
+     * 
      * @param sqlPoolName The Sql Pool name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -231,7 +226,7 @@ public final class SqlPoolsImpl {
 
     /**
      * Get Sql Pool.
-     *
+     * 
      * @param sqlPoolName The Sql Pool name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorContractException thrown if the request is rejected by server.

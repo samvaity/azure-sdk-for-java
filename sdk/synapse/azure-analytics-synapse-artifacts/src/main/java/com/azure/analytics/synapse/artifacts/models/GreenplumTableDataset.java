@@ -5,46 +5,69 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Greenplum Database dataset. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("GreenplumTable")
-@JsonFlatten
+/**
+ * Greenplum Database dataset.
+ */
 @Fluent
 public class GreenplumTableDataset extends Dataset {
     /*
+     * Type of dataset.
+     */
+    @Generated
+    private String type = "GreenplumTable";
+
+    /*
      * This property will be retired. Please consider using schema + table properties instead.
      */
-    @JsonProperty(value = "typeProperties.tableName")
+    @Generated
     private Object tableName;
 
     /*
      * The table name of Greenplum. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.table")
+    @Generated
     private Object table;
 
     /*
      * The schema name of Greenplum. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.schema")
+    @Generated
     private Object schemaTypePropertiesSchema;
 
-    /** Creates an instance of GreenplumTableDataset class. */
-    public GreenplumTableDataset() {}
+    /**
+     * Creates an instance of GreenplumTableDataset class.
+     */
+    @Generated
+    public GreenplumTableDataset() {
+    }
+
+    /**
+     * Get the type property: Type of dataset.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the tableName property: This property will be retired. Please consider using schema + table properties
      * instead.
-     *
+     * 
      * @return the tableName value.
      */
+    @Generated
     public Object getTableName() {
         return this.tableName;
     }
@@ -52,10 +75,11 @@ public class GreenplumTableDataset extends Dataset {
     /**
      * Set the tableName property: This property will be retired. Please consider using schema + table properties
      * instead.
-     *
+     * 
      * @param tableName the tableName value to set.
      * @return the GreenplumTableDataset object itself.
      */
+    @Generated
     public GreenplumTableDataset setTableName(Object tableName) {
         this.tableName = tableName;
         return this;
@@ -63,19 +87,21 @@ public class GreenplumTableDataset extends Dataset {
 
     /**
      * Get the table property: The table name of Greenplum. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the table value.
      */
+    @Generated
     public Object getTable() {
         return this.table;
     }
 
     /**
      * Set the table property: The table name of Greenplum. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param table the table value to set.
      * @return the GreenplumTableDataset object itself.
      */
+    @Generated
     public GreenplumTableDataset setTable(Object table) {
         this.table = table;
         return this;
@@ -84,9 +110,10 @@ public class GreenplumTableDataset extends Dataset {
     /**
      * Get the schemaTypePropertiesSchema property: The schema name of Greenplum. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the schemaTypePropertiesSchema value.
      */
+    @Generated
     public Object getSchemaTypePropertiesSchema() {
         return this.schemaTypePropertiesSchema;
     }
@@ -94,61 +121,189 @@ public class GreenplumTableDataset extends Dataset {
     /**
      * Set the schemaTypePropertiesSchema property: The schema name of Greenplum. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param schemaTypePropertiesSchema the schemaTypePropertiesSchema value to set.
      * @return the GreenplumTableDataset object itself.
      */
+    @Generated
     public GreenplumTableDataset setSchemaTypePropertiesSchema(Object schemaTypePropertiesSchema) {
         this.schemaTypePropertiesSchema = schemaTypePropertiesSchema;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GreenplumTableDataset setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GreenplumTableDataset setStructure(Object structure) {
         super.setStructure(structure);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GreenplumTableDataset setSchema(Object schema) {
         super.setSchema(schema);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GreenplumTableDataset setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         super.setLinkedServiceName(linkedServiceName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GreenplumTableDataset setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GreenplumTableDataset setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GreenplumTableDataset setFolder(DatasetFolder folder) {
         super.setFolder(folder);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("linkedServiceName", getLinkedServiceName());
+        jsonWriter.writeStringField("description", getDescription());
+        if (getStructure() != null) {
+            jsonWriter.writeUntypedField("structure", getStructure());
+        }
+        if (getSchema() != null) {
+            jsonWriter.writeUntypedField("schema", getSchema());
+        }
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeJsonField("folder", getFolder());
+        jsonWriter.writeStringField("type", this.type);
+        if (tableName != null || table != null || schemaTypePropertiesSchema != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            if (this.tableName != null) {
+                jsonWriter.writeUntypedField("tableName", this.tableName);
+            }
+            if (this.table != null) {
+                jsonWriter.writeUntypedField("table", this.table);
+            }
+            if (this.schemaTypePropertiesSchema != null) {
+                jsonWriter.writeUntypedField("schema", this.schemaTypePropertiesSchema);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of GreenplumTableDataset from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of GreenplumTableDataset if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the GreenplumTableDataset.
+     */
+    @Generated
+    public static GreenplumTableDataset fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            GreenplumTableDataset deserializedGreenplumTableDataset = new GreenplumTableDataset();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("linkedServiceName".equals(fieldName)) {
+                    deserializedGreenplumTableDataset.setLinkedServiceName(LinkedServiceReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedGreenplumTableDataset.setDescription(reader.getString());
+                } else if ("structure".equals(fieldName)) {
+                    deserializedGreenplumTableDataset.setStructure(reader.readUntyped());
+                } else if ("schema".equals(fieldName)) {
+                    deserializedGreenplumTableDataset.setSchema(reader.readUntyped());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedGreenplumTableDataset.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedGreenplumTableDataset.setAnnotations(annotations);
+                } else if ("folder".equals(fieldName)) {
+                    deserializedGreenplumTableDataset.setFolder(DatasetFolder.fromJson(reader));
+                } else if ("type".equals(fieldName)) {
+                    deserializedGreenplumTableDataset.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("tableName".equals(fieldName)) {
+                            deserializedGreenplumTableDataset.tableName = reader.readUntyped();
+                        } else if ("table".equals(fieldName)) {
+                            deserializedGreenplumTableDataset.table = reader.readUntyped();
+                        } else if ("schema".equals(fieldName)) {
+                            deserializedGreenplumTableDataset.schemaTypePropertiesSchema = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedGreenplumTableDataset.setAdditionalProperties(additionalProperties);
+
+            return deserializedGreenplumTableDataset;
+        });
     }
 }

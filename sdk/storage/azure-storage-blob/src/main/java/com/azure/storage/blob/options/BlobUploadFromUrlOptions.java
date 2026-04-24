@@ -5,6 +5,8 @@ package com.azure.storage.blob.options;
 
 import com.azure.core.http.HttpAuthorization;
 import com.azure.core.util.CoreUtils;
+import com.azure.storage.blob.models.CustomerProvidedKey;
+import com.azure.storage.blob.models.FileShareTokenIntent;
 import com.azure.storage.blob.models.AccessTier;
 import com.azure.storage.blob.models.BlobCopySourceTagsMode;
 import com.azure.storage.blob.models.BlobHttpHeaders;
@@ -27,8 +29,12 @@ public class BlobUploadFromUrlOptions {
     private Boolean copySourceBlobProperties;
     private HttpAuthorization sourceAuthorization;
     private BlobCopySourceTagsMode copySourceTags;
+    private FileShareTokenIntent sourceShareTokenIntent;
+    private CustomerProvidedKey sourceCustomerProvidedKey;
 
     /**
+     * Creates a new instance of {@link BlobUploadFromUrlOptions}.
+     *
      * @param sourceUrl The source URL to upload from.
      */
     public BlobUploadFromUrlOptions(String sourceUrl) {
@@ -37,6 +43,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Gets the source URL to upload from.
+     *
      * @return The source URL to upload from.
      */
     public String getSourceUrl() {
@@ -44,6 +52,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Gets the {@link BlobHttpHeaders}.
+     *
      * @return {@link BlobHttpHeaders}
      */
     public BlobHttpHeaders getHeaders() {
@@ -51,6 +61,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Sets the {@link BlobHttpHeaders}.
+     *
      * @param headers {@link BlobHttpHeaders}
      * @return The updated options
      */
@@ -60,6 +72,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Gets the tags to associate with the blob.
+     *
      * @return The tags to associate with the blob.
      */
     public Map<String, String> getTags() {
@@ -67,6 +81,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Sets the tags to associate with the blob.
+     *
      * @param tags The tags to associate with the blob.
      * @return The updated options.
      */
@@ -76,6 +92,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Gets the {@link AccessTier}.
+     *
      * @return {@link AccessTier}
      */
     public AccessTier getTier() {
@@ -83,6 +101,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Sets the {@link AccessTier}.
+     *
      * @param tier {@link AccessTier}
      * @return The updated options.
      */
@@ -92,6 +112,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Gets the MD5 hash of the content.
+     *
      * @return An MD5 hash of the content. This hash is used to verify the integrity of the content during transport.
      * When this header is specified, the storage service compares the hash of the content that has arrived with this
      * header value. Note that this MD5 hash is not stored with the blob. If the two hashes do not match, the operation
@@ -102,6 +124,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Sets the MD5 hash of the content.
+     *
      * @param contentMd5 An MD5 hash of the block content. This hash is used to verify the integrity of the block during
      * transport. When this header is specified, the storage service compares the hash of the content that has arrived
      * with this header value. Note that this MD5 hash is not stored with the blob. If the two hashes do not match, the
@@ -114,6 +138,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Gets the {@link BlobRequestConditions}.
+     *
      * @return {@link BlobRequestConditions}
      */
     public BlobRequestConditions getDestinationRequestConditions() {
@@ -121,16 +147,20 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Sets the {@link BlobRequestConditions}.
+     *
      * @param destinationRequestConditions {@link BlobRequestConditions}
      * @return The updated options.
      */
-    public BlobUploadFromUrlOptions setDestinationRequestConditions(BlobRequestConditions
-        destinationRequestConditions) {
+    public BlobUploadFromUrlOptions
+        setDestinationRequestConditions(BlobRequestConditions destinationRequestConditions) {
         this.destinationRequestConditions = destinationRequestConditions;
         return this;
     }
 
     /**
+     * Gets the {@link BlobRequestConditions}.
+     *
      * @return {@link BlobRequestConditions}
      */
     public BlobRequestConditions getSourceRequestConditions() {
@@ -138,6 +168,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Sets the {@link BlobRequestConditions}.
+     *
      * @param sourceRequestConditions {@link BlobRequestConditions}
      * @return The updated options.
      */
@@ -167,6 +199,9 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Gets "Authorization" header for accessing source URL. Currently only "Bearer" authentication is accepted by
+     * Storage.
+     *
      * @return auth header for access to source.
      */
     public HttpAuthorization getSourceAuthorization() {
@@ -186,6 +221,8 @@ public class BlobUploadFromUrlOptions {
     }
 
     /**
+     * Gets the copy source tags mode
+     *
      * @return The copy source tags mode.
      */
     public BlobCopySourceTagsMode getCopySourceTagsMode() {
@@ -200,6 +237,50 @@ public class BlobUploadFromUrlOptions {
      */
     public BlobUploadFromUrlOptions setCopySourceTagsMode(BlobCopySourceTagsMode copySourceTags) {
         this.copySourceTags = copySourceTags;
+        return this;
+    }
+
+    /**
+     * Optional, only applicable (but required) when the source is Azure Storage Files and using token authentication.
+     * Gets the intent of the request.
+     *
+     * @return the {@link FileShareTokenIntent} for the file share.
+     */
+    public FileShareTokenIntent getSourceShareTokenIntent() {
+        return sourceShareTokenIntent;
+    }
+
+    /**
+     * Optional, only applicable (but required) when the source is Azure Storage Files and using token authentication.
+     * Sets the intent of the request.
+     *
+     * @param sourceShareTokenIntent Used to indicate the intent of the request.
+     * @return The updated options.
+     */
+    public BlobUploadFromUrlOptions setSourceShareTokenIntent(FileShareTokenIntent sourceShareTokenIntent) {
+        this.sourceShareTokenIntent = sourceShareTokenIntent;
+        return this;
+    }
+
+    /**
+     * Gets the optional {@link CustomerProvidedKey} used for encrypting the source blob.
+     * Applicable only for service version 2026-02-06 or later.
+     *
+     * @return the {@link CustomerProvidedKey} used for encrypting the source blob.
+     */
+    public CustomerProvidedKey getSourceCustomerProvidedKey() {
+        return sourceCustomerProvidedKey;
+    }
+
+    /**
+     * Sets the optional {@link CustomerProvidedKey} used for encrypting the source blob.
+     * Applicable only for service version 2026-02-06 or later.
+     *
+     * @param sourceCustomerProvidedKey The {@link CustomerProvidedKey} used for encrypting the source blob.
+     * @return The updated options.
+     */
+    public BlobUploadFromUrlOptions setSourceCustomerProvidedKey(CustomerProvidedKey sourceCustomerProvidedKey) {
+        this.sourceCustomerProvidedKey = sourceCustomerProvidedKey;
         return this;
     }
 }

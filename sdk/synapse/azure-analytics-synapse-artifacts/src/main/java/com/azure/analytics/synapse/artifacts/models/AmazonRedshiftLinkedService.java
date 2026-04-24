@@ -5,66 +5,89 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Linked service for Amazon Redshift. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("AmazonRedshift")
-@JsonFlatten
+/**
+ * Linked service for Amazon Redshift.
+ */
 @Fluent
 public class AmazonRedshiftLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "AmazonRedshift";
+
+    /*
      * The name of the Amazon Redshift server. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.server", required = true)
+    @Generated
     private Object server;
 
     /*
      * The username of the Amazon Redshift source. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.username")
+    @Generated
     private Object username;
 
     /*
      * The password of the Amazon Redshift source.
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private SecretBase password;
 
     /*
      * The database name of the Amazon Redshift source. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.database", required = true)
+    @Generated
     private Object database;
 
     /*
      * The TCP port number that the Amazon Redshift server uses to listen for client connections. The default value is
      * 5439. Type: integer (or Expression with resultType integer).
      */
-    @JsonProperty(value = "typeProperties.port")
+    @Generated
     private Object port;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of AmazonRedshiftLinkedService class. */
-    public AmazonRedshiftLinkedService() {}
+    /**
+     * Creates an instance of AmazonRedshiftLinkedService class.
+     */
+    @Generated
+    public AmazonRedshiftLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the server property: The name of the Amazon Redshift server. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the server value.
      */
+    @Generated
     public Object getServer() {
         return this.server;
     }
@@ -72,10 +95,11 @@ public class AmazonRedshiftLinkedService extends LinkedService {
     /**
      * Set the server property: The name of the Amazon Redshift server. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param server the server value to set.
      * @return the AmazonRedshiftLinkedService object itself.
      */
+    @Generated
     public AmazonRedshiftLinkedService setServer(Object server) {
         this.server = server;
         return this;
@@ -84,9 +108,10 @@ public class AmazonRedshiftLinkedService extends LinkedService {
     /**
      * Get the username property: The username of the Amazon Redshift source. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the username value.
      */
+    @Generated
     public Object getUsername() {
         return this.username;
     }
@@ -94,10 +119,11 @@ public class AmazonRedshiftLinkedService extends LinkedService {
     /**
      * Set the username property: The username of the Amazon Redshift source. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param username the username value to set.
      * @return the AmazonRedshiftLinkedService object itself.
      */
+    @Generated
     public AmazonRedshiftLinkedService setUsername(Object username) {
         this.username = username;
         return this;
@@ -105,19 +131,21 @@ public class AmazonRedshiftLinkedService extends LinkedService {
 
     /**
      * Get the password property: The password of the Amazon Redshift source.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: The password of the Amazon Redshift source.
-     *
+     * 
      * @param password the password value to set.
      * @return the AmazonRedshiftLinkedService object itself.
      */
+    @Generated
     public AmazonRedshiftLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -126,9 +154,10 @@ public class AmazonRedshiftLinkedService extends LinkedService {
     /**
      * Get the database property: The database name of the Amazon Redshift source. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the database value.
      */
+    @Generated
     public Object getDatabase() {
         return this.database;
     }
@@ -136,10 +165,11 @@ public class AmazonRedshiftLinkedService extends LinkedService {
     /**
      * Set the database property: The database name of the Amazon Redshift source. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param database the database value to set.
      * @return the AmazonRedshiftLinkedService object itself.
      */
+    @Generated
     public AmazonRedshiftLinkedService setDatabase(Object database) {
         this.database = database;
         return this;
@@ -148,9 +178,10 @@ public class AmazonRedshiftLinkedService extends LinkedService {
     /**
      * Get the port property: The TCP port number that the Amazon Redshift server uses to listen for client connections.
      * The default value is 5439. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @return the port value.
      */
+    @Generated
     public Object getPort() {
         return this.port;
     }
@@ -158,10 +189,11 @@ public class AmazonRedshiftLinkedService extends LinkedService {
     /**
      * Set the port property: The TCP port number that the Amazon Redshift server uses to listen for client connections.
      * The default value is 5439. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @param port the port value to set.
      * @return the AmazonRedshiftLinkedService object itself.
      */
+    @Generated
     public AmazonRedshiftLinkedService setPort(Object port) {
         this.port = port;
         return this;
@@ -170,9 +202,10 @@ public class AmazonRedshiftLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -180,40 +213,173 @@ public class AmazonRedshiftLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the AmazonRedshiftLinkedService object itself.
      */
+    @Generated
     public AmazonRedshiftLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public AmazonRedshiftLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonRedshiftLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonRedshiftLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonRedshiftLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonRedshiftLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (server != null
+            || username != null
+            || password != null
+            || database != null
+            || port != null
+            || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("server", this.server);
+            if (this.username != null) {
+                jsonWriter.writeUntypedField("username", this.username);
+            }
+            jsonWriter.writeJsonField("password", this.password);
+            jsonWriter.writeUntypedField("database", this.database);
+            if (this.port != null) {
+                jsonWriter.writeUntypedField("port", this.port);
+            }
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AmazonRedshiftLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AmazonRedshiftLinkedService if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AmazonRedshiftLinkedService.
+     */
+    @Generated
+    public static AmazonRedshiftLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AmazonRedshiftLinkedService deserializedAmazonRedshiftLinkedService = new AmazonRedshiftLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedAmazonRedshiftLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedAmazonRedshiftLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedAmazonRedshiftLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedAmazonRedshiftLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedAmazonRedshiftLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedAmazonRedshiftLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("server".equals(fieldName)) {
+                            deserializedAmazonRedshiftLinkedService.server = reader.readUntyped();
+                        } else if ("username".equals(fieldName)) {
+                            deserializedAmazonRedshiftLinkedService.username = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedAmazonRedshiftLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("database".equals(fieldName)) {
+                            deserializedAmazonRedshiftLinkedService.database = reader.readUntyped();
+                        } else if ("port".equals(fieldName)) {
+                            deserializedAmazonRedshiftLinkedService.port = reader.readUntyped();
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedAmazonRedshiftLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAmazonRedshiftLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedAmazonRedshiftLinkedService;
+        });
     }
 }

@@ -4,63 +4,78 @@
 
 package com.azure.communication.phonenumbers.implementation.models;
 
-import com.azure.communication.phonenumbers.CodeCoverageAnnotation.Generated;
 import com.azure.communication.phonenumbers.models.PhoneNumberAssignmentType;
 import com.azure.communication.phonenumbers.models.PhoneNumberCapabilities;
 import com.azure.communication.phonenumbers.models.PhoneNumberType;
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The PhoneNumberSearchRequest model. */
+/**
+ * Represents a phone number search request to find phone numbers. Found phone numbers are temporarily held for a
+ * following purchase.
+ */
 @Fluent
-@Generated
-public final class PhoneNumberSearchRequest {
+public final class PhoneNumberSearchRequest implements JsonSerializable<PhoneNumberSearchRequest> {
     /*
-     * The type of phone numbers to search for, e.g. geographic, or tollFree.
+     * The type of phone numbers to search for, e.g. geographic, tollFree, mobile.
      */
-    @JsonProperty(value = "phoneNumberType", required = true)
+    @Generated
     private PhoneNumberType phoneNumberType;
 
     /*
-     * The assignment type of the phone numbers to search for. A phone number
-     * can be assigned to a person, or to an application.
+     * The assignment type of the phone numbers to search for. A phone number can be assigned to a person, or to an
+     * application.
      */
-    @JsonProperty(value = "assignmentType", required = true)
+    @Generated
     private PhoneNumberAssignmentType assignmentType;
 
     /*
      * Capabilities of a phone number.
      */
-    @JsonProperty(value = "capabilities", required = true)
+    @Generated
     private PhoneNumberCapabilities capabilities;
 
     /*
      * The area code of the desired phone number, e.g. 425.
      */
-    @JsonProperty(value = "areaCode")
+    @Generated
     private String areaCode;
 
     /*
      * The quantity of desired phone numbers. The default value is 1.
      */
-    @JsonProperty(value = "quantity")
+    @Generated
     private Integer quantity;
 
     /**
-     * Get the phoneNumberType property: The type of phone numbers to search for, e.g. geographic, or tollFree.
-     *
+     * Creates an instance of PhoneNumberSearchRequest class.
+     */
+    @Generated
+    public PhoneNumberSearchRequest() {
+    }
+
+    /**
+     * Get the phoneNumberType property: The type of phone numbers to search for, e.g. geographic, tollFree, mobile.
+     * 
      * @return the phoneNumberType value.
      */
+    @Generated
     public PhoneNumberType getPhoneNumberType() {
         return this.phoneNumberType;
     }
 
     /**
-     * Set the phoneNumberType property: The type of phone numbers to search for, e.g. geographic, or tollFree.
-     *
+     * Set the phoneNumberType property: The type of phone numbers to search for, e.g. geographic, tollFree, mobile.
+     * 
      * @param phoneNumberType the phoneNumberType value to set.
      * @return the PhoneNumberSearchRequest object itself.
      */
+    @Generated
     public PhoneNumberSearchRequest setPhoneNumberType(PhoneNumberType phoneNumberType) {
         this.phoneNumberType = phoneNumberType;
         return this;
@@ -69,9 +84,10 @@ public final class PhoneNumberSearchRequest {
     /**
      * Get the assignmentType property: The assignment type of the phone numbers to search for. A phone number can be
      * assigned to a person, or to an application.
-     *
+     * 
      * @return the assignmentType value.
      */
+    @Generated
     public PhoneNumberAssignmentType getAssignmentType() {
         return this.assignmentType;
     }
@@ -79,10 +95,11 @@ public final class PhoneNumberSearchRequest {
     /**
      * Set the assignmentType property: The assignment type of the phone numbers to search for. A phone number can be
      * assigned to a person, or to an application.
-     *
+     * 
      * @param assignmentType the assignmentType value to set.
      * @return the PhoneNumberSearchRequest object itself.
      */
+    @Generated
     public PhoneNumberSearchRequest setAssignmentType(PhoneNumberAssignmentType assignmentType) {
         this.assignmentType = assignmentType;
         return this;
@@ -90,19 +107,21 @@ public final class PhoneNumberSearchRequest {
 
     /**
      * Get the capabilities property: Capabilities of a phone number.
-     *
+     * 
      * @return the capabilities value.
      */
+    @Generated
     public PhoneNumberCapabilities getCapabilities() {
         return this.capabilities;
     }
 
     /**
      * Set the capabilities property: Capabilities of a phone number.
-     *
+     * 
      * @param capabilities the capabilities value to set.
      * @return the PhoneNumberSearchRequest object itself.
      */
+    @Generated
     public PhoneNumberSearchRequest setCapabilities(PhoneNumberCapabilities capabilities) {
         this.capabilities = capabilities;
         return this;
@@ -110,19 +129,21 @@ public final class PhoneNumberSearchRequest {
 
     /**
      * Get the areaCode property: The area code of the desired phone number, e.g. 425.
-     *
+     * 
      * @return the areaCode value.
      */
+    @Generated
     public String getAreaCode() {
         return this.areaCode;
     }
 
     /**
      * Set the areaCode property: The area code of the desired phone number, e.g. 425.
-     *
+     * 
      * @param areaCode the areaCode value to set.
      * @return the PhoneNumberSearchRequest object itself.
      */
+    @Generated
     public PhoneNumberSearchRequest setAreaCode(String areaCode) {
         this.areaCode = areaCode;
         return this;
@@ -130,21 +151,78 @@ public final class PhoneNumberSearchRequest {
 
     /**
      * Get the quantity property: The quantity of desired phone numbers. The default value is 1.
-     *
+     * 
      * @return the quantity value.
      */
+    @Generated
     public Integer getQuantity() {
         return this.quantity;
     }
 
     /**
      * Set the quantity property: The quantity of desired phone numbers. The default value is 1.
-     *
+     * 
      * @param quantity the quantity value to set.
      * @return the PhoneNumberSearchRequest object itself.
      */
+    @Generated
     public PhoneNumberSearchRequest setQuantity(Integer quantity) {
         this.quantity = quantity;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("phoneNumberType",
+            this.phoneNumberType == null ? null : this.phoneNumberType.toString());
+        jsonWriter.writeStringField("assignmentType",
+            this.assignmentType == null ? null : this.assignmentType.toString());
+        jsonWriter.writeJsonField("capabilities", this.capabilities);
+        jsonWriter.writeStringField("areaCode", this.areaCode);
+        jsonWriter.writeNumberField("quantity", this.quantity);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PhoneNumberSearchRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PhoneNumberSearchRequest if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the PhoneNumberSearchRequest.
+     */
+    @Generated
+    public static PhoneNumberSearchRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PhoneNumberSearchRequest deserializedPhoneNumberSearchRequest = new PhoneNumberSearchRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("phoneNumberType".equals(fieldName)) {
+                    deserializedPhoneNumberSearchRequest.phoneNumberType
+                        = PhoneNumberType.fromString(reader.getString());
+                } else if ("assignmentType".equals(fieldName)) {
+                    deserializedPhoneNumberSearchRequest.assignmentType
+                        = PhoneNumberAssignmentType.fromString(reader.getString());
+                } else if ("capabilities".equals(fieldName)) {
+                    deserializedPhoneNumberSearchRequest.capabilities = PhoneNumberCapabilities.fromJson(reader);
+                } else if ("areaCode".equals(fieldName)) {
+                    deserializedPhoneNumberSearchRequest.areaCode = reader.getString();
+                } else if ("quantity".equals(fieldName)) {
+                    deserializedPhoneNumberSearchRequest.quantity = reader.getNullable(JsonReader::getInt);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPhoneNumberSearchRequest;
+        });
     }
 }

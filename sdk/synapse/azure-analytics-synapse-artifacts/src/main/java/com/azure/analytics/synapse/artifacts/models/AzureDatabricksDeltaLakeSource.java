@@ -5,36 +5,62 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity Azure Databricks Delta Lake source. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("AzureDatabricksDeltaLakeSource")
+/**
+ * A copy activity Azure Databricks Delta Lake source.
+ */
 @Fluent
 public final class AzureDatabricksDeltaLakeSource extends CopySource {
     /*
+     * Copy source type.
+     */
+    @Generated
+    private String type = "AzureDatabricksDeltaLakeSource";
+
+    /*
      * Azure Databricks Delta Lake Sql query. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "query")
+    @Generated
     private Object query;
 
     /*
      * Azure Databricks Delta Lake export settings.
      */
-    @JsonProperty(value = "exportSettings")
+    @Generated
     private AzureDatabricksDeltaLakeExportCommand exportSettings;
 
-    /** Creates an instance of AzureDatabricksDeltaLakeSource class. */
-    public AzureDatabricksDeltaLakeSource() {}
+    /**
+     * Creates an instance of AzureDatabricksDeltaLakeSource class.
+     */
+    @Generated
+    public AzureDatabricksDeltaLakeSource() {
+    }
+
+    /**
+     * Get the type property: Copy source type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the query property: Azure Databricks Delta Lake Sql query. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the query value.
      */
+    @Generated
     public Object getQuery() {
         return this.query;
     }
@@ -42,10 +68,11 @@ public final class AzureDatabricksDeltaLakeSource extends CopySource {
     /**
      * Set the query property: Azure Databricks Delta Lake Sql query. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param query the query value to set.
      * @return the AzureDatabricksDeltaLakeSource object itself.
      */
+    @Generated
     public AzureDatabricksDeltaLakeSource setQuery(Object query) {
         this.query = query;
         return this;
@@ -53,42 +80,127 @@ public final class AzureDatabricksDeltaLakeSource extends CopySource {
 
     /**
      * Get the exportSettings property: Azure Databricks Delta Lake export settings.
-     *
+     * 
      * @return the exportSettings value.
      */
+    @Generated
     public AzureDatabricksDeltaLakeExportCommand getExportSettings() {
         return this.exportSettings;
     }
 
     /**
      * Set the exportSettings property: Azure Databricks Delta Lake export settings.
-     *
+     * 
      * @param exportSettings the exportSettings value to set.
      * @return the AzureDatabricksDeltaLakeSource object itself.
      */
+    @Generated
     public AzureDatabricksDeltaLakeSource setExportSettings(AzureDatabricksDeltaLakeExportCommand exportSettings) {
         this.exportSettings = exportSettings;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDatabricksDeltaLakeSource setSourceRetryCount(Object sourceRetryCount) {
         super.setSourceRetryCount(sourceRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDatabricksDeltaLakeSource setSourceRetryWait(Object sourceRetryWait) {
         super.setSourceRetryWait(sourceRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDatabricksDeltaLakeSource setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getSourceRetryCount() != null) {
+            jsonWriter.writeUntypedField("sourceRetryCount", getSourceRetryCount());
+        }
+        if (getSourceRetryWait() != null) {
+            jsonWriter.writeUntypedField("sourceRetryWait", getSourceRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.query != null) {
+            jsonWriter.writeUntypedField("query", this.query);
+        }
+        jsonWriter.writeJsonField("exportSettings", this.exportSettings);
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureDatabricksDeltaLakeSource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureDatabricksDeltaLakeSource if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the AzureDatabricksDeltaLakeSource.
+     */
+    @Generated
+    public static AzureDatabricksDeltaLakeSource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureDatabricksDeltaLakeSource deserializedAzureDatabricksDeltaLakeSource
+                = new AzureDatabricksDeltaLakeSource();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sourceRetryCount".equals(fieldName)) {
+                    deserializedAzureDatabricksDeltaLakeSource.setSourceRetryCount(reader.readUntyped());
+                } else if ("sourceRetryWait".equals(fieldName)) {
+                    deserializedAzureDatabricksDeltaLakeSource.setSourceRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedAzureDatabricksDeltaLakeSource.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedAzureDatabricksDeltaLakeSource.type = reader.getString();
+                } else if ("query".equals(fieldName)) {
+                    deserializedAzureDatabricksDeltaLakeSource.query = reader.readUntyped();
+                } else if ("exportSettings".equals(fieldName)) {
+                    deserializedAzureDatabricksDeltaLakeSource.exportSettings
+                        = AzureDatabricksDeltaLakeExportCommand.fromJson(reader);
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAzureDatabricksDeltaLakeSource.setAdditionalProperties(additionalProperties);
+
+            return deserializedAzureDatabricksDeltaLakeSource;
+        });
     }
 }

@@ -5,70 +5,85 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Notebook resource type. */
+/**
+ * Notebook resource type.
+ */
 @Fluent
-public final class NotebookResource {
+public final class NotebookResource implements JsonSerializable<NotebookResource> {
     /*
      * Fully qualified resource Id for the resource. Ex -
-     * /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+     * /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{
+     * resourceType}/{resourceName}
      */
-    @JsonProperty(value = "id", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private String id;
 
     /*
      * The name of the resource
      */
-    @JsonProperty(value = "name", required = true)
+    @Generated
     private String name;
 
     /*
      * The type of the resource. Ex- Microsoft.Compute/virtualMachines or Microsoft.Storage/storageAccounts.
      */
-    @JsonProperty(value = "type", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private String type;
 
     /*
      * Resource Etag.
      */
-    @JsonProperty(value = "etag", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private String etag;
 
     /*
      * Properties of Notebook.
      */
-    @JsonProperty(value = "properties", required = true)
+    @Generated
     private Notebook properties;
 
-    /** Creates an instance of NotebookResource class. */
-    public NotebookResource() {}
+    /**
+     * Creates an instance of NotebookResource class.
+     */
+    @Generated
+    public NotebookResource() {
+    }
 
     /**
      * Get the id property: Fully qualified resource Id for the resource. Ex -
      * /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}.
-     *
+     * 
      * @return the id value.
      */
+    @Generated
     public String getId() {
         return this.id;
     }
 
     /**
      * Get the name property: The name of the resource.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The name of the resource.
-     *
+     * 
      * @param name the name value to set.
      * @return the NotebookResource object itself.
      */
+    @Generated
     public NotebookResource setName(String name) {
         this.name = name;
         return this;
@@ -77,39 +92,91 @@ public final class NotebookResource {
     /**
      * Get the type property: The type of the resource. Ex- Microsoft.Compute/virtualMachines or
      * Microsoft.Storage/storageAccounts.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public String getType() {
         return this.type;
     }
 
     /**
      * Get the etag property: Resource Etag.
-     *
+     * 
      * @return the etag value.
      */
+    @Generated
     public String getEtag() {
         return this.etag;
     }
 
     /**
      * Get the properties property: Properties of Notebook.
-     *
+     * 
      * @return the properties value.
      */
+    @Generated
     public Notebook getProperties() {
         return this.properties;
     }
 
     /**
      * Set the properties property: Properties of Notebook.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the NotebookResource object itself.
      */
+    @Generated
     public NotebookResource setProperties(Notebook properties) {
         this.properties = properties;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeJsonField("properties", this.properties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of NotebookResource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of NotebookResource if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the NotebookResource.
+     */
+    @Generated
+    public static NotebookResource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            NotebookResource deserializedNotebookResource = new NotebookResource();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedNotebookResource.name = reader.getString();
+                } else if ("properties".equals(fieldName)) {
+                    deserializedNotebookResource.properties = Notebook.fromJson(reader);
+                } else if ("id".equals(fieldName)) {
+                    deserializedNotebookResource.id = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedNotebookResource.type = reader.getString();
+                } else if ("etag".equals(fieldName)) {
+                    deserializedNotebookResource.etag = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedNotebookResource;
+        });
     }
 }

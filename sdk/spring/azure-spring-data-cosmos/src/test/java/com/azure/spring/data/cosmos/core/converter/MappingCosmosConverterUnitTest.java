@@ -7,6 +7,7 @@ import com.azure.spring.data.cosmos.core.convert.MappingCosmosConverter;
 import com.azure.spring.data.cosmos.core.convert.ObjectMapperFactory;
 import com.azure.spring.data.cosmos.core.mapping.CosmosMappingContext;
 import com.azure.spring.data.cosmos.domain.Address;
+import com.azure.spring.data.cosmos.domain.BigJavaMathTypes;
 import com.azure.spring.data.cosmos.domain.Importance;
 import com.azure.spring.data.cosmos.domain.Memo;
 import com.azure.spring.data.cosmos.domain.Person;
@@ -14,11 +15,11 @@ import com.azure.spring.data.cosmos.domain.PersonWithEtag;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 
 import java.text.ParseException;
@@ -28,7 +29,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MappingCosmosConverterUnitTest {
     private static final SimpleDateFormat DATE = new SimpleDateFormat(TestConstants.DATE_FORMAT);
     private static final SimpleDateFormat TIMEZONE_DATE = new SimpleDateFormat(TestConstants.DATE_TIMEZONE_FORMAT);
@@ -38,7 +39,7 @@ public class MappingCosmosConverterUnitTest {
     @Mock
     ApplicationContext applicationContext;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         final CosmosMappingContext mappingContext = new CosmosMappingContext();
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -98,6 +99,29 @@ public class MappingCosmosConverterUnitTest {
         assertThat(memo.getId()).isEqualTo(TestConstants.ID_1);
         assertThat(memo.getMessage()).isEqualTo(TestConstants.MESSAGE);
         assertThat(memo.getDate().getTime()).isEqualTo(date);
+    }
+
+    @Test
+    public void canWritePojoWithBigJavaMathTypes() {
+        final BigJavaMathTypes javaMathTypes = new BigJavaMathTypes(TestConstants.ID_1, TestConstants.BIG_DECIMAL, TestConstants.BIG_INTEGER);
+        final JsonNode jsonNode = mappingCosmosConverter.writeJsonNode(javaMathTypes);
+
+        assertThat(jsonNode.get(TestConstants.PROPERTY_ID).asText()).isEqualTo(javaMathTypes.getId());
+        assertThat(jsonNode.get(TestConstants.PROPERTY_BIG_DECIMAL).decimalValue()).isEqualTo(javaMathTypes.getBigDecimal());
+        assertThat(jsonNode.get(TestConstants.PROPERTY_BIG_INTEGER).bigIntegerValue()).isEqualTo(javaMathTypes.getBigInteger());
+    }
+
+    @Test
+    public void canReadPojoWithBigJavaMathTypes() {
+        final ObjectNode jsonObject = ObjectMapperFactory.getObjectMapper().createObjectNode();
+        jsonObject.put(TestConstants.PROPERTY_ID, TestConstants.ID_1);
+        jsonObject.put(TestConstants.PROPERTY_BIG_DECIMAL, TestConstants.BIG_DECIMAL);
+        jsonObject.put(TestConstants.PROPERTY_BIG_INTEGER, TestConstants.BIG_INTEGER);
+
+        final BigJavaMathTypes memo = mappingCosmosConverter.read(BigJavaMathTypes.class, jsonObject);
+        assertThat(memo.getId()).isEqualTo(TestConstants.ID_1);
+        assertThat(memo.getBigDecimal()).isEqualTo(TestConstants.BIG_DECIMAL);
+        assertThat(memo.getBigInteger()).isEqualTo(TestConstants.BIG_INTEGER);
     }
 
     @Test

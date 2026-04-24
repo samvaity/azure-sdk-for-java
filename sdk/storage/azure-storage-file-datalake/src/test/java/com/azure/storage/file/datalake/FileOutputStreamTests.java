@@ -6,12 +6,12 @@ import com.azure.core.test.utils.TestUtils;
 import com.azure.storage.blob.models.BlobErrorCode;
 import com.azure.storage.blob.models.BlobStorageException;
 import com.azure.storage.common.implementation.Constants;
+import com.azure.storage.common.test.shared.extensions.LiveOnly;
 import com.azure.storage.file.datalake.models.DataLakeRequestConditions;
 import com.azure.storage.file.datalake.options.DataLakeFileInputStreamOptions;
 import com.azure.storage.file.datalake.options.DataLakeFileOutputStreamOptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -37,7 +37,7 @@ public class FileOutputStreamTests extends DataLakeTestBase {
     }
 
     // Only run this test in live mode since blocks are dynamically assigned
-    @EnabledIf("com.azure.storage.file.datalake.DataLakeTestBase#isLiveMode")
+    @LiveOnly
     @Test
     public void uploadDownload() throws IOException {
         byte[] randomBytes = getRandomByteArray(6 * Constants.MB);
@@ -53,7 +53,7 @@ public class FileOutputStreamTests extends DataLakeTestBase {
     }
 
     // Only run this test in live mode since blocks are dynamically assigned
-    @EnabledIf("com.azure.storage.file.datalake.DataLakeTestBase#isLiveMode")
+    @LiveOnly
     @ParameterizedTest
     @MethodSource("uploadDownloadBlockSizeSupplier")
     public void uploadDownloadBlockSize(Integer blockSize, int numChunks, int[] sizes) throws IOException {
@@ -64,8 +64,8 @@ public class FileOutputStreamTests extends DataLakeTestBase {
             outStream.write(randomBytes);
         }
 
-        try (InputStream inputStream = fc.openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(blockSize))
-            .getInputStream()) {
+        try (InputStream inputStream
+            = fc.openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(blockSize)).getInputStream()) {
             int b;
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream(length);
 
@@ -93,13 +93,13 @@ public class FileOutputStreamTests extends DataLakeTestBase {
     private static Stream<Arguments> uploadDownloadBlockSizeSupplier() {
         return Stream.of(
             // blockSize || numChunks | sizes
-            Arguments.of(null, 2, new int[]{4 * Constants.MB, 2 * Constants.MB}), // Default
-            Arguments.of(5 * Constants.MB, 2, new int[]{5 * Constants.MB, Constants.MB}), // Greater than default
-            Arguments.of(3 * Constants.MB, 2, new int[]{3 * Constants.MB, 3 * Constants.MB}) // Smaller than default
+            Arguments.of(null, 2, new int[] { 4 * Constants.MB, 2 * Constants.MB }), // Default
+            Arguments.of(5 * Constants.MB, 2, new int[] { 5 * Constants.MB, Constants.MB }), // Greater than default
+            Arguments.of(3 * Constants.MB, 2, new int[] { 3 * Constants.MB, 3 * Constants.MB }) // Smaller than default
         );
     }
 
-    @EnabledIf("com.azure.storage.file.datalake.DataLakeTestBase#isLiveMode")
+    @LiveOnly
     @Test
     public void outputStreamWithCloseMultipleTimes() throws IOException {
         byte[] data = getRandomByteArray(10 * Constants.MB);
@@ -119,10 +119,11 @@ public class FileOutputStreamTests extends DataLakeTestBase {
         assertEquals(etag, fc.getProperties().getETag());
 
         assertEquals(data.length, fc.getProperties().getFileSize());
-        TestUtils.assertArraysEqual(data, convertInputStreamToByteArray(fc.openInputStream().getInputStream(), data.length));
+        TestUtils.assertArraysEqual(data,
+            convertInputStreamToByteArray(fc.openInputStream().getInputStream(), data.length));
     }
 
-    @EnabledIf("com.azure.storage.file.datalake.DataLakeTestBase#isLiveMode")
+    @LiveOnly
     @Test
     public void outputStreamDefaultNoOverwrite() throws IOException {
         byte[] data = getRandomByteArray(Constants.KB);
@@ -147,7 +148,7 @@ public class FileOutputStreamTests extends DataLakeTestBase {
         }
     }
 
-    @EnabledIf("com.azure.storage.file.datalake.DataLakeTestBase#isLiveMode")
+    @LiveOnly
     @Test
     public void outputStreamBufferReuse() throws IOException {
         fc = dataLakeFileSystemClient.getFileClient(generatePathName());
@@ -163,6 +164,7 @@ public class FileOutputStreamTests extends DataLakeTestBase {
         }
 
         assertEquals(data.length, fc.getProperties().getFileSize());
-        TestUtils.assertArraysEqual(data, convertInputStreamToByteArray(fc.openInputStream().getInputStream(), data.length));
+        TestUtils.assertArraysEqual(data,
+            convertInputStreamToByteArray(fc.openInputStream().getInputStream(), data.length));
     }
 }

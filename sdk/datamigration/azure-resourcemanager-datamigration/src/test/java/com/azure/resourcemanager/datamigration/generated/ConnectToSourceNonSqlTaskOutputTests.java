@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.ConnectToSourceNonSqlTaskO
 public final class ConnectToSourceNonSqlTaskOutputTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ConnectToSourceNonSqlTaskOutput model =
-            BinaryData
-                .fromString(
-                    "{\"id\":\"vmkfssxqu\",\"sourceServerBrandVersion\":\"fpl\",\"serverProperties\":{\"serverPlatform\":\"sxnkjzkdeslpvlo\",\"serverName\":\"i\",\"serverVersion\":\"ghxpkdw\",\"serverEdition\":\"aiuebbaumnyqu\",\"serverOperatingSystemVersion\":\"deoj\",\"serverDatabaseCount\":746279797},\"databases\":[\"hsmtxpsiebtfhvp\",\"sapskr\",\"qmhjjdhtld\"],\"validationErrors\":[{\"message\":\"xuutkncwscwsv\",\"actionableMessage\":\"otogtwrupqs\",\"filePath\":\"nmic\",\"lineNumber\":\"vce\",\"hResult\":579723655,\"stackTrace\":\"lo\"},{\"message\":\"oty\",\"actionableMessage\":\"fcnj\",\"filePath\":\"cn\",\"lineNumber\":\"hbttkphyw\",\"hResult\":1284749235,\"stackTrace\":\"t\"},{\"message\":\"nermcl\",\"actionableMessage\":\"lphox\",\"filePath\":\"crpab\",\"lineNumber\":\"epsbjtazqu\",\"hResult\":1647814243,\"stackTrace\":\"pmueefjzwfqk\"}]}")
-                .toObject(ConnectToSourceNonSqlTaskOutput.class);
+        ConnectToSourceNonSqlTaskOutput model = BinaryData.fromString(
+            "{\"id\":\"rtneemmja\",\"sourceServerBrandVersion\":\"cgxefnohaitraniz\",\"serverProperties\":{\"serverPlatform\":\"gudasmxubvfb\",\"serverName\":\"fcocefhpr\",\"serverVersion\":\"lfmpztr\",\"serverEdition\":\"dsvh\",\"serverOperatingSystemVersion\":\"dculregp\",\"serverDatabaseCount\":573797574},\"databases\":[\"hvrztnvg\",\"shqrdgrt\",\"mewjzlpyk\",\"fa\"],\"validationErrors\":[{\"message\":\"cayer\",\"actionableMessage\":\"ransyby\",\"filePath\":\"ol\",\"lineNumber\":\"rghsrleinkfsc\",\"hResult\":1984999234,\"stackTrace\":\"jwvuag\"},{\"message\":\"wtltngvmreuptrk\",\"actionableMessage\":\"m\",\"filePath\":\"ajwolxfs\",\"lineNumber\":\"ghmp\",\"hResult\":297293023,\"stackTrace\":\"slrcigtzj\"},{\"message\":\"bxqla\",\"actionableMessage\":\"nssovyxpav\",\"filePath\":\"nievwffc\",\"lineNumber\":\"yezslpu\",\"hResult\":1842033064,\"stackTrace\":\"dsvalpnptwtrkx\"}]}")
+            .toObject(ConnectToSourceNonSqlTaskOutput.class);
     }
 
     @org.junit.jupiter.api.Test

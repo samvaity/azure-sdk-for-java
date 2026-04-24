@@ -12,23 +12,19 @@ import org.junit.jupiter.api.Assertions;
 public final class CustomDomainInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CustomDomainInner model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"provisioningState\":\"Failed\",\"domainName\":\"ncsdtclusiyp\",\"customCertificate\":{\"id\":\"fgytguslfeadcyg\"}},\"id\":\"ukyhejhzis\",\"name\":\"gfpelolppvksrpqv\",\"type\":\"jzraehtwdwrf\"}")
-                .toObject(CustomDomainInner.class);
-        Assertions.assertEquals("ncsdtclusiyp", model.domainName());
-        Assertions.assertEquals("fgytguslfeadcyg", model.customCertificate().id());
+        CustomDomainInner model = BinaryData.fromString(
+            "{\"properties\":{\"provisioningState\":\"Updating\",\"domainName\":\"fbgofeljagrqmqh\",\"customCertificate\":{\"id\":\"vriiio\"}},\"id\":\"al\",\"name\":\"hfkvtvsexsowuel\",\"type\":\"qhhahhxvrhmzkwpj\"}")
+            .toObject(CustomDomainInner.class);
+        Assertions.assertEquals("fbgofeljagrqmqh", model.domainName());
+        Assertions.assertEquals("vriiio", model.customCertificate().id());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CustomDomainInner model =
-            new CustomDomainInner()
-                .withDomainName("ncsdtclusiyp")
-                .withCustomCertificate(new ResourceReference().withId("fgytguslfeadcyg"));
+        CustomDomainInner model = new CustomDomainInner().withDomainName("fbgofeljagrqmqh")
+            .withCustomCertificate(new ResourceReference().withId("vriiio"));
         model = BinaryData.fromObject(model).toObject(CustomDomainInner.class);
-        Assertions.assertEquals("ncsdtclusiyp", model.domainName());
-        Assertions.assertEquals("fgytguslfeadcyg", model.customCertificate().id());
+        Assertions.assertEquals("fbgofeljagrqmqh", model.domainName());
+        Assertions.assertEquals("vriiio", model.customCertificate().id());
     }
 }

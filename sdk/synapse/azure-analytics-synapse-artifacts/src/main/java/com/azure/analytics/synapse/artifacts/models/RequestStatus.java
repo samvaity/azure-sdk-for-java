@@ -4,45 +4,59 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Enumerates possible request statuses. */
+/**
+ * Enumerates possible request statuses.
+ */
 public final class RequestStatus extends ExpandableStringEnum<RequestStatus> {
-    /** Static value Running for RequestStatus. */
+    /**
+     * Static value Running for RequestStatus.
+     */
+    @Generated
     public static final RequestStatus RUNNING = fromString("Running");
 
-    /** Static value Completed for RequestStatus. */
+    /**
+     * Static value Completed for RequestStatus.
+     */
+    @Generated
     public static final RequestStatus COMPLETED = fromString("Completed");
 
-    /** Static value Failed for RequestStatus. */
+    /**
+     * Static value Failed for RequestStatus.
+     */
+    @Generated
     public static final RequestStatus FAILED = fromString("Failed");
 
     /**
      * Creates a new instance of RequestStatus value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public RequestStatus() {}
+    public RequestStatus() {
+    }
 
     /**
      * Creates or finds a RequestStatus from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding RequestStatus.
      */
-    @JsonCreator
+    @Generated
     public static RequestStatus fromString(String name) {
         return fromString(name, RequestStatus.class);
     }
 
     /**
      * Gets known RequestStatus values.
-     *
+     * 
      * @return known RequestStatus values.
      */
+    @Generated
     public static Collection<RequestStatus> values() {
         return values(RequestStatus.class);
     }

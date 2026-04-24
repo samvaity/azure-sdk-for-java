@@ -8,56 +8,54 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of ReplicationProtectedItems. */
+/**
+ * Resource collection API of ReplicationProtectedItems.
+ */
 public interface ReplicationProtectedItems {
     /**
      * Gets the list of Replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR replication protected items in the protection container as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR replication protected items in the protection container as paginated response with
+     * {@link PagedIterable}.
      */
-    PagedIterable<ReplicationProtectedItem> listByReplicationProtectionContainers(
-        String resourceName, String resourceGroupName, String fabricName, String protectionContainerName);
+    PagedIterable<ReplicationProtectedItem> listByReplicationProtectionContainers(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName);
 
     /**
      * Gets the list of Replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR replication protected items in the protection container as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR replication protected items in the protection container as paginated response with
+     * {@link PagedIterable}.
      */
-    PagedIterable<ReplicationProtectedItem> listByReplicationProtectionContainers(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        Context context);
+    PagedIterable<ReplicationProtectedItem> listByReplicationProtectionContainers(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, Context context);
 
     /**
      * Gets the details of a Replication protected item.
-     *
-     * <p>Gets the details of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -67,21 +65,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the details of an ASR replication protected item along with {@link Response}.
      */
-    Response<ReplicationProtectedItem> getWithResponse(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context);
+    Response<ReplicationProtectedItem> getWithResponse(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, Context context);
 
     /**
      * Gets the details of a Replication protected item.
-     *
-     * <p>Gets the details of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -90,22 +83,18 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the details of an ASR replication protected item.
      */
-    ReplicationProtectedItem get(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName);
+    ReplicationProtectedItem get(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName);
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -113,22 +102,18 @@ public interface ReplicationProtectedItems {
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    void purge(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
+    void purge(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
         String replicatedProtectedItemName);
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -137,21 +122,16 @@ public interface ReplicationProtectedItems {
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    void purge(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context);
+    void purge(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, Context context);
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -161,21 +141,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem addDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        AddDisksInput addDisksInput);
+    ReplicationProtectedItem addDisks(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, AddDisksInput addDisksInput);
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -186,22 +161,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem addDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        AddDisksInput addDisksInput,
+    ReplicationProtectedItem addDisks(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, AddDisksInput addDisksInput,
         Context context);
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -211,21 +181,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem applyRecoveryPoint(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    ReplicationProtectedItem applyRecoveryPoint(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName,
         ApplyRecoveryPointInput applyRecoveryPointInput);
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -236,22 +202,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem applyRecoveryPoint(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ApplyRecoveryPointInput applyRecoveryPointInput,
-        Context context);
+    ReplicationProtectedItem applyRecoveryPoint(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName,
+        ApplyRecoveryPointInput applyRecoveryPointInput, Context context);
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -260,20 +221,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem failoverCancel(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName);
+    ReplicationProtectedItem failoverCancel(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName);
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -283,21 +240,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem failoverCancel(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context);
+    ReplicationProtectedItem failoverCancel(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, Context context);
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -306,20 +258,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem failoverCommit(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName);
+    ReplicationProtectedItem failoverCommit(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName);
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -329,21 +277,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem failoverCommit(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context);
+    ReplicationProtectedItem failoverCommit(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, Context context);
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -353,21 +296,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem plannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        PlannedFailoverInput failoverInput);
+    ReplicationProtectedItem plannedFailover(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, PlannedFailoverInput failoverInput);
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -378,22 +316,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem plannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        PlannedFailoverInput failoverInput,
+    ReplicationProtectedItem plannedFailover(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, PlannedFailoverInput failoverInput,
         Context context);
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -402,21 +335,16 @@ public interface ReplicationProtectedItems {
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        DisableProtectionInput disableProtectionInput);
+    void delete(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, DisableProtectionInput disableProtectionInput);
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -426,22 +354,16 @@ public interface ReplicationProtectedItems {
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        DisableProtectionInput disableProtectionInput,
-        Context context);
+    void delete(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, DisableProtectionInput disableProtectionInput, Context context);
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -451,21 +373,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem removeDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        RemoveDisksInput removeDisksInput);
+    ReplicationProtectedItem removeDisks(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, RemoveDisksInput removeDisksInput);
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -476,23 +393,18 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem removeDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        RemoveDisksInput removeDisksInput,
+    ReplicationProtectedItem removeDisks(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, RemoveDisksInput removeDisksInput,
         Context context);
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -501,21 +413,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem repairReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName);
+    ReplicationProtectedItem repairReplication(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName);
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -525,21 +433,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem repairReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context);
+    ReplicationProtectedItem repairReplication(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, Context context);
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -549,21 +452,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem reprotect(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ReverseReplicationInput reprotectInput);
+    ReplicationProtectedItem reprotect(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, ReverseReplicationInput reprotectInput);
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -574,22 +472,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem reprotect(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ReverseReplicationInput reprotectInput,
+    ReplicationProtectedItem reprotect(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, ReverseReplicationInput reprotectInput,
         Context context);
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -599,21 +492,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem resolveHealthErrors(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ResolveHealthInput resolveHealthInput);
+    ReplicationProtectedItem resolveHealthErrors(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, ResolveHealthInput resolveHealthInput);
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -624,22 +512,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem resolveHealthErrors(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ResolveHealthInput resolveHealthInput,
+    ReplicationProtectedItem resolveHealthErrors(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, ResolveHealthInput resolveHealthInput,
         Context context);
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -649,21 +532,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem switchProvider(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        SwitchProviderInput switchProviderInput);
+    ReplicationProtectedItem switchProvider(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, SwitchProviderInput switchProviderInput);
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -674,22 +552,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem switchProvider(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        SwitchProviderInput switchProviderInput,
+    ReplicationProtectedItem switchProvider(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, SwitchProviderInput switchProviderInput,
         Context context);
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -699,21 +572,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem testFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverInput testfailoverInput);
+    ReplicationProtectedItem testFailover(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, TestFailoverInput testfailoverInput);
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -724,22 +592,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem testFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverInput testfailoverInput,
+    ReplicationProtectedItem testFailover(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, TestFailoverInput testfailoverInput,
         Context context);
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -749,21 +612,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem testFailoverCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverCleanupInput cleanupInput);
+    ReplicationProtectedItem testFailoverCleanup(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, TestFailoverCleanupInput cleanupInput);
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -774,22 +632,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem testFailoverCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverCleanupInput cleanupInput,
+    ReplicationProtectedItem testFailoverCleanup(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, TestFailoverCleanupInput cleanupInput,
         Context context);
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -799,21 +652,16 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem unplannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UnplannedFailoverInput failoverInput);
+    ReplicationProtectedItem unplannedFailover(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, UnplannedFailoverInput failoverInput);
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -824,22 +672,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem unplannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UnplannedFailoverInput failoverInput,
+    ReplicationProtectedItem unplannedFailover(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, UnplannedFailoverInput failoverInput,
         Context context);
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -849,21 +692,17 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem updateAppliance(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    ReplicationProtectedItem updateAppliance(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName,
         UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput);
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -874,23 +713,18 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem updateAppliance(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput,
-        Context context);
+    ReplicationProtectedItem updateAppliance(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName,
+        UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput, Context context);
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -900,22 +734,18 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem updateMobilityService(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    ReplicationProtectedItem updateMobilityService(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName,
         UpdateMobilityServiceRequest updateMobilityServiceRequest);
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -926,54 +756,49 @@ public interface ReplicationProtectedItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return replication protected item.
      */
-    ReplicationProtectedItem updateMobilityService(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateMobilityServiceRequest updateMobilityServiceRequest,
-        Context context);
+    ReplicationProtectedItem updateMobilityService(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName,
+        UpdateMobilityServiceRequest updateMobilityServiceRequest, Context context);
 
     /**
      * Gets the list of replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR replication protected items in the vault as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR replication protected items in the vault as paginated response with
+     * {@link PagedIterable}.
      */
-    PagedIterable<ReplicationProtectedItem> list(String resourceName, String resourceGroupName);
+    PagedIterable<ReplicationProtectedItem> list(String resourceGroupName, String resourceName);
 
     /**
      * Gets the list of replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param skipToken The pagination token. Possible values: "FabricId" or "FabricId_CloudId" or null.
      * @param filter OData filter options.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR replication protected items in the vault as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR replication protected items in the vault as paginated response with
+     * {@link PagedIterable}.
      */
-    PagedIterable<ReplicationProtectedItem> list(
-        String resourceName, String resourceGroupName, String skipToken, String filter, Context context);
+    PagedIterable<ReplicationProtectedItem> list(String resourceGroupName, String resourceName, String skipToken,
+        String filter, Context context);
 
     /**
      * Gets the details of a Replication protected item.
-     *
-     * <p>Gets the details of an ASR replication protected item.
-     *
+     * 
+     * Gets the details of an ASR replication protected item.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -984,9 +809,9 @@ public interface ReplicationProtectedItems {
 
     /**
      * Gets the details of a Replication protected item.
-     *
-     * <p>Gets the details of an ASR replication protected item.
-     *
+     * 
+     * Gets the details of an ASR replication protected item.
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -998,7 +823,7 @@ public interface ReplicationProtectedItems {
 
     /**
      * Begins definition for a new ReplicationProtectedItem resource.
-     *
+     * 
      * @param name resource name.
      * @return the first stage of the new ReplicationProtectedItem definition.
      */

@@ -5,6 +5,7 @@ package com.azure.storage.queue;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.PagedFlux;
 import com.azure.core.http.rest.PagedResponse;
@@ -15,20 +16,25 @@ import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.storage.common.StorageSharedKeyCredential;
 import com.azure.storage.common.implementation.AccountSasImplUtil;
+import com.azure.storage.common.implementation.Constants;
 import com.azure.storage.common.implementation.SasImplUtils;
 import com.azure.storage.common.implementation.StorageImplUtils;
 import com.azure.storage.common.sas.AccountSasSignatureValues;
 import com.azure.storage.queue.implementation.AzureQueueStorageImpl;
+import com.azure.storage.queue.implementation.models.KeyInfo;
 import com.azure.storage.queue.models.QueueCorsRule;
+import com.azure.storage.queue.models.QueueGetUserDelegationKeyOptions;
 import com.azure.storage.queue.models.QueueItem;
 import com.azure.storage.queue.models.QueueMessageDecodingError;
 import com.azure.storage.queue.models.QueueServiceProperties;
 import com.azure.storage.queue.models.QueueServiceStatistics;
 import com.azure.storage.queue.models.QueueStorageException;
 import com.azure.storage.queue.models.QueuesSegmentOptions;
+import com.azure.storage.queue.models.UserDelegationKey;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +97,8 @@ public final class QueueServiceAsyncClient {
     }
 
     /**
+     * Gets the URL of the storage queue.
+     *
      * @return the URL of the storage queue
      */
     public String getQueueServiceUrl() {
@@ -187,18 +195,12 @@ public final class QueueServiceAsyncClient {
     public Mono<Response<QueueAsyncClient>> createQueueWithResponse(String queueName, Map<String, String> metadata) {
         try {
             Objects.requireNonNull(queueName, "'queueName' cannot be null.");
-            return withContext(context -> createQueueWithResponse(queueName, metadata, context));
+            QueueAsyncClient queueAsyncClient = getQueueAsyncClient(queueName);
+            return queueAsyncClient.createWithResponse(metadata)
+                .map(response -> new SimpleResponse<>(response, queueAsyncClient));
         } catch (RuntimeException ex) {
             return monoError(LOGGER, ex);
         }
-    }
-
-    Mono<Response<QueueAsyncClient>> createQueueWithResponse(String queueName, Map<String, String> metadata,
-        Context context) {
-        QueueAsyncClient queueAsyncClient = getQueueAsyncClient(queueName);
-
-        return queueAsyncClient.createWithResponse(metadata, context)
-            .map(response -> new SimpleResponse<>(response, queueAsyncClient));
     }
 
     /**
@@ -247,15 +249,10 @@ public final class QueueServiceAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Void>> deleteQueueWithResponse(String queueName) {
         try {
-            return withContext(context -> deleteQueueWithResponse(queueName, context));
+            return getQueueAsyncClient(queueName).deleteWithResponse();
         } catch (RuntimeException ex) {
             return monoError(LOGGER, ex);
         }
-    }
-
-    Mono<Response<Void>> deleteQueueWithResponse(String queueName, Context context) {
-        QueueAsyncClient queueAsyncClient = getQueueAsyncClient(queueName);
-        return queueAsyncClient.deleteWithResponse(context);
     }
 
     /**
@@ -350,11 +347,11 @@ public final class QueueServiceAsyncClient {
             }
         }
 
-        BiFunction<String, Integer, Mono<PagedResponse<QueueItem>>> retriever =
-            (nextMarker, pageSize) -> StorageImplUtils.applyOptionalTimeout(this.client.getServices()
-                .listQueuesSegmentSinglePageAsync(prefix, nextMarker,
-                    pageSize == null ? maxResultsPerPage : pageSize, include,
-                    null, null, context), timeout);
+        BiFunction<String, Integer, Mono<PagedResponse<QueueItem>>> retriever = (nextMarker,
+            pageSize) -> StorageImplUtils.applyOptionalTimeout(this.client.getServices()
+                .listQueuesSegmentSinglePageAsync(prefix, nextMarker, pageSize == null ? maxResultsPerPage : pageSize,
+                    include, null, null, context),
+                timeout);
 
         return new PagedFlux<>(pageSize -> retriever.apply(marker, pageSize), retriever);
     }
@@ -424,7 +421,8 @@ public final class QueueServiceAsyncClient {
 
     Mono<Response<QueueServiceProperties>> getPropertiesWithResponse(Context context) {
         context = context == null ? Context.NONE : context;
-        return client.getServices().getPropertiesWithResponseAsync(null, null, context)
+        return client.getServices()
+            .getPropertiesWithResponseAsync(null, null, context)
             .map(response -> new SimpleResponse<>(response, response.getValue()));
     }
 
@@ -548,8 +546,7 @@ public final class QueueServiceAsyncClient {
 
     Mono<Response<Void>> setPropertiesWithResponse(QueueServiceProperties properties, Context context) {
         context = context == null ? Context.NONE : context;
-        return client.getServices().setPropertiesWithResponseAsync(properties, null, null, context)
-            .map(response -> new SimpleResponse<>(response, null));
+        return client.getServices().setPropertiesNoCustomHeadersWithResponseAsync(properties, null, null, context);
     }
 
     /**
@@ -613,10 +610,10 @@ public final class QueueServiceAsyncClient {
 
     Mono<Response<QueueServiceStatistics>> getStatisticsWithResponse(Context context) {
         context = context == null ? Context.NONE : context;
-        return client.getServices().getStatisticsWithResponseAsync(null, null, context)
+        return client.getServices()
+            .getStatisticsWithResponseAsync(null, null, context)
             .map(response -> new SimpleResponse<>(response, response.getValue()));
     }
-
 
     /**
      * Get associated account name.
@@ -698,12 +695,105 @@ public final class QueueServiceAsyncClient {
      * @return A {@code String} representing the SAS query parameters.
      */
     public String generateAccountSas(AccountSasSignatureValues accountSasSignatureValues, Context context) {
+        return generateAccountSas(accountSasSignatureValues, null, context);
+    }
+
+    /**
+     * Generates an account SAS for the Azure Storage account using the specified {@link AccountSasSignatureValues}.
+     * <p>Note : The client must be authenticated via {@link StorageSharedKeyCredential}
+     * <p>See {@link AccountSasSignatureValues} for more information on how to construct an account SAS.</p>
+     *
+     * @param accountSasSignatureValues {@link AccountSasSignatureValues}
+     * @param stringToSignHandler For debugging purposes only. Returns the string to sign that was used to generate the
+     * signature.
+     * @param context Additional context that is passed through the code when generating a SAS.
+     *
+     * @return A {@code String} representing the SAS query parameters.
+     */
+    public String generateAccountSas(AccountSasSignatureValues accountSasSignatureValues,
+        Consumer<String> stringToSignHandler, Context context) {
         return new AccountSasImplUtil(accountSasSignatureValues, null)
-            .generateSas(SasImplUtils.extractSharedKeyCredential(getHttpPipeline()), context);
+            .generateSas(SasImplUtils.extractSharedKeyCredential(getHttpPipeline()), stringToSignHandler, context);
     }
 
-    AzureQueueStorageImpl getAzureQueueStorage() {
-        return client;
+    /**
+     * Gets a user delegation key for use with this account's queue storage. Note: This method call is only valid when
+     * using {@link TokenCredential} in this object's {@link HttpPipeline}.
+     *
+     * @param start Start time for the key's validity. Null indicates immediate start.
+     * @param expiry Expiration of the key's validity.
+     * @return A {@link Mono} containing the user delegation key.
+     * @throws IllegalArgumentException If {@code start} isn't null and is after {@code expiry}.
+     * @throws NullPointerException If {@code expiry} is null.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<UserDelegationKey> getUserDelegationKey(OffsetDateTime start, OffsetDateTime expiry) {
+        return getUserDelegationKeyWithResponse(start, expiry).flatMap(FluxUtil::toMono);
     }
 
+    /**
+     * Gets a user delegation key for use with this account's queue storage. Note: This method call is only valid when
+     * using {@link TokenCredential} in this object's {@link HttpPipeline}.
+     *
+     * @param start Start time for the key's validity. Null indicates immediate start.
+     * @param expiry Expiration of the key's validity.
+     * @return A {@link Mono} containing a {@link Response} whose {@link Response#getValue() value} containing the user
+     * delegation key.
+     * @throws IllegalArgumentException If {@code start} isn't null and is after {@code expiry}.
+     * @throws NullPointerException If {@code expiry} is null.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<UserDelegationKey>> getUserDelegationKeyWithResponse(OffsetDateTime start,
+        OffsetDateTime expiry) {
+        try {
+            return withContext(context -> getUserDelegationKeyWithResponse(start, expiry, context));
+        } catch (RuntimeException ex) {
+            return monoError(LOGGER, ex);
+        }
+    }
+
+    /**
+     * Gets a user delegation key for use with this account's queue storage. Note: This method call is only valid when
+     * using {@link TokenCredential} in this object's {@link HttpPipeline}.
+     *
+     * @param options Options for getting the user delegation key.
+     * @return A {@link Mono} containing a {@link Response} whose {@link Response#getValue() value} containing the user
+     * delegation key.
+     * @throws IllegalArgumentException If {@code options.getStartsOn()} isn't null and is after
+     * {@code options.getExpiresOn()}.
+     * @throws NullPointerException If {@code options.getExpiresOn()} is null.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<UserDelegationKey>>
+        getUserDelegationKeyWithResponse(QueueGetUserDelegationKeyOptions options) {
+        try {
+            StorageImplUtils.assertNotNull("options", options);
+            return withContext(context -> getUserDelegationKeyWithResponse(options.getStartsOn(),
+                options.getExpiresOn(), options.getDelegatedUserTenantId(), context));
+        } catch (RuntimeException ex) {
+            return monoError(LOGGER, ex);
+        }
+    }
+
+    Mono<Response<UserDelegationKey>> getUserDelegationKeyWithResponse(OffsetDateTime start, OffsetDateTime expiry,
+        Context context) {
+        return getUserDelegationKeyWithResponse(start, expiry, null, context);
+    }
+
+    Mono<Response<UserDelegationKey>> getUserDelegationKeyWithResponse(OffsetDateTime start, OffsetDateTime expiry,
+        String delegatedUserTenantId, Context context) {
+        context = context == null ? Context.NONE : context;
+        if (start != null && !start.isBefore(expiry)) {
+            throw LOGGER.logExceptionAsError(
+                new IllegalArgumentException("`start` must be null or a datetime before `expiry`."));
+        }
+
+        return client.getServices()
+            .getUserDelegationKeyWithResponseAsync(
+                new KeyInfo().setStart(start == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(start))
+                    .setExpiry(Constants.ISO_8601_UTC_DATE_FORMATTER.format(expiry))
+                    .setDelegatedUserTenantId(delegatedUserTenantId),
+                null, null, context)
+            .map(rb -> new SimpleResponse<>(rb, rb.getValue()));
+    }
 }

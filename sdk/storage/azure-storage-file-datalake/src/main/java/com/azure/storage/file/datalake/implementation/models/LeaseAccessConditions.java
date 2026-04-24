@@ -5,28 +5,33 @@
 package com.azure.storage.file.datalake.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
 
-/** Parameter group. */
-@JacksonXmlRootElement(localName = "LeaseAccessConditions")
+/**
+ * Parameter group.
+ */
 @Fluent
 public final class LeaseAccessConditions {
     /*
      * If specified, the operation only succeeds if the resource's lease is active and matches this ID.
      */
-    @JsonProperty(value = "leaseId")
+    @Generated
     private String leaseId;
 
-    /** Creates an instance of LeaseAccessConditions class. */
-    public LeaseAccessConditions() {}
+    /**
+     * Creates an instance of LeaseAccessConditions class.
+     */
+    @Generated
+    public LeaseAccessConditions() {
+    }
 
     /**
      * Get the leaseId property: If specified, the operation only succeeds if the resource's lease is active and matches
      * this ID.
-     *
+     * 
      * @return the leaseId value.
      */
+    @Generated
     public String getLeaseId() {
         return this.leaseId;
     }
@@ -34,10 +39,11 @@ public final class LeaseAccessConditions {
     /**
      * Set the leaseId property: If specified, the operation only succeeds if the resource's lease is active and matches
      * this ID.
-     *
+     * 
      * @param leaseId the leaseId value to set.
      * @return the LeaseAccessConditions object itself.
      */
+    @Generated
     public LeaseAccessConditions setLeaseId(String leaseId) {
         this.leaseId = leaseId;
         return this;

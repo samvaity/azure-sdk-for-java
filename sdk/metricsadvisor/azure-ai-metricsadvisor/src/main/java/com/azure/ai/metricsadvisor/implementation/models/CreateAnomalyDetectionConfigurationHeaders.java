@@ -5,23 +5,25 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The CreateAnomalyDetectionConfigurationHeaders model. */
+/**
+ * The CreateAnomalyDetectionConfigurationHeaders model.
+ */
 @Fluent
 public final class CreateAnomalyDetectionConfigurationHeaders {
     /*
      * The Location property.
      */
-    @JsonProperty(value = "Location")
+    @Generated
     private String location;
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of CreateAnomalyDetectionConfigurationHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public CreateAnomalyDetectionConfigurationHeaders(HttpHeaders rawHeaders) {
@@ -30,19 +32,21 @@ public final class CreateAnomalyDetectionConfigurationHeaders {
 
     /**
      * Get the location property: The Location property.
-     *
+     * 
      * @return the location value.
      */
+    @Generated
     public String getLocation() {
         return this.location;
     }
 
     /**
      * Set the location property: The Location property.
-     *
+     * 
      * @param location the location value to set.
      * @return the CreateAnomalyDetectionConfigurationHeaders object itself.
      */
+    @Generated
     public CreateAnomalyDetectionConfigurationHeaders setLocation(String location) {
         this.location = location;
         return this;

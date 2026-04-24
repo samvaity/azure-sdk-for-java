@@ -5,35 +5,56 @@
 package com.azure.communication.rooms.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
-/** Request payload for updating a room. */
+/**
+ * Request payload for updating a room.
+ */
 @Fluent
-public final class UpdateRoomRequest {
+public final class UpdateRoomRequest implements JsonSerializable<UpdateRoomRequest> {
     /*
      * (Optional) The timestamp from when the room is open for joining. The timestamp is in RFC3339 format:
      * `yyyy-MM-ddTHH:mm:ssZ`.
      */
-    @JsonProperty(value = "validFrom")
+    @Generated
     private OffsetDateTime validFrom;
 
     /*
      * (Optional) The timestamp from when the room can no longer be joined. The timestamp is in RFC3339 format:
      * `yyyy-MM-ddTHH:mm:ssZ`.
      */
-    @JsonProperty(value = "validUntil")
+    @Generated
     private OffsetDateTime validUntil;
 
-    /** Creates an instance of UpdateRoomRequest class. */
-    public UpdateRoomRequest() {}
+    /*
+     * (Optional) Set this flag to true if, at the time of the call, dial out to a PSTN number is enabled in a
+     * particular room. By default, this flag is set to false.
+     */
+    @Generated
+    private Boolean pstnDialOutEnabled;
+
+    /**
+     * Creates an instance of UpdateRoomRequest class.
+     */
+    @Generated
+    public UpdateRoomRequest() {
+    }
 
     /**
      * Get the validFrom property: (Optional) The timestamp from when the room is open for joining. The timestamp is in
      * RFC3339 format: `yyyy-MM-ddTHH:mm:ssZ`.
-     *
+     * 
      * @return the validFrom value.
      */
+    @Generated
     public OffsetDateTime getValidFrom() {
         return this.validFrom;
     }
@@ -41,10 +62,11 @@ public final class UpdateRoomRequest {
     /**
      * Set the validFrom property: (Optional) The timestamp from when the room is open for joining. The timestamp is in
      * RFC3339 format: `yyyy-MM-ddTHH:mm:ssZ`.
-     *
+     * 
      * @param validFrom the validFrom value to set.
      * @return the UpdateRoomRequest object itself.
      */
+    @Generated
     public UpdateRoomRequest setValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
         return this;
@@ -53,9 +75,10 @@ public final class UpdateRoomRequest {
     /**
      * Get the validUntil property: (Optional) The timestamp from when the room can no longer be joined. The timestamp
      * is in RFC3339 format: `yyyy-MM-ddTHH:mm:ssZ`.
-     *
+     * 
      * @return the validUntil value.
      */
+    @Generated
     public OffsetDateTime getValidUntil() {
         return this.validUntil;
     }
@@ -63,12 +86,85 @@ public final class UpdateRoomRequest {
     /**
      * Set the validUntil property: (Optional) The timestamp from when the room can no longer be joined. The timestamp
      * is in RFC3339 format: `yyyy-MM-ddTHH:mm:ssZ`.
-     *
+     * 
      * @param validUntil the validUntil value to set.
      * @return the UpdateRoomRequest object itself.
      */
+    @Generated
     public UpdateRoomRequest setValidUntil(OffsetDateTime validUntil) {
         this.validUntil = validUntil;
         return this;
+    }
+
+    /**
+     * Get the pstnDialOutEnabled property: (Optional) Set this flag to true if, at the time of the call, dial out to a
+     * PSTN number is enabled in a particular room. By default, this flag is set to false.
+     * 
+     * @return the pstnDialOutEnabled value.
+     */
+    @Generated
+    public Boolean isPstnDialOutEnabled() {
+        return this.pstnDialOutEnabled;
+    }
+
+    /**
+     * Set the pstnDialOutEnabled property: (Optional) Set this flag to true if, at the time of the call, dial out to a
+     * PSTN number is enabled in a particular room. By default, this flag is set to false.
+     * 
+     * @param pstnDialOutEnabled the pstnDialOutEnabled value to set.
+     * @return the UpdateRoomRequest object itself.
+     */
+    @Generated
+    public UpdateRoomRequest setPstnDialOutEnabled(Boolean pstnDialOutEnabled) {
+        this.pstnDialOutEnabled = pstnDialOutEnabled;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("validFrom",
+            this.validFrom == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.validFrom));
+        jsonWriter.writeStringField("validUntil",
+            this.validUntil == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.validUntil));
+        jsonWriter.writeBooleanField("pstnDialOutEnabled", this.pstnDialOutEnabled);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of UpdateRoomRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of UpdateRoomRequest if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the UpdateRoomRequest.
+     */
+    @Generated
+    public static UpdateRoomRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            UpdateRoomRequest deserializedUpdateRoomRequest = new UpdateRoomRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("validFrom".equals(fieldName)) {
+                    deserializedUpdateRoomRequest.validFrom = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("validUntil".equals(fieldName)) {
+                    deserializedUpdateRoomRequest.validUntil = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("pstnDialOutEnabled".equals(fieldName)) {
+                    deserializedUpdateRoomRequest.pstnDialOutEnabled = reader.getNullable(JsonReader::getBoolean);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedUpdateRoomRequest;
+        });
     }
 }

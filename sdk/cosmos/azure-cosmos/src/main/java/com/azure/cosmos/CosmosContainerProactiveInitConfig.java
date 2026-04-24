@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
  * Encapsulates the list of container identities and no. of proactive connection regions.
  * */
 public final class CosmosContainerProactiveInitConfig {
-    private final static ImplementationBridgeHelpers.CosmosContainerIdentityHelper.CosmosContainerIdentityAccessor
-        containerIdAccessor = ImplementationBridgeHelpers
-            .CosmosContainerIdentityHelper
-            .getCosmosContainerIdentityAccessor();
+    private static ImplementationBridgeHelpers.CosmosContainerIdentityHelper.CosmosContainerIdentityAccessor containerIdentityAccessor() {
+        return ImplementationBridgeHelpers.CosmosContainerIdentityHelper.getCosmosContainerIdentityAccessor();
+    }
+
     private final List<CosmosContainerIdentity> cosmosContainerIdentities;
     private final Map<CosmosContainerIdentity, ContainerDirectConnectionMetadata> containerDirectConnectionMetadataMap;
     private final int numProactiveConnectionRegions;
@@ -96,17 +96,19 @@ public final class CosmosContainerProactiveInitConfig {
             return "";
         }
 
-        return
-            String.format(
-                "%s(%d)",
+        // containers -> the containers part of the connection warm up
+        // pcrc -> the first k regions from the preferredRegions to which connections are warmed up
+        // awd -> duration within which aggressive connection warm up happens
+        return String.format(
+                "(containers:%s)(pcrc:%d)(awd:%s)",
                 cosmosContainerIdentities
                     .stream()
                     .map(ci -> String.join(
                         ".",
-                        containerIdAccessor.getDatabaseName(ci),
-                        containerIdAccessor.getContainerName(ci)))
-                    .collect(Collectors.joining(",")),
-                numProactiveConnectionRegions);
+                        containerIdentityAccessor().getContainerLink(ci)))
+                    .collect(Collectors.joining(";")),
+                numProactiveConnectionRegions,
+                aggressiveWarmupDuration);
     }
 
     static void initialize() {

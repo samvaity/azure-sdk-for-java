@@ -12,32 +12,28 @@ import org.junit.jupiter.api.Assertions;
 public final class ResourceModelWithAllowedPropertySetSkuTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ResourceModelWithAllowedPropertySetSku model =
-            BinaryData
-                .fromString(
-                    "{\"name\":\"dhsgcba\",\"tier\":\"Standard\",\"size\":\"jkot\",\"family\":\"qgoulznd\",\"capacity\":708367520}")
-                .toObject(ResourceModelWithAllowedPropertySetSku.class);
-        Assertions.assertEquals("dhsgcba", model.name());
+        ResourceModelWithAllowedPropertySetSku model = BinaryData.fromString(
+            "{\"name\":\"t\",\"tier\":\"Standard\",\"size\":\"dsoifiyipj\",\"family\":\"qwpgrjbzn\",\"capacity\":969861111}")
+            .toObject(ResourceModelWithAllowedPropertySetSku.class);
+        Assertions.assertEquals("t", model.name());
         Assertions.assertEquals(SkuTier.STANDARD, model.tier());
-        Assertions.assertEquals("jkot", model.size());
-        Assertions.assertEquals("qgoulznd", model.family());
-        Assertions.assertEquals(708367520, model.capacity());
+        Assertions.assertEquals("dsoifiyipj", model.size());
+        Assertions.assertEquals("qwpgrjbzn", model.family());
+        Assertions.assertEquals(969861111, model.capacity());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ResourceModelWithAllowedPropertySetSku model =
-            new ResourceModelWithAllowedPropertySetSku()
-                .withName("dhsgcba")
-                .withTier(SkuTier.STANDARD)
-                .withSize("jkot")
-                .withFamily("qgoulznd")
-                .withCapacity(708367520);
+        ResourceModelWithAllowedPropertySetSku model = new ResourceModelWithAllowedPropertySetSku().withName("t")
+            .withTier(SkuTier.STANDARD)
+            .withSize("dsoifiyipj")
+            .withFamily("qwpgrjbzn")
+            .withCapacity(969861111);
         model = BinaryData.fromObject(model).toObject(ResourceModelWithAllowedPropertySetSku.class);
-        Assertions.assertEquals("dhsgcba", model.name());
+        Assertions.assertEquals("t", model.name());
         Assertions.assertEquals(SkuTier.STANDARD, model.tier());
-        Assertions.assertEquals("jkot", model.size());
-        Assertions.assertEquals("qgoulznd", model.family());
-        Assertions.assertEquals(708367520, model.capacity());
+        Assertions.assertEquals("dsoifiyipj", model.size());
+        Assertions.assertEquals("qwpgrjbzn", model.family());
+        Assertions.assertEquals(969861111, model.capacity());
     }
 }

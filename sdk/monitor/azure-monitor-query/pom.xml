@@ -11,10 +11,11 @@
 
   <groupId>com.azure</groupId>
   <artifactId>azure-monitor-query</artifactId>
-  <version>1.3.0-beta.1</version> <!-- {x-version-update;com.azure:azure-monitor-query;current} -->
+  <version>1.6.0-beta.1</version> <!-- {x-version-update;com.azure:azure-monitor-query;current} -->
 
   <name>Microsoft Azure SDK for Azure Monitor Logs and Metrics Query</name>
-  <description>This package contains the Microsoft Azure SDK for querying Azure Monitor's Logs and Metrics data sources.</description>
+  <description>This package has been split into two newer libraries available at https://central.sonatype.com/artifact/com.azure/azure-monitor-query-metrics and https://central.sonatype.com/artifact/com.azure/azure-monitor-query-logs</description>
+
 
   <distributionManagement>
     <site>
@@ -36,53 +37,47 @@
       --add-exports com.azure.core.serializer.json/com.azure.core.serializer.json.jackson.implementation=ALL-UNNAMED
       --add-opens com.azure.monitor.query/com.azure.monitor.query=ALL-UNNAMED
     </javaModulesSurefireArgLine>
-    <checkstyle.excludes>**/implementation/**/*.java</checkstyle.excludes>
+
+    <spotbugs.skip>false</spotbugs.skip>
   </properties>
   <dependencies>
     <dependency>
       <groupId>com.azure</groupId>
       <artifactId>azure-core</artifactId>
-      <version>1.41.0</version> <!-- {x-version-update;com.azure:azure-core;dependency} -->
+      <version>1.57.1</version> <!-- {x-version-update;com.azure:azure-core;dependency} -->
     </dependency>
     <dependency>
       <groupId>com.azure</groupId>
       <artifactId>azure-core-http-netty</artifactId>
-      <version>1.13.5</version> <!-- {x-version-update;com.azure:azure-core-http-netty;dependency} -->
+      <version>1.16.3</version> <!-- {x-version-update;com.azure:azure-core-http-netty;dependency} -->
     </dependency>
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>5.9.3</version> <!-- {x-version-update;org.junit.jupiter:junit-jupiter-api;external_dependency} -->
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.9.3</version> <!-- {x-version-update;org.junit.jupiter:junit-jupiter-engine;external_dependency} -->
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <version>5.9.3</version> <!-- {x-version-update;org.junit.jupiter:junit-jupiter-params;external_dependency} -->
-      <scope>test</scope>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-json</artifactId>
+      <version>1.5.1</version> <!-- {x-version-update;com.azure:azure-json;dependency} -->
     </dependency>
     <dependency>
       <groupId>com.azure</groupId>
       <artifactId>azure-identity</artifactId>
-      <version>1.9.2</version> <!-- {x-version-update;com.azure:azure-identity;dependency} -->
+      <version>1.18.2</version> <!-- {x-version-update;com.azure:azure-identity;dependency} -->
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.azure</groupId>
       <artifactId>azure-core-test</artifactId>
-      <version>1.18.1</version> <!-- {x-version-update;com.azure:azure-core-test;dependency} -->
+      <version>1.27.0-beta.14</version> <!-- {x-version-update;com.azure:azure-core-test;dependency} -->
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.azure</groupId>
       <artifactId>azure-core-serializer-json-jackson</artifactId>
-      <version>1.4.2</version> <!-- {x-version-update;com.azure:azure-core-serializer-json-jackson;dependency} -->
+      <version>1.6.3</version> <!-- {x-version-update;com.azure:azure-core-serializer-json-jackson;dependency} -->
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-data-appconfiguration</artifactId>
+      <version>1.9.1</version> <!-- {x-version-update;com.azure:azure-data-appconfiguration;dependency} -->
       <scope>test</scope>
     </dependency>
   </dependencies>

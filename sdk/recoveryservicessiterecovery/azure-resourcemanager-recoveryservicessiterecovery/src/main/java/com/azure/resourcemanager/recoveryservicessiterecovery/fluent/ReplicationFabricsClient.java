@@ -16,30 +16,32 @@ import com.azure.resourcemanager.recoveryservicessiterecovery.models.FabricCreat
 import com.azure.resourcemanager.recoveryservicessiterecovery.models.FailoverProcessServerRequest;
 import com.azure.resourcemanager.recoveryservicessiterecovery.models.RenewCertificateInput;
 
-/** An instance of this class provides access to all the operations defined in ReplicationFabricsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ReplicationFabricsClient.
+ */
 public interface ReplicationFabricsClient {
     /**
      * Gets the list of ASR fabrics.
-     *
-     * <p>Gets a list of the Azure Site Recovery fabrics in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets a list of the Azure Site Recovery fabrics in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of the Azure Site Recovery fabrics in the vault as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<FabricInner> list(String resourceName, String resourceGroupName);
+    PagedIterable<FabricInner> list(String resourceGroupName, String resourceName);
 
     /**
      * Gets the list of ASR fabrics.
-     *
-     * <p>Gets a list of the Azure Site Recovery fabrics in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets a list of the Azure Site Recovery fabrics in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -47,15 +49,15 @@ public interface ReplicationFabricsClient {
      * @return a list of the Azure Site Recovery fabrics in the vault as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<FabricInner> list(String resourceName, String resourceGroupName, Context context);
+    PagedIterable<FabricInner> list(String resourceGroupName, String resourceName, Context context);
 
     /**
      * Gets the details of an ASR fabric.
-     *
-     * <p>Gets the details of an Azure Site Recovery fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an Azure Site Recovery fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param filter OData filter options.
      * @param context The context to associate with this operation.
@@ -65,16 +67,16 @@ public interface ReplicationFabricsClient {
      * @return the details of an Azure Site Recovery fabric along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<FabricInner> getWithResponse(
-        String resourceName, String resourceGroupName, String fabricName, String filter, Context context);
+    Response<FabricInner> getWithResponse(String resourceGroupName, String resourceName, String fabricName,
+        String filter, Context context);
 
     /**
      * Gets the details of an ASR fabric.
-     *
-     * <p>Gets the details of an Azure Site Recovery fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an Azure Site Recovery fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -82,15 +84,15 @@ public interface ReplicationFabricsClient {
      * @return the details of an Azure Site Recovery fabric.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    FabricInner get(String resourceName, String resourceGroupName, String fabricName);
+    FabricInner get(String resourceGroupName, String resourceName, String fabricName);
 
     /**
      * Creates an Azure Site Recovery fabric.
-     *
-     * <p>The operation to create an Azure Site Recovery fabric (for e.g. Hyper-V site).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an Azure Site Recovery fabric (for e.g. Hyper-V site).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the ASR fabric.
      * @param input Fabric creation input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -99,16 +101,16 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of fabric definition.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<FabricInner>, FabricInner> beginCreate(
-        String resourceName, String resourceGroupName, String fabricName, FabricCreationInput input);
+    SyncPoller<PollResult<FabricInner>, FabricInner> beginCreate(String resourceGroupName, String resourceName,
+        String fabricName, FabricCreationInput input);
 
     /**
      * Creates an Azure Site Recovery fabric.
-     *
-     * <p>The operation to create an Azure Site Recovery fabric (for e.g. Hyper-V site).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an Azure Site Recovery fabric (for e.g. Hyper-V site).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the ASR fabric.
      * @param input Fabric creation input.
      * @param context The context to associate with this operation.
@@ -118,16 +120,16 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of fabric definition.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<FabricInner>, FabricInner> beginCreate(
-        String resourceName, String resourceGroupName, String fabricName, FabricCreationInput input, Context context);
+    SyncPoller<PollResult<FabricInner>, FabricInner> beginCreate(String resourceGroupName, String resourceName,
+        String fabricName, FabricCreationInput input, Context context);
 
     /**
      * Creates an Azure Site Recovery fabric.
-     *
-     * <p>The operation to create an Azure Site Recovery fabric (for e.g. Hyper-V site).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an Azure Site Recovery fabric (for e.g. Hyper-V site).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the ASR fabric.
      * @param input Fabric creation input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -136,15 +138,15 @@ public interface ReplicationFabricsClient {
      * @return fabric definition.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    FabricInner create(String resourceName, String resourceGroupName, String fabricName, FabricCreationInput input);
+    FabricInner create(String resourceGroupName, String resourceName, String fabricName, FabricCreationInput input);
 
     /**
      * Creates an Azure Site Recovery fabric.
-     *
-     * <p>The operation to create an Azure Site Recovery fabric (for e.g. Hyper-V site).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an Azure Site Recovery fabric (for e.g. Hyper-V site).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the ASR fabric.
      * @param input Fabric creation input.
      * @param context The context to associate with this operation.
@@ -154,16 +156,16 @@ public interface ReplicationFabricsClient {
      * @return fabric definition.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    FabricInner create(
-        String resourceName, String resourceGroupName, String fabricName, FabricCreationInput input, Context context);
+    FabricInner create(String resourceGroupName, String resourceName, String fabricName, FabricCreationInput input,
+        Context context);
 
     /**
      * Purges the site.
-     *
-     * <p>The operation to purge(force delete) an Azure Site Recovery fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to purge(force delete) an Azure Site Recovery fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName ASR fabric to purge.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -171,15 +173,15 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginPurge(String resourceName, String resourceGroupName, String fabricName);
+    SyncPoller<PollResult<Void>, Void> beginPurge(String resourceGroupName, String resourceName, String fabricName);
 
     /**
      * Purges the site.
-     *
-     * <p>The operation to purge(force delete) an Azure Site Recovery fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to purge(force delete) an Azure Site Recovery fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName ASR fabric to purge.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -188,31 +190,31 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginPurge(
-        String resourceName, String resourceGroupName, String fabricName, Context context);
+    SyncPoller<PollResult<Void>, Void> beginPurge(String resourceGroupName, String resourceName, String fabricName,
+        Context context);
 
     /**
      * Purges the site.
-     *
-     * <p>The operation to purge(force delete) an Azure Site Recovery fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to purge(force delete) an Azure Site Recovery fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName ASR fabric to purge.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    void purge(String resourceName, String resourceGroupName, String fabricName);
+    void purge(String resourceGroupName, String resourceName, String fabricName);
 
     /**
      * Purges the site.
-     *
-     * <p>The operation to purge(force delete) an Azure Site Recovery fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to purge(force delete) an Azure Site Recovery fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName ASR fabric to purge.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -220,15 +222,15 @@ public interface ReplicationFabricsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    void purge(String resourceName, String resourceGroupName, String fabricName, Context context);
+    void purge(String resourceGroupName, String resourceName, String fabricName, Context context);
 
     /**
      * Checks the consistency of the ASR fabric.
-     *
-     * <p>The operation to perform a consistency check on the fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to perform a consistency check on the fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -236,16 +238,16 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of fabric definition.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<FabricInner>, FabricInner> beginCheckConsistency(
-        String resourceName, String resourceGroupName, String fabricName);
+    SyncPoller<PollResult<FabricInner>, FabricInner> beginCheckConsistency(String resourceGroupName,
+        String resourceName, String fabricName);
 
     /**
      * Checks the consistency of the ASR fabric.
-     *
-     * <p>The operation to perform a consistency check on the fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to perform a consistency check on the fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -254,16 +256,16 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of fabric definition.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<FabricInner>, FabricInner> beginCheckConsistency(
-        String resourceName, String resourceGroupName, String fabricName, Context context);
+    SyncPoller<PollResult<FabricInner>, FabricInner> beginCheckConsistency(String resourceGroupName,
+        String resourceName, String fabricName, Context context);
 
     /**
      * Checks the consistency of the ASR fabric.
-     *
-     * <p>The operation to perform a consistency check on the fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to perform a consistency check on the fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -271,15 +273,15 @@ public interface ReplicationFabricsClient {
      * @return fabric definition.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    FabricInner checkConsistency(String resourceName, String resourceGroupName, String fabricName);
+    FabricInner checkConsistency(String resourceGroupName, String resourceName, String fabricName);
 
     /**
      * Checks the consistency of the ASR fabric.
-     *
-     * <p>The operation to perform a consistency check on the fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to perform a consistency check on the fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -288,15 +290,15 @@ public interface ReplicationFabricsClient {
      * @return fabric definition.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    FabricInner checkConsistency(String resourceName, String resourceGroupName, String fabricName, Context context);
+    FabricInner checkConsistency(String resourceGroupName, String resourceName, String fabricName, Context context);
 
     /**
      * Migrates the site to AAD.
-     *
-     * <p>The operation to migrate an Azure Site Recovery fabric to AAD.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to migrate an Azure Site Recovery fabric to AAD.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName ASR fabric to migrate.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -304,16 +306,16 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginMigrateToAad(
-        String resourceName, String resourceGroupName, String fabricName);
+    SyncPoller<PollResult<Void>, Void> beginMigrateToAad(String resourceGroupName, String resourceName,
+        String fabricName);
 
     /**
      * Migrates the site to AAD.
-     *
-     * <p>The operation to migrate an Azure Site Recovery fabric to AAD.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to migrate an Azure Site Recovery fabric to AAD.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName ASR fabric to migrate.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -322,31 +324,31 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginMigrateToAad(
-        String resourceName, String resourceGroupName, String fabricName, Context context);
+    SyncPoller<PollResult<Void>, Void> beginMigrateToAad(String resourceGroupName, String resourceName,
+        String fabricName, Context context);
 
     /**
      * Migrates the site to AAD.
-     *
-     * <p>The operation to migrate an Azure Site Recovery fabric to AAD.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to migrate an Azure Site Recovery fabric to AAD.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName ASR fabric to migrate.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    void migrateToAad(String resourceName, String resourceGroupName, String fabricName);
+    void migrateToAad(String resourceGroupName, String resourceName, String fabricName);
 
     /**
      * Migrates the site to AAD.
-     *
-     * <p>The operation to migrate an Azure Site Recovery fabric to AAD.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to migrate an Azure Site Recovery fabric to AAD.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName ASR fabric to migrate.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -354,15 +356,15 @@ public interface ReplicationFabricsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    void migrateToAad(String resourceName, String resourceGroupName, String fabricName, Context context);
+    void migrateToAad(String resourceGroupName, String resourceName, String fabricName, Context context);
 
     /**
      * Perform failover of the process server.
-     *
-     * <p>The operation to move replications from a process server to another process server.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to move replications from a process server to another process server.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the process server.
      * @param failoverProcessServerRequest The input to the failover process server operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -371,63 +373,54 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of fabric definition.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<FabricInner>, FabricInner> beginReassociateGateway(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
+    SyncPoller<PollResult<FabricInner>, FabricInner> beginReassociateGateway(String resourceGroupName,
+        String resourceName, String fabricName, FailoverProcessServerRequest failoverProcessServerRequest);
+
+    /**
+     * Perform failover of the process server.
+     * 
+     * The operation to move replications from a process server to another process server.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param fabricName The name of the fabric containing the process server.
+     * @param failoverProcessServerRequest The input to the failover process server operation.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of fabric definition.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<FabricInner>, FabricInner> beginReassociateGateway(String resourceGroupName,
+        String resourceName, String fabricName, FailoverProcessServerRequest failoverProcessServerRequest,
+        Context context);
+
+    /**
+     * Perform failover of the process server.
+     * 
+     * The operation to move replications from a process server to another process server.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param fabricName The name of the fabric containing the process server.
+     * @param failoverProcessServerRequest The input to the failover process server operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return fabric definition.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    FabricInner reassociateGateway(String resourceGroupName, String resourceName, String fabricName,
         FailoverProcessServerRequest failoverProcessServerRequest);
 
     /**
      * Perform failover of the process server.
-     *
-     * <p>The operation to move replications from a process server to another process server.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to move replications from a process server to another process server.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param fabricName The name of the fabric containing the process server.
-     * @param failoverProcessServerRequest The input to the failover process server operation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of fabric definition.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<FabricInner>, FabricInner> beginReassociateGateway(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        FailoverProcessServerRequest failoverProcessServerRequest,
-        Context context);
-
-    /**
-     * Perform failover of the process server.
-     *
-     * <p>The operation to move replications from a process server to another process server.
-     *
      * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param fabricName The name of the fabric containing the process server.
-     * @param failoverProcessServerRequest The input to the failover process server operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return fabric definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    FabricInner reassociateGateway(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        FailoverProcessServerRequest failoverProcessServerRequest);
-
-    /**
-     * Perform failover of the process server.
-     *
-     * <p>The operation to move replications from a process server to another process server.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
      * @param fabricName The name of the fabric containing the process server.
      * @param failoverProcessServerRequest The input to the failover process server operation.
      * @param context The context to associate with this operation.
@@ -437,20 +430,16 @@ public interface ReplicationFabricsClient {
      * @return fabric definition.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    FabricInner reassociateGateway(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        FailoverProcessServerRequest failoverProcessServerRequest,
-        Context context);
+    FabricInner reassociateGateway(String resourceGroupName, String resourceName, String fabricName,
+        FailoverProcessServerRequest failoverProcessServerRequest, Context context);
 
     /**
      * Deletes the site.
-     *
-     * <p>The operation to delete or remove an Azure Site Recovery fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or remove an Azure Site Recovery fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName ASR fabric to delete.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -458,15 +447,15 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginDelete(String resourceName, String resourceGroupName, String fabricName);
+    SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String resourceName, String fabricName);
 
     /**
      * Deletes the site.
-     *
-     * <p>The operation to delete or remove an Azure Site Recovery fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or remove an Azure Site Recovery fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName ASR fabric to delete.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -475,88 +464,84 @@ public interface ReplicationFabricsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceName, String resourceGroupName, String fabricName, Context context);
-
-    /**
-     * Deletes the site.
-     *
-     * <p>The operation to delete or remove an Azure Site Recovery fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param fabricName ASR fabric to delete.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    void delete(String resourceName, String resourceGroupName, String fabricName);
-
-    /**
-     * Deletes the site.
-     *
-     * <p>The operation to delete or remove an Azure Site Recovery fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param fabricName ASR fabric to delete.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    void delete(String resourceName, String resourceGroupName, String fabricName, Context context);
-
-    /**
-     * Renews certificate for the fabric.
-     *
-     * <p>Renews the connection certificate for the ASR replication fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param fabricName fabric name to renew certs for.
-     * @param renewCertificate Renew certificate input.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of fabric definition.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<FabricInner>, FabricInner> beginRenewCertificate(
-        String resourceName, String resourceGroupName, String fabricName, RenewCertificateInput renewCertificate);
-
-    /**
-     * Renews certificate for the fabric.
-     *
-     * <p>Renews the connection certificate for the ASR replication fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param fabricName fabric name to renew certs for.
-     * @param renewCertificate Renew certificate input.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of fabric definition.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<FabricInner>, FabricInner> beginRenewCertificate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        RenewCertificateInput renewCertificate,
+    SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String resourceName, String fabricName,
         Context context);
 
     /**
-     * Renews certificate for the fabric.
-     *
-     * <p>Renews the connection certificate for the ASR replication fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * Deletes the site.
+     * 
+     * The operation to delete or remove an Azure Site Recovery fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param fabricName ASR fabric to delete.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    void delete(String resourceGroupName, String resourceName, String fabricName);
+
+    /**
+     * Deletes the site.
+     * 
+     * The operation to delete or remove an Azure Site Recovery fabric.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param fabricName ASR fabric to delete.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    void delete(String resourceGroupName, String resourceName, String fabricName, Context context);
+
+    /**
+     * Renews certificate for the fabric.
+     * 
+     * Renews the connection certificate for the ASR replication fabric.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param fabricName fabric name to renew certs for.
+     * @param renewCertificate Renew certificate input.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of fabric definition.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<FabricInner>, FabricInner> beginRenewCertificate(String resourceGroupName,
+        String resourceName, String fabricName, RenewCertificateInput renewCertificate);
+
+    /**
+     * Renews certificate for the fabric.
+     * 
+     * Renews the connection certificate for the ASR replication fabric.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param fabricName fabric name to renew certs for.
+     * @param renewCertificate Renew certificate input.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of fabric definition.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<FabricInner>, FabricInner> beginRenewCertificate(String resourceGroupName,
+        String resourceName, String fabricName, RenewCertificateInput renewCertificate, Context context);
+
+    /**
+     * Renews certificate for the fabric.
+     * 
+     * Renews the connection certificate for the ASR replication fabric.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName fabric name to renew certs for.
      * @param renewCertificate Renew certificate input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -565,16 +550,16 @@ public interface ReplicationFabricsClient {
      * @return fabric definition.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    FabricInner renewCertificate(
-        String resourceName, String resourceGroupName, String fabricName, RenewCertificateInput renewCertificate);
+    FabricInner renewCertificate(String resourceGroupName, String resourceName, String fabricName,
+        RenewCertificateInput renewCertificate);
 
     /**
      * Renews certificate for the fabric.
-     *
-     * <p>Renews the connection certificate for the ASR replication fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Renews the connection certificate for the ASR replication fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName fabric name to renew certs for.
      * @param renewCertificate Renew certificate input.
      * @param context The context to associate with this operation.
@@ -584,10 +569,64 @@ public interface ReplicationFabricsClient {
      * @return fabric definition.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    FabricInner renewCertificate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        RenewCertificateInput renewCertificate,
-        Context context);
+    FabricInner renewCertificate(String resourceGroupName, String resourceName, String fabricName,
+        RenewCertificateInput renewCertificate, Context context);
+
+    /**
+     * Removes the appliance's infrastructure under the fabric.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName Resource name.
+     * @param fabricName Fabric name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of long-running operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<Void>, Void> beginRemoveInfra(String resourceGroupName, String resourceName,
+        String fabricName);
+
+    /**
+     * Removes the appliance's infrastructure under the fabric.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName Resource name.
+     * @param fabricName Fabric name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of long-running operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<Void>, Void> beginRemoveInfra(String resourceGroupName, String resourceName,
+        String fabricName, Context context);
+
+    /**
+     * Removes the appliance's infrastructure under the fabric.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName Resource name.
+     * @param fabricName Fabric name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    void removeInfra(String resourceGroupName, String resourceName, String fabricName);
+
+    /**
+     * Removes the appliance's infrastructure under the fabric.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName Resource name.
+     * @param fabricName Fabric name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    void removeInfra(String resourceGroupName, String resourceName, String fabricName, Context context);
 }

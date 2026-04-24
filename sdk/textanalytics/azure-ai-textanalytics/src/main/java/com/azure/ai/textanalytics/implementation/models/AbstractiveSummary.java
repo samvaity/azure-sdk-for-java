@@ -5,42 +5,55 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** An object representing a single summary with context for given document. */
+/**
+ * An object representing a single summary with context for given document.
+ */
 @Fluent
-public final class AbstractiveSummary {
+public final class AbstractiveSummary implements JsonSerializable<AbstractiveSummary> {
     /*
      * The text of the summary.
      */
-    @JsonProperty(value = "text", required = true)
+    @Generated
     private String text;
 
     /*
      * The context list of the summary.
      */
-    @JsonProperty(value = "contexts")
+    @Generated
     private List<SummaryContext> contexts;
 
-    /** Creates an instance of AbstractiveSummary class. */
-    public AbstractiveSummary() {}
+    /**
+     * Creates an instance of AbstractiveSummary class.
+     */
+    @Generated
+    public AbstractiveSummary() {
+    }
 
     /**
      * Get the text property: The text of the summary.
-     *
+     * 
      * @return the text value.
      */
+    @Generated
     public String getText() {
         return this.text;
     }
 
     /**
      * Set the text property: The text of the summary.
-     *
+     * 
      * @param text the text value to set.
      * @return the AbstractiveSummary object itself.
      */
+    @Generated
     public AbstractiveSummary setText(String text) {
         this.text = text;
         return this;
@@ -48,21 +61,66 @@ public final class AbstractiveSummary {
 
     /**
      * Get the contexts property: The context list of the summary.
-     *
+     * 
      * @return the contexts value.
      */
+    @Generated
     public List<SummaryContext> getContexts() {
         return this.contexts;
     }
 
     /**
      * Set the contexts property: The context list of the summary.
-     *
+     * 
      * @param contexts the contexts value to set.
      * @return the AbstractiveSummary object itself.
      */
+    @Generated
     public AbstractiveSummary setContexts(List<SummaryContext> contexts) {
         this.contexts = contexts;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("text", this.text);
+        jsonWriter.writeArrayField("contexts", this.contexts, (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AbstractiveSummary from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AbstractiveSummary if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AbstractiveSummary.
+     */
+    @Generated
+    public static AbstractiveSummary fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AbstractiveSummary deserializedAbstractiveSummary = new AbstractiveSummary();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("text".equals(fieldName)) {
+                    deserializedAbstractiveSummary.text = reader.getString();
+                } else if ("contexts".equals(fieldName)) {
+                    List<SummaryContext> contexts = reader.readArray(reader1 -> SummaryContext.fromJson(reader1));
+                    deserializedAbstractiveSummary.contexts = contexts;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedAbstractiveSummary;
+        });
     }
 }

@@ -5,13 +5,14 @@ package com.azure.search.documents;
 
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.util.Configuration;
-import com.azure.core.util.Context;
 import com.azure.search.documents.models.SearchOptions;
 import com.azure.search.documents.models.SearchResult;
 import reactor.core.publisher.Flux;
 
+import java.util.Map;
+
 /**
- * This example shows how to perform basic searches using the Azure Cognitive Search SDK for Java
+ * This example shows how to perform basic searches using the Azure AI Search SDK for Java
  * <p>
  * This sample is based on the hotels-sample index available to install from the portal.
  * See https://docs.microsoft.com/azure/search/search-get-started-portal
@@ -19,7 +20,7 @@ import reactor.core.publisher.Flux;
 public class SearchForDynamicDocumentsExample {
 
     /**
-     * From the Azure portal, get your Azure Cognitive Search service URL and API key,
+     * From the Azure portal, get your Azure AI Search service URL and API key,
      * and set the values of these environment variables:
      */
     private static final String ENDPOINT = Configuration.getGlobalConfiguration().get("AZURE_COGNITIVE_SEARCH_ENDPOINT");
@@ -44,15 +45,10 @@ public class SearchForDynamicDocumentsExample {
             .buildClient();
 
         // Perform a text-based search
-        for (SearchResult result : client.search("luxury hotel",
-            new SearchOptions(), Context.NONE)) {
-
+        for (SearchResult result : client.search(new SearchOptions().setSearchText("luxury hotel"))) {
             // Each result is a dynamic Map
-            SearchDocument doc = result.getDocument(SearchDocument.class);
-            String hotelName = (String) doc.get("HotelName");
-            Double rating = (Double) doc.get("Rating");
-
-            System.out.printf("%s: %s%n", hotelName, rating);
+            Map<String, Object> doc = result.getAdditionalProperties();
+            System.out.printf("%s: %s%n", doc.get("HotelName"), doc.get("Rating"));
         }
     }
 
@@ -68,7 +64,7 @@ public class SearchForDynamicDocumentsExample {
             .buildAsyncClient();
 
         // Add additional options for the search
-        SearchOptions parameters = new SearchOptions()
+        SearchOptions parameters = new SearchOptions().setSearchText("hotel")
             .setFilter("geo.distance(Location,geography'POINT(-122.121513 47.673988)') le 5")  // items having a geo-location distance which is less than 5 km from Redmond
             .setFacets("Tags,sort:value")
             .setOrderBy("Rating")
@@ -76,21 +72,15 @@ public class SearchForDynamicDocumentsExample {
             .setIncludeTotalCount(true);
 
         // Perform a search and subscribe to the results and log additional information
-        Flux<SearchResult> results = client.search("hotel", parameters)
+        Flux<SearchResult> results = client.search(parameters)
             .log()
-            .doOnSubscribe(__ -> System.out.println("Subscribed to PagedFlux results"));
+            .doOnSubscribe(ignored -> System.out.println("Subscribed to PagedFlux results"));
 
         // Subscribe and process all results across all pages in the response
-        results.subscribe(
-            result -> {
-                SearchDocument doc = result.getDocument(SearchDocument.class);
-                String hotelName = (String) doc.get("HotelName");
-                Integer rating = (Integer) doc.get("Rating");
-
-                System.out.printf("%s: %d%n", hotelName, rating);
-            },
-            err -> System.out.printf("error: %s%n", err),
-            () -> System.out.println("Completed processing"));
+        results.subscribe(result -> {
+            Map<String, Object> doc = result.getAdditionalProperties();
+            System.out.printf("%s: %s%n", doc.get("HotelName"), doc.get("Rating"));
+        }, err -> System.out.printf("error: %s%n", err), () -> System.out.println("Completed processing"));
 
         /*
         This will block until the above query has completed. This is strongly discouraged for use in production as

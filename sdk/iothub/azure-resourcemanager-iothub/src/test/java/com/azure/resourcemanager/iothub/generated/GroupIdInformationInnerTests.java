@@ -13,28 +13,23 @@ import org.junit.jupiter.api.Assertions;
 public final class GroupIdInformationInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        GroupIdInformationInner model =
-            BinaryData
-                .fromString(
-                    "{\"id\":\"nzar\",\"name\":\"lquuijfqkacewii\",\"type\":\"pubjibw\",\"properties\":{\"groupId\":\"f\",\"requiredMembers\":[\"qkvpuvksgplsakn\",\"n\",\"synljphuopxodl\",\"iyntorzihle\"],\"requiredZoneNames\":[\"swsrms\",\"yzrpzbchckqqzq\",\"ox\"]}}")
-                .toObject(GroupIdInformationInner.class);
-        Assertions.assertEquals("f", model.properties().groupId());
-        Assertions.assertEquals("qkvpuvksgplsakn", model.properties().requiredMembers().get(0));
-        Assertions.assertEquals("swsrms", model.properties().requiredZoneNames().get(0));
+        GroupIdInformationInner model = BinaryData.fromString(
+            "{\"id\":\"wdmjsjqbjhhyx\",\"name\":\"wlycoduhpkxkg\",\"type\":\"areqna\",\"properties\":{\"groupId\":\"qugjhkycube\",\"requiredMembers\":[\"ssofwqmzqa\",\"krmnjijpxacqqud\"],\"requiredZoneNames\":[\"yxbaaabjyvayf\",\"imrzrtuzqog\",\"exn\"]}}")
+            .toObject(GroupIdInformationInner.class);
+        Assertions.assertEquals("qugjhkycube", model.properties().groupId());
+        Assertions.assertEquals("ssofwqmzqa", model.properties().requiredMembers().get(0));
+        Assertions.assertEquals("yxbaaabjyvayf", model.properties().requiredZoneNames().get(0));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        GroupIdInformationInner model =
-            new GroupIdInformationInner()
-                .withProperties(
-                    new GroupIdInformationProperties()
-                        .withGroupId("f")
-                        .withRequiredMembers(Arrays.asList("qkvpuvksgplsakn", "n", "synljphuopxodl", "iyntorzihle"))
-                        .withRequiredZoneNames(Arrays.asList("swsrms", "yzrpzbchckqqzq", "ox")));
+        GroupIdInformationInner model
+            = new GroupIdInformationInner().withProperties(new GroupIdInformationProperties().withGroupId("qugjhkycube")
+                .withRequiredMembers(Arrays.asList("ssofwqmzqa", "krmnjijpxacqqud"))
+                .withRequiredZoneNames(Arrays.asList("yxbaaabjyvayf", "imrzrtuzqog", "exn")));
         model = BinaryData.fromObject(model).toObject(GroupIdInformationInner.class);
-        Assertions.assertEquals("f", model.properties().groupId());
-        Assertions.assertEquals("qkvpuvksgplsakn", model.properties().requiredMembers().get(0));
-        Assertions.assertEquals("swsrms", model.properties().requiredZoneNames().get(0));
+        Assertions.assertEquals("qugjhkycube", model.properties().groupId());
+        Assertions.assertEquals("ssofwqmzqa", model.properties().requiredMembers().get(0));
+        Assertions.assertEquals("yxbaaabjyvayf", model.properties().requiredZoneNames().get(0));
     }
 }

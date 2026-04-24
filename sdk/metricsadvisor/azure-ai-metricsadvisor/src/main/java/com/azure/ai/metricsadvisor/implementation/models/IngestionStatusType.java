@@ -4,60 +4,89 @@
 
 package com.azure.ai.metricsadvisor.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** latest ingestion task status for this data slice. */
+/**
+ * latest ingestion task status for this data slice.
+ */
 public final class IngestionStatusType extends ExpandableStringEnum<IngestionStatusType> {
-    /** Static value NotStarted for IngestionStatusType. */
+    /**
+     * Static value NotStarted for IngestionStatusType.
+     */
+    @Generated
     public static final IngestionStatusType NOT_STARTED = fromString("NotStarted");
 
-    /** Static value Scheduled for IngestionStatusType. */
+    /**
+     * Static value Scheduled for IngestionStatusType.
+     */
+    @Generated
     public static final IngestionStatusType SCHEDULED = fromString("Scheduled");
 
-    /** Static value Running for IngestionStatusType. */
+    /**
+     * Static value Running for IngestionStatusType.
+     */
+    @Generated
     public static final IngestionStatusType RUNNING = fromString("Running");
 
-    /** Static value Succeeded for IngestionStatusType. */
+    /**
+     * Static value Succeeded for IngestionStatusType.
+     */
+    @Generated
     public static final IngestionStatusType SUCCEEDED = fromString("Succeeded");
 
-    /** Static value Failed for IngestionStatusType. */
+    /**
+     * Static value Failed for IngestionStatusType.
+     */
+    @Generated
     public static final IngestionStatusType FAILED = fromString("Failed");
 
-    /** Static value NoData for IngestionStatusType. */
+    /**
+     * Static value NoData for IngestionStatusType.
+     */
+    @Generated
     public static final IngestionStatusType NO_DATA = fromString("NoData");
 
-    /** Static value Error for IngestionStatusType. */
+    /**
+     * Static value Error for IngestionStatusType.
+     */
+    @Generated
     public static final IngestionStatusType ERROR = fromString("Error");
 
-    /** Static value Paused for IngestionStatusType. */
+    /**
+     * Static value Paused for IngestionStatusType.
+     */
+    @Generated
     public static final IngestionStatusType PAUSED = fromString("Paused");
 
     /**
      * Creates a new instance of IngestionStatusType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public IngestionStatusType() {}
+    public IngestionStatusType() {
+    }
 
     /**
      * Creates or finds a IngestionStatusType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding IngestionStatusType.
      */
-    @JsonCreator
+    @Generated
     public static IngestionStatusType fromString(String name) {
         return fromString(name, IngestionStatusType.class);
     }
 
     /**
      * Gets known IngestionStatusType values.
-     *
+     * 
      * @return known IngestionStatusType values.
      */
+    @Generated
     public static Collection<IngestionStatusType> values() {
         return values(IngestionStatusType.class);
     }

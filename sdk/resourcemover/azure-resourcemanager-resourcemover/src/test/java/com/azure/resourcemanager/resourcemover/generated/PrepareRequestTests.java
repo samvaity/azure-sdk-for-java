@@ -13,26 +13,22 @@ import org.junit.jupiter.api.Assertions;
 public final class PrepareRequestTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        PrepareRequest model =
-            BinaryData
-                .fromString(
-                    "{\"validateOnly\":true,\"moveResources\":[\"sbzjhcr\",\"evdphlxaol\",\"hqtrgqjbpf\"],\"moveResourceInputType\":\"MoveResourceId\"}")
-                .toObject(PrepareRequest.class);
+        PrepareRequest model = BinaryData.fromString(
+            "{\"validateOnly\":true,\"moveResources\":[\"awrlyx\",\"jkcpr\",\"nwbxgjvtbvpyssz\"],\"moveResourceInputType\":\"MoveResourceId\"}")
+            .toObject(PrepareRequest.class);
         Assertions.assertEquals(true, model.validateOnly());
-        Assertions.assertEquals("sbzjhcr", model.moveResources().get(0));
+        Assertions.assertEquals("awrlyx", model.moveResources().get(0));
         Assertions.assertEquals(MoveResourceInputType.MOVE_RESOURCE_ID, model.moveResourceInputType());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        PrepareRequest model =
-            new PrepareRequest()
-                .withValidateOnly(true)
-                .withMoveResources(Arrays.asList("sbzjhcr", "evdphlxaol", "hqtrgqjbpf"))
-                .withMoveResourceInputType(MoveResourceInputType.MOVE_RESOURCE_ID);
+        PrepareRequest model = new PrepareRequest().withValidateOnly(true)
+            .withMoveResources(Arrays.asList("awrlyx", "jkcpr", "nwbxgjvtbvpyssz"))
+            .withMoveResourceInputType(MoveResourceInputType.MOVE_RESOURCE_ID);
         model = BinaryData.fromObject(model).toObject(PrepareRequest.class);
         Assertions.assertEquals(true, model.validateOnly());
-        Assertions.assertEquals("sbzjhcr", model.moveResources().get(0));
+        Assertions.assertEquals("awrlyx", model.moveResources().get(0));
         Assertions.assertEquals(MoveResourceInputType.MOVE_RESOURCE_ID, model.moveResourceInputType());
     }
 }

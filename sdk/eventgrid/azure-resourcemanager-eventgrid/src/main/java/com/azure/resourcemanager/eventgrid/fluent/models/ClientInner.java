@@ -7,35 +7,54 @@ package com.azure.resourcemanager.eventgrid.fluent.models;
 import com.azure.core.annotation.Fluent;
 import com.azure.core.management.ProxyResource;
 import com.azure.core.management.SystemData;
-import com.azure.resourcemanager.eventgrid.models.ClientAuthentication;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.eventgrid.models.ClientCertificateAuthentication;
 import com.azure.resourcemanager.eventgrid.models.ClientProvisioningState;
 import com.azure.resourcemanager.eventgrid.models.ClientState;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.util.Map;
 
-/** The Client resource. */
+/**
+ * The Client resource.
+ */
 @Fluent
 public final class ClientInner extends ProxyResource {
     /*
      * The properties of client.
      */
-    @JsonProperty(value = "properties")
     private ClientProperties innerProperties;
 
     /*
-     * The system metadata relating to the Client resource.
+     * The system metadata relating to the Event Grid resource.
      */
-    @JsonProperty(value = "systemData", access = JsonProperty.Access.WRITE_ONLY)
     private SystemData systemData;
 
-    /** Creates an instance of ClientInner class. */
+    /*
+     * The type of the resource.
+     */
+    private String type;
+
+    /*
+     * The name of the resource.
+     */
+    private String name;
+
+    /*
+     * Fully qualified resource Id for the resource.
+     */
+    private String id;
+
+    /**
+     * Creates an instance of ClientInner class.
+     */
     public ClientInner() {
     }
 
     /**
      * Get the innerProperties property: The properties of client.
-     *
+     * 
      * @return the innerProperties value.
      */
     private ClientProperties innerProperties() {
@@ -43,8 +62,8 @@ public final class ClientInner extends ProxyResource {
     }
 
     /**
-     * Get the systemData property: The system metadata relating to the Client resource.
-     *
+     * Get the systemData property: The system metadata relating to the Event Grid resource.
+     * 
      * @return the systemData value.
      */
     public SystemData systemData() {
@@ -52,8 +71,38 @@ public final class ClientInner extends ProxyResource {
     }
 
     /**
+     * Get the type property: The type of the resource.
+     * 
+     * @return the type value.
+     */
+    @Override
+    public String type() {
+        return this.type;
+    }
+
+    /**
+     * Get the name property: The name of the resource.
+     * 
+     * @return the name value.
+     */
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    /**
+     * Get the id property: Fully qualified resource Id for the resource.
+     * 
+     * @return the id value.
+     */
+    @Override
+    public String id() {
+        return this.id;
+    }
+
+    /**
      * Get the description property: Description for the Client resource.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -62,7 +111,7 @@ public final class ClientInner extends ProxyResource {
 
     /**
      * Set the description property: Description for the Client resource.
-     *
+     * 
      * @param description the description value to set.
      * @return the ClientInner object itself.
      */
@@ -77,7 +126,7 @@ public final class ClientInner extends ProxyResource {
     /**
      * Get the authenticationName property: The name presented by the client for authentication. The default value is
      * the name of the resource.
-     *
+     * 
      * @return the authenticationName value.
      */
     public String authenticationName() {
@@ -87,7 +136,7 @@ public final class ClientInner extends ProxyResource {
     /**
      * Set the authenticationName property: The name presented by the client for authentication. The default value is
      * the name of the resource.
-     *
+     * 
      * @param authenticationName the authenticationName value to set.
      * @return the ClientInner object itself.
      */
@@ -100,31 +149,8 @@ public final class ClientInner extends ProxyResource {
     }
 
     /**
-     * Get the authentication property: Authentication information for the client.
-     *
-     * @return the authentication value.
-     */
-    public ClientAuthentication authentication() {
-        return this.innerProperties() == null ? null : this.innerProperties().authentication();
-    }
-
-    /**
-     * Set the authentication property: Authentication information for the client.
-     *
-     * @param authentication the authentication value to set.
-     * @return the ClientInner object itself.
-     */
-    public ClientInner withAuthentication(ClientAuthentication authentication) {
-        if (this.innerProperties() == null) {
-            this.innerProperties = new ClientProperties();
-        }
-        this.innerProperties().withAuthentication(authentication);
-        return this;
-    }
-
-    /**
      * Get the clientCertificateAuthentication property: The client certificate authentication information.
-     *
+     * 
      * @return the clientCertificateAuthentication value.
      */
     public ClientCertificateAuthentication clientCertificateAuthentication() {
@@ -133,12 +159,12 @@ public final class ClientInner extends ProxyResource {
 
     /**
      * Set the clientCertificateAuthentication property: The client certificate authentication information.
-     *
+     * 
      * @param clientCertificateAuthentication the clientCertificateAuthentication value to set.
      * @return the ClientInner object itself.
      */
-    public ClientInner withClientCertificateAuthentication(
-        ClientCertificateAuthentication clientCertificateAuthentication) {
+    public ClientInner
+        withClientCertificateAuthentication(ClientCertificateAuthentication clientCertificateAuthentication) {
         if (this.innerProperties() == null) {
             this.innerProperties = new ClientProperties();
         }
@@ -148,7 +174,7 @@ public final class ClientInner extends ProxyResource {
 
     /**
      * Get the state property: Indicates if the client is enabled or not. Default value is Enabled.
-     *
+     * 
      * @return the state value.
      */
     public ClientState state() {
@@ -157,7 +183,7 @@ public final class ClientInner extends ProxyResource {
 
     /**
      * Set the state property: Indicates if the client is enabled or not. Default value is Enabled.
-     *
+     * 
      * @param state the state value to set.
      * @return the ClientInner object itself.
      */
@@ -171,8 +197,9 @@ public final class ClientInner extends ProxyResource {
 
     /**
      * Get the attributes property: Attributes for the client. Supported values are int, bool, string, string[].
-     * Example: "attributes": { "room": "345", "floor": 12, "deviceTypes": ["Fan", "Light"] }.
-     *
+     * Example:
+     * "attributes": { "room": "345", "floor": 12, "deviceTypes": ["Fan", "Light"] }.
+     * 
      * @return the attributes value.
      */
     public Map<String, Object> attributes() {
@@ -181,8 +208,9 @@ public final class ClientInner extends ProxyResource {
 
     /**
      * Set the attributes property: Attributes for the client. Supported values are int, bool, string, string[].
-     * Example: "attributes": { "room": "345", "floor": 12, "deviceTypes": ["Fan", "Light"] }.
-     *
+     * Example:
+     * "attributes": { "room": "345", "floor": 12, "deviceTypes": ["Fan", "Light"] }.
+     * 
      * @param attributes the attributes value to set.
      * @return the ClientInner object itself.
      */
@@ -196,7 +224,7 @@ public final class ClientInner extends ProxyResource {
 
     /**
      * Get the provisioningState property: Provisioning state of the Client resource.
-     *
+     * 
      * @return the provisioningState value.
      */
     public ClientProvisioningState provisioningState() {
@@ -205,12 +233,57 @@ public final class ClientInner extends ProxyResource {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (innerProperties() != null) {
             innerProperties().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("properties", this.innerProperties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ClientInner from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ClientInner if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ClientInner.
+     */
+    public static ClientInner fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ClientInner deserializedClientInner = new ClientInner();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedClientInner.id = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedClientInner.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedClientInner.type = reader.getString();
+                } else if ("properties".equals(fieldName)) {
+                    deserializedClientInner.innerProperties = ClientProperties.fromJson(reader);
+                } else if ("systemData".equals(fieldName)) {
+                    deserializedClientInner.systemData = SystemData.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedClientInner;
+        });
     }
 }

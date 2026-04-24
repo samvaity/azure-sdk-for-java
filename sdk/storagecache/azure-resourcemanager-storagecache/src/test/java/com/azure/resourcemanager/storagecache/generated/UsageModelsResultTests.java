@@ -14,45 +14,35 @@ import org.junit.jupiter.api.Assertions;
 public final class UsageModelsResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        UsageModelsResult model =
-            BinaryData
-                .fromString(
-                    "{\"nextLink\":\"clhocohsl\",\"value\":[{\"display\":{\"description\":\"ggzfbu\"},\"modelName\":\"mvfaxkffeiith\",\"targetType\":\"m\"},{\"display\":{\"description\":\"v\"},\"modelName\":\"xmzsbbzogg\",\"targetType\":\"rxwburv\"},{\"display\":{\"description\":\"jnspydp\"},\"modelName\":\"oenkouknvudwti\",\"targetType\":\"bldngkpoc\"},{\"display\":{\"description\":\"z\"},\"modelName\":\"o\",\"targetType\":\"ukgjnpiucgygevq\"}]}")
-                .toObject(UsageModelsResult.class);
-        Assertions.assertEquals("clhocohsl", model.nextLink());
-        Assertions.assertEquals("ggzfbu", model.value().get(0).display().description());
-        Assertions.assertEquals("mvfaxkffeiith", model.value().get(0).modelName());
-        Assertions.assertEquals("m", model.value().get(0).targetType());
+        UsageModelsResult model = BinaryData.fromString(
+            "{\"nextLink\":\"bnxknalaulppg\",\"value\":[{\"display\":{\"description\":\"apnyiropuhpig\"},\"modelName\":\"gylgqgitxmedjvcs\",\"targetType\":\"n\"},{\"display\":{\"description\":\"ncw\"},\"modelName\":\"hxg\",\"targetType\":\"rmgucnap\"},{\"display\":{\"description\":\"oellwp\"},\"modelName\":\"d\",\"targetType\":\"pfqbuaceopzf\"},{\"display\":{\"description\":\"huaoppp\"},\"modelName\":\"eqx\",\"targetType\":\"z\"}]}")
+            .toObject(UsageModelsResult.class);
+        Assertions.assertEquals("bnxknalaulppg", model.nextLink());
+        Assertions.assertEquals("apnyiropuhpig", model.value().get(0).display().description());
+        Assertions.assertEquals("gylgqgitxmedjvcs", model.value().get(0).modelName());
+        Assertions.assertEquals("n", model.value().get(0).targetType());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        UsageModelsResult model =
-            new UsageModelsResult()
-                .withNextLink("clhocohsl")
-                .withValue(
-                    Arrays
-                        .asList(
-                            new UsageModelInner()
-                                .withDisplay(new UsageModelDisplay().withDescription("ggzfbu"))
-                                .withModelName("mvfaxkffeiith")
-                                .withTargetType("m"),
-                            new UsageModelInner()
-                                .withDisplay(new UsageModelDisplay().withDescription("v"))
-                                .withModelName("xmzsbbzogg")
-                                .withTargetType("rxwburv"),
-                            new UsageModelInner()
-                                .withDisplay(new UsageModelDisplay().withDescription("jnspydp"))
-                                .withModelName("oenkouknvudwti")
-                                .withTargetType("bldngkpoc"),
-                            new UsageModelInner()
-                                .withDisplay(new UsageModelDisplay().withDescription("z"))
-                                .withModelName("o")
-                                .withTargetType("ukgjnpiucgygevq")));
+        UsageModelsResult model = new UsageModelsResult().withNextLink("bnxknalaulppg")
+            .withValue(Arrays.asList(
+                new UsageModelInner().withDisplay(new UsageModelDisplay().withDescription("apnyiropuhpig"))
+                    .withModelName("gylgqgitxmedjvcs")
+                    .withTargetType("n"),
+                new UsageModelInner().withDisplay(new UsageModelDisplay().withDescription("ncw"))
+                    .withModelName("hxg")
+                    .withTargetType("rmgucnap"),
+                new UsageModelInner().withDisplay(new UsageModelDisplay().withDescription("oellwp"))
+                    .withModelName("d")
+                    .withTargetType("pfqbuaceopzf"),
+                new UsageModelInner().withDisplay(new UsageModelDisplay().withDescription("huaoppp"))
+                    .withModelName("eqx")
+                    .withTargetType("z")));
         model = BinaryData.fromObject(model).toObject(UsageModelsResult.class);
-        Assertions.assertEquals("clhocohsl", model.nextLink());
-        Assertions.assertEquals("ggzfbu", model.value().get(0).display().description());
-        Assertions.assertEquals("mvfaxkffeiith", model.value().get(0).modelName());
-        Assertions.assertEquals("m", model.value().get(0).targetType());
+        Assertions.assertEquals("bnxknalaulppg", model.nextLink());
+        Assertions.assertEquals("apnyiropuhpig", model.value().get(0).display().description());
+        Assertions.assertEquals("gylgqgitxmedjvcs", model.value().get(0).modelName());
+        Assertions.assertEquals("n", model.value().get(0).targetType());
     }
 }

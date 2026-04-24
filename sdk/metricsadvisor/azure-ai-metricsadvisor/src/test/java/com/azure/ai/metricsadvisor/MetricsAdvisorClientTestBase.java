@@ -15,32 +15,31 @@ import com.azure.core.test.utils.MockTokenCredential;
 import com.azure.core.util.Configuration;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 
+import java.time.Duration;
 import java.util.Arrays;
 
 import static com.azure.ai.metricsadvisor.TestUtils.AZURE_METRICS_ADVISOR_ENDPOINT;
-import static com.azure.ai.metricsadvisor.TestUtils.getEmailSanitizers;
+import static com.azure.ai.metricsadvisor.TestUtils.DEFAULT_SUBSCRIBER_TIMEOUT_SECONDS;
 
 public abstract class MetricsAdvisorClientTestBase extends TestProxyTestBase {
+    protected static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(DEFAULT_SUBSCRIBER_TIMEOUT_SECONDS);
 
     @Override
     protected void beforeTest() {
     }
 
     private HttpClient buildAsyncAssertingClient(HttpClient httpClient) {
-        return new AssertingHttpClientBuilder(httpClient)
-            .assertAsync()
-            .build();
+        return new AssertingHttpClientBuilder(httpClient).assertAsync().build();
     }
 
     private HttpClient buildSyncAssertingClient(HttpClient httpClient) {
-        return new AssertingHttpClientBuilder(httpClient)
-            .assertSync()
-            .build();
+        return new AssertingHttpClientBuilder(httpClient).assertSync().build();
     }
 
     MetricsAdvisorClientBuilder getMetricsAdvisorBuilder(HttpClient httpClient,
-                                                         MetricsAdvisorServiceVersion serviceVersion, boolean isSync) {
-        HttpClient httpClient1 = interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient;
+        MetricsAdvisorServiceVersion serviceVersion, boolean isSync) {
+        HttpClient httpClient1
+            = interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient;
         if (isSync) {
             httpClient1 = buildSyncAssertingClient(httpClient1);
         } else {
@@ -50,10 +49,8 @@ public abstract class MetricsAdvisorClientTestBase extends TestProxyTestBase {
     }
 
     MetricsAdvisorClientBuilder getMetricsAdvisorBuilderInternal(HttpClient httpClient,
-                                                         MetricsAdvisorServiceVersion serviceVersion,
-                                                         boolean useKeyCredential) {
-        MetricsAdvisorClientBuilder builder = new MetricsAdvisorClientBuilder()
-            .endpoint(getEndpoint())
+        MetricsAdvisorServiceVersion serviceVersion, boolean useKeyCredential) {
+        MetricsAdvisorClientBuilder builder = new MetricsAdvisorClientBuilder().endpoint(getEndpoint())
             .httpClient(httpClient)
             .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
             .serviceVersion(serviceVersion);
@@ -63,31 +60,28 @@ public abstract class MetricsAdvisorClientTestBase extends TestProxyTestBase {
                 if (interceptorManager.isRecordMode()) {
                     builder.addPolicy(interceptorManager.getRecordPolicy());
                 }
-                builder
-                    .credential(new MetricsAdvisorKeyCredential(
-                        Configuration.getGlobalConfiguration().get("AZURE_METRICS_ADVISOR_SUBSCRIPTION_KEY"),
-                        Configuration.getGlobalConfiguration().get("AZURE_METRICS_ADVISOR_API_KEY")));
+                builder.credential(new MetricsAdvisorKeyCredential(
+                    Configuration.getGlobalConfiguration().get("AZURE_METRICS_ADVISOR_SUBSCRIPTION_KEY"),
+                    Configuration.getGlobalConfiguration().get("AZURE_METRICS_ADVISOR_API_KEY")));
 
             } else {
                 builder.credential(new MetricsAdvisorKeyCredential("subscription_key", "api_key"));
                 // setting bodiless matcher to "exclude" matching request bodies with UUID's
-                interceptorManager.addMatchers(Arrays.asList(new BodilessMatcher(), new CustomMatcher().setHeadersKeyOnlyMatch(Arrays.asList("x-api-key"))));
+                interceptorManager.addMatchers(Arrays.asList(new BodilessMatcher(),
+                    new CustomMatcher().setHeadersKeyOnlyMatch(Arrays.asList("x-api-key"))));
             }
         } else {
             if (!interceptorManager.isPlaybackMode()) {
                 if (interceptorManager.isRecordMode()) {
                     builder.addPolicy(interceptorManager.getRecordPolicy());
                 }
-                builder
-                    .credential(new DefaultAzureCredentialBuilder().build());
+                builder.credential(new DefaultAzureCredentialBuilder().build());
             } else {
                 builder.credential(new MockTokenCredential());
                 interceptorManager.addMatchers(Arrays.asList(new BodilessMatcher()));
             }
         }
-        if (!interceptorManager.isLiveMode()) {
-            interceptorManager.addSanitizers(getEmailSanitizers());
-        }
+
         return builder;
     }
 

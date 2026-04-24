@@ -13,23 +13,21 @@ import org.junit.jupiter.api.Assertions;
 public final class L2NetworkPatchParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        L2NetworkPatchParameters model =
-            BinaryData
-                .fromString(
-                    "{\"tags\":{\"obkauxofsh\":\"uahokq\",\"whslwkoj\":\"phwpnulaiywzej\",\"rpqaf\":\"llndnpd\"}}")
-                .toObject(L2NetworkPatchParameters.class);
-        Assertions.assertEquals("uahokq", model.tags().get("obkauxofsh"));
+        L2NetworkPatchParameters model = BinaryData.fromString(
+            "{\"tags\":{\"wxudgn\":\"feddwwnlza\",\"gpbemeluclvdjju\":\"gookrtalvnb\",\"ahhxhqfaqnvzoqg\":\"yrdnqod\"}}")
+            .toObject(L2NetworkPatchParameters.class);
+        Assertions.assertEquals("feddwwnlza", model.tags().get("wxudgn"));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        L2NetworkPatchParameters model =
-            new L2NetworkPatchParameters()
-                .withTags(mapOf("obkauxofsh", "uahokq", "whslwkoj", "phwpnulaiywzej", "rpqaf", "llndnpd"));
+        L2NetworkPatchParameters model = new L2NetworkPatchParameters()
+            .withTags(mapOf("wxudgn", "feddwwnlza", "gpbemeluclvdjju", "gookrtalvnb", "ahhxhqfaqnvzoqg", "yrdnqod"));
         model = BinaryData.fromObject(model).toObject(L2NetworkPatchParameters.class);
-        Assertions.assertEquals("uahokq", model.tags().get("obkauxofsh"));
+        Assertions.assertEquals("feddwwnlza", model.tags().get("wxudgn"));
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

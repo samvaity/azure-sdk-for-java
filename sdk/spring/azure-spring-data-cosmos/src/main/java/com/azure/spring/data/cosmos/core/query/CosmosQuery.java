@@ -17,6 +17,7 @@ import java.util.Optional;
 /**
  * Class for cosmos query
  */
+@SuppressWarnings("deprecation")
 public class CosmosQuery {
 
     private final Criteria criteria;
@@ -156,7 +157,10 @@ public class CosmosQuery {
     private boolean isCrossPartitionQuery(@NonNull String keyName) {
         Assert.hasText(keyName, "PartitionKey should have text.");
 
-        final Optional<Criteria> criteria = this.getSubjectCriteria(this.criteria, keyName);
+        Optional<Criteria> criteria = Optional.empty();
+        if (this.criteria != null) {
+            criteria = this.getSubjectCriteria(this.criteria, keyName);
+        }
 
         return criteria.map(criteria1 -> {
             //  If there is equal criteria, then it is a single partition query
@@ -177,12 +181,12 @@ public class CosmosQuery {
 
     private boolean hasKeywordOr() {
         // If there is OR keyword in DocumentQuery, the top node of Criteria must be OR type.
-        return this.criteria.getType() == CriteriaType.OR;
+        return this.criteria != null ? this.criteria.getType() == CriteriaType.OR : false;
     }
 
     private boolean hasKeywordAnd() {
         // If there is AND keyword in DocumentQuery, the top node of Criteria must be AND type.
-        return this.criteria.getType() == CriteriaType.AND;
+        return this.criteria != null ? this.criteria.getType() == CriteriaType.AND : false;
     }
 
     private boolean isEqualCriteria(Criteria criteria) {
@@ -216,7 +220,10 @@ public class CosmosQuery {
             return false;
         }
 
-        final Optional<Criteria> criteria = this.getSubjectCriteria(this.criteria, partitionKeyFieldName);
+        Optional<Criteria> criteria = Optional.empty();
+        if (this.criteria != null) {
+            criteria = this.getSubjectCriteria(this.criteria, partitionKeyFieldName);
+        }
         return criteria.isPresent();
     }
 
@@ -264,6 +271,9 @@ public class CosmosQuery {
      * @return Optional
      */
     public Optional<Criteria> getCriteriaByType(@NonNull CriteriaType criteriaType) {
+        if (this.criteria == null) {
+            return Optional.empty();
+        }
         return getCriteriaByType(criteriaType, this.criteria);
     }
 

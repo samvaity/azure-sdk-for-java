@@ -13,6 +13,7 @@ public final class ContextAccessor {
 
     public interface ReceiveMessageContextAccessor {
         ServiceBusReceivedMessage setContext(ServiceBusReceivedMessage message, Context context);
+
         Context getContext(ServiceBusReceivedMessage message);
     }
 
@@ -21,6 +22,7 @@ public final class ContextAccessor {
     }
 
     public static ServiceBusReceivedMessage setContext(ServiceBusReceivedMessage message, Context context) {
+        assert message != null; // message is never null on this path.
         return receiveAccessor.setContext(message, context);
     }
 

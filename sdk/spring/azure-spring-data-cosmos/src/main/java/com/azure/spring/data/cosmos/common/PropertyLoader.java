@@ -11,9 +11,10 @@ import java.util.Properties;
 /**
  * Load properties from files
  */
+@SuppressWarnings("deprecation")
 public final class PropertyLoader {
 
-    private static final String PROJECT_PROPERTY_FILE = "/META-INF/azure-spring-data-cosmos.properties";
+    private static final String PROJECT_PROPERTY_FILE = "/azure-spring-data-cosmos.properties";
 
     private static final String APPLICATION_PROPERTY_FILE = "/application.properties";
 
@@ -23,7 +24,7 @@ public final class PropertyLoader {
     }
 
     /**
-     * Get project version from /META-INF/azure-spring-data-cosmos.properties
+     * Get project version from /azure-spring-data-cosmos.properties
      *
      * @return String project version
      */

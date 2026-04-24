@@ -7,8 +7,8 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.models.BlobErrorCode;
 import com.azure.storage.blob.models.BlobStorageException;
 import com.azure.storage.common.implementation.Constants;
+import com.azure.storage.common.test.shared.extensions.LiveOnly;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class EncryptedBlobOutputStreamTests extends BlobCryptographyTestBase {
     private static final String KEY_ID = "keyId";
     private EncryptedBlobClient bec; // encrypted client
-    private EncryptedBlobAsyncClient beac; // encrypted async client
     private BlobContainerClient cc;
 
     @Override
@@ -33,25 +32,17 @@ public class EncryptedBlobOutputStreamTests extends BlobCryptographyTestBase {
         super.beforeTest();
         FakeKey fakeKey = new FakeKey(KEY_ID, getRandomByteArray(256));
 
-        cc = getServiceClientBuilder(ENV.getPrimaryAccount())
-            .buildClient()
+        cc = getServiceClientBuilder(ENV.getPrimaryAccount()).buildClient()
             .getBlobContainerClient(generateContainerName());
         cc.create();
 
         String blobName = generateBlobName();
 
-        beac = getEncryptedClientBuilder(fakeKey, null, ENV.getPrimaryAccount().getCredential(),
-            cc.getBlobContainerUrl())
-            .blobName(blobName)
-            .buildEncryptedBlobAsyncClient();
-
         bec = getEncryptedClientBuilder(fakeKey, null, ENV.getPrimaryAccount().getCredential(),
-            cc.getBlobContainerUrl())
-            .blobName(blobName)
-            .buildEncryptedBlobClient();
+            cc.getBlobContainerUrl()).blobName(blobName).buildEncryptedBlobClient();
     }
 
-    @EnabledIf("com.azure.storage.blob.specialized.cryptography.BlobCryptographyTestBase#liveOnly")
+    @LiveOnly
     @Test
     public void encryptedBlobOutputStreamNotANoop() throws IOException {
         byte[] data = getRandomByteArray(10 * Constants.MB);
@@ -66,7 +57,7 @@ public class EncryptedBlobOutputStreamTests extends BlobCryptographyTestBase {
         assertFalse(Arrays.equals(data, os.toByteArray()));
     }
 
-    @EnabledIf("com.azure.storage.blob.specialized.cryptography.BlobCryptographyTestBase#liveOnly")
+    @LiveOnly
     @Test
     public void encryptedBlobOutputStream() throws IOException {
         byte[] data = getRandomByteArray(10 * Constants.MB);
@@ -78,7 +69,7 @@ public class EncryptedBlobOutputStreamTests extends BlobCryptographyTestBase {
         assertArrayEquals(data, convertInputStreamToByteArray(bec.openInputStream(), 10 * Constants.MB));
     }
 
-    @EnabledIf("com.azure.storage.blob.specialized.cryptography.BlobCryptographyTestBase#liveOnly")
+    @LiveOnly
     @Test
     public void encryptedBlobOutputStreamDefaultNoOverwrite() throws IOException {
         byte[] data = getRandomByteArray(10 * Constants.MB);
@@ -90,7 +81,7 @@ public class EncryptedBlobOutputStreamTests extends BlobCryptographyTestBase {
         assertThrows(IllegalArgumentException.class, bec::getBlobOutputStream);
     }
 
-    @EnabledIf("com.azure.storage.blob.specialized.cryptography.BlobCryptographyTestBase#liveOnly")
+    @LiveOnly
     @Test
     public void encryptedBlobOutputStreamDefaultNoOverwriteInterrupted() throws IOException {
         byte[] data = getRandomByteArray(10 * Constants.MB);
@@ -108,11 +99,11 @@ public class EncryptedBlobOutputStreamTests extends BlobCryptographyTestBase {
         assertEquals(BlobErrorCode.BLOB_ALREADY_EXISTS, ((BlobStorageException) e.getCause()).getErrorCode());
     }
 
-    @EnabledIf("com.azure.storage.blob.specialized.cryptography.BlobCryptographyTestBase#liveOnly")
+    @LiveOnly
     @Test
     public void encryptedBlobOutputStreamOverwrite() throws IOException {
         byte[] randomData = getRandomByteArray(10 * Constants.MB);
-        beac.upload(DATA.getDefaultFlux(), null).block();
+        bec.upload(DATA.getDefaultInputStream());
 
         try (OutputStream outputStream = bec.getBlobOutputStream(true)) {
             outputStream.write(randomData);

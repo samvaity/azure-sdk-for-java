@@ -8,15 +8,17 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of ReplicationNetworkMappings. */
+/**
+ * Resource collection API of ReplicationNetworkMappings.
+ */
 public interface ReplicationNetworkMappings {
     /**
      * Gets all the network mappings under a network.
-     *
-     * <p>Lists all ASR network mappings for the specified network.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists all ASR network mappings for the specified network.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Primary fabric name.
      * @param networkName Primary network name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -24,16 +26,16 @@ public interface ReplicationNetworkMappings {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return list of network mappings as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<NetworkMapping> listByReplicationNetworks(
-        String resourceName, String resourceGroupName, String fabricName, String networkName);
+    PagedIterable<NetworkMapping> listByReplicationNetworks(String resourceGroupName, String resourceName,
+        String fabricName, String networkName);
 
     /**
      * Gets all the network mappings under a network.
-     *
-     * <p>Lists all ASR network mappings for the specified network.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists all ASR network mappings for the specified network.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Primary fabric name.
      * @param networkName Primary network name.
      * @param context The context to associate with this operation.
@@ -42,16 +44,16 @@ public interface ReplicationNetworkMappings {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return list of network mappings as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<NetworkMapping> listByReplicationNetworks(
-        String resourceName, String resourceGroupName, String fabricName, String networkName, Context context);
+    PagedIterable<NetworkMapping> listByReplicationNetworks(String resourceGroupName, String resourceName,
+        String fabricName, String networkName, Context context);
 
     /**
      * Gets network mapping by name.
-     *
-     * <p>Gets the details of an ASR network mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an ASR network mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Primary fabric name.
      * @param networkName Primary network name.
      * @param networkMappingName Network mapping name.
@@ -61,21 +63,16 @@ public interface ReplicationNetworkMappings {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the details of an ASR network mapping along with {@link Response}.
      */
-    Response<NetworkMapping> getWithResponse(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String networkName,
-        String networkMappingName,
-        Context context);
+    Response<NetworkMapping> getWithResponse(String resourceGroupName, String resourceName, String fabricName,
+        String networkName, String networkMappingName, Context context);
 
     /**
      * Gets network mapping by name.
-     *
-     * <p>Gets the details of an ASR network mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an ASR network mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Primary fabric name.
      * @param networkName Primary network name.
      * @param networkMappingName Network mapping name.
@@ -84,20 +81,16 @@ public interface ReplicationNetworkMappings {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the details of an ASR network mapping.
      */
-    NetworkMapping get(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String networkName,
+    NetworkMapping get(String resourceGroupName, String resourceName, String fabricName, String networkName,
         String networkMappingName);
 
     /**
      * Delete network mapping.
-     *
-     * <p>The operation to delete a network mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete a network mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Primary fabric name.
      * @param networkName Primary network name.
      * @param networkMappingName ARM Resource Name for network mapping.
@@ -105,20 +98,16 @@ public interface ReplicationNetworkMappings {
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String networkName,
+    void delete(String resourceGroupName, String resourceName, String fabricName, String networkName,
         String networkMappingName);
 
     /**
      * Delete network mapping.
-     *
-     * <p>The operation to delete a network mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete a network mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Primary fabric name.
      * @param networkName Primary network name.
      * @param networkMappingName ARM Resource Name for network mapping.
@@ -127,48 +116,43 @@ public interface ReplicationNetworkMappings {
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String networkName,
-        String networkMappingName,
-        Context context);
+    void delete(String resourceGroupName, String resourceName, String fabricName, String networkName,
+        String networkMappingName, Context context);
 
     /**
      * Gets all the network mappings under a vault.
-     *
-     * <p>Lists all ASR network mappings in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists all ASR network mappings in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return list of network mappings as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<NetworkMapping> list(String resourceName, String resourceGroupName);
+    PagedIterable<NetworkMapping> list(String resourceGroupName, String resourceName);
 
     /**
      * Gets all the network mappings under a vault.
-     *
-     * <p>Lists all ASR network mappings in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists all ASR network mappings in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return list of network mappings as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<NetworkMapping> list(String resourceName, String resourceGroupName, Context context);
+    PagedIterable<NetworkMapping> list(String resourceGroupName, String resourceName, Context context);
 
     /**
      * Gets network mapping by name.
-     *
-     * <p>Gets the details of an ASR network mapping.
-     *
+     * 
+     * Gets the details of an ASR network mapping.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -179,9 +163,9 @@ public interface ReplicationNetworkMappings {
 
     /**
      * Gets network mapping by name.
-     *
-     * <p>Gets the details of an ASR network mapping.
-     *
+     * 
+     * Gets the details of an ASR network mapping.
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -193,9 +177,9 @@ public interface ReplicationNetworkMappings {
 
     /**
      * Delete network mapping.
-     *
-     * <p>The operation to delete a network mapping.
-     *
+     * 
+     * The operation to delete a network mapping.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -205,9 +189,9 @@ public interface ReplicationNetworkMappings {
 
     /**
      * Delete network mapping.
-     *
-     * <p>The operation to delete a network mapping.
-     *
+     * 
+     * The operation to delete a network mapping.
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -218,7 +202,7 @@ public interface ReplicationNetworkMappings {
 
     /**
      * Begins definition for a new NetworkMapping resource.
-     *
+     * 
      * @param name resource name.
      * @return the first stage of the new NetworkMapping definition.
      */

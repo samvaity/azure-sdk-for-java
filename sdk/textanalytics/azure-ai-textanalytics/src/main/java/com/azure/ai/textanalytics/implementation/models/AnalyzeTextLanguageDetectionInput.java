@@ -5,45 +5,70 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The AnalyzeTextLanguageDetectionInput model. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "kind")
-@JsonTypeName("LanguageDetection")
+/**
+ * The AnalyzeTextLanguageDetectionInput model.
+ */
 @Fluent
 public final class AnalyzeTextLanguageDetectionInput extends AnalyzeTextTask {
     /*
+     * Enumeration of supported Text Analysis tasks.
+     */
+    @Generated
+    private AnalyzeTextTaskKind kind = AnalyzeTextTaskKind.LANGUAGE_DETECTION;
+
+    /*
      * The analysisInput property.
      */
-    @JsonProperty(value = "analysisInput")
+    @Generated
     private LanguageDetectionAnalysisInput analysisInput;
 
     /*
      * Supported parameters for a Language Detection task.
      */
-    @JsonProperty(value = "parameters")
+    @Generated
     private LanguageDetectionTaskParameters parameters;
 
-    /** Creates an instance of AnalyzeTextLanguageDetectionInput class. */
-    public AnalyzeTextLanguageDetectionInput() {}
+    /**
+     * Creates an instance of AnalyzeTextLanguageDetectionInput class.
+     */
+    @Generated
+    public AnalyzeTextLanguageDetectionInput() {
+    }
+
+    /**
+     * Get the kind property: Enumeration of supported Text Analysis tasks.
+     * 
+     * @return the kind value.
+     */
+    @Generated
+    @Override
+    public AnalyzeTextTaskKind getKind() {
+        return this.kind;
+    }
 
     /**
      * Get the analysisInput property: The analysisInput property.
-     *
+     * 
      * @return the analysisInput value.
      */
+    @Generated
     public LanguageDetectionAnalysisInput getAnalysisInput() {
         return this.analysisInput;
     }
 
     /**
      * Set the analysisInput property: The analysisInput property.
-     *
+     * 
      * @param analysisInput the analysisInput value to set.
      * @return the AnalyzeTextLanguageDetectionInput object itself.
      */
+    @Generated
     public AnalyzeTextLanguageDetectionInput setAnalysisInput(LanguageDetectionAnalysisInput analysisInput) {
         this.analysisInput = analysisInput;
         return this;
@@ -51,21 +76,71 @@ public final class AnalyzeTextLanguageDetectionInput extends AnalyzeTextTask {
 
     /**
      * Get the parameters property: Supported parameters for a Language Detection task.
-     *
+     * 
      * @return the parameters value.
      */
+    @Generated
     public LanguageDetectionTaskParameters getParameters() {
         return this.parameters;
     }
 
     /**
      * Set the parameters property: Supported parameters for a Language Detection task.
-     *
+     * 
      * @param parameters the parameters value to set.
      * @return the AnalyzeTextLanguageDetectionInput object itself.
      */
+    @Generated
     public AnalyzeTextLanguageDetectionInput setParameters(LanguageDetectionTaskParameters parameters) {
         this.parameters = parameters;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("kind", this.kind == null ? null : this.kind.toString());
+        jsonWriter.writeJsonField("analysisInput", this.analysisInput);
+        jsonWriter.writeJsonField("parameters", this.parameters);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AnalyzeTextLanguageDetectionInput from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AnalyzeTextLanguageDetectionInput if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the AnalyzeTextLanguageDetectionInput.
+     */
+    @Generated
+    public static AnalyzeTextLanguageDetectionInput fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AnalyzeTextLanguageDetectionInput deserializedAnalyzeTextLanguageDetectionInput
+                = new AnalyzeTextLanguageDetectionInput();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("kind".equals(fieldName)) {
+                    deserializedAnalyzeTextLanguageDetectionInput.kind
+                        = AnalyzeTextTaskKind.fromString(reader.getString());
+                } else if ("analysisInput".equals(fieldName)) {
+                    deserializedAnalyzeTextLanguageDetectionInput.analysisInput
+                        = LanguageDetectionAnalysisInput.fromJson(reader);
+                } else if ("parameters".equals(fieldName)) {
+                    deserializedAnalyzeTextLanguageDetectionInput.parameters
+                        = LanguageDetectionTaskParameters.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedAnalyzeTextLanguageDetectionInput;
+        });
     }
 }

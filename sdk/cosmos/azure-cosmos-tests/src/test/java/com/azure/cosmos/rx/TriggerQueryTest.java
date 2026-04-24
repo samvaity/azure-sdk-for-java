@@ -38,7 +38,7 @@ public class TriggerQueryTest extends TestSuiteBase {
         super(clientBuilder);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryWithFilter() throws Exception {
 
         String filterId = createdTriggers.get(0).getId();
@@ -67,7 +67,7 @@ public class TriggerQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(maxItemCount), validator, 10000);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void query_NoResults() throws Exception {
 
         String query = "SELECT * from root r where r.id = '2'";
@@ -84,7 +84,7 @@ public class TriggerQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(), validator);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryAll() throws Exception {
 
         String query = "SELECT * from root";
@@ -113,7 +113,7 @@ public class TriggerQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(maxItemCount), validator);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void invalidQuerySytax() throws Exception {
         String query = "I am an invalid query";
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
@@ -133,11 +133,11 @@ public class TriggerQueryTest extends TestSuiteBase {
         return cosmosContainer.getScripts().createTrigger(storedProcedure).block().getProperties();
     }
 
-    @BeforeClass(groups = { "simple" }, timeOut = SETUP_TIMEOUT)
+    @BeforeClass(groups = { "query" }, timeOut = SETUP_TIMEOUT)
     public void before_TriggerQueryTest() throws Exception {
         client = getClientBuilder().buildAsyncClient();
         createdCollection = getSharedMultiPartitionCosmosContainer(client);
-        truncateCollection(createdCollection);
+        cleanUpContainer(createdCollection);
         createdTriggers.clear();
 
         for(int i = 0; i < 5; i++) {
@@ -147,7 +147,7 @@ public class TriggerQueryTest extends TestSuiteBase {
         waitIfNeededForReplicasToCatchUp(getClientBuilder());
     }
 
-    @AfterClass(groups = { "simple" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
+    @AfterClass(groups = { "query" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
     public void afterClass() {
         safeClose(client);
     }

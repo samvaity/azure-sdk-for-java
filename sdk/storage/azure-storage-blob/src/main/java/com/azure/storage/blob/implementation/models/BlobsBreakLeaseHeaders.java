@@ -5,155 +5,122 @@
 package com.azure.storage.blob.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.util.DateTimeRfc1123;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.time.OffsetDateTime;
 
-/** The BlobsBreakLeaseHeaders model. */
-@JacksonXmlRootElement(localName = "null")
+/**
+ * The BlobsBreakLeaseHeaders model.
+ */
 @Fluent
 public final class BlobsBreakLeaseHeaders {
     /*
-     * The x-ms-version property.
-     */
-    @JsonProperty(value = "x-ms-version")
-    private String xMsVersion;
-
-    /*
      * The ETag property.
      */
-    @JsonProperty(value = "ETag")
+    @Generated
     private String eTag;
-
-    /*
-     * The x-ms-lease-time property.
-     */
-    @JsonProperty(value = "x-ms-lease-time")
-    private Integer xMsLeaseTime;
 
     /*
      * The Last-Modified property.
      */
-    @JsonProperty(value = "Last-Modified")
+    @Generated
     private DateTimeRfc1123 lastModified;
 
     /*
-     * The x-ms-request-id property.
+     * The x-ms-lease-time property.
      */
-    @JsonProperty(value = "x-ms-request-id")
-    private String xMsRequestId;
+    @Generated
+    private Integer xMsLeaseTime;
 
     /*
      * The x-ms-client-request-id property.
      */
-    @JsonProperty(value = "x-ms-client-request-id")
+    @Generated
     private String xMsClientRequestId;
+
+    /*
+     * The x-ms-request-id property.
+     */
+    @Generated
+    private String xMsRequestId;
+
+    /*
+     * The x-ms-version property.
+     */
+    @Generated
+    private String xMsVersion;
 
     /*
      * The Date property.
      */
-    @JsonProperty(value = "Date")
+    @Generated
     private DateTimeRfc1123 date;
-
-    private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
 
     private static final HttpHeaderName X_MS_LEASE_TIME = HttpHeaderName.fromString("x-ms-lease-time");
 
-    private static final HttpHeaderName X_MS_REQUEST_ID = HttpHeaderName.fromString("x-ms-request-id");
+    private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of BlobsBreakLeaseHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public BlobsBreakLeaseHeaders(HttpHeaders rawHeaders) {
-        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
         this.eTag = rawHeaders.getValue(HttpHeaderName.ETAG);
-        String xMsLeaseTime = rawHeaders.getValue(X_MS_LEASE_TIME);
-        if (xMsLeaseTime != null) {
-            this.xMsLeaseTime = Integer.parseInt(xMsLeaseTime);
-        }
         String lastModified = rawHeaders.getValue(HttpHeaderName.LAST_MODIFIED);
         if (lastModified != null) {
             this.lastModified = new DateTimeRfc1123(lastModified);
+        } else {
+            this.lastModified = null;
         }
-        this.xMsRequestId = rawHeaders.getValue(X_MS_REQUEST_ID);
+        String xMsLeaseTime = rawHeaders.getValue(X_MS_LEASE_TIME);
+        if (xMsLeaseTime != null) {
+            this.xMsLeaseTime = Integer.parseInt(xMsLeaseTime);
+        } else {
+            this.xMsLeaseTime = null;
+        }
         this.xMsClientRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_CLIENT_REQUEST_ID);
+        this.xMsRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_REQUEST_ID);
+        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
         String date = rawHeaders.getValue(HttpHeaderName.DATE);
         if (date != null) {
             this.date = new DateTimeRfc1123(date);
+        } else {
+            this.date = null;
         }
-    }
-
-    /**
-     * Get the xMsVersion property: The x-ms-version property.
-     *
-     * @return the xMsVersion value.
-     */
-    public String getXMsVersion() {
-        return this.xMsVersion;
-    }
-
-    /**
-     * Set the xMsVersion property: The x-ms-version property.
-     *
-     * @param xMsVersion the xMsVersion value to set.
-     * @return the BlobsBreakLeaseHeaders object itself.
-     */
-    public BlobsBreakLeaseHeaders setXMsVersion(String xMsVersion) {
-        this.xMsVersion = xMsVersion;
-        return this;
     }
 
     /**
      * Get the eTag property: The ETag property.
-     *
+     * 
      * @return the eTag value.
      */
+    @Generated
     public String getETag() {
         return this.eTag;
     }
 
     /**
      * Set the eTag property: The ETag property.
-     *
+     * 
      * @param eTag the eTag value to set.
      * @return the BlobsBreakLeaseHeaders object itself.
      */
+    @Generated
     public BlobsBreakLeaseHeaders setETag(String eTag) {
         this.eTag = eTag;
         return this;
     }
 
     /**
-     * Get the xMsLeaseTime property: The x-ms-lease-time property.
-     *
-     * @return the xMsLeaseTime value.
-     */
-    public Integer getXMsLeaseTime() {
-        return this.xMsLeaseTime;
-    }
-
-    /**
-     * Set the xMsLeaseTime property: The x-ms-lease-time property.
-     *
-     * @param xMsLeaseTime the xMsLeaseTime value to set.
-     * @return the BlobsBreakLeaseHeaders object itself.
-     */
-    public BlobsBreakLeaseHeaders setXMsLeaseTime(Integer xMsLeaseTime) {
-        this.xMsLeaseTime = xMsLeaseTime;
-        return this;
-    }
-
-    /**
      * Get the lastModified property: The Last-Modified property.
-     *
+     * 
      * @return the lastModified value.
      */
+    @Generated
     public OffsetDateTime getLastModified() {
         if (this.lastModified == null) {
             return null;
@@ -163,10 +130,11 @@ public final class BlobsBreakLeaseHeaders {
 
     /**
      * Set the lastModified property: The Last-Modified property.
-     *
+     * 
      * @param lastModified the lastModified value to set.
      * @return the BlobsBreakLeaseHeaders object itself.
      */
+    @Generated
     public BlobsBreakLeaseHeaders setLastModified(OffsetDateTime lastModified) {
         if (lastModified == null) {
             this.lastModified = null;
@@ -177,50 +145,99 @@ public final class BlobsBreakLeaseHeaders {
     }
 
     /**
-     * Get the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @return the xMsRequestId value.
+     * Get the xMsLeaseTime property: The x-ms-lease-time property.
+     * 
+     * @return the xMsLeaseTime value.
      */
-    public String getXMsRequestId() {
-        return this.xMsRequestId;
+    @Generated
+    public Integer getXMsLeaseTime() {
+        return this.xMsLeaseTime;
     }
 
     /**
-     * Set the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @param xMsRequestId the xMsRequestId value to set.
+     * Set the xMsLeaseTime property: The x-ms-lease-time property.
+     * 
+     * @param xMsLeaseTime the xMsLeaseTime value to set.
      * @return the BlobsBreakLeaseHeaders object itself.
      */
-    public BlobsBreakLeaseHeaders setXMsRequestId(String xMsRequestId) {
-        this.xMsRequestId = xMsRequestId;
+    @Generated
+    public BlobsBreakLeaseHeaders setXMsLeaseTime(Integer xMsLeaseTime) {
+        this.xMsLeaseTime = xMsLeaseTime;
         return this;
     }
 
     /**
      * Get the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
+     * 
      * @return the xMsClientRequestId value.
      */
+    @Generated
     public String getXMsClientRequestId() {
         return this.xMsClientRequestId;
     }
 
     /**
      * Set the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
+     * 
      * @param xMsClientRequestId the xMsClientRequestId value to set.
      * @return the BlobsBreakLeaseHeaders object itself.
      */
+    @Generated
     public BlobsBreakLeaseHeaders setXMsClientRequestId(String xMsClientRequestId) {
         this.xMsClientRequestId = xMsClientRequestId;
         return this;
     }
 
     /**
+     * Get the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @return the xMsRequestId value.
+     */
+    @Generated
+    public String getXMsRequestId() {
+        return this.xMsRequestId;
+    }
+
+    /**
+     * Set the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @param xMsRequestId the xMsRequestId value to set.
+     * @return the BlobsBreakLeaseHeaders object itself.
+     */
+    @Generated
+    public BlobsBreakLeaseHeaders setXMsRequestId(String xMsRequestId) {
+        this.xMsRequestId = xMsRequestId;
+        return this;
+    }
+
+    /**
+     * Get the xMsVersion property: The x-ms-version property.
+     * 
+     * @return the xMsVersion value.
+     */
+    @Generated
+    public String getXMsVersion() {
+        return this.xMsVersion;
+    }
+
+    /**
+     * Set the xMsVersion property: The x-ms-version property.
+     * 
+     * @param xMsVersion the xMsVersion value to set.
+     * @return the BlobsBreakLeaseHeaders object itself.
+     */
+    @Generated
+    public BlobsBreakLeaseHeaders setXMsVersion(String xMsVersion) {
+        this.xMsVersion = xMsVersion;
+        return this;
+    }
+
+    /**
      * Get the date property: The Date property.
-     *
+     * 
      * @return the date value.
      */
+    @Generated
     public OffsetDateTime getDate() {
         if (this.date == null) {
             return null;
@@ -230,10 +247,11 @@ public final class BlobsBreakLeaseHeaders {
 
     /**
      * Set the date property: The Date property.
-     *
+     * 
      * @param date the date value to set.
      * @return the BlobsBreakLeaseHeaders object itself.
      */
+    @Generated
     public BlobsBreakLeaseHeaders setDate(OffsetDateTime date) {
         if (date == null) {
             this.date = null;

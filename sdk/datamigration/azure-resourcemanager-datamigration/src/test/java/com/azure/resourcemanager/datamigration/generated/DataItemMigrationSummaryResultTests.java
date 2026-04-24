@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.DataItemMigrationSummaryRe
 public final class DataItemMigrationSummaryResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DataItemMigrationSummaryResult model =
-            BinaryData
-                .fromString(
-                    "{\"name\":\"wbqpl\",\"startedOn\":\"2021-09-11T01:03:51Z\",\"endedOn\":\"2021-06-28T12:16:27Z\",\"state\":\"Stopped\",\"statusMessage\":\"zlrphwzs\",\"itemsCount\":1934599669073503654,\"itemsCompletedCount\":5542031390718229960,\"errorPrefix\":\"dunvmnnrwrbiorkt\",\"resultPrefix\":\"ywjhhgdnhx\"}")
-                .toObject(DataItemMigrationSummaryResult.class);
+        DataItemMigrationSummaryResult model = BinaryData.fromString(
+            "{\"name\":\"tzlswvaj\",\"startedOn\":\"2021-11-03T15:02:37Z\",\"endedOn\":\"2021-09-26T07:25:25Z\",\"state\":\"Skipped\",\"statusMessage\":\"qzasunwqrjzfrgqh\",\"itemsCount\":8053513658904619463,\"itemsCompletedCount\":7536993001537330098,\"errorPrefix\":\"cnjrohmbpyryxame\",\"resultPrefix\":\"ydyvkfkmro\"}")
+            .toObject(DataItemMigrationSummaryResult.class);
     }
 
     @org.junit.jupiter.api.Test

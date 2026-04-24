@@ -9,9 +9,12 @@ import com.azure.core.management.SystemData;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.networkcloud.fluent.models.StorageApplianceInner;
 import com.azure.resourcemanager.networkcloud.models.AdministrativeCredentials;
+import com.azure.resourcemanager.networkcloud.models.CertificateInfo;
 import com.azure.resourcemanager.networkcloud.models.ExtendedLocation;
+import com.azure.resourcemanager.networkcloud.models.OperationStatusResult;
 import com.azure.resourcemanager.networkcloud.models.RemoteVendorManagementFeature;
 import com.azure.resourcemanager.networkcloud.models.RemoteVendorManagementStatus;
+import com.azure.resourcemanager.networkcloud.models.SecretRotationStatus;
 import com.azure.resourcemanager.networkcloud.models.StorageAppliance;
 import com.azure.resourcemanager.networkcloud.models.StorageApplianceDetailedStatus;
 import com.azure.resourcemanager.networkcloud.models.StorageApplianceEnableRemoteVendorManagementParameters;
@@ -19,6 +22,7 @@ import com.azure.resourcemanager.networkcloud.models.StorageAppliancePatchParame
 import com.azure.resourcemanager.networkcloud.models.StorageApplianceProvisioningState;
 import com.azure.resourcemanager.networkcloud.models.StorageApplianceRunReadCommandsParameters;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public final class StorageApplianceImpl
@@ -52,6 +56,10 @@ public final class StorageApplianceImpl
         }
     }
 
+    public String etag() {
+        return this.innerModel().etag();
+    }
+
     public ExtendedLocation extendedLocation() {
         return this.innerModel().extendedLocation();
     }
@@ -62,6 +70,10 @@ public final class StorageApplianceImpl
 
     public AdministrativeCredentials administratorCredentials() {
         return this.innerModel().administratorCredentials();
+    }
+
+    public CertificateInfo caCertificate() {
+        return this.innerModel().caCertificate();
     }
 
     public Long capacity() {
@@ -88,6 +100,14 @@ public final class StorageApplianceImpl
         return this.innerModel().managementIpv4Address();
     }
 
+    public String manufacturer() {
+        return this.innerModel().manufacturer();
+    }
+
+    public String model() {
+        return this.innerModel().model();
+    }
+
     public StorageApplianceProvisioningState provisioningState() {
         return this.innerModel().provisioningState();
     }
@@ -108,12 +128,25 @@ public final class StorageApplianceImpl
         return this.innerModel().remoteVendorManagementStatus();
     }
 
+    public List<SecretRotationStatus> secretRotationStatus() {
+        List<SecretRotationStatus> inner = this.innerModel().secretRotationStatus();
+        if (inner != null) {
+            return Collections.unmodifiableList(inner);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
     public String serialNumber() {
         return this.innerModel().serialNumber();
     }
 
     public String storageApplianceSkuId() {
         return this.innerModel().storageApplianceSkuId();
+    }
+
+    public String version() {
+        return this.innerModel().version();
     }
 
     public Region region() {
@@ -140,6 +173,14 @@ public final class StorageApplianceImpl
 
     private String storageApplianceName;
 
+    private String createIfMatch;
+
+    private String createIfNoneMatch;
+
+    private String updateIfMatch;
+
+    private String updateIfNoneMatch;
+
     private StorageAppliancePatchParameters updateStorageApplianceUpdateParameters;
 
     public StorageApplianceImpl withExistingResourceGroup(String resourceGroupName) {
@@ -148,20 +189,18 @@ public final class StorageApplianceImpl
     }
 
     public StorageAppliance create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getStorageAppliances()
-                .createOrUpdate(resourceGroupName, storageApplianceName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getStorageAppliances()
+            .createOrUpdate(resourceGroupName, storageApplianceName, this.innerModel(), createIfMatch,
+                createIfNoneMatch, Context.NONE);
         return this;
     }
 
     public StorageAppliance create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getStorageAppliances()
-                .createOrUpdate(resourceGroupName, storageApplianceName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getStorageAppliances()
+            .createOrUpdate(resourceGroupName, storageApplianceName, this.innerModel(), createIfMatch,
+                createIfNoneMatch, context);
         return this;
     }
 
@@ -169,97 +208,90 @@ public final class StorageApplianceImpl
         this.innerObject = new StorageApplianceInner();
         this.serviceManager = serviceManager;
         this.storageApplianceName = name;
+        this.createIfMatch = null;
+        this.createIfNoneMatch = null;
     }
 
     public StorageApplianceImpl update() {
+        this.updateIfMatch = null;
+        this.updateIfNoneMatch = null;
         this.updateStorageApplianceUpdateParameters = new StorageAppliancePatchParameters();
         return this;
     }
 
     public StorageAppliance apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getStorageAppliances()
-                .update(resourceGroupName, storageApplianceName, updateStorageApplianceUpdateParameters, Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getStorageAppliances()
+            .update(resourceGroupName, storageApplianceName, updateIfMatch, updateIfNoneMatch,
+                updateStorageApplianceUpdateParameters, Context.NONE);
         return this;
     }
 
     public StorageAppliance apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getStorageAppliances()
-                .update(resourceGroupName, storageApplianceName, updateStorageApplianceUpdateParameters, context);
+        this.innerObject = serviceManager.serviceClient()
+            .getStorageAppliances()
+            .update(resourceGroupName, storageApplianceName, updateIfMatch, updateIfNoneMatch,
+                updateStorageApplianceUpdateParameters, context);
         return this;
     }
 
-    StorageApplianceImpl(
-        StorageApplianceInner innerObject, com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
+    StorageApplianceImpl(StorageApplianceInner innerObject,
+        com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.storageApplianceName = Utils.getValueFromIdByName(innerObject.id(), "storageAppliances");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.storageApplianceName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "storageAppliances");
     }
 
     public StorageAppliance refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getStorageAppliances()
-                .getByResourceGroupWithResponse(resourceGroupName, storageApplianceName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getStorageAppliances()
+            .getByResourceGroupWithResponse(resourceGroupName, storageApplianceName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public StorageAppliance refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getStorageAppliances()
-                .getByResourceGroupWithResponse(resourceGroupName, storageApplianceName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getStorageAppliances()
+            .getByResourceGroupWithResponse(resourceGroupName, storageApplianceName, context)
+            .getValue();
         return this;
     }
 
-    public void disableRemoteVendorManagement() {
-        serviceManager.storageAppliances().disableRemoteVendorManagement(resourceGroupName, storageApplianceName);
+    public OperationStatusResult disableRemoteVendorManagement() {
+        return serviceManager.storageAppliances()
+            .disableRemoteVendorManagement(resourceGroupName, storageApplianceName);
     }
 
-    public void disableRemoteVendorManagement(Context context) {
-        serviceManager
-            .storageAppliances()
+    public OperationStatusResult disableRemoteVendorManagement(Context context) {
+        return serviceManager.storageAppliances()
             .disableRemoteVendorManagement(resourceGroupName, storageApplianceName, context);
     }
 
-    public void enableRemoteVendorManagement() {
-        serviceManager.storageAppliances().enableRemoteVendorManagement(resourceGroupName, storageApplianceName);
+    public OperationStatusResult enableRemoteVendorManagement() {
+        return serviceManager.storageAppliances().enableRemoteVendorManagement(resourceGroupName, storageApplianceName);
     }
 
-    public void enableRemoteVendorManagement(
+    public OperationStatusResult enableRemoteVendorManagement(
         StorageApplianceEnableRemoteVendorManagementParameters storageApplianceEnableRemoteVendorManagementParameters,
         Context context) {
-        serviceManager
-            .storageAppliances()
-            .enableRemoteVendorManagement(
-                resourceGroupName,
-                storageApplianceName,
-                storageApplianceEnableRemoteVendorManagementParameters,
-                context);
+        return serviceManager.storageAppliances()
+            .enableRemoteVendorManagement(resourceGroupName, storageApplianceName,
+                storageApplianceEnableRemoteVendorManagementParameters, context);
     }
 
-    public void runReadCommands(StorageApplianceRunReadCommandsParameters storageApplianceRunReadCommandsParameters) {
-        serviceManager
-            .storageAppliances()
+    public OperationStatusResult
+        runReadCommands(StorageApplianceRunReadCommandsParameters storageApplianceRunReadCommandsParameters) {
+        return serviceManager.storageAppliances()
             .runReadCommands(resourceGroupName, storageApplianceName, storageApplianceRunReadCommandsParameters);
     }
 
-    public void runReadCommands(
+    public OperationStatusResult runReadCommands(
         StorageApplianceRunReadCommandsParameters storageApplianceRunReadCommandsParameters, Context context) {
-        serviceManager
-            .storageAppliances()
-            .runReadCommands(
-                resourceGroupName, storageApplianceName, storageApplianceRunReadCommandsParameters, context);
+        return serviceManager.storageAppliances()
+            .runReadCommands(resourceGroupName, storageApplianceName, storageApplianceRunReadCommandsParameters,
+                context);
     }
 
     public StorageApplianceImpl withRegion(Region location) {
@@ -317,7 +349,27 @@ public final class StorageApplianceImpl
         }
     }
 
+    public StorageApplianceImpl withIfMatch(String ifMatch) {
+        if (isInCreateMode()) {
+            this.createIfMatch = ifMatch;
+            return this;
+        } else {
+            this.updateIfMatch = ifMatch;
+            return this;
+        }
+    }
+
+    public StorageApplianceImpl withIfNoneMatch(String ifNoneMatch) {
+        if (isInCreateMode()) {
+            this.createIfNoneMatch = ifNoneMatch;
+            return this;
+        } else {
+            this.updateIfNoneMatch = ifNoneMatch;
+            return this;
+        }
+    }
+
     private boolean isInCreateMode() {
-        return this.innerModel().id() == null;
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

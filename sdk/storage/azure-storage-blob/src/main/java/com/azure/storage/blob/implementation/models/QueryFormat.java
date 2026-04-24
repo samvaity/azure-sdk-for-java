@@ -5,61 +5,73 @@
 package com.azure.storage.blob.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** The QueryFormat model. */
-@JacksonXmlRootElement(localName = "QueryFormat")
+/**
+ * The QueryFormat model.
+ */
 @Fluent
-public final class QueryFormat {
+public final class QueryFormat implements XmlSerializable<QueryFormat> {
     /*
      * The quick query format type.
      */
-    @JsonProperty(value = "Type", required = true)
+    @Generated
     private QueryFormatType type;
 
     /*
      * Groups the settings used for interpreting the blob data if the blob is delimited text formatted.
      */
-    @JsonProperty(value = "DelimitedTextConfiguration")
+    @Generated
     private DelimitedTextConfiguration delimitedTextConfiguration;
 
     /*
      * json text configuration
      */
-    @JsonProperty(value = "JsonTextConfiguration")
+    @Generated
     private JsonTextConfiguration jsonTextConfiguration;
 
     /*
      * Groups the settings used for formatting the response if the response should be Arrow formatted.
      */
-    @JsonProperty(value = "ArrowConfiguration")
+    @Generated
     private ArrowConfiguration arrowConfiguration;
 
     /*
      * parquet configuration
      */
-    @JsonProperty(value = "ParquetTextConfiguration")
+    @Generated
     private Object parquetTextConfiguration;
 
-    /** Creates an instance of QueryFormat class. */
-    public QueryFormat() {}
+    /**
+     * Creates an instance of QueryFormat class.
+     */
+    @Generated
+    public QueryFormat() {
+    }
 
     /**
      * Get the type property: The quick query format type.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public QueryFormatType getType() {
         return this.type;
     }
 
     /**
      * Set the type property: The quick query format type.
-     *
+     * 
      * @param type the type value to set.
      * @return the QueryFormat object itself.
      */
+    @Generated
     public QueryFormat setType(QueryFormatType type) {
         this.type = type;
         return this;
@@ -68,9 +80,10 @@ public final class QueryFormat {
     /**
      * Get the delimitedTextConfiguration property: Groups the settings used for interpreting the blob data if the blob
      * is delimited text formatted.
-     *
+     * 
      * @return the delimitedTextConfiguration value.
      */
+    @Generated
     public DelimitedTextConfiguration getDelimitedTextConfiguration() {
         return this.delimitedTextConfiguration;
     }
@@ -78,10 +91,11 @@ public final class QueryFormat {
     /**
      * Set the delimitedTextConfiguration property: Groups the settings used for interpreting the blob data if the blob
      * is delimited text formatted.
-     *
+     * 
      * @param delimitedTextConfiguration the delimitedTextConfiguration value to set.
      * @return the QueryFormat object itself.
      */
+    @Generated
     public QueryFormat setDelimitedTextConfiguration(DelimitedTextConfiguration delimitedTextConfiguration) {
         this.delimitedTextConfiguration = delimitedTextConfiguration;
         return this;
@@ -89,19 +103,21 @@ public final class QueryFormat {
 
     /**
      * Get the jsonTextConfiguration property: json text configuration.
-     *
+     * 
      * @return the jsonTextConfiguration value.
      */
+    @Generated
     public JsonTextConfiguration getJsonTextConfiguration() {
         return this.jsonTextConfiguration;
     }
 
     /**
      * Set the jsonTextConfiguration property: json text configuration.
-     *
+     * 
      * @param jsonTextConfiguration the jsonTextConfiguration value to set.
      * @return the QueryFormat object itself.
      */
+    @Generated
     public QueryFormat setJsonTextConfiguration(JsonTextConfiguration jsonTextConfiguration) {
         this.jsonTextConfiguration = jsonTextConfiguration;
         return this;
@@ -110,9 +126,10 @@ public final class QueryFormat {
     /**
      * Get the arrowConfiguration property: Groups the settings used for formatting the response if the response should
      * be Arrow formatted.
-     *
+     * 
      * @return the arrowConfiguration value.
      */
+    @Generated
     public ArrowConfiguration getArrowConfiguration() {
         return this.arrowConfiguration;
     }
@@ -120,10 +137,11 @@ public final class QueryFormat {
     /**
      * Set the arrowConfiguration property: Groups the settings used for formatting the response if the response should
      * be Arrow formatted.
-     *
+     * 
      * @param arrowConfiguration the arrowConfiguration value to set.
      * @return the QueryFormat object itself.
      */
+    @Generated
     public QueryFormat setArrowConfiguration(ArrowConfiguration arrowConfiguration) {
         this.arrowConfiguration = arrowConfiguration;
         return this;
@@ -131,21 +149,97 @@ public final class QueryFormat {
 
     /**
      * Get the parquetTextConfiguration property: parquet configuration.
-     *
+     * 
      * @return the parquetTextConfiguration value.
      */
+    @Generated
     public Object getParquetTextConfiguration() {
         return this.parquetTextConfiguration;
     }
 
     /**
      * Set the parquetTextConfiguration property: parquet configuration.
-     *
+     * 
      * @param parquetTextConfiguration the parquetTextConfiguration value to set.
      * @return the QueryFormat object itself.
      */
+    @Generated
     public QueryFormat setParquetTextConfiguration(Object parquetTextConfiguration) {
         this.parquetTextConfiguration = parquetTextConfiguration;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "QueryFormat" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeStringElement("Type", this.type == null ? null : this.type.toString());
+        xmlWriter.writeXml(this.delimitedTextConfiguration, "DelimitedTextConfiguration");
+        xmlWriter.writeXml(this.jsonTextConfiguration, "JsonTextConfiguration");
+        xmlWriter.writeXml(this.arrowConfiguration, "ArrowConfiguration");
+        xmlWriter.writeStartElement("ParquetTextConfiguration").writeEndElement();
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of QueryFormat from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of QueryFormat if the XmlReader was pointing to an instance of it, or null if it was pointing
+     * to XML null.
+     * @throws XMLStreamException If an error occurs while reading the QueryFormat.
+     */
+    @Generated
+    public static QueryFormat fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of QueryFormat from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of QueryFormat if the XmlReader was pointing to an instance of it, or null if it was pointing
+     * to XML null.
+     * @throws XMLStreamException If an error occurs while reading the QueryFormat.
+     */
+    @Generated
+    public static QueryFormat fromXml(XmlReader xmlReader, String rootElementName) throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "QueryFormat" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            QueryFormat deserializedQueryFormat = new QueryFormat();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Type".equals(elementName.getLocalPart())) {
+                    deserializedQueryFormat.type = QueryFormatType.fromString(reader.getStringElement());
+                } else if ("DelimitedTextConfiguration".equals(elementName.getLocalPart())) {
+                    deserializedQueryFormat.delimitedTextConfiguration
+                        = DelimitedTextConfiguration.fromXml(reader, "DelimitedTextConfiguration");
+                } else if ("JsonTextConfiguration".equals(elementName.getLocalPart())) {
+                    deserializedQueryFormat.jsonTextConfiguration
+                        = JsonTextConfiguration.fromXml(reader, "JsonTextConfiguration");
+                } else if ("ArrowConfiguration".equals(elementName.getLocalPart())) {
+                    deserializedQueryFormat.arrowConfiguration
+                        = ArrowConfiguration.fromXml(reader, "ArrowConfiguration");
+                } else if ("ParquetTextConfiguration".equals(elementName.getLocalPart())) {
+                    deserializedQueryFormat.parquetTextConfiguration = new Object();
+                    xmlReader.skipElement();
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedQueryFormat;
+        });
     }
 }

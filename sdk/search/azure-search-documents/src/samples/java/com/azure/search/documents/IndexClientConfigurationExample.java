@@ -16,7 +16,7 @@ import com.azure.core.util.Configuration;
 public class IndexClientConfigurationExample {
 
     /**
-     * From the Azure portal, get your Azure Cognitive Search service URL and API key,
+     * From the Azure portal, get your Azure AI Search service URL and API key,
      * and set the values of these environment variables:
      */
     private static final String ENDPOINT = Configuration.getGlobalConfiguration().get("AZURE_COGNITIVE_SEARCH_ENDPOINT");
@@ -50,12 +50,9 @@ public class IndexClientConfigurationExample {
             .endpoint(ENDPOINT)
             .credential(new AzureKeyCredential(API_KEY))
             .indexName("hotels")
-            .serviceVersion(SearchServiceVersion.V2020_06_30)
+            .serviceVersion(SearchServiceVersion.getLatest())
             .addPolicy(new RetryPolicy())
-            .httpClient(
-                new NettyAsyncHttpClientBuilder()
-                    .wiretap(true)
-                    .build()
-            ).buildAsyncClient();
+            .httpClient(new NettyAsyncHttpClientBuilder().build())
+            .buildAsyncClient();
     }
 }

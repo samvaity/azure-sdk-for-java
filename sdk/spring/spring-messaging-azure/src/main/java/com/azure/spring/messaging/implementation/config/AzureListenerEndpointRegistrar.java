@@ -19,6 +19,7 @@ import java.util.List;
  * Helper bean for registering {@link AzureListenerEndpoint} with a {@link AzureListenerEndpointRegistry}.
  *
  */
+@SuppressWarnings("deprecation")
 public class AzureListenerEndpointRegistrar implements BeanFactoryAware, InitializingBean {
 
     private final List<AzureListenerEndpointDescriptor> endpointDescriptors = new ArrayList<>();
@@ -40,6 +41,7 @@ public class AzureListenerEndpointRegistrar implements BeanFactoryAware, Initial
      * A {@link BeanFactory} only needs to be available in conjunction with {@link #setContainerFactoryBeanName}.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
         if (beanFactory instanceof ConfigurableBeanFactory) {

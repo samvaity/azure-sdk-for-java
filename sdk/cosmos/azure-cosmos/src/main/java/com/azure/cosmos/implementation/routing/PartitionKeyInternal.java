@@ -181,16 +181,6 @@ public class PartitionKeyInternal implements Comparable<PartitionKeyInternal> {
 
     @Override
     public int hashCode() {
-//        TODO: @kushagraThapar, @moderakh, mbhaskar to identify proper implementation.
-//        Issue: https://github.com/Azure/azure-sdk-for-java/issues/9046
-//        if (this.components == null || this.components.size() == 0) {
-//            return 0;
-//        }
-//        int [] ordinals = new int[this.components.size()];
-//        for (int i = 0; i < this.components.size(); i++) {
-//            ordinals[i] = this.components.get(i).GetTypeOrdinal();
-//        }
-//        return Arrays.hashCode(ordinals);
         return super.hashCode();
     }
 
@@ -249,6 +239,10 @@ public class PartitionKeyInternal implements Comparable<PartitionKeyInternal> {
         return PartitionKeyInternalHelper.getEffectivePartitionKeyString(internalPartitionKey, partitionKey);
     }
 
+    public byte[] getEffectivePartitionKeyBytes(PartitionKeyInternal internalPartitionKey, PartitionKeyDefinition partitionKey) {
+        return PartitionKeyInternalHelper.getEffectivePartitionKeyBytes(internalPartitionKey, partitionKey);
+    }
+
     public Range<String> getEPKRangeForPrefixPartitionKey(PartitionKeyDefinition partitionKeyDefinition) {
         return PartitionKeyInternalHelper.getEPKRangeForPrefixPartitionKey(this, partitionKeyDefinition);
     }
@@ -258,6 +252,14 @@ public class PartitionKeyInternal implements Comparable<PartitionKeyInternal> {
         return collection.getPartitionKey() != null && partitionKeyInternal != null
             && collection.getPartitionKey().getKind().equals(PartitionKind.MULTI_HASH)
             && collection.getPartitionKey().getPaths().size() > partitionKeyInternal.getComponents().size();
+    }
+
+    public Object[] toObjectArray() {
+        if (this.components == null) {
+            return null;
+        }
+
+        return this.components.stream().map(component -> component.toObject()).toArray();
     }
 
     @SuppressWarnings("serial")
@@ -371,7 +373,7 @@ public class PartitionKeyInternal implements Comparable<PartitionKeyInternal> {
 
             throw new IllegalStateException(String.format(
                     "Unable to deserialize PartitionKeyInternal '%s'",
-                    root.toString()));
+                    root));
         }
     }
 }

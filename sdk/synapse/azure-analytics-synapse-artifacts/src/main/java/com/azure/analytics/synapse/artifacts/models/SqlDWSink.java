@@ -5,72 +5,99 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity SQL Data Warehouse sink. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("SqlDWSink")
+/**
+ * A copy activity SQL Data Warehouse sink.
+ */
 @Fluent
 public final class SqlDWSink extends CopySink {
     /*
+     * Copy sink type.
+     */
+    @Generated
+    private String type = "SqlDWSink";
+
+    /*
      * SQL pre-copy script. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "preCopyScript")
+    @Generated
     private Object preCopyScript;
 
     /*
-     * Indicates to use PolyBase to copy data into SQL Data Warehouse when applicable. Type: boolean (or Expression
-     * with resultType boolean).
+     * Indicates to use PolyBase to copy data into SQL Data Warehouse when applicable. Type: boolean (or Expression with
+     * resultType boolean).
      */
-    @JsonProperty(value = "allowPolyBase")
+    @Generated
     private Object allowPolyBase;
 
     /*
      * Specifies PolyBase-related settings when allowPolyBase is true.
      */
-    @JsonProperty(value = "polyBaseSettings")
+    @Generated
     private PolybaseSettings polyBaseSettings;
 
     /*
      * Indicates to use Copy Command to copy data into SQL Data Warehouse. Type: boolean (or Expression with resultType
      * boolean).
      */
-    @JsonProperty(value = "allowCopyCommand")
+    @Generated
     private Object allowCopyCommand;
 
     /*
      * Specifies Copy Command related settings when allowCopyCommand is true.
      */
-    @JsonProperty(value = "copyCommandSettings")
+    @Generated
     private DWCopyCommandSettings copyCommandSettings;
 
     /*
      * The option to handle sink table, such as autoCreate. For now only 'autoCreate' value is supported. Type: string
      * (or Expression with resultType string).
      */
-    @JsonProperty(value = "tableOption")
+    @Generated
     private Object tableOption;
 
-    /** Creates an instance of SqlDWSink class. */
-    public SqlDWSink() {}
+    /**
+     * Creates an instance of SqlDWSink class.
+     */
+    @Generated
+    public SqlDWSink() {
+    }
+
+    /**
+     * Get the type property: Copy sink type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the preCopyScript property: SQL pre-copy script. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the preCopyScript value.
      */
+    @Generated
     public Object getPreCopyScript() {
         return this.preCopyScript;
     }
 
     /**
      * Set the preCopyScript property: SQL pre-copy script. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param preCopyScript the preCopyScript value to set.
      * @return the SqlDWSink object itself.
      */
+    @Generated
     public SqlDWSink setPreCopyScript(Object preCopyScript) {
         this.preCopyScript = preCopyScript;
         return this;
@@ -79,9 +106,10 @@ public final class SqlDWSink extends CopySink {
     /**
      * Get the allowPolyBase property: Indicates to use PolyBase to copy data into SQL Data Warehouse when applicable.
      * Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the allowPolyBase value.
      */
+    @Generated
     public Object getAllowPolyBase() {
         return this.allowPolyBase;
     }
@@ -89,10 +117,11 @@ public final class SqlDWSink extends CopySink {
     /**
      * Set the allowPolyBase property: Indicates to use PolyBase to copy data into SQL Data Warehouse when applicable.
      * Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param allowPolyBase the allowPolyBase value to set.
      * @return the SqlDWSink object itself.
      */
+    @Generated
     public SqlDWSink setAllowPolyBase(Object allowPolyBase) {
         this.allowPolyBase = allowPolyBase;
         return this;
@@ -100,19 +129,21 @@ public final class SqlDWSink extends CopySink {
 
     /**
      * Get the polyBaseSettings property: Specifies PolyBase-related settings when allowPolyBase is true.
-     *
+     * 
      * @return the polyBaseSettings value.
      */
+    @Generated
     public PolybaseSettings getPolyBaseSettings() {
         return this.polyBaseSettings;
     }
 
     /**
      * Set the polyBaseSettings property: Specifies PolyBase-related settings when allowPolyBase is true.
-     *
+     * 
      * @param polyBaseSettings the polyBaseSettings value to set.
      * @return the SqlDWSink object itself.
      */
+    @Generated
     public SqlDWSink setPolyBaseSettings(PolybaseSettings polyBaseSettings) {
         this.polyBaseSettings = polyBaseSettings;
         return this;
@@ -121,9 +152,10 @@ public final class SqlDWSink extends CopySink {
     /**
      * Get the allowCopyCommand property: Indicates to use Copy Command to copy data into SQL Data Warehouse. Type:
      * boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the allowCopyCommand value.
      */
+    @Generated
     public Object getAllowCopyCommand() {
         return this.allowCopyCommand;
     }
@@ -131,10 +163,11 @@ public final class SqlDWSink extends CopySink {
     /**
      * Set the allowCopyCommand property: Indicates to use Copy Command to copy data into SQL Data Warehouse. Type:
      * boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param allowCopyCommand the allowCopyCommand value to set.
      * @return the SqlDWSink object itself.
      */
+    @Generated
     public SqlDWSink setAllowCopyCommand(Object allowCopyCommand) {
         this.allowCopyCommand = allowCopyCommand;
         return this;
@@ -142,19 +175,21 @@ public final class SqlDWSink extends CopySink {
 
     /**
      * Get the copyCommandSettings property: Specifies Copy Command related settings when allowCopyCommand is true.
-     *
+     * 
      * @return the copyCommandSettings value.
      */
+    @Generated
     public DWCopyCommandSettings getCopyCommandSettings() {
         return this.copyCommandSettings;
     }
 
     /**
      * Set the copyCommandSettings property: Specifies Copy Command related settings when allowCopyCommand is true.
-     *
+     * 
      * @param copyCommandSettings the copyCommandSettings value to set.
      * @return the SqlDWSink object itself.
      */
+    @Generated
     public SqlDWSink setCopyCommandSettings(DWCopyCommandSettings copyCommandSettings) {
         this.copyCommandSettings = copyCommandSettings;
         return this;
@@ -163,9 +198,10 @@ public final class SqlDWSink extends CopySink {
     /**
      * Get the tableOption property: The option to handle sink table, such as autoCreate. For now only 'autoCreate'
      * value is supported. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the tableOption value.
      */
+    @Generated
     public Object getTableOption() {
         return this.tableOption;
     }
@@ -173,47 +209,163 @@ public final class SqlDWSink extends CopySink {
     /**
      * Set the tableOption property: The option to handle sink table, such as autoCreate. For now only 'autoCreate'
      * value is supported. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param tableOption the tableOption value to set.
      * @return the SqlDWSink object itself.
      */
+    @Generated
     public SqlDWSink setTableOption(Object tableOption) {
         this.tableOption = tableOption;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SqlDWSink setWriteBatchSize(Object writeBatchSize) {
         super.setWriteBatchSize(writeBatchSize);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SqlDWSink setWriteBatchTimeout(Object writeBatchTimeout) {
         super.setWriteBatchTimeout(writeBatchTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SqlDWSink setSinkRetryCount(Object sinkRetryCount) {
         super.setSinkRetryCount(sinkRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SqlDWSink setSinkRetryWait(Object sinkRetryWait) {
         super.setSinkRetryWait(sinkRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SqlDWSink setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getWriteBatchSize() != null) {
+            jsonWriter.writeUntypedField("writeBatchSize", getWriteBatchSize());
+        }
+        if (getWriteBatchTimeout() != null) {
+            jsonWriter.writeUntypedField("writeBatchTimeout", getWriteBatchTimeout());
+        }
+        if (getSinkRetryCount() != null) {
+            jsonWriter.writeUntypedField("sinkRetryCount", getSinkRetryCount());
+        }
+        if (getSinkRetryWait() != null) {
+            jsonWriter.writeUntypedField("sinkRetryWait", getSinkRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.preCopyScript != null) {
+            jsonWriter.writeUntypedField("preCopyScript", this.preCopyScript);
+        }
+        if (this.allowPolyBase != null) {
+            jsonWriter.writeUntypedField("allowPolyBase", this.allowPolyBase);
+        }
+        jsonWriter.writeJsonField("polyBaseSettings", this.polyBaseSettings);
+        if (this.allowCopyCommand != null) {
+            jsonWriter.writeUntypedField("allowCopyCommand", this.allowCopyCommand);
+        }
+        jsonWriter.writeJsonField("copyCommandSettings", this.copyCommandSettings);
+        if (this.tableOption != null) {
+            jsonWriter.writeUntypedField("tableOption", this.tableOption);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SqlDWSink from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SqlDWSink if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IOException If an error occurs while reading the SqlDWSink.
+     */
+    @Generated
+    public static SqlDWSink fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SqlDWSink deserializedSqlDWSink = new SqlDWSink();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("writeBatchSize".equals(fieldName)) {
+                    deserializedSqlDWSink.setWriteBatchSize(reader.readUntyped());
+                } else if ("writeBatchTimeout".equals(fieldName)) {
+                    deserializedSqlDWSink.setWriteBatchTimeout(reader.readUntyped());
+                } else if ("sinkRetryCount".equals(fieldName)) {
+                    deserializedSqlDWSink.setSinkRetryCount(reader.readUntyped());
+                } else if ("sinkRetryWait".equals(fieldName)) {
+                    deserializedSqlDWSink.setSinkRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedSqlDWSink.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedSqlDWSink.type = reader.getString();
+                } else if ("preCopyScript".equals(fieldName)) {
+                    deserializedSqlDWSink.preCopyScript = reader.readUntyped();
+                } else if ("allowPolyBase".equals(fieldName)) {
+                    deserializedSqlDWSink.allowPolyBase = reader.readUntyped();
+                } else if ("polyBaseSettings".equals(fieldName)) {
+                    deserializedSqlDWSink.polyBaseSettings = PolybaseSettings.fromJson(reader);
+                } else if ("allowCopyCommand".equals(fieldName)) {
+                    deserializedSqlDWSink.allowCopyCommand = reader.readUntyped();
+                } else if ("copyCommandSettings".equals(fieldName)) {
+                    deserializedSqlDWSink.copyCommandSettings = DWCopyCommandSettings.fromJson(reader);
+                } else if ("tableOption".equals(fieldName)) {
+                    deserializedSqlDWSink.tableOption = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedSqlDWSink.setAdditionalProperties(additionalProperties);
+
+            return deserializedSqlDWSink;
+        });
     }
 }

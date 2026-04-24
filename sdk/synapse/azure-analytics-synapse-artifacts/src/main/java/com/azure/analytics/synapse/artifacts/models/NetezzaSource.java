@@ -5,42 +5,68 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity Netezza source. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("NetezzaSource")
+/**
+ * A copy activity Netezza source.
+ */
 @Fluent
 public final class NetezzaSource extends TabularSource {
     /*
+     * Copy source type.
+     */
+    @Generated
+    private String type = "NetezzaSource";
+
+    /*
      * A query to retrieve data from source. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "query")
+    @Generated
     private Object query;
 
     /*
      * The partition mechanism that will be used for Netezza read in parallel.
      */
-    @JsonProperty(value = "partitionOption")
+    @Generated
     private NetezzaPartitionOption partitionOption;
 
     /*
      * The settings that will be leveraged for Netezza source partitioning.
      */
-    @JsonProperty(value = "partitionSettings")
+    @Generated
     private NetezzaPartitionSettings partitionSettings;
 
-    /** Creates an instance of NetezzaSource class. */
-    public NetezzaSource() {}
+    /**
+     * Creates an instance of NetezzaSource class.
+     */
+    @Generated
+    public NetezzaSource() {
+    }
+
+    /**
+     * Get the type property: Copy source type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the query property: A query to retrieve data from source. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the query value.
      */
+    @Generated
     public Object getQuery() {
         return this.query;
     }
@@ -48,10 +74,11 @@ public final class NetezzaSource extends TabularSource {
     /**
      * Set the query property: A query to retrieve data from source. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param query the query value to set.
      * @return the NetezzaSource object itself.
      */
+    @Generated
     public NetezzaSource setQuery(Object query) {
         this.query = query;
         return this;
@@ -59,19 +86,21 @@ public final class NetezzaSource extends TabularSource {
 
     /**
      * Get the partitionOption property: The partition mechanism that will be used for Netezza read in parallel.
-     *
+     * 
      * @return the partitionOption value.
      */
+    @Generated
     public NetezzaPartitionOption getPartitionOption() {
         return this.partitionOption;
     }
 
     /**
      * Set the partitionOption property: The partition mechanism that will be used for Netezza read in parallel.
-     *
+     * 
      * @param partitionOption the partitionOption value to set.
      * @return the NetezzaSource object itself.
      */
+    @Generated
     public NetezzaSource setPartitionOption(NetezzaPartitionOption partitionOption) {
         this.partitionOption = partitionOption;
         return this;
@@ -79,56 +108,159 @@ public final class NetezzaSource extends TabularSource {
 
     /**
      * Get the partitionSettings property: The settings that will be leveraged for Netezza source partitioning.
-     *
+     * 
      * @return the partitionSettings value.
      */
+    @Generated
     public NetezzaPartitionSettings getPartitionSettings() {
         return this.partitionSettings;
     }
 
     /**
      * Set the partitionSettings property: The settings that will be leveraged for Netezza source partitioning.
-     *
+     * 
      * @param partitionSettings the partitionSettings value to set.
      * @return the NetezzaSource object itself.
      */
+    @Generated
     public NetezzaSource setPartitionSettings(NetezzaPartitionSettings partitionSettings) {
         this.partitionSettings = partitionSettings;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public NetezzaSource setQueryTimeout(Object queryTimeout) {
         super.setQueryTimeout(queryTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public NetezzaSource setAdditionalColumns(Object additionalColumns) {
         super.setAdditionalColumns(additionalColumns);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public NetezzaSource setSourceRetryCount(Object sourceRetryCount) {
         super.setSourceRetryCount(sourceRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public NetezzaSource setSourceRetryWait(Object sourceRetryWait) {
         super.setSourceRetryWait(sourceRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public NetezzaSource setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getSourceRetryCount() != null) {
+            jsonWriter.writeUntypedField("sourceRetryCount", getSourceRetryCount());
+        }
+        if (getSourceRetryWait() != null) {
+            jsonWriter.writeUntypedField("sourceRetryWait", getSourceRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        if (getQueryTimeout() != null) {
+            jsonWriter.writeUntypedField("queryTimeout", getQueryTimeout());
+        }
+        if (getAdditionalColumns() != null) {
+            jsonWriter.writeUntypedField("additionalColumns", getAdditionalColumns());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.query != null) {
+            jsonWriter.writeUntypedField("query", this.query);
+        }
+        jsonWriter.writeStringField("partitionOption",
+            this.partitionOption == null ? null : this.partitionOption.toString());
+        jsonWriter.writeJsonField("partitionSettings", this.partitionSettings);
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of NetezzaSource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of NetezzaSource if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the NetezzaSource.
+     */
+    @Generated
+    public static NetezzaSource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            NetezzaSource deserializedNetezzaSource = new NetezzaSource();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sourceRetryCount".equals(fieldName)) {
+                    deserializedNetezzaSource.setSourceRetryCount(reader.readUntyped());
+                } else if ("sourceRetryWait".equals(fieldName)) {
+                    deserializedNetezzaSource.setSourceRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedNetezzaSource.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("queryTimeout".equals(fieldName)) {
+                    deserializedNetezzaSource.setQueryTimeout(reader.readUntyped());
+                } else if ("additionalColumns".equals(fieldName)) {
+                    deserializedNetezzaSource.setAdditionalColumns(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedNetezzaSource.type = reader.getString();
+                } else if ("query".equals(fieldName)) {
+                    deserializedNetezzaSource.query = reader.readUntyped();
+                } else if ("partitionOption".equals(fieldName)) {
+                    deserializedNetezzaSource.partitionOption = NetezzaPartitionOption.fromString(reader.getString());
+                } else if ("partitionSettings".equals(fieldName)) {
+                    deserializedNetezzaSource.partitionSettings = NetezzaPartitionSettings.fromJson(reader);
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedNetezzaSource.setAdditionalProperties(additionalProperties);
+
+            return deserializedNetezzaSource;
+        });
     }
 }

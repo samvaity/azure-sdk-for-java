@@ -5,48 +5,57 @@
 package com.azure.storage.file.share.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** Abstract for entries that can be listed from Directory. */
-@JacksonXmlRootElement(localName = "Entries")
+/**
+ * Abstract for entries that can be listed from Directory.
+ */
 @Fluent
-@JsonDeserialize(
-        using = com.azure.storage.file.share.implementation.util.FilesAndDirectoriesListSegmentDeserializer.class)
-public final class FilesAndDirectoriesListSegment {
+public final class FilesAndDirectoriesListSegment implements XmlSerializable<FilesAndDirectoriesListSegment> {
     /*
      * The DirectoryItems property.
      */
-    @JsonProperty("Directory")
+    @Generated
     private List<DirectoryItem> directoryItems = new ArrayList<>();
 
     /*
      * The FileItems property.
      */
-    @JsonProperty("File")
+    @Generated
     private List<FileItem> fileItems = new ArrayList<>();
 
-    /** Creates an instance of FilesAndDirectoriesListSegment class. */
-    public FilesAndDirectoriesListSegment() {}
+    /**
+     * Creates an instance of FilesAndDirectoriesListSegment class.
+     */
+    @Generated
+    public FilesAndDirectoriesListSegment() {
+    }
 
     /**
      * Get the directoryItems property: The DirectoryItems property.
-     *
+     * 
      * @return the directoryItems value.
      */
+    @Generated
     public List<DirectoryItem> getDirectoryItems() {
         return this.directoryItems;
     }
 
     /**
      * Set the directoryItems property: The DirectoryItems property.
-     *
+     * 
      * @param directoryItems the directoryItems value to set.
      * @return the FilesAndDirectoriesListSegment object itself.
      */
+    @Generated
     public FilesAndDirectoriesListSegment setDirectoryItems(List<DirectoryItem> directoryItems) {
         this.directoryItems = directoryItems;
         return this;
@@ -54,21 +63,95 @@ public final class FilesAndDirectoriesListSegment {
 
     /**
      * Get the fileItems property: The FileItems property.
-     *
+     * 
      * @return the fileItems value.
      */
+    @Generated
     public List<FileItem> getFileItems() {
         return this.fileItems;
     }
 
     /**
      * Set the fileItems property: The FileItems property.
-     *
+     * 
      * @param fileItems the fileItems value to set.
      * @return the FilesAndDirectoriesListSegment object itself.
      */
+    @Generated
     public FilesAndDirectoriesListSegment setFileItems(List<FileItem> fileItems) {
         this.fileItems = fileItems;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "Entries" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        if (this.directoryItems != null) {
+            for (DirectoryItem element : this.directoryItems) {
+                xmlWriter.writeXml(element, "Directory");
+            }
+        }
+        if (this.fileItems != null) {
+            for (FileItem element : this.fileItems) {
+                xmlWriter.writeXml(element, "File");
+            }
+        }
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of FilesAndDirectoriesListSegment from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of FilesAndDirectoriesListSegment if the XmlReader was pointing to an instance of it, or null
+     * if it was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the FilesAndDirectoriesListSegment.
+     */
+    @Generated
+    public static FilesAndDirectoriesListSegment fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of FilesAndDirectoriesListSegment from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of FilesAndDirectoriesListSegment if the XmlReader was pointing to an instance of it, or null
+     * if it was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the FilesAndDirectoriesListSegment.
+     */
+    @Generated
+    public static FilesAndDirectoriesListSegment fromXml(XmlReader xmlReader, String rootElementName)
+        throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "Entries" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            FilesAndDirectoriesListSegment deserializedFilesAndDirectoriesListSegment
+                = new FilesAndDirectoriesListSegment();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Directory".equals(elementName.getLocalPart())) {
+                    deserializedFilesAndDirectoriesListSegment.directoryItems
+                        .add(DirectoryItem.fromXml(reader, "Directory"));
+                } else if ("File".equals(elementName.getLocalPart())) {
+                    deserializedFilesAndDirectoriesListSegment.fileItems.add(FileItem.fromXml(reader, "File"));
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedFilesAndDirectoriesListSegment;
+        });
     }
 }

@@ -5,45 +5,57 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The Match model. */
+/**
+ * The Match model.
+ */
 @Fluent
-public final class Match {
+public final class Match implements JsonSerializable<Match> {
     /*
      * If a well known item is recognized, a decimal number denoting the confidence level between 0 and 1 will be
      * returned.
      */
-    @JsonProperty(value = "confidenceScore", required = true)
+    @Generated
     private double confidenceScore;
 
     /*
      * Entity text as appears in the request.
      */
-    @JsonProperty(value = "text", required = true)
+    @Generated
     private String text;
 
     /*
      * Start position for the entity match text.
      */
-    @JsonProperty(value = "offset", required = true)
+    @Generated
     private int offset;
 
     /*
      * Length for the entity match text.
      */
-    @JsonProperty(value = "length", required = true)
+    @Generated
     private int length;
 
-    /** Creates an instance of Match class. */
-    public Match() {}
+    /**
+     * Creates an instance of Match class.
+     */
+    @Generated
+    public Match() {
+    }
 
     /**
      * Get the confidenceScore property: If a well known item is recognized, a decimal number denoting the confidence
      * level between 0 and 1 will be returned.
-     *
+     * 
      * @return the confidenceScore value.
      */
+    @Generated
     public double getConfidenceScore() {
         return this.confidenceScore;
     }
@@ -51,10 +63,11 @@ public final class Match {
     /**
      * Set the confidenceScore property: If a well known item is recognized, a decimal number denoting the confidence
      * level between 0 and 1 will be returned.
-     *
+     * 
      * @param confidenceScore the confidenceScore value to set.
      * @return the Match object itself.
      */
+    @Generated
     public Match setConfidenceScore(double confidenceScore) {
         this.confidenceScore = confidenceScore;
         return this;
@@ -62,19 +75,21 @@ public final class Match {
 
     /**
      * Get the text property: Entity text as appears in the request.
-     *
+     * 
      * @return the text value.
      */
+    @Generated
     public String getText() {
         return this.text;
     }
 
     /**
      * Set the text property: Entity text as appears in the request.
-     *
+     * 
      * @param text the text value to set.
      * @return the Match object itself.
      */
+    @Generated
     public Match setText(String text) {
         this.text = text;
         return this;
@@ -82,19 +97,21 @@ public final class Match {
 
     /**
      * Get the offset property: Start position for the entity match text.
-     *
+     * 
      * @return the offset value.
      */
+    @Generated
     public int getOffset() {
         return this.offset;
     }
 
     /**
      * Set the offset property: Start position for the entity match text.
-     *
+     * 
      * @param offset the offset value to set.
      * @return the Match object itself.
      */
+    @Generated
     public Match setOffset(int offset) {
         this.offset = offset;
         return this;
@@ -102,21 +119,71 @@ public final class Match {
 
     /**
      * Get the length property: Length for the entity match text.
-     *
+     * 
      * @return the length value.
      */
+    @Generated
     public int getLength() {
         return this.length;
     }
 
     /**
      * Set the length property: Length for the entity match text.
-     *
+     * 
      * @param length the length value to set.
      * @return the Match object itself.
      */
+    @Generated
     public Match setLength(int length) {
         this.length = length;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeDoubleField("confidenceScore", this.confidenceScore);
+        jsonWriter.writeStringField("text", this.text);
+        jsonWriter.writeIntField("offset", this.offset);
+        jsonWriter.writeIntField("length", this.length);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of Match from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of Match if the JsonReader was pointing to an instance of it, or null if it was pointing to
+     * JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the Match.
+     */
+    @Generated
+    public static Match fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            Match deserializedMatch = new Match();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("confidenceScore".equals(fieldName)) {
+                    deserializedMatch.confidenceScore = reader.getDouble();
+                } else if ("text".equals(fieldName)) {
+                    deserializedMatch.text = reader.getString();
+                } else if ("offset".equals(fieldName)) {
+                    deserializedMatch.offset = reader.getInt();
+                } else if ("length".equals(fieldName)) {
+                    deserializedMatch.length = reader.getInt();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedMatch;
+        });
     }
 }

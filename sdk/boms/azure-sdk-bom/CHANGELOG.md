@@ -1,5 +1,225 @@
 # Release History
 
+## 1.3.6 (2026-04-07)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+- Added new library entries to the BOM:
+    - [`azure-ai-agents`](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/ai/azure-ai-agents/README.md) 
+    - [`azure-ai-projects`](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/ai/azure-ai-projects/README.md)   
+
+## 1.3.5 (2026-03-05)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+- Added a new library entry to the BOM:
+    - [`azure-ai-contentunderstanding`](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/contentunderstanding/azure-ai-contentunderstanding/README.md)  
+
+## 1.3.4 (2026-01-30)
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.3.3 (2025-11-26)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.3.2 (2025-11-04)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.3.1 (2025-10-10)
+
+### Breaking Changes
+
+- Removed the following libraries from the BOM:
+    - `azure-mixedreality-remoterendering` - Service is deprecated and non-functional since 2025-10-01 see: [retirement notice](https://azure.microsoft.com/updates?id=azure-remote-rendering-retirement)
+
+
+## 1.3.0 (2025-10-02)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+### Breaking Changes
+
+- Removed the following libraries from the BOM:
+    - `azure-ai-formrecognizer` - See the [migration guide](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/documentintelligence/azure-ai-documentintelligence/MIGRATION_GUIDE.md) for details.
+    - `azure-monitor-query` - See the [migration guide](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/monitor/migration-guide-query.md) for details.
+
+## 1.2.38 (2025-09-03)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+- Added a new library entry to the BOM:
+    - [azure-messaging-eventgrid-systemevents](https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/eventgrid/azure-messaging-eventgrid-systemevents)
+
+## 1.2.37 (2025-08-02)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+- Added new library entries to the BOM:
+    - [azure-monitor-query-metrics](https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/monitor/azure-monitor-query-metrics)
+    - [azure-monitor-query-logs](https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/monitor/azure-monitor-query-logs)
+
+## 1.2.36 (2025-06-30)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+- Added ARM libraries to the BOM.
+
+## 1.2.35 (2025-05-27)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.34 (2025-04-28)
+
+### Dependency Updates
+
+- Added a new libary entry to the BOM:
+  - [azure-health-deidentification](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/healthdataaiservices/azure-health-deidentification/README.md)
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.33 (2025-03-28)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.32 (2025-03-06)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.31 (2025-01-28)
+
+### Dependency Updates
+
+- Added a new library entry to the BOM:
+  - [azure-ai-documentintelligence](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/documentintelligence/azure-ai-documentintelligence/README.md)
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.30 (2024-12-04)
+
+### Dependency Updates
+
+- Added a new library entry to the BOM:
+  - [azure-ai-translation-document](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/translation/azure-ai-translation-document/README.md)
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.29 (2024-10-28)
+
+### Dependency Updates
+
+- Added new library entries to the BOM:
+  - `azure-ai-vision-imageanalysis`
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.28 (2024-09-30)
+
+### Dependency Updates
+
+- Added new library entries to the BOM:
+  - `azure-data-schemaregistry-jsonschema`
+  - `azure-health-insights-radiologyinsights`
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.27 (2024-08-27)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.26 (2024-07-30)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.25 (2024-07-02)
+
+### Dependency Updates
+
+- Added new library entries to the BOM:
+  - `azure-messaging-eventgrid-namespaces`
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.24 (2024-05-29)
+
+### Dependency Updates
+
+- Added new library entries to the BOM:
+  - `azure-ai-translation-text`
+  - `azure-developer-devcenter`
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.23 (2024-04-24)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.22 (2024-03-26)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.21 (2024-02-26)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.20 (2024-01-25)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.19 (2023-12-07)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.18 (2023-10-26)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.17 (2023-09-28)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
+## 1.2.16 (2023-08-23)
+
+### Dependency Updates
+
+- Updated Azure SDK dependency versions to the latest releases.
+
 ## 1.2.15 (2023-07-26)
 
 ### Dependency Updates

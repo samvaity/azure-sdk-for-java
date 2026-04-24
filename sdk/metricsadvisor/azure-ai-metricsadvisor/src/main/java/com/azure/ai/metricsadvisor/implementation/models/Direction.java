@@ -4,45 +4,59 @@
 
 package com.azure.ai.metricsadvisor.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** value filter direction. */
+/**
+ * value filter direction.
+ */
 public final class Direction extends ExpandableStringEnum<Direction> {
-    /** Static value Both for Direction. */
+    /**
+     * Static value Both for Direction.
+     */
+    @Generated
     public static final Direction BOTH = fromString("Both");
 
-    /** Static value Down for Direction. */
+    /**
+     * Static value Down for Direction.
+     */
+    @Generated
     public static final Direction DOWN = fromString("Down");
 
-    /** Static value Up for Direction. */
+    /**
+     * Static value Up for Direction.
+     */
+    @Generated
     public static final Direction UP = fromString("Up");
 
     /**
      * Creates a new instance of Direction value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public Direction() {}
+    public Direction() {
+    }
 
     /**
      * Creates or finds a Direction from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding Direction.
      */
-    @JsonCreator
+    @Generated
     public static Direction fromString(String name) {
         return fromString(name, Direction.class);
     }
 
     /**
      * Gets known Direction values.
-     *
+     * 
      * @return known Direction values.
      */
+    @Generated
     public static Collection<Direction> values() {
         return values(Direction.class);
     }

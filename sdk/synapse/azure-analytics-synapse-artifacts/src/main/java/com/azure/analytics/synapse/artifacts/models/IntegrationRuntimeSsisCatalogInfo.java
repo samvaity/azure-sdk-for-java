@@ -5,64 +5,75 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.HashMap;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** Catalog information for managed dedicated integration runtime. */
+/**
+ * Catalog information for managed dedicated integration runtime.
+ */
 @Fluent
-public final class IntegrationRuntimeSsisCatalogInfo {
+public final class IntegrationRuntimeSsisCatalogInfo implements JsonSerializable<IntegrationRuntimeSsisCatalogInfo> {
     /*
      * The catalog database server URL.
      */
-    @JsonProperty(value = "catalogServerEndpoint")
+    @Generated
     private String catalogServerEndpoint;
 
     /*
      * The administrator user name of catalog database.
      */
-    @JsonProperty(value = "catalogAdminUserName")
+    @Generated
     private String catalogAdminUserName;
 
     /*
      * The password of the administrator user account of the catalog database.
      */
-    @JsonProperty(value = "catalogAdminPassword")
+    @Generated
     private SecureString catalogAdminPassword;
 
     /*
      * The pricing tier for the catalog database. The valid values could be found in
      * https://azure.microsoft.com/en-us/pricing/details/sql-database/
      */
-    @JsonProperty(value = "catalogPricingTier")
+    @Generated
     private IntegrationRuntimeSsisCatalogPricingTier catalogPricingTier;
 
     /*
      * Catalog information for managed dedicated integration runtime.
      */
-    @JsonIgnore private Map<String, Object> additionalProperties;
+    @Generated
+    private Map<String, Object> additionalProperties;
 
-    /** Creates an instance of IntegrationRuntimeSsisCatalogInfo class. */
-    public IntegrationRuntimeSsisCatalogInfo() {}
+    /**
+     * Creates an instance of IntegrationRuntimeSsisCatalogInfo class.
+     */
+    @Generated
+    public IntegrationRuntimeSsisCatalogInfo() {
+    }
 
     /**
      * Get the catalogServerEndpoint property: The catalog database server URL.
-     *
+     * 
      * @return the catalogServerEndpoint value.
      */
+    @Generated
     public String getCatalogServerEndpoint() {
         return this.catalogServerEndpoint;
     }
 
     /**
      * Set the catalogServerEndpoint property: The catalog database server URL.
-     *
+     * 
      * @param catalogServerEndpoint the catalogServerEndpoint value to set.
      * @return the IntegrationRuntimeSsisCatalogInfo object itself.
      */
+    @Generated
     public IntegrationRuntimeSsisCatalogInfo setCatalogServerEndpoint(String catalogServerEndpoint) {
         this.catalogServerEndpoint = catalogServerEndpoint;
         return this;
@@ -70,19 +81,21 @@ public final class IntegrationRuntimeSsisCatalogInfo {
 
     /**
      * Get the catalogAdminUserName property: The administrator user name of catalog database.
-     *
+     * 
      * @return the catalogAdminUserName value.
      */
+    @Generated
     public String getCatalogAdminUserName() {
         return this.catalogAdminUserName;
     }
 
     /**
      * Set the catalogAdminUserName property: The administrator user name of catalog database.
-     *
+     * 
      * @param catalogAdminUserName the catalogAdminUserName value to set.
      * @return the IntegrationRuntimeSsisCatalogInfo object itself.
      */
+    @Generated
     public IntegrationRuntimeSsisCatalogInfo setCatalogAdminUserName(String catalogAdminUserName) {
         this.catalogAdminUserName = catalogAdminUserName;
         return this;
@@ -90,19 +103,21 @@ public final class IntegrationRuntimeSsisCatalogInfo {
 
     /**
      * Get the catalogAdminPassword property: The password of the administrator user account of the catalog database.
-     *
+     * 
      * @return the catalogAdminPassword value.
      */
+    @Generated
     public SecureString getCatalogAdminPassword() {
         return this.catalogAdminPassword;
     }
 
     /**
      * Set the catalogAdminPassword property: The password of the administrator user account of the catalog database.
-     *
+     * 
      * @param catalogAdminPassword the catalogAdminPassword value to set.
      * @return the IntegrationRuntimeSsisCatalogInfo object itself.
      */
+    @Generated
     public IntegrationRuntimeSsisCatalogInfo setCatalogAdminPassword(SecureString catalogAdminPassword) {
         this.catalogAdminPassword = catalogAdminPassword;
         return this;
@@ -111,9 +126,10 @@ public final class IntegrationRuntimeSsisCatalogInfo {
     /**
      * Get the catalogPricingTier property: The pricing tier for the catalog database. The valid values could be found
      * in https://azure.microsoft.com/en-us/pricing/details/sql-database/.
-     *
+     * 
      * @return the catalogPricingTier value.
      */
+    @Generated
     public IntegrationRuntimeSsisCatalogPricingTier getCatalogPricingTier() {
         return this.catalogPricingTier;
     }
@@ -121,42 +137,97 @@ public final class IntegrationRuntimeSsisCatalogInfo {
     /**
      * Set the catalogPricingTier property: The pricing tier for the catalog database. The valid values could be found
      * in https://azure.microsoft.com/en-us/pricing/details/sql-database/.
-     *
+     * 
      * @param catalogPricingTier the catalogPricingTier value to set.
      * @return the IntegrationRuntimeSsisCatalogInfo object itself.
      */
-    public IntegrationRuntimeSsisCatalogInfo setCatalogPricingTier(
-            IntegrationRuntimeSsisCatalogPricingTier catalogPricingTier) {
+    @Generated
+    public IntegrationRuntimeSsisCatalogInfo
+        setCatalogPricingTier(IntegrationRuntimeSsisCatalogPricingTier catalogPricingTier) {
         this.catalogPricingTier = catalogPricingTier;
         return this;
     }
 
     /**
      * Get the additionalProperties property: Catalog information for managed dedicated integration runtime.
-     *
+     * 
      * @return the additionalProperties value.
      */
-    @JsonAnyGetter
+    @Generated
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     /**
      * Set the additionalProperties property: Catalog information for managed dedicated integration runtime.
-     *
+     * 
      * @param additionalProperties the additionalProperties value to set.
      * @return the IntegrationRuntimeSsisCatalogInfo object itself.
      */
+    @Generated
     public IntegrationRuntimeSsisCatalogInfo setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
         return this;
     }
 
-    @JsonAnySetter
-    void setAdditionalProperties(String key, Object value) {
-        if (additionalProperties == null) {
-            additionalProperties = new HashMap<>();
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("catalogServerEndpoint", this.catalogServerEndpoint);
+        jsonWriter.writeStringField("catalogAdminUserName", this.catalogAdminUserName);
+        jsonWriter.writeJsonField("catalogAdminPassword", this.catalogAdminPassword);
+        jsonWriter.writeStringField("catalogPricingTier",
+            this.catalogPricingTier == null ? null : this.catalogPricingTier.toString());
+        if (additionalProperties != null) {
+            for (Map.Entry<String, Object> additionalProperty : additionalProperties.entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
         }
-        additionalProperties.put(key, value);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of IntegrationRuntimeSsisCatalogInfo from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of IntegrationRuntimeSsisCatalogInfo if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the IntegrationRuntimeSsisCatalogInfo.
+     */
+    @Generated
+    public static IntegrationRuntimeSsisCatalogInfo fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            IntegrationRuntimeSsisCatalogInfo deserializedIntegrationRuntimeSsisCatalogInfo
+                = new IntegrationRuntimeSsisCatalogInfo();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("catalogServerEndpoint".equals(fieldName)) {
+                    deserializedIntegrationRuntimeSsisCatalogInfo.catalogServerEndpoint = reader.getString();
+                } else if ("catalogAdminUserName".equals(fieldName)) {
+                    deserializedIntegrationRuntimeSsisCatalogInfo.catalogAdminUserName = reader.getString();
+                } else if ("catalogAdminPassword".equals(fieldName)) {
+                    deserializedIntegrationRuntimeSsisCatalogInfo.catalogAdminPassword = SecureString.fromJson(reader);
+                } else if ("catalogPricingTier".equals(fieldName)) {
+                    deserializedIntegrationRuntimeSsisCatalogInfo.catalogPricingTier
+                        = IntegrationRuntimeSsisCatalogPricingTier.fromString(reader.getString());
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedIntegrationRuntimeSsisCatalogInfo.additionalProperties = additionalProperties;
+
+            return deserializedIntegrationRuntimeSsisCatalogInfo;
+        });
     }
 }

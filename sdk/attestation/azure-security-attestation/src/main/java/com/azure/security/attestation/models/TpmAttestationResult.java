@@ -5,6 +5,7 @@ package com.azure.security.attestation.models;
 
 import com.azure.core.annotation.Immutable;
 import com.azure.core.util.BinaryData;
+
 /**
  * The TpmAttestationResult class represents Tpm Attestation response data.
  *
@@ -22,7 +23,11 @@ public class TpmAttestationResult {
         this.tpmResult = result;
     }
 
-    /** @return known Tpm Attestation Result. */
+    /**
+     * Returns the known Tpm Attestation result.
+     *
+     * @return the known Tpm Attestation Result.
+     */
     public BinaryData getTpmResult() {
         return tpmResult;
     }

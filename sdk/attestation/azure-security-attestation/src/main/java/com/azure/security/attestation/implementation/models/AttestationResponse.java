@@ -5,33 +5,48 @@
 package com.azure.security.attestation.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The result of an attestation operation. */
+/**
+ * The result of an attestation operation.
+ */
 @Fluent
-public final class AttestationResponse {
+public final class AttestationResponse implements JsonSerializable<AttestationResponse> {
     /*
-     * An RFC 7519 JSON Web Token, the body of which is an AttestationResult
-     * object.
+     * An RFC 7519 JSON Web Token, the body of which is an AttestationResult object.
      */
-    @JsonProperty(value = "token")
+    @Generated
     private String token;
 
     /**
+     * Creates an instance of AttestationResponse class.
+     */
+    @Generated
+    public AttestationResponse() {
+    }
+
+    /**
      * Get the token property: An RFC 7519 JSON Web Token, the body of which is an AttestationResult object.
-     *
+     * 
      * @return the token value.
      */
+    @Generated
     public String getToken() {
         return this.token;
     }
 
     /**
      * Set the token property: An RFC 7519 JSON Web Token, the body of which is an AttestationResult object.
-     *
+     * 
      * @param token the token value to set.
      * @return the AttestationResponse object itself.
      */
+    @Generated
     public AttestationResponse setToken(String token) {
         this.token = token;
         return this;
@@ -39,8 +54,47 @@ public final class AttestationResponse {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
-    public void validate() {}
+    public void validate() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("token", this.token);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AttestationResponse from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AttestationResponse if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the AttestationResponse.
+     */
+    @Generated
+    public static AttestationResponse fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AttestationResponse deserializedAttestationResponse = new AttestationResponse();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("token".equals(fieldName)) {
+                    deserializedAttestationResponse.token = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedAttestationResponse;
+        });
+    }
 }

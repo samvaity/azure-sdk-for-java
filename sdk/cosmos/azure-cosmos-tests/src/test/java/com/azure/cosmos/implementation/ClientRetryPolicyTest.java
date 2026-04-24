@@ -6,31 +6,182 @@ package com.azure.cosmos.implementation;
 import com.azure.cosmos.BridgeInternal;
 import com.azure.cosmos.CosmosException;
 import com.azure.cosmos.ThrottlingRetryOptions;
+import com.azure.cosmos.implementation.directconnectivity.ChannelAcquisitionException;
+import com.azure.cosmos.implementation.directconnectivity.WFConstants;
+import com.azure.cosmos.implementation.perPartitionAutomaticFailover.GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover;
+import com.azure.cosmos.implementation.perPartitionCircuitBreaker.GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker;
+import com.azure.cosmos.implementation.routing.RegionalRoutingContext;
 import io.netty.handler.timeout.ReadTimeoutException;
-import io.reactivex.subscribers.TestSubscriber;
 import org.mockito.Mockito;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import javax.net.ssl.SSLHandshakeException;
 import java.net.SocketException;
 import java.net.URI;
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.azure.cosmos.implementation.TestUtils.mockDiagnosticsClientContext;
 
 public class ClientRetryPolicyTest {
     private final static int TIMEOUT = 10000;
+    private final static String TEST_DOCUMENT_PATH = "/dbs/db/colls/col/docs/doc";
+    private final static String TEST_DATABASE_PATH = "/dbs/db";
+
+    @DataProvider(name = "operationProvider")
+    public static Object[][] operationProvider() {
+        return new Object[][]{
+            // OperationType, ResourceType, isAddressRequest, RequestFullPath, ShouldRetryCrossRegion
+            { OperationType.Read, ResourceType.Document, Boolean.FALSE, TEST_DOCUMENT_PATH, Boolean.TRUE },
+            { OperationType.Read, ResourceType.Document, Boolean.TRUE, TEST_DOCUMENT_PATH, Boolean.TRUE },
+            { OperationType.Create, ResourceType.Document, Boolean.FALSE, TEST_DOCUMENT_PATH, Boolean.FALSE },
+            { OperationType.Create, ResourceType.Document, Boolean.TRUE, TEST_DOCUMENT_PATH, Boolean.FALSE },
+            { OperationType.Read, ResourceType.Database, Boolean.FALSE, TEST_DATABASE_PATH, Boolean.TRUE },
+            { OperationType.Create, ResourceType.Database, Boolean.FALSE, TEST_DATABASE_PATH, Boolean.FALSE },
+            { OperationType.QueryPlan, ResourceType.Document, Boolean.FALSE, TEST_DOCUMENT_PATH, Boolean.TRUE }
+        };
+    }
+
+    @DataProvider(name = "requestRateTooLargeArgProvider")
+    public static Object[][] requestRateTooLargeArgProvider() {
+        return new Object[][]{
+            // OperationType, ResourceType, useMetadataThrottling
+            { OperationType.ReadFeed, ResourceType.PartitionKeyRange, true },
+            { OperationType.Read, ResourceType.Document, false },
+            { OperationType.ReadFeed, ResourceType.DocumentCollection, false }
+        };
+    }
+
+    @DataProvider(name = "exceptionArgsProvider")
+    public static Object[][] exceptionArgsProvider() {
+        return new Object[][]{
+            {new ServiceUnavailableException(), OperationType.Read},
+            {new ServiceUnavailableException(), OperationType.Create},
+            {new InternalServerErrorException(), OperationType.Read},
+            {new InternalServerErrorException(), OperationType.Create},
+            {new RequestTimeoutException(null, null, HttpConstants.SubStatusCodes.TRANSIT_TIMEOUT), OperationType.Create},
+            {new RequestTimeoutException(null, new ReadTimeoutException(), null, null, HttpConstants.SubStatusCodes.GATEWAY_ENDPOINT_READ_TIMEOUT), OperationType.Create},
+            {new RequestTimeoutException(null, new ReadTimeoutException(), null, null, HttpConstants.SubStatusCodes.GATEWAY_ENDPOINT_READ_TIMEOUT), OperationType.Read},
+        };
+    }
+
+    @DataProvider(name = "requestRateTooLarge_batch_ArgProvider")
+    public static Object[][] requestRateTooLarge_batch_ArgProvider() {
+        return new Object[][]{
+            // OperationType, ResourceType, disableRetryForThrottledBatchRequest
+            { OperationType.Batch, ResourceType.Document, true },
+            { OperationType.Batch, ResourceType.Document, false },
+            { OperationType.Batch, ResourceType.DocumentCollection, true },
+            { OperationType.Read, ResourceType.Document, true }
+        };
+    }
+
+    @Test(groups = "unit", dataProvider = "requestRateTooLargeArgProvider")
+    public void requestRateTooLarge(
+        OperationType operationType,
+        ResourceType resourceType,
+        boolean useMetadataThrottlingPolicy) throws Exception {
+        ThrottlingRetryOptions throttlingRetryOptions =
+            new ThrottlingRetryOptions().setMaxRetryAttemptsOnThrottledRequests(1);
+        GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito
+            .doReturn(new RegionalRoutingContext(new URI("http://localhost")))
+            .when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            throttlingRetryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            false);
+
+        // Create throttling exception with retry delay
+        Map<String, String> headers = new HashMap<>();
+        headers.put(
+            HttpConstants.HttpHeaders.RETRY_AFTER_IN_MILLISECONDS,
+            "1000");
+        headers.put(WFConstants.BackendHeaders.SUB_STATUS,
+            Integer.toString(HttpConstants.SubStatusCodes.USER_REQUEST_RATE_TOO_LARGE));
+        RequestRateTooLargeException throttlingException = new RequestRateTooLargeException(null, 1, "1", headers);
+
+        RxDocumentServiceRequest request = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
+            operationType,
+            "/dbs/db/colls/col",
+            resourceType);
+        request.requestContext = new DocumentServiceRequestContext();
+        request.requestContext.routeToLocation(0, true);
+
+        clientRetryPolicy.onBeforeSendRequest(request);
+
+        Mono<ShouldRetryResult> shouldRetry = clientRetryPolicy.shouldRetry(throttlingException);
+        validateSuccess(shouldRetry, ShouldRetryValidator.builder()
+            .nullException()
+            .shouldRetry(true)
+            .build());
+
+        shouldRetry = clientRetryPolicy.shouldRetry(throttlingException);
+        if (useMetadataThrottlingPolicy) {
+            validateSuccess(shouldRetry, ShouldRetryValidator.builder()
+                .nullException()
+                .shouldRetry(true)
+                .build());
+        } else {
+            validateSuccess(shouldRetry, ShouldRetryValidator.builder()
+                .shouldRetry(false)
+                .build());
+        }
+    }
+
+    @DataProvider(name = "tcpNetworkFailureOnWriteArgProvider")
+    public static Object[][] tcpNetworkFailureOnWriteArgProvider() {
+        return new Object[][]{
+            // internal exception, canUseMultipleWriteLocations, nonIdempotentWriteRetriesEnabled, shouldRetry
+            { new SocketException("Dummy socket exception"), false, true, false },
+            { new SSLHandshakeException("test"), false, true, false },
+            { new ChannelAcquisitionException("test channel acquisition failed"), false, true, false },
+
+            // when canUseMultipleWriteLocations
+            { new SocketException("Dummy socket exception"), true, false, false },
+            { new SSLHandshakeException("test"), true, false, true },
+            { new ChannelAcquisitionException("test channel acquisition failed"), true, false, true },
+            { new SocketException("Dummy socket exception"), true, true, true },
+            { new SSLHandshakeException("test"), true, true, true },
+            { new ChannelAcquisitionException("test channel acquisition failed"), true, true, true }
+        };
+    }
 
     @Test(groups = "unit")
     public void networkFailureOnRead() throws Exception {
         ThrottlingRetryOptions throttlingRetryOptions = new ThrottlingRetryOptions();
         GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        Mockito.doReturn(new RegionalRoutingContext(new URI("http://localhost"))).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
         Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, throttlingRetryOptions, null);
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            throttlingRetryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            false);
 
         Exception exception = new SocketException("Dummy SocketException");
         CosmosException cosmosException = BridgeInternal.createCosmosException(null, HttpConstants.StatusCodes.SERVICE_UNAVAILABLE, exception);
@@ -48,7 +199,7 @@ public class ClientRetryPolicyTest {
             validateSuccess(shouldRetry, ShouldRetryValidator.builder()
                     .nullException()
                     .shouldRetry(true)
-                    .backOfTime(Duration.ofMillis(ClientRetryPolicy.RetryIntervalInMS))
+                    .backOffTime(Duration.ofMillis(ClientRetryPolicy.RetryIntervalInMS))
                     .build());
 
             Mockito.verify(endpointManager, Mockito.times(i + 1)).markEndpointUnavailableForRead(Mockito.any());
@@ -58,13 +209,31 @@ public class ClientRetryPolicyTest {
         }
     }
 
-    @Test(groups = "unit")
-    public void shouldRetryOnGatewayTimeout() throws Exception {
+    @Test(groups = { "unit" }, dataProvider = "operationProvider")
+    public void shouldRetryOnGatewayTimeout(
+        OperationType operationType,
+        ResourceType resourceType,
+        boolean isAddressRefresh,
+        String resourceFullPath,
+        boolean shouldCrossRegionRetry) throws Exception {
         ThrottlingRetryOptions throttlingRetryOptions = new ThrottlingRetryOptions();
         GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito.doReturn(new RegionalRoutingContext(new URI("http://localhost"))).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
         Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(true));
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, throttlingRetryOptions, null);
+        ClientRetryPolicy clientRetryPolicy =
+            new ClientRetryPolicy(
+                mockDiagnosticsClientContext(),
+                endpointManager,
+                true,
+                throttlingRetryOptions,
+                globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+                globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+                false);
 
         Exception exception = ReadTimeoutException.INSTANCE;
         CosmosException cosmosException = BridgeInternal.createCosmosException(null, HttpConstants.StatusCodes.REQUEST_TIMEOUT, exception);
@@ -73,81 +242,45 @@ public class ClientRetryPolicyTest {
         RxDocumentServiceRequest dsr;
         Mono<ShouldRetryResult> shouldRetry;
 
-        //Data Plane Read
-        dsr = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
-            OperationType.Read, "/dbs/db/colls/col/docs/doc", ResourceType.Document);
+        dsr = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(), operationType, resourceFullPath, resourceType);
+        dsr.setAddressRefresh(isAddressRefresh, false);
 
         clientRetryPolicy.onBeforeSendRequest(dsr);
         shouldRetry = clientRetryPolicy.shouldRetry(cosmosException);
-
-        validateSuccess(shouldRetry, ShouldRetryValidator.builder()
-            .nullException()
-            .shouldRetry(true)
-            .backOfTime(Duration.ofMillis(1000))
-            .build());
-
-        //Metadata Read
-        dsr = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
-            OperationType.Read, "/dbs/db/clls/col/docs/doc", ResourceType.Database);
-
-        clientRetryPolicy.onBeforeSendRequest(dsr);
-
-        shouldRetry = clientRetryPolicy.shouldRetry(cosmosException);
-
-        validateSuccess(shouldRetry, ShouldRetryValidator.builder()
-            .nullException()
-            .shouldRetry(true)
-            .backOfTime(Duration.ofMillis(1000))
-            .build());
-
-        //Query Plan
-        dsr = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
-            OperationType.QueryPlan, "/dbs/db/colls/col/docs/doc", ResourceType.Document);
-
-        clientRetryPolicy.onBeforeSendRequest(dsr);
-
-        shouldRetry = clientRetryPolicy.shouldRetry(cosmosException);
-
-        validateSuccess(shouldRetry, ShouldRetryValidator.builder()
-            .nullException()
-            .shouldRetry(true)
-            .backOfTime(Duration.ofMillis(1000))
-            .build());
-
-        //Data Plane Write - Should not retry
-        dsr = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
-            OperationType.Create, "/dbs/db/colls/col/docs/doc", ResourceType.Document);
-
-        clientRetryPolicy.onBeforeSendRequest(dsr);
-        shouldRetry = clientRetryPolicy.shouldRetry(cosmosException);
-
-        validateSuccess(shouldRetry, ShouldRetryValidator.builder()
-            .nullException()
-            .shouldRetry(false)
-            .build());
-
-        //Metadata Write - Should not Retry
-        dsr = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
-            OperationType.Create, "/dbs/db/colls/col/docs/docId", ResourceType.Database);
-
-        clientRetryPolicy.onBeforeSendRequest(dsr);
-
-        shouldRetry = clientRetryPolicy.shouldRetry(cosmosException);
-
-        validateSuccess(shouldRetry, ShouldRetryValidator.builder()
-            .nullException()
-            .shouldRetry(false)
-            .build());
+        if (shouldCrossRegionRetry) {
+            validateSuccess(shouldRetry, ShouldRetryValidator.builder()
+                .nullException()
+                .shouldRetry(true)
+                .backOffTime(Duration.ofMillis(1000))
+                .build());
+        } else {
+            validateSuccess(shouldRetry, ShouldRetryValidator.builder()
+                .nullException()
+                .shouldRetry(false)
+                .build());
+        }
     }
 
     @Test(groups = "unit")
     public void tcpNetworkFailureOnRead() throws Exception {
         ThrottlingRetryOptions retryOptions = new ThrottlingRetryOptions();
         GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito.doReturn(new RegionalRoutingContext(new URI("http://localhost"))).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
         Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
         Mockito.doReturn(2).when(endpointManager).getPreferredLocationCount();
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, retryOptions, null);
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            retryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            false);
 
         Exception exception = ReadTimeoutException.INSTANCE;
         GoneException goneException = new GoneException(exception);
@@ -168,7 +301,7 @@ public class ClientRetryPolicyTest {
                 validateSuccess(shouldRetry, ShouldRetryValidator.builder()
                     .nullException()
                     .shouldRetry(true)
-                    .backOfTime(Duration.ofMillis(0))
+                    .backOffTime(Duration.ofMillis(0))
                     .build());
 
                 Assert.assertTrue(clientRetryPolicy.canUsePreferredLocations());
@@ -190,9 +323,21 @@ public class ClientRetryPolicyTest {
     public void networkFailureOnWrite() throws Exception {
         ThrottlingRetryOptions throttlingRetryOptions = new ThrottlingRetryOptions();
         GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito.doReturn(new RegionalRoutingContext(new URI("http://localhost"))).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
         Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, throttlingRetryOptions, null);
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            throttlingRetryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            false);
 
         Exception exception = new SocketException("Dummy SocketException");;
         CosmosException cosmosException = BridgeInternal.createCosmosException(null, HttpConstants.StatusCodes.SERVICE_UNAVAILABLE, exception);
@@ -215,69 +360,77 @@ public class ClientRetryPolicyTest {
         }
     }
 
-    @Test(groups = "unit")
-    public void tcpNetworkFailureOnWrite() throws Exception {
+    @Test(groups = "unit", dataProvider = "tcpNetworkFailureOnWriteArgProvider")
+    public void tcpNetworkFailureOnWrite(
+        Exception exception,
+        boolean canUseMultiWriteLocations,
+        boolean nonIdempotentWriteRetriesEnabled,
+        boolean shouldRetry) throws Exception {
         ThrottlingRetryOptions retryOptions = new ThrottlingRetryOptions();
         GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito.doReturn(new RegionalRoutingContext(new URI("http://localhost"))).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
         Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
         Mockito.doReturn(2).when(endpointManager).getPreferredLocationCount();
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, retryOptions, null);
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            retryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            false);
 
         //Non retribale exception for write
-        Exception exception = new SocketException("Dummy SocketException");;
         GoneException goneException = new GoneException(exception);
         CosmosException cosmosException = BridgeInternal.createCosmosException(null, HttpConstants.StatusCodes.SERVICE_UNAVAILABLE, goneException);
 
         RxDocumentServiceRequest dsr = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
             OperationType.Create, "/dbs/db/colls/col/docs/docId", ResourceType.Document);
         dsr.requestContext = new DocumentServiceRequestContext();
+        dsr.setNonIdempotentWriteRetriesEnabled(nonIdempotentWriteRetriesEnabled);
+        Mockito.when(endpointManager.canUseMultipleWriteLocations(dsr)).thenReturn(canUseMultiWriteLocations);
 
         clientRetryPolicy.onBeforeSendRequest(dsr);
+        if (shouldRetry) {
+            for (int i = 0; i < 10; i++) {
+                Mono<ShouldRetryResult> retryResult = clientRetryPolicy.shouldRetry(cosmosException);
+                if (i < 2) {
+                    validateSuccess(retryResult, ShouldRetryValidator.builder()
+                        .nullException()
+                        .shouldRetry(true)
+                        .backOffTime(Duration.ofMillis(0))
+                        .build());
 
-        for (int i = 0; i < 10; i++) {
-            Mono<ShouldRetryResult> shouldRetry = clientRetryPolicy.shouldRetry(cosmosException);
-            //  We don't want to retry writes on network failure with non retriable exception
-            validateSuccess(shouldRetry, ShouldRetryValidator.builder()
-                .nullException()
-                .shouldRetry(false)
-                .build());
+                    Assert.assertTrue(clientRetryPolicy.canUsePreferredLocations());
+                } else {
+                    validateSuccess(retryResult, ShouldRetryValidator.builder()
+                        .nullException()
+                        .shouldRetry(false)
+                        .build());
 
-            Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForRead(Mockito.any());
-            Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForWrite(Mockito.any());
-        }
+                    Assert.assertFalse(clientRetryPolicy.canUsePreferredLocations());
+                }
 
-        // Retriable exception scenario
-        exception = new SSLHandshakeException("test");
-        goneException = new GoneException(exception);
-        cosmosException = BridgeInternal.createCosmosException(null, HttpConstants.StatusCodes.SERVICE_UNAVAILABLE, goneException);
-
-        Mockito.doReturn(true).when(endpointManager).canUseMultipleWriteLocations(Mockito.any(RxDocumentServiceRequest.class));
-        clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, retryOptions, null);
-        clientRetryPolicy.onBeforeSendRequest(dsr);
-
-        for (int i = 0; i < 10; i++) {
-            Mono<ShouldRetryResult> shouldRetry = clientRetryPolicy.shouldRetry(cosmosException);
-            //  We want to retry writes on network failure with retriable exception
-            if (i < 2) {
-                validateSuccess(shouldRetry, ShouldRetryValidator.builder()
-                    .nullException()
-                    .shouldRetry(true)
-                    .backOfTime(Duration.ofMillis(0))
-                    .build());
-
-                Assert.assertTrue(clientRetryPolicy.canUsePreferredLocations());
-            } else {
-                validateSuccess(shouldRetry, ShouldRetryValidator.builder()
+                Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForRead(Mockito.any());
+                Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForWrite(Mockito.any());
+            }
+        } else {
+            for (int i = 0; i < 10; i++) {
+                Mono<ShouldRetryResult> retryResult = clientRetryPolicy.shouldRetry(cosmosException);
+                //  We don't want to retry writes on network failure with non retriable exception
+                validateSuccess(retryResult, ShouldRetryValidator.builder()
                     .nullException()
                     .shouldRetry(false)
                     .build());
 
-                Assert.assertFalse(clientRetryPolicy.canUsePreferredLocations());
+                Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForRead(Mockito.any());
+                Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForWrite(Mockito.any());
             }
-
-            Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForRead(Mockito.any());
-            Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForWrite(Mockito.any());
         }
     }
 
@@ -285,9 +438,21 @@ public class ClientRetryPolicyTest {
     public void networkFailureOnUpsert() throws Exception {
         ThrottlingRetryOptions throttlingRetryOptions = new ThrottlingRetryOptions();
         GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito.doReturn(new RegionalRoutingContext(new URI("http://localhost"))).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
         Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, throttlingRetryOptions, null);
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            throttlingRetryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            false);
 
         Exception exception = new SocketException("Dummy SocketException");
         CosmosException cosmosException = BridgeInternal.createCosmosException(null, HttpConstants.StatusCodes.SERVICE_UNAVAILABLE, exception);
@@ -316,10 +481,22 @@ public class ClientRetryPolicyTest {
     public void tcpNetworkFailureOnUpsert() throws Exception {
         ThrottlingRetryOptions retryOptions = new ThrottlingRetryOptions();
         GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito.doReturn(new RegionalRoutingContext(new URI("http://localhost"))).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
         Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
         Mockito.doReturn(2).when(endpointManager).getPreferredLocationCount();
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, retryOptions, null);
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            retryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            false);
 
         Exception exception = new SocketException("Dummy SocketException");
         GoneException goneException = new GoneException(exception);
@@ -350,9 +527,21 @@ public class ClientRetryPolicyTest {
     public void networkFailureOnDelete() throws Exception {
         ThrottlingRetryOptions throttlingRetryOptions = new ThrottlingRetryOptions();
         GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito.doReturn(new RegionalRoutingContext(new URI("http://localhost"))).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
         Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, throttlingRetryOptions, null);
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            throttlingRetryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            false);
 
         Exception exception = ReadTimeoutException.INSTANCE;
         CosmosException cosmosException = BridgeInternal.createCosmosException(
@@ -382,10 +571,22 @@ public class ClientRetryPolicyTest {
     public void tcpNetworkFailureOnDelete() throws Exception {
         ThrottlingRetryOptions retryOptions = new ThrottlingRetryOptions();
         GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito.doReturn(new RegionalRoutingContext(new URI("http://localhost"))).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
         Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
         Mockito.doReturn(2).when(endpointManager).getPreferredLocationCount();
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, retryOptions, null);
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            retryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            false);
 
         Exception exception = ReadTimeoutException.INSTANCE;
         GoneException goneException = new GoneException(exception);
@@ -413,89 +614,23 @@ public class ClientRetryPolicyTest {
     }
 
     @Test(groups = "unit")
-    public void httpNetworkFailureOnQueryPlan() throws Exception {
-        ThrottlingRetryOptions retryOptions = new ThrottlingRetryOptions();
-        GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
-        Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(true));
-        Mockito.doReturn(2).when(endpointManager).getPreferredLocationCount();
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, retryOptions, null);
-
-        Exception exception = ReadTimeoutException.INSTANCE;
-        CosmosException cosmosException =
-            BridgeInternal.createCosmosException(null, HttpConstants.StatusCodes.REQUEST_TIMEOUT, exception);
-        BridgeInternal.setSubStatusCode(cosmosException, HttpConstants.SubStatusCodes.GATEWAY_ENDPOINT_READ_TIMEOUT);
-
-        RxDocumentServiceRequest dsr = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
-            OperationType.QueryPlan, "/dbs/db/colls/col/docs/", ResourceType.Document);
-        dsr.requestContext = new DocumentServiceRequestContext();
-
-        clientRetryPolicy.onBeforeSendRequest(dsr);
-
-        for (int i = 0; i < 10; i++) {
-            Mono<ShouldRetryResult> shouldRetry = clientRetryPolicy.shouldRetry(cosmosException);
-
-            validateSuccess(shouldRetry, ShouldRetryValidator.builder()
-                .nullException()
-                .shouldRetry(true)
-                .backOfTime(Duration.ofMillis(1000))
-                .build());
-
-            Mockito.verify(endpointManager, Mockito.times(i+1)).markEndpointUnavailableForRead(Mockito.any());
-            Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForWrite(Mockito.any());
-        }
-    }
-
-    @Test(groups = "unit")
-    public void httpNetworkFailureOnAddressRefresh() throws Exception {
-        ThrottlingRetryOptions retryOptions = new ThrottlingRetryOptions();
-        GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
-        Mockito.doReturn(new URI("http://localhost")).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
-        Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
-        Mockito.doReturn(2).when(endpointManager).getPreferredLocationCount();
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, retryOptions, null);
-
-        Exception exception = ReadTimeoutException.INSTANCE;
-        CosmosException cosmosException =
-            BridgeInternal.createCosmosException(null, HttpConstants.StatusCodes.REQUEST_TIMEOUT, exception);
-        BridgeInternal.setSubStatusCode(cosmosException, HttpConstants.SubStatusCodes.GATEWAY_ENDPOINT_READ_TIMEOUT);
-
-        RxDocumentServiceRequest dsr = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
-            OperationType.Read, "/dbs/db/colls/col/docs/", ResourceType.Document);
-        dsr.setAddressRefresh(true, false);
-        dsr.requestContext = new DocumentServiceRequestContext();
-
-        clientRetryPolicy.onBeforeSendRequest(dsr);
-
-        for (int i = 0; i < 10; i++) {
-            Mono<ShouldRetryResult> shouldRetry = clientRetryPolicy.shouldRetry(cosmosException);
-
-            if (i < 3) {
-                validateSuccess(shouldRetry, ShouldRetryValidator.builder()
-                                                 .nullException()
-                                                 .shouldRetry(true)
-                                                 .backOfTime(Duration.ofMillis(0))
-                                                 .build());
-            } else {
-                validateSuccess(shouldRetry, ShouldRetryValidator.builder()
-                                                 .nullException()
-                                                 .shouldRetry(false)
-                                                 .build());
-            }
-
-            Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForRead(Mockito.any());
-            Mockito.verify(endpointManager, Mockito.times(0)).markEndpointUnavailableForWrite(Mockito.any());
-        }
-    }
-
-
-    @Test(groups = "unit")
     public void onBeforeSendRequestNotInvoked() {
         ThrottlingRetryOptions throttlingRetryOptions = new ThrottlingRetryOptions();
         GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
 
         Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
-        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(mockDiagnosticsClientContext(), endpointManager, true, throttlingRetryOptions, null);
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            throttlingRetryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            false);
 
         Exception exception = ReadTimeoutException.INSTANCE;
 
@@ -512,6 +647,112 @@ public class ClientRetryPolicyTest {
         Mockito.verifyNoInteractions(endpointManager);
     }
 
+    @Test(groups = "unit", dataProvider = "exceptionArgsProvider")
+    public void returnWithInternalServerErrorOnPpcbFailure(CosmosException cosmosException, OperationType operationType) throws Exception {
+        ThrottlingRetryOptions throttlingRetryOptions = new ThrottlingRetryOptions();
+        GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        CosmosException cosmosEx = Mockito.mock(CosmosException.class);
+
+        Mockito.when(globalPartitionEndpointManagerForPerPartitionCircuitBreaker.isPerPartitionLevelCircuitBreakingApplicable(Mockito.any())).thenReturn(true);
+        Mockito.doThrow(cosmosEx).when(globalPartitionEndpointManagerForPerPartitionCircuitBreaker).handleLocationExceptionForPartitionKeyRange(Mockito.any(), Mockito.any(), Mockito.anyBoolean());
+
+        Mockito.doReturn(new RegionalRoutingContext(new URI("http://localhost"))).when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+        Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(true));
+        ClientRetryPolicy clientRetryPolicy =
+            new ClientRetryPolicy(
+                mockDiagnosticsClientContext(),
+                endpointManager,
+                true,
+                throttlingRetryOptions,
+                globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+                globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+                false);
+
+        RxDocumentServiceRequest dsr;
+        Mono<ShouldRetryResult> shouldRetry;
+
+        dsr = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(), operationType, TEST_DOCUMENT_PATH, ResourceType.Document);
+
+        clientRetryPolicy.onBeforeSendRequest(dsr);
+        shouldRetry = clientRetryPolicy.shouldRetry(cosmosException);
+
+        // rethrow exception thrown from PPCB
+        validateSuccess(shouldRetry, ShouldRetryValidator.builder()
+            .withException(cosmosEx)
+            .shouldRetry(false)
+            .build());
+    }
+
+    @Test(groups = "unit", dataProvider = "requestRateTooLarge_batch_ArgProvider")
+    public void requestRateTooLarge_batch(
+        OperationType operationType,
+        ResourceType resourceType,
+        boolean disableRetryForThrottledBatchRequest) throws Exception {
+
+        ThrottlingRetryOptions throttlingRetryOptions =
+            new ThrottlingRetryOptions().setMaxRetryAttemptsOnThrottledRequests(1);
+
+        GlobalEndpointManager endpointManager = Mockito.mock(GlobalEndpointManager.class);
+        GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker globalPartitionEndpointManagerForPerPartitionCircuitBreaker
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionCircuitBreaker.class);
+
+        GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover globalPartitionEndpointManagerForPerPartitionAutomaticFailover
+            = Mockito.mock(GlobalPartitionEndpointManagerForPerPartitionAutomaticFailover.class);
+
+        Mockito
+            .doReturn(new RegionalRoutingContext(new URI("http://localhost")))
+            .when(endpointManager).resolveServiceEndpoint(Mockito.any(RxDocumentServiceRequest.class));
+
+        Mockito.doReturn(Mono.empty()).when(endpointManager).refreshLocationAsync(Mockito.eq(null), Mockito.eq(false));
+        ClientRetryPolicy clientRetryPolicy = new ClientRetryPolicy(
+            mockDiagnosticsClientContext(),
+            endpointManager,
+            true,
+            throttlingRetryOptions,
+            globalPartitionEndpointManagerForPerPartitionCircuitBreaker,
+            globalPartitionEndpointManagerForPerPartitionAutomaticFailover,
+            disableRetryForThrottledBatchRequest);
+
+        // Create throttling exception with retry delay
+        Map<String, String> headers = new HashMap<>();
+        headers.put(
+            HttpConstants.HttpHeaders.RETRY_AFTER_IN_MILLISECONDS,
+            "1000");
+        headers.put(WFConstants.BackendHeaders.SUB_STATUS,
+            Integer.toString(HttpConstants.SubStatusCodes.USER_REQUEST_RATE_TOO_LARGE));
+        RequestRateTooLargeException throttlingException = new RequestRateTooLargeException(null, 1, "1", headers);
+
+        RxDocumentServiceRequest request = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
+            operationType,
+            "/dbs/db/colls/col",
+            resourceType);
+        request.requestContext = new DocumentServiceRequestContext();
+        request.requestContext.routeToLocation(0, true);
+
+        clientRetryPolicy.onBeforeSendRequest(request);
+
+        Mono<ShouldRetryResult> shouldRetry = clientRetryPolicy.shouldRetry(throttlingException);
+        if (operationType != OperationType.Batch || resourceType != ResourceType.Document) {
+          validateSuccess(shouldRetry, ShouldRetryValidator.builder()
+              .nullException()
+              .shouldRetry(true)
+              .build());
+        } else if (disableRetryForThrottledBatchRequest) {
+          validateSuccess(shouldRetry, ShouldRetryValidator.builder()
+              .shouldRetry(false)
+              .build());
+        } else {
+          validateSuccess(shouldRetry, ShouldRetryValidator.builder()
+              .shouldRetry(true)
+              .build());
+        }
+    }
+
     public static void validateSuccess(Mono<ShouldRetryResult> single,
                                        ShouldRetryValidator validator) {
 
@@ -521,13 +762,9 @@ public class ClientRetryPolicyTest {
     public static void validateSuccess(Mono<ShouldRetryResult> single,
                                        ShouldRetryValidator validator,
                                        long timeout) {
-        TestSubscriber<ShouldRetryResult> testSubscriber = new TestSubscriber<>();
-
-        single.flux().subscribe(testSubscriber);
-        testSubscriber.awaitTerminalEvent(timeout, TimeUnit.MILLISECONDS);
-        testSubscriber.assertComplete();
-        testSubscriber.assertNoErrors();
-        testSubscriber.assertValueCount(1);
-        validator.validate(testSubscriber.values().get(0));
+        StepVerifier.create(single)
+            .assertNext(validator::validate)
+            .expectComplete()
+            .verify(Duration.ofMillis(timeout));
     }
 }

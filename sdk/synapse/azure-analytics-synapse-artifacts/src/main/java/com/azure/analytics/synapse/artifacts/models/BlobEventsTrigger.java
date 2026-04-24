@@ -5,62 +5,86 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-/** Trigger that runs every time a Blob event occurs. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("BlobEventsTrigger")
-@JsonFlatten
+/**
+ * Trigger that runs every time a Blob event occurs.
+ */
 @Fluent
 public class BlobEventsTrigger extends MultiplePipelineTrigger {
+    /*
+     * Trigger type.
+     */
+    @Generated
+    private String type = "BlobEventsTrigger";
+
     /*
      * The blob path must begin with the pattern provided for trigger to fire. For example, '/records/blobs/december/'
      * will only fire the trigger for blobs in the december folder under the records container. At least one of these
      * must be provided: blobPathBeginsWith, blobPathEndsWith.
      */
-    @JsonProperty(value = "typeProperties.blobPathBeginsWith")
+    @Generated
     private String blobPathBeginsWith;
 
     /*
-     * The blob path must end with the pattern provided for trigger to fire. For example, 'december/boxes.csv' will
-     * only fire the trigger for blobs named boxes in a december folder. At least one of these must be provided:
+     * The blob path must end with the pattern provided for trigger to fire. For example, 'december/boxes.csv' will only
+     * fire the trigger for blobs named boxes in a december folder. At least one of these must be provided:
      * blobPathBeginsWith, blobPathEndsWith.
      */
-    @JsonProperty(value = "typeProperties.blobPathEndsWith")
+    @Generated
     private String blobPathEndsWith;
 
     /*
      * If set to true, blobs with zero bytes will be ignored.
      */
-    @JsonProperty(value = "typeProperties.ignoreEmptyBlobs")
+    @Generated
     private Boolean ignoreEmptyBlobs;
 
     /*
      * The type of events that cause this trigger to fire.
      */
-    @JsonProperty(value = "typeProperties.events", required = true)
+    @Generated
     private List<BlobEventType> events;
 
     /*
      * The ARM resource ID of the Storage Account.
      */
-    @JsonProperty(value = "typeProperties.scope", required = true)
+    @Generated
     private String scope;
 
-    /** Creates an instance of BlobEventsTrigger class. */
-    public BlobEventsTrigger() {}
+    /**
+     * Creates an instance of BlobEventsTrigger class.
+     */
+    @Generated
+    public BlobEventsTrigger() {
+    }
+
+    /**
+     * Get the type property: Trigger type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the blobPathBeginsWith property: The blob path must begin with the pattern provided for trigger to fire. For
      * example, '/records/blobs/december/' will only fire the trigger for blobs in the december folder under the records
      * container. At least one of these must be provided: blobPathBeginsWith, blobPathEndsWith.
-     *
+     * 
      * @return the blobPathBeginsWith value.
      */
+    @Generated
     public String getBlobPathBeginsWith() {
         return this.blobPathBeginsWith;
     }
@@ -69,10 +93,11 @@ public class BlobEventsTrigger extends MultiplePipelineTrigger {
      * Set the blobPathBeginsWith property: The blob path must begin with the pattern provided for trigger to fire. For
      * example, '/records/blobs/december/' will only fire the trigger for blobs in the december folder under the records
      * container. At least one of these must be provided: blobPathBeginsWith, blobPathEndsWith.
-     *
+     * 
      * @param blobPathBeginsWith the blobPathBeginsWith value to set.
      * @return the BlobEventsTrigger object itself.
      */
+    @Generated
     public BlobEventsTrigger setBlobPathBeginsWith(String blobPathBeginsWith) {
         this.blobPathBeginsWith = blobPathBeginsWith;
         return this;
@@ -82,9 +107,10 @@ public class BlobEventsTrigger extends MultiplePipelineTrigger {
      * Get the blobPathEndsWith property: The blob path must end with the pattern provided for trigger to fire. For
      * example, 'december/boxes.csv' will only fire the trigger for blobs named boxes in a december folder. At least one
      * of these must be provided: blobPathBeginsWith, blobPathEndsWith.
-     *
+     * 
      * @return the blobPathEndsWith value.
      */
+    @Generated
     public String getBlobPathEndsWith() {
         return this.blobPathEndsWith;
     }
@@ -93,10 +119,11 @@ public class BlobEventsTrigger extends MultiplePipelineTrigger {
      * Set the blobPathEndsWith property: The blob path must end with the pattern provided for trigger to fire. For
      * example, 'december/boxes.csv' will only fire the trigger for blobs named boxes in a december folder. At least one
      * of these must be provided: blobPathBeginsWith, blobPathEndsWith.
-     *
+     * 
      * @param blobPathEndsWith the blobPathEndsWith value to set.
      * @return the BlobEventsTrigger object itself.
      */
+    @Generated
     public BlobEventsTrigger setBlobPathEndsWith(String blobPathEndsWith) {
         this.blobPathEndsWith = blobPathEndsWith;
         return this;
@@ -104,19 +131,21 @@ public class BlobEventsTrigger extends MultiplePipelineTrigger {
 
     /**
      * Get the ignoreEmptyBlobs property: If set to true, blobs with zero bytes will be ignored.
-     *
+     * 
      * @return the ignoreEmptyBlobs value.
      */
+    @Generated
     public Boolean isIgnoreEmptyBlobs() {
         return this.ignoreEmptyBlobs;
     }
 
     /**
      * Set the ignoreEmptyBlobs property: If set to true, blobs with zero bytes will be ignored.
-     *
+     * 
      * @param ignoreEmptyBlobs the ignoreEmptyBlobs value to set.
      * @return the BlobEventsTrigger object itself.
      */
+    @Generated
     public BlobEventsTrigger setIgnoreEmptyBlobs(Boolean ignoreEmptyBlobs) {
         this.ignoreEmptyBlobs = ignoreEmptyBlobs;
         return this;
@@ -124,19 +153,21 @@ public class BlobEventsTrigger extends MultiplePipelineTrigger {
 
     /**
      * Get the events property: The type of events that cause this trigger to fire.
-     *
+     * 
      * @return the events value.
      */
+    @Generated
     public List<BlobEventType> getEvents() {
         return this.events;
     }
 
     /**
      * Set the events property: The type of events that cause this trigger to fire.
-     *
+     * 
      * @param events the events value to set.
      * @return the BlobEventsTrigger object itself.
      */
+    @Generated
     public BlobEventsTrigger setEvents(List<BlobEventType> events) {
         this.events = events;
         return this;
@@ -144,42 +175,152 @@ public class BlobEventsTrigger extends MultiplePipelineTrigger {
 
     /**
      * Get the scope property: The ARM resource ID of the Storage Account.
-     *
+     * 
      * @return the scope value.
      */
+    @Generated
     public String getScope() {
         return this.scope;
     }
 
     /**
      * Set the scope property: The ARM resource ID of the Storage Account.
-     *
+     * 
      * @param scope the scope value to set.
      * @return the BlobEventsTrigger object itself.
      */
+    @Generated
     public BlobEventsTrigger setScope(String scope) {
         this.scope = scope;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public BlobEventsTrigger setPipelines(List<TriggerPipelineReference> pipelines) {
         super.setPipelines(pipelines);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public BlobEventsTrigger setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public BlobEventsTrigger setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeArrayField("pipelines", getPipelines(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (blobPathBeginsWith != null
+            || blobPathEndsWith != null
+            || ignoreEmptyBlobs != null
+            || events != null
+            || scope != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeStringField("blobPathBeginsWith", this.blobPathBeginsWith);
+            jsonWriter.writeStringField("blobPathEndsWith", this.blobPathEndsWith);
+            jsonWriter.writeBooleanField("ignoreEmptyBlobs", this.ignoreEmptyBlobs);
+            jsonWriter.writeArrayField("events", this.events,
+                (writer, element) -> writer.writeString(element == null ? null : element.toString()));
+            jsonWriter.writeStringField("scope", this.scope);
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of BlobEventsTrigger from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of BlobEventsTrigger if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the BlobEventsTrigger.
+     */
+    @Generated
+    public static BlobEventsTrigger fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            BlobEventsTrigger deserializedBlobEventsTrigger = new BlobEventsTrigger();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("description".equals(fieldName)) {
+                    deserializedBlobEventsTrigger.setDescription(reader.getString());
+                } else if ("runtimeState".equals(fieldName)) {
+                    deserializedBlobEventsTrigger.setRuntimeState(TriggerRuntimeState.fromString(reader.getString()));
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedBlobEventsTrigger.setAnnotations(annotations);
+                } else if ("pipelines".equals(fieldName)) {
+                    List<TriggerPipelineReference> pipelines
+                        = reader.readArray(reader1 -> TriggerPipelineReference.fromJson(reader1));
+                    deserializedBlobEventsTrigger.setPipelines(pipelines);
+                } else if ("type".equals(fieldName)) {
+                    deserializedBlobEventsTrigger.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("blobPathBeginsWith".equals(fieldName)) {
+                            deserializedBlobEventsTrigger.blobPathBeginsWith = reader.getString();
+                        } else if ("blobPathEndsWith".equals(fieldName)) {
+                            deserializedBlobEventsTrigger.blobPathEndsWith = reader.getString();
+                        } else if ("ignoreEmptyBlobs".equals(fieldName)) {
+                            deserializedBlobEventsTrigger.ignoreEmptyBlobs = reader.getNullable(JsonReader::getBoolean);
+                        } else if ("events".equals(fieldName)) {
+                            List<BlobEventType> events
+                                = reader.readArray(reader1 -> BlobEventType.fromString(reader1.getString()));
+                            deserializedBlobEventsTrigger.events = events;
+                        } else if ("scope".equals(fieldName)) {
+                            deserializedBlobEventsTrigger.scope = reader.getString();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedBlobEventsTrigger.setAdditionalProperties(additionalProperties);
+
+            return deserializedBlobEventsTrigger;
+        });
     }
 }

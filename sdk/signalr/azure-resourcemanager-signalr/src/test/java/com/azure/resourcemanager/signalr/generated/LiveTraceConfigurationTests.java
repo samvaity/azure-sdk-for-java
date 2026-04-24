@@ -13,31 +13,23 @@ import org.junit.jupiter.api.Assertions;
 public final class LiveTraceConfigurationTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        LiveTraceConfiguration model =
-            BinaryData
-                .fromString(
-                    "{\"enabled\":\"wgxhn\",\"categories\":[{\"name\":\"fbkp\",\"enabled\":\"gklwn\"},{\"name\":\"hjdauwhvylwz\",\"enabled\":\"dhxujznbmpo\"},{\"name\":\"wpr\",\"enabled\":\"lve\"},{\"name\":\"lupj\",\"enabled\":\"hfxobbcswsrtj\"}]}")
-                .toObject(LiveTraceConfiguration.class);
-        Assertions.assertEquals("wgxhn", model.enabled());
-        Assertions.assertEquals("fbkp", model.categories().get(0).name());
-        Assertions.assertEquals("gklwn", model.categories().get(0).enabled());
+        LiveTraceConfiguration model = BinaryData.fromString(
+            "{\"enabled\":\"krrjrea\",\"categories\":[{\"name\":\"gumhjglikkxws\",\"enabled\":\"lbqpvuzlmvfelf\"},{\"name\":\"gplcrpwjxeznoigb\",\"enabled\":\"jwmwkpnbs\"}]}")
+            .toObject(LiveTraceConfiguration.class);
+        Assertions.assertEquals("krrjrea", model.enabled());
+        Assertions.assertEquals("gumhjglikkxws", model.categories().get(0).name());
+        Assertions.assertEquals("lbqpvuzlmvfelf", model.categories().get(0).enabled());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        LiveTraceConfiguration model =
-            new LiveTraceConfiguration()
-                .withEnabled("wgxhn")
-                .withCategories(
-                    Arrays
-                        .asList(
-                            new LiveTraceCategory().withName("fbkp").withEnabled("gklwn"),
-                            new LiveTraceCategory().withName("hjdauwhvylwz").withEnabled("dhxujznbmpo"),
-                            new LiveTraceCategory().withName("wpr").withEnabled("lve"),
-                            new LiveTraceCategory().withName("lupj").withEnabled("hfxobbcswsrtj")));
+        LiveTraceConfiguration model = new LiveTraceConfiguration().withEnabled("krrjrea")
+            .withCategories(
+                Arrays.asList(new LiveTraceCategory().withName("gumhjglikkxws").withEnabled("lbqpvuzlmvfelf"),
+                    new LiveTraceCategory().withName("gplcrpwjxeznoigb").withEnabled("jwmwkpnbs")));
         model = BinaryData.fromObject(model).toObject(LiveTraceConfiguration.class);
-        Assertions.assertEquals("wgxhn", model.enabled());
-        Assertions.assertEquals("fbkp", model.categories().get(0).name());
-        Assertions.assertEquals("gklwn", model.categories().get(0).enabled());
+        Assertions.assertEquals("krrjrea", model.enabled());
+        Assertions.assertEquals("gumhjglikkxws", model.categories().get(0).name());
+        Assertions.assertEquals("lbqpvuzlmvfelf", model.categories().get(0).enabled());
     }
 }

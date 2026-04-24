@@ -11,29 +11,25 @@ import org.junit.jupiter.api.Assertions;
 public final class EvaluatePoliciesPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        EvaluatePoliciesProperties model =
-            BinaryData
-                .fromString(
-                    "{\"factName\":\"zzbtdcqvpniyujvi\",\"factData\":\"wdsh\",\"valueOffset\":\"snrbgyefrymsgao\",\"userObjectId\":\"mwn\"}")
-                .toObject(EvaluatePoliciesProperties.class);
-        Assertions.assertEquals("zzbtdcqvpniyujvi", model.factName());
-        Assertions.assertEquals("wdsh", model.factData());
-        Assertions.assertEquals("snrbgyefrymsgao", model.valueOffset());
-        Assertions.assertEquals("mwn", model.userObjectId());
+        EvaluatePoliciesProperties model = BinaryData.fromString(
+            "{\"factName\":\"gsj\",\"factData\":\"nwqjnoba\",\"valueOffset\":\"hdd\",\"userObjectId\":\"acegfnmntf\"}")
+            .toObject(EvaluatePoliciesProperties.class);
+        Assertions.assertEquals("gsj", model.factName());
+        Assertions.assertEquals("nwqjnoba", model.factData());
+        Assertions.assertEquals("hdd", model.valueOffset());
+        Assertions.assertEquals("acegfnmntf", model.userObjectId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        EvaluatePoliciesProperties model =
-            new EvaluatePoliciesProperties()
-                .withFactName("zzbtdcqvpniyujvi")
-                .withFactData("wdsh")
-                .withValueOffset("snrbgyefrymsgao")
-                .withUserObjectId("mwn");
+        EvaluatePoliciesProperties model = new EvaluatePoliciesProperties().withFactName("gsj")
+            .withFactData("nwqjnoba")
+            .withValueOffset("hdd")
+            .withUserObjectId("acegfnmntf");
         model = BinaryData.fromObject(model).toObject(EvaluatePoliciesProperties.class);
-        Assertions.assertEquals("zzbtdcqvpniyujvi", model.factName());
-        Assertions.assertEquals("wdsh", model.factData());
-        Assertions.assertEquals("snrbgyefrymsgao", model.valueOffset());
-        Assertions.assertEquals("mwn", model.userObjectId());
+        Assertions.assertEquals("gsj", model.factName());
+        Assertions.assertEquals("nwqjnoba", model.factData());
+        Assertions.assertEquals("hdd", model.valueOffset());
+        Assertions.assertEquals("acegfnmntf", model.userObjectId());
     }
 }

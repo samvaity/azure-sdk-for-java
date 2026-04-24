@@ -5,158 +5,177 @@
 package com.azure.storage.file.datalake.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.util.DateTimeRfc1123;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.time.OffsetDateTime;
 
-/** The PathsFlushDataHeaders model. */
-@JacksonXmlRootElement(localName = "null")
+/**
+ * The PathsFlushDataHeaders model.
+ */
 @Fluent
 public final class PathsFlushDataHeaders {
     /*
-     * The x-ms-version property.
+     * The Date property.
      */
-    @JsonProperty(value = "x-ms-version")
-    private String xMsVersion;
+    @Generated
+    private DateTimeRfc1123 date;
 
     /*
      * The ETag property.
      */
-    @JsonProperty(value = "ETag")
+    @Generated
     private String eTag;
 
     /*
      * The Last-Modified property.
      */
-    @JsonProperty(value = "Last-Modified")
+    @Generated
     private DateTimeRfc1123 lastModified;
 
     /*
      * The Content-Length property.
      */
-    @JsonProperty(value = "Content-Length")
+    @Generated
     private Long contentLength;
+
+    /*
+     * The x-ms-client-request-id property.
+     */
+    @Generated
+    private String xMsClientRequestId;
+
+    /*
+     * The x-ms-request-id property.
+     */
+    @Generated
+    private String xMsRequestId;
+
+    /*
+     * The x-ms-version property.
+     */
+    @Generated
+    private String xMsVersion;
+
+    /*
+     * The x-ms-request-server-encrypted property.
+     */
+    @Generated
+    private Boolean xMsRequestServerEncrypted;
 
     /*
      * The x-ms-encryption-key-sha256 property.
      */
-    @JsonProperty(value = "x-ms-encryption-key-sha256")
+    @Generated
     private String xMsEncryptionKeySha256;
 
     /*
      * The x-ms-lease-renewed property.
      */
-    @JsonProperty(value = "x-ms-lease-renewed")
+    @Generated
     private Boolean xMsLeaseRenewed;
-
-    /*
-     * The x-ms-request-id property.
-     */
-    @JsonProperty(value = "x-ms-request-id")
-    private String xMsRequestId;
-
-    /*
-     * The x-ms-request-server-encrypted property.
-     */
-    @JsonProperty(value = "x-ms-request-server-encrypted")
-    private Boolean xMsRequestServerEncrypted;
-
-    /*
-     * The Date property.
-     */
-    @JsonProperty(value = "Date")
-    private DateTimeRfc1123 date;
-
-    /*
-     * The x-ms-client-request-id property.
-     */
-    @JsonProperty(value = "x-ms-client-request-id")
-    private String xMsClientRequestId;
 
     private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
 
-    private static final HttpHeaderName X_MS_ENCRYPTION_KEY_SHA256 =
-            HttpHeaderName.fromString("x-ms-encryption-key-sha256");
+    private static final HttpHeaderName X_MS_REQUEST_SERVER_ENCRYPTED
+        = HttpHeaderName.fromString("x-ms-request-server-encrypted");
+
+    private static final HttpHeaderName X_MS_ENCRYPTION_KEY_SHA256
+        = HttpHeaderName.fromString("x-ms-encryption-key-sha256");
 
     private static final HttpHeaderName X_MS_LEASE_RENEWED = HttpHeaderName.fromString("x-ms-lease-renewed");
-
-    private static final HttpHeaderName X_MS_REQUEST_ID = HttpHeaderName.fromString("x-ms-request-id");
-
-    private static final HttpHeaderName X_MS_REQUEST_SERVER_ENCRYPTED =
-            HttpHeaderName.fromString("x-ms-request-server-encrypted");
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of PathsFlushDataHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public PathsFlushDataHeaders(HttpHeaders rawHeaders) {
-        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
+        String date = rawHeaders.getValue(HttpHeaderName.DATE);
+        if (date != null) {
+            this.date = new DateTimeRfc1123(date);
+        } else {
+            this.date = null;
+        }
         this.eTag = rawHeaders.getValue(HttpHeaderName.ETAG);
         String lastModified = rawHeaders.getValue(HttpHeaderName.LAST_MODIFIED);
         if (lastModified != null) {
             this.lastModified = new DateTimeRfc1123(lastModified);
+        } else {
+            this.lastModified = null;
         }
         String contentLength = rawHeaders.getValue(HttpHeaderName.CONTENT_LENGTH);
         if (contentLength != null) {
             this.contentLength = Long.parseLong(contentLength);
+        } else {
+            this.contentLength = null;
+        }
+        this.xMsClientRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_CLIENT_REQUEST_ID);
+        this.xMsRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_REQUEST_ID);
+        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
+        String xMsRequestServerEncrypted = rawHeaders.getValue(X_MS_REQUEST_SERVER_ENCRYPTED);
+        if (xMsRequestServerEncrypted != null) {
+            this.xMsRequestServerEncrypted = Boolean.parseBoolean(xMsRequestServerEncrypted);
+        } else {
+            this.xMsRequestServerEncrypted = null;
         }
         this.xMsEncryptionKeySha256 = rawHeaders.getValue(X_MS_ENCRYPTION_KEY_SHA256);
         String xMsLeaseRenewed = rawHeaders.getValue(X_MS_LEASE_RENEWED);
         if (xMsLeaseRenewed != null) {
             this.xMsLeaseRenewed = Boolean.parseBoolean(xMsLeaseRenewed);
+        } else {
+            this.xMsLeaseRenewed = null;
         }
-        this.xMsRequestId = rawHeaders.getValue(X_MS_REQUEST_ID);
-        String xMsRequestServerEncrypted = rawHeaders.getValue(X_MS_REQUEST_SERVER_ENCRYPTED);
-        if (xMsRequestServerEncrypted != null) {
-            this.xMsRequestServerEncrypted = Boolean.parseBoolean(xMsRequestServerEncrypted);
-        }
-        String date = rawHeaders.getValue(HttpHeaderName.DATE);
-        if (date != null) {
-            this.date = new DateTimeRfc1123(date);
-        }
-        this.xMsClientRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_CLIENT_REQUEST_ID);
     }
 
     /**
-     * Get the xMsVersion property: The x-ms-version property.
-     *
-     * @return the xMsVersion value.
+     * Get the date property: The Date property.
+     * 
+     * @return the date value.
      */
-    public String getXMsVersion() {
-        return this.xMsVersion;
+    @Generated
+    public OffsetDateTime getDate() {
+        if (this.date == null) {
+            return null;
+        }
+        return this.date.getDateTime();
     }
 
     /**
-     * Set the xMsVersion property: The x-ms-version property.
-     *
-     * @param xMsVersion the xMsVersion value to set.
+     * Set the date property: The Date property.
+     * 
+     * @param date the date value to set.
      * @return the PathsFlushDataHeaders object itself.
      */
-    public PathsFlushDataHeaders setXMsVersion(String xMsVersion) {
-        this.xMsVersion = xMsVersion;
+    @Generated
+    public PathsFlushDataHeaders setDate(OffsetDateTime date) {
+        if (date == null) {
+            this.date = null;
+        } else {
+            this.date = new DateTimeRfc1123(date);
+        }
         return this;
     }
 
     /**
      * Get the eTag property: The ETag property.
-     *
+     * 
      * @return the eTag value.
      */
+    @Generated
     public String getETag() {
         return this.eTag;
     }
 
     /**
      * Set the eTag property: The ETag property.
-     *
+     * 
      * @param eTag the eTag value to set.
      * @return the PathsFlushDataHeaders object itself.
      */
+    @Generated
     public PathsFlushDataHeaders setETag(String eTag) {
         this.eTag = eTag;
         return this;
@@ -164,9 +183,10 @@ public final class PathsFlushDataHeaders {
 
     /**
      * Get the lastModified property: The Last-Modified property.
-     *
+     * 
      * @return the lastModified value.
      */
+    @Generated
     public OffsetDateTime getLastModified() {
         if (this.lastModified == null) {
             return null;
@@ -176,10 +196,11 @@ public final class PathsFlushDataHeaders {
 
     /**
      * Set the lastModified property: The Last-Modified property.
-     *
+     * 
      * @param lastModified the lastModified value to set.
      * @return the PathsFlushDataHeaders object itself.
      */
+    @Generated
     public PathsFlushDataHeaders setLastModified(OffsetDateTime lastModified) {
         if (lastModified == null) {
             this.lastModified = null;
@@ -191,39 +212,131 @@ public final class PathsFlushDataHeaders {
 
     /**
      * Get the contentLength property: The Content-Length property.
-     *
+     * 
      * @return the contentLength value.
      */
+    @Generated
     public Long getContentLength() {
         return this.contentLength;
     }
 
     /**
      * Set the contentLength property: The Content-Length property.
-     *
+     * 
      * @param contentLength the contentLength value to set.
      * @return the PathsFlushDataHeaders object itself.
      */
+    @Generated
     public PathsFlushDataHeaders setContentLength(Long contentLength) {
         this.contentLength = contentLength;
         return this;
     }
 
     /**
+     * Get the xMsClientRequestId property: The x-ms-client-request-id property.
+     * 
+     * @return the xMsClientRequestId value.
+     */
+    @Generated
+    public String getXMsClientRequestId() {
+        return this.xMsClientRequestId;
+    }
+
+    /**
+     * Set the xMsClientRequestId property: The x-ms-client-request-id property.
+     * 
+     * @param xMsClientRequestId the xMsClientRequestId value to set.
+     * @return the PathsFlushDataHeaders object itself.
+     */
+    @Generated
+    public PathsFlushDataHeaders setXMsClientRequestId(String xMsClientRequestId) {
+        this.xMsClientRequestId = xMsClientRequestId;
+        return this;
+    }
+
+    /**
+     * Get the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @return the xMsRequestId value.
+     */
+    @Generated
+    public String getXMsRequestId() {
+        return this.xMsRequestId;
+    }
+
+    /**
+     * Set the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @param xMsRequestId the xMsRequestId value to set.
+     * @return the PathsFlushDataHeaders object itself.
+     */
+    @Generated
+    public PathsFlushDataHeaders setXMsRequestId(String xMsRequestId) {
+        this.xMsRequestId = xMsRequestId;
+        return this;
+    }
+
+    /**
+     * Get the xMsVersion property: The x-ms-version property.
+     * 
+     * @return the xMsVersion value.
+     */
+    @Generated
+    public String getXMsVersion() {
+        return this.xMsVersion;
+    }
+
+    /**
+     * Set the xMsVersion property: The x-ms-version property.
+     * 
+     * @param xMsVersion the xMsVersion value to set.
+     * @return the PathsFlushDataHeaders object itself.
+     */
+    @Generated
+    public PathsFlushDataHeaders setXMsVersion(String xMsVersion) {
+        this.xMsVersion = xMsVersion;
+        return this;
+    }
+
+    /**
+     * Get the xMsRequestServerEncrypted property: The x-ms-request-server-encrypted property.
+     * 
+     * @return the xMsRequestServerEncrypted value.
+     */
+    @Generated
+    public Boolean isXMsRequestServerEncrypted() {
+        return this.xMsRequestServerEncrypted;
+    }
+
+    /**
+     * Set the xMsRequestServerEncrypted property: The x-ms-request-server-encrypted property.
+     * 
+     * @param xMsRequestServerEncrypted the xMsRequestServerEncrypted value to set.
+     * @return the PathsFlushDataHeaders object itself.
+     */
+    @Generated
+    public PathsFlushDataHeaders setXMsRequestServerEncrypted(Boolean xMsRequestServerEncrypted) {
+        this.xMsRequestServerEncrypted = xMsRequestServerEncrypted;
+        return this;
+    }
+
+    /**
      * Get the xMsEncryptionKeySha256 property: The x-ms-encryption-key-sha256 property.
-     *
+     * 
      * @return the xMsEncryptionKeySha256 value.
      */
+    @Generated
     public String getXMsEncryptionKeySha256() {
         return this.xMsEncryptionKeySha256;
     }
 
     /**
      * Set the xMsEncryptionKeySha256 property: The x-ms-encryption-key-sha256 property.
-     *
+     * 
      * @param xMsEncryptionKeySha256 the xMsEncryptionKeySha256 value to set.
      * @return the PathsFlushDataHeaders object itself.
      */
+    @Generated
     public PathsFlushDataHeaders setXMsEncryptionKeySha256(String xMsEncryptionKeySha256) {
         this.xMsEncryptionKeySha256 = xMsEncryptionKeySha256;
         return this;
@@ -231,108 +344,23 @@ public final class PathsFlushDataHeaders {
 
     /**
      * Get the xMsLeaseRenewed property: The x-ms-lease-renewed property.
-     *
+     * 
      * @return the xMsLeaseRenewed value.
      */
+    @Generated
     public Boolean isXMsLeaseRenewed() {
         return this.xMsLeaseRenewed;
     }
 
     /**
      * Set the xMsLeaseRenewed property: The x-ms-lease-renewed property.
-     *
+     * 
      * @param xMsLeaseRenewed the xMsLeaseRenewed value to set.
      * @return the PathsFlushDataHeaders object itself.
      */
+    @Generated
     public PathsFlushDataHeaders setXMsLeaseRenewed(Boolean xMsLeaseRenewed) {
         this.xMsLeaseRenewed = xMsLeaseRenewed;
-        return this;
-    }
-
-    /**
-     * Get the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @return the xMsRequestId value.
-     */
-    public String getXMsRequestId() {
-        return this.xMsRequestId;
-    }
-
-    /**
-     * Set the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @param xMsRequestId the xMsRequestId value to set.
-     * @return the PathsFlushDataHeaders object itself.
-     */
-    public PathsFlushDataHeaders setXMsRequestId(String xMsRequestId) {
-        this.xMsRequestId = xMsRequestId;
-        return this;
-    }
-
-    /**
-     * Get the xMsRequestServerEncrypted property: The x-ms-request-server-encrypted property.
-     *
-     * @return the xMsRequestServerEncrypted value.
-     */
-    public Boolean isXMsRequestServerEncrypted() {
-        return this.xMsRequestServerEncrypted;
-    }
-
-    /**
-     * Set the xMsRequestServerEncrypted property: The x-ms-request-server-encrypted property.
-     *
-     * @param xMsRequestServerEncrypted the xMsRequestServerEncrypted value to set.
-     * @return the PathsFlushDataHeaders object itself.
-     */
-    public PathsFlushDataHeaders setXMsRequestServerEncrypted(Boolean xMsRequestServerEncrypted) {
-        this.xMsRequestServerEncrypted = xMsRequestServerEncrypted;
-        return this;
-    }
-
-    /**
-     * Get the date property: The Date property.
-     *
-     * @return the date value.
-     */
-    public OffsetDateTime getDate() {
-        if (this.date == null) {
-            return null;
-        }
-        return this.date.getDateTime();
-    }
-
-    /**
-     * Set the date property: The Date property.
-     *
-     * @param date the date value to set.
-     * @return the PathsFlushDataHeaders object itself.
-     */
-    public PathsFlushDataHeaders setDate(OffsetDateTime date) {
-        if (date == null) {
-            this.date = null;
-        } else {
-            this.date = new DateTimeRfc1123(date);
-        }
-        return this;
-    }
-
-    /**
-     * Get the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
-     * @return the xMsClientRequestId value.
-     */
-    public String getXMsClientRequestId() {
-        return this.xMsClientRequestId;
-    }
-
-    /**
-     * Set the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
-     * @param xMsClientRequestId the xMsClientRequestId value to set.
-     * @return the PathsFlushDataHeaders object itself.
-     */
-    public PathsFlushDataHeaders setXMsClientRequestId(String xMsClientRequestId) {
-        this.xMsClientRequestId = xMsClientRequestId;
         return this;
     }
 }

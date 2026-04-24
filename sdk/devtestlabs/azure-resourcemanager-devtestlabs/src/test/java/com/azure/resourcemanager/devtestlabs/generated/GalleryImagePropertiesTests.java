@@ -12,52 +12,46 @@ import org.junit.jupiter.api.Assertions;
 public final class GalleryImagePropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        GalleryImageProperties model =
-            BinaryData
-                .fromString(
-                    "{\"author\":\"rnjwmw\",\"createdDate\":\"2021-03-16T02:28:23Z\",\"description\":\"saz\",\"imageReference\":{\"offer\":\"oqkag\",\"publisher\":\"sxtta\",\"sku\":\"zxnfaaz\",\"osType\":\"dtnkdmkq\",\"version\":\"lwuenvrkp\"},\"icon\":\"uaibrebqaaysj\",\"enabled\":false,\"planId\":\"tnqttezlwfffiak\",\"isPlanAuthorized\":false}")
-                .toObject(GalleryImageProperties.class);
-        Assertions.assertEquals("rnjwmw", model.author());
-        Assertions.assertEquals("saz", model.description());
-        Assertions.assertEquals("oqkag", model.imageReference().offer());
-        Assertions.assertEquals("sxtta", model.imageReference().publisher());
-        Assertions.assertEquals("zxnfaaz", model.imageReference().sku());
-        Assertions.assertEquals("dtnkdmkq", model.imageReference().osType());
-        Assertions.assertEquals("lwuenvrkp", model.imageReference().version());
-        Assertions.assertEquals("uaibrebqaaysj", model.icon());
+        GalleryImageProperties model = BinaryData.fromString(
+            "{\"author\":\"btx\",\"createdDate\":\"2021-01-25T07:52:30Z\",\"description\":\"wsrt\",\"imageReference\":{\"offer\":\"oezbrhubsk\",\"publisher\":\"dyg\",\"sku\":\"okkqfqjbvleo\",\"osType\":\"ml\",\"version\":\"qtqzfavyv\"},\"icon\":\"qybaryeua\",\"enabled\":false,\"planId\":\"abqgzslesjcbh\",\"isPlanAuthorized\":false}")
+            .toObject(GalleryImageProperties.class);
+        Assertions.assertEquals("btx", model.author());
+        Assertions.assertEquals("wsrt", model.description());
+        Assertions.assertEquals("oezbrhubsk", model.imageReference().offer());
+        Assertions.assertEquals("dyg", model.imageReference().publisher());
+        Assertions.assertEquals("okkqfqjbvleo", model.imageReference().sku());
+        Assertions.assertEquals("ml", model.imageReference().osType());
+        Assertions.assertEquals("qtqzfavyv", model.imageReference().version());
+        Assertions.assertEquals("qybaryeua", model.icon());
         Assertions.assertEquals(false, model.enabled());
-        Assertions.assertEquals("tnqttezlwfffiak", model.planId());
+        Assertions.assertEquals("abqgzslesjcbh", model.planId());
         Assertions.assertEquals(false, model.isPlanAuthorized());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        GalleryImageProperties model =
-            new GalleryImageProperties()
-                .withAuthor("rnjwmw")
-                .withDescription("saz")
-                .withImageReference(
-                    new GalleryImageReference()
-                        .withOffer("oqkag")
-                        .withPublisher("sxtta")
-                        .withSku("zxnfaaz")
-                        .withOsType("dtnkdmkq")
-                        .withVersion("lwuenvrkp"))
-                .withIcon("uaibrebqaaysj")
-                .withEnabled(false)
-                .withPlanId("tnqttezlwfffiak")
-                .withIsPlanAuthorized(false);
+        GalleryImageProperties model = new GalleryImageProperties().withAuthor("btx")
+            .withDescription("wsrt")
+            .withImageReference(new GalleryImageReference().withOffer("oezbrhubsk")
+                .withPublisher("dyg")
+                .withSku("okkqfqjbvleo")
+                .withOsType("ml")
+                .withVersion("qtqzfavyv"))
+            .withIcon("qybaryeua")
+            .withEnabled(false)
+            .withPlanId("abqgzslesjcbh")
+            .withIsPlanAuthorized(false);
         model = BinaryData.fromObject(model).toObject(GalleryImageProperties.class);
-        Assertions.assertEquals("rnjwmw", model.author());
-        Assertions.assertEquals("saz", model.description());
-        Assertions.assertEquals("oqkag", model.imageReference().offer());
-        Assertions.assertEquals("sxtta", model.imageReference().publisher());
-        Assertions.assertEquals("zxnfaaz", model.imageReference().sku());
-        Assertions.assertEquals("dtnkdmkq", model.imageReference().osType());
-        Assertions.assertEquals("lwuenvrkp", model.imageReference().version());
-        Assertions.assertEquals("uaibrebqaaysj", model.icon());
+        Assertions.assertEquals("btx", model.author());
+        Assertions.assertEquals("wsrt", model.description());
+        Assertions.assertEquals("oezbrhubsk", model.imageReference().offer());
+        Assertions.assertEquals("dyg", model.imageReference().publisher());
+        Assertions.assertEquals("okkqfqjbvleo", model.imageReference().sku());
+        Assertions.assertEquals("ml", model.imageReference().osType());
+        Assertions.assertEquals("qtqzfavyv", model.imageReference().version());
+        Assertions.assertEquals("qybaryeua", model.icon());
         Assertions.assertEquals(false, model.enabled());
-        Assertions.assertEquals("tnqttezlwfffiak", model.planId());
+        Assertions.assertEquals("abqgzslesjcbh", model.planId());
         Assertions.assertEquals(false, model.isPlanAuthorized());
     }
 }

@@ -5,20 +5,30 @@
 package com.azure.resourcemanager.appcontainers.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Custom Domain binding type. */
+/**
+ * Custom Domain binding type.
+ */
 public final class BindingType extends ExpandableStringEnum<BindingType> {
-    /** Static value Disabled for BindingType. */
+    /**
+     * Static value Disabled for BindingType.
+     */
     public static final BindingType DISABLED = fromString("Disabled");
 
-    /** Static value SniEnabled for BindingType. */
+    /**
+     * Static value SniEnabled for BindingType.
+     */
     public static final BindingType SNI_ENABLED = fromString("SniEnabled");
 
     /**
+     * Static value Auto for BindingType.
+     */
+    public static final BindingType AUTO = fromString("Auto");
+
+    /**
      * Creates a new instance of BindingType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -27,18 +37,17 @@ public final class BindingType extends ExpandableStringEnum<BindingType> {
 
     /**
      * Creates or finds a BindingType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding BindingType.
      */
-    @JsonCreator
     public static BindingType fromString(String name) {
         return fromString(name, BindingType.class);
     }
 
     /**
      * Gets known BindingType values.
-     *
+     * 
      * @return known BindingType values.
      */
     public static Collection<BindingType> values() {

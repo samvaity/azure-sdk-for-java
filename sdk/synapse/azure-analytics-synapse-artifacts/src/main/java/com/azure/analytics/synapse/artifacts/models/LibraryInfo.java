@@ -5,76 +5,89 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Information about a library/package created at the workspace level.
- *
- * <p>Library/package information of a Big Data pool powered by Apache Spark.
+ * 
+ * Library/package information of a Big Data pool powered by Apache Spark.
  */
 @Fluent
-public final class LibraryInfo {
+public final class LibraryInfo implements JsonSerializable<LibraryInfo> {
     /*
      * Name of the library.
      */
-    @JsonProperty(value = "name")
+    @Generated
     private String name;
 
     /*
      * Storage blob path of library.
      */
-    @JsonProperty(value = "path")
+    @Generated
     private String path;
 
     /*
      * Storage blob container name.
      */
-    @JsonProperty(value = "containerName")
+    @Generated
     private String containerName;
 
     /*
      * The last update time of the library.
      */
-    @JsonProperty(value = "uploadedTimestamp")
+    @Generated
     private OffsetDateTime uploadedTimestamp;
 
     /*
      * Type of the library.
      */
-    @JsonProperty(value = "type")
+    @Generated
     private String type;
 
     /*
      * Provisioning status of the library/package.
      */
-    @JsonProperty(value = "provisioningStatus", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private String provisioningStatus;
 
     /*
      * Creator Id of the library/package.
      */
-    @JsonProperty(value = "creatorId", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private String creatorId;
 
-    /** Creates an instance of LibraryInfo class. */
-    public LibraryInfo() {}
+    /**
+     * Creates an instance of LibraryInfo class.
+     */
+    @Generated
+    public LibraryInfo() {
+    }
 
     /**
      * Get the name property: Name of the library.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: Name of the library.
-     *
+     * 
      * @param name the name value to set.
      * @return the LibraryInfo object itself.
      */
+    @Generated
     public LibraryInfo setName(String name) {
         this.name = name;
         return this;
@@ -82,19 +95,21 @@ public final class LibraryInfo {
 
     /**
      * Get the path property: Storage blob path of library.
-     *
+     * 
      * @return the path value.
      */
+    @Generated
     public String getPath() {
         return this.path;
     }
 
     /**
      * Set the path property: Storage blob path of library.
-     *
+     * 
      * @param path the path value to set.
      * @return the LibraryInfo object itself.
      */
+    @Generated
     public LibraryInfo setPath(String path) {
         this.path = path;
         return this;
@@ -102,19 +117,21 @@ public final class LibraryInfo {
 
     /**
      * Get the containerName property: Storage blob container name.
-     *
+     * 
      * @return the containerName value.
      */
+    @Generated
     public String getContainerName() {
         return this.containerName;
     }
 
     /**
      * Set the containerName property: Storage blob container name.
-     *
+     * 
      * @param containerName the containerName value to set.
      * @return the LibraryInfo object itself.
      */
+    @Generated
     public LibraryInfo setContainerName(String containerName) {
         this.containerName = containerName;
         return this;
@@ -122,19 +139,21 @@ public final class LibraryInfo {
 
     /**
      * Get the uploadedTimestamp property: The last update time of the library.
-     *
+     * 
      * @return the uploadedTimestamp value.
      */
+    @Generated
     public OffsetDateTime getUploadedTimestamp() {
         return this.uploadedTimestamp;
     }
 
     /**
      * Set the uploadedTimestamp property: The last update time of the library.
-     *
+     * 
      * @param uploadedTimestamp the uploadedTimestamp value to set.
      * @return the LibraryInfo object itself.
      */
+    @Generated
     public LibraryInfo setUploadedTimestamp(OffsetDateTime uploadedTimestamp) {
         this.uploadedTimestamp = uploadedTimestamp;
         return this;
@@ -142,19 +161,21 @@ public final class LibraryInfo {
 
     /**
      * Get the type property: Type of the library.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public String getType() {
         return this.type;
     }
 
     /**
      * Set the type property: Type of the library.
-     *
+     * 
      * @param type the type value to set.
      * @return the LibraryInfo object itself.
      */
+    @Generated
     public LibraryInfo setType(String type) {
         this.type = type;
         return this;
@@ -162,19 +183,79 @@ public final class LibraryInfo {
 
     /**
      * Get the provisioningStatus property: Provisioning status of the library/package.
-     *
+     * 
      * @return the provisioningStatus value.
      */
+    @Generated
     public String getProvisioningStatus() {
         return this.provisioningStatus;
     }
 
     /**
      * Get the creatorId property: Creator Id of the library/package.
-     *
+     * 
      * @return the creatorId value.
      */
+    @Generated
     public String getCreatorId() {
         return this.creatorId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeStringField("path", this.path);
+        jsonWriter.writeStringField("containerName", this.containerName);
+        jsonWriter.writeStringField("uploadedTimestamp",
+            this.uploadedTimestamp == null
+                ? null
+                : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.uploadedTimestamp));
+        jsonWriter.writeStringField("type", this.type);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of LibraryInfo from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of LibraryInfo if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the LibraryInfo.
+     */
+    @Generated
+    public static LibraryInfo fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            LibraryInfo deserializedLibraryInfo = new LibraryInfo();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedLibraryInfo.name = reader.getString();
+                } else if ("path".equals(fieldName)) {
+                    deserializedLibraryInfo.path = reader.getString();
+                } else if ("containerName".equals(fieldName)) {
+                    deserializedLibraryInfo.containerName = reader.getString();
+                } else if ("uploadedTimestamp".equals(fieldName)) {
+                    deserializedLibraryInfo.uploadedTimestamp = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("type".equals(fieldName)) {
+                    deserializedLibraryInfo.type = reader.getString();
+                } else if ("provisioningStatus".equals(fieldName)) {
+                    deserializedLibraryInfo.provisioningStatus = reader.getString();
+                } else if ("creatorId".equals(fieldName)) {
+                    deserializedLibraryInfo.creatorId = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedLibraryInfo;
+        });
     }
 }

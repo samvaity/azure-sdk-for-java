@@ -5,25 +5,32 @@
 package com.azure.resourcemanager.iothub.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The device streams properties of iothub. */
+/**
+ * The device streams properties of iothub.
+ */
 @Fluent
-public final class IotHubPropertiesDeviceStreams {
+public final class IotHubPropertiesDeviceStreams implements JsonSerializable<IotHubPropertiesDeviceStreams> {
     /*
      * List of Device Streams Endpoints.
      */
-    @JsonProperty(value = "streamingEndpoints")
     private List<String> streamingEndpoints;
 
-    /** Creates an instance of IotHubPropertiesDeviceStreams class. */
+    /**
+     * Creates an instance of IotHubPropertiesDeviceStreams class.
+     */
     public IotHubPropertiesDeviceStreams() {
     }
 
     /**
      * Get the streamingEndpoints property: List of Device Streams Endpoints.
-     *
+     * 
      * @return the streamingEndpoints value.
      */
     public List<String> streamingEndpoints() {
@@ -32,7 +39,7 @@ public final class IotHubPropertiesDeviceStreams {
 
     /**
      * Set the streamingEndpoints property: List of Device Streams Endpoints.
-     *
+     * 
      * @param streamingEndpoints the streamingEndpoints value to set.
      * @return the IotHubPropertiesDeviceStreams object itself.
      */
@@ -43,9 +50,48 @@ public final class IotHubPropertiesDeviceStreams {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("streamingEndpoints", this.streamingEndpoints,
+            (writer, element) -> writer.writeString(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of IotHubPropertiesDeviceStreams from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of IotHubPropertiesDeviceStreams if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the IotHubPropertiesDeviceStreams.
+     */
+    public static IotHubPropertiesDeviceStreams fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            IotHubPropertiesDeviceStreams deserializedIotHubPropertiesDeviceStreams
+                = new IotHubPropertiesDeviceStreams();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("streamingEndpoints".equals(fieldName)) {
+                    List<String> streamingEndpoints = reader.readArray(reader1 -> reader1.getString());
+                    deserializedIotHubPropertiesDeviceStreams.streamingEndpoints = streamingEndpoints;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedIotHubPropertiesDeviceStreams;
+        });
     }
 }

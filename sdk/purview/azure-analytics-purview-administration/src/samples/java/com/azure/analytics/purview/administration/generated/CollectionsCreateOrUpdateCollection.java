@@ -13,17 +13,16 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 
 public class CollectionsCreateOrUpdateCollection {
     public static void main(String[] args) {
-        CollectionsClient collectionsClient =
-                new CollectionsClientBuilder()
-                        .credential(new DefaultAzureCredentialBuilder().build())
-                        .endpoint("{endpoint}")
-                        .buildClient();
-        // BEGIN:com.azure.analytics.purview.administration.generated.collectionscreateorupdatecollection.collectionscreateorupdatecollection
-        BinaryData collection =
-                BinaryData.fromString("{\"parentCollection\":{\"referenceName\":\"myParentCollection1\"}}");
+        CollectionsClient collectionsClient
+            = new CollectionsClientBuilder().credential(new DefaultAzureCredentialBuilder().build())
+                .endpoint("{endpoint}")
+                .buildClient();
+        // BEGIN:com.azure.analytics.purview.administration.generated.collections-create-or-update-collection.collections-create-or-update-collection
+        BinaryData collection
+            = BinaryData.fromString("{\"parentCollection\":{\"referenceName\":\"myParentCollection1\"}}");
         RequestOptions requestOptions = new RequestOptions();
-        Response<BinaryData> response =
-                collectionsClient.createOrUpdateCollectionWithResponse("myCollection1", collection, requestOptions);
-        // END:com.azure.analytics.purview.administration.generated.collectionscreateorupdatecollection.collectionscreateorupdatecollection
+        Response<BinaryData> response
+            = collectionsClient.createOrUpdateCollectionWithResponse("myCollection1", collection, requestOptions);
+        // END:com.azure.analytics.purview.administration.generated.collections-create-or-update-collection.collections-create-or-update-collection
     }
 }

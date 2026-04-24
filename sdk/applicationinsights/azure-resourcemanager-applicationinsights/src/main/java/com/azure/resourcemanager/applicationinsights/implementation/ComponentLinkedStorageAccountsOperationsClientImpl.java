@@ -37,24 +37,24 @@ import reactor.core.publisher.Mono;
  */
 public final class ComponentLinkedStorageAccountsOperationsClientImpl
     implements ComponentLinkedStorageAccountsOperationsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ComponentLinkedStorageAccountsOperationsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final ApplicationInsightsManagementClientImpl client;
 
     /**
      * Initializes an instance of ComponentLinkedStorageAccountsOperationsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ComponentLinkedStorageAccountsOperationsClientImpl(ApplicationInsightsManagementClientImpl client) {
-        this.service =
-            RestProxy
-                .create(
-                    ComponentLinkedStorageAccountsOperationsService.class,
-                    client.getHttpPipeline(),
-                    client.getSerializerAdapter());
+        this.service = RestProxy.create(ComponentLinkedStorageAccountsOperationsService.class, client.getHttpPipeline(),
+            client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -65,77 +65,51 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
      */
     @Host("{$host}")
     @ServiceInterface(name = "ApplicationInsightsM")
-    private interface ComponentLinkedStorageAccountsOperationsService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components"
-                + "/{resourceName}/linkedStorageAccounts/{storageType}")
-        @ExpectedResponses({200})
+    public interface ComponentLinkedStorageAccountsOperationsService {
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/{resourceName}/linkedStorageAccounts/{storageType}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ComponentLinkedStorageAccountsInner>> get(
-            @HostParam("$host") String endpoint,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("storageType") StorageType storageType,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<ComponentLinkedStorageAccountsInner>> get(@HostParam("$host") String endpoint,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("api-version") String apiVersion,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("resourceName") String resourceName,
+            @PathParam("storageType") StorageType storageType, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components"
-                + "/{resourceName}/linkedStorageAccounts/{storageType}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/{resourceName}/linkedStorageAccounts/{storageType}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ComponentLinkedStorageAccountsInner>> createAndUpdate(
-            @HostParam("$host") String endpoint,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceName") String resourceName,
+        Mono<Response<ComponentLinkedStorageAccountsInner>> createAndUpdate(@HostParam("$host") String endpoint,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("api-version") String apiVersion,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("resourceName") String resourceName,
             @PathParam("storageType") StorageType storageType,
             @BodyParam("application/json") ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Patch(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components"
-                + "/{resourceName}/linkedStorageAccounts/{storageType}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/{resourceName}/linkedStorageAccounts/{storageType}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ComponentLinkedStorageAccountsInner>> update(
-            @HostParam("$host") String endpoint,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceName") String resourceName,
+        Mono<Response<ComponentLinkedStorageAccountsInner>> update(@HostParam("$host") String endpoint,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("api-version") String apiVersion,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("resourceName") String resourceName,
             @PathParam("storageType") StorageType storageType,
             @BodyParam("application/json") ComponentLinkedStorageAccountsPatch linkedStorageAccountsProperties,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components"
-                + "/{resourceName}/linkedStorageAccounts/{storageType}")
-        @ExpectedResponses({200, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/{resourceName}/linkedStorageAccounts/{storageType}")
+        @ExpectedResponses({ 200, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Void>> delete(
-            @HostParam("$host") String endpoint,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("storageType") StorageType storageType,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<Void>> delete(@HostParam("$host") String endpoint,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("api-version") String apiVersion,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("resourceName") String resourceName,
+            @PathParam("storageType") StorageType storageType, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Returns the current linked storage settings for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -143,26 +117,22 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return an Application Insights component linked storage accounts along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ComponentLinkedStorageAccountsInner>> getWithResponseAsync(
-        String resourceGroupName, String resourceName, StorageType storageType) {
+    private Mono<Response<ComponentLinkedStorageAccountsInner>> getWithResponseAsync(String resourceGroupName,
+        String resourceName, StorageType storageType) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceName == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
@@ -173,24 +143,14 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
         final String apiVersion = "2020-03-01-preview";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            resourceGroupName,
-                            apiVersion,
-                            this.client.getSubscriptionId(),
-                            resourceName,
-                            storageType,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), resourceGroupName, apiVersion,
+                this.client.getSubscriptionId(), resourceName, storageType, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Returns the current linked storage settings for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -199,26 +159,22 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return an Application Insights component linked storage accounts along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ComponentLinkedStorageAccountsInner>> getWithResponseAsync(
-        String resourceGroupName, String resourceName, StorageType storageType, Context context) {
+    private Mono<Response<ComponentLinkedStorageAccountsInner>> getWithResponseAsync(String resourceGroupName,
+        String resourceName, StorageType storageType, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceName == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
@@ -229,21 +185,13 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
         final String apiVersion = "2020-03-01-preview";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                resourceGroupName,
-                apiVersion,
-                this.client.getSubscriptionId(),
-                resourceName,
-                storageType,
-                accept,
-                context);
+        return service.get(this.client.getEndpoint(), resourceGroupName, apiVersion, this.client.getSubscriptionId(),
+            resourceName, storageType, accept, context);
     }
 
     /**
      * Returns the current linked storage settings for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -253,32 +201,15 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
      * @return an Application Insights component linked storage accounts on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ComponentLinkedStorageAccountsInner> getAsync(
-        String resourceGroupName, String resourceName, StorageType storageType) {
+    private Mono<ComponentLinkedStorageAccountsInner> getAsync(String resourceGroupName, String resourceName,
+        StorageType storageType) {
         return getWithResponseAsync(resourceGroupName, resourceName, storageType)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Returns the current linked storage settings for an Application Insights component.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param resourceName The name of the Application Insights component resource.
-     * @param storageType The type of the Application Insights component data source for the linked storage account.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an Application Insights component linked storage accounts.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public ComponentLinkedStorageAccountsInner get(
-        String resourceGroupName, String resourceName, StorageType storageType) {
-        return getAsync(resourceGroupName, resourceName, storageType).block();
-    }
-
-    /**
-     * Returns the current linked storage settings for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -289,203 +220,159 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
      * @return an Application Insights component linked storage accounts along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ComponentLinkedStorageAccountsInner> getWithResponse(
-        String resourceGroupName, String resourceName, StorageType storageType, Context context) {
+    public Response<ComponentLinkedStorageAccountsInner> getWithResponse(String resourceGroupName, String resourceName,
+        StorageType storageType, Context context) {
         return getWithResponseAsync(resourceGroupName, resourceName, storageType, context).block();
     }
 
     /**
-     * Replace current linked storage account for an Application Insights component.
-     *
+     * Returns the current linked storage settings for an Application Insights component.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
-     * @param linkedStorageAccountsProperties Properties that need to be specified to update linked storage accounts for
-     *     an Application Insights component.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an Application Insights component linked storage accounts along with {@link Response} on successful
-     *     completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ComponentLinkedStorageAccountsInner>> createAndUpdateWithResponseAsync(
-        String resourceGroupName,
-        String resourceName,
-        StorageType storageType,
-        ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
-        }
-        if (storageType == null) {
-            return Mono.error(new IllegalArgumentException("Parameter storageType is required and cannot be null."));
-        }
-        if (linkedStorageAccountsProperties == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter linkedStorageAccountsProperties is required and cannot be null."));
-        } else {
-            linkedStorageAccountsProperties.validate();
-        }
-        final String apiVersion = "2020-03-01-preview";
-        final String accept = "application/json";
-        return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .createAndUpdate(
-                            this.client.getEndpoint(),
-                            resourceGroupName,
-                            apiVersion,
-                            this.client.getSubscriptionId(),
-                            resourceName,
-                            storageType,
-                            linkedStorageAccountsProperties,
-                            accept,
-                            context))
-            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
-    }
-
-    /**
-     * Replace current linked storage account for an Application Insights component.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param resourceName The name of the Application Insights component resource.
-     * @param storageType The type of the Application Insights component data source for the linked storage account.
-     * @param linkedStorageAccountsProperties Properties that need to be specified to update linked storage accounts for
-     *     an Application Insights component.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an Application Insights component linked storage accounts along with {@link Response} on successful
-     *     completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ComponentLinkedStorageAccountsInner>> createAndUpdateWithResponseAsync(
-        String resourceGroupName,
-        String resourceName,
-        StorageType storageType,
-        ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
-        }
-        if (storageType == null) {
-            return Mono.error(new IllegalArgumentException("Parameter storageType is required and cannot be null."));
-        }
-        if (linkedStorageAccountsProperties == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter linkedStorageAccountsProperties is required and cannot be null."));
-        } else {
-            linkedStorageAccountsProperties.validate();
-        }
-        final String apiVersion = "2020-03-01-preview";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .createAndUpdate(
-                this.client.getEndpoint(),
-                resourceGroupName,
-                apiVersion,
-                this.client.getSubscriptionId(),
-                resourceName,
-                storageType,
-                linkedStorageAccountsProperties,
-                accept,
-                context);
-    }
-
-    /**
-     * Replace current linked storage account for an Application Insights component.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param resourceName The name of the Application Insights component resource.
-     * @param storageType The type of the Application Insights component data source for the linked storage account.
-     * @param linkedStorageAccountsProperties Properties that need to be specified to update linked storage accounts for
-     *     an Application Insights component.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an Application Insights component linked storage accounts on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ComponentLinkedStorageAccountsInner> createAndUpdateAsync(
-        String resourceGroupName,
-        String resourceName,
-        StorageType storageType,
-        ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties) {
-        return createAndUpdateWithResponseAsync(
-                resourceGroupName, resourceName, storageType, linkedStorageAccountsProperties)
-            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
-    }
-
-    /**
-     * Replace current linked storage account for an Application Insights component.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param resourceName The name of the Application Insights component resource.
-     * @param storageType The type of the Application Insights component data source for the linked storage account.
-     * @param linkedStorageAccountsProperties Properties that need to be specified to update linked storage accounts for
-     *     an Application Insights component.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return an Application Insights component linked storage accounts.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ComponentLinkedStorageAccountsInner createAndUpdate(
-        String resourceGroupName,
-        String resourceName,
-        StorageType storageType,
-        ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties) {
-        return createAndUpdateAsync(resourceGroupName, resourceName, storageType, linkedStorageAccountsProperties)
-            .block();
+    public ComponentLinkedStorageAccountsInner get(String resourceGroupName, String resourceName,
+        StorageType storageType) {
+        return getWithResponse(resourceGroupName, resourceName, storageType, Context.NONE).getValue();
     }
 
     /**
      * Replace current linked storage account for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
      * @param linkedStorageAccountsProperties Properties that need to be specified to update linked storage accounts for
-     *     an Application Insights component.
+     * an Application Insights component.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return an Application Insights component linked storage accounts along with {@link Response} on successful
+     * completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<ComponentLinkedStorageAccountsInner>> createAndUpdateWithResponseAsync(
+        String resourceGroupName, String resourceName, StorageType storageType,
+        ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            return Mono
+                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
+        if (storageType == null) {
+            return Mono.error(new IllegalArgumentException("Parameter storageType is required and cannot be null."));
+        }
+        if (linkedStorageAccountsProperties == null) {
+            return Mono.error(new IllegalArgumentException(
+                "Parameter linkedStorageAccountsProperties is required and cannot be null."));
+        } else {
+            linkedStorageAccountsProperties.validate();
+        }
+        final String apiVersion = "2020-03-01-preview";
+        final String accept = "application/json";
+        return FluxUtil
+            .withContext(context -> service.createAndUpdate(this.client.getEndpoint(), resourceGroupName, apiVersion,
+                this.client.getSubscriptionId(), resourceName, storageType, linkedStorageAccountsProperties, accept,
+                context))
+            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+    }
+
+    /**
+     * Replace current linked storage account for an Application Insights component.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param resourceName The name of the Application Insights component resource.
+     * @param storageType The type of the Application Insights component data source for the linked storage account.
+     * @param linkedStorageAccountsProperties Properties that need to be specified to update linked storage accounts for
+     * an Application Insights component.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return an Application Insights component linked storage accounts along with {@link Response} on successful
+     * completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<ComponentLinkedStorageAccountsInner>> createAndUpdateWithResponseAsync(
+        String resourceGroupName, String resourceName, StorageType storageType,
+        ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties, Context context) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            return Mono
+                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
+        if (storageType == null) {
+            return Mono.error(new IllegalArgumentException("Parameter storageType is required and cannot be null."));
+        }
+        if (linkedStorageAccountsProperties == null) {
+            return Mono.error(new IllegalArgumentException(
+                "Parameter linkedStorageAccountsProperties is required and cannot be null."));
+        } else {
+            linkedStorageAccountsProperties.validate();
+        }
+        final String apiVersion = "2020-03-01-preview";
+        final String accept = "application/json";
+        context = this.client.mergeContext(context);
+        return service.createAndUpdate(this.client.getEndpoint(), resourceGroupName, apiVersion,
+            this.client.getSubscriptionId(), resourceName, storageType, linkedStorageAccountsProperties, accept,
+            context);
+    }
+
+    /**
+     * Replace current linked storage account for an Application Insights component.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param resourceName The name of the Application Insights component resource.
+     * @param storageType The type of the Application Insights component data source for the linked storage account.
+     * @param linkedStorageAccountsProperties Properties that need to be specified to update linked storage accounts for
+     * an Application Insights component.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return an Application Insights component linked storage accounts on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<ComponentLinkedStorageAccountsInner> createAndUpdateAsync(String resourceGroupName,
+        String resourceName, StorageType storageType,
+        ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties) {
+        return createAndUpdateWithResponseAsync(resourceGroupName, resourceName, storageType,
+            linkedStorageAccountsProperties).flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Replace current linked storage account for an Application Insights component.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param resourceName The name of the Application Insights component resource.
+     * @param storageType The type of the Application Insights component data source for the linked storage account.
+     * @param linkedStorageAccountsProperties Properties that need to be specified to update linked storage accounts for
+     * an Application Insights component.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -493,52 +380,62 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
      * @return an Application Insights component linked storage accounts along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ComponentLinkedStorageAccountsInner> createAndUpdateWithResponse(
-        String resourceGroupName,
-        String resourceName,
-        StorageType storageType,
-        ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties,
-        Context context) {
-        return createAndUpdateWithResponseAsync(
-                resourceGroupName, resourceName, storageType, linkedStorageAccountsProperties, context)
-            .block();
+    public Response<ComponentLinkedStorageAccountsInner> createAndUpdateWithResponse(String resourceGroupName,
+        String resourceName, StorageType storageType,
+        ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties, Context context) {
+        return createAndUpdateWithResponseAsync(resourceGroupName, resourceName, storageType,
+            linkedStorageAccountsProperties, context).block();
+    }
+
+    /**
+     * Replace current linked storage account for an Application Insights component.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param resourceName The name of the Application Insights component resource.
+     * @param storageType The type of the Application Insights component data source for the linked storage account.
+     * @param linkedStorageAccountsProperties Properties that need to be specified to update linked storage accounts for
+     * an Application Insights component.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return an Application Insights component linked storage accounts.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ComponentLinkedStorageAccountsInner createAndUpdate(String resourceGroupName, String resourceName,
+        StorageType storageType, ComponentLinkedStorageAccountsInner linkedStorageAccountsProperties) {
+        return createAndUpdateWithResponse(resourceGroupName, resourceName, storageType,
+            linkedStorageAccountsProperties, Context.NONE).getValue();
     }
 
     /**
      * Update linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
      * @param linkedStorageAccountsProperties Properties that need to be specified to update a linked storage accounts
-     *     for an Application Insights component.
+     * for an Application Insights component.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return an Application Insights component linked storage accounts along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ComponentLinkedStorageAccountsInner>> updateWithResponseAsync(
-        String resourceGroupName,
-        String resourceName,
-        StorageType storageType,
+    private Mono<Response<ComponentLinkedStorageAccountsInner>> updateWithResponseAsync(String resourceGroupName,
+        String resourceName, StorageType storageType,
         ComponentLinkedStorageAccountsPatch linkedStorageAccountsProperties) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceName == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
@@ -547,69 +444,50 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
             return Mono.error(new IllegalArgumentException("Parameter storageType is required and cannot be null."));
         }
         if (linkedStorageAccountsProperties == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter linkedStorageAccountsProperties is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter linkedStorageAccountsProperties is required and cannot be null."));
         } else {
             linkedStorageAccountsProperties.validate();
         }
         final String apiVersion = "2020-03-01-preview";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .update(
-                            this.client.getEndpoint(),
-                            resourceGroupName,
-                            apiVersion,
-                            this.client.getSubscriptionId(),
-                            resourceName,
-                            storageType,
-                            linkedStorageAccountsProperties,
-                            accept,
-                            context))
+            .withContext(context -> service.update(this.client.getEndpoint(), resourceGroupName, apiVersion,
+                this.client.getSubscriptionId(), resourceName, storageType, linkedStorageAccountsProperties, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Update linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
      * @param linkedStorageAccountsProperties Properties that need to be specified to update a linked storage accounts
-     *     for an Application Insights component.
+     * for an Application Insights component.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return an Application Insights component linked storage accounts along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ComponentLinkedStorageAccountsInner>> updateWithResponseAsync(
-        String resourceGroupName,
-        String resourceName,
-        StorageType storageType,
-        ComponentLinkedStorageAccountsPatch linkedStorageAccountsProperties,
-        Context context) {
+    private Mono<Response<ComponentLinkedStorageAccountsInner>> updateWithResponseAsync(String resourceGroupName,
+        String resourceName, StorageType storageType,
+        ComponentLinkedStorageAccountsPatch linkedStorageAccountsProperties, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceName == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
@@ -618,82 +496,46 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
             return Mono.error(new IllegalArgumentException("Parameter storageType is required and cannot be null."));
         }
         if (linkedStorageAccountsProperties == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter linkedStorageAccountsProperties is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter linkedStorageAccountsProperties is required and cannot be null."));
         } else {
             linkedStorageAccountsProperties.validate();
         }
         final String apiVersion = "2020-03-01-preview";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .update(
-                this.client.getEndpoint(),
-                resourceGroupName,
-                apiVersion,
-                this.client.getSubscriptionId(),
-                resourceName,
-                storageType,
-                linkedStorageAccountsProperties,
-                accept,
-                context);
+        return service.update(this.client.getEndpoint(), resourceGroupName, apiVersion, this.client.getSubscriptionId(),
+            resourceName, storageType, linkedStorageAccountsProperties, accept, context);
     }
 
     /**
      * Update linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
      * @param linkedStorageAccountsProperties Properties that need to be specified to update a linked storage accounts
-     *     for an Application Insights component.
+     * for an Application Insights component.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return an Application Insights component linked storage accounts on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ComponentLinkedStorageAccountsInner> updateAsync(
-        String resourceGroupName,
-        String resourceName,
-        StorageType storageType,
-        ComponentLinkedStorageAccountsPatch linkedStorageAccountsProperties) {
+    private Mono<ComponentLinkedStorageAccountsInner> updateAsync(String resourceGroupName, String resourceName,
+        StorageType storageType, ComponentLinkedStorageAccountsPatch linkedStorageAccountsProperties) {
         return updateWithResponseAsync(resourceGroupName, resourceName, storageType, linkedStorageAccountsProperties)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Update linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
      * @param linkedStorageAccountsProperties Properties that need to be specified to update a linked storage accounts
-     *     for an Application Insights component.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an Application Insights component linked storage accounts.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public ComponentLinkedStorageAccountsInner update(
-        String resourceGroupName,
-        String resourceName,
-        StorageType storageType,
-        ComponentLinkedStorageAccountsPatch linkedStorageAccountsProperties) {
-        return updateAsync(resourceGroupName, resourceName, storageType, linkedStorageAccountsProperties).block();
-    }
-
-    /**
-     * Update linked storage accounts for an Application Insights component.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param resourceName The name of the Application Insights component resource.
-     * @param storageType The type of the Application Insights component data source for the linked storage account.
-     * @param linkedStorageAccountsProperties Properties that need to be specified to update a linked storage accounts
-     *     for an Application Insights component.
+     * for an Application Insights component.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -701,20 +543,36 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
      * @return an Application Insights component linked storage accounts along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ComponentLinkedStorageAccountsInner> updateWithResponse(
-        String resourceGroupName,
-        String resourceName,
-        StorageType storageType,
-        ComponentLinkedStorageAccountsPatch linkedStorageAccountsProperties,
-        Context context) {
-        return updateWithResponseAsync(
-                resourceGroupName, resourceName, storageType, linkedStorageAccountsProperties, context)
-            .block();
+    public Response<ComponentLinkedStorageAccountsInner> updateWithResponse(String resourceGroupName,
+        String resourceName, StorageType storageType,
+        ComponentLinkedStorageAccountsPatch linkedStorageAccountsProperties, Context context) {
+        return updateWithResponseAsync(resourceGroupName, resourceName, storageType, linkedStorageAccountsProperties,
+            context).block();
+    }
+
+    /**
+     * Update linked storage accounts for an Application Insights component.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param resourceName The name of the Application Insights component resource.
+     * @param storageType The type of the Application Insights component data source for the linked storage account.
+     * @param linkedStorageAccountsProperties Properties that need to be specified to update a linked storage accounts
+     * for an Application Insights component.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return an Application Insights component linked storage accounts.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ComponentLinkedStorageAccountsInner update(String resourceGroupName, String resourceName,
+        StorageType storageType, ComponentLinkedStorageAccountsPatch linkedStorageAccountsProperties) {
+        return updateWithResponse(resourceGroupName, resourceName, storageType, linkedStorageAccountsProperties,
+            Context.NONE).getValue();
     }
 
     /**
      * Delete linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -724,23 +582,19 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> deleteWithResponseAsync(
-        String resourceGroupName, String resourceName, StorageType storageType) {
+    private Mono<Response<Void>> deleteWithResponseAsync(String resourceGroupName, String resourceName,
+        StorageType storageType) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceName == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
@@ -751,24 +605,14 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
         final String apiVersion = "2020-03-01-preview";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            resourceGroupName,
-                            apiVersion,
-                            this.client.getSubscriptionId(),
-                            resourceName,
-                            storageType,
-                            accept,
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), resourceGroupName, apiVersion,
+                this.client.getSubscriptionId(), resourceName, storageType, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Delete linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -779,23 +623,19 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> deleteWithResponseAsync(
-        String resourceGroupName, String resourceName, StorageType storageType, Context context) {
+    private Mono<Response<Void>> deleteWithResponseAsync(String resourceGroupName, String resourceName,
+        StorageType storageType, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceName == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
@@ -806,21 +646,13 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
         final String apiVersion = "2020-03-01-preview";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                resourceGroupName,
-                apiVersion,
-                this.client.getSubscriptionId(),
-                resourceName,
-                storageType,
-                accept,
-                context);
+        return service.delete(this.client.getEndpoint(), resourceGroupName, apiVersion, this.client.getSubscriptionId(),
+            resourceName, storageType, accept, context);
     }
 
     /**
      * Delete linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -836,22 +668,7 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
 
     /**
      * Delete linked storage accounts for an Application Insights component.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param resourceName The name of the Application Insights component resource.
-     * @param storageType The type of the Application Insights component data source for the linked storage account.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void delete(String resourceGroupName, String resourceName, StorageType storageType) {
-        deleteAsync(resourceGroupName, resourceName, storageType).block();
-    }
-
-    /**
-     * Delete linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -862,8 +679,23 @@ public final class ComponentLinkedStorageAccountsOperationsClientImpl
      * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> deleteWithResponse(
-        String resourceGroupName, String resourceName, StorageType storageType, Context context) {
+    public Response<Void> deleteWithResponse(String resourceGroupName, String resourceName, StorageType storageType,
+        Context context) {
         return deleteWithResponseAsync(resourceGroupName, resourceName, storageType, context).block();
+    }
+
+    /**
+     * Delete linked storage accounts for an Application Insights component.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param resourceName The name of the Application Insights component resource.
+     * @param storageType The type of the Application Insights component data source for the linked storage account.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void delete(String resourceGroupName, String resourceName, StorageType storageType) {
+        deleteWithResponse(resourceGroupName, resourceName, storageType, Context.NONE);
     }
 }

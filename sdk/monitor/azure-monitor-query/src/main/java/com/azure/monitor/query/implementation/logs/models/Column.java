@@ -5,45 +5,56 @@
 package com.azure.monitor.query.implementation.logs.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
 /**
  * A table column.
- *
- * <p>A column in a table.
+ * 
+ * A column in a table.
  */
 @Fluent
-public final class Column {
+public final class Column implements JsonSerializable<Column> {
     /*
      * The name of this column.
      */
-    @JsonProperty(value = "name")
+    @Generated
     private String name;
 
     /*
      * The data type of this column.
      */
-    @JsonProperty(value = "type")
+    @Generated
     private LogsColumnType type;
 
-    /** Creates an instance of Column class. */
-    public Column() {}
+    /**
+     * Creates an instance of Column class.
+     */
+    @Generated
+    public Column() {
+    }
 
     /**
      * Get the name property: The name of this column.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The name of this column.
-     *
+     * 
      * @param name the name value to set.
      * @return the Column object itself.
      */
+    @Generated
     public Column setName(String name) {
         this.name = name;
         return this;
@@ -51,28 +62,64 @@ public final class Column {
 
     /**
      * Get the type property: The data type of this column.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public LogsColumnType getType() {
         return this.type;
     }
 
     /**
      * Set the type property: The data type of this column.
-     *
+     * 
      * @param type the type value to set.
      * @return the Column object itself.
      */
+    @Generated
     public Column setType(LogsColumnType type) {
         this.type = type;
         return this;
     }
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * {@inheritDoc}
      */
-    public void validate() {}
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeStringField("type", this.type == null ? null : this.type.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of Column from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of Column if the JsonReader was pointing to an instance of it, or null if it was pointing to
+     * JSON null.
+     * @throws IOException If an error occurs while reading the Column.
+     */
+    @Generated
+    public static Column fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            Column deserializedColumn = new Column();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedColumn.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedColumn.type = LogsColumnType.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedColumn;
+        });
+    }
 }

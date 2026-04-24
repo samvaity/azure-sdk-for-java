@@ -4,33 +4,59 @@
 
 package com.azure.communication.callautomation.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for CallRejectReasonInternal. */
+/**
+ * The rejection reason.
+ */
 public final class CallRejectReasonInternal extends ExpandableStringEnum<CallRejectReasonInternal> {
-    /** Static value none for CallRejectReasonInternal. */
+    /**
+     * Static value none for CallRejectReasonInternal.
+     */
+    @Generated
     public static final CallRejectReasonInternal NONE = fromString("none");
 
-    /** Static value busy for CallRejectReasonInternal. */
+    /**
+     * Static value busy for CallRejectReasonInternal.
+     */
+    @Generated
     public static final CallRejectReasonInternal BUSY = fromString("busy");
 
-    /** Static value forbidden for CallRejectReasonInternal. */
+    /**
+     * Static value forbidden for CallRejectReasonInternal.
+     */
+    @Generated
     public static final CallRejectReasonInternal FORBIDDEN = fromString("forbidden");
 
     /**
+     * Creates a new instance of CallRejectReasonInternal value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public CallRejectReasonInternal() {
+    }
+
+    /**
      * Creates or finds a CallRejectReasonInternal from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding CallRejectReasonInternal.
      */
-    @JsonCreator
+    @Generated
     public static CallRejectReasonInternal fromString(String name) {
         return fromString(name, CallRejectReasonInternal.class);
     }
 
-    /** @return known CallRejectReasonInternal values. */
+    /**
+     * Gets known CallRejectReasonInternal values.
+     * 
+     * @return known CallRejectReasonInternal values.
+     */
+    @Generated
     public static Collection<CallRejectReasonInternal> values() {
         return values(CallRejectReasonInternal.class);
     }

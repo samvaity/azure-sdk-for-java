@@ -12,22 +12,20 @@ import org.junit.jupiter.api.Assertions;
 public final class StorageApplianceCommandSpecificationTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        StorageApplianceCommandSpecification model =
-            BinaryData
-                .fromString("{\"arguments\":[\"dkq\",\"eqyj\"],\"command\":\"eziunjxdfzant\"}")
+        StorageApplianceCommandSpecification model
+            = BinaryData.fromString("{\"arguments\":[\"ytehqpuvjmvqmt\",\"wckygr\",\"ejnndljdju\"],\"command\":\"kb\"}")
                 .toObject(StorageApplianceCommandSpecification.class);
-        Assertions.assertEquals("dkq", model.arguments().get(0));
-        Assertions.assertEquals("eziunjxdfzant", model.command());
+        Assertions.assertEquals("ytehqpuvjmvqmt", model.arguments().get(0));
+        Assertions.assertEquals("kb", model.command());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        StorageApplianceCommandSpecification model =
-            new StorageApplianceCommandSpecification()
-                .withArguments(Arrays.asList("dkq", "eqyj"))
-                .withCommand("eziunjxdfzant");
+        StorageApplianceCommandSpecification model = new StorageApplianceCommandSpecification()
+            .withArguments(Arrays.asList("ytehqpuvjmvqmt", "wckygr", "ejnndljdju"))
+            .withCommand("kb");
         model = BinaryData.fromObject(model).toObject(StorageApplianceCommandSpecification.class);
-        Assertions.assertEquals("dkq", model.arguments().get(0));
-        Assertions.assertEquals("eziunjxdfzant", model.command());
+        Assertions.assertEquals("ytehqpuvjmvqmt", model.arguments().get(0));
+        Assertions.assertEquals("kb", model.command());
     }
 }

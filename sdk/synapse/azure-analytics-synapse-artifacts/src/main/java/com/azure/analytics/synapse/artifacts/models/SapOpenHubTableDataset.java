@@ -5,49 +5,72 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Sap Business Warehouse Open Hub Destination Table properties. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("SapOpenHubTable")
-@JsonFlatten
+/**
+ * Sap Business Warehouse Open Hub Destination Table properties.
+ */
 @Fluent
 public class SapOpenHubTableDataset extends Dataset {
+    /*
+     * Type of dataset.
+     */
+    @Generated
+    private String type = "SapOpenHubTable";
+
     /*
      * The name of the Open Hub Destination with destination type as Database Table. Type: string (or Expression with
      * resultType string).
      */
-    @JsonProperty(value = "typeProperties.openHubDestinationName", required = true)
+    @Generated
     private Object openHubDestinationName;
 
     /*
      * Whether to exclude the records of the last request. The default value is true. Type: boolean (or Expression with
      * resultType boolean).
      */
-    @JsonProperty(value = "typeProperties.excludeLastRequest")
+    @Generated
     private Object excludeLastRequest;
 
     /*
      * The ID of request for delta loading. Once it is set, only data with requestId larger than the value of this
      * property will be retrieved. The default value is 0. Type: integer (or Expression with resultType integer ).
      */
-    @JsonProperty(value = "typeProperties.baseRequestId")
+    @Generated
     private Object baseRequestId;
 
-    /** Creates an instance of SapOpenHubTableDataset class. */
-    public SapOpenHubTableDataset() {}
+    /**
+     * Creates an instance of SapOpenHubTableDataset class.
+     */
+    @Generated
+    public SapOpenHubTableDataset() {
+    }
+
+    /**
+     * Get the type property: Type of dataset.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the openHubDestinationName property: The name of the Open Hub Destination with destination type as Database
      * Table. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the openHubDestinationName value.
      */
+    @Generated
     public Object getOpenHubDestinationName() {
         return this.openHubDestinationName;
     }
@@ -55,10 +78,11 @@ public class SapOpenHubTableDataset extends Dataset {
     /**
      * Set the openHubDestinationName property: The name of the Open Hub Destination with destination type as Database
      * Table. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param openHubDestinationName the openHubDestinationName value to set.
      * @return the SapOpenHubTableDataset object itself.
      */
+    @Generated
     public SapOpenHubTableDataset setOpenHubDestinationName(Object openHubDestinationName) {
         this.openHubDestinationName = openHubDestinationName;
         return this;
@@ -67,9 +91,10 @@ public class SapOpenHubTableDataset extends Dataset {
     /**
      * Get the excludeLastRequest property: Whether to exclude the records of the last request. The default value is
      * true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the excludeLastRequest value.
      */
+    @Generated
     public Object getExcludeLastRequest() {
         return this.excludeLastRequest;
     }
@@ -77,10 +102,11 @@ public class SapOpenHubTableDataset extends Dataset {
     /**
      * Set the excludeLastRequest property: Whether to exclude the records of the last request. The default value is
      * true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param excludeLastRequest the excludeLastRequest value to set.
      * @return the SapOpenHubTableDataset object itself.
      */
+    @Generated
     public SapOpenHubTableDataset setExcludeLastRequest(Object excludeLastRequest) {
         this.excludeLastRequest = excludeLastRequest;
         return this;
@@ -90,9 +116,10 @@ public class SapOpenHubTableDataset extends Dataset {
      * Get the baseRequestId property: The ID of request for delta loading. Once it is set, only data with requestId
      * larger than the value of this property will be retrieved. The default value is 0. Type: integer (or Expression
      * with resultType integer ).
-     *
+     * 
      * @return the baseRequestId value.
      */
+    @Generated
     public Object getBaseRequestId() {
         return this.baseRequestId;
     }
@@ -101,61 +128,187 @@ public class SapOpenHubTableDataset extends Dataset {
      * Set the baseRequestId property: The ID of request for delta loading. Once it is set, only data with requestId
      * larger than the value of this property will be retrieved. The default value is 0. Type: integer (or Expression
      * with resultType integer ).
-     *
+     * 
      * @param baseRequestId the baseRequestId value to set.
      * @return the SapOpenHubTableDataset object itself.
      */
+    @Generated
     public SapOpenHubTableDataset setBaseRequestId(Object baseRequestId) {
         this.baseRequestId = baseRequestId;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapOpenHubTableDataset setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapOpenHubTableDataset setStructure(Object structure) {
         super.setStructure(structure);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapOpenHubTableDataset setSchema(Object schema) {
         super.setSchema(schema);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapOpenHubTableDataset setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         super.setLinkedServiceName(linkedServiceName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapOpenHubTableDataset setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapOpenHubTableDataset setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapOpenHubTableDataset setFolder(DatasetFolder folder) {
         super.setFolder(folder);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("linkedServiceName", getLinkedServiceName());
+        jsonWriter.writeStringField("description", getDescription());
+        if (getStructure() != null) {
+            jsonWriter.writeUntypedField("structure", getStructure());
+        }
+        if (getSchema() != null) {
+            jsonWriter.writeUntypedField("schema", getSchema());
+        }
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeJsonField("folder", getFolder());
+        jsonWriter.writeStringField("type", this.type);
+        if (openHubDestinationName != null || excludeLastRequest != null || baseRequestId != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("openHubDestinationName", this.openHubDestinationName);
+            if (this.excludeLastRequest != null) {
+                jsonWriter.writeUntypedField("excludeLastRequest", this.excludeLastRequest);
+            }
+            if (this.baseRequestId != null) {
+                jsonWriter.writeUntypedField("baseRequestId", this.baseRequestId);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SapOpenHubTableDataset from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SapOpenHubTableDataset if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SapOpenHubTableDataset.
+     */
+    @Generated
+    public static SapOpenHubTableDataset fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SapOpenHubTableDataset deserializedSapOpenHubTableDataset = new SapOpenHubTableDataset();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("linkedServiceName".equals(fieldName)) {
+                    deserializedSapOpenHubTableDataset.setLinkedServiceName(LinkedServiceReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedSapOpenHubTableDataset.setDescription(reader.getString());
+                } else if ("structure".equals(fieldName)) {
+                    deserializedSapOpenHubTableDataset.setStructure(reader.readUntyped());
+                } else if ("schema".equals(fieldName)) {
+                    deserializedSapOpenHubTableDataset.setSchema(reader.readUntyped());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedSapOpenHubTableDataset.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedSapOpenHubTableDataset.setAnnotations(annotations);
+                } else if ("folder".equals(fieldName)) {
+                    deserializedSapOpenHubTableDataset.setFolder(DatasetFolder.fromJson(reader));
+                } else if ("type".equals(fieldName)) {
+                    deserializedSapOpenHubTableDataset.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("openHubDestinationName".equals(fieldName)) {
+                            deserializedSapOpenHubTableDataset.openHubDestinationName = reader.readUntyped();
+                        } else if ("excludeLastRequest".equals(fieldName)) {
+                            deserializedSapOpenHubTableDataset.excludeLastRequest = reader.readUntyped();
+                        } else if ("baseRequestId".equals(fieldName)) {
+                            deserializedSapOpenHubTableDataset.baseRequestId = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedSapOpenHubTableDataset.setAdditionalProperties(additionalProperties);
+
+            return deserializedSapOpenHubTableDataset;
+        });
     }
 }

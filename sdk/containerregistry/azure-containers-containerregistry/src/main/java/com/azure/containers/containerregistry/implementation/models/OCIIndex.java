@@ -6,43 +6,54 @@ package com.azure.containers.containerregistry.implementation.models;
 
 import com.azure.containers.containerregistry.models.OciAnnotations;
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.json.JsonReader;
 import com.azure.json.JsonToken;
 import com.azure.json.JsonWriter;
 import java.io.IOException;
 import java.util.List;
 
-/** Returns the requested OCI index file. */
+/**
+ * Returns the requested OCI index file.
+ */
 @Fluent
 public final class OCIIndex extends Manifest {
     /*
      * List of OCI image layer information
      */
+    @Generated
     private List<ManifestListAttributes> manifests;
 
     /*
      * Additional information provided through arbitrary metadata.
      */
+    @Generated
     private OciAnnotations annotations;
 
-    /** Creates an instance of OCIIndex class. */
-    public OCIIndex() {}
+    /**
+     * Creates an instance of OCIIndex class.
+     */
+    @Generated
+    public OCIIndex() {
+    }
 
     /**
      * Get the manifests property: List of OCI image layer information.
-     *
+     * 
      * @return the manifests value.
      */
+    @Generated
     public List<ManifestListAttributes> getManifests() {
         return this.manifests;
     }
 
     /**
      * Set the manifests property: List of OCI image layer information.
-     *
+     * 
      * @param manifests the manifests value to set.
      * @return the OCIIndex object itself.
      */
+    @Generated
     public OCIIndex setManifests(List<ManifestListAttributes> manifests) {
         this.manifests = manifests;
         return this;
@@ -50,31 +61,40 @@ public final class OCIIndex extends Manifest {
 
     /**
      * Get the annotations property: Additional information provided through arbitrary metadata.
-     *
+     * 
      * @return the annotations value.
      */
+    @Generated
     public OciAnnotations getAnnotations() {
         return this.annotations;
     }
 
     /**
      * Set the annotations property: Additional information provided through arbitrary metadata.
-     *
+     * 
      * @param annotations the annotations value to set.
      * @return the OCIIndex object itself.
      */
+    @Generated
     public OCIIndex setAnnotations(OciAnnotations annotations) {
         this.annotations = annotations;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public OCIIndex setSchemaVersion(Integer schemaVersion) {
         super.setSchemaVersion(schemaVersion);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
         jsonWriter.writeStartObject();
@@ -86,34 +106,34 @@ public final class OCIIndex extends Manifest {
 
     /**
      * Reads an instance of OCIIndex from the JsonReader.
-     *
+     * 
      * @param jsonReader The JsonReader being read.
      * @return An instance of OCIIndex if the JsonReader was pointing to an instance of it, or null if it was pointing
-     *     to JSON null.
+     * to JSON null.
      * @throws IOException If an error occurs while reading the OCIIndex.
      */
+    @Generated
     public static OCIIndex fromJson(JsonReader jsonReader) throws IOException {
-        return jsonReader.readObject(
-                reader -> {
-                    OCIIndex deserializedOCIIndex = new OCIIndex();
-                    while (reader.nextToken() != JsonToken.END_OBJECT) {
-                        String fieldName = reader.getFieldName();
-                        reader.nextToken();
+        return jsonReader.readObject(reader -> {
+            OCIIndex deserializedOCIIndex = new OCIIndex();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
 
-                        if ("schemaVersion".equals(fieldName)) {
-                            deserializedOCIIndex.setSchemaVersion(reader.getNullable(JsonReader::getInt));
-                        } else if ("manifests".equals(fieldName)) {
-                            List<ManifestListAttributes> manifests =
-                                    reader.readArray(reader1 -> ManifestListAttributes.fromJson(reader1));
-                            deserializedOCIIndex.manifests = manifests;
-                        } else if ("annotations".equals(fieldName)) {
-                            deserializedOCIIndex.annotations = OciAnnotations.fromJson(reader);
-                        } else {
-                            reader.skipChildren();
-                        }
-                    }
+                if ("schemaVersion".equals(fieldName)) {
+                    deserializedOCIIndex.setSchemaVersion(reader.getNullable(JsonReader::getInt));
+                } else if ("manifests".equals(fieldName)) {
+                    List<ManifestListAttributes> manifests
+                        = reader.readArray(reader1 -> ManifestListAttributes.fromJson(reader1));
+                    deserializedOCIIndex.manifests = manifests;
+                } else if ("annotations".equals(fieldName)) {
+                    deserializedOCIIndex.annotations = OciAnnotations.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
 
-                    return deserializedOCIIndex;
-                });
+            return deserializedOCIIndex;
+        });
     }
 }

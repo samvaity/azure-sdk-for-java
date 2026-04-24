@@ -1,6 +1,6 @@
 # Release History
 
-## 1.0.0-beta.5 (Unreleased)
+## 1.3.0-beta.1 (Unreleased)
 
 ### Features Added
 
@@ -9,6 +9,544 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 1.2.0 (2026-03-03)
+
+- Azure Resource Manager Elastic client library for Java. This package contains Microsoft Azure SDK for Elastic Management SDK.  Package api-version 2025-06-01. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Breaking Changes
+
+#### `models.ElasticVersionsListResponse` was removed
+
+#### `models.MonitoredSubscriptionPropertiesList` was removed
+
+#### `models.OperationListResult` was removed
+
+#### `models.ElasticMonitorResourceListResponse` was removed
+
+#### `models.ConnectedPartnerResourcesListResponse` was removed
+
+#### `models.MonitoringTagRulesListResponse` was removed
+
+#### `models.VMHostListResponse` was removed
+
+#### `models.MonitoredResourceListResponse` was removed
+
+#### `models.OpenAIIntegrationRPModelListResponse` was removed
+
+#### `models.IdentityProperties` was modified
+
+* `validate()` was removed
+
+#### `models.ElasticProperties` was modified
+
+* `validate()` was removed
+
+#### `models.ElasticMonitorResourceUpdateParameters` was modified
+
+* `validate()` was removed
+
+#### `models.MonitoredSubscription` was modified
+
+* `validate()` was removed
+
+#### `models.ElasticOrganizationToAzureSubscriptionMappingResponseProperties` was modified
+
+* `ElasticOrganizationToAzureSubscriptionMappingResponseProperties()` was changed to private access
+* `withBilledAzureSubscriptionId(java.lang.String)` was removed
+* `withElasticOrganizationName(java.lang.String)` was removed
+* `withElasticOrganizationId(java.lang.String)` was removed
+* `validate()` was removed
+
+#### `models.ConnectedPartnerResourceProperties` was modified
+
+* `ConnectedPartnerResourceProperties()` was changed to private access
+* `withType(java.lang.String)` was removed
+* `withPartnerDeploymentName(java.lang.String)` was removed
+* `withLocation(java.lang.String)` was removed
+* `withPartnerDeploymentUri(java.lang.String)` was removed
+* `withAzureResourceId(java.lang.String)` was removed
+* `validate()` was removed
+
+#### `models.ExternalUserInfo` was modified
+
+* `validate()` was removed
+
+#### `models.MarketplaceSaaSInfoMarketplaceSubscription` was modified
+
+* `MarketplaceSaaSInfoMarketplaceSubscription()` was changed to private access
+* `withId(java.lang.String)` was removed
+* `validate()` was removed
+* `withOfferId(java.lang.String)` was removed
+* `withPublisherId(java.lang.String)` was removed
+
+#### `models.CompanyInfo` was modified
+
+* `validate()` was removed
+
+#### `models.UserEmailId` was modified
+
+* `validate()` was removed
+
+#### `models.ResubscribeProperties` was modified
+
+* `validate()` was removed
+
+#### `models.ElasticCloudUser` was modified
+
+* `validate()` was removed
+
+#### `models.MonitorProperties` was modified
+
+* `validate()` was removed
+
+#### `models.ElasticMonitorUpgrade` was modified
+
+* `validate()` was removed
+
+#### `models.MonitoringTagRulesProperties` was modified
+
+* `validate()` was removed
+
+#### `models.MarketplaceSaaSInfo` was modified
+
+* `MarketplaceSaaSInfo()` was changed to private access
+* `withMarketplaceResourceId(java.lang.String)` was removed
+* `withMarketplaceName(java.lang.String)` was removed
+* `withMarketplaceSubscription(models.MarketplaceSaaSInfoMarketplaceSubscription)` was removed
+* `withSubscribed(java.lang.Boolean)` was removed
+* `withBilledAzureSubscriptionId(java.lang.String)` was removed
+* `validate()` was removed
+* `withMarketplaceStatus(java.lang.String)` was removed
+
+#### `models.OpenAIIntegrationProperties` was modified
+
+* `validate()` was removed
+
+#### `models.UserInfo` was modified
+
+* `validate()` was removed
+
+#### `models.ElasticTrafficFilterRule` was modified
+
+* `ElasticTrafficFilterRule()` was changed to private access
+* `withAzureEndpointName(java.lang.String)` was removed
+* `withDescription(java.lang.String)` was removed
+* `withSource(java.lang.String)` was removed
+* `withAzureEndpointGuid(java.lang.String)` was removed
+* `withId(java.lang.String)` was removed
+* `validate()` was removed
+
+#### `models.ProjectDetails` was modified
+
+* `validate()` was removed
+
+#### `models.ElasticTrafficFilter` was modified
+
+* `ElasticTrafficFilter()` was changed to private access
+* `withRules(java.util.List)` was removed
+* `withDescription(java.lang.String)` was removed
+* `validate()` was removed
+* `withName(java.lang.String)` was removed
+* `withIncludeByDefault(java.lang.Boolean)` was removed
+* `withType(models.Type)` was removed
+* `withId(java.lang.String)` was removed
+* `withRegion(java.lang.String)` was removed
+
+#### `models.PartnerBillingEntity` was modified
+
+* `PartnerBillingEntity()` was changed to private access
+* `withName(java.lang.String)` was removed
+* `withPartnerEntityUri(java.lang.String)` was removed
+* `withId(java.lang.String)` was removed
+* `validate()` was removed
+
+#### `models.ElasticVersionListProperties` was modified
+
+* `ElasticVersionListProperties()` was changed to private access
+* `validate()` was removed
+* `withVersion(java.lang.String)` was removed
+
+#### `models.SubscriptionList` was modified
+
+* `validate()` was removed
+
+#### `models.LogRules` was modified
+
+* `validate()` was removed
+
+#### `models.ResourceSku` was modified
+
+* `validate()` was removed
+
+#### `models.FilteringTag` was modified
+
+* `validate()` was removed
+
+#### `models.PlanDetails` was modified
+
+* `validate()` was removed
+
+#### `models.ElasticCloudDeployment` was modified
+
+* `validate()` was removed
+
+#### `models.OperationDisplay` was modified
+
+* `OperationDisplay()` was changed to private access
+* `withResource(java.lang.String)` was removed
+* `withDescription(java.lang.String)` was removed
+* `withOperation(java.lang.String)` was removed
+* `validate()` was removed
+* `withProvider(java.lang.String)` was removed
+
+#### `models.VMCollectionUpdate` was modified
+
+* `validate()` was removed
+
+#### `models.OpenAIIntegrationStatusResponseProperties` was modified
+
+* `OpenAIIntegrationStatusResponseProperties()` was changed to private access
+* `validate()` was removed
+* `withStatus(java.lang.String)` was removed
+
+#### `models.UserApiKeyResponseProperties` was modified
+
+* `UserApiKeyResponseProperties()` was changed to private access
+* `validate()` was removed
+* `withApiKey(java.lang.String)` was removed
+
+### Features Added
+
+#### `models.OpenAIIntegrationRPModel` was modified
+
+* `systemData()` was added
+
+#### `models.MonitoredSubscriptionProperties` was modified
+
+* `systemData()` was added
+
+## 1.1.0 (2025-10-20)
+
+- Azure Resource Manager Elastic client library for Java. This package contains Microsoft Azure SDK for Elastic Management SDK.  Package tag package-2025-06-01. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Breaking Changes
+
+#### `models.MonitorProperties` was modified
+
+* `withProvisioningState(models.ProvisioningState)` was removed
+
+#### `models.MonitoringTagRulesProperties` was modified
+
+* `withProvisioningState(models.ProvisioningState)` was removed
+
+### Features Added
+
+* `models.MonitoredSubscriptionProperties$Definition` was added
+
+* `models.ConfigurationType` was added
+
+* `models.MonitoredSubscription` was added
+
+* `models.ResubscribeProperties` was added
+
+* `models.ProjectType` was added
+
+* `models.MonitoredSubscriptionProperties` was added
+
+* `models.MonitoredSubscriptionPropertiesList` was added
+
+* `models.MonitoredSubscriptionProperties$Update` was added
+
+* `models.MonitoredSubscriptionProperties$DefinitionStages` was added
+
+* `models.HostingType` was added
+
+* `models.MonitoredSubscriptionProperties$UpdateStages` was added
+
+* `models.ProjectDetails` was added
+
+* `models.MonitoredSubscriptions` was added
+
+* `models.Status` was added
+
+* `models.SubscriptionList` was added
+
+* `models.Operation` was added
+
+#### `models.ConnectedPartnerResourceProperties` was modified
+
+* `withType(java.lang.String)` was added
+* `type()` was added
+
+#### `models.MarketplaceSaaSInfoMarketplaceSubscription` was modified
+
+* `withOfferId(java.lang.String)` was added
+* `offerId()` was added
+* `publisherId()` was added
+* `withPublisherId(java.lang.String)` was added
+
+#### `models.DeploymentInfoResponse` was modified
+
+* `projectType()` was added
+* `configurationType()` was added
+
+#### `models.ElasticMonitorResource` was modified
+
+* `kind()` was added
+
+#### `models.MonitorProperties` was modified
+
+* `hostingType()` was added
+* `withProjectDetails(models.ProjectDetails)` was added
+* `withHostingType(models.HostingType)` was added
+* `projectDetails()` was added
+
+#### `ElasticManager` was modified
+
+* `monitoredSubscriptions()` was added
+
+#### `models.OpenAIIntegrationProperties` was modified
+
+* `withOpenAIConnectorId(java.lang.String)` was added
+* `openAIConnectorId()` was added
+
+#### `models.Organizations` was modified
+
+* `resubscribe(java.lang.String,java.lang.String)` was added
+* `resubscribe(java.lang.String,java.lang.String,models.ResubscribeProperties,com.azure.core.util.Context)` was added
+
+#### `models.ElasticMonitorResource$Definition` was modified
+
+* `withKind(java.lang.String)` was added
+
+## 1.0.0 (2024-10-21)
+
+- Azure Resource Manager Elastic client library for Java. This package contains Microsoft Azure SDK for Elastic Management SDK.  Package tag package-2024-03-01. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Breaking Changes
+
+#### `ElasticManager` was modified
+
+* `fluent.MicrosoftElastic serviceClient()` -> `fluent.ElasticManagementClient serviceClient()`
+
+### Features Added
+
+* `models.ElasticOrganizationToAzureSubscriptionMappingResponseProperties` was added
+
+* `models.ConnectedPartnerResourceProperties` was added
+
+* `models.OpenAIIntegrationRPModel` was added
+
+* `models.OpenAIIntegrationStatusResponse` was added
+
+* `models.ElasticOrganizationToAzureSubscriptionMappingResponse` was added
+
+* `models.ConnectedPartnerResourcesListFormat` was added
+
+* `models.OpenAIIntegrationRPModel$UpdateStages` was added
+
+* `models.BillingInfoResponse` was added
+
+* `models.ConnectedPartnerResourcesListResponse` was added
+
+* `models.ConnectedPartnerResources` was added
+
+* `models.OpenAIIntegrationProperties` was added
+
+* `models.OpenAIIntegrationRPModel$Update` was added
+
+* `models.PartnerBillingEntity` was added
+
+* `models.OpenAIIntegrationRPModel$DefinitionStages` was added
+
+* `models.OpenAIs` was added
+
+* `models.BillingInfoes` was added
+
+* `models.OpenAIIntegrationRPModel$Definition` was added
+
+* `models.PlanDetails` was added
+
+* `models.OpenAIIntegrationStatusResponseProperties` was added
+
+* `models.OpenAIIntegrationRPModelListResponse` was added
+
+#### `models.IdentityProperties` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.ElasticProperties` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.ElasticMonitorResourceUpdateParameters` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.ExternalUserInfo` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.MarketplaceSaaSInfoMarketplaceSubscription` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.DeploymentInfoResponse` was modified
+
+* `elasticsearchEndPoint()` was added
+
+#### `models.CompanyInfo` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.UserEmailId` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.ElasticCloudUser` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.MonitorProperties` was modified
+
+* `subscriptionState()` was added
+* `withSaaSAzureSubscriptionStatus(java.lang.String)` was added
+* `sourceCampaignId()` was added
+* `saaSAzureSubscriptionStatus()` was added
+* `sourceCampaignName()` was added
+* `withPlanDetails(models.PlanDetails)` was added
+* `withSourceCampaignId(java.lang.String)` was added
+* `withSourceCampaignName(java.lang.String)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+* `planDetails()` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+* `withSubscriptionState(java.lang.String)` was added
+
+#### `models.ElasticMonitorUpgrade` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.ElasticVersionsListResponse` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `ElasticManager` was modified
+
+* `billingInfoes()` was added
+* `openAIs()` was added
+* `connectedPartnerResources()` was added
+
+#### `models.OperationListResult` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.MonitoringTagRulesProperties` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.MarketplaceSaaSInfo` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+* `withSubscribed(java.lang.Boolean)` was added
+* `marketplaceStatus()` was added
+* `billedAzureSubscriptionId()` was added
+* `subscribed()` was added
+* `withBilledAzureSubscriptionId(java.lang.String)` was added
+* `withMarketplaceStatus(java.lang.String)` was added
+
+#### `models.ElasticMonitorResourceListResponse` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.UserInfo` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.ElasticTrafficFilterRule` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.ElasticTrafficFilter` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.Organizations` was modified
+
+* `getElasticToAzureSubscriptionMappingWithResponse(com.azure.core.util.Context)` was added
+* `getElasticToAzureSubscriptionMapping()` was added
+
+#### `models.MonitoringTagRulesListResponse` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.ElasticVersionListProperties` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.LogRules` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.VMHostListResponse` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.ResourceSku` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.FilteringTag` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.MonitoredResourceListResponse` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.ElasticCloudDeployment` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.OperationDisplay` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
+
+#### `models.VMCollectionUpdate` was modified
+
+* `toJson(com.azure.json.JsonWriter)` was added
+* `fromJson(com.azure.json.JsonReader)` was added
+
+#### `models.UserApiKeyResponseProperties` was modified
+
+* `fromJson(com.azure.json.JsonReader)` was added
+* `toJson(com.azure.json.JsonWriter)` was added
 
 ## 1.0.0-beta.4 (2023-05-23)
 

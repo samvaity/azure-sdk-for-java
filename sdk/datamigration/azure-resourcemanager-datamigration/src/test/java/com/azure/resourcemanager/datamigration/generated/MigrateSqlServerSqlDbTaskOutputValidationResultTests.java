@@ -13,21 +13,21 @@ import java.util.Map;
 public final class MigrateSqlServerSqlDbTaskOutputValidationResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlDbTaskOutputValidationResult model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"MigrationValidationOutput\",\"migrationId\":\"ivfomiloxgg\",\"summaryResults\":{\"qvci\":{\"id\":\"q\",\"migrationId\":\"ieuzaofjchvcyyy\",\"sourceDatabaseName\":\"gdotcubiipuipwo\",\"targetDatabaseName\":\"nmacj\",\"startedOn\":\"2021-08-08T02:00:14Z\",\"endedOn\":\"2021-11-17T10:08:40Z\",\"status\":\"Stopped\"}},\"status\":\"Default\",\"id\":\"fgmblrrilbywdxsm\"}")
-                .toObject(MigrateSqlServerSqlDbTaskOutputValidationResult.class);
+        MigrateSqlServerSqlDbTaskOutputValidationResult model = BinaryData.fromString(
+            "{\"resultType\":\"MigrationValidationOutput\",\"id\":\"xhajlfnth\",\"migrationId\":\"lfpya\",\"summaryResults\":{\"mjnlexwhcb\":{\"id\":\"gvoavyunssxlgh\",\"migrationId\":\"egjlgvvpa\",\"sourceDatabaseName\":\"ksgbuxan\",\"targetDatabaseName\":\"ygdhgaqipirpiwr\",\"startedOn\":\"2021-06-02T13:21:22Z\",\"endedOn\":\"2021-06-05T11:42:14Z\",\"status\":\"CompletedWithIssues\"},\"crrpcjttbstvje\":{\"id\":\"ibkeph\",\"migrationId\":\"uerct\",\"sourceDatabaseName\":\"oyin\",\"targetDatabaseName\":\"pbrlcyrduczkgofx\",\"startedOn\":\"2021-04-30T22:30:31Z\",\"endedOn\":\"2021-05-31T02:04:39Z\",\"status\":\"InProgress\"},\"vensrpm\":{\"id\":\"nrmvvfkoxmlghk\",\"migrationId\":\"idvrmaz\",\"sourceDatabaseName\":\"dwwexymz\",\"targetDatabaseName\":\"azipbhpwvqsg\",\"startedOn\":\"2021-12-02T14:35:56Z\",\"endedOn\":\"2021-02-23T06:33:06Z\",\"status\":\"Stopped\"},\"iac\":{\"id\":\"yvpkpatlbijpzgsk\",\"migrationId\":\"fhfv\",\"sourceDatabaseName\":\"mknbnxwcdommpv\",\"targetDatabaseName\":\"awz\",\"startedOn\":\"2021-04-11T00:12:02Z\",\"endedOn\":\"2021-06-10T00:42:17Z\",\"status\":\"Failed\"}},\"status\":\"InProgress\"}")
+            .toObject(MigrateSqlServerSqlDbTaskOutputValidationResult.class);
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MigrateSqlServerSqlDbTaskOutputValidationResult model =
-            new MigrateSqlServerSqlDbTaskOutputValidationResult()
-                .withSummaryResults(mapOf("qvci", new MigrationValidationDatabaseSummaryResult()));
+        MigrateSqlServerSqlDbTaskOutputValidationResult model = new MigrateSqlServerSqlDbTaskOutputValidationResult()
+            .withSummaryResults(mapOf("mjnlexwhcb", new MigrationValidationDatabaseSummaryResult(), "crrpcjttbstvje",
+                new MigrationValidationDatabaseSummaryResult(), "vensrpm",
+                new MigrationValidationDatabaseSummaryResult(), "iac", new MigrationValidationDatabaseSummaryResult()));
         model = BinaryData.fromObject(model).toObject(MigrateSqlServerSqlDbTaskOutputValidationResult.class);
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

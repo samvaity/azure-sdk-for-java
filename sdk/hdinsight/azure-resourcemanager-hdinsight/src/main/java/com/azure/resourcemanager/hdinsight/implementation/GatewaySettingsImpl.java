@@ -5,15 +5,18 @@
 package com.azure.resourcemanager.hdinsight.implementation;
 
 import com.azure.resourcemanager.hdinsight.fluent.models.GatewaySettingsInner;
+import com.azure.resourcemanager.hdinsight.models.EntraUserInfo;
 import com.azure.resourcemanager.hdinsight.models.GatewaySettings;
+import java.util.Collections;
+import java.util.List;
 
 public final class GatewaySettingsImpl implements GatewaySettings {
     private GatewaySettingsInner innerObject;
 
     private final com.azure.resourcemanager.hdinsight.HDInsightManager serviceManager;
 
-    GatewaySettingsImpl(
-        GatewaySettingsInner innerObject, com.azure.resourcemanager.hdinsight.HDInsightManager serviceManager) {
+    GatewaySettingsImpl(GatewaySettingsInner innerObject,
+        com.azure.resourcemanager.hdinsight.HDInsightManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
     }
@@ -28,6 +31,15 @@ public final class GatewaySettingsImpl implements GatewaySettings {
 
     public String password() {
         return this.innerModel().password();
+    }
+
+    public List<EntraUserInfo> restAuthEntraUsers() {
+        List<EntraUserInfo> inner = this.innerModel().restAuthEntraUsers();
+        if (inner != null) {
+            return Collections.unmodifiableList(inner);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public GatewaySettingsInner innerModel() {

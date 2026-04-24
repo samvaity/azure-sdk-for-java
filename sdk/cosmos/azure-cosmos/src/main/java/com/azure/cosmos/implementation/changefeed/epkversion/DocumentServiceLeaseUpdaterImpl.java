@@ -60,7 +60,7 @@ class DocumentServiceLeaseUpdaterImpl implements ServiceItemLeaseUpdater {
 
         return
             Mono.just(this)
-            .flatMap( value -> this.tryReplaceLease(cachedLease, itemId, partitionKey))
+            .flatMap( value -> this.tryReplaceLease(cachedLease, itemId, partitionKey, requestOptions))
             .map(leaseDocument -> {
                 cachedLease.setServiceItemLease(ServiceItemLeaseV1.fromDocument(leaseDocument));
                 return cachedLease;
@@ -122,11 +122,11 @@ class DocumentServiceLeaseUpdaterImpl implements ServiceItemLeaseUpdater {
             .onErrorResume(throwable -> {
                 if (throwable instanceof LeaseConflictException) {
                     logger.warn(
-                        "Lease with token {}: Failed to update lease with concurrency token '{}', owner '{}', continuationToken '{}'.",
-                        cachedLease.getLeaseToken(),
-                        cachedLease.getConcurrencyToken(),
-                        cachedLease.getOwner(),
-                        cachedLease.getReadableContinuationToken(), throwable);
+                        "Lease with token " + cachedLease.getLeaseToken() +
+                            ": Failed to update lease with concurrency token '" + cachedLease.getConcurrencyToken() +
+                            "', owner '" + cachedLease.getOwner() +
+                            "', continuationToken '" + cachedLease.getReadableContinuationToken() + "'.",
+                        throwable);
 
                     return Mono.just(cachedLease);
                 }
@@ -137,8 +137,13 @@ class DocumentServiceLeaseUpdaterImpl implements ServiceItemLeaseUpdater {
     private Mono<InternalObjectNode> tryReplaceLease(
             Lease lease,
             String itemId,
-            PartitionKey partitionKey) throws LeaseLostException {
-        return this.client.replaceItem(itemId, partitionKey, lease, this.getCreateIfMatchOptions(lease))
+            PartitionKey partitionKey,
+            CosmosItemRequestOptions cosmosItemRequestOptions) throws LeaseLostException {
+        return this.client.replaceItem(
+                itemId,
+                partitionKey,
+                lease,
+                this.getCreateIfMatchOptions(cosmosItemRequestOptions, lease))
             .map(cosmosItemResponse -> BridgeInternal.getProperties(cosmosItemResponse))
             .onErrorResume(re -> {
                 if (re instanceof CosmosException) {
@@ -162,8 +167,7 @@ class DocumentServiceLeaseUpdaterImpl implements ServiceItemLeaseUpdater {
             });
     }
 
-    private CosmosItemRequestOptions getCreateIfMatchOptions(Lease lease) {
-        CosmosItemRequestOptions createIfMatchOptions = new CosmosItemRequestOptions();
+    private CosmosItemRequestOptions getCreateIfMatchOptions(CosmosItemRequestOptions createIfMatchOptions, Lease lease) {
         createIfMatchOptions.setIfMatchETag(lease.getConcurrencyToken());
 
         return createIfMatchOptions;

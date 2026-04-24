@@ -21,26 +21,33 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.resourcemanager.storagecache.fluent.AscOperationsClient;
 import com.azure.resourcemanager.storagecache.fluent.models.AscOperationInner;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in AscOperationsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in AscOperationsClient.
+ */
 public final class AscOperationsClientImpl implements AscOperationsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final AscOperationsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final StorageCacheManagementClientImpl client;
 
     /**
      * Initializes an instance of AscOperationsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     AscOperationsClientImpl(StorageCacheManagementClientImpl client) {
-        this.service =
-            RestProxy.create(AscOperationsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(AscOperationsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -49,47 +56,47 @@ public final class AscOperationsClientImpl implements AscOperationsClient {
      * service to perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "StorageCacheManageme")
+    @ServiceInterface(name = "StorageCacheManagementClientAscOperations")
     public interface AscOperationsService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/providers/Microsoft.StorageCache/locations/{location}/ascOperations/{operationId}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.StorageCache/locations/{location}/ascOperations/{operationId}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<AscOperationInner>> get(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("location") String location,
-            @PathParam("operationId") String operationId,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<AscOperationInner>> get(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("location") String location, @PathParam("operationId") String operationId,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.StorageCache/locations/{location}/ascOperations/{operationId}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AscOperationInner> getSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("location") String location, @PathParam("operationId") String operationId,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets the status of an asynchronous operation for the Azure HPC Cache.
-     *
+     * 
      * @param location The name of Azure region.
      * @param operationId The ID of an ongoing async operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the status of an asynchronous operation for the Azure HPC Cache along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<AscOperationInner>> getWithResponseAsync(String location, String operationId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (location == null) {
             return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
@@ -99,69 +106,14 @@ public final class AscOperationsClientImpl implements AscOperationsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            location,
-                            operationId,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), location, operationId, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the status of an asynchronous operation for the Azure HPC Cache.
-     *
-     * @param location The name of Azure region.
-     * @param operationId The ID of an ongoing async operation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the status of an asynchronous operation for the Azure HPC Cache along with {@link Response} on successful
-     *     completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AscOperationInner>> getWithResponseAsync(
-        String location, String operationId, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (location == null) {
-            return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
-        }
-        if (operationId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter operationId is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                location,
-                operationId,
-                accept,
-                context);
-    }
-
-    /**
-     * Gets the status of an asynchronous operation for the Azure HPC Cache.
-     *
+     * 
      * @param location The name of Azure region.
      * @param operationId The ID of an ongoing async operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -176,7 +128,7 @@ public final class AscOperationsClientImpl implements AscOperationsClient {
 
     /**
      * Gets the status of an asynchronous operation for the Azure HPC Cache.
-     *
+     * 
      * @param location The name of Azure region.
      * @param operationId The ID of an ongoing async operation.
      * @param context The context to associate with this operation.
@@ -187,12 +139,32 @@ public final class AscOperationsClientImpl implements AscOperationsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<AscOperationInner> getWithResponse(String location, String operationId, Context context) {
-        return getWithResponseAsync(location, operationId, context).block();
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (location == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter location is required and cannot be null."));
+        }
+        if (operationId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter operationId is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getSync(this.client.getEndpoint(), this.client.getApiVersion(), this.client.getSubscriptionId(),
+            location, operationId, accept, context);
     }
 
     /**
      * Gets the status of an asynchronous operation for the Azure HPC Cache.
-     *
+     * 
      * @param location The name of Azure region.
      * @param operationId The ID of an ongoing async operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -204,4 +176,6 @@ public final class AscOperationsClientImpl implements AscOperationsClient {
     public AscOperationInner get(String location, String operationId) {
         return getWithResponse(location, operationId, Context.NONE).getValue();
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(AscOperationsClientImpl.class);
 }

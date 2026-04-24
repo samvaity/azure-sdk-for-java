@@ -8,28 +8,37 @@ import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.test.TestMode;
 import com.azure.core.test.TestProxyTestBase;
 import com.azure.core.test.models.CustomMatcher;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Configuration;
 import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Stream;
-
 
 public class EmailTestBase extends TestProxyTestBase {
 
     protected static final String CONNECTION_STRING = Configuration.getGlobalConfiguration()
-        .get("COMMUNICATION_CONNECTION_STRING_EMAIL", "endpoint=https://REDACTED.communication.azure.com/;accesskey=QWNjZXNzS2V5");
+        .get("COMMUNICATION_CONNECTION_STRING_EMAIL",
+            "endpoint=https://REDACTED.communication.azure.com/;accesskey=QWNjZXNzS2V5");
 
-    protected static final String RECIPIENT_ADDRESS = Configuration.getGlobalConfiguration()
-        .get("RECIPIENT_ADDRESS", "customer@contoso.com");
+    protected static final String RECIPIENT_ADDRESS
+        = Configuration.getGlobalConfiguration().get("RECIPIENT_ADDRESS", "customer@contoso.com");
 
-    protected static final String SECOND_RECIPIENT_ADDRESS = Configuration.getGlobalConfiguration()
-        .get("SECOND_RECIPIENT_ADDRESS", "customer2@contoso.com");
+    protected static final String SECOND_RECIPIENT_ADDRESS
+        = Configuration.getGlobalConfiguration().get("SECOND_RECIPIENT_ADDRESS", "customer2@contoso.com");
 
-    protected static final String SENDER_ADDRESS = Configuration.getGlobalConfiguration()
-        .get("SENDER_ADDRESS", "sender@domain.com");
+    protected static final String SENDER_ADDRESS
+        = Configuration.getGlobalConfiguration().get("SENDER_ADDRESS", "sender@domain.com");
+
+    protected static BinaryData getRedPngImageData() {
+        String base64String
+            = "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAIAAAACDbGyAAAAEUlEQVR4nGP8z4ACmBgo4wMAUJEBCfBOwRcAAAAASUVORK5CYII=";
+        byte[] decodedBytes = Base64.getDecoder().decode(base64String);
+        return BinaryData.fromBytes(decodedBytes);
+    }
 
     protected EmailClient getEmailClient(HttpClient httpClient) {
         return getEmailClientBuilder(httpClient).buildClient();
@@ -40,8 +49,7 @@ public class EmailTestBase extends TestProxyTestBase {
     }
 
     private EmailClientBuilder getEmailClientBuilder(HttpClient httpClient) {
-        EmailClientBuilder emailClientBuilder = new EmailClientBuilder()
-            .connectionString(CONNECTION_STRING)
+        EmailClientBuilder emailClientBuilder = new EmailClientBuilder().connectionString(CONNECTION_STRING)
             .httpClient(getHttpClientOrUsePlayback(httpClient));
         if (interceptorManager.isPlaybackMode()) {
             interceptorManager.addMatchers(Arrays.asList(new CustomMatcher()
@@ -53,6 +61,11 @@ public class EmailTestBase extends TestProxyTestBase {
             emailClientBuilder.addPolicy(recordPolicy);
         }
 
+        if (!interceptorManager.isLiveMode()) {
+            // Remove `operation-location` sanitizers from list of common sanitizers
+            interceptorManager.removeSanitizers("AZSDK2030");
+        }
+
         return emailClientBuilder;
     }
 
@@ -61,8 +74,7 @@ public class EmailTestBase extends TestProxyTestBase {
         // arguments - https://github.com/junit-team/junit5/issues/1427
         List<Arguments> argumentsList = new ArrayList<>();
 
-        getHttpClients()
-            .forEach(httpClient -> argumentsList.add(Arguments.of(httpClient)));
+        getHttpClients().forEach(httpClient -> argumentsList.add(Arguments.of(httpClient)));
 
         return argumentsList.stream();
     }

@@ -5,126 +5,142 @@
 package com.azure.ai.formrecognizer.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-/** Recognized field value. */
+/**
+ * Recognized field value.
+ */
 @Fluent
-public final class FieldValue {
+public final class FieldValue implements JsonSerializable<FieldValue> {
     /*
      * Type of field value.
      */
-    @JsonProperty(value = "type", required = true)
+    @Generated
     private FieldValueType type;
 
     /*
      * String value.
      */
-    @JsonProperty(value = "valueString")
+    @Generated
     private String valueString;
 
     /*
      * Date value.
      */
-    @JsonProperty(value = "valueDate")
+    @Generated
     private LocalDate valueDate;
 
     /*
      * Time value.
      */
-    @JsonProperty(value = "valueTime")
+    @Generated
     private String valueTime;
 
     /*
      * Phone number value.
      */
-    @JsonProperty(value = "valuePhoneNumber")
+    @Generated
     private String valuePhoneNumber;
 
     /*
      * Floating point value.
      */
-    @JsonProperty(value = "valueNumber")
+    @Generated
     private Float valueNumber;
 
     /*
      * Integer value.
      */
-    @JsonProperty(value = "valueInteger")
+    @Generated
     private Integer valueInteger;
 
     /*
      * Array of field values.
      */
-    @JsonProperty(value = "valueArray")
+    @Generated
     private List<FieldValue> valueArray;
 
     /*
      * Dictionary of named field values.
      */
-    @JsonProperty(value = "valueObject")
+    @Generated
     private Map<String, FieldValue> valueObject;
 
     /*
      * Selection mark value.
      */
-    @JsonProperty(value = "valueSelectionMark")
+    @Generated
     private FieldValueSelectionMark valueSelectionMark;
 
     /*
      * 3-letter country code (ISO 3166-1 alpha-3).
      */
-    @JsonProperty(value = "valueCountryRegion")
+    @Generated
     private String valueCountryRegion;
 
     /*
      * Text content of the extracted field.
      */
-    @JsonProperty(value = "text")
+    @Generated
     private String text;
 
     /*
      * Bounding box of the field value, if appropriate.
      */
-    @JsonProperty(value = "boundingBox")
+    @Generated
     private List<Float> boundingBox;
 
     /*
      * Confidence score.
      */
-    @JsonProperty(value = "confidence")
+    @Generated
     private Float confidence;
 
     /*
-     * When includeTextDetails is set to true, a list of references to the text
-     * elements constituting this field.
+     * When includeTextDetails is set to true, a list of references to the text elements constituting this field.
      */
-    @JsonProperty(value = "elements")
+    @Generated
     private List<String> elements;
 
     /*
      * The 1-based page number in the input document.
      */
-    @JsonProperty(value = "page")
+    @Generated
     private Integer page;
 
     /**
+     * Creates an instance of FieldValue class.
+     */
+    @Generated
+    public FieldValue() {
+    }
+
+    /**
      * Get the type property: Type of field value.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public FieldValueType getType() {
         return this.type;
     }
 
     /**
      * Set the type property: Type of field value.
-     *
+     * 
      * @param type the type value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setType(FieldValueType type) {
         this.type = type;
         return this;
@@ -132,19 +148,21 @@ public final class FieldValue {
 
     /**
      * Get the valueString property: String value.
-     *
+     * 
      * @return the valueString value.
      */
+    @Generated
     public String getValueString() {
         return this.valueString;
     }
 
     /**
      * Set the valueString property: String value.
-     *
+     * 
      * @param valueString the valueString value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setValueString(String valueString) {
         this.valueString = valueString;
         return this;
@@ -152,19 +170,21 @@ public final class FieldValue {
 
     /**
      * Get the valueDate property: Date value.
-     *
+     * 
      * @return the valueDate value.
      */
+    @Generated
     public LocalDate getValueDate() {
         return this.valueDate;
     }
 
     /**
      * Set the valueDate property: Date value.
-     *
+     * 
      * @param valueDate the valueDate value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setValueDate(LocalDate valueDate) {
         this.valueDate = valueDate;
         return this;
@@ -172,19 +192,21 @@ public final class FieldValue {
 
     /**
      * Get the valueTime property: Time value.
-     *
+     * 
      * @return the valueTime value.
      */
+    @Generated
     public String getValueTime() {
         return this.valueTime;
     }
 
     /**
      * Set the valueTime property: Time value.
-     *
+     * 
      * @param valueTime the valueTime value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setValueTime(String valueTime) {
         this.valueTime = valueTime;
         return this;
@@ -192,19 +214,21 @@ public final class FieldValue {
 
     /**
      * Get the valuePhoneNumber property: Phone number value.
-     *
+     * 
      * @return the valuePhoneNumber value.
      */
+    @Generated
     public String getValuePhoneNumber() {
         return this.valuePhoneNumber;
     }
 
     /**
      * Set the valuePhoneNumber property: Phone number value.
-     *
+     * 
      * @param valuePhoneNumber the valuePhoneNumber value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setValuePhoneNumber(String valuePhoneNumber) {
         this.valuePhoneNumber = valuePhoneNumber;
         return this;
@@ -212,19 +236,21 @@ public final class FieldValue {
 
     /**
      * Get the valueNumber property: Floating point value.
-     *
+     * 
      * @return the valueNumber value.
      */
+    @Generated
     public Float getValueNumber() {
         return this.valueNumber;
     }
 
     /**
      * Set the valueNumber property: Floating point value.
-     *
+     * 
      * @param valueNumber the valueNumber value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setValueNumber(Float valueNumber) {
         this.valueNumber = valueNumber;
         return this;
@@ -232,19 +258,21 @@ public final class FieldValue {
 
     /**
      * Get the valueInteger property: Integer value.
-     *
+     * 
      * @return the valueInteger value.
      */
+    @Generated
     public Integer getValueInteger() {
         return this.valueInteger;
     }
 
     /**
      * Set the valueInteger property: Integer value.
-     *
+     * 
      * @param valueInteger the valueInteger value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setValueInteger(Integer valueInteger) {
         this.valueInteger = valueInteger;
         return this;
@@ -252,19 +280,21 @@ public final class FieldValue {
 
     /**
      * Get the valueArray property: Array of field values.
-     *
+     * 
      * @return the valueArray value.
      */
+    @Generated
     public List<FieldValue> getValueArray() {
         return this.valueArray;
     }
 
     /**
      * Set the valueArray property: Array of field values.
-     *
+     * 
      * @param valueArray the valueArray value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setValueArray(List<FieldValue> valueArray) {
         this.valueArray = valueArray;
         return this;
@@ -272,19 +302,21 @@ public final class FieldValue {
 
     /**
      * Get the valueObject property: Dictionary of named field values.
-     *
+     * 
      * @return the valueObject value.
      */
+    @Generated
     public Map<String, FieldValue> getValueObject() {
         return this.valueObject;
     }
 
     /**
      * Set the valueObject property: Dictionary of named field values.
-     *
+     * 
      * @param valueObject the valueObject value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setValueObject(Map<String, FieldValue> valueObject) {
         this.valueObject = valueObject;
         return this;
@@ -292,19 +324,21 @@ public final class FieldValue {
 
     /**
      * Get the valueSelectionMark property: Selection mark value.
-     *
+     * 
      * @return the valueSelectionMark value.
      */
+    @Generated
     public FieldValueSelectionMark getValueSelectionMark() {
         return this.valueSelectionMark;
     }
 
     /**
      * Set the valueSelectionMark property: Selection mark value.
-     *
+     * 
      * @param valueSelectionMark the valueSelectionMark value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setValueSelectionMark(FieldValueSelectionMark valueSelectionMark) {
         this.valueSelectionMark = valueSelectionMark;
         return this;
@@ -312,19 +346,21 @@ public final class FieldValue {
 
     /**
      * Get the valueCountryRegion property: 3-letter country code (ISO 3166-1 alpha-3).
-     *
+     * 
      * @return the valueCountryRegion value.
      */
+    @Generated
     public String getValueCountryRegion() {
         return this.valueCountryRegion;
     }
 
     /**
      * Set the valueCountryRegion property: 3-letter country code (ISO 3166-1 alpha-3).
-     *
+     * 
      * @param valueCountryRegion the valueCountryRegion value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setValueCountryRegion(String valueCountryRegion) {
         this.valueCountryRegion = valueCountryRegion;
         return this;
@@ -332,19 +368,21 @@ public final class FieldValue {
 
     /**
      * Get the text property: Text content of the extracted field.
-     *
+     * 
      * @return the text value.
      */
+    @Generated
     public String getText() {
         return this.text;
     }
 
     /**
      * Set the text property: Text content of the extracted field.
-     *
+     * 
      * @param text the text value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setText(String text) {
         this.text = text;
         return this;
@@ -352,19 +390,21 @@ public final class FieldValue {
 
     /**
      * Get the boundingBox property: Bounding box of the field value, if appropriate.
-     *
+     * 
      * @return the boundingBox value.
      */
+    @Generated
     public List<Float> getBoundingBox() {
         return this.boundingBox;
     }
 
     /**
      * Set the boundingBox property: Bounding box of the field value, if appropriate.
-     *
+     * 
      * @param boundingBox the boundingBox value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setBoundingBox(List<Float> boundingBox) {
         this.boundingBox = boundingBox;
         return this;
@@ -372,19 +412,21 @@ public final class FieldValue {
 
     /**
      * Get the confidence property: Confidence score.
-     *
+     * 
      * @return the confidence value.
      */
+    @Generated
     public Float getConfidence() {
         return this.confidence;
     }
 
     /**
      * Set the confidence property: Confidence score.
-     *
+     * 
      * @param confidence the confidence value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setConfidence(Float confidence) {
         this.confidence = confidence;
         return this;
@@ -393,9 +435,10 @@ public final class FieldValue {
     /**
      * Get the elements property: When includeTextDetails is set to true, a list of references to the text elements
      * constituting this field.
-     *
+     * 
      * @return the elements value.
      */
+    @Generated
     public List<String> getElements() {
         return this.elements;
     }
@@ -403,10 +446,11 @@ public final class FieldValue {
     /**
      * Set the elements property: When includeTextDetails is set to true, a list of references to the text elements
      * constituting this field.
-     *
+     * 
      * @param elements the elements value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setElements(List<String> elements) {
         this.elements = elements;
         return this;
@@ -414,21 +458,113 @@ public final class FieldValue {
 
     /**
      * Get the page property: The 1-based page number in the input document.
-     *
+     * 
      * @return the page value.
      */
+    @Generated
     public Integer getPage() {
         return this.page;
     }
 
     /**
      * Set the page property: The 1-based page number in the input document.
-     *
+     * 
      * @param page the page value to set.
      * @return the FieldValue object itself.
      */
+    @Generated
     public FieldValue setPage(Integer page) {
         this.page = page;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("type", this.type == null ? null : this.type.toString());
+        jsonWriter.writeStringField("valueString", this.valueString);
+        jsonWriter.writeStringField("valueDate", Objects.toString(this.valueDate, null));
+        jsonWriter.writeStringField("valueTime", this.valueTime);
+        jsonWriter.writeStringField("valuePhoneNumber", this.valuePhoneNumber);
+        jsonWriter.writeNumberField("valueNumber", this.valueNumber);
+        jsonWriter.writeNumberField("valueInteger", this.valueInteger);
+        jsonWriter.writeArrayField("valueArray", this.valueArray, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeMapField("valueObject", this.valueObject, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("valueSelectionMark",
+            this.valueSelectionMark == null ? null : this.valueSelectionMark.toString());
+        jsonWriter.writeStringField("valueCountryRegion", this.valueCountryRegion);
+        jsonWriter.writeStringField("text", this.text);
+        jsonWriter.writeArrayField("boundingBox", this.boundingBox, (writer, element) -> writer.writeFloat(element));
+        jsonWriter.writeNumberField("confidence", this.confidence);
+        jsonWriter.writeArrayField("elements", this.elements, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeNumberField("page", this.page);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of FieldValue from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of FieldValue if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the FieldValue.
+     */
+    @Generated
+    public static FieldValue fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            FieldValue deserializedFieldValue = new FieldValue();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("type".equals(fieldName)) {
+                    deserializedFieldValue.type = FieldValueType.fromString(reader.getString());
+                } else if ("valueString".equals(fieldName)) {
+                    deserializedFieldValue.valueString = reader.getString();
+                } else if ("valueDate".equals(fieldName)) {
+                    deserializedFieldValue.valueDate
+                        = reader.getNullable(nonNullReader -> LocalDate.parse(nonNullReader.getString()));
+                } else if ("valueTime".equals(fieldName)) {
+                    deserializedFieldValue.valueTime = reader.getString();
+                } else if ("valuePhoneNumber".equals(fieldName)) {
+                    deserializedFieldValue.valuePhoneNumber = reader.getString();
+                } else if ("valueNumber".equals(fieldName)) {
+                    deserializedFieldValue.valueNumber = reader.getNullable(JsonReader::getFloat);
+                } else if ("valueInteger".equals(fieldName)) {
+                    deserializedFieldValue.valueInteger = reader.getNullable(JsonReader::getInt);
+                } else if ("valueArray".equals(fieldName)) {
+                    List<FieldValue> valueArray = reader.readArray(reader1 -> FieldValue.fromJson(reader1));
+                    deserializedFieldValue.valueArray = valueArray;
+                } else if ("valueObject".equals(fieldName)) {
+                    Map<String, FieldValue> valueObject = reader.readMap(reader1 -> FieldValue.fromJson(reader1));
+                    deserializedFieldValue.valueObject = valueObject;
+                } else if ("valueSelectionMark".equals(fieldName)) {
+                    deserializedFieldValue.valueSelectionMark = FieldValueSelectionMark.fromString(reader.getString());
+                } else if ("valueCountryRegion".equals(fieldName)) {
+                    deserializedFieldValue.valueCountryRegion = reader.getString();
+                } else if ("text".equals(fieldName)) {
+                    deserializedFieldValue.text = reader.getString();
+                } else if ("boundingBox".equals(fieldName)) {
+                    List<Float> boundingBox = reader.readArray(reader1 -> reader1.getFloat());
+                    deserializedFieldValue.boundingBox = boundingBox;
+                } else if ("confidence".equals(fieldName)) {
+                    deserializedFieldValue.confidence = reader.getNullable(JsonReader::getFloat);
+                } else if ("elements".equals(fieldName)) {
+                    List<String> elements = reader.readArray(reader1 -> reader1.getString());
+                    deserializedFieldValue.elements = elements;
+                } else if ("page".equals(fieldName)) {
+                    deserializedFieldValue.page = reader.getNullable(JsonReader::getInt);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedFieldValue;
+        });
     }
 }

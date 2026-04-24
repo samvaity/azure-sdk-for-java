@@ -12,22 +12,20 @@ import org.junit.jupiter.api.Assertions;
 public final class StopOnDisconnectConfigurationTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        StopOnDisconnectConfiguration model =
-            BinaryData
-                .fromString("{\"status\":\"Disabled\",\"gracePeriodMinutes\":1747128451}")
+        StopOnDisconnectConfiguration model
+            = BinaryData.fromString("{\"status\":\"Enabled\",\"gracePeriodMinutes\":1224652239}")
                 .toObject(StopOnDisconnectConfiguration.class);
-        Assertions.assertEquals(StopOnDisconnectEnableStatus.DISABLED, model.status());
-        Assertions.assertEquals(1747128451, model.gracePeriodMinutes());
+        Assertions.assertEquals(StopOnDisconnectEnableStatus.ENABLED, model.status());
+        Assertions.assertEquals(1224652239, model.gracePeriodMinutes());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        StopOnDisconnectConfiguration model =
-            new StopOnDisconnectConfiguration()
-                .withStatus(StopOnDisconnectEnableStatus.DISABLED)
-                .withGracePeriodMinutes(1747128451);
+        StopOnDisconnectConfiguration model
+            = new StopOnDisconnectConfiguration().withStatus(StopOnDisconnectEnableStatus.ENABLED)
+                .withGracePeriodMinutes(1224652239);
         model = BinaryData.fromObject(model).toObject(StopOnDisconnectConfiguration.class);
-        Assertions.assertEquals(StopOnDisconnectEnableStatus.DISABLED, model.status());
-        Assertions.assertEquals(1747128451, model.gracePeriodMinutes());
+        Assertions.assertEquals(StopOnDisconnectEnableStatus.ENABLED, model.status());
+        Assertions.assertEquals(1224652239, model.gracePeriodMinutes());
     }
 }

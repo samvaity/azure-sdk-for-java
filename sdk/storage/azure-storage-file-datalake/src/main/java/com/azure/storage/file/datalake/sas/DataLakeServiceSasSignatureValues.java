@@ -12,6 +12,7 @@ import com.azure.storage.file.datalake.DataLakeServiceVersion;
 import com.azure.storage.file.datalake.models.UserDelegationKey;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 
 /**
  * Used to initialize parameters for a Shared Access Signature (SAS) for an Azure Data Lake Storage service. Once all
@@ -26,39 +27,27 @@ import java.time.OffsetDateTime;
  * User Delegation SAS</a>
  */
 public final class DataLakeServiceSasSignatureValues {
-
     private static final String VERSION = Configuration.getGlobalConfiguration()
         .get(Constants.PROPERTY_AZURE_STORAGE_SAS_SERVICE_VERSION, DataLakeServiceVersion.getLatest().getVersion());
 
     private SasProtocol protocol;
-
     private OffsetDateTime startTime;
-
     private OffsetDateTime expiryTime;
-
     private String permissions;
-
     private SasIpRange sasIpRange;
-
     private String identifier;
-
     private String cacheControl;
-
     private String contentDisposition;
-
     private String contentEncoding;
-
     private String contentLanguage;
-
     private String contentType;
-
     private String preauthorizedAgentObjectId; /* saoid */
-
     private String agentObjectId; /* suoid */
-
     private String correlationId;
-
     private String encryptionScope;
+    private String delegatedUserObjectId;
+    private Map<String, String> requestHeaders;
+    private Map<String, String> requestQueryParameters;
 
     /**
      * Creates an object with the specified expiry time and permissions
@@ -98,6 +87,9 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the version of the service this SAS will target. If not specified, it will default to the version targeted
+     * by the library.
+     *
      * @return the version of the service this SAS will target. If not specified, it will default to the version
      * targeted by the library.
      */
@@ -121,6 +113,8 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the {@link SasProtocol} which determines the protocols allowed by the SAS.
+     *
      * @return the {@link SasProtocol} which determines the protocols allowed by the SAS.
      */
     public SasProtocol getProtocol() {
@@ -139,6 +133,8 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets when the SAS will take effect.
+     *
      * @return when the SAS will take effect.
      */
     public OffsetDateTime getStartTime() {
@@ -157,6 +153,8 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the time after which the SAS will no longer work.
+     *
      * @return the time after which the SAS will no longer work.
      */
     public OffsetDateTime getExpiryTime() {
@@ -175,6 +173,9 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the permissions string allowed by the SAS. Please refer to either {@link FileSystemSasPermission} or
+     * {@link PathSasPermission} depending on the resource being accessed for help determining the permissions allowed.
+     *
      * @return the permissions string allowed by the SAS. Please refer to either {@link FileSystemSasPermission} or
      * {@link PathSasPermission} depending on the resource being accessed for help determining the permissions allowed.
      */
@@ -209,6 +210,8 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the {@link SasIpRange} which determines the IP ranges that are allowed to use the SAS.
+     *
      * @return the {@link SasIpRange} which determines the IP ranges that are allowed to use the SAS.
      */
     public SasIpRange getSasIpRange() {
@@ -228,6 +231,10 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the name of the access policy on the file system this SAS references if any. Please see
+     * <a href="https://docs.microsoft.com/rest/api/storageservices/establishing-a-stored-access-policy">here</a>
+     * for more information.
+     *
      * @return the name of the access policy on the file system this SAS references if any. Please see
      * <a href="https://docs.microsoft.com/rest/api/storageservices/establishing-a-stored-access-policy">here</a>
      * for more information.
@@ -250,6 +257,8 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the cache-control header for the SAS.
+     *
      * @return the cache-control header for the SAS.
      */
     public String getCacheControl() {
@@ -268,6 +277,8 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the content-disposition header for the SAS.
+     *
      * @return the content-disposition header for the SAS.
      */
     public String getContentDisposition() {
@@ -286,6 +297,8 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the content-encoding header for the SAS.
+     *
      * @return the content-encoding header for the SAS.
      */
     public String getContentEncoding() {
@@ -304,6 +317,8 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the content-language header for the SAS.
+     *
      * @return the content-language header for the SAS.
      */
     public String getContentLanguage() {
@@ -322,6 +337,8 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the content-type header for the SAS.
+     *
      * @return the content-type header for the SAS.
      */
     public String getContentType() {
@@ -340,6 +357,9 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the AAD object ID of a user assumed to be authorized by the owner of the user delegation key to perform the
+     * action granted by the SAS token.
+     *
      * @return The AAD object ID of a user assumed to be authorized by the owner of the user delegation key to perform
      * the action granted by the SAS token. The service will validate the SAS token and ensure that the owner of the
      * user delegation key has the required permissions before granting access but no additional permission check for
@@ -365,6 +385,9 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the AAD object ID of a user assumed to be unauthorized by the owner of the user delegation key to perform
+     * the action granted by the SAS token.
+     *
      * @return The AAD object ID of a user assumed to be unauthorized by the owner of the user delegation key to
      * perform the action granted by the SAS token. The service will validate the SAS token and ensure that the owner
      * of the user delegation key has the required permissions before granting access and the service will perform an
@@ -390,6 +413,8 @@ public final class DataLakeServiceSasSignatureValues {
     }
 
     /**
+     * Gets the correlation id value for the SAS.
+     *
      * @return the correlation id value for the SAS.
      */
     public String getCorrelationId() {
@@ -427,6 +452,82 @@ public final class DataLakeServiceSasSignatureValues {
      */
     public DataLakeServiceSasSignatureValues setEncryptionScope(String encryptionScope) {
         this.encryptionScope = encryptionScope;
+        return this;
+    }
+
+    /**
+     * Optional. Beginning in version 2025-07-05, this value specifies the Entra ID of the user that is authorized to
+     * use the resulting SAS URL. The resulting SAS URL must be used in conjunction with an Entra ID token that has been
+     * issued to the user specified in this value.
+     *
+     * @return The Entra ID of the user that is authorized to use the resulting SAS URL.
+     */
+    public String getDelegatedUserObjectId() {
+        return delegatedUserObjectId;
+    }
+
+    /**
+     * Optional. Beginning in version 2025-07-05, this value specifies the Entra ID of the user that is authorized to
+     * use the resulting SAS URL. The resulting SAS URL must be used in conjunction with an Entra ID token that has been
+     * issued to the user specified in this value.
+     *
+     * @param delegatedUserObjectId The Entra ID of the user that is authorized to use the resulting SAS URL.
+     * @return the updated DataLakeServiceSasSignatureValues object
+     */
+    public DataLakeServiceSasSignatureValues setDelegatedUserObjectId(String delegatedUserObjectId) {
+        this.delegatedUserObjectId = delegatedUserObjectId;
+        return this;
+    }
+
+    /**
+     * Optional. Beginning in version 2026-04-06, this value specifies Custom Request Headers to include in the SAS.
+     * Any usage of the SAS must include these headers and values in the request.
+     *
+     * <p>Note: This parameter is only valid for user delegation SAS. </p>
+     *
+     * @return The custom request headers to be set when the SAS is used.
+     */
+    public Map<String, String> getRequestHeaders() {
+        return requestHeaders;
+    }
+
+    /**
+     * Optional. Beginning in version 2026-04-06, this value specifies Custom Request Headers to include in the SAS.
+     * Any usage of the SAS must include these headers and values in the request.
+     *
+     * <p>Note: This parameter is only valid for user delegation SAS. </p>
+     *
+     * @param requestHeaders The custom request headers to be set when the SAS is used.
+     * @return the updated DataLakeServiceSasSignatureValues object
+     */
+    public DataLakeServiceSasSignatureValues setRequestHeaders(Map<String, String> requestHeaders) {
+        this.requestHeaders = requestHeaders;
+        return this;
+    }
+
+    /**
+     * Optional. Beginning in version 2026-04-06, this value specifies Custom Request Query Parameters to include in
+     * the SAS. Any usage of the SAS must include these query parameters and values in the request.
+     *
+     * <p>Note: This parameter is only valid for user delegation SAS. </p>
+     *
+     * @return The custom query parameters to be set when the SAS is used.
+     */
+    public Map<String, String> getRequestQueryParameters() {
+        return requestQueryParameters;
+    }
+
+    /**
+     * Optional. Beginning in version 2026-04-06, this value specifies Custom Request Query Parameters to include in
+     * the SAS. Any usage of the SAS must include these query parameters and values in the request.
+     *
+     * <p>Note: This parameter is only valid for user delegation SAS. </p>
+     *
+     * @param requestQueryParameters The custom query parameters to be set when the SAS is used.
+     * @return the updated DataLakeServiceSasSignatureValues object
+     */
+    public DataLakeServiceSasSignatureValues setRequestQueryParameters(Map<String, String> requestQueryParameters) {
+        this.requestQueryParameters = requestQueryParameters;
         return this;
     }
 }

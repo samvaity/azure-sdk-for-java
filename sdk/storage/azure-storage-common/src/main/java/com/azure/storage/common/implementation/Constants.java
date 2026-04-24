@@ -3,6 +3,7 @@
 
 package com.azure.storage.common.implementation;
 
+import com.azure.core.http.HttpHeaderName;
 import com.azure.core.util.Configuration;
 import com.azure.storage.common.sas.SasProtocol;
 import java.time.ZoneId;
@@ -53,18 +54,17 @@ public final class Constants {
     /**
      * Exception message when the value could not be parsed into an enum.
      */
-    public static final String ENUM_COULD_NOT_BE_PARSED_INVALID_VALUE =
-        "%s could not be parsed from '%s' due to invalid value %s.";
+    public static final String ENUM_COULD_NOT_BE_PARSED_INVALID_VALUE
+        = "%s could not be parsed from '%s' due to invalid value %s.";
 
+    public static final DateTimeFormatter ISO_8601_UTC_DATE_FORMATTER
+        = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT).withZone(ZoneId.of("UTC"));
 
-    public static final DateTimeFormatter ISO_8601_UTC_DATE_FORMATTER =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT).withZone(ZoneId.of("UTC"));
+    public static final String BLOB_ALREADY_EXISTS
+        = "Blob already exists. Specify overwrite to true to force update the blob.";
 
-    public static final String BLOB_ALREADY_EXISTS =
-        "Blob already exists. Specify overwrite to true to force update the blob.";
-
-    public static final String FILE_ALREADY_EXISTS =
-        "File already exists. Specify overwrite to true to force update the file.";
+    public static final String FILE_ALREADY_EXISTS
+        = "File already exists. Specify overwrite to true to force update the file.";
 
     /**
      * Buffer width used to copy data to output streams.
@@ -87,8 +87,12 @@ public final class Constants {
 
     public static final String PROPERTY_AZURE_STORAGE_SAS_SERVICE_VERSION = "AZURE_STORAGE_SAS_SERVICE_VERSION";
 
-    public static final String SAS_SERVICE_VERSION = Configuration.getGlobalConfiguration()
-        .get(PROPERTY_AZURE_STORAGE_SAS_SERVICE_VERSION, "2023-01-03");
+    public static final String SAS_SERVICE_VERSION
+        = Configuration.getGlobalConfiguration().get(PROPERTY_AZURE_STORAGE_SAS_SERVICE_VERSION, "2026-06-06");
+
+    public static final String ADJUSTED_BLOB_LENGTH_KEY = "adjustedBlobLength";
+
+    public static final String SKIP_ECHO_VALIDATION_KEY = "skipEchoValidation";
 
     private Constants() {
     }
@@ -193,7 +197,7 @@ public final class Constants {
          * The default account key for the development storage.
          */
         public static final String EMULATOR_ACCOUNT_KEY
-                = "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==";
+            = "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==";
 
         /**
          * The default account name for the development storage.
@@ -216,12 +220,14 @@ public final class Constants {
          * @deprecated For SAS Service Version use {@link Constants#SAS_SERVICE_VERSION}.
          */
         @Deprecated
-        public static final String TARGET_STORAGE_VERSION = "2023-01-03";
+        public static final String TARGET_STORAGE_VERSION = "2026-06-06";
 
         /**
          * Error code returned from the service.
          */
         public static final String ERROR_CODE = "x-ms-error-code";
+
+        public static final HttpHeaderName ERROR_CODE_HEADER_NAME = HttpHeaderName.fromString(ERROR_CODE);
 
         /**
          * Compression type used on the body.
@@ -235,6 +241,8 @@ public final class Constants {
         public static final String ENCRYPTION_KEY = "x-ms-encryption-key";
 
         public static final String ENCRYPTION_KEY_SHA256 = "x-ms-encryption-key-sha256";
+        public static final HttpHeaderName ENCRYPTION_KEY_SHA256_HEADER_NAME
+            = HttpHeaderName.fromString(ENCRYPTION_KEY_SHA256);
 
         public static final String SERVER_ENCRYPTED = "x-ms-server-encrypted";
 
@@ -242,6 +250,16 @@ public final class Constants {
 
         public static final String ETAG_WILDCARD = "*";
 
+        /**
+         * Metadata key ("hdi_isfolder") used to mark virtual directories in Azure Blob Storage.
+         *
+         * <p>Azure Blob Storage has a flat namespace and doesn't inherently support directories.
+         * To implement directory-like organization, the Azure Storage client libraries use
+         * the convention of empty blobs with this metadata key set to "true".
+         *
+         * <p>When this metadata is present on a zero-length blob without extension, it should
+         * be treated as a directory marker rather than a regular blob.
+         */
         public static final String DIRECTORY_METADATA_KEY = "hdi_isfolder";
 
         public static final String X_MS_META = "x-ms-meta";
@@ -249,6 +267,10 @@ public final class Constants {
         public static final String SMB_PROTOCOL = "SMB";
 
         public static final String NFS_PROTOCOL = "NFS";
+
+        public static final String VERSION = "x-ms-version";
+
+        public static final String INVALID_HEADER_VALUE = "InvalidHeaderValue";
 
         private HeaderConstants() {
             // Private to prevent construction.
@@ -261,6 +283,31 @@ public final class Constants {
      * RESERVED FOR INTERNAL USE.
      */
     public static final class UrlConstants {
+
+        /**
+         * DNS subdomain label for the Blob service ({@code account}.blob.{suffix}).
+         */
+        public static final String BLOB_URI_SUBDOMAIN = "blob";
+
+        /**
+         * DNS subdomain label for the Azure Files service ({@code account}.file.{suffix}).
+         */
+        public static final String FILE_URI_SUBDOMAIN = "file";
+
+        /**
+         * DNS subdomain label for the Queue service ({@code account}.queue.{suffix}).
+         */
+        public static final String QUEUE_URI_SUBDOMAIN = "queue";
+
+        /**
+         * DNS subdomain label for the Table service ({@code account}.table.{suffix}).
+         */
+        public static final String TABLE_URI_SUBDOMAIN = "table";
+
+        /**
+         * DNS subdomain label for Data Lake Storage ({@code account}.dfs.{suffix}).
+         */
+        public static final String DFS_URI_SUBDOMAIN = "dfs";
 
         /**
          * The snapshot parameters.
@@ -333,9 +380,24 @@ public final class Constants {
         public static final String SAS_SIGNATURE = "sig";
 
         /**
+         * The SAS delegated user object id parameter.
+         */
+        public static final String SAS_DELEGATED_USER_OBJECT_ID = "sduoid";
+
+        /**
          * The SAS encryption scope parameter.
          */
         public static final String SAS_ENCRYPTION_SCOPE = "ses";
+
+        /**
+         * The SAS request headers parameter.
+         */
+        public static final String SAS_REQUEST_HEADERS = "srh";
+
+        /**
+         * The SAS request query parameters parameter.
+         */
+        public static final String SAS_REQUEST_QUERY_PARAMETERS = "srq";
 
         /**
          * The SAS cache control parameter.
@@ -393,6 +455,11 @@ public final class Constants {
         public static final String SAS_SIGNED_KEY_VERSION = "skv";
 
         /**
+         * The SAS signed delegated user tenant id parameter for user delegation SAS.
+         */
+        public static final String SAS_SIGNED_KEY_DELEGATED_USER_TENANT_ID = "skdutid";
+
+        /**
          * The SAS preauthorized agent object id parameter for user delegation SAS.
          */
         public static final String SAS_PREAUTHORIZED_AGENT_OBJECT_ID = "saoid";
@@ -421,4 +488,5 @@ public final class Constants {
             // Private to prevent construction.
         }
     }
+
 }

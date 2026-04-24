@@ -5,41 +5,54 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Contains details of errors encountered during a job execution. */
+/**
+ * Contains details of errors encountered during a job execution.
+ */
 @Fluent
-public final class DocumentError {
+public final class DocumentError implements JsonSerializable<DocumentError> {
     /*
      * The ID of the input document.
      */
-    @JsonProperty(value = "id", required = true)
+    @Generated
     private String id;
 
     /*
      * Error encountered.
      */
-    @JsonProperty(value = "error", required = true)
+    @Generated
     private Error error;
 
-    /** Creates an instance of DocumentError class. */
-    public DocumentError() {}
+    /**
+     * Creates an instance of DocumentError class.
+     */
+    @Generated
+    public DocumentError() {
+    }
 
     /**
      * Get the id property: The ID of the input document.
-     *
+     * 
      * @return the id value.
      */
+    @Generated
     public String getId() {
         return this.id;
     }
 
     /**
      * Set the id property: The ID of the input document.
-     *
+     * 
      * @param id the id value to set.
      * @return the DocumentError object itself.
      */
+    @Generated
     public DocumentError setId(String id) {
         this.id = id;
         return this;
@@ -47,21 +60,65 @@ public final class DocumentError {
 
     /**
      * Get the error property: Error encountered.
-     *
+     * 
      * @return the error value.
      */
+    @Generated
     public Error getError() {
         return this.error;
     }
 
     /**
      * Set the error property: Error encountered.
-     *
+     * 
      * @param error the error value to set.
      * @return the DocumentError object itself.
      */
+    @Generated
     public DocumentError setError(Error error) {
         this.error = error;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("id", this.id);
+        jsonWriter.writeJsonField("error", this.error);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DocumentError from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DocumentError if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DocumentError.
+     */
+    @Generated
+    public static DocumentError fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DocumentError deserializedDocumentError = new DocumentError();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedDocumentError.id = reader.getString();
+                } else if ("error".equals(fieldName)) {
+                    deserializedDocumentError.error = Error.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedDocumentError;
+        });
     }
 }

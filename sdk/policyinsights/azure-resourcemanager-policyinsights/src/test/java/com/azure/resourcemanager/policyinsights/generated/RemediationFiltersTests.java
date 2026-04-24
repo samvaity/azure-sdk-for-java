@@ -8,22 +8,23 @@ import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.policyinsights.models.RemediationFilters;
 import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public final class RemediationFiltersTests {
-    @Test
-    public void testDeserialize() {
-        RemediationFilters model =
-            BinaryData
-                .fromString("{\"locations\":[\"qw\",\"bmdg\",\"bjf\",\"dgmb\"]}")
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        RemediationFilters model
+            = BinaryData.fromString("{\"locations\":[\"nb\"],\"resourceIds\":[\"abnmocpcyshu\",\"zafb\"]}")
                 .toObject(RemediationFilters.class);
-        Assertions.assertEquals("qw", model.locations().get(0));
+        Assertions.assertEquals("nb", model.locations().get(0));
+        Assertions.assertEquals("abnmocpcyshu", model.resourceIds().get(0));
     }
 
-    @Test
-    public void testSerialize() {
-        RemediationFilters model = new RemediationFilters().withLocations(Arrays.asList("qw", "bmdg", "bjf", "dgmb"));
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
+        RemediationFilters model = new RemediationFilters().withLocations(Arrays.asList("nb"))
+            .withResourceIds(Arrays.asList("abnmocpcyshu", "zafb"));
         model = BinaryData.fromObject(model).toObject(RemediationFilters.class);
-        Assertions.assertEquals("qw", model.locations().get(0));
+        Assertions.assertEquals("nb", model.locations().get(0));
+        Assertions.assertEquals("abnmocpcyshu", model.resourceIds().get(0));
     }
 }

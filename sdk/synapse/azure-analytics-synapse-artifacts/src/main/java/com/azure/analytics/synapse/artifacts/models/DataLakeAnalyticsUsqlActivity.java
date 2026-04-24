@@ -5,74 +5,97 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Data Lake Analytics U-SQL activity. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("DataLakeAnalyticsU-SQL")
-@JsonFlatten
+/**
+ * Data Lake Analytics U-SQL activity.
+ */
 @Fluent
 public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
+    /*
+     * Type of activity.
+     */
+    @Generated
+    private String type = "DataLakeAnalyticsU-SQL";
+
     /*
      * Case-sensitive path to folder that contains the U-SQL script. Type: string (or Expression with resultType
      * string).
      */
-    @JsonProperty(value = "typeProperties.scriptPath", required = true)
+    @Generated
     private Object scriptPath;
 
     /*
      * Script linked service reference.
      */
-    @JsonProperty(value = "typeProperties.scriptLinkedService", required = true)
+    @Generated
     private LinkedServiceReference scriptLinkedService;
 
     /*
      * The maximum number of nodes simultaneously used to run the job. Default value is 1. Type: integer (or Expression
      * with resultType integer), minimum: 1.
      */
-    @JsonProperty(value = "typeProperties.degreeOfParallelism")
+    @Generated
     private Object degreeOfParallelism;
 
     /*
      * Determines which jobs out of all that are queued should be selected to run first. The lower the number, the
      * higher the priority. Default value is 1000. Type: integer (or Expression with resultType integer), minimum: 1.
      */
-    @JsonProperty(value = "typeProperties.priority")
+    @Generated
     private Object priority;
 
     /*
      * Parameters for U-SQL job request.
      */
-    @JsonProperty(value = "typeProperties.parameters")
+    @Generated
     private Map<String, Object> parameters;
 
     /*
      * Runtime version of the U-SQL engine to use. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.runtimeVersion")
+    @Generated
     private Object runtimeVersion;
 
     /*
      * Compilation mode of U-SQL. Must be one of these values : Semantic, Full and SingleBox. Type: string (or
      * Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.compilationMode")
+    @Generated
     private Object compilationMode;
 
-    /** Creates an instance of DataLakeAnalyticsUsqlActivity class. */
-    public DataLakeAnalyticsUsqlActivity() {}
+    /**
+     * Creates an instance of DataLakeAnalyticsUsqlActivity class.
+     */
+    @Generated
+    public DataLakeAnalyticsUsqlActivity() {
+    }
+
+    /**
+     * Get the type property: Type of activity.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the scriptPath property: Case-sensitive path to folder that contains the U-SQL script. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @return the scriptPath value.
      */
+    @Generated
     public Object getScriptPath() {
         return this.scriptPath;
     }
@@ -80,10 +103,11 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
     /**
      * Set the scriptPath property: Case-sensitive path to folder that contains the U-SQL script. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @param scriptPath the scriptPath value to set.
      * @return the DataLakeAnalyticsUsqlActivity object itself.
      */
+    @Generated
     public DataLakeAnalyticsUsqlActivity setScriptPath(Object scriptPath) {
         this.scriptPath = scriptPath;
         return this;
@@ -91,19 +115,21 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
 
     /**
      * Get the scriptLinkedService property: Script linked service reference.
-     *
+     * 
      * @return the scriptLinkedService value.
      */
+    @Generated
     public LinkedServiceReference getScriptLinkedService() {
         return this.scriptLinkedService;
     }
 
     /**
      * Set the scriptLinkedService property: Script linked service reference.
-     *
+     * 
      * @param scriptLinkedService the scriptLinkedService value to set.
      * @return the DataLakeAnalyticsUsqlActivity object itself.
      */
+    @Generated
     public DataLakeAnalyticsUsqlActivity setScriptLinkedService(LinkedServiceReference scriptLinkedService) {
         this.scriptLinkedService = scriptLinkedService;
         return this;
@@ -112,9 +138,10 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
     /**
      * Get the degreeOfParallelism property: The maximum number of nodes simultaneously used to run the job. Default
      * value is 1. Type: integer (or Expression with resultType integer), minimum: 1.
-     *
+     * 
      * @return the degreeOfParallelism value.
      */
+    @Generated
     public Object getDegreeOfParallelism() {
         return this.degreeOfParallelism;
     }
@@ -122,10 +149,11 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
     /**
      * Set the degreeOfParallelism property: The maximum number of nodes simultaneously used to run the job. Default
      * value is 1. Type: integer (or Expression with resultType integer), minimum: 1.
-     *
+     * 
      * @param degreeOfParallelism the degreeOfParallelism value to set.
      * @return the DataLakeAnalyticsUsqlActivity object itself.
      */
+    @Generated
     public DataLakeAnalyticsUsqlActivity setDegreeOfParallelism(Object degreeOfParallelism) {
         this.degreeOfParallelism = degreeOfParallelism;
         return this;
@@ -135,9 +163,10 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
      * Get the priority property: Determines which jobs out of all that are queued should be selected to run first. The
      * lower the number, the higher the priority. Default value is 1000. Type: integer (or Expression with resultType
      * integer), minimum: 1.
-     *
+     * 
      * @return the priority value.
      */
+    @Generated
     public Object getPriority() {
         return this.priority;
     }
@@ -146,10 +175,11 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
      * Set the priority property: Determines which jobs out of all that are queued should be selected to run first. The
      * lower the number, the higher the priority. Default value is 1000. Type: integer (or Expression with resultType
      * integer), minimum: 1.
-     *
+     * 
      * @param priority the priority value to set.
      * @return the DataLakeAnalyticsUsqlActivity object itself.
      */
+    @Generated
     public DataLakeAnalyticsUsqlActivity setPriority(Object priority) {
         this.priority = priority;
         return this;
@@ -157,19 +187,21 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
 
     /**
      * Get the parameters property: Parameters for U-SQL job request.
-     *
+     * 
      * @return the parameters value.
      */
+    @Generated
     public Map<String, Object> getParameters() {
         return this.parameters;
     }
 
     /**
      * Set the parameters property: Parameters for U-SQL job request.
-     *
+     * 
      * @param parameters the parameters value to set.
      * @return the DataLakeAnalyticsUsqlActivity object itself.
      */
+    @Generated
     public DataLakeAnalyticsUsqlActivity setParameters(Map<String, Object> parameters) {
         this.parameters = parameters;
         return this;
@@ -178,9 +210,10 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
     /**
      * Get the runtimeVersion property: Runtime version of the U-SQL engine to use. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the runtimeVersion value.
      */
+    @Generated
     public Object getRuntimeVersion() {
         return this.runtimeVersion;
     }
@@ -188,10 +221,11 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
     /**
      * Set the runtimeVersion property: Runtime version of the U-SQL engine to use. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param runtimeVersion the runtimeVersion value to set.
      * @return the DataLakeAnalyticsUsqlActivity object itself.
      */
+    @Generated
     public DataLakeAnalyticsUsqlActivity setRuntimeVersion(Object runtimeVersion) {
         this.runtimeVersion = runtimeVersion;
         return this;
@@ -200,9 +234,10 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
     /**
      * Get the compilationMode property: Compilation mode of U-SQL. Must be one of these values : Semantic, Full and
      * SingleBox. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the compilationMode value.
      */
+    @Generated
     public Object getCompilationMode() {
         return this.compilationMode;
     }
@@ -210,68 +245,225 @@ public class DataLakeAnalyticsUsqlActivity extends ExecutionActivity {
     /**
      * Set the compilationMode property: Compilation mode of U-SQL. Must be one of these values : Semantic, Full and
      * SingleBox. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param compilationMode the compilationMode value to set.
      * @return the DataLakeAnalyticsUsqlActivity object itself.
      */
+    @Generated
     public DataLakeAnalyticsUsqlActivity setCompilationMode(Object compilationMode) {
         this.compilationMode = compilationMode;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DataLakeAnalyticsUsqlActivity setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         super.setLinkedServiceName(linkedServiceName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DataLakeAnalyticsUsqlActivity setPolicy(ActivityPolicy policy) {
         super.setPolicy(policy);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DataLakeAnalyticsUsqlActivity setName(String name) {
         super.setName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DataLakeAnalyticsUsqlActivity setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DataLakeAnalyticsUsqlActivity setState(ActivityState state) {
         super.setState(state);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DataLakeAnalyticsUsqlActivity setOnInactiveMarkAs(ActivityOnInactiveMarkAs onInactiveMarkAs) {
         super.setOnInactiveMarkAs(onInactiveMarkAs);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DataLakeAnalyticsUsqlActivity setDependsOn(List<ActivityDependency> dependsOn) {
         super.setDependsOn(dependsOn);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DataLakeAnalyticsUsqlActivity setUserProperties(List<UserProperty> userProperties) {
         super.setUserProperties(userProperties);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", getName());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeStringField("state", getState() == null ? null : getState().toString());
+        jsonWriter.writeStringField("onInactiveMarkAs",
+            getOnInactiveMarkAs() == null ? null : getOnInactiveMarkAs().toString());
+        jsonWriter.writeArrayField("dependsOn", getDependsOn(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("userProperties", getUserProperties(),
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("linkedServiceName", getLinkedServiceName());
+        jsonWriter.writeJsonField("policy", getPolicy());
+        jsonWriter.writeStringField("type", this.type);
+        if (scriptPath != null
+            || scriptLinkedService != null
+            || degreeOfParallelism != null
+            || priority != null
+            || parameters != null
+            || runtimeVersion != null
+            || compilationMode != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("scriptPath", this.scriptPath);
+            jsonWriter.writeJsonField("scriptLinkedService", this.scriptLinkedService);
+            if (this.degreeOfParallelism != null) {
+                jsonWriter.writeUntypedField("degreeOfParallelism", this.degreeOfParallelism);
+            }
+            if (this.priority != null) {
+                jsonWriter.writeUntypedField("priority", this.priority);
+            }
+            jsonWriter.writeMapField("parameters", this.parameters, (writer, element) -> writer.writeUntyped(element));
+            if (this.runtimeVersion != null) {
+                jsonWriter.writeUntypedField("runtimeVersion", this.runtimeVersion);
+            }
+            if (this.compilationMode != null) {
+                jsonWriter.writeUntypedField("compilationMode", this.compilationMode);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DataLakeAnalyticsUsqlActivity from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DataLakeAnalyticsUsqlActivity if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DataLakeAnalyticsUsqlActivity.
+     */
+    @Generated
+    public static DataLakeAnalyticsUsqlActivity fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DataLakeAnalyticsUsqlActivity deserializedDataLakeAnalyticsUsqlActivity
+                = new DataLakeAnalyticsUsqlActivity();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedDataLakeAnalyticsUsqlActivity.setName(reader.getString());
+                } else if ("description".equals(fieldName)) {
+                    deserializedDataLakeAnalyticsUsqlActivity.setDescription(reader.getString());
+                } else if ("state".equals(fieldName)) {
+                    deserializedDataLakeAnalyticsUsqlActivity.setState(ActivityState.fromString(reader.getString()));
+                } else if ("onInactiveMarkAs".equals(fieldName)) {
+                    deserializedDataLakeAnalyticsUsqlActivity
+                        .setOnInactiveMarkAs(ActivityOnInactiveMarkAs.fromString(reader.getString()));
+                } else if ("dependsOn".equals(fieldName)) {
+                    List<ActivityDependency> dependsOn
+                        = reader.readArray(reader1 -> ActivityDependency.fromJson(reader1));
+                    deserializedDataLakeAnalyticsUsqlActivity.setDependsOn(dependsOn);
+                } else if ("userProperties".equals(fieldName)) {
+                    List<UserProperty> userProperties = reader.readArray(reader1 -> UserProperty.fromJson(reader1));
+                    deserializedDataLakeAnalyticsUsqlActivity.setUserProperties(userProperties);
+                } else if ("linkedServiceName".equals(fieldName)) {
+                    deserializedDataLakeAnalyticsUsqlActivity
+                        .setLinkedServiceName(LinkedServiceReference.fromJson(reader));
+                } else if ("policy".equals(fieldName)) {
+                    deserializedDataLakeAnalyticsUsqlActivity.setPolicy(ActivityPolicy.fromJson(reader));
+                } else if ("type".equals(fieldName)) {
+                    deserializedDataLakeAnalyticsUsqlActivity.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("scriptPath".equals(fieldName)) {
+                            deserializedDataLakeAnalyticsUsqlActivity.scriptPath = reader.readUntyped();
+                        } else if ("scriptLinkedService".equals(fieldName)) {
+                            deserializedDataLakeAnalyticsUsqlActivity.scriptLinkedService
+                                = LinkedServiceReference.fromJson(reader);
+                        } else if ("degreeOfParallelism".equals(fieldName)) {
+                            deserializedDataLakeAnalyticsUsqlActivity.degreeOfParallelism = reader.readUntyped();
+                        } else if ("priority".equals(fieldName)) {
+                            deserializedDataLakeAnalyticsUsqlActivity.priority = reader.readUntyped();
+                        } else if ("parameters".equals(fieldName)) {
+                            Map<String, Object> parameters = reader.readMap(reader1 -> reader1.readUntyped());
+                            deserializedDataLakeAnalyticsUsqlActivity.parameters = parameters;
+                        } else if ("runtimeVersion".equals(fieldName)) {
+                            deserializedDataLakeAnalyticsUsqlActivity.runtimeVersion = reader.readUntyped();
+                        } else if ("compilationMode".equals(fieldName)) {
+                            deserializedDataLakeAnalyticsUsqlActivity.compilationMode = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedDataLakeAnalyticsUsqlActivity.setAdditionalProperties(additionalProperties);
+
+            return deserializedDataLakeAnalyticsUsqlActivity;
+        });
     }
 }

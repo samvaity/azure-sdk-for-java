@@ -22,16 +22,16 @@ import java.util.function.Consumer;
 
 /**
  * <p>Device code authentication is a type of authentication flow offered by
- * <a href="https://learn.microsoft.com/azure/active-directory/fundamentals/">Azure Active Directory (Azure AD)
- * </a> that allows users to sign in to applications on devices that don't have a web browser or a keyboard.
+ * <a href="https://learn.microsoft.com/entra/fundamentals/">Microsoft Entra ID</a> that
+ * allows users to sign in to applications on devices that don't have a web browser or a keyboard.
  * This authentication method is particularly useful for devices such as smart TVs, gaming consoles, and
  * Internet of Things (IoT) devices that may not have the capability to enter a username and password.
  * With device code authentication, the user is presented with a device code on the device that needs to be
  * authenticated. The user then navigates to a web browser on a separate device and enters the code on the
- * Microsoft sign-in page. After the user enters the code, Azure AD verifies it and prompts the user to sign in
+ * Microsoft sign-in page. After the user enters the code, Microsoft Entra ID verifies it and prompts the user to sign in
  * with their credentials, such as a username and password or a multi-factor authentication (MFA) method.
- * Device code authentication can be initiated using various Azure AD-supported protocols, such as OAuth 2.0 and
- * OpenID Connect, and it can be used with a wide range of Azure AD-integrated applications.
+ * Device code authentication can be initiated using various Microsoft Entra-supported protocols, such as OAuth 2.0 and
+ * OpenID Connect, and it can be used with a wide range of Microsoft Entra-integrated applications.
  * The DeviceCodeCredential interactively authenticates a user and acquires a token on devices with limited UI.
  * It works by prompting the user to visit a login URL on a browser-enabled machine when the application attempts to
  * authenticate. The user then enters the device code mentioned in the instructions along with their login credentials.
@@ -45,7 +45,7 @@ import java.util.function.Consumer;
  * <p>To authenticate a user through device code flow, use the following steps:</p>
  *
  * <ol>
- *     <li>Go to Azure Active Directory in Azure portal and find your app registration.</li>
+ *     <li>Go to Microsoft Entra ID in Azure portal and find your app registration.</li>
  *     <li>Navigate to the Authentication section.</li>
  *     <li>Under Suggested Redirected URIs, check the URI that ends with /common/oauth2/nativeclient.</li>
  *     <li>Under Default Client Type, select yes for Treat application as a public client.</li>
@@ -70,8 +70,7 @@ import java.util.function.Consumer;
  *
  * <!-- src_embed com.azure.identity.credential.devicecodecredential.construct -->
  * <pre>
- * TokenCredential deviceCodeCredential = new DeviceCodeCredentialBuilder&#40;&#41;
- *     .build&#40;&#41;;
+ * TokenCredential deviceCodeCredential = new DeviceCodeCredentialBuilder&#40;&#41;.build&#40;&#41;;
  * </pre>
  * <!-- end com.azure.identity.credential.devicecodecredential.construct -->
  *
@@ -92,7 +91,6 @@ public class DeviceCodeCredential implements TokenCredential {
     private boolean isCaeDisabledRequestCached;
     private boolean isCachePopulated;
 
-
     /**
      * Creates a DeviceCodeCredential with the given identity client options.
      *
@@ -103,10 +101,9 @@ public class DeviceCodeCredential implements TokenCredential {
      * @param identityClientOptions the options for configuring the identity client
      */
     DeviceCodeCredential(String clientId, String tenantId, Consumer<DeviceCodeInfo> challengeConsumer,
-                         boolean automaticAuthentication, IdentityClientOptions identityClientOptions) {
+        boolean automaticAuthentication, IdentityClientOptions identityClientOptions) {
         this.challengeConsumer = challengeConsumer;
-        IdentityClientBuilder builder =  new IdentityClientBuilder()
-            .tenantId(tenantId)
+        IdentityClientBuilder builder = new IdentityClientBuilder().tenantId(tenantId)
             .clientId(clientId)
             .identityClientOptions(identityClientOptions);
 
@@ -130,35 +127,38 @@ public class DeviceCodeCredential implements TokenCredential {
             } else {
                 return Mono.empty();
             }
-        }).switchIfEmpty(
-            Mono.defer(() -> {
-                if (!automaticAuthentication) {
-                    return Mono.error(LOGGER.logExceptionAsError(new AuthenticationRequiredException("Interactive "
-                         + "authentication is needed to acquire token. Call Authenticate to initiate the device "
-                         + "code authentication.", request)));
-                }
-                return identityClient.authenticateWithDeviceCode(request, challengeConsumer);
-            }))
-            .map(msalToken -> {
-                AccessToken accessToken = updateCache(msalToken);
-                if (request.isCaeEnabled()) {
-                    isCaeEnabledRequestCached = true;
-                } else {
-                    isCaeDisabledRequestCached = true;
-                }
-                return accessToken;
-            })
+        }).switchIfEmpty(Mono.defer(() -> {
+            if (!automaticAuthentication) {
+                return Mono.error(LOGGER.logExceptionAsError(new AuthenticationRequiredException("Interactive "
+                    + "authentication is needed to acquire token. Call Authenticate to initiate the device "
+                    + "code authentication.", request)));
+            }
+            return identityClient.authenticateWithDeviceCode(request, challengeConsumer);
+        })).map(msalToken -> {
+            AccessToken accessToken = updateCache(msalToken);
+            if (request.isCaeEnabled()) {
+                isCaeEnabledRequestCached = true;
+            } else {
+                isCaeDisabledRequestCached = true;
+            }
+            return accessToken;
+        })
             .doOnNext(token -> LoggingUtil.logTokenSuccess(LOGGER, request))
-            .doOnError(error -> LoggingUtil.logTokenError(LOGGER, identityClient.getIdentityClientOptions(),
-                request, error));
+            .doOnError(
+                error -> LoggingUtil.logTokenError(LOGGER, identityClient.getIdentityClientOptions(), request, error));
     }
 
     @Override
     public AccessToken getTokenSync(TokenRequestContext request) {
         if (cachedToken.get() != null) {
             try {
-                return identitySyncClient.authenticateWithPublicClientCache(request, cachedToken.get());
-            } catch (Exception e) { }
+                MsalToken token = identitySyncClient.authenticateWithPublicClientCache(request, cachedToken.get());
+                if (token != null) {
+                    LoggingUtil.logTokenSuccess(LOGGER, request);
+                    return token;
+                }
+            } catch (Exception e) {
+            }
         }
         try {
             if (!automaticAuthentication) {
@@ -166,7 +166,7 @@ public class DeviceCodeCredential implements TokenCredential {
                     + "authentication is needed to acquire token. Call Authenticate to initiate the device "
                     + "code authentication.", request));
             }
-            MsalToken accessToken =  identitySyncClient.authenticateWithDeviceCode(request, challengeConsumer);
+            MsalToken accessToken = identitySyncClient.authenticateWithDeviceCode(request, challengeConsumer);
             updateCache(accessToken);
             LoggingUtil.logTokenSuccess(LOGGER, request);
             return accessToken;
@@ -176,14 +176,12 @@ public class DeviceCodeCredential implements TokenCredential {
         }
     }
 
-
-
     /**
      * Authenticates a user via the device code flow.
      *
-     * <p> The credential acquires a verification URL and code from the Azure Active Directory. The user must
-     * browse to the URL, enter the code, and authenticate with Azure Active Directory. If the user authenticates
-     * successfully, the credential receives an access token. </p>
+     * <p> The credential acquires a verification URL and code from the Microsoft Entra ID. The user must
+     * browse to the URL, enter the code, and authenticate with Microsoft Entra ID. If the user authenticates
+     * successfully, the credential receives an access token. This method will always generate a challenge to the user.</p>
      *
      * @param request The details of the authentication request.
      *
@@ -194,16 +192,16 @@ public class DeviceCodeCredential implements TokenCredential {
      */
     public Mono<AuthenticationRecord> authenticate(TokenRequestContext request) {
         return Mono.defer(() -> identityClient.authenticateWithDeviceCode(request, challengeConsumer))
-                       .map(this::updateCache)
-                       .map(msalToken -> cachedToken.get().getAuthenticationRecord());
+            .map(this::updateCache)
+            .map(msalToken -> cachedToken.get().getAuthenticationRecord());
     }
 
     /**
      * Authenticates a user via the device code flow.
      *
-     * <p> The credential acquires a verification URL and code from the Azure Active Directory. The user must
-     * browse to the URL, enter the code, and authenticate with Azure Active Directory. If the user authenticates
-     * successfully, the credential receives an access token. </p>
+     * <p> The credential acquires a verification URL and code from the Microsoft Entra ID. The user must
+     * browse to the URL, enter the code, and authenticate with Microsoft Entra ID. If the user authenticates
+     * successfully, the credential receives an access token. This method will always generate a challenge to the user.</p>
      *
      * @return The {@link AuthenticationRecord} which can be used to silently authenticate the account
      * on future execution if persistent caching was configured via
@@ -214,23 +212,21 @@ public class DeviceCodeCredential implements TokenCredential {
         String defaultScope = AzureAuthorityHosts.getDefaultScope(authorityHost);
         if (defaultScope == null) {
             return Mono.error(LoggingUtil.logCredentialUnavailableException(LOGGER,
-                identityClient.getIdentityClientOptions(), new CredentialUnavailableException("Authenticating in this "
-                                                    + "environment requires specifying a TokenRequestContext.")));
+                identityClient.getIdentityClientOptions(), new CredentialUnavailableException(
+                    "Authenticating in this " + "environment requires specifying a TokenRequestContext.")));
         }
         return authenticate(new TokenRequestContext().addScopes(defaultScope));
     }
 
     private AccessToken updateCache(MsalToken msalToken) {
-        cachedToken.set(
-                new MsalAuthenticationAccount(
-                    new AuthenticationRecord(msalToken.getAuthenticationResult(),
-                                identityClient.getTenantId(), identityClient.getClientId()),
-                    msalToken.getAccount().getTenantProfiles()));
+        cachedToken.set(new MsalAuthenticationAccount(new AuthenticationRecord(msalToken.getAuthenticationResult(),
+            identityClient.getTenantId(), identityClient.getClientId()), msalToken.getAccount().getTenantProfiles()));
         return msalToken;
     }
 
     private boolean isCachePopulated(TokenRequestContext request) {
-        return (cachedToken.get() != null) && ((request.isCaeEnabled() && isCaeEnabledRequestCached)
-            || (!request.isCaeEnabled() && isCaeDisabledRequestCached));
+        return (cachedToken.get() != null)
+            && ((request.isCaeEnabled() && isCaeEnabledRequestCached)
+                || (!request.isCaeEnabled() && isCaeDisabledRequestCached));
     }
 }

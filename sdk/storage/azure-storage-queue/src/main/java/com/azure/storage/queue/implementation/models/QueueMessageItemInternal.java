@@ -5,76 +5,89 @@
 package com.azure.storage.queue.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.DateTimeRfc1123;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
 import java.time.OffsetDateTime;
+import java.util.Objects;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** The object returned in the QueueMessageList array when calling Get Messages on a Queue. */
-@JacksonXmlRootElement(localName = "QueueMessage")
+/**
+ * The object returned in the QueueMessageList array when calling Get Messages on a Queue.
+ */
 @Fluent
-public final class QueueMessageItemInternal {
+public final class QueueMessageItemInternal implements XmlSerializable<QueueMessageItemInternal> {
     /*
      * The Id of the Message.
      */
-    @JsonProperty(value = "MessageId", required = true)
+    @Generated
     private String messageId;
 
     /*
      * The time the Message was inserted into the Queue.
      */
-    @JsonProperty(value = "InsertionTime", required = true)
+    @Generated
     private DateTimeRfc1123 insertionTime;
 
     /*
      * The time that the Message will expire and be automatically deleted.
      */
-    @JsonProperty(value = "ExpirationTime", required = true)
+    @Generated
     private DateTimeRfc1123 expirationTime;
 
     /*
      * This value is required to delete the Message. If deletion fails using this popreceipt then the message has been
      * dequeued by another client.
      */
-    @JsonProperty(value = "PopReceipt", required = true)
+    @Generated
     private String popReceipt;
 
     /*
      * The time that the message will again become visible in the Queue.
      */
-    @JsonProperty(value = "TimeNextVisible", required = true)
+    @Generated
     private DateTimeRfc1123 timeNextVisible;
 
     /*
      * The number of times the message has been dequeued.
      */
-    @JsonProperty(value = "DequeueCount", required = true)
+    @Generated
     private long dequeueCount;
 
     /*
      * The content of the Message.
      */
-    @JsonProperty(value = "MessageText", required = true)
+    @Generated
     private String messageText;
 
-    /** Creates an instance of QueueMessageItemInternal class. */
-    public QueueMessageItemInternal() {}
+    /**
+     * Creates an instance of QueueMessageItemInternal class.
+     */
+    @Generated
+    public QueueMessageItemInternal() {
+    }
 
     /**
      * Get the messageId property: The Id of the Message.
-     *
+     * 
      * @return the messageId value.
      */
+    @Generated
     public String getMessageId() {
         return this.messageId;
     }
 
     /**
      * Set the messageId property: The Id of the Message.
-     *
+     * 
      * @param messageId the messageId value to set.
      * @return the QueueMessageItemInternal object itself.
      */
+    @Generated
     public QueueMessageItemInternal setMessageId(String messageId) {
         this.messageId = messageId;
         return this;
@@ -82,9 +95,10 @@ public final class QueueMessageItemInternal {
 
     /**
      * Get the insertionTime property: The time the Message was inserted into the Queue.
-     *
+     * 
      * @return the insertionTime value.
      */
+    @Generated
     public OffsetDateTime getInsertionTime() {
         if (this.insertionTime == null) {
             return null;
@@ -94,10 +108,11 @@ public final class QueueMessageItemInternal {
 
     /**
      * Set the insertionTime property: The time the Message was inserted into the Queue.
-     *
+     * 
      * @param insertionTime the insertionTime value to set.
      * @return the QueueMessageItemInternal object itself.
      */
+    @Generated
     public QueueMessageItemInternal setInsertionTime(OffsetDateTime insertionTime) {
         if (insertionTime == null) {
             this.insertionTime = null;
@@ -109,9 +124,10 @@ public final class QueueMessageItemInternal {
 
     /**
      * Get the expirationTime property: The time that the Message will expire and be automatically deleted.
-     *
+     * 
      * @return the expirationTime value.
      */
+    @Generated
     public OffsetDateTime getExpirationTime() {
         if (this.expirationTime == null) {
             return null;
@@ -121,10 +137,11 @@ public final class QueueMessageItemInternal {
 
     /**
      * Set the expirationTime property: The time that the Message will expire and be automatically deleted.
-     *
+     * 
      * @param expirationTime the expirationTime value to set.
      * @return the QueueMessageItemInternal object itself.
      */
+    @Generated
     public QueueMessageItemInternal setExpirationTime(OffsetDateTime expirationTime) {
         if (expirationTime == null) {
             this.expirationTime = null;
@@ -137,9 +154,10 @@ public final class QueueMessageItemInternal {
     /**
      * Get the popReceipt property: This value is required to delete the Message. If deletion fails using this
      * popreceipt then the message has been dequeued by another client.
-     *
+     * 
      * @return the popReceipt value.
      */
+    @Generated
     public String getPopReceipt() {
         return this.popReceipt;
     }
@@ -147,10 +165,11 @@ public final class QueueMessageItemInternal {
     /**
      * Set the popReceipt property: This value is required to delete the Message. If deletion fails using this
      * popreceipt then the message has been dequeued by another client.
-     *
+     * 
      * @param popReceipt the popReceipt value to set.
      * @return the QueueMessageItemInternal object itself.
      */
+    @Generated
     public QueueMessageItemInternal setPopReceipt(String popReceipt) {
         this.popReceipt = popReceipt;
         return this;
@@ -158,9 +177,10 @@ public final class QueueMessageItemInternal {
 
     /**
      * Get the timeNextVisible property: The time that the message will again become visible in the Queue.
-     *
+     * 
      * @return the timeNextVisible value.
      */
+    @Generated
     public OffsetDateTime getTimeNextVisible() {
         if (this.timeNextVisible == null) {
             return null;
@@ -170,10 +190,11 @@ public final class QueueMessageItemInternal {
 
     /**
      * Set the timeNextVisible property: The time that the message will again become visible in the Queue.
-     *
+     * 
      * @param timeNextVisible the timeNextVisible value to set.
      * @return the QueueMessageItemInternal object itself.
      */
+    @Generated
     public QueueMessageItemInternal setTimeNextVisible(OffsetDateTime timeNextVisible) {
         if (timeNextVisible == null) {
             this.timeNextVisible = null;
@@ -185,19 +206,21 @@ public final class QueueMessageItemInternal {
 
     /**
      * Get the dequeueCount property: The number of times the message has been dequeued.
-     *
+     * 
      * @return the dequeueCount value.
      */
+    @Generated
     public long getDequeueCount() {
         return this.dequeueCount;
     }
 
     /**
      * Set the dequeueCount property: The number of times the message has been dequeued.
-     *
+     * 
      * @param dequeueCount the dequeueCount value to set.
      * @return the QueueMessageItemInternal object itself.
      */
+    @Generated
     public QueueMessageItemInternal setDequeueCount(long dequeueCount) {
         this.dequeueCount = dequeueCount;
         return this;
@@ -205,21 +228,103 @@ public final class QueueMessageItemInternal {
 
     /**
      * Get the messageText property: The content of the Message.
-     *
+     * 
      * @return the messageText value.
      */
+    @Generated
     public String getMessageText() {
         return this.messageText;
     }
 
     /**
      * Set the messageText property: The content of the Message.
-     *
+     * 
      * @param messageText the messageText value to set.
      * @return the QueueMessageItemInternal object itself.
      */
+    @Generated
     public QueueMessageItemInternal setMessageText(String messageText) {
         this.messageText = messageText;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "QueueMessage" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeStringElement("MessageId", this.messageId);
+        xmlWriter.writeStringElement("InsertionTime", Objects.toString(this.insertionTime, null));
+        xmlWriter.writeStringElement("ExpirationTime", Objects.toString(this.expirationTime, null));
+        xmlWriter.writeStringElement("PopReceipt", this.popReceipt);
+        xmlWriter.writeStringElement("TimeNextVisible", Objects.toString(this.timeNextVisible, null));
+        xmlWriter.writeLongElement("DequeueCount", this.dequeueCount);
+        xmlWriter.writeStringElement("MessageText", this.messageText);
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of QueueMessageItemInternal from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of QueueMessageItemInternal if the XmlReader was pointing to an instance of it, or null if it
+     * was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the QueueMessageItemInternal.
+     */
+    @Generated
+    public static QueueMessageItemInternal fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of QueueMessageItemInternal from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of QueueMessageItemInternal if the XmlReader was pointing to an instance of it, or null if it
+     * was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the QueueMessageItemInternal.
+     */
+    @Generated
+    public static QueueMessageItemInternal fromXml(XmlReader xmlReader, String rootElementName)
+        throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "QueueMessage" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            QueueMessageItemInternal deserializedQueueMessageItemInternal = new QueueMessageItemInternal();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("MessageId".equals(elementName.getLocalPart())) {
+                    deserializedQueueMessageItemInternal.messageId = reader.getStringElement();
+                } else if ("InsertionTime".equals(elementName.getLocalPart())) {
+                    deserializedQueueMessageItemInternal.insertionTime
+                        = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("ExpirationTime".equals(elementName.getLocalPart())) {
+                    deserializedQueueMessageItemInternal.expirationTime
+                        = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("PopReceipt".equals(elementName.getLocalPart())) {
+                    deserializedQueueMessageItemInternal.popReceipt = reader.getStringElement();
+                } else if ("TimeNextVisible".equals(elementName.getLocalPart())) {
+                    deserializedQueueMessageItemInternal.timeNextVisible
+                        = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("DequeueCount".equals(elementName.getLocalPart())) {
+                    deserializedQueueMessageItemInternal.dequeueCount = reader.getLongElement();
+                } else if ("MessageText".equals(elementName.getLocalPart())) {
+                    deserializedQueueMessageItemInternal.messageText = reader.getStringElement();
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedQueueMessageItemInternal;
+        });
     }
 }

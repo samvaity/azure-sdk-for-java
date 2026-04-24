@@ -5,84 +5,93 @@
 package com.azure.resourcemanager.loganalytics.fluent.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.loganalytics.models.AssociatedWorkspace;
 import com.azure.resourcemanager.loganalytics.models.BillingType;
 import com.azure.resourcemanager.loganalytics.models.CapacityReservationProperties;
 import com.azure.resourcemanager.loganalytics.models.ClusterEntityStatus;
+import com.azure.resourcemanager.loganalytics.models.ClusterReplicationProperties;
 import com.azure.resourcemanager.loganalytics.models.KeyVaultProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.List;
 
-/** Cluster properties. */
+/**
+ * Cluster properties.
+ */
 @Fluent
-public final class ClusterProperties {
+public final class ClusterProperties implements JsonSerializable<ClusterProperties> {
     /*
      * The ID associated with the cluster.
      */
-    @JsonProperty(value = "clusterId", access = JsonProperty.Access.WRITE_ONLY)
     private String clusterId;
 
     /*
      * The provisioning state of the cluster.
      */
-    @JsonProperty(value = "provisioningState", access = JsonProperty.Access.WRITE_ONLY)
     private ClusterEntityStatus provisioningState;
 
     /*
-     * Configures whether cluster will use double encryption. This Property can
-     * not be modified after cluster creation. Default value is 'true'
+     * Configures whether cluster will use double encryption. This Property can not be modified after cluster creation.
+     * Default value is 'true'
      */
-    @JsonProperty(value = "isDoubleEncryptionEnabled")
     private Boolean isDoubleEncryptionEnabled;
 
     /*
-     * Sets whether the cluster will support availability zones. This can be
-     * set as true only in regions where Azure Data Explorer support
-     * Availability Zones. This Property can not be modified after cluster
-     * creation. Default value is 'true' if region supports Availability Zones.
+     * Sets whether the cluster will support availability zones. This can be set as true only in regions where Azure
+     * Data Explorer support Availability Zones. This Property can not be modified after cluster creation. Default value
+     * is 'true' if region supports Availability Zones.
      */
-    @JsonProperty(value = "isAvailabilityZonesEnabled")
     private Boolean isAvailabilityZonesEnabled;
 
     /*
      * The cluster's billing type.
      */
-    @JsonProperty(value = "billingType")
     private BillingType billingType;
 
     /*
      * The associated key properties.
      */
-    @JsonProperty(value = "keyVaultProperties")
     private KeyVaultProperties keyVaultProperties;
 
     /*
      * The last time the cluster was updated.
      */
-    @JsonProperty(value = "lastModifiedDate", access = JsonProperty.Access.WRITE_ONLY)
-    private String lastModifiedDate;
+    private OffsetDateTime lastModifiedDate;
 
     /*
      * The cluster creation time
      */
-    @JsonProperty(value = "createdDate", access = JsonProperty.Access.WRITE_ONLY)
-    private String createdDate;
+    private OffsetDateTime createdDate;
 
     /*
      * The list of Log Analytics workspaces associated with the cluster
      */
-    @JsonProperty(value = "associatedWorkspaces")
     private List<AssociatedWorkspace> associatedWorkspaces;
 
     /*
      * Additional properties for capacity reservation
      */
-    @JsonProperty(value = "capacityReservationProperties")
     private CapacityReservationProperties capacityReservationProperties;
+
+    /*
+     * Cluster's replication properties.
+     */
+    private ClusterReplicationProperties replication;
+
+    /**
+     * Creates an instance of ClusterProperties class.
+     */
+    public ClusterProperties() {
+    }
 
     /**
      * Get the clusterId property: The ID associated with the cluster.
-     *
+     * 
      * @return the clusterId value.
      */
     public String clusterId() {
@@ -91,7 +100,7 @@ public final class ClusterProperties {
 
     /**
      * Get the provisioningState property: The provisioning state of the cluster.
-     *
+     * 
      * @return the provisioningState value.
      */
     public ClusterEntityStatus provisioningState() {
@@ -101,7 +110,7 @@ public final class ClusterProperties {
     /**
      * Get the isDoubleEncryptionEnabled property: Configures whether cluster will use double encryption. This Property
      * can not be modified after cluster creation. Default value is 'true'.
-     *
+     * 
      * @return the isDoubleEncryptionEnabled value.
      */
     public Boolean isDoubleEncryptionEnabled() {
@@ -111,7 +120,7 @@ public final class ClusterProperties {
     /**
      * Set the isDoubleEncryptionEnabled property: Configures whether cluster will use double encryption. This Property
      * can not be modified after cluster creation. Default value is 'true'.
-     *
+     * 
      * @param isDoubleEncryptionEnabled the isDoubleEncryptionEnabled value to set.
      * @return the ClusterProperties object itself.
      */
@@ -124,7 +133,7 @@ public final class ClusterProperties {
      * Get the isAvailabilityZonesEnabled property: Sets whether the cluster will support availability zones. This can
      * be set as true only in regions where Azure Data Explorer support Availability Zones. This Property can not be
      * modified after cluster creation. Default value is 'true' if region supports Availability Zones.
-     *
+     * 
      * @return the isAvailabilityZonesEnabled value.
      */
     public Boolean isAvailabilityZonesEnabled() {
@@ -135,7 +144,7 @@ public final class ClusterProperties {
      * Set the isAvailabilityZonesEnabled property: Sets whether the cluster will support availability zones. This can
      * be set as true only in regions where Azure Data Explorer support Availability Zones. This Property can not be
      * modified after cluster creation. Default value is 'true' if region supports Availability Zones.
-     *
+     * 
      * @param isAvailabilityZonesEnabled the isAvailabilityZonesEnabled value to set.
      * @return the ClusterProperties object itself.
      */
@@ -146,7 +155,7 @@ public final class ClusterProperties {
 
     /**
      * Get the billingType property: The cluster's billing type.
-     *
+     * 
      * @return the billingType value.
      */
     public BillingType billingType() {
@@ -155,7 +164,7 @@ public final class ClusterProperties {
 
     /**
      * Set the billingType property: The cluster's billing type.
-     *
+     * 
      * @param billingType the billingType value to set.
      * @return the ClusterProperties object itself.
      */
@@ -166,7 +175,7 @@ public final class ClusterProperties {
 
     /**
      * Get the keyVaultProperties property: The associated key properties.
-     *
+     * 
      * @return the keyVaultProperties value.
      */
     public KeyVaultProperties keyVaultProperties() {
@@ -175,7 +184,7 @@ public final class ClusterProperties {
 
     /**
      * Set the keyVaultProperties property: The associated key properties.
-     *
+     * 
      * @param keyVaultProperties the keyVaultProperties value to set.
      * @return the ClusterProperties object itself.
      */
@@ -186,25 +195,25 @@ public final class ClusterProperties {
 
     /**
      * Get the lastModifiedDate property: The last time the cluster was updated.
-     *
+     * 
      * @return the lastModifiedDate value.
      */
-    public String lastModifiedDate() {
+    public OffsetDateTime lastModifiedDate() {
         return this.lastModifiedDate;
     }
 
     /**
      * Get the createdDate property: The cluster creation time.
-     *
+     * 
      * @return the createdDate value.
      */
-    public String createdDate() {
+    public OffsetDateTime createdDate() {
         return this.createdDate;
     }
 
     /**
      * Get the associatedWorkspaces property: The list of Log Analytics workspaces associated with the cluster.
-     *
+     * 
      * @return the associatedWorkspaces value.
      */
     public List<AssociatedWorkspace> associatedWorkspaces() {
@@ -213,7 +222,7 @@ public final class ClusterProperties {
 
     /**
      * Set the associatedWorkspaces property: The list of Log Analytics workspaces associated with the cluster.
-     *
+     * 
      * @param associatedWorkspaces the associatedWorkspaces value to set.
      * @return the ClusterProperties object itself.
      */
@@ -224,7 +233,7 @@ public final class ClusterProperties {
 
     /**
      * Get the capacityReservationProperties property: Additional properties for capacity reservation.
-     *
+     * 
      * @return the capacityReservationProperties value.
      */
     public CapacityReservationProperties capacityReservationProperties() {
@@ -233,19 +242,39 @@ public final class ClusterProperties {
 
     /**
      * Set the capacityReservationProperties property: Additional properties for capacity reservation.
-     *
+     * 
      * @param capacityReservationProperties the capacityReservationProperties value to set.
      * @return the ClusterProperties object itself.
      */
-    public ClusterProperties withCapacityReservationProperties(
-        CapacityReservationProperties capacityReservationProperties) {
+    public ClusterProperties
+        withCapacityReservationProperties(CapacityReservationProperties capacityReservationProperties) {
         this.capacityReservationProperties = capacityReservationProperties;
         return this;
     }
 
     /**
+     * Get the replication property: Cluster's replication properties.
+     * 
+     * @return the replication value.
+     */
+    public ClusterReplicationProperties replication() {
+        return this.replication;
+    }
+
+    /**
+     * Set the replication property: Cluster's replication properties.
+     * 
+     * @param replication the replication value to set.
+     * @return the ClusterProperties object itself.
+     */
+    public ClusterProperties withReplication(ClusterReplicationProperties replication) {
+        this.replication = replication;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -258,5 +287,79 @@ public final class ClusterProperties {
         if (capacityReservationProperties() != null) {
             capacityReservationProperties().validate();
         }
+        if (replication() != null) {
+            replication().validate();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeBooleanField("isDoubleEncryptionEnabled", this.isDoubleEncryptionEnabled);
+        jsonWriter.writeBooleanField("isAvailabilityZonesEnabled", this.isAvailabilityZonesEnabled);
+        jsonWriter.writeStringField("billingType", this.billingType == null ? null : this.billingType.toString());
+        jsonWriter.writeJsonField("keyVaultProperties", this.keyVaultProperties);
+        jsonWriter.writeArrayField("associatedWorkspaces", this.associatedWorkspaces,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("capacityReservationProperties", this.capacityReservationProperties);
+        jsonWriter.writeJsonField("replication", this.replication);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ClusterProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ClusterProperties if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ClusterProperties.
+     */
+    public static ClusterProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ClusterProperties deserializedClusterProperties = new ClusterProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("clusterId".equals(fieldName)) {
+                    deserializedClusterProperties.clusterId = reader.getString();
+                } else if ("provisioningState".equals(fieldName)) {
+                    deserializedClusterProperties.provisioningState
+                        = ClusterEntityStatus.fromString(reader.getString());
+                } else if ("isDoubleEncryptionEnabled".equals(fieldName)) {
+                    deserializedClusterProperties.isDoubleEncryptionEnabled
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("isAvailabilityZonesEnabled".equals(fieldName)) {
+                    deserializedClusterProperties.isAvailabilityZonesEnabled
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("billingType".equals(fieldName)) {
+                    deserializedClusterProperties.billingType = BillingType.fromString(reader.getString());
+                } else if ("keyVaultProperties".equals(fieldName)) {
+                    deserializedClusterProperties.keyVaultProperties = KeyVaultProperties.fromJson(reader);
+                } else if ("lastModifiedDate".equals(fieldName)) {
+                    deserializedClusterProperties.lastModifiedDate = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("createdDate".equals(fieldName)) {
+                    deserializedClusterProperties.createdDate = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("associatedWorkspaces".equals(fieldName)) {
+                    List<AssociatedWorkspace> associatedWorkspaces
+                        = reader.readArray(reader1 -> AssociatedWorkspace.fromJson(reader1));
+                    deserializedClusterProperties.associatedWorkspaces = associatedWorkspaces;
+                } else if ("capacityReservationProperties".equals(fieldName)) {
+                    deserializedClusterProperties.capacityReservationProperties
+                        = CapacityReservationProperties.fromJson(reader);
+                } else if ("replication".equals(fieldName)) {
+                    deserializedClusterProperties.replication = ClusterReplicationProperties.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedClusterProperties;
+        });
     }
 }

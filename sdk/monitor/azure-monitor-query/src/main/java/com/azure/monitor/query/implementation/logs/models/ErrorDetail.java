@@ -5,96 +5,105 @@
 package com.azure.monitor.query.implementation.logs.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-/** Error details. */
+/**
+ * Error details.
+ */
 @Fluent
-public final class ErrorDetail {
+public final class ErrorDetail implements JsonSerializable<ErrorDetail> {
     /*
      * The error's code.
      */
-    @JsonProperty(value = "code", required = true)
-    private String code;
+    @Generated
+    private final String code;
 
     /*
      * A human readable error message.
      */
-    @JsonProperty(value = "message", required = true)
-    private String message;
+    @Generated
+    private final String message;
 
     /*
      * Indicates which property in the request is responsible for the error.
      */
-    @JsonProperty(value = "target")
+    @Generated
     private String target;
 
     /*
      * Indicates which value in 'target' is responsible for the error.
      */
-    @JsonProperty(value = "value")
+    @Generated
     private String value;
 
     /*
      * Indicates resources which were responsible for the error.
      */
-    @JsonProperty(value = "resources")
+    @Generated
     private List<String> resources;
 
     /*
      * Additional properties that can be provided on the error details object
      */
-    @JsonProperty(value = "additionalProperties")
+    @Generated
     private Object additionalProperties;
 
     /**
      * Creates an instance of ErrorDetail class.
-     *
+     * 
      * @param code the code value to set.
      * @param message the message value to set.
      */
-    @JsonCreator
-    public ErrorDetail(
-            @JsonProperty(value = "code", required = true) String code,
-            @JsonProperty(value = "message", required = true) String message) {
+    @Generated
+    public ErrorDetail(String code, String message) {
         this.code = code;
         this.message = message;
     }
 
     /**
      * Get the code property: The error's code.
-     *
+     * 
      * @return the code value.
      */
+    @Generated
     public String getCode() {
         return this.code;
     }
 
     /**
      * Get the message property: A human readable error message.
-     *
+     * 
      * @return the message value.
      */
+    @Generated
     public String getMessage() {
         return this.message;
     }
 
     /**
      * Get the target property: Indicates which property in the request is responsible for the error.
-     *
+     * 
      * @return the target value.
      */
+    @Generated
     public String getTarget() {
         return this.target;
     }
 
     /**
      * Set the target property: Indicates which property in the request is responsible for the error.
-     *
+     * 
      * @param target the target value to set.
      * @return the ErrorDetail object itself.
      */
+    @Generated
     public ErrorDetail setTarget(String target) {
         this.target = target;
         return this;
@@ -102,19 +111,21 @@ public final class ErrorDetail {
 
     /**
      * Get the value property: Indicates which value in 'target' is responsible for the error.
-     *
+     * 
      * @return the value value.
      */
+    @Generated
     public String getValue() {
         return this.value;
     }
 
     /**
      * Set the value property: Indicates which value in 'target' is responsible for the error.
-     *
+     * 
      * @param value the value value to set.
      * @return the ErrorDetail object itself.
      */
+    @Generated
     public ErrorDetail setValue(String value) {
         this.value = value;
         return this;
@@ -122,19 +133,21 @@ public final class ErrorDetail {
 
     /**
      * Get the resources property: Indicates resources which were responsible for the error.
-     *
+     * 
      * @return the resources value.
      */
+    @Generated
     public List<String> getResources() {
         return this.resources;
     }
 
     /**
      * Set the resources property: Indicates resources which were responsible for the error.
-     *
+     * 
      * @param resources the resources value to set.
      * @return the ErrorDetail object itself.
      */
+    @Generated
     public ErrorDetail setResources(List<String> resources) {
         this.resources = resources;
         return this;
@@ -142,35 +155,105 @@ public final class ErrorDetail {
 
     /**
      * Get the additionalProperties property: Additional properties that can be provided on the error details object.
-     *
+     * 
      * @return the additionalProperties value.
      */
+    @Generated
     public Object getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     /**
      * Set the additionalProperties property: Additional properties that can be provided on the error details object.
-     *
+     * 
      * @param additionalProperties the additionalProperties value to set.
      * @return the ErrorDetail object itself.
      */
+    @Generated
     public ErrorDetail setAdditionalProperties(Object additionalProperties) {
         this.additionalProperties = additionalProperties;
         return this;
     }
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * {@inheritDoc}
      */
-    public void validate() {
-        if (getCode() == null) {
-            throw new IllegalArgumentException("Missing required property code in model ErrorDetail");
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("code", this.code);
+        jsonWriter.writeStringField("message", this.message);
+        jsonWriter.writeStringField("target", this.target);
+        jsonWriter.writeStringField("value", this.value);
+        jsonWriter.writeArrayField("resources", this.resources, (writer, element) -> writer.writeString(element));
+        if (this.additionalProperties != null) {
+            jsonWriter.writeUntypedField("additionalProperties", this.additionalProperties);
         }
-        if (getMessage() == null) {
-            throw new IllegalArgumentException("Missing required property message in model ErrorDetail");
-        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ErrorDetail from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ErrorDetail if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ErrorDetail.
+     */
+    @Generated
+    public static ErrorDetail fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            boolean codeFound = false;
+            String code = null;
+            boolean messageFound = false;
+            String message = null;
+            String target = null;
+            String value = null;
+            List<String> resources = null;
+            Object additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("code".equals(fieldName)) {
+                    code = reader.getString();
+                    codeFound = true;
+                } else if ("message".equals(fieldName)) {
+                    message = reader.getString();
+                    messageFound = true;
+                } else if ("target".equals(fieldName)) {
+                    target = reader.getString();
+                } else if ("value".equals(fieldName)) {
+                    value = reader.getString();
+                } else if ("resources".equals(fieldName)) {
+                    resources = reader.readArray(reader1 -> reader1.getString());
+                } else if ("additionalProperties".equals(fieldName)) {
+                    additionalProperties = reader.readUntyped();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (codeFound && messageFound) {
+                ErrorDetail deserializedErrorDetail = new ErrorDetail(code, message);
+                deserializedErrorDetail.target = target;
+                deserializedErrorDetail.value = value;
+                deserializedErrorDetail.resources = resources;
+                deserializedErrorDetail.additionalProperties = additionalProperties;
+
+                return deserializedErrorDetail;
+            }
+            List<String> missingProperties = new ArrayList<>();
+            if (!codeFound) {
+                missingProperties.add("code");
+            }
+            if (!messageFound) {
+                missingProperties.add("message");
+            }
+
+            throw new IllegalStateException(
+                "Missing required property/properties: " + String.join(", ", missingProperties));
+        });
     }
 }

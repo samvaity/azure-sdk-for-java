@@ -5,39 +5,140 @@
 package com.azure.storage.file.share.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** Settings for SMB protocol. */
-@JacksonXmlRootElement(localName = "SMB")
+/**
+ * Settings for SMB protocol.
+ */
 @Fluent
-public final class ShareSmbSettings {
+public final class ShareSmbSettings implements XmlSerializable<ShareSmbSettings> {
     /*
      * Settings for SMB Multichannel.
      */
-    @JsonProperty(value = "Multichannel")
+    @Generated
     private SmbMultichannel multichannel;
 
-    /** Creates an instance of ShareSmbSettings class. */
-    public ShareSmbSettings() {}
+    /*
+     * Enable or disable encryption in transit.
+     */
+    @Generated
+    private ShareSmbSettingsEncryptionInTransit encryptionInTransit;
+
+    /**
+     * Creates an instance of ShareSmbSettings class.
+     */
+    @Generated
+    public ShareSmbSettings() {
+    }
 
     /**
      * Get the multichannel property: Settings for SMB Multichannel.
-     *
+     * 
      * @return the multichannel value.
      */
+    @Generated
     public SmbMultichannel getMultichannel() {
         return this.multichannel;
     }
 
     /**
      * Set the multichannel property: Settings for SMB Multichannel.
-     *
+     * 
      * @param multichannel the multichannel value to set.
      * @return the ShareSmbSettings object itself.
      */
+    @Generated
     public ShareSmbSettings setMultichannel(SmbMultichannel multichannel) {
         this.multichannel = multichannel;
         return this;
+    }
+
+    /**
+     * Get the encryptionInTransit property: Enable or disable encryption in transit.
+     * 
+     * @return the encryptionInTransit value.
+     */
+    @Generated
+    public ShareSmbSettingsEncryptionInTransit getEncryptionInTransit() {
+        return this.encryptionInTransit;
+    }
+
+    /**
+     * Set the encryptionInTransit property: Enable or disable encryption in transit.
+     * 
+     * @param encryptionInTransit the encryptionInTransit value to set.
+     * @return the ShareSmbSettings object itself.
+     */
+    @Generated
+    public ShareSmbSettings setEncryptionInTransit(ShareSmbSettingsEncryptionInTransit encryptionInTransit) {
+        this.encryptionInTransit = encryptionInTransit;
+        return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "SMB" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeXml(this.multichannel, "Multichannel");
+        xmlWriter.writeXml(this.encryptionInTransit, "EncryptionInTransit");
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of ShareSmbSettings from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of ShareSmbSettings if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the ShareSmbSettings.
+     */
+    @Generated
+    public static ShareSmbSettings fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of ShareSmbSettings from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of ShareSmbSettings if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the ShareSmbSettings.
+     */
+    @Generated
+    public static ShareSmbSettings fromXml(XmlReader xmlReader, String rootElementName) throws XMLStreamException {
+        String finalRootElementName = rootElementName == null || rootElementName.isEmpty() ? "SMB" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            ShareSmbSettings deserializedShareSmbSettings = new ShareSmbSettings();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Multichannel".equals(elementName.getLocalPart())) {
+                    deserializedShareSmbSettings.multichannel = SmbMultichannel.fromXml(reader, "Multichannel");
+                } else if ("EncryptionInTransit".equals(elementName.getLocalPart())) {
+                    deserializedShareSmbSettings.encryptionInTransit
+                        = ShareSmbSettingsEncryptionInTransit.fromXml(reader, "EncryptionInTransit");
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedShareSmbSettings;
+        });
     }
 }

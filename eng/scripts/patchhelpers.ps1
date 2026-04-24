@@ -23,8 +23,9 @@ class ArtifactInfo {
     [string]$PipelineName
     [hashtable]$Dependencies
 
-    ArtifactInfo([string]$ArtifactId, [string]$LatestGAOrPatchVersion) {
+    ArtifactInfo([string]$ArtifactId, [string]$GroupId, [string]$LatestGAOrPatchVersion) {
         $this.ArtifactId = $ArtifactId
+        $this.GroupId = $GroupId
         $this.LatestGAOrPatchVersion = $LatestGAOrPatchVersion
     }
 }
@@ -50,19 +51,19 @@ function GetVersionInfoForAllMavenArtifacts([string]$GroupId = "com.azure") {
     $azComArtifactIds = GetAllAzComClientArtifactsFromMaven -GroupId $GroupId
 
     foreach ($artifactId in $azComArtifactIds) {
-        $artifactInfos[$artifactId] = GetVersionInfoForMavenArtifact -ArtifactId $artifactId
+        $artifactInfos[$artifactId] = GetVersionInfoForMavenArtifact -ArtifactId $artifactId -GroupId $GroupId
     }
 
     return $artifactInfos
 }
 
 # Get version info for all a Maven artifact
-function GetVersionInfoForMavenArtifact($ArtifactId) {
-    $info = GetVersionInfoForAnArtifactId -ArtifactId $artifactId
+function GetVersionInfoForMavenArtifact($ArtifactId, $GroupId = "com.azure") {
+    $info = GetVersionInfoForAnArtifactId -GroupId $groupId -ArtifactId $artifactId
     $artifactId = $info.ArtifactId
     $latestGAOrPatchVersion = $info.LatestGAOrPatchVersion
 
-    return [ArtifactInfo]::new($artifactId, $latestGAOrPatchVersion)
+    return [ArtifactInfo]::new($artifactId, $groupId, $latestGAOrPatchVersion)
 }
 
 # Parse the dependency information for each of the artifact from maven.
@@ -70,8 +71,9 @@ function UpdateDependencies($ArtifactInfos) {
     foreach ($artifactId in $ArtifactInfos.Keys) {
         $deps = @{}
         $sdkVersion = $ArtifactInfos[$artifactId].LatestGAOrPatchVersion
-        $pomFileUri = "https://repo1.maven.org/maven2/com/azure/$artifactId/$sdkVersion/$artifactId-$sdkVersion.pom"
-        $webResponseObj = Invoke-WebRequest -Uri $pomFileUri
+        $groupPath = $ArtifactInfos[$artifactId].GroupId -replace '\.', '/'
+        $pomFileUri = "https://repo1.maven.org/maven2/$groupPath/$artifactId/$sdkVersion/$artifactId-$sdkVersion.pom"
+        $webResponseObj = Invoke-WebRequest -Uri $pomFileUri -UserAgent "azure-sdk-for-java" -Headers @{ "Content-signal" = "search=yes,ai-train=no" }
         $dependencies = ([xml]$webResponseObj.Content).project.dependencies.dependency | Where-Object { (([String]::IsNullOrWhiteSpace($_.scope)) -or ($_.scope -eq 'compile')) }
         $dependencies | ForEach-Object { $deps[$_.artifactId] = $_.version }
         $ArtifactInfos[$artifactId].Dependencies = $deps
@@ -87,7 +89,7 @@ function UpdateCIInformation($ArtifactInfos) {
         $serviceDirectory = $arInfo.ServiceDirectoryName
 
         if (!$serviceDirectory) {
-            $pkgProperties = [PackageProps](Get-PkgProperties -PackageName $artifactId -ServiceDirectory $serviceDirectory)
+            $pkgProperties = [PackageProps](Get-PkgProperties -PackageName $artifactId -ServiceDirectory $serviceDirectory -GroupId $arInfo.GroupId)
             $arInfo.ServiceDirectoryName = $pkgProperties.ServiceDirectory
             $arInfo.ArtifactDirPath = $pkgProperties.DirectoryPath
             $arInfo.CurrentPomFileVersion = $pkgProperties.Version
@@ -99,74 +101,38 @@ function UpdateCIInformation($ArtifactInfos) {
     }
 }
 
-# Create the forward looking graph for once the artifacts have been patched.
-function CreateForwardLookingVersions($ArtifactInfos) {
-    $allDependenciesWithVersion = @{}
+# Find all the artifacts that will need to be patched based on dependency analysis.
+# Iterates until no more patches are found (fixed-point), so the result is correct
+# regardless of artifact ordering in patch_release_client.txt.
+# Only dependencies that are themselves in the patch list are checked — external
+# dependencies (reactor-core, jackson, etc.) are ignored.
+function FindArtifactsThatNeedPatching($ArtifactInfos) {
+    $latestVersions = @{}
     foreach ($arId in $ArtifactInfos.Keys) {
-        foreach ($depId in $ArtifactInfos[$arId].Dependencies.Keys) {
-            $depVersion = $ArtifactInfos[$arId].Dependencies[$depId]
-            $currentVersion = $allDependenciesWithVersion[$depId]
-            if ($null -eq $currentVersion) {
-                $latestVersion = $depVersion
-            }
-            else {
-                $orderedVersions = @($depVersion, $currentVersion) | ForEach-Object { [AzureEngSemanticVersion]::ParseVersionString($_) }
-                $sortedVersions = [AzureEngSemanticVersion]::SortVersions($orderedVersions)
-                if($null -eq $sortedVersions) {
-                    # We currently have a bug where semantic version may have 4 values just like jackson-databind.
-                    $latestVersion = $depVersion
-                } else {
-                    $latestVersion = $sortedVersions[0].RawVersion
+        $latestVersions[$arId] = $ArtifactInfos[$arId].LatestGAOrPatchVersion
+    }
+
+    do {
+        $changed = $false
+        foreach ($arId in $ArtifactInfos.Keys) {
+            $arInfo = $ArtifactInfos[$arId]
+            if ($arInfo.FutureReleasePatchVersion) { continue }
+            foreach ($depId in $arInfo.Dependencies.Keys) {
+                if (-not $latestVersions.ContainsKey($depId)) { continue }
+                if ($arInfo.Dependencies[$depId] -ne $latestVersions[$depId]) {
+                    $patchVersion = GetPatchVersion -ReleaseVersion $arInfo.LatestGAOrPatchVersion
+                    $arInfo.FutureReleasePatchVersion = $patchVersion
+                    $latestVersions[$arId] = $patchVersion
+                    $changed = $true
+                    break
                 }
             }
-
-            $allDependenciesWithVersion[$depId] = $latestVersion
         }
-    }
-
-    return $allDependenciesWithVersion
-}
-
-# Find all the artifacts that will need to be patched based on the dependency analysis.
-function FindAllArtifactsThatNeedPatching($ArtifactInfos, $AllDependenciesWithVersion) {
-    foreach($arId in $ArtifactInfos.Keys) {
-        $arInfo = $ArtifactInfos[$arId]
-        if($arInfo.GroupId -ne 'com.azure') {
-            continue;
-        }
-
-        foreach($depId in $arInfo.Dependencies.Keys) {
-            $depVersion = $arInfo.Dependencies[$depId]
-
-            if($depVersion -ne $AllDependenciesWithVersion[$depId]) {
-                $currentGAOrPatchVersion = $arInfo.LatestGAOrPatchVersion
-                $newPatchVersion = GetPatchVersion -ReleaseVersion $currentGAOrPatchVersion
-                $arInfo.FutureReleasePatchVersion = $newPatchVersion
-                $AllDependenciesWithVersion[$arId] = $newPatchVersion
-            }
-        }
-    }
-}
-
-# Helper class that analyzes all the artifacts that need to be patched if a given artifact is patched.
-function ArtifactsToPatchUtil([String] $DependencyId, [hashtable]$ArtifactInfos, $AllDependenciesWithVersion) {
-    $arInfo = $ArtifactInfos[$DependencyId]
-    $currentGAOrPatchVersion = $arInfo.LatestGAOrPatchVersion
-    $newPatchVersion = GetPatchVersion -ReleaseVersion $currentGAOrPatchVersion
-    $arInfo.FutureReleasePatchVersion = $newPatchVersion
-    $AllDependenciesWithVersion[$depId] = $newPatchVersion
-
-    foreach($arId in $ArtifactInfos.Keys) {
-        $arInfo = $ArtifactInfos[$arId]
-        $depVersion = $arInfo.Dependencies[$DependencyId]
-        if($depVersion -and $depVersion -ne $newPatchVersion) {
-            ArtifactsToPatchUtil -DependencyId $DependencyId -ArtifactInfos $ArtifactInfos -AllDependenciesWithVersion $AllDependenciesWithVersion
-        }
-    }
+    } while ($changed)
 }
 
 # Update dependencies in the version client file.
-function UpdateDependenciesInVersionClient([hashtable]$ArtifactInfos, [string]$GroupId = "com.azure") {
+function UpdateDependenciesInVersionClient([hashtable]$ArtifactInfos) {
     ## We need to update the version_client.txt to have the correct versions in place.
     foreach ($artifactId in $ArtifactInfos.Keys) {
         $newDependencyVersion = $ArtifactInfos[$artifactId].FutureReleasePatchVersion
@@ -178,15 +144,15 @@ function UpdateDependenciesInVersionClient([hashtable]$ArtifactInfos, [string]$G
         $currentFileVersion = $ArtifactInfos[$artifactId].CurrentPomFileVersion
 
         if ($newDependencyVersion) {
-            $cmdOutput = SetDependencyVersion -GroupId $GroupId -ArtifactId $artifactId -Version $newDependencyVersion
-            $cmdOutput = SetCurrentVersion -GroupId $GroupId -ArtifactId $artifactId -Version $currentFileVersion
+            $cmdOutput = SetDependencyVersion -GroupId $ArtifactInfos[$artifactId].GroupId -ArtifactId $artifactId -Version $newDependencyVersion
+            $cmdOutput = SetCurrentVersion -GroupId $ArtifactInfos[$artifactId].GroupId -ArtifactId $artifactId -Version $currentFileVersion
         }
     }
 }
 
 # Get the release version for the next bom artifact.
 function GetNextBomVersion() {
-    $pkgProperties = [PackageProps](Get-PkgProperties -PackageName "azure-sdk-bom")
+    $pkgProperties = [PackageProps](Get-PkgProperties -PackageName "azure-sdk-bom" -GroupId "com.azure")
     $currentVersion = $pkgProperties.Version
 
     $patchVersion = GetPatchVersion -ReleaseVersion $currentVersion
@@ -271,7 +237,7 @@ function CreateDependencyXmlElement($Artifact, [xml]$Doc) {
 }
 
 # Generate BOM file for the given artifacts.
-function GenerateBOMFile($ArtifactInfos, $BomFileBranchName) {
+function GenerateBOMFile($ArtifactInfos, $BomFileBranchName, [bool]$UseCurrentBranch = $false) {
     $gaArtifacts = @()
 
     foreach ($artifact in $ArtifactInfos.Values) {
@@ -308,8 +274,9 @@ function GenerateBOMFile($ArtifactInfos, $BomFileBranchName) {
         $releaseVersion = $bomFileContent.project.version
         $patchVersion = GetPatchVersion -ReleaseVersion $releaseVersion
         $remoteName = GetRemoteName
-        Write-Host "git checkout -b $BomFileBranchName $remoteName/main"
-        $cmdOutput = git checkout -b $BomFileBranchName $remoteName/main
+        $base = if ($UseCurrentBranch) { "HEAD" } else { "$remoteName/main" }
+        Write-Host "git checkout -b $BomFileBranchName $base"
+        $cmdOutput = git checkout -b $BomFileBranchName $base
         $bomFileContent.Save($BomFilePath)
         Write-Host "git add $BomFilePath"
         git add $BomFilePath

@@ -13,32 +13,19 @@ import org.junit.jupiter.api.Assertions;
 public final class ServiceFabricFragmentTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ServiceFabricFragment model =
-            BinaryData
-                .fromString(
-                    "{\"tags\":{\"jeokbzefezrxccz\":\"vkzqk\",\"pqxbkwvzgnzvdf\":\"rtle\",\"mqpnoda\":\"zdix\",\"sbostzel\":\"opqhewjptmc\"}}")
-                .toObject(ServiceFabricFragment.class);
-        Assertions.assertEquals("vkzqk", model.tags().get("jeokbzefezrxccz"));
+        ServiceFabricFragment model = BinaryData.fromString("{\"tags\":{\"usxjbaqehg\":\"uewmrswnjlxuzrhw\"}}")
+            .toObject(ServiceFabricFragment.class);
+        Assertions.assertEquals("uewmrswnjlxuzrhw", model.tags().get("usxjbaqehg"));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ServiceFabricFragment model =
-            new ServiceFabricFragment()
-                .withTags(
-                    mapOf(
-                        "jeokbzefezrxccz",
-                        "vkzqk",
-                        "pqxbkwvzgnzvdf",
-                        "rtle",
-                        "mqpnoda",
-                        "zdix",
-                        "sbostzel",
-                        "opqhewjptmc"));
+        ServiceFabricFragment model = new ServiceFabricFragment().withTags(mapOf("usxjbaqehg", "uewmrswnjlxuzrhw"));
         model = BinaryData.fromObject(model).toObject(ServiceFabricFragment.class);
-        Assertions.assertEquals("vkzqk", model.tags().get("jeokbzefezrxccz"));
+        Assertions.assertEquals("uewmrswnjlxuzrhw", model.tags().get("usxjbaqehg"));
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

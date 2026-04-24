@@ -3,25 +3,26 @@
 
 package com.azure.security.keyvault.jca;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.ssl.PrivateKeyDetails;
-import org.apache.http.ssl.PrivateKeyStrategy;
-import org.apache.http.ssl.SSLContexts;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.TrustSelfSignedStrategy;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import org.apache.hc.core5.ssl.PrivateKeyDetails;
+import org.apache.hc.core5.ssl.PrivateKeyStrategy;
+import org.apache.hc.core5.ssl.SSLContexts;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
@@ -66,7 +67,6 @@ public class ServerSocketTest {
         certificateName = PropertyConvertorUtils.getPropertyValue("AZURE_KEYVAULT_CERTIFICATE_NAME");
     }
 
-
     private void startSocket(SSLServerSocket serverSocket) {
         Thread server = new Thread(() -> {
             while (true) {
@@ -86,8 +86,7 @@ public class ServerSocketTest {
 
     @Test
     public void testHttpsConnectionWithoutClientTrust() throws Exception {
-        SSLContext sslContext = SSLContexts
-            .custom()
+        SSLContext sslContext = SSLContexts.custom()
             .loadTrustMaterial((final X509Certificate[] chain, final String authType) -> true)
             .build();
         testHttpsConnection(8765, sslContext);
@@ -96,10 +95,7 @@ public class ServerSocketTest {
 
     @Test
     public void testHttpsConnectionWithSelfSignedClientTrust() throws Exception {
-        SSLContext sslContext = SSLContexts
-            .custom()
-            .loadTrustMaterial(ks, new TrustSelfSignedStrategy())
-            .build();
+        SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(ks, new TrustSelfSignedStrategy()).build();
         testHttpsConnection(8766, sslContext);
 
     }
@@ -108,7 +104,6 @@ public class ServerSocketTest {
     public void testServerSocketWithDefaultTrustManager() throws Exception {
         serverSocketWithTrustManager(8768);
     }
-
 
     /**
      * Test SSLServerSocket with key vault trust manager.
@@ -121,7 +116,6 @@ public class ServerSocketTest {
         Security.addProvider(provider);
         serverSocketWithTrustManager(8767);
     }
-
 
     private void testHttpsConnection(Integer port, SSLContext sslContext) throws Exception {
         /*
@@ -176,8 +170,7 @@ public class ServerSocketTest {
          * - Set SSL context to trust any certificate.
          */
 
-        SSLContext sslContext = SSLContexts
-            .custom()
+        SSLContext sslContext = SSLContexts.custom()
             .loadTrustMaterial(ks, new TrustSelfSignedStrategy())
             .loadKeyMaterial(ks, "".toCharArray(), new ClientPrivateKeyStrategy())
             .build();
@@ -199,21 +192,18 @@ public class ServerSocketTest {
          * - Create SSL connection factory.
          * - Set hostname verifier to trust any hostname.
          */
-        SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
-            sslContext, (hostname, session) -> true);
+        SSLConnectionSocketFactory sslConnectionSocketFactory
+            = new SSLConnectionSocketFactory(sslContext, (hostname, session) -> true);
 
         PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager(
-            RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("https", sslConnectionSocketFactory)
-                .build());
-
+            RegistryBuilder.<ConnectionSocketFactory>create().register("https", sslConnectionSocketFactory).build());
 
         String result = null;
 
         try (CloseableHttpClient client = HttpClients.custom().setConnectionManager(manager).build()) {
             HttpGet httpGet = new HttpGet("https://localhost:" + port);
-            ResponseHandler<String> responseHandler = (HttpResponse response) -> {
-                int status = response.getStatusLine().getStatusCode();
+            HttpClientResponseHandler<String> responseHandler = (ClassicHttpResponse response) -> {
+                int status = response.getCode();
                 String result1 = null;
                 if (status == 204) {
                     result1 = "Success";
@@ -227,12 +217,10 @@ public class ServerSocketTest {
         return result;
     }
 
-
     private static class ClientPrivateKeyStrategy implements PrivateKeyStrategy {
         @Override
-        public String chooseAlias(Map<String, PrivateKeyDetails> map, Socket socket) {
+        public String chooseAlias(Map<String, PrivateKeyDetails> aliases, SSLParameters sslParameters) {
             return certificateName; // It should be your certificate alias used in client-side
         }
     }
-
 }

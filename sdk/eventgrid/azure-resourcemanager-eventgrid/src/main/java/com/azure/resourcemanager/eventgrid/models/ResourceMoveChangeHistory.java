@@ -5,37 +5,44 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
-/** The change history of the resource move. */
+/**
+ * The change history of the resource move.
+ */
 @Fluent
-public final class ResourceMoveChangeHistory {
+public final class ResourceMoveChangeHistory implements JsonSerializable<ResourceMoveChangeHistory> {
     /*
      * Azure subscription ID of the resource.
      */
-    @JsonProperty(value = "azureSubscriptionId")
     private String azureSubscriptionId;
 
     /*
      * Azure Resource Group of the resource.
      */
-    @JsonProperty(value = "resourceGroupName")
     private String resourceGroupName;
 
     /*
      * UTC timestamp of when the resource was changed.
      */
-    @JsonProperty(value = "changedTimeUtc")
     private OffsetDateTime changedTimeUtc;
 
-    /** Creates an instance of ResourceMoveChangeHistory class. */
+    /**
+     * Creates an instance of ResourceMoveChangeHistory class.
+     */
     public ResourceMoveChangeHistory() {
     }
 
     /**
      * Get the azureSubscriptionId property: Azure subscription ID of the resource.
-     *
+     * 
      * @return the azureSubscriptionId value.
      */
     public String azureSubscriptionId() {
@@ -44,7 +51,7 @@ public final class ResourceMoveChangeHistory {
 
     /**
      * Set the azureSubscriptionId property: Azure subscription ID of the resource.
-     *
+     * 
      * @param azureSubscriptionId the azureSubscriptionId value to set.
      * @return the ResourceMoveChangeHistory object itself.
      */
@@ -55,7 +62,7 @@ public final class ResourceMoveChangeHistory {
 
     /**
      * Get the resourceGroupName property: Azure Resource Group of the resource.
-     *
+     * 
      * @return the resourceGroupName value.
      */
     public String resourceGroupName() {
@@ -64,7 +71,7 @@ public final class ResourceMoveChangeHistory {
 
     /**
      * Set the resourceGroupName property: Azure Resource Group of the resource.
-     *
+     * 
      * @param resourceGroupName the resourceGroupName value to set.
      * @return the ResourceMoveChangeHistory object itself.
      */
@@ -75,7 +82,7 @@ public final class ResourceMoveChangeHistory {
 
     /**
      * Get the changedTimeUtc property: UTC timestamp of when the resource was changed.
-     *
+     * 
      * @return the changedTimeUtc value.
      */
     public OffsetDateTime changedTimeUtc() {
@@ -84,7 +91,7 @@ public final class ResourceMoveChangeHistory {
 
     /**
      * Set the changedTimeUtc property: UTC timestamp of when the resource was changed.
-     *
+     * 
      * @param changedTimeUtc the changedTimeUtc value to set.
      * @return the ResourceMoveChangeHistory object itself.
      */
@@ -95,9 +102,53 @@ public final class ResourceMoveChangeHistory {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("azureSubscriptionId", this.azureSubscriptionId);
+        jsonWriter.writeStringField("resourceGroupName", this.resourceGroupName);
+        jsonWriter.writeStringField("changedTimeUtc",
+            this.changedTimeUtc == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.changedTimeUtc));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ResourceMoveChangeHistory from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ResourceMoveChangeHistory if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ResourceMoveChangeHistory.
+     */
+    public static ResourceMoveChangeHistory fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ResourceMoveChangeHistory deserializedResourceMoveChangeHistory = new ResourceMoveChangeHistory();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("azureSubscriptionId".equals(fieldName)) {
+                    deserializedResourceMoveChangeHistory.azureSubscriptionId = reader.getString();
+                } else if ("resourceGroupName".equals(fieldName)) {
+                    deserializedResourceMoveChangeHistory.resourceGroupName = reader.getString();
+                } else if ("changedTimeUtc".equals(fieldName)) {
+                    deserializedResourceMoveChangeHistory.changedTimeUtc = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedResourceMoveChangeHistory;
+        });
     }
 }

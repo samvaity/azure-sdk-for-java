@@ -11,26 +11,23 @@ import org.junit.jupiter.api.Assertions;
 public final class BillingMeterPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        BillingMeterProperties model =
-            BinaryData
-                .fromString(
-                    "{\"category\":\"fqweykhmene\",\"meterType\":\"yexfwh\",\"displayName\":\"cibvyvdcsitynn\"}")
-                .toObject(BillingMeterProperties.class);
-        Assertions.assertEquals("fqweykhmene", model.category());
-        Assertions.assertEquals("yexfwh", model.meterType());
-        Assertions.assertEquals("cibvyvdcsitynn", model.displayName());
+        BillingMeterProperties model = BinaryData
+            .fromString(
+                "{\"category\":\"dslfhotwmcy\",\"meterType\":\"wlbjnpgacftade\",\"displayName\":\"nltyfsoppusuesnz\"}")
+            .toObject(BillingMeterProperties.class);
+        Assertions.assertEquals("dslfhotwmcy", model.category());
+        Assertions.assertEquals("wlbjnpgacftade", model.meterType());
+        Assertions.assertEquals("nltyfsoppusuesnz", model.displayName());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        BillingMeterProperties model =
-            new BillingMeterProperties()
-                .withCategory("fqweykhmene")
-                .withMeterType("yexfwh")
-                .withDisplayName("cibvyvdcsitynn");
+        BillingMeterProperties model = new BillingMeterProperties().withCategory("dslfhotwmcy")
+            .withMeterType("wlbjnpgacftade")
+            .withDisplayName("nltyfsoppusuesnz");
         model = BinaryData.fromObject(model).toObject(BillingMeterProperties.class);
-        Assertions.assertEquals("fqweykhmene", model.category());
-        Assertions.assertEquals("yexfwh", model.meterType());
-        Assertions.assertEquals("cibvyvdcsitynn", model.displayName());
+        Assertions.assertEquals("dslfhotwmcy", model.category());
+        Assertions.assertEquals("wlbjnpgacftade", model.meterType());
+        Assertions.assertEquals("nltyfsoppusuesnz", model.displayName());
     }
 }

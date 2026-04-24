@@ -4,69 +4,75 @@
 
 package com.azure.resourcemanager.subscription.models;
 
-import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.http.rest.Response;
+import com.azure.core.util.Context;
 
-/** Subscription policies. */
-@Immutable
-public final class SubscriptionPolicies {
-    /*
-     * The subscription location placement ID. The ID indicates which regions are visible for a subscription. For
-     * example, a subscription with a location placement Id of Public_2014-09-01 has access to Azure public regions.
+/**
+ * Resource collection API of SubscriptionPolicies.
+ */
+public interface SubscriptionPolicies {
+    /**
+     * Create or Update Subscription tenant policy for user's tenant.
+     * 
+     * @param body The body parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return tenant policy Information along with {@link Response}.
      */
-    @JsonProperty(value = "locationPlacementId", access = JsonProperty.Access.WRITE_ONLY)
-    private String locationPlacementId;
-
-    /*
-     * The subscription quota ID.
-     */
-    @JsonProperty(value = "quotaId", access = JsonProperty.Access.WRITE_ONLY)
-    private String quotaId;
-
-    /*
-     * The subscription spending limit.
-     */
-    @JsonProperty(value = "spendingLimit", access = JsonProperty.Access.WRITE_ONLY)
-    private SpendingLimit spendingLimit;
-
-    /** Creates an instance of SubscriptionPolicies class. */
-    public SubscriptionPolicies() {
-    }
+    Response<GetTenantPolicyResponse> addUpdatePolicyForTenantWithResponse(PutTenantPolicyRequestProperties body,
+        Context context);
 
     /**
-     * Get the locationPlacementId property: The subscription location placement ID. The ID indicates which regions are
-     * visible for a subscription. For example, a subscription with a location placement Id of Public_2014-09-01 has
-     * access to Azure public regions.
-     *
-     * @return the locationPlacementId value.
+     * Create or Update Subscription tenant policy for user's tenant.
+     * 
+     * @param body The body parameter.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return tenant policy Information.
      */
-    public String locationPlacementId() {
-        return this.locationPlacementId;
-    }
+    GetTenantPolicyResponse addUpdatePolicyForTenant(PutTenantPolicyRequestProperties body);
 
     /**
-     * Get the quotaId property: The subscription quota ID.
-     *
-     * @return the quotaId value.
+     * Get the subscription tenant policy for the user's tenant.
+     * 
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the subscription tenant policy for the user's tenant along with {@link Response}.
      */
-    public String quotaId() {
-        return this.quotaId;
-    }
+    Response<GetTenantPolicyResponse> getPolicyForTenantWithResponse(Context context);
 
     /**
-     * Get the spendingLimit property: The subscription spending limit.
-     *
-     * @return the spendingLimit value.
+     * Get the subscription tenant policy for the user's tenant.
+     * 
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the subscription tenant policy for the user's tenant.
      */
-    public SpendingLimit spendingLimit() {
-        return this.spendingLimit;
-    }
+    GetTenantPolicyResponse getPolicyForTenant();
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * Get the subscription tenant policy for the user's tenant.
+     * 
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the subscription tenant policy for the user's tenant as paginated response with {@link PagedIterable}.
      */
-    public void validate() {
-    }
+    PagedIterable<GetTenantPolicyResponse> listPolicyForTenant();
+
+    /**
+     * Get the subscription tenant policy for the user's tenant.
+     * 
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the subscription tenant policy for the user's tenant as paginated response with {@link PagedIterable}.
+     */
+    PagedIterable<GetTenantPolicyResponse> listPolicyForTenant(Context context);
 }

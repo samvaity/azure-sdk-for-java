@@ -3,15 +3,13 @@
 
 package com.azure.ai.translation.text;
 
-import java.util.List;
-import java.util.ArrayList;
-import com.azure.core.credential.AzureKeyCredential;
-import com.azure.ai.translation.text.models.InputTextItem;
-import com.azure.ai.translation.text.models.ProfanityAction;
-import com.azure.ai.translation.text.models.ProfanityMarker;
-import com.azure.ai.translation.text.models.TextType;
+import java.util.Arrays;
+
+import com.azure.ai.translation.text.models.TranslateInputItem;
 import com.azure.ai.translation.text.models.TranslatedTextItem;
-import com.azure.ai.translation.text.models.Translation;
+import com.azure.ai.translation.text.models.TranslationTarget;
+import com.azure.ai.translation.text.models.TranslationText;
+import com.azure.core.credential.AzureKeyCredential;
 
 /**
  * Translate text from known source language to target language.
@@ -33,22 +31,14 @@ public class TranslateWithTransliteration {
                 .endpoint("https://api.cognitive.microsofttranslator.com")
                 .buildClient();
 
-        String fromScript = "Latn";
-        String fromLanguage = "ar";
-        String toScript = "Latn";
-        List<String> targetLanguages = new ArrayList<>();
-        targetLanguages.add("zh-Hans");
-        List<InputTextItem> content = new ArrayList<>();
-        content.add(new InputTextItem("hudha akhtabar."));
+        TranslationTarget target = new TranslationTarget("zh-Hans").setScript("Latn");
+        TranslateInputItem input = new TranslateInputItem("hudha akhtabar.", Arrays.asList(target))
+            .setLanguage("ar").setScript("Latn");
 
-        List<TranslatedTextItem> translations = client.translate(targetLanguages, content, null, fromLanguage, TextType.PLAIN, null, ProfanityAction.NO_ACTION, ProfanityMarker.ASTERISK, false, false, null, fromScript, toScript, false);
+        TranslatedTextItem translation = client.translate(Arrays.asList(input)).get(0);
 
-        for (TranslatedTextItem translation : translations) {
-            System.out.println("Source Text: " + translation.getSourceText().getText());
-            for (Translation textTranslation : translation.getTranslations()) {
-                System.out.println("Text was translated to: '" + textTranslation.getTo() + "' and the result is: '" + textTranslation.getText() + "'.");
-                System.out.println("Transliterated text (" + textTranslation.getTransliteration().getScript() + "): " + textTranslation.getTransliteration().getText());
-            }
+        for (TranslationText textTranslation : translation.getTranslations()) {
+            System.out.println("Text was translated to: '" + textTranslation.getLanguage() + "' and the result is: '" + textTranslation.getText() + "'.");
         }
     }
 }

@@ -29,8 +29,10 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.management.polling.PollResult;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.resourcemanager.eventgrid.fluent.ChannelsClient;
@@ -42,17 +44,23 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ChannelsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ChannelsClient.
+ */
 public final class ChannelsClientImpl implements ChannelsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ChannelsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final EventGridManagementClientImpl client;
 
     /**
      * Initializes an instance of ChannelsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ChannelsClientImpl(EventGridManagementClientImpl client) {
@@ -65,115 +73,164 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "EventGridManagementC")
+    @ServiceInterface(name = "EventGridManagementClientChannels")
     public interface ChannelsService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ChannelInner>> get(
-            @HostParam("$host") String endpoint,
+        Mono<Response<ChannelInner>> get(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
-            @PathParam("channelName") String channelName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("channelName") String channelName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
-        @ExpectedResponses({200, 201})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ChannelInner>> createOrUpdate(
-            @HostParam("$host") String endpoint,
+        Response<ChannelInner> getSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
-            @PathParam("channelName") String channelName,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") ChannelInner channelInfo,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("channelName") String channelName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
-        @ExpectedResponses({200, 202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> delete(
-            @HostParam("$host") String endpoint,
+        Mono<Response<ChannelInner>> createOrUpdate(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
-            @PathParam("channelName") String channelName,
-            @QueryParam("api-version") String apiVersion,
+            @PathParam("channelName") String channelName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ChannelInner channelInfo, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
-        @Patch(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Void>> update(
-            @HostParam("$host") String endpoint,
+        Response<ChannelInner> createOrUpdateSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
-            @PathParam("channelName") String channelName,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") ChannelUpdateParameters channelUpdateParameters,
+            @PathParam("channelName") String channelName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ChannelInner channelInfo, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels")
-        @ExpectedResponses({200})
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
+        @ExpectedResponses({ 200, 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ChannelsListResult>> listByPartnerNamespace(
-            @HostParam("$host") String endpoint,
+        Mono<Response<Flux<ByteBuffer>>> delete(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$top") Integer top,
-            @HeaderParam("Accept") String accept,
+            @PathParam("channelName") String channelName, @QueryParam("api-version") String apiVersion,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}/getFullUrl")
-        @ExpectedResponses({200})
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
+        @ExpectedResponses({ 200, 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<EventSubscriptionFullUrlInner>> getFullUrl(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> deleteSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
-            @PathParam("channelName") String channelName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+            @PathParam("channelName") String channelName, @QueryParam("api-version") String apiVersion,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Void>> update(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @PathParam("channelName") String channelName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ChannelUpdateParameters channelUpdateParameters, Context context);
+
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<Void> updateSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @PathParam("channelName") String channelName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ChannelUpdateParameters channelUpdateParameters, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<ChannelsListResult>> listByPartnerNamespace(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$filter") String filter,
+            @QueryParam("$top") Integer top, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ChannelsListResult> listByPartnerNamespaceSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$filter") String filter,
+            @QueryParam("$top") Integer top, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}/getFullUrl")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<EventSubscriptionFullUrlInner>> getFullUrl(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @PathParam("channelName") String channelName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/channels/{channelName}/getFullUrl")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<EventSubscriptionFullUrlInner> getFullUrlSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @PathParam("channelName") String channelName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<ChannelsListResult>> listByPartnerNamespaceNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ChannelsListResult> listByPartnerNamespaceNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Get a channel.
-     *
-     * <p>Get properties of a channel.
-     *
+     * 
+     * Get properties of a channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -183,19 +240,15 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return properties of a channel along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ChannelInner>> getWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName) {
+    private Mono<Response<ChannelInner>> getWithResponseAsync(String resourceGroupName, String partnerNamespaceName,
+        String channelName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -210,80 +263,16 @@ public final class ChannelsClientImpl implements ChannelsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            channelName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, partnerNamespaceName, channelName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get a channel.
-     *
-     * <p>Get properties of a channel.
-     *
-     * @param resourceGroupName The name of the resource group within the partners subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param channelName Name of the channel.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties of a channel along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ChannelInner>> getWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
-        }
-        if (channelName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                channelName,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Get a channel.
-     *
-     * <p>Get properties of a channel.
-     *
+     * 
+     * Get properties of a channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -300,9 +289,9 @@ public final class ChannelsClientImpl implements ChannelsClient {
 
     /**
      * Get a channel.
-     *
-     * <p>Get properties of a channel.
-     *
+     * 
+     * Get properties of a channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -313,16 +302,40 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return properties of a channel along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ChannelInner> getWithResponse(
-        String resourceGroupName, String partnerNamespaceName, String channelName, Context context) {
-        return getWithResponseAsync(resourceGroupName, partnerNamespaceName, channelName, context).block();
+    public Response<ChannelInner> getWithResponse(String resourceGroupName, String partnerNamespaceName,
+        String channelName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        if (channelName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, channelName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Get a channel.
-     *
-     * <p>Get properties of a channel.
-     *
+     * 
+     * Get properties of a channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -338,9 +351,9 @@ public final class ChannelsClientImpl implements ChannelsClient {
 
     /**
      * Create or update a channel.
-     *
-     * <p>Synchronously creates or updates a new channel with the specified parameters.
-     *
+     * 
+     * Synchronously creates or updates a new channel with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -351,19 +364,15 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return channel info along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ChannelInner>> createOrUpdateWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName, ChannelInner channelInfo) {
+    private Mono<Response<ChannelInner>> createOrUpdateWithResponseAsync(String resourceGroupName,
+        String partnerNamespaceName, String channelName, ChannelInner channelInfo) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -383,92 +392,17 @@ public final class ChannelsClientImpl implements ChannelsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .createOrUpdate(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            channelName,
-                            this.client.getApiVersion(),
-                            channelInfo,
-                            accept,
-                            context))
+            .withContext(context -> service.createOrUpdate(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, partnerNamespaceName, channelName, this.client.getApiVersion(), channelInfo, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Create or update a channel.
-     *
-     * <p>Synchronously creates or updates a new channel with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group within the partners subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param channelName Name of the channel.
-     * @param channelInfo Channel information.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return channel info along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ChannelInner>> createOrUpdateWithResponseAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        String channelName,
-        ChannelInner channelInfo,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
-        }
-        if (channelName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
-        }
-        if (channelInfo == null) {
-            return Mono.error(new IllegalArgumentException("Parameter channelInfo is required and cannot be null."));
-        } else {
-            channelInfo.validate();
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .createOrUpdate(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                channelName,
-                this.client.getApiVersion(),
-                channelInfo,
-                accept,
-                context);
-    }
-
-    /**
-     * Create or update a channel.
-     *
-     * <p>Synchronously creates or updates a new channel with the specified parameters.
-     *
+     * 
+     * Synchronously creates or updates a new channel with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -479,17 +413,17 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return channel info on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ChannelInner> createOrUpdateAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName, ChannelInner channelInfo) {
+    private Mono<ChannelInner> createOrUpdateAsync(String resourceGroupName, String partnerNamespaceName,
+        String channelName, ChannelInner channelInfo) {
         return createOrUpdateWithResponseAsync(resourceGroupName, partnerNamespaceName, channelName, channelInfo)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Create or update a channel.
-     *
-     * <p>Synchronously creates or updates a new channel with the specified parameters.
-     *
+     * 
+     * Synchronously creates or updates a new channel with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -501,22 +435,46 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return channel info along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ChannelInner> createOrUpdateWithResponse(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        String channelName,
-        ChannelInner channelInfo,
-        Context context) {
-        return createOrUpdateWithResponseAsync(
-                resourceGroupName, partnerNamespaceName, channelName, channelInfo, context)
-            .block();
+    public Response<ChannelInner> createOrUpdateWithResponse(String resourceGroupName, String partnerNamespaceName,
+        String channelName, ChannelInner channelInfo, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        if (channelName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
+        }
+        if (channelInfo == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter channelInfo is required and cannot be null."));
+        } else {
+            channelInfo.validate();
+        }
+        final String accept = "application/json";
+        return service.createOrUpdateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, channelName, this.client.getApiVersion(), channelInfo, accept, context);
     }
 
     /**
      * Create or update a channel.
-     *
-     * <p>Synchronously creates or updates a new channel with the specified parameters.
-     *
+     * 
+     * Synchronously creates or updates a new channel with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -527,18 +485,17 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return channel info.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ChannelInner createOrUpdate(
-        String resourceGroupName, String partnerNamespaceName, String channelName, ChannelInner channelInfo) {
-        return createOrUpdateWithResponse(
-                resourceGroupName, partnerNamespaceName, channelName, channelInfo, Context.NONE)
-            .getValue();
+    public ChannelInner createOrUpdate(String resourceGroupName, String partnerNamespaceName, String channelName,
+        ChannelInner channelInfo) {
+        return createOrUpdateWithResponse(resourceGroupName, partnerNamespaceName, channelName, channelInfo,
+            Context.NONE).getValue();
     }
 
     /**
      * Delete a channel.
-     *
-     * <p>Delete an existing channel.
-     *
+     * 
+     * Delete an existing channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -548,19 +505,15 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName) {
+    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName,
+        String partnerNamespaceName, String channelName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -574,77 +527,101 @@ public final class ChannelsClientImpl implements ChannelsClient {
             return Mono.error(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
         }
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            channelName,
-                            this.client.getApiVersion(),
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, partnerNamespaceName, channelName, this.client.getApiVersion(), context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Delete a channel.
-     *
-     * <p>Delete an existing channel.
-     *
+     * 
+     * Delete an existing channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName, Context context) {
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String partnerNamespaceName,
+        String channelName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
         }
         if (channelName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
         }
-        context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                channelName,
-                this.client.getApiVersion(),
-                context);
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, channelName, this.client.getApiVersion(), Context.NONE);
     }
 
     /**
      * Delete a channel.
-     *
-     * <p>Delete an existing channel.
-     *
+     * 
+     * Delete an existing channel.
+     * 
+     * @param resourceGroupName The name of the resource group within the partners subscription.
+     * @param partnerNamespaceName Name of the partner namespace.
+     * @param channelName Name of the channel.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String partnerNamespaceName,
+        String channelName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        if (channelName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
+        }
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, channelName, this.client.getApiVersion(), context);
+    }
+
+    /**
+     * Delete a channel.
+     * 
+     * Delete an existing channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -654,46 +631,19 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(resourceGroupName, partnerNamespaceName, channelName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String partnerNamespaceName,
+        String channelName) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = deleteWithResponseAsync(resourceGroupName, partnerNamespaceName, channelName);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Delete a channel.
-     *
-     * <p>Delete an existing channel.
-     *
-     * @param resourceGroupName The name of the resource group within the partners subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param channelName Name of the channel.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(resourceGroupName, partnerNamespaceName, channelName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Delete a channel.
-     *
-     * <p>Delete an existing channel.
-     *
+     * 
+     * Delete an existing channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -703,16 +653,17 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceGroupName, String partnerNamespaceName, String channelName) {
-        return this.beginDeleteAsync(resourceGroupName, partnerNamespaceName, channelName).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String partnerNamespaceName,
+        String channelName) {
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, partnerNamespaceName, channelName);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Delete a channel.
-     *
-     * <p>Delete an existing channel.
-     *
+     * 
+     * Delete an existing channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -723,16 +674,18 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceGroupName, String partnerNamespaceName, String channelName, Context context) {
-        return this.beginDeleteAsync(resourceGroupName, partnerNamespaceName, channelName, context).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String partnerNamespaceName,
+        String channelName, Context context) {
+        Response<BinaryData> response
+            = deleteWithResponse(resourceGroupName, partnerNamespaceName, channelName, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Delete a channel.
-     *
-     * <p>Delete an existing channel.
-     *
+     * 
+     * Delete an existing channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -743,38 +696,15 @@ public final class ChannelsClientImpl implements ChannelsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Void> deleteAsync(String resourceGroupName, String partnerNamespaceName, String channelName) {
-        return beginDeleteAsync(resourceGroupName, partnerNamespaceName, channelName)
-            .last()
+        return beginDeleteAsync(resourceGroupName, partnerNamespaceName, channelName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Delete a channel.
-     *
-     * <p>Delete an existing channel.
-     *
-     * @param resourceGroupName The name of the resource group within the partners subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param channelName Name of the channel.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName, Context context) {
-        return beginDeleteAsync(resourceGroupName, partnerNamespaceName, channelName, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Delete a channel.
-     *
-     * <p>Delete an existing channel.
-     *
+     * 
+     * Delete an existing channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -784,14 +714,14 @@ public final class ChannelsClientImpl implements ChannelsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String partnerNamespaceName, String channelName) {
-        deleteAsync(resourceGroupName, partnerNamespaceName, channelName).block();
+        beginDelete(resourceGroupName, partnerNamespaceName, channelName).getFinalResult();
     }
 
     /**
      * Delete a channel.
-     *
-     * <p>Delete an existing channel.
-     *
+     * 
+     * Delete an existing channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -802,14 +732,14 @@ public final class ChannelsClientImpl implements ChannelsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String partnerNamespaceName, String channelName, Context context) {
-        deleteAsync(resourceGroupName, partnerNamespaceName, channelName, context).block();
+        beginDelete(resourceGroupName, partnerNamespaceName, channelName, context).getFinalResult();
     }
 
     /**
      * Update a Channel.
-     *
-     * <p>Synchronously updates a channel with the specified parameters.
-     *
+     * 
+     * Synchronously updates a channel with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -820,22 +750,15 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> updateWithResponseAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        String channelName,
-        ChannelUpdateParameters channelUpdateParameters) {
+    private Mono<Response<Void>> updateWithResponseAsync(String resourceGroupName, String partnerNamespaceName,
+        String channelName, ChannelUpdateParameters channelUpdateParameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -849,98 +772,23 @@ public final class ChannelsClientImpl implements ChannelsClient {
             return Mono.error(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
         }
         if (channelUpdateParameters == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter channelUpdateParameters is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter channelUpdateParameters is required and cannot be null."));
         } else {
             channelUpdateParameters.validate();
         }
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .update(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            channelName,
-                            this.client.getApiVersion(),
-                            channelUpdateParameters,
-                            context))
+                context -> service.update(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+                    partnerNamespaceName, channelName, this.client.getApiVersion(), channelUpdateParameters, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Update a Channel.
-     *
-     * <p>Synchronously updates a channel with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group within the partners subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param channelName Name of the channel.
-     * @param channelUpdateParameters Channel update information.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> updateWithResponseAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        String channelName,
-        ChannelUpdateParameters channelUpdateParameters,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
-        }
-        if (channelName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
-        }
-        if (channelUpdateParameters == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter channelUpdateParameters is required and cannot be null."));
-        } else {
-            channelUpdateParameters.validate();
-        }
-        context = this.client.mergeContext(context);
-        return service
-            .update(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                channelName,
-                this.client.getApiVersion(),
-                channelUpdateParameters,
-                context);
-    }
-
-    /**
-     * Update a Channel.
-     *
-     * <p>Synchronously updates a channel with the specified parameters.
-     *
+     * 
+     * Synchronously updates a channel with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -951,10 +799,7 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> updateAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        String channelName,
+    private Mono<Void> updateAsync(String resourceGroupName, String partnerNamespaceName, String channelName,
         ChannelUpdateParameters channelUpdateParameters) {
         return updateWithResponseAsync(resourceGroupName, partnerNamespaceName, channelName, channelUpdateParameters)
             .flatMap(ignored -> Mono.empty());
@@ -962,9 +807,9 @@ public final class ChannelsClientImpl implements ChannelsClient {
 
     /**
      * Update a Channel.
-     *
-     * <p>Synchronously updates a channel with the specified parameters.
-     *
+     * 
+     * Synchronously updates a channel with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -976,22 +821,45 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> updateWithResponse(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        String channelName,
-        ChannelUpdateParameters channelUpdateParameters,
-        Context context) {
-        return updateWithResponseAsync(
-                resourceGroupName, partnerNamespaceName, channelName, channelUpdateParameters, context)
-            .block();
+    public Response<Void> updateWithResponse(String resourceGroupName, String partnerNamespaceName, String channelName,
+        ChannelUpdateParameters channelUpdateParameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        if (channelName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
+        }
+        if (channelUpdateParameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter channelUpdateParameters is required and cannot be null."));
+        } else {
+            channelUpdateParameters.validate();
+        }
+        return service.updateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, channelName, this.client.getApiVersion(), channelUpdateParameters, context);
     }
 
     /**
      * Update a Channel.
-     *
-     * <p>Synchronously updates a channel with the specified parameters.
-     *
+     * 
+     * Synchronously updates a channel with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the channel.
@@ -1001,49 +869,41 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void update(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        String channelName,
+    public void update(String resourceGroupName, String partnerNamespaceName, String channelName,
         ChannelUpdateParameters channelUpdateParameters) {
         updateWithResponse(resourceGroupName, partnerNamespaceName, channelName, channelUpdateParameters, Context.NONE);
     }
 
     /**
      * List channels.
-     *
-     * <p>List all the channels in a partner namespace.
-     *
+     * 
+     * List all the channels in a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Channels operation along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return result of the List Channels operation along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ChannelInner>> listByPartnerNamespaceSinglePageAsync(
-        String resourceGroupName, String partnerNamespaceName, String filter, Integer top) {
+    private Mono<PagedResponse<ChannelInner>> listByPartnerNamespaceSinglePageAsync(String resourceGroupName,
+        String partnerNamespaceName, String filter, Integer top) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1056,122 +916,35 @@ public final class ChannelsClientImpl implements ChannelsClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .listByPartnerNamespace(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            this.client.getApiVersion(),
-                            filter,
-                            top,
-                            accept,
-                            context))
-            .<PagedResponse<ChannelInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+                context -> service.listByPartnerNamespace(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, partnerNamespaceName, this.client.getApiVersion(), filter, top, accept, context))
+            .<PagedResponse<ChannelInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * List channels.
-     *
-     * <p>List all the channels in a partner namespace.
-     *
+     * 
+     * List all the channels in a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Channels operation along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ChannelInner>> listByPartnerNamespaceSinglePageAsync(
-        String resourceGroupName, String partnerNamespaceName, String filter, Integer top, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByPartnerNamespace(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                this.client.getApiVersion(),
-                filter,
-                top,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * List channels.
-     *
-     * <p>List all the channels in a partner namespace.
-     *
-     * @param resourceGroupName The name of the resource group within the partners subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
-     * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return result of the List Channels operation as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ChannelInner> listByPartnerNamespaceAsync(
-        String resourceGroupName, String partnerNamespaceName, String filter, Integer top) {
+    private PagedFlux<ChannelInner> listByPartnerNamespaceAsync(String resourceGroupName, String partnerNamespaceName,
+        String filter, Integer top) {
         return new PagedFlux<>(
             () -> listByPartnerNamespaceSinglePageAsync(resourceGroupName, partnerNamespaceName, filter, top),
             nextLink -> listByPartnerNamespaceNextSinglePageAsync(nextLink));
@@ -1179,9 +952,9 @@ public final class ChannelsClientImpl implements ChannelsClient {
 
     /**
      * List channels.
-     *
-     * <p>List all the channels in a partner namespace.
-     *
+     * 
+     * List all the channels in a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1200,38 +973,106 @@ public final class ChannelsClientImpl implements ChannelsClient {
 
     /**
      * List channels.
-     *
-     * <p>List all the channels in a partner namespace.
-     *
+     * 
+     * List all the channels in a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
-     * @param context The context to associate with this operation.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Channels operation as paginated response with {@link PagedFlux}.
+     * @return result of the List Channels operation along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ChannelInner> listByPartnerNamespaceAsync(
-        String resourceGroupName, String partnerNamespaceName, String filter, Integer top, Context context) {
-        return new PagedFlux<>(
-            () -> listByPartnerNamespaceSinglePageAsync(resourceGroupName, partnerNamespaceName, filter, top, context),
-            nextLink -> listByPartnerNamespaceNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ChannelInner> listByPartnerNamespaceSinglePage(String resourceGroupName,
+        String partnerNamespaceName, String filter, Integer top) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ChannelsListResult> res = service.listByPartnerNamespaceSync(this.client.getEndpoint(),
+            this.client.getSubscriptionId(), resourceGroupName, partnerNamespaceName, this.client.getApiVersion(),
+            filter, top, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * List channels.
-     *
-     * <p>List all the channels in a partner namespace.
-     *
+     * 
+     * List all the channels in a partner namespace.
+     * 
+     * @param resourceGroupName The name of the resource group within the partners subscription.
+     * @param partnerNamespaceName Name of the partner namespace.
+     * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
+     * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return result of the List Channels operation along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ChannelInner> listByPartnerNamespaceSinglePage(String resourceGroupName,
+        String partnerNamespaceName, String filter, Integer top, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ChannelsListResult> res
+            = service.listByPartnerNamespaceSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, partnerNamespaceName, this.client.getApiVersion(), filter, top, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * List channels.
+     * 
+     * List all the channels in a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1243,24 +1084,25 @@ public final class ChannelsClientImpl implements ChannelsClient {
     public PagedIterable<ChannelInner> listByPartnerNamespace(String resourceGroupName, String partnerNamespaceName) {
         final String filter = null;
         final Integer top = null;
-        return new PagedIterable<>(listByPartnerNamespaceAsync(resourceGroupName, partnerNamespaceName, filter, top));
+        return new PagedIterable<>(
+            () -> listByPartnerNamespaceSinglePage(resourceGroupName, partnerNamespaceName, filter, top),
+            nextLink -> listByPartnerNamespaceNextSinglePage(nextLink));
     }
 
     /**
      * List channels.
-     *
-     * <p>List all the channels in a partner namespace.
-     *
+     * 
+     * List all the channels in a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1268,17 +1110,18 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return result of the List Channels operation as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<ChannelInner> listByPartnerNamespace(
-        String resourceGroupName, String partnerNamespaceName, String filter, Integer top, Context context) {
+    public PagedIterable<ChannelInner> listByPartnerNamespace(String resourceGroupName, String partnerNamespaceName,
+        String filter, Integer top, Context context) {
         return new PagedIterable<>(
-            listByPartnerNamespaceAsync(resourceGroupName, partnerNamespaceName, filter, top, context));
+            () -> listByPartnerNamespaceSinglePage(resourceGroupName, partnerNamespaceName, filter, top, context),
+            nextLink -> listByPartnerNamespaceNextSinglePage(nextLink, context));
     }
 
     /**
      * Get full URL of partner destination channel.
-     *
-     * <p>Get the full endpoint URL of a partner destination channel.
-     *
+     * 
+     * Get the full endpoint URL of a partner destination channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the Channel.
@@ -1286,22 +1129,18 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the full endpoint URL of a partner destination channel along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<EventSubscriptionFullUrlInner>> getFullUrlWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName) {
+    private Mono<Response<EventSubscriptionFullUrlInner>> getFullUrlWithResponseAsync(String resourceGroupName,
+        String partnerNamespaceName, String channelName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1316,81 +1155,16 @@ public final class ChannelsClientImpl implements ChannelsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getFullUrl(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            channelName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.getFullUrl(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, partnerNamespaceName, channelName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get full URL of partner destination channel.
-     *
-     * <p>Get the full endpoint URL of a partner destination channel.
-     *
-     * @param resourceGroupName The name of the resource group within the partners subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param channelName Name of the Channel.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the full endpoint URL of a partner destination channel along with {@link Response} on successful
-     *     completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<EventSubscriptionFullUrlInner>> getFullUrlWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
-        }
-        if (channelName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getFullUrl(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                channelName,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Get full URL of partner destination channel.
-     *
-     * <p>Get the full endpoint URL of a partner destination channel.
-     *
+     * 
+     * Get the full endpoint URL of a partner destination channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the Channel.
@@ -1400,17 +1174,17 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return the full endpoint URL of a partner destination channel on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<EventSubscriptionFullUrlInner> getFullUrlAsync(
-        String resourceGroupName, String partnerNamespaceName, String channelName) {
+    private Mono<EventSubscriptionFullUrlInner> getFullUrlAsync(String resourceGroupName, String partnerNamespaceName,
+        String channelName) {
         return getFullUrlWithResponseAsync(resourceGroupName, partnerNamespaceName, channelName)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Get full URL of partner destination channel.
-     *
-     * <p>Get the full endpoint URL of a partner destination channel.
-     *
+     * 
+     * Get the full endpoint URL of a partner destination channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the Channel.
@@ -1421,16 +1195,40 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return the full endpoint URL of a partner destination channel along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<EventSubscriptionFullUrlInner> getFullUrlWithResponse(
-        String resourceGroupName, String partnerNamespaceName, String channelName, Context context) {
-        return getFullUrlWithResponseAsync(resourceGroupName, partnerNamespaceName, channelName, context).block();
+    public Response<EventSubscriptionFullUrlInner> getFullUrlWithResponse(String resourceGroupName,
+        String partnerNamespaceName, String channelName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        if (channelName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter channelName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getFullUrlSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, channelName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Get full URL of partner destination channel.
-     *
-     * <p>Get the full endpoint URL of a partner destination channel.
-     *
+     * 
+     * Get the full endpoint URL of a partner destination channel.
+     * 
      * @param resourceGroupName The name of the resource group within the partners subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param channelName Name of the Channel.
@@ -1440,21 +1238,20 @@ public final class ChannelsClientImpl implements ChannelsClient {
      * @return the full endpoint URL of a partner destination channel.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public EventSubscriptionFullUrlInner getFullUrl(
-        String resourceGroupName, String partnerNamespaceName, String channelName) {
+    public EventSubscriptionFullUrlInner getFullUrl(String resourceGroupName, String partnerNamespaceName,
+        String channelName) {
         return getFullUrlWithResponse(resourceGroupName, partnerNamespaceName, channelName, Context.NONE).getValue();
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Channels operation along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return result of the List Channels operation along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ChannelInner>> listByPartnerNamespaceNextSinglePageAsync(String nextLink) {
@@ -1462,63 +1259,72 @@ public final class ChannelsClientImpl implements ChannelsClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listByPartnerNamespaceNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<ChannelInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<ChannelInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return result of the List Channels operation along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ChannelInner> listByPartnerNamespaceNextSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ChannelsListResult> res
+            = service.listByPartnerNamespaceNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Channels operation along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return result of the List Channels operation along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ChannelInner>> listByPartnerNamespaceNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<ChannelInner> listByPartnerNamespaceNextSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByPartnerNamespaceNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<ChannelsListResult> res
+            = service.listByPartnerNamespaceNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(ChannelsClientImpl.class);
 }

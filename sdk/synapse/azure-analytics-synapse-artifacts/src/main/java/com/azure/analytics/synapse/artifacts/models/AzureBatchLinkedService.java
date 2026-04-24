@@ -5,80 +5,104 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Azure Batch linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("AzureBatch")
-@JsonFlatten
+/**
+ * Azure Batch linked service.
+ */
 @Fluent
 public class AzureBatchLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "AzureBatch";
+
+    /*
      * The Azure Batch account name. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.accountName", required = true)
+    @Generated
     private Object accountName;
 
     /*
      * The Azure Batch account access key.
      */
-    @JsonProperty(value = "typeProperties.accessKey")
+    @Generated
     private SecretBase accessKey;
 
     /*
      * The Azure Batch URI. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.batchUri", required = true)
+    @Generated
     private Object batchUri;
 
     /*
      * The Azure Batch pool name. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.poolName", required = true)
+    @Generated
     private Object poolName;
 
     /*
      * The Azure Storage linked service reference.
      */
-    @JsonProperty(value = "typeProperties.linkedServiceName", required = true)
+    @Generated
     private LinkedServiceReference linkedServiceName;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
     /*
      * The credential reference containing authentication information.
      */
-    @JsonProperty(value = "typeProperties.credential")
+    @Generated
     private CredentialReference credential;
 
-    /** Creates an instance of AzureBatchLinkedService class. */
-    public AzureBatchLinkedService() {}
+    /**
+     * Creates an instance of AzureBatchLinkedService class.
+     */
+    @Generated
+    public AzureBatchLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the accountName property: The Azure Batch account name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the accountName value.
      */
+    @Generated
     public Object getAccountName() {
         return this.accountName;
     }
 
     /**
      * Set the accountName property: The Azure Batch account name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param accountName the accountName value to set.
      * @return the AzureBatchLinkedService object itself.
      */
+    @Generated
     public AzureBatchLinkedService setAccountName(Object accountName) {
         this.accountName = accountName;
         return this;
@@ -86,19 +110,21 @@ public class AzureBatchLinkedService extends LinkedService {
 
     /**
      * Get the accessKey property: The Azure Batch account access key.
-     *
+     * 
      * @return the accessKey value.
      */
+    @Generated
     public SecretBase getAccessKey() {
         return this.accessKey;
     }
 
     /**
      * Set the accessKey property: The Azure Batch account access key.
-     *
+     * 
      * @param accessKey the accessKey value to set.
      * @return the AzureBatchLinkedService object itself.
      */
+    @Generated
     public AzureBatchLinkedService setAccessKey(SecretBase accessKey) {
         this.accessKey = accessKey;
         return this;
@@ -106,19 +132,21 @@ public class AzureBatchLinkedService extends LinkedService {
 
     /**
      * Get the batchUri property: The Azure Batch URI. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the batchUri value.
      */
+    @Generated
     public Object getBatchUri() {
         return this.batchUri;
     }
 
     /**
      * Set the batchUri property: The Azure Batch URI. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param batchUri the batchUri value to set.
      * @return the AzureBatchLinkedService object itself.
      */
+    @Generated
     public AzureBatchLinkedService setBatchUri(Object batchUri) {
         this.batchUri = batchUri;
         return this;
@@ -126,19 +154,21 @@ public class AzureBatchLinkedService extends LinkedService {
 
     /**
      * Get the poolName property: The Azure Batch pool name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the poolName value.
      */
+    @Generated
     public Object getPoolName() {
         return this.poolName;
     }
 
     /**
      * Set the poolName property: The Azure Batch pool name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param poolName the poolName value to set.
      * @return the AzureBatchLinkedService object itself.
      */
+    @Generated
     public AzureBatchLinkedService setPoolName(Object poolName) {
         this.poolName = poolName;
         return this;
@@ -146,19 +176,21 @@ public class AzureBatchLinkedService extends LinkedService {
 
     /**
      * Get the linkedServiceName property: The Azure Storage linked service reference.
-     *
+     * 
      * @return the linkedServiceName value.
      */
+    @Generated
     public LinkedServiceReference getLinkedServiceName() {
         return this.linkedServiceName;
     }
 
     /**
      * Set the linkedServiceName property: The Azure Storage linked service reference.
-     *
+     * 
      * @param linkedServiceName the linkedServiceName value to set.
      * @return the AzureBatchLinkedService object itself.
      */
+    @Generated
     public AzureBatchLinkedService setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         this.linkedServiceName = linkedServiceName;
         return this;
@@ -167,9 +199,10 @@ public class AzureBatchLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -177,10 +210,11 @@ public class AzureBatchLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the AzureBatchLinkedService object itself.
      */
+    @Generated
     public AzureBatchLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
@@ -188,49 +222,184 @@ public class AzureBatchLinkedService extends LinkedService {
 
     /**
      * Get the credential property: The credential reference containing authentication information.
-     *
+     * 
      * @return the credential value.
      */
+    @Generated
     public CredentialReference getCredential() {
         return this.credential;
     }
 
     /**
      * Set the credential property: The credential reference containing authentication information.
-     *
+     * 
      * @param credential the credential value to set.
      * @return the AzureBatchLinkedService object itself.
      */
+    @Generated
     public AzureBatchLinkedService setCredential(CredentialReference credential) {
         this.credential = credential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public AzureBatchLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureBatchLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureBatchLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureBatchLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureBatchLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (accountName != null
+            || accessKey != null
+            || batchUri != null
+            || poolName != null
+            || linkedServiceName != null
+            || encryptedCredential != null
+            || credential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("accountName", this.accountName);
+            jsonWriter.writeJsonField("accessKey", this.accessKey);
+            jsonWriter.writeUntypedField("batchUri", this.batchUri);
+            jsonWriter.writeUntypedField("poolName", this.poolName);
+            jsonWriter.writeJsonField("linkedServiceName", this.linkedServiceName);
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeJsonField("credential", this.credential);
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureBatchLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureBatchLinkedService if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AzureBatchLinkedService.
+     */
+    @Generated
+    public static AzureBatchLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureBatchLinkedService deserializedAzureBatchLinkedService = new AzureBatchLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedAzureBatchLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedAzureBatchLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedAzureBatchLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedAzureBatchLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedAzureBatchLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedAzureBatchLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("accountName".equals(fieldName)) {
+                            deserializedAzureBatchLinkedService.accountName = reader.readUntyped();
+                        } else if ("accessKey".equals(fieldName)) {
+                            deserializedAzureBatchLinkedService.accessKey = SecretBase.fromJson(reader);
+                        } else if ("batchUri".equals(fieldName)) {
+                            deserializedAzureBatchLinkedService.batchUri = reader.readUntyped();
+                        } else if ("poolName".equals(fieldName)) {
+                            deserializedAzureBatchLinkedService.poolName = reader.readUntyped();
+                        } else if ("linkedServiceName".equals(fieldName)) {
+                            deserializedAzureBatchLinkedService.linkedServiceName
+                                = LinkedServiceReference.fromJson(reader);
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedAzureBatchLinkedService.encryptedCredential = reader.readUntyped();
+                        } else if ("credential".equals(fieldName)) {
+                            deserializedAzureBatchLinkedService.credential = CredentialReference.fromJson(reader);
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAzureBatchLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedAzureBatchLinkedService;
+        });
     }
 }

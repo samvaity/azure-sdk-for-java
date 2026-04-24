@@ -4,20 +4,23 @@
 
 package com.azure.resourcemanager.communication.generated;
 
-/** Samples for EmailServices CreateOrUpdate. */
+/**
+ * Samples for EmailServices CreateOrUpdate.
+ */
 public final class EmailServicesCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/communication/resource-manager/Microsoft.Communication/stable/2023-03-31/examples/emailServices/createOrUpdate.json
+     * x-ms-original-file:
+     * specification/communication/resource-manager/Microsoft.Communication/stable/2025-09-01/examples/emailServices/
+     * createOrUpdate.json
      */
     /**
      * Sample code: Create or update EmailService resource.
-     *
+     * 
      * @param manager Entry point to CommunicationManager.
      */
-    public static void createOrUpdateEmailServiceResource(
-        com.azure.resourcemanager.communication.CommunicationManager manager) {
-        manager
-            .emailServices()
+    public static void
+        createOrUpdateEmailServiceResource(com.azure.resourcemanager.communication.CommunicationManager manager) {
+        manager.emailServices()
             .define("MyEmailServiceResource")
             .withRegion("Global")
             .withExistingResourceGroup("MyResourceGroup")

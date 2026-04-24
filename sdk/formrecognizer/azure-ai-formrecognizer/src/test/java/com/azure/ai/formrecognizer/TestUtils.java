@@ -7,14 +7,10 @@ import com.azure.ai.formrecognizer.models.FormRecognizerAudience;
 import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpClient;
 import com.azure.core.test.InterceptorManager;
-import com.azure.core.test.models.TestProxySanitizer;
-import com.azure.core.test.models.TestProxySanitizerType;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.FluxUtil;
 import com.azure.core.util.polling.SyncPoller;
-import com.azure.core.util.serializer.JacksonAdapter;
-import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.identity.AzureAuthorityHosts;
 import org.junit.jupiter.params.provider.Arguments;
 import reactor.test.StepVerifier;
@@ -30,16 +26,14 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.azure.ai.formrecognizer.FormRecognizerClientTestBase.ENCODED_EMPTY_SPACE;
-import static com.azure.core.test.TestBase.AZURE_TEST_SERVICE_VERSIONS_VALUE_ALL;
-import static com.azure.core.test.TestBase.getHttpClients;
+import static com.azure.core.test.TestProxyTestBase.AZURE_TEST_SERVICE_VERSIONS_VALUE_ALL;
+import static com.azure.core.test.TestProxyTestBase.getHttpClients;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Contains helper methods for generating inputs for test methods
  */
 final class TestUtils {
-    private static final String REDACTED_VALUE = "REDACTED";
-    private static final String URL_REGEX = "(?<=http://|https://)([^/?]+)";
     // Duration
     static final Duration ONE_NANO_DURATION = Duration.ofMillis(1);
     // Local test files
@@ -63,6 +57,8 @@ final class TestUtils {
     static final String VALID_HTTPS_LOCALHOST = "https://localhost:8080";
     static final String VALID_HTTP_LOCALHOST = "http://localhost:8080";
     static final String VALID_URL = "https://resources/contoso-allinone.jpg";
+    // Disables OperationLocation and Location Sanitizer
+    static final String[] REMOVE_SANITIZER_ID = { "AZSDK2003", "AZSDK2030" };
 
     private TestUtils() {
     }
@@ -104,16 +100,13 @@ final class TestUtils {
         // By default, we will assume that the authority is public
         return AzureAuthorityHosts.AZURE_PUBLIC_CLOUD;
     }
+
     static InputStream getContentDetectionFileData(String localFileUrl) {
         try {
             return new FileInputStream(localFileUrl);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Local file not found.", e);
         }
-    }
-
-    static SerializerAdapter getSerializerAdapter() {
-        return JacksonAdapter.createDefaultSerializerAdapter();
     }
 
     /**
@@ -126,12 +119,11 @@ final class TestUtils {
         // when this issues is closed, the newer version of junit will have better support for
         // cartesian product of arguments - https://github.com/junit-team/junit5/issues/1427
         List<Arguments> argumentsList = new ArrayList<>();
-        getHttpClients()
-            .forEach(httpClient -> {
-                Arrays.stream(FormRecognizerServiceVersion.values()).filter(
-                    TestUtils::shouldServiceVersionBeTested)
-                    .forEach(serviceVersion -> argumentsList.add(Arguments.of(httpClient, serviceVersion)));
-            });
+        getHttpClients().forEach(httpClient -> {
+            Arrays.stream(FormRecognizerServiceVersion.values())
+                .filter(TestUtils::shouldServiceVersionBeTested)
+                .forEach(serviceVersion -> argumentsList.add(Arguments.of(httpClient, serviceVersion)));
+        });
         return argumentsList.stream();
     }
 
@@ -152,8 +144,8 @@ final class TestUtils {
      * @return Boolean indicates whether filters out the service version or not.
      */
     private static boolean shouldServiceVersionBeTested(FormRecognizerServiceVersion serviceVersion) {
-        String serviceVersionFromEnv =
-            Configuration.getGlobalConfiguration().get("AZURE_FORM_RECOGNIZER_TEST_SERVICE_VERSIONS");
+        String serviceVersionFromEnv
+            = Configuration.getGlobalConfiguration().get("AZURE_FORM_RECOGNIZER_TEST_SERVICE_VERSIONS");
         if (CoreUtils.isNullOrEmpty(serviceVersionFromEnv)) {
             return FormRecognizerServiceVersion.getLatest().equals(serviceVersion);
         }
@@ -161,32 +153,20 @@ final class TestUtils {
             return true;
         }
         String[] configuredServiceVersionList = serviceVersionFromEnv.split(",");
-        return Arrays.stream(configuredServiceVersionList).anyMatch(configuredServiceVersion ->
-            serviceVersion.getVersion().equals(configuredServiceVersion.trim()));
+        return Arrays.stream(configuredServiceVersionList)
+            .anyMatch(configuredServiceVersion -> serviceVersion.getVersion().equals(configuredServiceVersion.trim()));
     }
 
     static void validateExceptionSource(HttpResponseException errorResponseException) {
-        StepVerifier.create(FluxUtil.collectBytesInByteBufferStream(
-            errorResponseException.getResponse().getRequest().getBody()))
+        StepVerifier
+            .create(
+                FluxUtil.collectBytesInByteBufferStream(errorResponseException.getResponse().getRequest().getBody()))
             .assertNext(bytes -> assertEquals(ENCODED_EMPTY_SPACE, new String(bytes, StandardCharsets.UTF_8)))
             .verifyComplete();
     }
 
     static <T, U> SyncPoller<T, U> setSyncPollerPollInterval(SyncPoller<T, U> syncPoller,
         InterceptorManager interceptorManager) {
-        return interceptorManager.isPlaybackMode()
-            ? syncPoller.setPollInterval(Duration.ofMillis(1))
-            : syncPoller;
-    }
-
-    public static List<TestProxySanitizer> getTestProxySanitizers() {
-        return Arrays.asList(
-            new TestProxySanitizer("$..targetModelLocation", null, REDACTED_VALUE, TestProxySanitizerType.BODY_KEY),
-            new TestProxySanitizer("$..targetResourceId", null, REDACTED_VALUE, TestProxySanitizerType.BODY_KEY),
-            new TestProxySanitizer("$..urlSource", null, REDACTED_VALUE, TestProxySanitizerType.BODY_KEY),
-            new TestProxySanitizer("$..azureBlobSource.containerUrl", null, REDACTED_VALUE, TestProxySanitizerType.BODY_KEY),
-            new TestProxySanitizer("$..source", null, REDACTED_VALUE, TestProxySanitizerType.BODY_KEY),
-            new TestProxySanitizer("$..resourceLocation", null, REDACTED_VALUE, TestProxySanitizerType.BODY_KEY));
+        return interceptorManager.isPlaybackMode() ? syncPoller.setPollInterval(Duration.ofMillis(1)) : syncPoller;
     }
 }
-

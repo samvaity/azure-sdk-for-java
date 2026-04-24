@@ -4,11 +4,11 @@
 package com.azure.storage.queue.sas;
 
 import com.azure.core.util.Configuration;
-import com.azure.storage.common.implementation.StorageImplUtils;
-import com.azure.storage.common.sas.SasProtocol;
-import com.azure.storage.common.implementation.Constants;
-import com.azure.storage.common.sas.SasIpRange;
 import com.azure.storage.common.StorageSharedKeyCredential;
+import com.azure.storage.common.implementation.Constants;
+import com.azure.storage.common.implementation.StorageImplUtils;
+import com.azure.storage.common.sas.SasIpRange;
+import com.azure.storage.common.sas.SasProtocol;
 import com.azure.storage.queue.QueueServiceVersion;
 
 import java.time.OffsetDateTime;
@@ -28,21 +28,17 @@ public final class QueueServiceSasSignatureValues {
         .get(Constants.PROPERTY_AZURE_STORAGE_SAS_SERVICE_VERSION, QueueServiceVersion.getLatest().getVersion());
 
     private SasProtocol protocol;
-
     private OffsetDateTime startTime;
-
     private OffsetDateTime expiryTime;
-
     private String permissions;
-
     private SasIpRange sasIpRange;
-
     private String queueName;
-
     private String identifier;
+    private String delegatedUserObjectId;
 
     /**
      * Creates an object with empty values for all fields.
+     *
      * @deprecated Please use {@link #QueueServiceSasSignatureValues(String)}, or
      * {@link #QueueServiceSasSignatureValues(OffsetDateTime, QueueSasPermission)}
      */
@@ -55,6 +51,7 @@ public final class QueueServiceSasSignatureValues {
      *
      * @param expiryTime The time after which the SAS will no longer work.
      * @param permissions {@link QueueSasPermission} allowed by the SAS.
+     * @throws NullPointerException if {@code expiryTime} or {@code permissions} is null.
      */
     public QueueServiceSasSignatureValues(OffsetDateTime expiryTime, QueueSasPermission permissions) {
         StorageImplUtils.assertNotNull("expiryTime", expiryTime);
@@ -67,6 +64,7 @@ public final class QueueServiceSasSignatureValues {
      * Creates an object with the specified identifier.
      *
      * @param identifier Name of the access policy.
+     * @throws NullPointerException if {@code identifier} is null.
      */
     public QueueServiceSasSignatureValues(String identifier) {
         StorageImplUtils.assertNotNull("identifier", identifier);
@@ -74,6 +72,9 @@ public final class QueueServiceSasSignatureValues {
     }
 
     /**
+     * Gets the version of the service this SAS will target. If not specified, it will default to the version
+     * targeted by the library.
+     *
      * @return the version of the service this SAS will target. If not specified, it will default to the version
      * targeted by the library.
      */
@@ -97,6 +98,8 @@ public final class QueueServiceSasSignatureValues {
     }
 
     /**
+     * Gets the {@link SasProtocol} which determines the protocols allowed by the SAS.
+     *
      * @return the {@link SasProtocol} which determines the protocols allowed by the SAS.
      */
     public SasProtocol getProtocol() {
@@ -115,6 +118,8 @@ public final class QueueServiceSasSignatureValues {
     }
 
     /**
+     * Gets when the SAS will take effect.
+     *
      * @return when the SAS will take effect.
      */
     public OffsetDateTime getStartTime() {
@@ -133,6 +138,8 @@ public final class QueueServiceSasSignatureValues {
     }
 
     /**
+     * Gets the time after which the SAS will no longer work.
+     *
      * @return the time after which the SAS will no longer work.
      */
     public OffsetDateTime getExpiryTime() {
@@ -151,6 +158,9 @@ public final class QueueServiceSasSignatureValues {
     }
 
     /**
+     * Gets the permissions string allowed by the SAS. Please refer to {@link QueueSasPermission} for help
+     * determining the permissions allowed.
+     *
      * @return the permissions string allowed by the SAS. Please refer to {@link QueueSasPermission} for help
      * determining the permissions allowed.
      */
@@ -173,6 +183,8 @@ public final class QueueServiceSasSignatureValues {
     }
 
     /**
+     * Gets the {@link SasIpRange} which determines the IP ranges that are allowed to use the SAS.
+     *
      * @return the {@link SasIpRange} which determines the IP ranges that are allowed to use the SAS.
      */
     public SasIpRange getSasIpRange() {
@@ -182,9 +194,9 @@ public final class QueueServiceSasSignatureValues {
     /**
      * Sets the {@link SasIpRange} which determines the IP ranges that are allowed to use the SAS.
      *
-     * @see <a href=https://docs.microsoft.com/rest/api/storageservices/create-service-sas#specifying-ip-address-or-ip-range>Specifying IP Address or IP range</a>
      * @param sasIpRange Allowed IP range to set
      * @return the updated QueueServiceSasSignatureValues object
+     * @see <a href=https://docs.microsoft.com/rest/api/storageservices/create-service-sas#specifying-ip-address-or-ip-range>Specifying IP Address or IP range</a>
      */
     public QueueServiceSasSignatureValues setSasIpRange(SasIpRange sasIpRange) {
         this.sasIpRange = sasIpRange;
@@ -195,7 +207,7 @@ public final class QueueServiceSasSignatureValues {
      * Gets the name of the queue this SAS may access.
      *
      * @return The name of the queue the SAS user may access.
-     * @deprecated Queue name is now auto-populated by the SAS generation methods provided on the desired queue client.
+     * @deprecated Queue name is now autopopulated by the SAS generation methods provided on the desired queue client.
      */
     @Deprecated
     public String getQueueName() {
@@ -208,7 +220,7 @@ public final class QueueServiceSasSignatureValues {
      * @param queueName Canonical name of the object the SAS grants access
      * @return the updated QueueServiceSasSignatureValues object
      * @deprecated Please use the generateSas methods provided on the desired queue client that will
-     * auto-populate the queue name.
+     * autopopulate the queue name.
      */
     @Deprecated
     public QueueServiceSasSignatureValues setQueueName(String queueName) {
@@ -217,8 +229,10 @@ public final class QueueServiceSasSignatureValues {
     }
 
     /**
+     * Gets the name of the access policy on the queue this SAS references if any.
+     *
      * @return the name of the access policy on the queue this SAS references if any. Please see
-     * <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/establishing-a-stored-access-policy">here</a>
+     * <a href="https://docs.microsoft.com/rest/api/storageservices/establishing-a-stored-access-policy">here</a>
      * for more information.
      * @deprecated Please use {@link #getIdentifier()}
      */
@@ -228,8 +242,10 @@ public final class QueueServiceSasSignatureValues {
     }
 
     /**
+     * Sets the name of the access policy on the queue this SAS references if any.
+     *
      * @return the name of the access policy on the queue this SAS references if any. Please see
-     * <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/establishing-a-stored-access-policy">here</a>
+     * <a href="https://docs.microsoft.com/rest/api/storageservices/establishing-a-stored-access-policy">here</a>
      * for more information.
      */
     public String getIdentifier() {
@@ -238,7 +254,7 @@ public final class QueueServiceSasSignatureValues {
 
     /**
      * Sets the name of the access policy on the queue this SAS references if any. Please see
-     * <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/establishing-a-stored-access-policy">here</a>
+     * <a href="https://docs.microsoft.com/rest/api/storageservices/establishing-a-stored-access-policy">here</a>
      * for more information.
      *
      * @param identifier Name of the access policy
@@ -246,6 +262,30 @@ public final class QueueServiceSasSignatureValues {
      */
     public QueueServiceSasSignatureValues setIdentifier(String identifier) {
         this.identifier = identifier;
+        return this;
+    }
+
+    /**
+     * Optional. Beginning in version 2025-07-05, this value specifies the Entra ID of the user that is authorized to
+     * use the resulting SAS URL. The resulting SAS URL must be used in conjunction with an Entra ID token that has been
+     * issued to the user specified in this value.
+     *
+     * @return The Entra ID of the user that is authorized to use the resulting SAS URL.
+     */
+    public String getDelegatedUserObjectId() {
+        return delegatedUserObjectId;
+    }
+
+    /**
+     * Optional. Beginning in version 2025-07-05, this value specifies the Entra ID of the user that is authorized to
+     * use the resulting SAS URL. The resulting SAS URL must be used in conjunction with an Entra ID token that has been
+     * issued to the user specified in this value.
+     *
+     * @param delegatedUserObjectId The Entra ID of the user that is authorized to use the resulting SAS URL.
+     * @return the updated QueueServiceSasSignatureValues object
+     */
+    public QueueServiceSasSignatureValues setDelegatedUserObjectId(String delegatedUserObjectId) {
+        this.delegatedUserObjectId = delegatedUserObjectId;
         return this;
     }
 
@@ -272,8 +312,8 @@ public final class QueueServiceSasSignatureValues {
      * after initializing {@link QueueServiceSasSignatureValues}.
      */
     @Deprecated
-    public QueueServiceSasQueryParameters generateSasQueryParameters(
-        StorageSharedKeyCredential storageSharedKeyCredentials) {
+    public QueueServiceSasQueryParameters
+        generateSasQueryParameters(StorageSharedKeyCredential storageSharedKeyCredentials) {
         StorageImplUtils.assertNotNull("storageSharedKeyCredentials", storageSharedKeyCredentials);
 
         // Signature is generated on the un-url-encoded values.
@@ -287,25 +327,21 @@ public final class QueueServiceSasSignatureValues {
 
     /**
      * Computes the canonical name for a queue resource for SAS signing.
+     *
      * @param account Account of the storage account.
      * @param queueName Name of the queue.
      * @return Canonical name as a string.
      */
     private static String getCanonicalName(String account, String queueName) {
         // Queue: "/queue/account/queuename"
-        return String.join("", new String[] { "/queue/", account, "/", queueName });
+        return "/queue/" + account + "/" + queueName;
     }
 
     private String stringToSign(String canonicalName) {
-        return String.join("\n",
-            this.permissions == null ? "" : this.permissions,
+        return String.join("\n", this.permissions == null ? "" : this.permissions,
             this.startTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.startTime),
-            this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime),
-            canonicalName,
-            this.identifier == null ? "" : this.identifier,
-            this.sasIpRange == null ? "" : this.sasIpRange.toString(),
-            this.protocol == null ? "" : protocol.toString(),
-            VERSION == null ? "" : VERSION
-        );
+            this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime), canonicalName,
+            this.identifier == null ? "" : this.identifier, this.sasIpRange == null ? "" : this.sasIpRange.toString(),
+            this.protocol == null ? "" : protocol.toString(), VERSION == null ? "" : VERSION);
     }
 }

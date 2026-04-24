@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.MigrateSqlServerSqlMITaskO
 public final class MigrateSqlServerSqlMITaskOutputDatabaseLevelTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlMITaskOutputDatabaseLevel model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"DatabaseLevelOutput\",\"databaseName\":\"jj\",\"sizeMB\":63.13862474716693,\"state\":\"None\",\"stage\":\"Backup\",\"startedOn\":\"2021-02-26T04:41:23Z\",\"endedOn\":\"2021-05-28T10:13:33Z\",\"message\":\"moob\",\"exceptionsAndWarnings\":[{\"message\":\"idgfc\",\"actionableMessage\":\"mpimaqxzhemjyh\",\"filePath\":\"uj\",\"lineNumber\":\"t\",\"hResult\":509926505,\"stackTrace\":\"zwculkbawpfajnj\"}],\"id\":\"tlwtjjguktalhsn\"}")
-                .toObject(MigrateSqlServerSqlMITaskOutputDatabaseLevel.class);
+        MigrateSqlServerSqlMITaskOutputDatabaseLevel model = BinaryData.fromString(
+            "{\"resultType\":\"DatabaseLevelOutput\",\"databaseName\":\"wbormcqmi\",\"sizeMB\":87.65496530131892,\"state\":\"Warning\",\"stage\":\"None\",\"startedOn\":\"2021-02-01T01:58:21Z\",\"endedOn\":\"2020-12-22T09:59:08Z\",\"message\":\"jmcsmyqwixvcpwn\",\"exceptionsAndWarnings\":[{\"message\":\"zwofalick\",\"actionableMessage\":\"oiqtamtyvskn\",\"filePath\":\"wzawnvsbcfhzagxn\",\"lineNumber\":\"ycvdimw\",\"hResult\":1892945991,\"stackTrace\":\"gzgy\"},{\"message\":\"utrwpweryekz\",\"actionableMessage\":\"hmeott\",\"filePath\":\"jyosxwwh\",\"lineNumber\":\"jtfvpndpmiljpn\",\"hResult\":1686524732,\"stackTrace\":\"dqllzsauzpjlxeeh\"},{\"message\":\"iqhzlr\",\"actionableMessage\":\"mezx\",\"filePath\":\"kihmxrfdsajredn\",\"lineNumber\":\"yshtuwgmev\",\"hResult\":1510058293,\"stackTrace\":\"wzyif\"}],\"id\":\"gwltxeqip\"}")
+            .toObject(MigrateSqlServerSqlMITaskOutputDatabaseLevel.class);
     }
 
     @org.junit.jupiter.api.Test

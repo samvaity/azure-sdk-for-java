@@ -6,61 +6,67 @@ package com.azure.resourcemanager.iothub.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.DateTimeRfc1123;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
 
-/** The description of an X509 CA Certificate. */
+/**
+ * The description of an X509 CA Certificate.
+ */
 @Fluent
-public final class CertificateProperties {
+public final class CertificateProperties implements JsonSerializable<CertificateProperties> {
     /*
      * The certificate's subject name.
      */
-    @JsonProperty(value = "subject", access = JsonProperty.Access.WRITE_ONLY)
     private String subject;
 
     /*
      * The certificate's expiration date and time.
      */
-    @JsonProperty(value = "expiry", access = JsonProperty.Access.WRITE_ONLY)
     private DateTimeRfc1123 expiry;
 
     /*
      * The certificate's thumbprint.
      */
-    @JsonProperty(value = "thumbprint", access = JsonProperty.Access.WRITE_ONLY)
     private String thumbprint;
 
     /*
      * Determines whether certificate has been verified.
      */
-    @JsonProperty(value = "isVerified")
     private Boolean isVerified;
 
     /*
      * The certificate's create date and time.
      */
-    @JsonProperty(value = "created", access = JsonProperty.Access.WRITE_ONLY)
     private DateTimeRfc1123 created;
 
     /*
      * The certificate's last update date and time.
      */
-    @JsonProperty(value = "updated", access = JsonProperty.Access.WRITE_ONLY)
     private DateTimeRfc1123 updated;
 
     /*
      * The certificate content
      */
-    @JsonProperty(value = "certificate")
     private String certificate;
 
-    /** Creates an instance of CertificateProperties class. */
+    /*
+     * The reference to policy stored in Azure Device Registry (ADR).
+     */
+    private String policyResourceId;
+
+    /**
+     * Creates an instance of CertificateProperties class.
+     */
     public CertificateProperties() {
     }
 
     /**
      * Get the subject property: The certificate's subject name.
-     *
+     * 
      * @return the subject value.
      */
     public String subject() {
@@ -69,7 +75,7 @@ public final class CertificateProperties {
 
     /**
      * Get the expiry property: The certificate's expiration date and time.
-     *
+     * 
      * @return the expiry value.
      */
     public OffsetDateTime expiry() {
@@ -81,7 +87,7 @@ public final class CertificateProperties {
 
     /**
      * Get the thumbprint property: The certificate's thumbprint.
-     *
+     * 
      * @return the thumbprint value.
      */
     public String thumbprint() {
@@ -90,7 +96,7 @@ public final class CertificateProperties {
 
     /**
      * Get the isVerified property: Determines whether certificate has been verified.
-     *
+     * 
      * @return the isVerified value.
      */
     public Boolean isVerified() {
@@ -99,7 +105,7 @@ public final class CertificateProperties {
 
     /**
      * Set the isVerified property: Determines whether certificate has been verified.
-     *
+     * 
      * @param isVerified the isVerified value to set.
      * @return the CertificateProperties object itself.
      */
@@ -110,7 +116,7 @@ public final class CertificateProperties {
 
     /**
      * Get the created property: The certificate's create date and time.
-     *
+     * 
      * @return the created value.
      */
     public OffsetDateTime created() {
@@ -122,7 +128,7 @@ public final class CertificateProperties {
 
     /**
      * Get the updated property: The certificate's last update date and time.
-     *
+     * 
      * @return the updated value.
      */
     public OffsetDateTime updated() {
@@ -134,7 +140,7 @@ public final class CertificateProperties {
 
     /**
      * Get the certificate property: The certificate content.
-     *
+     * 
      * @return the certificate value.
      */
     public String certificate() {
@@ -143,7 +149,7 @@ public final class CertificateProperties {
 
     /**
      * Set the certificate property: The certificate content.
-     *
+     * 
      * @param certificate the certificate value to set.
      * @return the CertificateProperties object itself.
      */
@@ -153,10 +159,85 @@ public final class CertificateProperties {
     }
 
     /**
+     * Get the policyResourceId property: The reference to policy stored in Azure Device Registry (ADR).
+     * 
+     * @return the policyResourceId value.
+     */
+    public String policyResourceId() {
+        return this.policyResourceId;
+    }
+
+    /**
+     * Set the policyResourceId property: The reference to policy stored in Azure Device Registry (ADR).
+     * 
+     * @param policyResourceId the policyResourceId value to set.
+     * @return the CertificateProperties object itself.
+     */
+    public CertificateProperties withPolicyResourceId(String policyResourceId) {
+        this.policyResourceId = policyResourceId;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeBooleanField("isVerified", this.isVerified);
+        jsonWriter.writeStringField("certificate", this.certificate);
+        jsonWriter.writeStringField("policyResourceId", this.policyResourceId);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CertificateProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CertificateProperties if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the CertificateProperties.
+     */
+    public static CertificateProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CertificateProperties deserializedCertificateProperties = new CertificateProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("subject".equals(fieldName)) {
+                    deserializedCertificateProperties.subject = reader.getString();
+                } else if ("expiry".equals(fieldName)) {
+                    deserializedCertificateProperties.expiry
+                        = reader.getNullable(nonNullReader -> new DateTimeRfc1123(nonNullReader.getString()));
+                } else if ("thumbprint".equals(fieldName)) {
+                    deserializedCertificateProperties.thumbprint = reader.getString();
+                } else if ("isVerified".equals(fieldName)) {
+                    deserializedCertificateProperties.isVerified = reader.getNullable(JsonReader::getBoolean);
+                } else if ("created".equals(fieldName)) {
+                    deserializedCertificateProperties.created
+                        = reader.getNullable(nonNullReader -> new DateTimeRfc1123(nonNullReader.getString()));
+                } else if ("updated".equals(fieldName)) {
+                    deserializedCertificateProperties.updated
+                        = reader.getNullable(nonNullReader -> new DateTimeRfc1123(nonNullReader.getString()));
+                } else if ("certificate".equals(fieldName)) {
+                    deserializedCertificateProperties.certificate = reader.getString();
+                } else if ("policyResourceId".equals(fieldName)) {
+                    deserializedCertificateProperties.policyResourceId = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedCertificateProperties;
+        });
     }
 }

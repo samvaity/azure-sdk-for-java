@@ -24,8 +24,7 @@ class Mappings {
     private final Map<String, MappingsBuilder.ExactMapping> exactMappings;
     private final Trie<MappingsBuilder.PrefixMapping> prefixMappings;
 
-    Mappings(
-        Map<String, MappingsBuilder.ExactMapping> exactMappings,
+    Mappings(Map<String, MappingsBuilder.ExactMapping> exactMappings,
         Trie<MappingsBuilder.PrefixMapping> prefixMappings) {
         this.exactMappings = exactMappings;
         this.prefixMappings = prefixMappings;
@@ -35,8 +34,7 @@ class Mappings {
         attributes.forEach((attributeKey, value) -> map(telemetryBuilder, attributeKey, value));
     }
 
-    private void map(
-        AbstractTelemetryBuilder telemetryBuilder, AttributeKey<?> attributeKey, Object value) {
+    private void map(AbstractTelemetryBuilder telemetryBuilder, AttributeKey<?> attributeKey, Object value) {
         String key = attributeKey.getKey();
         MappingsBuilder.ExactMapping exactMapping = exactMappings.get(key);
         if (exactMapping != null) {
@@ -55,13 +53,14 @@ class Mappings {
     }
 
     @Nullable
-    private static String convertToString(Object value, AttributeType type) {
+    public static String convertToString(Object value, AttributeType type) {
         switch (type) {
             case STRING:
             case BOOLEAN:
             case LONG:
             case DOUBLE:
                 return String.valueOf(value);
+
             case STRING_ARRAY:
             case BOOLEAN_ARRAY:
             case LONG_ARRAY:

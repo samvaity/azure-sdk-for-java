@@ -4,37 +4,123 @@
 
 package com.azure.communication.phonenumbers.implementation.models;
 
-import com.azure.communication.phonenumbers.CodeCoverageAnnotation.Generated;
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The PhoneNumberPurchaseRequest model. */
+/**
+ * The phone number search purchase request.
+ */
 @Fluent
-@Generated
-public final class PhoneNumberPurchaseRequest {
+public final class PhoneNumberPurchaseRequest implements JsonSerializable<PhoneNumberPurchaseRequest> {
     /*
      * The search id.
      */
-    @JsonProperty(value = "searchId")
+    @Generated
     private String searchId;
+
+    /*
+     * The agreement to not resell the phone numbers. Defaults to false if not provided.
+     */
+    @Generated
+    private Boolean agreeToNotResell;
+
+    /**
+     * Creates an instance of PhoneNumberPurchaseRequest class.
+     */
+    @Generated
+    public PhoneNumberPurchaseRequest() {
+    }
 
     /**
      * Get the searchId property: The search id.
-     *
+     * 
      * @return the searchId value.
      */
+    @Generated
     public String getSearchId() {
         return this.searchId;
     }
 
     /**
      * Set the searchId property: The search id.
-     *
+     * 
      * @param searchId the searchId value to set.
      * @return the PhoneNumberPurchaseRequest object itself.
      */
+    @Generated
     public PhoneNumberPurchaseRequest setSearchId(String searchId) {
         this.searchId = searchId;
         return this;
+    }
+
+    /**
+     * Get the agreeToNotResell property: The agreement to not resell the phone numbers. Defaults to false if not
+     * provided.
+     * 
+     * @return the agreeToNotResell value.
+     */
+    @Generated
+    public Boolean isAgreeToNotResell() {
+        return this.agreeToNotResell;
+    }
+
+    /**
+     * Set the agreeToNotResell property: The agreement to not resell the phone numbers. Defaults to false if not
+     * provided.
+     * 
+     * @param agreeToNotResell the agreeToNotResell value to set.
+     * @return the PhoneNumberPurchaseRequest object itself.
+     */
+    @Generated
+    public PhoneNumberPurchaseRequest setAgreeToNotResell(Boolean agreeToNotResell) {
+        this.agreeToNotResell = agreeToNotResell;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("searchId", this.searchId);
+        jsonWriter.writeBooleanField("agreeToNotResell", this.agreeToNotResell);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PhoneNumberPurchaseRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PhoneNumberPurchaseRequest if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the PhoneNumberPurchaseRequest.
+     */
+    @Generated
+    public static PhoneNumberPurchaseRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PhoneNumberPurchaseRequest deserializedPhoneNumberPurchaseRequest = new PhoneNumberPurchaseRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("searchId".equals(fieldName)) {
+                    deserializedPhoneNumberPurchaseRequest.searchId = reader.getString();
+                } else if ("agreeToNotResell".equals(fieldName)) {
+                    deserializedPhoneNumberPurchaseRequest.agreeToNotResell
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPhoneNumberPurchaseRequest;
+        });
     }
 }

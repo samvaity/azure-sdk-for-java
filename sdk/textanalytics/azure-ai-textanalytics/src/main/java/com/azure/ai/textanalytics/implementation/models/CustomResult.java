@@ -5,54 +5,67 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The CustomResult model. */
+/**
+ * The CustomResult model.
+ */
 @Fluent
-public class CustomResult {
+public class CustomResult implements JsonSerializable<CustomResult> {
     /*
      * Errors by document id.
      */
-    @JsonProperty(value = "errors", required = true)
+    @Generated
     private List<DocumentError> errors;
 
     /*
      * if showStats=true was specified in the request this field will contain information about the request payload.
      */
-    @JsonProperty(value = "statistics")
+    @Generated
     private RequestStatistics statistics;
 
     /*
      * This field indicates the project name for the model.
      */
-    @JsonProperty(value = "projectName", required = true)
+    @Generated
     private String projectName;
 
     /*
      * This field indicates the deployment name for the model.
      */
-    @JsonProperty(value = "deploymentName", required = true)
+    @Generated
     private String deploymentName;
 
-    /** Creates an instance of CustomResult class. */
-    public CustomResult() {}
+    /**
+     * Creates an instance of CustomResult class.
+     */
+    @Generated
+    public CustomResult() {
+    }
 
     /**
      * Get the errors property: Errors by document id.
-     *
+     * 
      * @return the errors value.
      */
+    @Generated
     public List<DocumentError> getErrors() {
         return this.errors;
     }
 
     /**
      * Set the errors property: Errors by document id.
-     *
+     * 
      * @param errors the errors value to set.
      * @return the CustomResult object itself.
      */
+    @Generated
     public CustomResult setErrors(List<DocumentError> errors) {
         this.errors = errors;
         return this;
@@ -61,9 +74,10 @@ public class CustomResult {
     /**
      * Get the statistics property: if showStats=true was specified in the request this field will contain information
      * about the request payload.
-     *
+     * 
      * @return the statistics value.
      */
+    @Generated
     public RequestStatistics getStatistics() {
         return this.statistics;
     }
@@ -71,10 +85,11 @@ public class CustomResult {
     /**
      * Set the statistics property: if showStats=true was specified in the request this field will contain information
      * about the request payload.
-     *
+     * 
      * @param statistics the statistics value to set.
      * @return the CustomResult object itself.
      */
+    @Generated
     public CustomResult setStatistics(RequestStatistics statistics) {
         this.statistics = statistics;
         return this;
@@ -82,19 +97,21 @@ public class CustomResult {
 
     /**
      * Get the projectName property: This field indicates the project name for the model.
-     *
+     * 
      * @return the projectName value.
      */
+    @Generated
     public String getProjectName() {
         return this.projectName;
     }
 
     /**
      * Set the projectName property: This field indicates the project name for the model.
-     *
+     * 
      * @param projectName the projectName value to set.
      * @return the CustomResult object itself.
      */
+    @Generated
     public CustomResult setProjectName(String projectName) {
         this.projectName = projectName;
         return this;
@@ -102,21 +119,72 @@ public class CustomResult {
 
     /**
      * Get the deploymentName property: This field indicates the deployment name for the model.
-     *
+     * 
      * @return the deploymentName value.
      */
+    @Generated
     public String getDeploymentName() {
         return this.deploymentName;
     }
 
     /**
      * Set the deploymentName property: This field indicates the deployment name for the model.
-     *
+     * 
      * @param deploymentName the deploymentName value to set.
      * @return the CustomResult object itself.
      */
+    @Generated
     public CustomResult setDeploymentName(String deploymentName) {
         this.deploymentName = deploymentName;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("errors", this.errors, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("projectName", this.projectName);
+        jsonWriter.writeStringField("deploymentName", this.deploymentName);
+        jsonWriter.writeJsonField("statistics", this.statistics);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CustomResult from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CustomResult if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the CustomResult.
+     */
+    @Generated
+    public static CustomResult fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CustomResult deserializedCustomResult = new CustomResult();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("errors".equals(fieldName)) {
+                    List<DocumentError> errors = reader.readArray(reader1 -> DocumentError.fromJson(reader1));
+                    deserializedCustomResult.errors = errors;
+                } else if ("projectName".equals(fieldName)) {
+                    deserializedCustomResult.projectName = reader.getString();
+                } else if ("deploymentName".equals(fieldName)) {
+                    deserializedCustomResult.deploymentName = reader.getString();
+                } else if ("statistics".equals(fieldName)) {
+                    deserializedCustomResult.statistics = RequestStatistics.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedCustomResult;
+        });
     }
 }

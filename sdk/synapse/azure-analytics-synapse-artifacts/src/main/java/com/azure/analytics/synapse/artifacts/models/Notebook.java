@@ -5,94 +5,105 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.HashMap;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Notebook. */
+/**
+ * Notebook.
+ */
 @Fluent
-public final class Notebook {
+public final class Notebook implements JsonSerializable<Notebook> {
     /*
      * The description of the notebook.
      */
-    @JsonProperty(value = "description")
+    @Generated
     private String description;
 
     /*
      * Big data pool reference.
      */
-    @JsonProperty(value = "bigDataPool")
+    @Generated
     private BigDataPoolReference bigDataPool;
 
     /*
      * The spark configuration of the spark job.
      */
-    @JsonProperty(value = "targetSparkConfiguration")
+    @Generated
     private SparkConfigurationReference targetSparkConfiguration;
 
     /*
      * Session properties.
      */
-    @JsonProperty(value = "sessionProperties")
+    @Generated
     private NotebookSessionProperties sessionProperties;
 
     /*
      * Notebook root-level metadata.
      */
-    @JsonProperty(value = "metadata", required = true)
+    @Generated
     private NotebookMetadata metadata;
 
     /*
      * Notebook format (major number). Incremented between backwards incompatible changes to the notebook format.
      */
-    @JsonProperty(value = "nbformat", required = true)
+    @Generated
     private int nbformat;
 
     /*
      * Notebook format (minor number). Incremented for backward compatible changes to the notebook format.
      */
-    @JsonProperty(value = "nbformat_minor", required = true)
+    @Generated
     private int nbformatMinor;
 
     /*
      * Array of cells of the current notebook.
      */
-    @JsonProperty(value = "cells", required = true)
+    @Generated
     private List<NotebookCell> cells;
 
     /*
      * The folder that this notebook is in. If not specified, this notebook will appear at the root level.
      */
-    @JsonProperty(value = "folder")
+    @Generated
     private NotebookFolder folder;
 
     /*
      * Notebook.
      */
-    @JsonIgnore private Map<String, Object> additionalProperties;
+    @Generated
+    private Map<String, Object> additionalProperties;
 
-    /** Creates an instance of Notebook class. */
-    public Notebook() {}
+    /**
+     * Creates an instance of Notebook class.
+     */
+    @Generated
+    public Notebook() {
+    }
 
     /**
      * Get the description property: The description of the notebook.
-     *
+     * 
      * @return the description value.
      */
+    @Generated
     public String getDescription() {
         return this.description;
     }
 
     /**
      * Set the description property: The description of the notebook.
-     *
+     * 
      * @param description the description value to set.
      * @return the Notebook object itself.
      */
+    @Generated
     public Notebook setDescription(String description) {
         this.description = description;
         return this;
@@ -100,19 +111,21 @@ public final class Notebook {
 
     /**
      * Get the bigDataPool property: Big data pool reference.
-     *
+     * 
      * @return the bigDataPool value.
      */
+    @Generated
     public BigDataPoolReference getBigDataPool() {
         return this.bigDataPool;
     }
 
     /**
      * Set the bigDataPool property: Big data pool reference.
-     *
+     * 
      * @param bigDataPool the bigDataPool value to set.
      * @return the Notebook object itself.
      */
+    @Generated
     public Notebook setBigDataPool(BigDataPoolReference bigDataPool) {
         this.bigDataPool = bigDataPool;
         return this;
@@ -120,19 +133,21 @@ public final class Notebook {
 
     /**
      * Get the targetSparkConfiguration property: The spark configuration of the spark job.
-     *
+     * 
      * @return the targetSparkConfiguration value.
      */
+    @Generated
     public SparkConfigurationReference getTargetSparkConfiguration() {
         return this.targetSparkConfiguration;
     }
 
     /**
      * Set the targetSparkConfiguration property: The spark configuration of the spark job.
-     *
+     * 
      * @param targetSparkConfiguration the targetSparkConfiguration value to set.
      * @return the Notebook object itself.
      */
+    @Generated
     public Notebook setTargetSparkConfiguration(SparkConfigurationReference targetSparkConfiguration) {
         this.targetSparkConfiguration = targetSparkConfiguration;
         return this;
@@ -140,19 +155,21 @@ public final class Notebook {
 
     /**
      * Get the sessionProperties property: Session properties.
-     *
+     * 
      * @return the sessionProperties value.
      */
+    @Generated
     public NotebookSessionProperties getSessionProperties() {
         return this.sessionProperties;
     }
 
     /**
      * Set the sessionProperties property: Session properties.
-     *
+     * 
      * @param sessionProperties the sessionProperties value to set.
      * @return the Notebook object itself.
      */
+    @Generated
     public Notebook setSessionProperties(NotebookSessionProperties sessionProperties) {
         this.sessionProperties = sessionProperties;
         return this;
@@ -160,19 +177,21 @@ public final class Notebook {
 
     /**
      * Get the metadata property: Notebook root-level metadata.
-     *
+     * 
      * @return the metadata value.
      */
+    @Generated
     public NotebookMetadata getMetadata() {
         return this.metadata;
     }
 
     /**
      * Set the metadata property: Notebook root-level metadata.
-     *
+     * 
      * @param metadata the metadata value to set.
      * @return the Notebook object itself.
      */
+    @Generated
     public Notebook setMetadata(NotebookMetadata metadata) {
         this.metadata = metadata;
         return this;
@@ -181,9 +200,10 @@ public final class Notebook {
     /**
      * Get the nbformat property: Notebook format (major number). Incremented between backwards incompatible changes to
      * the notebook format.
-     *
+     * 
      * @return the nbformat value.
      */
+    @Generated
     public int getNbformat() {
         return this.nbformat;
     }
@@ -191,10 +211,11 @@ public final class Notebook {
     /**
      * Set the nbformat property: Notebook format (major number). Incremented between backwards incompatible changes to
      * the notebook format.
-     *
+     * 
      * @param nbformat the nbformat value to set.
      * @return the Notebook object itself.
      */
+    @Generated
     public Notebook setNbformat(int nbformat) {
         this.nbformat = nbformat;
         return this;
@@ -203,9 +224,10 @@ public final class Notebook {
     /**
      * Get the nbformatMinor property: Notebook format (minor number). Incremented for backward compatible changes to
      * the notebook format.
-     *
+     * 
      * @return the nbformatMinor value.
      */
+    @Generated
     public int getNbformatMinor() {
         return this.nbformatMinor;
     }
@@ -213,10 +235,11 @@ public final class Notebook {
     /**
      * Set the nbformatMinor property: Notebook format (minor number). Incremented for backward compatible changes to
      * the notebook format.
-     *
+     * 
      * @param nbformatMinor the nbformatMinor value to set.
      * @return the Notebook object itself.
      */
+    @Generated
     public Notebook setNbformatMinor(int nbformatMinor) {
         this.nbformatMinor = nbformatMinor;
         return this;
@@ -224,19 +247,21 @@ public final class Notebook {
 
     /**
      * Get the cells property: Array of cells of the current notebook.
-     *
+     * 
      * @return the cells value.
      */
+    @Generated
     public List<NotebookCell> getCells() {
         return this.cells;
     }
 
     /**
      * Set the cells property: Array of cells of the current notebook.
-     *
+     * 
      * @param cells the cells value to set.
      * @return the Notebook object itself.
      */
+    @Generated
     public Notebook setCells(List<NotebookCell> cells) {
         this.cells = cells;
         return this;
@@ -245,9 +270,10 @@ public final class Notebook {
     /**
      * Get the folder property: The folder that this notebook is in. If not specified, this notebook will appear at the
      * root level.
-     *
+     * 
      * @return the folder value.
      */
+    @Generated
     public NotebookFolder getFolder() {
         return this.folder;
     }
@@ -255,10 +281,11 @@ public final class Notebook {
     /**
      * Set the folder property: The folder that this notebook is in. If not specified, this notebook will appear at the
      * root level.
-     *
+     * 
      * @param folder the folder value to set.
      * @return the Notebook object itself.
      */
+    @Generated
     public Notebook setFolder(NotebookFolder folder) {
         this.folder = folder;
         return this;
@@ -266,30 +293,98 @@ public final class Notebook {
 
     /**
      * Get the additionalProperties property: Notebook.
-     *
+     * 
      * @return the additionalProperties value.
      */
-    @JsonAnyGetter
+    @Generated
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     /**
      * Set the additionalProperties property: Notebook.
-     *
+     * 
      * @param additionalProperties the additionalProperties value to set.
      * @return the Notebook object itself.
      */
+    @Generated
     public Notebook setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
         return this;
     }
 
-    @JsonAnySetter
-    void setAdditionalProperties(String key, Object value) {
-        if (additionalProperties == null) {
-            additionalProperties = new HashMap<>();
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("metadata", this.metadata);
+        jsonWriter.writeIntField("nbformat", this.nbformat);
+        jsonWriter.writeIntField("nbformat_minor", this.nbformatMinor);
+        jsonWriter.writeArrayField("cells", this.cells, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("description", this.description);
+        jsonWriter.writeJsonField("bigDataPool", this.bigDataPool);
+        jsonWriter.writeJsonField("targetSparkConfiguration", this.targetSparkConfiguration);
+        jsonWriter.writeJsonField("sessionProperties", this.sessionProperties);
+        jsonWriter.writeJsonField("folder", this.folder);
+        if (additionalProperties != null) {
+            for (Map.Entry<String, Object> additionalProperty : additionalProperties.entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
         }
-        additionalProperties.put(key, value);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of Notebook from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of Notebook if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the Notebook.
+     */
+    @Generated
+    public static Notebook fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            Notebook deserializedNotebook = new Notebook();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("metadata".equals(fieldName)) {
+                    deserializedNotebook.metadata = NotebookMetadata.fromJson(reader);
+                } else if ("nbformat".equals(fieldName)) {
+                    deserializedNotebook.nbformat = reader.getInt();
+                } else if ("nbformat_minor".equals(fieldName)) {
+                    deserializedNotebook.nbformatMinor = reader.getInt();
+                } else if ("cells".equals(fieldName)) {
+                    List<NotebookCell> cells = reader.readArray(reader1 -> NotebookCell.fromJson(reader1));
+                    deserializedNotebook.cells = cells;
+                } else if ("description".equals(fieldName)) {
+                    deserializedNotebook.description = reader.getString();
+                } else if ("bigDataPool".equals(fieldName)) {
+                    deserializedNotebook.bigDataPool = BigDataPoolReference.fromJson(reader);
+                } else if ("targetSparkConfiguration".equals(fieldName)) {
+                    deserializedNotebook.targetSparkConfiguration = SparkConfigurationReference.fromJson(reader);
+                } else if ("sessionProperties".equals(fieldName)) {
+                    deserializedNotebook.sessionProperties = NotebookSessionProperties.fromJson(reader);
+                } else if ("folder".equals(fieldName)) {
+                    deserializedNotebook.folder = NotebookFolder.fromJson(reader);
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedNotebook.additionalProperties = additionalProperties;
+
+            return deserializedNotebook;
+        });
     }
 }

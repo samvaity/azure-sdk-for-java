@@ -16,18 +16,22 @@ import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static com.azure.core.test.TestBase.AZURE_TEST_SERVICE_VERSIONS_VALUE_ALL;
-import static com.azure.core.test.TestBase.getHttpClients;
+import static com.azure.core.test.TestProxyTestBase.AZURE_TEST_SERVICE_VERSIONS_VALUE_ALL;
+import static com.azure.core.test.TestProxyTestBase.getHttpClients;
 
 class TestHelper {
     public static final String DISPLAY_NAME_WITH_ARGUMENTS = "{displayName} with [{arguments}]";
-    private static final String AZURE_IOT_MODELSREPOSITORY_TEST_SERVICE_VERSIONS = "AZURE_IOT_MODELSREPOSITORY_TEST_SERVICE_VERSIONS";
-    private static final String LOCAL_TEST_REPOSITORY_PATH_WITH_METADATA = (System.getProperty("user.dir") + "/src/test/resources/TestModelRepo/metadataModelsrepo/").replace("\\", "/");
-    private static final String LOCAL_TEST_REPOSITORY_NO_METADATA_PATH = (System.getProperty("user.dir") + "/src/test/resources/TestModelRepo/").replace("\\", "/");
-    public static final String MODELS_REPOSITORY_NO_METADATA_ENDPOINT = "https://raw.githubusercontent.com/Azure/iot-plugandplay-models/main";
+    private static final String AZURE_IOT_MODELSREPOSITORY_TEST_SERVICE_VERSIONS
+        = "AZURE_IOT_MODELSREPOSITORY_TEST_SERVICE_VERSIONS";
+    private static final String LOCAL_TEST_REPOSITORY_PATH_WITH_METADATA
+        = (System.getProperty("user.dir") + "/src/test/resources/TestModelRepo/metadataModelsrepo/").replace("\\", "/");
+    private static final String LOCAL_TEST_REPOSITORY_NO_METADATA_PATH
+        = (System.getProperty("user.dir") + "/src/test/resources/TestModelRepo/").replace("\\", "/");
+    public static final String MODELS_REPOSITORY_NO_METADATA_ENDPOINT
+        = "https://raw.githubusercontent.com/Azure/iot-plugandplay-models/main";
 
-    private static final String SERVICE_VERSION_FROM_ENV =
-        Configuration.getGlobalConfiguration().get(AZURE_IOT_MODELSREPOSITORY_TEST_SERVICE_VERSIONS);
+    private static final String SERVICE_VERSION_FROM_ENV
+        = Configuration.getGlobalConfiguration().get(AZURE_IOT_MODELSREPOSITORY_TEST_SERVICE_VERSIONS);
 
     /**
      * Returns a stream of arguments that includes all combinations of eligible {@link HttpClient HttpClients} and
@@ -39,13 +43,10 @@ class TestHelper {
         // when this issues is closed, the newer version of junit will have better support for
         // cartesian product of arguments - https://github.com/junit-team/junit5/issues/1427
         List<Arguments> argumentsList = new ArrayList<>();
-        getApplicableRepositoryUris()
-            .forEach(uri ->
-                getHttpClients()
-                    .forEach(httpClient -> Arrays
-                        .stream(ModelsRepositoryServiceVersion.values())
-                        .filter(TestHelper::shouldServiceVersionBeTested)
-                        .forEach(serviceVersion -> argumentsList.add(Arguments.of(httpClient, serviceVersion, uri)))));
+        getApplicableRepositoryUris().forEach(
+            uri -> getHttpClients().forEach(httpClient -> Arrays.stream(ModelsRepositoryServiceVersion.values())
+                .filter(TestHelper::shouldServiceVersionBeTested)
+                .forEach(serviceVersion -> argumentsList.add(Arguments.of(httpClient, serviceVersion, uri)))));
 
         return argumentsList.stream();
     }
@@ -83,8 +84,8 @@ class TestHelper {
             return true;
         }
         String[] configuredServiceVersionList = SERVICE_VERSION_FROM_ENV.split(",");
-        return Arrays.stream(configuredServiceVersionList).anyMatch(configuredServiceVersion ->
-            serviceVersion.getVersion().equals(configuredServiceVersion.trim()));
+        return Arrays.stream(configuredServiceVersionList)
+            .anyMatch(configuredServiceVersion -> serviceVersion.getVersion().equals(configuredServiceVersion.trim()));
     }
 
     /**

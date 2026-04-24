@@ -13,22 +13,18 @@ import org.junit.jupiter.api.Assertions;
 public final class NetworkProfileTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        NetworkProfile model =
-            BinaryData
-                .fromString(
-                    "{\"networkInterfaces\":[{\"ipAddress\":\"j\"},{\"ipAddress\":\"hbcryffdfdosyge\"}],\"circuitId\":\"aojakhmsbzjhcrz\"}")
-                .toObject(NetworkProfile.class);
-        Assertions.assertEquals("j", model.networkInterfaces().get(0).ipAddress());
+        NetworkProfile model = BinaryData.fromString(
+            "{\"networkInterfaces\":[{\"ipAddress\":\"npqxuh\"},{\"ipAddress\":\"y\"},{\"ipAddress\":\"iwbybrkxvdumjg\"}],\"circuitId\":\"fwvuk\"}")
+            .toObject(NetworkProfile.class);
+        Assertions.assertEquals("npqxuh", model.networkInterfaces().get(0).ipAddress());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        NetworkProfile model =
-            new NetworkProfile()
-                .withNetworkInterfaces(
-                    Arrays
-                        .asList(new IpAddress().withIpAddress("j"), new IpAddress().withIpAddress("hbcryffdfdosyge")));
+        NetworkProfile model
+            = new NetworkProfile().withNetworkInterfaces(Arrays.asList(new IpAddress().withIpAddress("npqxuh"),
+                new IpAddress().withIpAddress("y"), new IpAddress().withIpAddress("iwbybrkxvdumjg")));
         model = BinaryData.fromObject(model).toObject(NetworkProfile.class);
-        Assertions.assertEquals("j", model.networkInterfaces().get(0).ipAddress());
+        Assertions.assertEquals("npqxuh", model.networkInterfaces().get(0).ipAddress());
     }
 }

@@ -7,6 +7,7 @@ package com.azure.resourcemanager.appcontainers.generated;
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.appcontainers.fluent.models.ContainerAppJobExecutionsInner;
 import com.azure.resourcemanager.appcontainers.fluent.models.JobExecutionInner;
+import com.azure.resourcemanager.appcontainers.models.JobExecutionContainer;
 import com.azure.resourcemanager.appcontainers.models.JobExecutionTemplate;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -15,60 +16,65 @@ import org.junit.jupiter.api.Assertions;
 public final class ContainerAppJobExecutionsInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ContainerAppJobExecutionsInner model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"name\":\"uo\",\"id\":\"inyflnorwmduvwp\",\"type\":\"vxwmygd\",\"status\":\"Failed\",\"startTime\":\"2021-01-04T00:18:57Z\",\"endTime\":\"2021-06-03T06:53:08Z\",\"template\":{\"containers\":[],\"initContainers\":[]}},{\"name\":\"pnnbjc\",\"id\":\"gibbdaxc\",\"type\":\"fozauorsuk\",\"status\":\"Failed\",\"startTime\":\"2021-09-20T10:27:45Z\",\"endTime\":\"2021-03-26T17:33:57Z\",\"template\":{\"containers\":[],\"initContainers\":[]}},{\"name\":\"uuepzlrphwzsoldw\",\"id\":\"uqdunvmnnrwrbi\",\"type\":\"ktalywjhhgdnhxms\",\"status\":\"Succeeded\",\"startTime\":\"2021-07-20T04:17:10Z\",\"endTime\":\"2021-04-28T21:19:50Z\",\"template\":{\"containers\":[],\"initContainers\":[]}}],\"nextLink\":\"dufiq\"}")
-                .toObject(ContainerAppJobExecutionsInner.class);
-        Assertions.assertEquals("uo", model.value().get(0).name());
-        Assertions.assertEquals("inyflnorwmduvwp", model.value().get(0).id());
-        Assertions.assertEquals("vxwmygd", model.value().get(0).type());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-01-04T00:18:57Z"), model.value().get(0).startTime());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-06-03T06:53:08Z"), model.value().get(0).endTime());
+        ContainerAppJobExecutionsInner model = BinaryData.fromString(
+            "{\"value\":[{\"name\":\"slzojh\",\"id\":\"tfnmdx\",\"type\":\"ngfdgugeyzihgrky\",\"properties\":{\"status\":\"Degraded\",\"startTime\":\"2021-09-22T02:11:13Z\",\"endTime\":\"2021-04-27T02:27:57Z\",\"template\":{\"containers\":[{},{},{}],\"initContainers\":[{},{}]}}},{\"name\":\"eevy\",\"id\":\"hsgz\",\"type\":\"zbgomfgbeg\",\"properties\":{\"status\":\"Stopped\",\"startTime\":\"2021-04-25T04:23:56Z\",\"endTime\":\"2021-09-02T21:08:17Z\",\"template\":{\"containers\":[{},{},{}],\"initContainers\":[{}]}}},{\"name\":\"ankrrfxee\",\"id\":\"tijv\",\"type\":\"vbmqzbqq\",\"properties\":{\"status\":\"Degraded\",\"startTime\":\"2021-09-18T21:24:35Z\",\"endTime\":\"2021-05-22T08:03Z\",\"template\":{\"containers\":[{},{},{}],\"initContainers\":[{},{}]}}},{\"name\":\"jkuyxoafgaoq\",\"id\":\"faey\",\"type\":\"nm\",\"properties\":{\"status\":\"Degraded\",\"startTime\":\"2021-11-02T13:56:44Z\",\"endTime\":\"2021-01-21T07:08:35Z\",\"template\":{\"containers\":[{},{},{},{}],\"initContainers\":[{},{},{}]}}}],\"nextLink\":\"q\"}")
+            .toObject(ContainerAppJobExecutionsInner.class);
+        Assertions.assertEquals("slzojh", model.value().get(0).name());
+        Assertions.assertEquals("tfnmdx", model.value().get(0).id());
+        Assertions.assertEquals("ngfdgugeyzihgrky", model.value().get(0).type());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-09-22T02:11:13Z"), model.value().get(0).startTime());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-04-27T02:27:57Z"), model.value().get(0).endTime());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ContainerAppJobExecutionsInner model =
-            new ContainerAppJobExecutionsInner()
-                .withValue(
-                    Arrays
-                        .asList(
-                            new JobExecutionInner()
-                                .withName("uo")
-                                .withId("inyflnorwmduvwp")
-                                .withType("vxwmygd")
-                                .withStartTime(OffsetDateTime.parse("2021-01-04T00:18:57Z"))
-                                .withEndTime(OffsetDateTime.parse("2021-06-03T06:53:08Z"))
-                                .withTemplate(
-                                    new JobExecutionTemplate()
-                                        .withContainers(Arrays.asList())
-                                        .withInitContainers(Arrays.asList())),
-                            new JobExecutionInner()
-                                .withName("pnnbjc")
-                                .withId("gibbdaxc")
-                                .withType("fozauorsuk")
-                                .withStartTime(OffsetDateTime.parse("2021-09-20T10:27:45Z"))
-                                .withEndTime(OffsetDateTime.parse("2021-03-26T17:33:57Z"))
-                                .withTemplate(
-                                    new JobExecutionTemplate()
-                                        .withContainers(Arrays.asList())
-                                        .withInitContainers(Arrays.asList())),
-                            new JobExecutionInner()
-                                .withName("uuepzlrphwzsoldw")
-                                .withId("uqdunvmnnrwrbi")
-                                .withType("ktalywjhhgdnhxms")
-                                .withStartTime(OffsetDateTime.parse("2021-07-20T04:17:10Z"))
-                                .withEndTime(OffsetDateTime.parse("2021-04-28T21:19:50Z"))
-                                .withTemplate(
-                                    new JobExecutionTemplate()
-                                        .withContainers(Arrays.asList())
-                                        .withInitContainers(Arrays.asList()))));
+        ContainerAppJobExecutionsInner model
+            = new ContainerAppJobExecutionsInner()
+                .withValue(Arrays.asList(
+                    new JobExecutionInner().withName("slzojh")
+                        .withId("tfnmdx")
+                        .withType("ngfdgugeyzihgrky")
+                        .withStartTime(OffsetDateTime.parse("2021-09-22T02:11:13Z"))
+                        .withEndTime(OffsetDateTime.parse("2021-04-27T02:27:57Z"))
+                        .withTemplate(new JobExecutionTemplate()
+                            .withContainers(Arrays.asList(new JobExecutionContainer(), new JobExecutionContainer(),
+                                new JobExecutionContainer()))
+                            .withInitContainers(
+                                Arrays.asList(new JobExecutionContainer(), new JobExecutionContainer()))),
+                    new JobExecutionInner().withName("eevy")
+                        .withId("hsgz")
+                        .withType("zbgomfgbeg")
+                        .withStartTime(OffsetDateTime.parse("2021-04-25T04:23:56Z"))
+                        .withEndTime(OffsetDateTime.parse("2021-09-02T21:08:17Z"))
+                        .withTemplate(new JobExecutionTemplate()
+                            .withContainers(Arrays.asList(new JobExecutionContainer(), new JobExecutionContainer(),
+                                new JobExecutionContainer()))
+                            .withInitContainers(Arrays.asList(new JobExecutionContainer()))),
+                    new JobExecutionInner().withName("ankrrfxee")
+                        .withId("tijv")
+                        .withType("vbmqzbqq")
+                        .withStartTime(OffsetDateTime.parse("2021-09-18T21:24:35Z"))
+                        .withEndTime(OffsetDateTime.parse("2021-05-22T08:03Z"))
+                        .withTemplate(new JobExecutionTemplate()
+                            .withContainers(Arrays.asList(new JobExecutionContainer(), new JobExecutionContainer(),
+                                new JobExecutionContainer()))
+                            .withInitContainers(
+                                Arrays.asList(new JobExecutionContainer(), new JobExecutionContainer()))),
+                    new JobExecutionInner().withName("jkuyxoafgaoq")
+                        .withId("faey")
+                        .withType("nm")
+                        .withStartTime(OffsetDateTime.parse("2021-11-02T13:56:44Z"))
+                        .withEndTime(OffsetDateTime.parse("2021-01-21T07:08:35Z"))
+                        .withTemplate(new JobExecutionTemplate()
+                            .withContainers(Arrays.asList(new JobExecutionContainer(), new JobExecutionContainer(),
+                                new JobExecutionContainer(), new JobExecutionContainer()))
+                            .withInitContainers(Arrays.asList(new JobExecutionContainer(), new JobExecutionContainer(),
+                                new JobExecutionContainer())))));
         model = BinaryData.fromObject(model).toObject(ContainerAppJobExecutionsInner.class);
-        Assertions.assertEquals("uo", model.value().get(0).name());
-        Assertions.assertEquals("inyflnorwmduvwp", model.value().get(0).id());
-        Assertions.assertEquals("vxwmygd", model.value().get(0).type());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-01-04T00:18:57Z"), model.value().get(0).startTime());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-06-03T06:53:08Z"), model.value().get(0).endTime());
+        Assertions.assertEquals("slzojh", model.value().get(0).name());
+        Assertions.assertEquals("tfnmdx", model.value().get(0).id());
+        Assertions.assertEquals("ngfdgugeyzihgrky", model.value().get(0).type());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-09-22T02:11:13Z"), model.value().get(0).startTime());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-04-27T02:27:57Z"), model.value().get(0).endTime());
     }
 }

@@ -6,66 +6,43 @@ package com.azure.resourcemanager.communication.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.communication.CommunicationManager;
 import com.azure.resourcemanager.communication.models.CommunicationServiceResource;
-import java.nio.ByteBuffer;
+import com.azure.resourcemanager.communication.models.ManagedServiceIdentityType;
+import com.azure.resourcemanager.communication.models.PublicNetworkAccess;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class CommunicationServicesListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"properties\":{\"provisioningState\":\"Succeeded\",\"hostName\":\"slhs\",\"dataLocation\":\"kdeemaofmxagkvtm\",\"notificationHubId\":\"mqkrhahvljuahaqu\",\"version\":\"dhmdua\",\"immutableResourceId\":\"exq\",\"linkedDomains\":[\"adm\",\"sr\"],\"publicNetworkAccess\":\"Enabled\",\"disableLocalAuth\":false},\"identity\":{\"principalId\":\"d7522669-eb2f-4418-8e72-edcdb5c9160c\",\"tenantId\":\"631e3256-50cd-4e37-9a85-d361a8c2bf1e\",\"type\":\"SystemAssigned\",\"userAssignedIdentities\":{\"misgwbnb\":{\"principalId\":\"18f3b75b-3cb3-4b63-8109-55aa9942b33b\",\"clientId\":\"dae2f839-0b29-4ec1-a1d9-4bb401be728b\"},\"dawkzbali\":{\"principalId\":\"2599fdbc-fc4c-449b-ac4d-770281c6ffe0\",\"clientId\":\"f09e07dc-6189-4555-98ec-aa49b643b70f\"},\"qhakauhashsf\":{\"principalId\":\"28b30997-d035-42f6-bfd4-b0fb52f7f2b4\",\"clientId\":\"5bf9c7cb-9736-4d07-8172-3ec787bf75d0\"},\"sowzxcugi\":{\"principalId\":\"122176cf-624d-44ec-b004-47ddad3ed7c1\",\"clientId\":\"6c06f343-b98e-4599-8dfd-72a1e6beed07\"}}},\"location\":\"ooxdjebwpuc\",\"tags\":{\"bvmeuecivy\":\"vo\",\"ueiotwmcdyt\":\"zceuojgjrw\",\"it\":\"x\",\"hniskxfbkpyc\":\"nrjawgqwg\"},\"id\":\"klwndnhjdauwhv\",\"name\":\"l\",\"type\":\"zbtd\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"properties\":{\"provisioningState\":\"Updating\",\"hostName\":\"ftiyqzrnkcq\",\"dataLocation\":\"yx\",\"notificationHubId\":\"hzls\",\"version\":\"ohoqqnwvlryav\",\"immutableResourceId\":\"heun\",\"linkedDomains\":[\"hgyxzkonoc\",\"koklya\",\"uconuqszfkbey\",\"ewrmjmwvvjektc\"]},\"location\":\"enhwlrs\",\"tags\":{\"qdqgbi\":\"zpwv\",\"fcivfsnkym\":\"ylihkaetckt\",\"jf\":\"ctq\",\"fuwutttxf\":\"ebrjcxe\"},\"id\":\"jrbirphxepcyv\",\"name\":\"hfnljkyq\",\"type\":\"j\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        CommunicationManager manager = CommunicationManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<CommunicationServiceResource> response
+            = manager.communicationServices().list(com.azure.core.util.Context.NONE);
 
-        CommunicationManager manager =
-            CommunicationManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<CommunicationServiceResource> response =
-            manager.communicationServices().list(com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("enhwlrs", response.iterator().next().location());
-        Assertions.assertEquals("zpwv", response.iterator().next().tags().get("qdqgbi"));
-        Assertions.assertEquals("yx", response.iterator().next().dataLocation());
-        Assertions.assertEquals("hgyxzkonoc", response.iterator().next().linkedDomains().get(0));
+        Assertions.assertEquals("ooxdjebwpuc", response.iterator().next().location());
+        Assertions.assertEquals("vo", response.iterator().next().tags().get("bvmeuecivy"));
+        Assertions.assertEquals(ManagedServiceIdentityType.SYSTEM_ASSIGNED,
+            response.iterator().next().identity().type());
+        Assertions.assertEquals("kdeemaofmxagkvtm", response.iterator().next().dataLocation());
+        Assertions.assertEquals("adm", response.iterator().next().linkedDomains().get(0));
+        Assertions.assertEquals(PublicNetworkAccess.ENABLED, response.iterator().next().publicNetworkAccess());
+        Assertions.assertFalse(response.iterator().next().disableLocalAuth());
     }
 }

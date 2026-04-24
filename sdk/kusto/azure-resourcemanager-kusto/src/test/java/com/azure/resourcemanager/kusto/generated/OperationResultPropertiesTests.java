@@ -11,21 +11,20 @@ import org.junit.jupiter.api.Assertions;
 public final class OperationResultPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        OperationResultProperties model =
-            BinaryData
-                .fromString(
-                    "{\"operationKind\":\"irctymoxoftpipiw\",\"provisioningState\":\"Canceled\",\"operationState\":\"hxacpqjlihhyu\"}")
-                .toObject(OperationResultProperties.class);
-        Assertions.assertEquals("irctymoxoftpipiw", model.operationKind());
-        Assertions.assertEquals("hxacpqjlihhyu", model.operationState());
+        OperationResultProperties model = BinaryData
+            .fromString(
+                "{\"operationKind\":\"abwidfcxsspuun\",\"provisioningState\":\"Failed\",\"operationState\":\"hkx\"}")
+            .toObject(OperationResultProperties.class);
+        Assertions.assertEquals("abwidfcxsspuun", model.operationKind());
+        Assertions.assertEquals("hkx", model.operationState());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        OperationResultProperties model =
-            new OperationResultProperties().withOperationKind("irctymoxoftpipiw").withOperationState("hxacpqjlihhyu");
+        OperationResultProperties model
+            = new OperationResultProperties().withOperationKind("abwidfcxsspuun").withOperationState("hkx");
         model = BinaryData.fromObject(model).toObject(OperationResultProperties.class);
-        Assertions.assertEquals("irctymoxoftpipiw", model.operationKind());
-        Assertions.assertEquals("hxacpqjlihhyu", model.operationState());
+        Assertions.assertEquals("abwidfcxsspuun", model.operationKind());
+        Assertions.assertEquals("hkx", model.operationState());
     }
 }

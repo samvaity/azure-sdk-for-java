@@ -19,23 +19,22 @@ public final class ReplicationAppliancesImpl implements ReplicationAppliances {
 
     private final com.azure.resourcemanager.recoveryservicessiterecovery.SiteRecoveryManager serviceManager;
 
-    public ReplicationAppliancesImpl(
-        ReplicationAppliancesClient innerClient,
+    public ReplicationAppliancesImpl(ReplicationAppliancesClient innerClient,
         com.azure.resourcemanager.recoveryservicessiterecovery.SiteRecoveryManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
     }
 
-    public PagedIterable<ReplicationAppliance> list(String resourceName, String resourceGroupName) {
-        PagedIterable<ReplicationApplianceInner> inner = this.serviceClient().list(resourceName, resourceGroupName);
-        return Utils.mapPage(inner, inner1 -> new ReplicationApplianceImpl(inner1, this.manager()));
+    public PagedIterable<ReplicationAppliance> list(String resourceGroupName, String resourceName) {
+        PagedIterable<ReplicationApplianceInner> inner = this.serviceClient().list(resourceGroupName, resourceName);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new ReplicationApplianceImpl(inner1, this.manager()));
     }
 
-    public PagedIterable<ReplicationAppliance> list(
-        String resourceName, String resourceGroupName, String filter, Context context) {
-        PagedIterable<ReplicationApplianceInner> inner =
-            this.serviceClient().list(resourceName, resourceGroupName, filter, context);
-        return Utils.mapPage(inner, inner1 -> new ReplicationApplianceImpl(inner1, this.manager()));
+    public PagedIterable<ReplicationAppliance> list(String resourceGroupName, String resourceName, String filter,
+        Context context) {
+        PagedIterable<ReplicationApplianceInner> inner
+            = this.serviceClient().list(resourceGroupName, resourceName, filter, context);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new ReplicationApplianceImpl(inner1, this.manager()));
     }
 
     private ReplicationAppliancesClient serviceClient() {

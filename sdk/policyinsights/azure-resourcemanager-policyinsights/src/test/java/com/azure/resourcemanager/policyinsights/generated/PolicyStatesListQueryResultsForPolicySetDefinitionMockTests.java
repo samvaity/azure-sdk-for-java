@@ -6,120 +6,82 @@ package com.azure.resourcemanager.policyinsights.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
-import com.azure.core.util.Context;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.policyinsights.PolicyInsightsManager;
 import com.azure.resourcemanager.policyinsights.models.PolicyState;
 import com.azure.resourcemanager.policyinsights.models.PolicyStatesResource;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class PolicyStatesListQueryResultsForPolicySetDefinitionMockTests {
     @Test
     public void testListQueryResultsForPolicySetDefinition() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"@odata.id\":\"lokfpmijpdvzv\",\"@odata.context\":\"hwb\",\"timestamp\":\"2021-06-08T15:56:30Z\",\"resourceId\":\"vcgnrgla\",\"policyAssignmentId\":\"wyambhba\",\"policyDefinitionId\":\"bz\",\"effectiveParameters\":\"k\",\"isCompliant\":false,\"subscriptionId\":\"ibhlenntrv\",\"resourceType\":\"psabdu\",\"resourceLocation\":\"zmlghny\",\"resourceGroup\":\"lpyeu\",\"resourceTags\":\"p\",\"policyAssignmentName\":\"ixqbolxvhhyqqeg\",\"policyAssignmentOwner\":\"xgrzn\",\"policyAssignmentParameters\":\"inmtsdixchwkibm\",\"policyAssignmentScope\":\"ymncjc\",\"policyDefinitionName\":\"airwcqzoofj\",\"policyDefinitionAction\":\"jsvepfbhtleberp\",\"policyDefinitionCategory\":\"jeknfqnw\",\"policySetDefinitionId\":\"qxowkdn\",\"policySetDefinitionName\":\"xgkrh\",\"policySetDefinitionOwner\":\"ehycpn\",\"policySetDefinitionCategory\":\"awonoehrguqlhfw\",\"policySetDefinitionParameters\":\"bjzm\",\"managementGroupIds\":\"rguyfa\",\"policyDefinitionReferenceId\":\"kocbyg\",\"complianceState\":\"hrmxkbcjwwd\",\"policyEvaluationDetails\":{\"evaluatedExpressions\":[{\"result\":\"wppk\",\"expression\":\"ooz\",\"expressionKind\":\"yacagae\",\"path\":\"oiqclmgdtwgab\",\"expressionValue\":\"dataf\",\"targetValue\":\"datazbwjecooyvht\",\"operator\":\"bpelniibncgagd\"},{\"result\":\"dq\",\"expression\":\"tzbpyfao\",\"expressionKind\":\"f\",\"path\":\"tncwmhjobzrfpr\",\"expressionValue\":\"datadc\",\"targetValue\":\"datayftcvbzwgwhg\",\"operator\":\"soauoorssatfyb\"},{\"result\":\"ufdmxuq\",\"expression\":\"qna\",\"expressionKind\":\"tuxvzfqayopbt\",\"path\":\"xhgvbhxmndztgsq\",\"expressionValue\":\"datayqmarxneib\",\"targetValue\":\"databrhbjdqknhqn\",\"operator\":\"tpuwnnohmmzngocf\"}],\"ifNotExistsDetails\":{\"resourceId\":\"ypwyiulayno\",\"totalResources\":946012017}},\"policyDefinitionGroupNames\":[\"haxttpf\",\"mwgsghq\"],\"components\":[{\"id\":\"lddauqmllfe\",\"type\":\"hxuarig\",\"name\":\"dlj\",\"timestamp\":\"2020-12-20T02:40:04Z\",\"complianceState\":\"vkrbzkuastaxklpr\",\"ksgfyyskyekg\":\"datahgltoizwxvs\"},{\"id\":\"xczvfcckwrtwle\",\"type\":\"veszrtlhpdhw\",\"name\":\"ctac\",\"timestamp\":\"2021-06-05T22:05:52Z\",\"complianceState\":\"fmbbfnv\",\"nkrtikl\":\"datatzo\",\"hql\":\"datamn\"},{\"id\":\"qksyiibhyxwbgbu\",\"type\":\"vqdorbccqcd\",\"name\":\"hojvlirkn\",\"timestamp\":\"2021-09-05T02:19:34Z\",\"complianceState\":\"awrdt\",\"pya\":\"datazl\",\"uy\":\"dataxihzqjjts\",\"mcdcpkshl\":\"dataqfttkacybdueur\"},{\"id\":\"ermhzicsbfdjhyaa\",\"type\":\"yukibxigl\",\"name\":\"hzwxq\",\"timestamp\":\"2021-04-26T03:29:12Z\",\"complianceState\":\"iilhvtozyagj\",\"ylhyyx\":\"datak\",\"klvqzrwtrdgscn\":\"dataf\",\"on\":\"dataq\",\"mezyo\":\"datagnwxl\"}],\"policyDefinitionVersion\":\"pthceopvkv\",\"policySetDefinitionVersion\":\"fve\",\"policyAssignmentVersion\":\"bpbokhmml\",\"kasmcolmugpyva\":\"dataarnggcjfwblqh\",\"kluwz\":\"datas\",\"nobguqisqsqkpdmi\":\"dataeygzvtyevjhu\",\"pnml\":\"datay\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"@odata.id\":\"au\",\"@odata.context\":\"opionszon\",\"timestamp\":\"2021-09-07T22:24:15Z\",\"resourceId\":\"ajinnixjawrtmjfj\",\"policyAssignmentId\":\"ccxlzhcoxovnek\",\"policyDefinitionId\":\"nlusfnrd\",\"effectiveParameters\":\"xtxrdcqtjvidt\",\"isCompliant\":false,\"subscriptionId\":\"uslvyjtcvuwkasi\",\"resourceType\":\"esfuught\",\"resourceLocation\":\"fecjxeygtuhx\",\"resourceGroup\":\"cbuewmrswnjlxuz\",\"resourceTags\":\"wpusxjbaqehg\",\"policyAssignmentName\":\"ohzjqatucoigeb\",\"policyAssignmentOwner\":\"cnwfepbnwgfmxjg\",\"policyAssignmentParameters\":\"bjb\",\"policyAssignmentScope\":\"lfgtdysnaquflqbc\",\"policyDefinitionName\":\"hamzjrwdkqze\",\"policyDefinitionAction\":\"jleziunjx\",\"policyDefinitionCategory\":\"zantkwceg\",\"policySetDefinitionId\":\"mlbnseq\",\"policySetDefinitionName\":\"jjvpilguooqja\",\"policySetDefinitionOwner\":\"d\",\"policySetDefinitionCategory\":\"gueiookjbsahrtdt\",\"policySetDefinitionParameters\":\"elqacslmot\",\"managementGroupIds\":\"bnfxofvc\",\"policyDefinitionReferenceId\":\"gdirazf\",\"complianceState\":\"ejwabmdujtmvco\",\"policyEvaluationDetails\":{\"evaluatedExpressions\":[],\"ifNotExistsDetails\":{\"resourceId\":\"urbuhhlkyqltq\",\"totalResources\":862833850}},\"policyDefinitionGroupNames\":[\"uwkffdjktsysid\",\"vclglxnfuij\"],\"components\":[{\"id\":\"sqo\",\"type\":\"fikayiansharujtj\",\"name\":\"xfz\",\"timestamp\":\"2021-09-16T23:50:41Z\",\"complianceState\":\"tvwkpqhjpenu\",\"\":{}},{\"id\":\"eqqe\",\"type\":\"wv\",\"name\":\"vcdlg\",\"timestamp\":\"2021-08-31T10:46:48Z\",\"complianceState\":\"mfdjwn\",\"\":{}},{\"id\":\"un\",\"type\":\"ikczvvitacgxmf\",\"name\":\"serxht\",\"timestamp\":\"2021-11-15T21:15:02Z\",\"complianceState\":\"hlwntsjgq\",\"\":{}}],\"policyDefinitionVersion\":\"p\",\"policySetDefinitionVersion\":\"uuybnchrsz\",\"policyAssignmentVersion\":\"oyuelyetn\",\"\":{}}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        PolicyInsightsManager manager = PolicyInsightsManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<PolicyState> response = manager.policyStates()
+            .listQueryResultsForPolicySetDefinition(PolicyStatesResource.DEFAULT, "cnpatpft", "aebwfwhxorpwa",
+                1149429266, "zwuge", "ojfccylhtrht", OffsetDateTime.parse("2021-10-13T00:03:45Z"),
+                OffsetDateTime.parse("2021-02-19T10:18:07Z"), "zjpwexcdrzprob", "zxezmnr", "jgpjeuxs",
+                com.azure.core.util.Context.NONE);
 
-        PolicyInsightsManager manager =
-            PolicyInsightsManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<PolicyState> response =
-            manager
-                .policyStates()
-                .listQueryResultsForPolicySetDefinition(
-                    PolicyStatesResource.LATEST,
-                    "uxofshfphwpnulai",
-                    "wzejywhslw",
-                    2105999737,
-                    "jpllndnpdwrpq",
-                    "fgf",
-                    OffsetDateTime.parse("2020-12-25T16:05:30Z"),
-                    OffsetDateTime.parse("2021-09-16T14:06:24Z"),
-                    "nnfhyetefypo",
-                    "octfjgtixrjvzuyt",
-                    "rmlmuowo",
-                    Context.NONE);
-
-        Assertions.assertEquals(OffsetDateTime.parse("2021-09-07T22:24:15Z"), response.iterator().next().timestamp());
-        Assertions.assertEquals("ajinnixjawrtmjfj", response.iterator().next().resourceId());
-        Assertions.assertEquals("ccxlzhcoxovnek", response.iterator().next().policyAssignmentId());
-        Assertions.assertEquals("nlusfnrd", response.iterator().next().policyDefinitionId());
-        Assertions.assertEquals("xtxrdcqtjvidt", response.iterator().next().effectiveParameters());
-        Assertions.assertEquals(false, response.iterator().next().isCompliant());
-        Assertions.assertEquals("uslvyjtcvuwkasi", response.iterator().next().subscriptionId());
-        Assertions.assertEquals("esfuught", response.iterator().next().resourceType());
-        Assertions.assertEquals("fecjxeygtuhx", response.iterator().next().resourceLocation());
-        Assertions.assertEquals("cbuewmrswnjlxuz", response.iterator().next().resourceGroup());
-        Assertions.assertEquals("wpusxjbaqehg", response.iterator().next().resourceTags());
-        Assertions.assertEquals("ohzjqatucoigeb", response.iterator().next().policyAssignmentName());
-        Assertions.assertEquals("cnwfepbnwgfmxjg", response.iterator().next().policyAssignmentOwner());
-        Assertions.assertEquals("bjb", response.iterator().next().policyAssignmentParameters());
-        Assertions.assertEquals("lfgtdysnaquflqbc", response.iterator().next().policyAssignmentScope());
-        Assertions.assertEquals("hamzjrwdkqze", response.iterator().next().policyDefinitionName());
-        Assertions.assertEquals("jleziunjx", response.iterator().next().policyDefinitionAction());
-        Assertions.assertEquals("zantkwceg", response.iterator().next().policyDefinitionCategory());
-        Assertions.assertEquals("mlbnseq", response.iterator().next().policySetDefinitionId());
-        Assertions.assertEquals("jjvpilguooqja", response.iterator().next().policySetDefinitionName());
-        Assertions.assertEquals("d", response.iterator().next().policySetDefinitionOwner());
-        Assertions.assertEquals("gueiookjbsahrtdt", response.iterator().next().policySetDefinitionCategory());
-        Assertions.assertEquals("elqacslmot", response.iterator().next().policySetDefinitionParameters());
-        Assertions.assertEquals("bnfxofvc", response.iterator().next().managementGroupIds());
-        Assertions.assertEquals("gdirazf", response.iterator().next().policyDefinitionReferenceId());
-        Assertions.assertEquals("ejwabmdujtmvco", response.iterator().next().complianceState());
-        Assertions
-            .assertEquals(
-                "urbuhhlkyqltq",
-                response.iterator().next().policyEvaluationDetails().ifNotExistsDetails().resourceId());
-        Assertions
-            .assertEquals(
-                862833850, response.iterator().next().policyEvaluationDetails().ifNotExistsDetails().totalResources());
-        Assertions.assertEquals("uwkffdjktsysid", response.iterator().next().policyDefinitionGroupNames().get(0));
-        Assertions.assertEquals("sqo", response.iterator().next().components().get(0).id());
-        Assertions.assertEquals("fikayiansharujtj", response.iterator().next().components().get(0).type());
-        Assertions.assertEquals("xfz", response.iterator().next().components().get(0).name());
-        Assertions
-            .assertEquals(
-                OffsetDateTime.parse("2021-09-16T23:50:41Z"),
-                response.iterator().next().components().get(0).timestamp());
-        Assertions.assertEquals("tvwkpqhjpenu", response.iterator().next().components().get(0).complianceState());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-06-08T15:56:30Z"), response.iterator().next().timestamp());
+        Assertions.assertEquals("vcgnrgla", response.iterator().next().resourceId());
+        Assertions.assertEquals("wyambhba", response.iterator().next().policyAssignmentId());
+        Assertions.assertEquals("bz", response.iterator().next().policyDefinitionId());
+        Assertions.assertEquals("k", response.iterator().next().effectiveParameters());
+        Assertions.assertFalse(response.iterator().next().isCompliant());
+        Assertions.assertEquals("ibhlenntrv", response.iterator().next().subscriptionId());
+        Assertions.assertEquals("psabdu", response.iterator().next().resourceType());
+        Assertions.assertEquals("zmlghny", response.iterator().next().resourceLocation());
+        Assertions.assertEquals("lpyeu", response.iterator().next().resourceGroup());
+        Assertions.assertEquals("p", response.iterator().next().resourceTags());
+        Assertions.assertEquals("ixqbolxvhhyqqeg", response.iterator().next().policyAssignmentName());
+        Assertions.assertEquals("xgrzn", response.iterator().next().policyAssignmentOwner());
+        Assertions.assertEquals("inmtsdixchwkibm", response.iterator().next().policyAssignmentParameters());
+        Assertions.assertEquals("ymncjc", response.iterator().next().policyAssignmentScope());
+        Assertions.assertEquals("airwcqzoofj", response.iterator().next().policyDefinitionName());
+        Assertions.assertEquals("jsvepfbhtleberp", response.iterator().next().policyDefinitionAction());
+        Assertions.assertEquals("jeknfqnw", response.iterator().next().policyDefinitionCategory());
+        Assertions.assertEquals("qxowkdn", response.iterator().next().policySetDefinitionId());
+        Assertions.assertEquals("xgkrh", response.iterator().next().policySetDefinitionName());
+        Assertions.assertEquals("ehycpn", response.iterator().next().policySetDefinitionOwner());
+        Assertions.assertEquals("awonoehrguqlhfw", response.iterator().next().policySetDefinitionCategory());
+        Assertions.assertEquals("bjzm", response.iterator().next().policySetDefinitionParameters());
+        Assertions.assertEquals("rguyfa", response.iterator().next().managementGroupIds());
+        Assertions.assertEquals("kocbyg", response.iterator().next().policyDefinitionReferenceId());
+        Assertions.assertEquals("hrmxkbcjwwd", response.iterator().next().complianceState());
+        Assertions.assertEquals("wppk",
+            response.iterator().next().policyEvaluationDetails().evaluatedExpressions().get(0).result());
+        Assertions.assertEquals("ooz",
+            response.iterator().next().policyEvaluationDetails().evaluatedExpressions().get(0).expression());
+        Assertions.assertEquals("oiqclmgdtwgab",
+            response.iterator().next().policyEvaluationDetails().evaluatedExpressions().get(0).path());
+        Assertions.assertEquals("bpelniibncgagd",
+            response.iterator().next().policyEvaluationDetails().evaluatedExpressions().get(0).operator());
+        Assertions.assertEquals("ypwyiulayno",
+            response.iterator().next().policyEvaluationDetails().ifNotExistsDetails().resourceId());
+        Assertions.assertEquals(946012017,
+            response.iterator().next().policyEvaluationDetails().ifNotExistsDetails().totalResources());
+        Assertions.assertEquals("haxttpf", response.iterator().next().policyDefinitionGroupNames().get(0));
+        Assertions.assertEquals("lddauqmllfe", response.iterator().next().components().get(0).id());
+        Assertions.assertEquals("hxuarig", response.iterator().next().components().get(0).type());
+        Assertions.assertEquals("dlj", response.iterator().next().components().get(0).name());
+        Assertions.assertEquals(OffsetDateTime.parse("2020-12-20T02:40:04Z"),
+            response.iterator().next().components().get(0).timestamp());
+        Assertions.assertEquals("vkrbzkuastaxklpr", response.iterator().next().components().get(0).complianceState());
     }
 }

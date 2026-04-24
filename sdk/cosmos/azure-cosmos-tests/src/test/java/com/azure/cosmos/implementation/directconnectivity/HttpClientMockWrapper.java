@@ -10,6 +10,7 @@ import com.azure.cosmos.implementation.http.HttpRequest;
 import com.azure.cosmos.implementation.http.HttpResponse;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 import org.mockito.Mockito;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -84,9 +85,9 @@ public class HttpClientMockWrapper {
 
             HttpResponse resp = Mockito.mock(HttpResponse.class);
             Mockito.doReturn(this.status).when(resp).statusCode();
-            Mockito.doReturn(Flux.just(ByteBufUtil.writeUtf8(ByteBufAllocator.DEFAULT, this.content))).when(resp).body();
+            Mockito.doReturn(Mono.just(ByteBufUtil.writeUtf8(ByteBufAllocator.DEFAULT, this.content))).when(resp).body();
             Mockito.doReturn(Mono.just(this.content)).when(resp).bodyAsString();
-            Mockito.doReturn(Mono.just(this.content != null ? Utils.getUTF8Bytes(this.content) : new byte[0])).when(resp).bodyAsByteArray();
+            Mockito.doReturn(Mono.just(this.content != null ? Unpooled.wrappedBuffer(Utils.getUTF8Bytes(this.content)) : Unpooled.EMPTY_BUFFER)).when(resp).body();
             Mockito.doReturn(this.httpHeaders).when(resp).headers();
             return resp;
         }
@@ -139,6 +140,16 @@ public class HttpClientMockWrapper {
                 return Mono.delay(Duration.ofMillis(responseAfterMillis)).flatMap(t -> httpResponseOrException(httpResponse, e));
             }
         }).when(httpClient).send(Mockito.any(HttpRequest.class), Mockito.any(Duration.class));
+
+        Mockito.doAnswer(invocationOnMock -> {
+            HttpRequest httpRequest = invocationOnMock.getArgument(0, HttpRequest.class);
+            requests.add(httpRequest);
+            if (responseAfterMillis <= 0) {
+                return httpResponseOrException(httpResponse, e);
+            } else {
+                return Mono.delay(Duration.ofMillis(responseAfterMillis)).flatMap(t -> httpResponseOrException(httpResponse, e));
+            }
+        }).when(httpClient).send(Mockito.any(HttpRequest.class));
     }
 
     public HttpClientMockWrapper(HttpClientBehaviourBuilder builder) {

@@ -27,8 +27,10 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.management.polling.PollResult;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.resourcemanager.eventgrid.fluent.ClientGroupsClient;
@@ -38,22 +40,28 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ClientGroupsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ClientGroupsClient.
+ */
 public final class ClientGroupsClientImpl implements ClientGroupsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ClientGroupsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final EventGridManagementClientImpl client;
 
     /**
      * Initializes an instance of ClientGroupsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ClientGroupsClientImpl(EventGridManagementClientImpl client) {
-        this.service =
-            RestProxy.create(ClientGroupsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(ClientGroupsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -62,86 +70,112 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * to perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "EventGridManagementC")
+    @ServiceInterface(name = "EventGridManagementClientClientGroups")
     public interface ClientGroupsService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups/{clientGroupName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups/{clientGroupName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ClientGroupInner>> get(
-            @HostParam("$host") String endpoint,
+        Mono<Response<ClientGroupInner>> get(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("namespaceName") String namespaceName,
-            @PathParam("clientGroupName") String clientGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("clientGroupName") String clientGroupName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups/{clientGroupName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ClientGroupInner> getSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("clientGroupName") String clientGroupName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups/{clientGroupName}")
+        @ExpectedResponses({ 200, 201 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> createOrUpdate(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("clientGroupName") String clientGroupName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ClientGroupInner clientGroupInfo, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups/{clientGroupName}")
-        @ExpectedResponses({200, 201})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups/{clientGroupName}")
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> createOrUpdate(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> createOrUpdateSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("namespaceName") String namespaceName,
-            @PathParam("clientGroupName") String clientGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") ClientGroupInner clientGroupInfo,
-            @HeaderParam("Accept") String accept,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("clientGroupName") String clientGroupName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ClientGroupInner clientGroupInfo, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups/{clientGroupName}")
-        @ExpectedResponses({200, 202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups/{clientGroupName}")
+        @ExpectedResponses({ 200, 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> delete(
-            @HostParam("$host") String endpoint,
+        Mono<Response<Flux<ByteBuffer>>> delete(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("namespaceName") String namespaceName,
-            @PathParam("clientGroupName") String clientGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("clientGroupName") String clientGroupName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups/{clientGroupName}")
+        @ExpectedResponses({ 200, 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ClientGroupsListResult>> listByNamespace(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> deleteSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("namespaceName") String namespaceName,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$top") Integer top,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @PathParam("clientGroupName") String clientGroupName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<ClientGroupsListResult>> listByNamespace(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$filter") String filter,
+            @QueryParam("$top") Integer top, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/namespaces/{namespaceName}/clientGroups")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ClientGroupsListResult> listByNamespaceSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("namespaceName") String namespaceName,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$filter") String filter,
+            @QueryParam("$top") Integer top, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<ClientGroupsListResult>> listByNamespaceNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ClientGroupsListResult> listByNamespaceNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Get a client group.
-     *
-     * <p>Get properties of a client group.
-     *
+     * 
+     * Get properties of a client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -151,19 +185,15 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return properties of a client group along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ClientGroupInner>> getWithResponseAsync(
-        String resourceGroupName, String namespaceName, String clientGroupName) {
+    private Mono<Response<ClientGroupInner>> getWithResponseAsync(String resourceGroupName, String namespaceName,
+        String clientGroupName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -178,80 +208,16 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            namespaceName,
-                            clientGroupName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, namespaceName, clientGroupName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get a client group.
-     *
-     * <p>Get properties of a client group.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param clientGroupName Name of the client group.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties of a client group along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ClientGroupInner>> getWithResponseAsync(
-        String resourceGroupName, String namespaceName, String clientGroupName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (namespaceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
-        }
-        if (clientGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter clientGroupName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                namespaceName,
-                clientGroupName,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Get a client group.
-     *
-     * <p>Get properties of a client group.
-     *
+     * 
+     * Get properties of a client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -268,9 +234,9 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
 
     /**
      * Get a client group.
-     *
-     * <p>Get properties of a client group.
-     *
+     * 
+     * Get properties of a client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -281,16 +247,40 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return properties of a client group along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ClientGroupInner> getWithResponse(
-        String resourceGroupName, String namespaceName, String clientGroupName, Context context) {
-        return getWithResponseAsync(resourceGroupName, namespaceName, clientGroupName, context).block();
+    public Response<ClientGroupInner> getWithResponse(String resourceGroupName, String namespaceName,
+        String clientGroupName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (namespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+        }
+        if (clientGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clientGroupName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            namespaceName, clientGroupName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Get a client group.
-     *
-     * <p>Get properties of a client group.
-     *
+     * 
+     * Get properties of a client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -306,9 +296,9 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
 
     /**
      * Create or update a client group.
-     *
-     * <p>Create or update a client group with the specified parameters.
-     *
+     * 
+     * Create or update a client group with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName The client group name.
@@ -319,19 +309,15 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return the Client group resource along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(
-        String resourceGroupName, String namespaceName, String clientGroupName, ClientGroupInner clientGroupInfo) {
+    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(String resourceGroupName,
+        String namespaceName, String clientGroupName, ClientGroupInner clientGroupInfo) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -352,93 +338,118 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .createOrUpdate(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            namespaceName,
-                            clientGroupName,
-                            this.client.getApiVersion(),
-                            clientGroupInfo,
-                            accept,
-                            context))
+            .withContext(context -> service.createOrUpdate(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, namespaceName, clientGroupName, this.client.getApiVersion(), clientGroupInfo, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Create or update a client group.
-     *
-     * <p>Create or update a client group with the specified parameters.
-     *
+     * 
+     * Create or update a client group with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName The client group name.
      * @param clientGroupInfo Client group information.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the Client group resource along with {@link Response} on successful completion of {@link Mono}.
+     * @return the Client group resource along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(
-        String resourceGroupName,
-        String namespaceName,
-        String clientGroupName,
-        ClientGroupInner clientGroupInfo,
-        Context context) {
+    private Response<BinaryData> createOrUpdateWithResponse(String resourceGroupName, String namespaceName,
+        String clientGroupName, ClientGroupInner clientGroupInfo) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (namespaceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
         }
         if (clientGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter clientGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clientGroupName is required and cannot be null."));
         }
         if (clientGroupInfo == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter clientGroupInfo is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clientGroupInfo is required and cannot be null."));
         } else {
             clientGroupInfo.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .createOrUpdate(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                namespaceName,
-                clientGroupName,
-                this.client.getApiVersion(),
-                clientGroupInfo,
-                accept,
-                context);
+        return service.createOrUpdateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            namespaceName, clientGroupName, this.client.getApiVersion(), clientGroupInfo, accept, Context.NONE);
     }
 
     /**
      * Create or update a client group.
-     *
-     * <p>Create or update a client group with the specified parameters.
-     *
+     * 
+     * Create or update a client group with the specified parameters.
+     * 
+     * @param resourceGroupName The name of the resource group within the user's subscription.
+     * @param namespaceName Name of the namespace.
+     * @param clientGroupName The client group name.
+     * @param clientGroupInfo Client group information.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the Client group resource along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createOrUpdateWithResponse(String resourceGroupName, String namespaceName,
+        String clientGroupName, ClientGroupInner clientGroupInfo, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (namespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+        }
+        if (clientGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clientGroupName is required and cannot be null."));
+        }
+        if (clientGroupInfo == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clientGroupInfo is required and cannot be null."));
+        } else {
+            clientGroupInfo.validate();
+        }
+        final String accept = "application/json";
+        return service.createOrUpdateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            namespaceName, clientGroupName, this.client.getApiVersion(), clientGroupInfo, accept, context);
+    }
+
+    /**
+     * Create or update a client group.
+     * 
+     * Create or update a client group with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName The client group name.
@@ -451,55 +462,17 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ClientGroupInner>, ClientGroupInner> beginCreateOrUpdateAsync(
         String resourceGroupName, String namespaceName, String clientGroupName, ClientGroupInner clientGroupInfo) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateWithResponseAsync(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo);
-        return this
-            .client
-            .<ClientGroupInner, ClientGroupInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ClientGroupInner.class,
-                ClientGroupInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = createOrUpdateWithResponseAsync(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo);
+        return this.client.<ClientGroupInner, ClientGroupInner>getLroResult(mono, this.client.getHttpPipeline(),
+            ClientGroupInner.class, ClientGroupInner.class, this.client.getContext());
     }
 
     /**
      * Create or update a client group.
-     *
-     * <p>Create or update a client group with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param clientGroupName The client group name.
-     * @param clientGroupInfo Client group information.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of the Client group resource.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<ClientGroupInner>, ClientGroupInner> beginCreateOrUpdateAsync(
-        String resourceGroupName,
-        String namespaceName,
-        String clientGroupName,
-        ClientGroupInner clientGroupInfo,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateWithResponseAsync(
-                resourceGroupName, namespaceName, clientGroupName, clientGroupInfo, context);
-        return this
-            .client
-            .<ClientGroupInner, ClientGroupInner>getLroResult(
-                mono, this.client.getHttpPipeline(), ClientGroupInner.class, ClientGroupInner.class, context);
-    }
-
-    /**
-     * Create or update a client group.
-     *
-     * <p>Create or update a client group with the specified parameters.
-     *
+     * 
+     * Create or update a client group with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName The client group name.
@@ -510,18 +483,19 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return the {@link SyncPoller} for polling of the Client group resource.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<ClientGroupInner>, ClientGroupInner> beginCreateOrUpdate(
-        String resourceGroupName, String namespaceName, String clientGroupName, ClientGroupInner clientGroupInfo) {
-        return this
-            .beginCreateOrUpdateAsync(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo)
-            .getSyncPoller();
+    public SyncPoller<PollResult<ClientGroupInner>, ClientGroupInner> beginCreateOrUpdate(String resourceGroupName,
+        String namespaceName, String clientGroupName, ClientGroupInner clientGroupInfo) {
+        Response<BinaryData> response
+            = createOrUpdateWithResponse(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo);
+        return this.client.<ClientGroupInner, ClientGroupInner>getLroResult(response, ClientGroupInner.class,
+            ClientGroupInner.class, Context.NONE);
     }
 
     /**
      * Create or update a client group.
-     *
-     * <p>Create or update a client group with the specified parameters.
-     *
+     * 
+     * Create or update a client group with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName The client group name.
@@ -533,22 +507,19 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return the {@link SyncPoller} for polling of the Client group resource.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<ClientGroupInner>, ClientGroupInner> beginCreateOrUpdate(
-        String resourceGroupName,
-        String namespaceName,
-        String clientGroupName,
-        ClientGroupInner clientGroupInfo,
-        Context context) {
-        return this
-            .beginCreateOrUpdateAsync(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo, context)
-            .getSyncPoller();
+    public SyncPoller<PollResult<ClientGroupInner>, ClientGroupInner> beginCreateOrUpdate(String resourceGroupName,
+        String namespaceName, String clientGroupName, ClientGroupInner clientGroupInfo, Context context) {
+        Response<BinaryData> response
+            = createOrUpdateWithResponse(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo, context);
+        return this.client.<ClientGroupInner, ClientGroupInner>getLroResult(response, ClientGroupInner.class,
+            ClientGroupInner.class, context);
     }
 
     /**
      * Create or update a client group.
-     *
-     * <p>Create or update a client group with the specified parameters.
-     *
+     * 
+     * Create or update a client group with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName The client group name.
@@ -559,45 +530,17 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return the Client group resource on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ClientGroupInner> createOrUpdateAsync(
-        String resourceGroupName, String namespaceName, String clientGroupName, ClientGroupInner clientGroupInfo) {
-        return beginCreateOrUpdateAsync(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo)
-            .last()
+    private Mono<ClientGroupInner> createOrUpdateAsync(String resourceGroupName, String namespaceName,
+        String clientGroupName, ClientGroupInner clientGroupInfo) {
+        return beginCreateOrUpdateAsync(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Create or update a client group.
-     *
-     * <p>Create or update a client group with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param clientGroupName The client group name.
-     * @param clientGroupInfo Client group information.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the Client group resource on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ClientGroupInner> createOrUpdateAsync(
-        String resourceGroupName,
-        String namespaceName,
-        String clientGroupName,
-        ClientGroupInner clientGroupInfo,
-        Context context) {
-        return beginCreateOrUpdateAsync(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Create or update a client group.
-     *
-     * <p>Create or update a client group with the specified parameters.
-     *
+     * 
+     * Create or update a client group with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName The client group name.
@@ -608,16 +551,16 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return the Client group resource.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ClientGroupInner createOrUpdate(
-        String resourceGroupName, String namespaceName, String clientGroupName, ClientGroupInner clientGroupInfo) {
-        return createOrUpdateAsync(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo).block();
+    public ClientGroupInner createOrUpdate(String resourceGroupName, String namespaceName, String clientGroupName,
+        ClientGroupInner clientGroupInfo) {
+        return beginCreateOrUpdate(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo).getFinalResult();
     }
 
     /**
      * Create or update a client group.
-     *
-     * <p>Create or update a client group with the specified parameters.
-     *
+     * 
+     * Create or update a client group with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName The client group name.
@@ -629,20 +572,17 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return the Client group resource.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ClientGroupInner createOrUpdate(
-        String resourceGroupName,
-        String namespaceName,
-        String clientGroupName,
-        ClientGroupInner clientGroupInfo,
-        Context context) {
-        return createOrUpdateAsync(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo, context).block();
+    public ClientGroupInner createOrUpdate(String resourceGroupName, String namespaceName, String clientGroupName,
+        ClientGroupInner clientGroupInfo, Context context) {
+        return beginCreateOrUpdate(resourceGroupName, namespaceName, clientGroupName, clientGroupInfo, context)
+            .getFinalResult();
     }
 
     /**
      * Delete a client group.
-     *
-     * <p>Delete an existing client group.
-     *
+     * 
+     * Delete an existing client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -652,19 +592,15 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String namespaceName, String clientGroupName) {
+    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName, String namespaceName,
+        String clientGroupName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -679,80 +615,103 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            namespaceName,
-                            clientGroupName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, namespaceName, clientGroupName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Delete a client group.
-     *
-     * <p>Delete an existing client group.
-     *
+     * 
+     * Delete an existing client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String namespaceName, String clientGroupName, Context context) {
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String namespaceName,
+        String clientGroupName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (namespaceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
         }
         if (clientGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter clientGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clientGroupName is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                namespaceName,
-                clientGroupName,
-                this.client.getApiVersion(),
-                accept,
-                context);
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            namespaceName, clientGroupName, this.client.getApiVersion(), accept, Context.NONE);
     }
 
     /**
      * Delete a client group.
-     *
-     * <p>Delete an existing client group.
-     *
+     * 
+     * Delete an existing client group.
+     * 
+     * @param resourceGroupName The name of the resource group within the user's subscription.
+     * @param namespaceName Name of the namespace.
+     * @param clientGroupName Name of the client group.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String namespaceName,
+        String clientGroupName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (namespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+        }
+        if (clientGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clientGroupName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            namespaceName, clientGroupName, this.client.getApiVersion(), accept, context);
+    }
+
+    /**
+     * Delete a client group.
+     * 
+     * Delete an existing client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -762,46 +721,19 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceGroupName, String namespaceName, String clientGroupName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(resourceGroupName, namespaceName, clientGroupName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String namespaceName,
+        String clientGroupName) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = deleteWithResponseAsync(resourceGroupName, namespaceName, clientGroupName);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Delete a client group.
-     *
-     * <p>Delete an existing client group.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param clientGroupName Name of the client group.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceGroupName, String namespaceName, String clientGroupName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(resourceGroupName, namespaceName, clientGroupName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Delete a client group.
-     *
-     * <p>Delete an existing client group.
-     *
+     * 
+     * Delete an existing client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -811,16 +743,17 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceGroupName, String namespaceName, String clientGroupName) {
-        return this.beginDeleteAsync(resourceGroupName, namespaceName, clientGroupName).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String namespaceName,
+        String clientGroupName) {
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, namespaceName, clientGroupName);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Delete a client group.
-     *
-     * <p>Delete an existing client group.
-     *
+     * 
+     * Delete an existing client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -831,16 +764,17 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceGroupName, String namespaceName, String clientGroupName, Context context) {
-        return this.beginDeleteAsync(resourceGroupName, namespaceName, clientGroupName, context).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String namespaceName,
+        String clientGroupName, Context context) {
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, namespaceName, clientGroupName, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Delete a client group.
-     *
-     * <p>Delete an existing client group.
-     *
+     * 
+     * Delete an existing client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -851,38 +785,15 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Void> deleteAsync(String resourceGroupName, String namespaceName, String clientGroupName) {
-        return beginDeleteAsync(resourceGroupName, namespaceName, clientGroupName)
-            .last()
+        return beginDeleteAsync(resourceGroupName, namespaceName, clientGroupName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Delete a client group.
-     *
-     * <p>Delete an existing client group.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param clientGroupName Name of the client group.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(
-        String resourceGroupName, String namespaceName, String clientGroupName, Context context) {
-        return beginDeleteAsync(resourceGroupName, namespaceName, clientGroupName, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Delete a client group.
-     *
-     * <p>Delete an existing client group.
-     *
+     * 
+     * Delete an existing client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -892,14 +803,14 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String namespaceName, String clientGroupName) {
-        deleteAsync(resourceGroupName, namespaceName, clientGroupName).block();
+        beginDelete(resourceGroupName, namespaceName, clientGroupName).getFinalResult();
     }
 
     /**
      * Delete a client group.
-     *
-     * <p>Delete an existing client group.
-     *
+     * 
+     * Delete an existing client group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param clientGroupName Name of the client group.
@@ -910,44 +821,39 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String namespaceName, String clientGroupName, Context context) {
-        deleteAsync(resourceGroupName, namespaceName, clientGroupName, context).block();
+        beginDelete(resourceGroupName, namespaceName, clientGroupName, context).getFinalResult();
     }
 
     /**
      * List all client groups under a namespace.
-     *
-     * <p>Get all the client groups under a namespace.
-     *
+     * 
+     * Get all the client groups under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return all the client groups under a namespace along with {@link PagedResponse} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ClientGroupInner>> listByNamespaceSinglePageAsync(
-        String resourceGroupName, String namespaceName, String filter, Integer top) {
+    private Mono<PagedResponse<ClientGroupInner>> listByNamespaceSinglePageAsync(String resourceGroupName,
+        String namespaceName, String filter, Integer top) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -958,132 +864,44 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listByNamespace(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            namespaceName,
-                            this.client.getApiVersion(),
-                            filter,
-                            top,
-                            accept,
-                            context))
-            .<PagedResponse<ClientGroupInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.listByNamespace(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, namespaceName, this.client.getApiVersion(), filter, top, accept, context))
+            .<PagedResponse<ClientGroupInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * List all client groups under a namespace.
-     *
-     * <p>Get all the client groups under a namespace.
-     *
+     * 
+     * Get all the client groups under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all the client groups under a namespace along with {@link PagedResponse} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ClientGroupInner>> listByNamespaceSinglePageAsync(
-        String resourceGroupName, String namespaceName, String filter, Integer top, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (namespaceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByNamespace(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                namespaceName,
-                this.client.getApiVersion(),
-                filter,
-                top,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * List all client groups under a namespace.
-     *
-     * <p>Get all the client groups under a namespace.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param namespaceName Name of the namespace.
-     * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
-     * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return all the client groups under a namespace as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ClientGroupInner> listByNamespaceAsync(
-        String resourceGroupName, String namespaceName, String filter, Integer top) {
-        return new PagedFlux<>(
-            () -> listByNamespaceSinglePageAsync(resourceGroupName, namespaceName, filter, top),
+    private PagedFlux<ClientGroupInner> listByNamespaceAsync(String resourceGroupName, String namespaceName,
+        String filter, Integer top) {
+        return new PagedFlux<>(() -> listByNamespaceSinglePageAsync(resourceGroupName, namespaceName, filter, top),
             nextLink -> listByNamespaceNextSinglePageAsync(nextLink));
     }
 
     /**
      * List all client groups under a namespace.
-     *
-     * <p>Get all the client groups under a namespace.
-     *
+     * 
+     * Get all the client groups under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1095,45 +913,112 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
     private PagedFlux<ClientGroupInner> listByNamespaceAsync(String resourceGroupName, String namespaceName) {
         final String filter = null;
         final Integer top = null;
-        return new PagedFlux<>(
-            () -> listByNamespaceSinglePageAsync(resourceGroupName, namespaceName, filter, top),
+        return new PagedFlux<>(() -> listByNamespaceSinglePageAsync(resourceGroupName, namespaceName, filter, top),
             nextLink -> listByNamespaceNextSinglePageAsync(nextLink));
     }
 
     /**
      * List all client groups under a namespace.
-     *
-     * <p>Get all the client groups under a namespace.
-     *
+     * 
+     * Get all the client groups under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
-     * @param context The context to associate with this operation.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all the client groups under a namespace as paginated response with {@link PagedFlux}.
+     * @return all the client groups under a namespace along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ClientGroupInner> listByNamespaceAsync(
-        String resourceGroupName, String namespaceName, String filter, Integer top, Context context) {
-        return new PagedFlux<>(
-            () -> listByNamespaceSinglePageAsync(resourceGroupName, namespaceName, filter, top, context),
-            nextLink -> listByNamespaceNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ClientGroupInner> listByNamespaceSinglePage(String resourceGroupName, String namespaceName,
+        String filter, Integer top) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (namespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ClientGroupsListResult> res
+            = service.listByNamespaceSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+                namespaceName, this.client.getApiVersion(), filter, top, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * List all client groups under a namespace.
-     *
-     * <p>Get all the client groups under a namespace.
-     *
+     * 
+     * Get all the client groups under a namespace.
+     * 
+     * @param resourceGroupName The name of the resource group within the user's subscription.
+     * @param namespaceName Name of the namespace.
+     * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
+     * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all the client groups under a namespace along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ClientGroupInner> listByNamespaceSinglePage(String resourceGroupName, String namespaceName,
+        String filter, Integer top, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (namespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter namespaceName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ClientGroupsListResult> res
+            = service.listByNamespaceSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+                namespaceName, this.client.getApiVersion(), filter, top, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * List all client groups under a namespace.
+     * 
+     * Get all the client groups under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1145,24 +1030,24 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
     public PagedIterable<ClientGroupInner> listByNamespace(String resourceGroupName, String namespaceName) {
         final String filter = null;
         final Integer top = null;
-        return new PagedIterable<>(listByNamespaceAsync(resourceGroupName, namespaceName, filter, top));
+        return new PagedIterable<>(() -> listByNamespaceSinglePage(resourceGroupName, namespaceName, filter, top),
+            nextLink -> listByNamespaceNextSinglePage(nextLink));
     }
 
     /**
      * List all client groups under a namespace.
-     *
-     * <p>Get all the client groups under a namespace.
-     *
+     * 
+     * Get all the client groups under a namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param namespaceName Name of the namespace.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1170,21 +1055,22 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
      * @return all the client groups under a namespace as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<ClientGroupInner> listByNamespace(
-        String resourceGroupName, String namespaceName, String filter, Integer top, Context context) {
-        return new PagedIterable<>(listByNamespaceAsync(resourceGroupName, namespaceName, filter, top, context));
+    public PagedIterable<ClientGroupInner> listByNamespace(String resourceGroupName, String namespaceName,
+        String filter, Integer top, Context context) {
+        return new PagedIterable<>(
+            () -> listByNamespaceSinglePage(resourceGroupName, namespaceName, filter, top, context),
+            nextLink -> listByNamespaceNextSinglePage(nextLink, context));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return result of the List Client Group operation along with {@link PagedResponse} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ClientGroupInner>> listByNamespaceNextSinglePageAsync(String nextLink) {
@@ -1192,61 +1078,71 @@ public final class ClientGroupsClientImpl implements ClientGroupsClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(context -> service.listByNamespaceNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<ClientGroupInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<ClientGroupInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return result of the List Client Group operation along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ClientGroupInner> listByNamespaceNextSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ClientGroupsListResult> res
+            = service.listByNamespaceNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Client Group operation along with {@link PagedResponse} on successful completion of
-     *     {@link Mono}.
+     * @return result of the List Client Group operation along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ClientGroupInner>> listByNamespaceNextSinglePageAsync(String nextLink, Context context) {
+    private PagedResponse<ClientGroupInner> listByNamespaceNextSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByNamespaceNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<ClientGroupsListResult> res
+            = service.listByNamespaceNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(ClientGroupsClientImpl.class);
 }

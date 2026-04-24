@@ -10,47 +10,43 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public final class ComponentEventDetailsTests {
-    @Test
-    public void testDeserialize() {
-        ComponentEventDetails model =
-            BinaryData
-                .fromString(
-                    "{\"id\":\"czwtruwiqzbqjv\",\"type\":\"vmyokacspkwl\",\"name\":\"dobpxjmflbvvn\",\"timestamp\":\"2021-11-01T14:14:41Z\",\"tenantId\":\"cciw\",\"principalOid\":\"juqk\",\"policyDefinitionAction\":\"sa\",\"\":{}}")
-                .toObject(ComponentEventDetails.class);
-        Assertions.assertEquals("czwtruwiqzbqjv", model.id());
-        Assertions.assertEquals("vmyokacspkwl", model.type());
-        Assertions.assertEquals("dobpxjmflbvvn", model.name());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-11-01T14:14:41Z"), model.timestamp());
-        Assertions.assertEquals("cciw", model.tenantId());
-        Assertions.assertEquals("juqk", model.principalOid());
-        Assertions.assertEquals("sa", model.policyDefinitionAction());
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        ComponentEventDetails model = BinaryData.fromString(
+            "{\"id\":\"us\",\"type\":\"touwaboekqv\",\"name\":\"lns\",\"timestamp\":\"2021-06-29T22:28:15Z\",\"tenantId\":\"wyjsflhhcaalnjix\",\"principalOid\":\"xyawj\",\"policyDefinitionAction\":\"aq\",\"eli\":\"datayjpkiidzyexz\",\"bnxknalaulppg\":\"datahnrztfol\"}")
+            .toObject(ComponentEventDetails.class);
+        Assertions.assertEquals("us", model.id());
+        Assertions.assertEquals("touwaboekqv", model.type());
+        Assertions.assertEquals("lns", model.name());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-06-29T22:28:15Z"), model.timestamp());
+        Assertions.assertEquals("wyjsflhhcaalnjix", model.tenantId());
+        Assertions.assertEquals("xyawj", model.principalOid());
+        Assertions.assertEquals("aq", model.policyDefinitionAction());
     }
 
-    @Test
-    public void testSerialize() {
-        ComponentEventDetails model =
-            new ComponentEventDetails()
-                .withId("czwtruwiqzbqjv")
-                .withType("vmyokacspkwl")
-                .withName("dobpxjmflbvvn")
-                .withTimestamp(OffsetDateTime.parse("2021-11-01T14:14:41Z"))
-                .withTenantId("cciw")
-                .withPrincipalOid("juqk")
-                .withPolicyDefinitionAction("sa")
-                .withAdditionalProperties(mapOf());
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
+        ComponentEventDetails model = new ComponentEventDetails().withId("us")
+            .withType("touwaboekqv")
+            .withName("lns")
+            .withTimestamp(OffsetDateTime.parse("2021-06-29T22:28:15Z"))
+            .withTenantId("wyjsflhhcaalnjix")
+            .withPrincipalOid("xyawj")
+            .withPolicyDefinitionAction("aq")
+            .withAdditionalProperties(mapOf("eli", "datayjpkiidzyexz", "bnxknalaulppg", "datahnrztfol"));
         model = BinaryData.fromObject(model).toObject(ComponentEventDetails.class);
-        Assertions.assertEquals("czwtruwiqzbqjv", model.id());
-        Assertions.assertEquals("vmyokacspkwl", model.type());
-        Assertions.assertEquals("dobpxjmflbvvn", model.name());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-11-01T14:14:41Z"), model.timestamp());
-        Assertions.assertEquals("cciw", model.tenantId());
-        Assertions.assertEquals("juqk", model.principalOid());
-        Assertions.assertEquals("sa", model.policyDefinitionAction());
+        Assertions.assertEquals("us", model.id());
+        Assertions.assertEquals("touwaboekqv", model.type());
+        Assertions.assertEquals("lns", model.name());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-06-29T22:28:15Z"), model.timestamp());
+        Assertions.assertEquals("wyjsflhhcaalnjix", model.tenantId());
+        Assertions.assertEquals("xyawj", model.principalOid());
+        Assertions.assertEquals("aq", model.policyDefinitionAction());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

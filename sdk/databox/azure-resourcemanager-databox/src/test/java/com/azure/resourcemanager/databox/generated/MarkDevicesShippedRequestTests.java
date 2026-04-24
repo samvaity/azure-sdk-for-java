@@ -12,23 +12,20 @@ import org.junit.jupiter.api.Assertions;
 public final class MarkDevicesShippedRequestTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MarkDevicesShippedRequest model =
-            BinaryData
-                .fromString(
-                    "{\"deliverToDcPackageDetails\":{\"carrierName\":\"gygev\",\"trackingId\":\"ntypmrbpizcdrqj\"}}")
-                .toObject(MarkDevicesShippedRequest.class);
-        Assertions.assertEquals("gygev", model.deliverToDcPackageDetails().carrierName());
-        Assertions.assertEquals("ntypmrbpizcdrqj", model.deliverToDcPackageDetails().trackingId());
+        MarkDevicesShippedRequest model = BinaryData
+            .fromString(
+                "{\"deliverToDcPackageDetails\":{\"carrierName\":\"pocipazyxoegu\",\"trackingId\":\"jnpiucgyg\"}}")
+            .toObject(MarkDevicesShippedRequest.class);
+        Assertions.assertEquals("pocipazyxoegu", model.deliverToDcPackageDetails().carrierName());
+        Assertions.assertEquals("jnpiucgyg", model.deliverToDcPackageDetails().trackingId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MarkDevicesShippedRequest model =
-            new MarkDevicesShippedRequest()
-                .withDeliverToDcPackageDetails(
-                    new PackageCarrierInfo().withCarrierName("gygev").withTrackingId("ntypmrbpizcdrqj"));
+        MarkDevicesShippedRequest model = new MarkDevicesShippedRequest().withDeliverToDcPackageDetails(
+            new PackageCarrierInfo().withCarrierName("pocipazyxoegu").withTrackingId("jnpiucgyg"));
         model = BinaryData.fromObject(model).toObject(MarkDevicesShippedRequest.class);
-        Assertions.assertEquals("gygev", model.deliverToDcPackageDetails().carrierName());
-        Assertions.assertEquals("ntypmrbpizcdrqj", model.deliverToDcPackageDetails().trackingId());
+        Assertions.assertEquals("pocipazyxoegu", model.deliverToDcPackageDetails().carrierName());
+        Assertions.assertEquals("jnpiucgyg", model.deliverToDcPackageDetails().trackingId());
     }
 }

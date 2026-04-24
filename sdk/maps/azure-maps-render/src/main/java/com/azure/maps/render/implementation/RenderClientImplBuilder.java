@@ -6,8 +6,12 @@ package com.azure.maps.render.implementation;
 
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ServiceClientBuilder;
+import com.azure.core.client.traits.AzureKeyCredentialTrait;
 import com.azure.core.client.traits.ConfigurationTrait;
 import com.azure.core.client.traits.HttpTrait;
+import com.azure.core.client.traits.TokenCredentialTrait;
+import com.azure.core.credential.AzureKeyCredential;
+import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
@@ -16,7 +20,8 @@ import com.azure.core.http.HttpPipelinePosition;
 import com.azure.core.http.policy.AddDatePolicy;
 import com.azure.core.http.policy.AddHeadersFromContextPolicy;
 import com.azure.core.http.policy.AddHeadersPolicy;
-import com.azure.core.http.policy.CookiePolicy;
+import com.azure.core.http.policy.AzureKeyCredentialPolicy;
+import com.azure.core.http.policy.BearerTokenAuthenticationPolicy;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpLoggingPolicy;
 import com.azure.core.http.policy.HttpPipelinePolicy;
@@ -29,51 +34,55 @@ import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.builder.ClientBuilderUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
+import com.azure.maps.render.implementation.models.MediaType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
-/** A builder for creating a new instance of the RenderClient type. */
-@ServiceClientBuilder(serviceClients = {RenderClientImpl.class})
+/**
+ * A builder for creating a new instance of the RenderClient type.
+ */
+@ServiceClientBuilder(serviceClients = { RenderClientImpl.class })
 public final class RenderClientImplBuilder
-        implements HttpTrait<RenderClientImplBuilder>, ConfigurationTrait<RenderClientImplBuilder> {
-    @Generated private static final String SDK_NAME = "name";
+    implements HttpTrait<RenderClientImplBuilder>, ConfigurationTrait<RenderClientImplBuilder>,
+    TokenCredentialTrait<RenderClientImplBuilder>, AzureKeyCredentialTrait<RenderClientImplBuilder> {
+    @Generated
+    private static final String SDK_NAME = "name";
 
-    @Generated private static final String SDK_VERSION = "version";
+    @Generated
+    private static final String SDK_VERSION = "version";
 
-    @Generated private final Map<String, String> properties = new HashMap<>();
+    @Generated
+    private static final String[] DEFAULT_SCOPES = new String[] { "https://atlas.microsoft.com/.default" };
 
-    @Generated private final List<HttpPipelinePolicy> pipelinePolicies;
+    @Generated
+    private static final Map<String, String> PROPERTIES = new HashMap<>();
 
-    /** Create an instance of the RenderClientImplBuilder. */
+    @Generated
+    private final List<HttpPipelinePolicy> pipelinePolicies;
+
+    /**
+     * Create an instance of the RenderClientImplBuilder.
+     */
     @Generated
     public RenderClientImplBuilder() {
         this.pipelinePolicies = new ArrayList<>();
     }
 
     /*
-     * The HTTP pipeline to send requests through.
-     */
-    @Generated private HttpPipeline pipeline;
-
-    /** {@inheritDoc}. */
-    @Generated
-    @Override
-    public RenderClientImplBuilder pipeline(HttpPipeline pipeline) {
-        this.pipeline = pipeline;
-        return this;
-    }
-
-    /*
      * The HTTP client used to send the request.
      */
-    @Generated private HttpClient httpClient;
+    @Generated
+    private HttpClient httpClient;
 
-    /** {@inheritDoc}. */
+    /**
+     * {@inheritDoc}.
+     */
     @Generated
     @Override
     public RenderClientImplBuilder httpClient(HttpClient httpClient) {
@@ -82,11 +91,33 @@ public final class RenderClientImplBuilder
     }
 
     /*
+     * The HTTP pipeline to send requests through.
+     */
+    @Generated
+    private HttpPipeline pipeline;
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Generated
+    @Override
+    public RenderClientImplBuilder pipeline(HttpPipeline pipeline) {
+        if (this.pipeline != null && pipeline == null) {
+            LOGGER.atInfo().log("HttpPipeline is being set to 'null' when it was previously configured.");
+        }
+        this.pipeline = pipeline;
+        return this;
+    }
+
+    /*
      * The logging configuration for HTTP requests and responses.
      */
-    @Generated private HttpLogOptions httpLogOptions;
+    @Generated
+    private HttpLogOptions httpLogOptions;
 
-    /** {@inheritDoc}. */
+    /**
+     * {@inheritDoc}.
+     */
     @Generated
     @Override
     public RenderClientImplBuilder httpLogOptions(HttpLogOptions httpLogOptions) {
@@ -95,12 +126,14 @@ public final class RenderClientImplBuilder
     }
 
     /*
-     * The client options such as application ID and custom headers to set on a
-     * request.
+     * The client options such as application ID and custom headers to set on a request.
      */
-    @Generated private ClientOptions clientOptions;
+    @Generated
+    private ClientOptions clientOptions;
 
-    /** {@inheritDoc}. */
+    /**
+     * {@inheritDoc}.
+     */
     @Generated
     @Override
     public RenderClientImplBuilder clientOptions(ClientOptions clientOptions) {
@@ -111,9 +144,12 @@ public final class RenderClientImplBuilder
     /*
      * The retry options to configure retry policy for failed requests.
      */
-    @Generated private RetryOptions retryOptions;
+    @Generated
+    private RetryOptions retryOptions;
 
-    /** {@inheritDoc}. */
+    /**
+     * {@inheritDoc}.
+     */
     @Generated
     @Override
     public RenderClientImplBuilder retryOptions(RetryOptions retryOptions) {
@@ -121,21 +157,26 @@ public final class RenderClientImplBuilder
         return this;
     }
 
-    /** {@inheritDoc}. */
+    /**
+     * {@inheritDoc}.
+     */
     @Generated
     @Override
     public RenderClientImplBuilder addPolicy(HttpPipelinePolicy customPolicy) {
+        Objects.requireNonNull(customPolicy, "'customPolicy' cannot be null.");
         pipelinePolicies.add(customPolicy);
         return this;
     }
 
     /*
-     * The configuration store that is used during construction of the service
-     * client.
+     * The configuration store that is used during construction of the service client.
      */
-    @Generated private Configuration configuration;
+    @Generated
+    private Configuration configuration;
 
-    /** {@inheritDoc}. */
+    /**
+     * {@inheritDoc}.
+     */
     @Generated
     @Override
     public RenderClientImplBuilder configuration(Configuration configuration) {
@@ -144,19 +185,72 @@ public final class RenderClientImplBuilder
     }
 
     /*
-     * Specifies which account is intended for usage in conjunction with the
-     * Azure AD security model.  It represents a unique ID for the Azure Maps
-     * account and can be retrieved from the Azure Maps management  plane
-     * Account API. To use Azure AD security in Azure Maps see the following
-     * [articles](https://aka.ms/amauthdetails) for guidance.
+     * The TokenCredential used for authentication.
      */
-    @Generated private String clientId;
+    @Generated
+    private TokenCredential tokenCredential;
 
     /**
-     * Sets Specifies which account is intended for usage in conjunction with the Azure AD security model. It represents
-     * a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management plane Account API. To
-     * use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance.
-     *
+     * {@inheritDoc}.
+     */
+    @Generated
+    @Override
+    public RenderClientImplBuilder credential(TokenCredential tokenCredential) {
+        this.tokenCredential = tokenCredential;
+        return this;
+    }
+
+    /*
+     * The AzureKeyCredential used for authentication.
+     */
+    @Generated
+    private AzureKeyCredential azureKeyCredential;
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Generated
+    @Override
+    public RenderClientImplBuilder credential(AzureKeyCredential azureKeyCredential) {
+        this.azureKeyCredential = azureKeyCredential;
+        return this;
+    }
+
+    /*
+     * The Accept header field can be used to specify preferences regarding response media types. Allowed media types
+     * include image/jpeg and image/png. Return image in image/png if Accept header is not specified.
+     */
+    @Generated
+    private MediaType accept;
+
+    /**
+     * Sets The Accept header field can be used to specify preferences regarding response media types. Allowed media
+     * types include image/jpeg and image/png. Return image in image/png if Accept header is not specified.
+     * 
+     * @param accept the accept value.
+     * @return the RenderClientImplBuilder.
+     */
+    @Generated
+    public RenderClientImplBuilder accept(MediaType accept) {
+        this.accept = accept;
+        return this;
+    }
+
+    /*
+     * Indicates the account intended for use with the Microsoft Entra ID security model. This unique ID for the Azure
+     * Maps account can be obtained from the [Azure Maps management plane Account
+     * API](/rest/api/maps-management/accounts). For more information on using Microsoft Entra ID security in Azure
+     * Maps, see [Manage authentication in Azure Maps](/azure/azure-maps/how-to-manage-authentication).
+     */
+    @Generated
+    private String clientId;
+
+    /**
+     * Sets Indicates the account intended for use with the Microsoft Entra ID security model. This unique ID for the
+     * Azure Maps account can be obtained from the [Azure Maps management plane Account
+     * API](/rest/api/maps-management/accounts). For more information on using Microsoft Entra ID security in Azure
+     * Maps, see [Manage authentication in Azure Maps](/azure/azure-maps/how-to-manage-authentication).
+     * 
      * @param clientId the clientId value.
      * @return the RenderClientImplBuilder.
      */
@@ -169,11 +263,12 @@ public final class RenderClientImplBuilder
     /*
      * server parameter
      */
-    @Generated private String host;
+    @Generated
+    private String host;
 
     /**
      * Sets server parameter.
-     *
+     * 
      * @param host the host value.
      * @return the RenderClientImplBuilder.
      */
@@ -186,11 +281,12 @@ public final class RenderClientImplBuilder
     /*
      * Api Version
      */
-    @Generated private String apiVersion;
+    @Generated
+    private String apiVersion;
 
     /**
      * Sets Api Version.
-     *
+     * 
      * @param apiVersion the apiVersion value.
      * @return the RenderClientImplBuilder.
      */
@@ -203,11 +299,12 @@ public final class RenderClientImplBuilder
     /*
      * The serializer to serialize an object into a string
      */
-    @Generated private SerializerAdapter serializerAdapter;
+    @Generated
+    private SerializerAdapter serializerAdapter;
 
     /**
      * Sets The serializer to serialize an object into a string.
-     *
+     * 
      * @param serializerAdapter the serializerAdapter value.
      * @return the RenderClientImplBuilder.
      */
@@ -218,14 +315,14 @@ public final class RenderClientImplBuilder
     }
 
     /*
-     * The retry policy that will attempt to retry failed requests, if
-     * applicable.
+     * The retry policy that will attempt to retry failed requests, if applicable.
      */
-    @Generated private RetryPolicy retryPolicy;
+    @Generated
+    private RetryPolicy retryPolicy;
 
     /**
      * Sets The retry policy that will attempt to retry failed requests, if applicable.
-     *
+     * 
      * @param retryPolicy the retryPolicy value.
      * @return the RenderClientImplBuilder.
      */
@@ -237,69 +334,68 @@ public final class RenderClientImplBuilder
 
     /**
      * Builds an instance of RenderClientImpl with the provided parameters.
-     *
+     * 
      * @return an instance of RenderClientImpl.
      */
     @Generated
     public RenderClientImpl buildClient() {
-        if (pipeline == null) {
-            this.pipeline = createHttpPipeline();
-        }
-        if (host == null) {
-            this.host = "https://atlas.microsoft.com";
-        }
-        if (apiVersion == null) {
-            this.apiVersion = "2022-08-01";
-        }
-        if (serializerAdapter == null) {
-            this.serializerAdapter = JacksonAdapter.createDefaultSerializerAdapter();
-        }
-        RenderClientImpl client = new RenderClientImpl(pipeline, serializerAdapter, clientId, host, apiVersion);
+        this.validateClient();
+        HttpPipeline localPipeline = (pipeline != null) ? pipeline : createHttpPipeline();
+        String localHost = (host != null) ? host : "https://atlas.microsoft.com";
+        String localApiVersion = (apiVersion != null) ? apiVersion : "2024-04-01";
+        SerializerAdapter localSerializerAdapter
+            = (serializerAdapter != null) ? serializerAdapter : JacksonAdapter.createDefaultSerializerAdapter();
+        RenderClientImpl client = new RenderClientImpl(localPipeline, localSerializerAdapter, this.accept,
+            this.clientId, localHost, localApiVersion);
         return client;
     }
 
     @Generated
+    private void validateClient() {
+        // This method is invoked from 'buildInnerClient'/'buildClient' method.
+        // Developer can customize this method, to validate that the necessary conditions are met for the new client.
+    }
+
+    @Generated
     private HttpPipeline createHttpPipeline() {
-        Configuration buildConfiguration =
-                (configuration == null) ? Configuration.getGlobalConfiguration() : configuration;
-        if (httpLogOptions == null) {
-            httpLogOptions = new HttpLogOptions();
-        }
-        if (clientOptions == null) {
-            clientOptions = new ClientOptions();
-        }
+        Configuration buildConfiguration
+            = (configuration == null) ? Configuration.getGlobalConfiguration() : configuration;
+        HttpLogOptions localHttpLogOptions = this.httpLogOptions == null ? new HttpLogOptions() : this.httpLogOptions;
+        ClientOptions localClientOptions = this.clientOptions == null ? new ClientOptions() : this.clientOptions;
         List<HttpPipelinePolicy> policies = new ArrayList<>();
-        String clientName = properties.getOrDefault(SDK_NAME, "UnknownName");
-        String clientVersion = properties.getOrDefault(SDK_VERSION, "UnknownVersion");
-        String applicationId = CoreUtils.getApplicationId(clientOptions, httpLogOptions);
+        String clientName = PROPERTIES.getOrDefault(SDK_NAME, "UnknownName");
+        String clientVersion = PROPERTIES.getOrDefault(SDK_VERSION, "UnknownVersion");
+        String applicationId = CoreUtils.getApplicationId(localClientOptions, localHttpLogOptions);
         policies.add(new UserAgentPolicy(applicationId, clientName, clientVersion, buildConfiguration));
         policies.add(new RequestIdPolicy());
         policies.add(new AddHeadersFromContextPolicy());
-        HttpHeaders headers = new HttpHeaders();
-        clientOptions.getHeaders().forEach(header -> headers.set(header.getName(), header.getValue()));
-        if (headers.getSize() > 0) {
+        HttpHeaders headers = CoreUtils.createHttpHeadersFromClientOptions(localClientOptions);
+        if (headers != null) {
             policies.add(new AddHeadersPolicy(headers));
         }
-        policies.addAll(
-                this.pipelinePolicies.stream()
-                        .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_CALL)
-                        .collect(Collectors.toList()));
+        this.pipelinePolicies.stream()
+            .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_CALL)
+            .forEach(p -> policies.add(p));
         HttpPolicyProviders.addBeforeRetryPolicies(policies);
         policies.add(ClientBuilderUtil.validateAndGetRetryPolicy(retryPolicy, retryOptions, new RetryPolicy()));
         policies.add(new AddDatePolicy());
-        policies.add(new CookiePolicy());
-        policies.addAll(
-                this.pipelinePolicies.stream()
-                        .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_RETRY)
-                        .collect(Collectors.toList()));
+        if (azureKeyCredential != null) {
+            policies.add(new AzureKeyCredentialPolicy("SAS Token", azureKeyCredential));
+        }
+        if (tokenCredential != null) {
+            policies.add(new BearerTokenAuthenticationPolicy(tokenCredential, DEFAULT_SCOPES));
+        }
+        this.pipelinePolicies.stream()
+            .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_RETRY)
+            .forEach(p -> policies.add(p));
         HttpPolicyProviders.addAfterRetryPolicies(policies);
-        policies.add(new HttpLoggingPolicy(httpLogOptions));
-        HttpPipeline httpPipeline =
-                new HttpPipelineBuilder()
-                        .policies(policies.toArray(new HttpPipelinePolicy[0]))
-                        .httpClient(httpClient)
-                        .clientOptions(clientOptions)
-                        .build();
+        policies.add(new HttpLoggingPolicy(localHttpLogOptions));
+        HttpPipeline httpPipeline = new HttpPipelineBuilder().policies(policies.toArray(new HttpPipelinePolicy[0]))
+            .httpClient(httpClient)
+            .clientOptions(localClientOptions)
+            .build();
         return httpPipeline;
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(RenderClientImplBuilder.class);
 }

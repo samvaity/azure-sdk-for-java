@@ -4,19 +4,22 @@
 
 package com.azure.resourcemanager.iothub.generated;
 
-/** Samples for IotHubResource GetJob. */
+/**
+ * Samples for IotHubResource GetJob.
+ */
 public final class IotHubResourceGetJobSamples {
     /*
-     * x-ms-original-file: specification/iothub/resource-manager/Microsoft.Devices/preview/2022-11-15-preview/examples/iothub_getjob.json
+     * x-ms-original-file:
+     * specification/iothub/resource-manager/Microsoft.Devices/IoTHub/preview/2025-08-01-preview/examples/iothub_getjob.
+     * json
      */
     /**
      * Sample code: IotHubResource_GetJob.
-     *
+     * 
      * @param manager Entry point to IotHubManager.
      */
     public static void iotHubResourceGetJob(com.azure.resourcemanager.iothub.IotHubManager manager) {
-        manager
-            .iotHubResources()
+        manager.iotHubResources()
             .getJobWithResponse("myResourceGroup", "testHub", "test", com.azure.core.util.Context.NONE);
     }
 }

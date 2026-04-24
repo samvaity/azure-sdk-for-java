@@ -5,38 +5,44 @@
 package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.resourcemanager.networkcloud.models.ImageRepositoryCredentials;
+import com.azure.resourcemanager.networkcloud.models.ManagedServiceIdentity;
+import com.azure.resourcemanager.networkcloud.models.ManagedServiceIdentityType;
+import com.azure.resourcemanager.networkcloud.models.UserAssignedIdentity;
 import com.azure.resourcemanager.networkcloud.models.VirtualMachine;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for VirtualMachines Update. */
+/**
+ * Samples for VirtualMachines Update.
+ */
 public final class VirtualMachinesUpdateSamples {
     /*
-     * x-ms-original-file: specification/networkcloud/resource-manager/Microsoft.NetworkCloud/preview/2023-05-01-preview/examples/VirtualMachines_Patch.json
+     * x-ms-original-file:
+     * specification/networkcloud/resource-manager/Microsoft.NetworkCloud/stable/2025-09-01/examples/
+     * VirtualMachines_Patch.json
      */
     /**
      * Sample code: Patch virtual machine.
-     *
+     * 
      * @param manager Entry point to NetworkCloudManager.
      */
     public static void patchVirtualMachine(com.azure.resourcemanager.networkcloud.NetworkCloudManager manager) {
-        VirtualMachine resource =
-            manager
-                .virtualMachines()
-                .getByResourceGroupWithResponse(
-                    "resourceGroupName", "virtualMachineName", com.azure.core.util.Context.NONE)
-                .getValue();
-        resource
-            .update()
-            .withTags(mapOf("key1", "myvalue1", "key2", "myvalue2"))
-            .withVmImageRepositoryCredentials(
-                new ImageRepositoryCredentials()
-                    .withPassword("fakeTokenPlaceholder")
-                    .withRegistryUrl("myacr.azurecr.io")
-                    .withUsername("myuser"))
+        VirtualMachine resource = manager.virtualMachines()
+            .getByResourceGroupWithResponse("resourceGroupName", "virtualMachineName", com.azure.core.util.Context.NONE)
+            .getValue();
+        resource.update()
+            .withTags(mapOf("key1", "fakeTokenPlaceholder", "key2", "fakeTokenPlaceholder"))
+            .withIdentity(new ManagedServiceIdentity().withType(ManagedServiceIdentityType.USER_ASSIGNED)
+                .withUserAssignedIdentities(mapOf(
+                    "/subscriptions/123e4567-e89b-12d3-a456-426655440000/resourceGroups/resourceGroupName/providers/Microsoft.ManagedIdentity/userAssignedIdentities/userIdentity1",
+                    new UserAssignedIdentity())))
+            .withVmImageRepositoryCredentials(new ImageRepositoryCredentials().withPassword("fakeTokenPlaceholder")
+                .withRegistryUrl("myacr.azurecr.io")
+                .withUsername("myuser"))
             .apply();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

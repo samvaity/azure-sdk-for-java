@@ -4,38 +4,51 @@
 
 package com.azure.ai.formrecognizer.documentanalysis.implementation.models;
 
-import com.azure.core.annotation.Immutable;
+import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The DocumentClassifiersClassifyDocumentHeaders model. */
-@Immutable
+/**
+ * The DocumentClassifiersClassifyDocumentHeaders model.
+ */
+@Fluent
 public final class DocumentClassifiersClassifyDocumentHeaders {
     /*
      * The Operation-Location property.
      */
-    @JsonProperty(value = "Operation-Location")
+    @Generated
     private String operationLocation;
-
-    private static final HttpHeaderName OPERATION_LOCATION = HttpHeaderName.fromString("Operation-Location");
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of DocumentClassifiersClassifyDocumentHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public DocumentClassifiersClassifyDocumentHeaders(HttpHeaders rawHeaders) {
-        this.operationLocation = rawHeaders.getValue(OPERATION_LOCATION);
+        this.operationLocation = rawHeaders.getValue(HttpHeaderName.OPERATION_LOCATION);
     }
 
     /**
      * Get the operationLocation property: The Operation-Location property.
-     *
+     * 
      * @return the operationLocation value.
      */
+    @Generated
     public String getOperationLocation() {
         return this.operationLocation;
+    }
+
+    /**
+     * Set the operationLocation property: The Operation-Location property.
+     * 
+     * @param operationLocation the operationLocation value to set.
+     * @return the DocumentClassifiersClassifyDocumentHeaders object itself.
+     */
+    @Generated
+    public DocumentClassifiersClassifyDocumentHeaders setOperationLocation(String operationLocation) {
+        this.operationLocation = operationLocation;
+        return this;
     }
 }

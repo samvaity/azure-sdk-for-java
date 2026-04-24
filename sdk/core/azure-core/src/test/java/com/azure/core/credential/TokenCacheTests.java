@@ -4,7 +4,6 @@
 package com.azure.core.credential;
 
 import com.azure.core.implementation.AccessTokenCache;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,18 +18,15 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TokenCacheTests {
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
-    @BeforeEach
-    void beforeEach() {
-        StepVerifier.setDefaultTimeout(Duration.ofSeconds(30));
-    }
     @Test
     public void testOnlyOneThreadRefreshesToken() {
         AtomicLong refreshes = new AtomicLong(0);
@@ -41,13 +37,13 @@ public class TokenCacheTests {
             return incrementalRemoteGetTokenAsync(new AtomicInteger(1));
         });
 
-        StepVerifier.create(Flux.range(1, 10).flatMap(ignored -> Mono.just(OffsetDateTime.now()))
+        StepVerifier.create(Flux.range(1, 10)
+            .flatMap(ignored -> Mono.just(OffsetDateTime.now()))
             .parallel(10)
-                // Runs cache.getToken() on 10 different threads
-                .runOn(Schedulers.boundedElastic())
-                .flatMap(start -> cache.getToken())
-                .then())
-            .verifyComplete();
+            // Runs cache.getToken() on 10 different threads
+            .runOn(Schedulers.boundedElastic())
+            .flatMap(start -> cache.getToken())
+            .then()).expectComplete().verify(DEFAULT_TIMEOUT);
 
         // Ensure that only one refresh attempt is made.
         assertEquals(1, refreshes.get());
@@ -65,13 +61,13 @@ public class TokenCacheTests {
         // Token acquisition time grows in 1 sec, 2 sec... To make sure only one token acquisition is run
         AccessTokenCache cache = new AccessTokenCache(dummyCred);
 
-        StepVerifier.create(Flux.range(1, 10).flatMap(ignored -> Mono.just(OffsetDateTime.now()))
-                .parallel(10)
-                // Runs cache.getToken() on 10 different threads
-                .runOn(Schedulers.boundedElastic())
-                .flatMap(start -> cache.getToken(new TokenRequestContext(), false))
-                .then())
-            .verifyComplete();
+        StepVerifier.create(Flux.range(1, 10)
+            .flatMap(ignored -> Mono.just(OffsetDateTime.now()))
+            .parallel(10)
+            // Runs cache.getToken() on 10 different threads
+            .runOn(Schedulers.boundedElastic())
+            .flatMap(start -> cache.getToken(new TokenRequestContext(), false))
+            .then()).expectComplete().verify(DEFAULT_TIMEOUT);
 
         // Ensure that only one refresh attempt is made.
         assertEquals(1, refreshes.get());
@@ -90,13 +86,14 @@ public class TokenCacheTests {
 
         AccessTokenCache cache = new AccessTokenCache(dummyCred);
 
-        StepVerifier.create(Flux.range(1, 5).flatMap(ignored -> Mono.just(OffsetDateTime.now()))
-                .parallel(5)
-                // Runs cache.getToken() on 5 different threads
-                .runOn(Schedulers.boundedElastic())
-                .flatMap(start -> cache.getToken(new TokenRequestContext().addScopes("test" + atomicInteger.incrementAndGet() + "/.default"), true))
-                .then())
-            .verifyComplete();
+        StepVerifier.create(Flux.range(1, 5)
+            .flatMap(ignored -> Mono.just(OffsetDateTime.now()))
+            .parallel(5)
+            // Runs cache.getToken() on 5 different threads
+            .runOn(Schedulers.boundedElastic())
+            .flatMap(start -> cache.getToken(
+                new TokenRequestContext().addScopes("test" + atomicInteger.incrementAndGet() + "/.default"), true))
+            .then()).expectComplete().verify(DEFAULT_TIMEOUT);
 
         // Ensure that refresh attempts are made.
         assertEquals(5, refreshes.get());
@@ -114,17 +111,15 @@ public class TokenCacheTests {
 
         AccessTokenCache cache = new AccessTokenCache(dummyCred);
 
-        IntStream.range(0, 5)
-            .parallel()
-            .flatMap(integer -> {
-                cache.getTokenSync(new TokenRequestContext().addScopes("test" + integer + "/.default"), true);
-                return IntStream.of(integer);
-            }).boxed().collect(Collectors.toList());
+        IntStream.range(0, 5).parallel().flatMap(integer -> {
+            cache.getTokenSync(new TokenRequestContext().addScopes("test" + integer + "/.default"), true);
+            return IntStream.of(integer);
+        }).forEach(ignored -> {
+        });
 
         // Ensure that refresh attempts are made.
         assertEquals(5, refreshes.get());
     }
-
 
     @Test
     public void testOnlyOneSyncThreadRefreshesToken() {
@@ -138,12 +133,11 @@ public class TokenCacheTests {
         // Token acquisition time grows in 1 sec, 2 sec... To make sure only one token acquisition is run
         AccessTokenCache cache = new AccessTokenCache(dummyCred);
 
-        IntStream.range(1, 10)
-            .parallel()
-            .flatMap(integer -> {
-                cache.getTokenSync(new TokenRequestContext(), false);
-                return IntStream.of(integer);
-            }).boxed().collect(Collectors.toList());
+        IntStream.range(1, 10).parallel().flatMap(integer -> {
+            cache.getTokenSync(new TokenRequestContext(), false);
+            return IntStream.of(integer);
+        }).forEach(ignored -> {
+        });
 
         // Ensure that only one refresh attempt is made.
         assertEquals(1, refreshes.get());
@@ -176,6 +170,27 @@ public class TokenCacheTests {
         assertTrue(refreshes.get() <= 11);
     }
 
+    @Test
+    public void testRefreshOnFlow() throws InterruptedException {
+        AtomicLong refreshes = new AtomicLong(0);
+
+        TokenCredential dummyCred = request -> {
+            refreshes.incrementAndGet();
+            return Mono.just(new TokenCacheTests.Token("testToken", 200000, 33000));
+        };
+
+        AccessTokenCache cache = new AccessTokenCache(dummyCred);
+
+        cache.getTokenSync(new TokenRequestContext(), false);
+
+        sleep(40000);
+
+        cache.getTokenSync(new TokenRequestContext(), false);
+
+        // Ensure refresh is made after refreshOn duration.
+        assertEquals(2, refreshes.get());
+    }
+
     private Mono<AccessToken> remoteGetTokenThatExpiresSoonAsync() {
         return Mono.delay(Duration.ofMillis(1000))
             .map(l -> new Token(Integer.toString(ThreadLocalRandom.current().nextInt(100)), 0));
@@ -187,13 +202,19 @@ public class TokenCacheTests {
             .map(l -> new Token(Integer.toString(ThreadLocalRandom.current().nextInt(100))));
     }
 
-    private static class Token extends AccessToken {
+    public static class Token extends AccessToken {
         Token(String token) {
             this(token, 5000);
         }
 
         Token(String token, long validityInMillis) {
-            super(token, OffsetDateTime.now().plus(Duration.ofMillis(validityInMillis)));
+            super(token, OffsetDateTime.now().plus(Duration.ofMillis(validityInMillis)),
+                OffsetDateTime.now().plusSeconds(5));
+        }
+
+        Token(String token, long validityInMillis, long refreshInMillis) {
+            super(token, OffsetDateTime.now().plus(Duration.ofMillis(validityInMillis)),
+                OffsetDateTime.now().plus(Duration.ofMillis(refreshInMillis)));
         }
     }
 }

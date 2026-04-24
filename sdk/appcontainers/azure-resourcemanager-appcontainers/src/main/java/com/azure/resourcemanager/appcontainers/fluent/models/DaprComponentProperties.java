@@ -5,69 +5,80 @@
 package com.azure.resourcemanager.appcontainers.fluent.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import com.azure.resourcemanager.appcontainers.models.DaprComponentProvisioningState;
 import com.azure.resourcemanager.appcontainers.models.DaprMetadata;
 import com.azure.resourcemanager.appcontainers.models.Secret;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.util.List;
 
-/** Dapr Component resource specific properties. */
+/**
+ * Dapr Component resource specific properties.
+ */
 @Fluent
-public final class DaprComponentProperties {
+public final class DaprComponentProperties implements JsonSerializable<DaprComponentProperties> {
     /*
      * Component type
      */
-    @JsonProperty(value = "componentType")
     private String componentType;
 
     /*
      * Component version
      */
-    @JsonProperty(value = "version")
     private String version;
 
     /*
      * Boolean describing if the component errors are ignores
      */
-    @JsonProperty(value = "ignoreErrors")
     private Boolean ignoreErrors;
 
     /*
      * Initialization timeout
      */
-    @JsonProperty(value = "initTimeout")
     private String initTimeout;
 
     /*
      * Collection of secrets used by a Dapr component
      */
-    @JsonProperty(value = "secrets")
     private List<Secret> secrets;
 
     /*
      * Name of a Dapr component to retrieve component secrets from
      */
-    @JsonProperty(value = "secretStoreComponent")
     private String secretStoreComponent;
 
     /*
      * Component metadata
      */
-    @JsonProperty(value = "metadata")
     private List<DaprMetadata> metadata;
 
     /*
      * Names of container apps that can use this Dapr component
      */
-    @JsonProperty(value = "scopes")
     private List<String> scopes;
 
-    /** Creates an instance of DaprComponentProperties class. */
+    /*
+     * Provisioning state of the Dapr Component.
+     */
+    private DaprComponentProvisioningState provisioningState;
+
+    /*
+     * Any errors that occurred during deployment or deployment validation
+     */
+    private String deploymentErrors;
+
+    /**
+     * Creates an instance of DaprComponentProperties class.
+     */
     public DaprComponentProperties() {
     }
 
     /**
      * Get the componentType property: Component type.
-     *
+     * 
      * @return the componentType value.
      */
     public String componentType() {
@@ -76,7 +87,7 @@ public final class DaprComponentProperties {
 
     /**
      * Set the componentType property: Component type.
-     *
+     * 
      * @param componentType the componentType value to set.
      * @return the DaprComponentProperties object itself.
      */
@@ -87,7 +98,7 @@ public final class DaprComponentProperties {
 
     /**
      * Get the version property: Component version.
-     *
+     * 
      * @return the version value.
      */
     public String version() {
@@ -96,7 +107,7 @@ public final class DaprComponentProperties {
 
     /**
      * Set the version property: Component version.
-     *
+     * 
      * @param version the version value to set.
      * @return the DaprComponentProperties object itself.
      */
@@ -107,7 +118,7 @@ public final class DaprComponentProperties {
 
     /**
      * Get the ignoreErrors property: Boolean describing if the component errors are ignores.
-     *
+     * 
      * @return the ignoreErrors value.
      */
     public Boolean ignoreErrors() {
@@ -116,7 +127,7 @@ public final class DaprComponentProperties {
 
     /**
      * Set the ignoreErrors property: Boolean describing if the component errors are ignores.
-     *
+     * 
      * @param ignoreErrors the ignoreErrors value to set.
      * @return the DaprComponentProperties object itself.
      */
@@ -127,7 +138,7 @@ public final class DaprComponentProperties {
 
     /**
      * Get the initTimeout property: Initialization timeout.
-     *
+     * 
      * @return the initTimeout value.
      */
     public String initTimeout() {
@@ -136,7 +147,7 @@ public final class DaprComponentProperties {
 
     /**
      * Set the initTimeout property: Initialization timeout.
-     *
+     * 
      * @param initTimeout the initTimeout value to set.
      * @return the DaprComponentProperties object itself.
      */
@@ -147,7 +158,7 @@ public final class DaprComponentProperties {
 
     /**
      * Get the secrets property: Collection of secrets used by a Dapr component.
-     *
+     * 
      * @return the secrets value.
      */
     public List<Secret> secrets() {
@@ -156,7 +167,7 @@ public final class DaprComponentProperties {
 
     /**
      * Set the secrets property: Collection of secrets used by a Dapr component.
-     *
+     * 
      * @param secrets the secrets value to set.
      * @return the DaprComponentProperties object itself.
      */
@@ -167,7 +178,7 @@ public final class DaprComponentProperties {
 
     /**
      * Get the secretStoreComponent property: Name of a Dapr component to retrieve component secrets from.
-     *
+     * 
      * @return the secretStoreComponent value.
      */
     public String secretStoreComponent() {
@@ -176,7 +187,7 @@ public final class DaprComponentProperties {
 
     /**
      * Set the secretStoreComponent property: Name of a Dapr component to retrieve component secrets from.
-     *
+     * 
      * @param secretStoreComponent the secretStoreComponent value to set.
      * @return the DaprComponentProperties object itself.
      */
@@ -187,7 +198,7 @@ public final class DaprComponentProperties {
 
     /**
      * Get the metadata property: Component metadata.
-     *
+     * 
      * @return the metadata value.
      */
     public List<DaprMetadata> metadata() {
@@ -196,7 +207,7 @@ public final class DaprComponentProperties {
 
     /**
      * Set the metadata property: Component metadata.
-     *
+     * 
      * @param metadata the metadata value to set.
      * @return the DaprComponentProperties object itself.
      */
@@ -207,7 +218,7 @@ public final class DaprComponentProperties {
 
     /**
      * Get the scopes property: Names of container apps that can use this Dapr component.
-     *
+     * 
      * @return the scopes value.
      */
     public List<String> scopes() {
@@ -216,7 +227,7 @@ public final class DaprComponentProperties {
 
     /**
      * Set the scopes property: Names of container apps that can use this Dapr component.
-     *
+     * 
      * @param scopes the scopes value to set.
      * @return the DaprComponentProperties object itself.
      */
@@ -226,8 +237,26 @@ public final class DaprComponentProperties {
     }
 
     /**
+     * Get the provisioningState property: Provisioning state of the Dapr Component.
+     * 
+     * @return the provisioningState value.
+     */
+    public DaprComponentProvisioningState provisioningState() {
+        return this.provisioningState;
+    }
+
+    /**
+     * Get the deploymentErrors property: Any errors that occurred during deployment or deployment validation.
+     * 
+     * @return the deploymentErrors value.
+     */
+    public String deploymentErrors() {
+        return this.deploymentErrors;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -237,5 +266,70 @@ public final class DaprComponentProperties {
         if (metadata() != null) {
             metadata().forEach(e -> e.validate());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("componentType", this.componentType);
+        jsonWriter.writeStringField("version", this.version);
+        jsonWriter.writeBooleanField("ignoreErrors", this.ignoreErrors);
+        jsonWriter.writeStringField("initTimeout", this.initTimeout);
+        jsonWriter.writeArrayField("secrets", this.secrets, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("secretStoreComponent", this.secretStoreComponent);
+        jsonWriter.writeArrayField("metadata", this.metadata, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("scopes", this.scopes, (writer, element) -> writer.writeString(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DaprComponentProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DaprComponentProperties if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the DaprComponentProperties.
+     */
+    public static DaprComponentProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DaprComponentProperties deserializedDaprComponentProperties = new DaprComponentProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("componentType".equals(fieldName)) {
+                    deserializedDaprComponentProperties.componentType = reader.getString();
+                } else if ("version".equals(fieldName)) {
+                    deserializedDaprComponentProperties.version = reader.getString();
+                } else if ("ignoreErrors".equals(fieldName)) {
+                    deserializedDaprComponentProperties.ignoreErrors = reader.getNullable(JsonReader::getBoolean);
+                } else if ("initTimeout".equals(fieldName)) {
+                    deserializedDaprComponentProperties.initTimeout = reader.getString();
+                } else if ("secrets".equals(fieldName)) {
+                    List<Secret> secrets = reader.readArray(reader1 -> Secret.fromJson(reader1));
+                    deserializedDaprComponentProperties.secrets = secrets;
+                } else if ("secretStoreComponent".equals(fieldName)) {
+                    deserializedDaprComponentProperties.secretStoreComponent = reader.getString();
+                } else if ("metadata".equals(fieldName)) {
+                    List<DaprMetadata> metadata = reader.readArray(reader1 -> DaprMetadata.fromJson(reader1));
+                    deserializedDaprComponentProperties.metadata = metadata;
+                } else if ("scopes".equals(fieldName)) {
+                    List<String> scopes = reader.readArray(reader1 -> reader1.getString());
+                    deserializedDaprComponentProperties.scopes = scopes;
+                } else if ("provisioningState".equals(fieldName)) {
+                    deserializedDaprComponentProperties.provisioningState
+                        = DaprComponentProvisioningState.fromString(reader.getString());
+                } else if ("deploymentErrors".equals(fieldName)) {
+                    deserializedDaprComponentProperties.deploymentErrors = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedDaprComponentProperties;
+        });
     }
 }

@@ -10,17 +10,15 @@ import com.azure.resourcemanager.datamigration.models.ConnectToTargetAzureDbForP
 public final class ConnectToTargetAzureDbForPostgreSqlSyncTaskOutputTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ConnectToTargetAzureDbForPostgreSqlSyncTaskOutput model =
-            BinaryData
-                .fromString(
-                    "{\"id\":\"pp\",\"targetServerVersion\":\"lcxog\",\"databases\":[\"onz\",\"nsikvmkqzeqqkdl\",\"fzxmhhvhgureodkw\"],\"targetServerBrandVersion\":\"dagxtibqd\",\"validationErrors\":[{\"message\":\"akbogqxndlkzgxh\",\"actionableMessage\":\"iplbpodxunkbebxm\",\"filePath\":\"yyntwl\",\"lineNumber\":\"qtkoievs\",\"hResult\":921402224,\"stackTrace\":\"q\"}]}")
-                .toObject(ConnectToTargetAzureDbForPostgreSqlSyncTaskOutput.class);
+        ConnectToTargetAzureDbForPostgreSqlSyncTaskOutput model = BinaryData.fromString(
+            "{\"id\":\"nac\",\"targetServerVersion\":\"ckknhxkizvy\",\"databases\":[\"zvulj\",\"aaeranokqgukk\"],\"targetServerBrandVersion\":\"nvbroylaxx\",\"validationErrors\":[{\"message\":\"isdos\",\"actionableMessage\":\"b\",\"filePath\":\"vgjrwhr\",\"lineNumber\":\"ycy\",\"hResult\":101207087,\"stackTrace\":\"xgccknfnw\"},{\"message\":\"tmvpdvjdhtt\",\"actionableMessage\":\"efedxihchrphkm\",\"filePath\":\"jdqnsdfzpbgt\",\"lineNumber\":\"ylkdghrje\",\"hResult\":285687573,\"stackTrace\":\"wxezwzhok\"}]}")
+            .toObject(ConnectToTargetAzureDbForPostgreSqlSyncTaskOutput.class);
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ConnectToTargetAzureDbForPostgreSqlSyncTaskOutput model =
-            new ConnectToTargetAzureDbForPostgreSqlSyncTaskOutput();
+        ConnectToTargetAzureDbForPostgreSqlSyncTaskOutput model
+            = new ConnectToTargetAzureDbForPostgreSqlSyncTaskOutput();
         model = BinaryData.fromObject(model).toObject(ConnectToTargetAzureDbForPostgreSqlSyncTaskOutput.class);
     }
 }

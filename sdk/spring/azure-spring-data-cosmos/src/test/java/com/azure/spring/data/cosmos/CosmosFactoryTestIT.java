@@ -5,17 +5,17 @@ package com.azure.spring.data.cosmos;
 import com.azure.cosmos.CosmosAsyncClient;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.spring.data.cosmos.repository.TestRepositoryConfig;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestRepositoryConfig.class)
 public class CosmosFactoryTestIT {
 
@@ -85,14 +85,20 @@ public class CosmosFactoryTestIT {
 
     @Test
     public void testConnectionPolicyUserAgentKept() throws IllegalAccessException, NoSuchFieldException {
+        CosmosAsyncClient ignored = null;
+        try {
+            final CosmosClientBuilder cosmosClientBuilder = new CosmosClientBuilder()
+                .endpoint(cosmosDbUri)
+                .key(cosmosDbKey);
+            ignored = CosmosFactory.createCosmosAsyncClient(cosmosClientBuilder);
 
-        final CosmosClientBuilder cosmosClientBuilder = new CosmosClientBuilder()
-            .endpoint(cosmosDbUri)
-            .key(cosmosDbKey);
-        CosmosFactory.createCosmosAsyncClient(cosmosClientBuilder);
-
-        final String uaSuffix = getUserAgentSuffixValue(cosmosClientBuilder);
-        assertThat(uaSuffix).contains(Constants.USER_AGENT_SUFFIX);
+            final String uaSuffix = getUserAgentSuffixValue(cosmosClientBuilder);
+            assertThat(uaSuffix).contains(Constants.USER_AGENT_SUFFIX);
+        } finally {
+            if (ignored != null) {
+                ignored.close();
+            }
+        }
     }
 
     private String getUserAgentSuffixValue(CosmosClientBuilder cosmosClientBuilder) throws IllegalAccessException,

@@ -5,23 +5,25 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
 /**
- * The type of managed identity used. The type 'SystemAssigned, UserAssigned' includes both an implicitly created
- * identity and a set of user-assigned identities. The type 'None' will remove any identity.
+ * The type of managed identity used. Can be either 'SystemAssigned' or 'UserAssigned'.
  */
 public final class EventSubscriptionIdentityType extends ExpandableStringEnum<EventSubscriptionIdentityType> {
-    /** Static value SystemAssigned for EventSubscriptionIdentityType. */
+    /**
+     * Static value SystemAssigned for EventSubscriptionIdentityType.
+     */
     public static final EventSubscriptionIdentityType SYSTEM_ASSIGNED = fromString("SystemAssigned");
 
-    /** Static value UserAssigned for EventSubscriptionIdentityType. */
+    /**
+     * Static value UserAssigned for EventSubscriptionIdentityType.
+     */
     public static final EventSubscriptionIdentityType USER_ASSIGNED = fromString("UserAssigned");
 
     /**
      * Creates a new instance of EventSubscriptionIdentityType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -30,18 +32,17 @@ public final class EventSubscriptionIdentityType extends ExpandableStringEnum<Ev
 
     /**
      * Creates or finds a EventSubscriptionIdentityType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding EventSubscriptionIdentityType.
      */
-    @JsonCreator
     public static EventSubscriptionIdentityType fromString(String name) {
         return fromString(name, EventSubscriptionIdentityType.class);
     }
 
     /**
      * Gets known EventSubscriptionIdentityType values.
-     *
+     * 
      * @return known EventSubscriptionIdentityType values.
      */
     public static Collection<EventSubscriptionIdentityType> values() {

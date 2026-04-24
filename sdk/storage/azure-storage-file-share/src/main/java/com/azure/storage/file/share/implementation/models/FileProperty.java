@@ -5,69 +5,83 @@
 package com.azure.storage.file.share.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.DateTimeRfc1123;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** File properties. */
-@JacksonXmlRootElement(localName = "FileProperty")
+/**
+ * File properties.
+ */
 @Fluent
-public final class FileProperty {
+public final class FileProperty implements XmlSerializable<FileProperty> {
     /*
      * Content length of the file. This value may not be up-to-date since an SMB client may have modified the file
      * locally. The value of Content-Length may not reflect that fact until the handle is closed or the op-lock is
      * broken. To retrieve current property values, call Get File Properties.
      */
-    @JsonProperty(value = "Content-Length", required = true)
+    @Generated
     private long contentLength;
 
     /*
      * The CreationTime property.
      */
-    @JsonProperty(value = "CreationTime")
+    @Generated
     private OffsetDateTime creationTime;
 
     /*
      * The LastAccessTime property.
      */
-    @JsonProperty(value = "LastAccessTime")
+    @Generated
     private OffsetDateTime lastAccessTime;
 
     /*
      * The LastWriteTime property.
      */
-    @JsonProperty(value = "LastWriteTime")
+    @Generated
     private OffsetDateTime lastWriteTime;
 
     /*
      * The ChangeTime property.
      */
-    @JsonProperty(value = "ChangeTime")
+    @Generated
     private OffsetDateTime changeTime;
 
     /*
      * The Last-Modified property.
      */
-    @JsonProperty(value = "Last-Modified")
+    @Generated
     private DateTimeRfc1123 lastModified;
 
     /*
      * The Etag property.
      */
-    @JsonProperty(value = "Etag")
+    @Generated
     private String etag;
 
-    /** Creates an instance of FileProperty class. */
-    public FileProperty() {}
+    /**
+     * Creates an instance of FileProperty class.
+     */
+    @Generated
+    public FileProperty() {
+    }
 
     /**
      * Get the contentLength property: Content length of the file. This value may not be up-to-date since an SMB client
      * may have modified the file locally. The value of Content-Length may not reflect that fact until the handle is
      * closed or the op-lock is broken. To retrieve current property values, call Get File Properties.
-     *
+     * 
      * @return the contentLength value.
      */
+    @Generated
     public long getContentLength() {
         return this.contentLength;
     }
@@ -76,10 +90,11 @@ public final class FileProperty {
      * Set the contentLength property: Content length of the file. This value may not be up-to-date since an SMB client
      * may have modified the file locally. The value of Content-Length may not reflect that fact until the handle is
      * closed or the op-lock is broken. To retrieve current property values, call Get File Properties.
-     *
+     * 
      * @param contentLength the contentLength value to set.
      * @return the FileProperty object itself.
      */
+    @Generated
     public FileProperty setContentLength(long contentLength) {
         this.contentLength = contentLength;
         return this;
@@ -87,19 +102,21 @@ public final class FileProperty {
 
     /**
      * Get the creationTime property: The CreationTime property.
-     *
+     * 
      * @return the creationTime value.
      */
+    @Generated
     public OffsetDateTime getCreationTime() {
         return this.creationTime;
     }
 
     /**
      * Set the creationTime property: The CreationTime property.
-     *
+     * 
      * @param creationTime the creationTime value to set.
      * @return the FileProperty object itself.
      */
+    @Generated
     public FileProperty setCreationTime(OffsetDateTime creationTime) {
         this.creationTime = creationTime;
         return this;
@@ -107,19 +124,21 @@ public final class FileProperty {
 
     /**
      * Get the lastAccessTime property: The LastAccessTime property.
-     *
+     * 
      * @return the lastAccessTime value.
      */
+    @Generated
     public OffsetDateTime getLastAccessTime() {
         return this.lastAccessTime;
     }
 
     /**
      * Set the lastAccessTime property: The LastAccessTime property.
-     *
+     * 
      * @param lastAccessTime the lastAccessTime value to set.
      * @return the FileProperty object itself.
      */
+    @Generated
     public FileProperty setLastAccessTime(OffsetDateTime lastAccessTime) {
         this.lastAccessTime = lastAccessTime;
         return this;
@@ -127,19 +146,21 @@ public final class FileProperty {
 
     /**
      * Get the lastWriteTime property: The LastWriteTime property.
-     *
+     * 
      * @return the lastWriteTime value.
      */
+    @Generated
     public OffsetDateTime getLastWriteTime() {
         return this.lastWriteTime;
     }
 
     /**
      * Set the lastWriteTime property: The LastWriteTime property.
-     *
+     * 
      * @param lastWriteTime the lastWriteTime value to set.
      * @return the FileProperty object itself.
      */
+    @Generated
     public FileProperty setLastWriteTime(OffsetDateTime lastWriteTime) {
         this.lastWriteTime = lastWriteTime;
         return this;
@@ -147,19 +168,21 @@ public final class FileProperty {
 
     /**
      * Get the changeTime property: The ChangeTime property.
-     *
+     * 
      * @return the changeTime value.
      */
+    @Generated
     public OffsetDateTime getChangeTime() {
         return this.changeTime;
     }
 
     /**
      * Set the changeTime property: The ChangeTime property.
-     *
+     * 
      * @param changeTime the changeTime value to set.
      * @return the FileProperty object itself.
      */
+    @Generated
     public FileProperty setChangeTime(OffsetDateTime changeTime) {
         this.changeTime = changeTime;
         return this;
@@ -167,9 +190,10 @@ public final class FileProperty {
 
     /**
      * Get the lastModified property: The Last-Modified property.
-     *
+     * 
      * @return the lastModified value.
      */
+    @Generated
     public OffsetDateTime getLastModified() {
         if (this.lastModified == null) {
             return null;
@@ -179,10 +203,11 @@ public final class FileProperty {
 
     /**
      * Set the lastModified property: The Last-Modified property.
-     *
+     * 
      * @param lastModified the lastModified value to set.
      * @return the FileProperty object itself.
      */
+    @Generated
     public FileProperty setLastModified(OffsetDateTime lastModified) {
         if (lastModified == null) {
             this.lastModified = null;
@@ -194,21 +219,107 @@ public final class FileProperty {
 
     /**
      * Get the etag property: The Etag property.
-     *
+     * 
      * @return the etag value.
      */
+    @Generated
     public String getEtag() {
         return this.etag;
     }
 
     /**
      * Set the etag property: The Etag property.
-     *
+     * 
      * @param etag the etag value to set.
      * @return the FileProperty object itself.
      */
+    @Generated
     public FileProperty setEtag(String etag) {
         this.etag = etag;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "FileProperty" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeLongElement("Content-Length", this.contentLength);
+        xmlWriter.writeStringElement("CreationTime",
+            this.creationTime == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.creationTime));
+        xmlWriter.writeStringElement("LastAccessTime",
+            this.lastAccessTime == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.lastAccessTime));
+        xmlWriter.writeStringElement("LastWriteTime",
+            this.lastWriteTime == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.lastWriteTime));
+        xmlWriter.writeStringElement("ChangeTime",
+            this.changeTime == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.changeTime));
+        xmlWriter.writeStringElement("Last-Modified", Objects.toString(this.lastModified, null));
+        xmlWriter.writeStringElement("Etag", this.etag);
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of FileProperty from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of FileProperty if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the FileProperty.
+     */
+    @Generated
+    public static FileProperty fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of FileProperty from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of FileProperty if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the FileProperty.
+     */
+    @Generated
+    public static FileProperty fromXml(XmlReader xmlReader, String rootElementName) throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "FileProperty" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            FileProperty deserializedFileProperty = new FileProperty();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Content-Length".equals(elementName.getLocalPart())) {
+                    deserializedFileProperty.contentLength = reader.getLongElement();
+                } else if ("CreationTime".equals(elementName.getLocalPart())) {
+                    deserializedFileProperty.creationTime
+                        = reader.getNullableElement(dateString -> CoreUtils.parseBestOffsetDateTime(dateString));
+                } else if ("LastAccessTime".equals(elementName.getLocalPart())) {
+                    deserializedFileProperty.lastAccessTime
+                        = reader.getNullableElement(dateString -> CoreUtils.parseBestOffsetDateTime(dateString));
+                } else if ("LastWriteTime".equals(elementName.getLocalPart())) {
+                    deserializedFileProperty.lastWriteTime
+                        = reader.getNullableElement(dateString -> CoreUtils.parseBestOffsetDateTime(dateString));
+                } else if ("ChangeTime".equals(elementName.getLocalPart())) {
+                    deserializedFileProperty.changeTime
+                        = reader.getNullableElement(dateString -> CoreUtils.parseBestOffsetDateTime(dateString));
+                } else if ("Last-Modified".equals(elementName.getLocalPart())) {
+                    deserializedFileProperty.lastModified = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("Etag".equals(elementName.getLocalPart())) {
+                    deserializedFileProperty.etag = reader.getStringElement();
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedFileProperty;
+        });
     }
 }

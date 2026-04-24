@@ -13,11 +13,13 @@ import com.azure.spring.cloud.service.servicebus.consumer.ServiceBusRecordMessag
 import com.azure.spring.cloud.service.servicebus.properties.ServiceBusEntityType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.verification.VerificationMode;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -29,18 +31,30 @@ class ServiceBusSessionProcessorClientBuilderFactoryTests extends AbstractServic
     ServiceBusProcessorClientTestProperties,
     ServiceBusSessionProcessorClientBuilderFactory> {
 
+    @Override
+    public PropertiesIntegrityParameters getParametersForPropertiesIntegrity() {
+        Map<String, String> namingFromBinderToProperties = new HashMap<>();
+        namingFromBinderToProperties.put("queuename", "entityname");
+        namingFromBinderToProperties.put("topicname", "entityname");
+        namingFromBinderToProperties.put("disableautocomplete", "autocomplete");
+        return new PropertiesIntegrityParameters(ServiceBusProcessorClientTestProperties.class,
+            ServiceBusClientBuilder.ServiceBusSessionProcessorClientBuilder.class, namingFromBinderToProperties);
+    }
+
     @Test
-    void queueConfigured() {
+    void configured() {
         ServiceBusProcessorClientTestProperties properties = new ServiceBusProcessorClientTestProperties();
         properties.setNamespace("test-namespace");
         properties.setEntityType(ServiceBusEntityType.QUEUE);
         properties.setEntityName("test-queue");
+        properties.setSessionIdleTimeout(Duration.ofSeconds(10));
 
         final ServiceBusSessionProcessorClientBuilderFactory factory = createClientBuilderFactoryWithMockBuilder(properties);
         final ServiceBusClientBuilder.ServiceBusSessionProcessorClientBuilder builder = factory.build();
         builder.buildProcessorClient();
 
         verify(builder, times(1)).queueName("test-queue");
+        verify(builder, times(1)).sessionIdleTimeout(Duration.ofSeconds(10));
     }
 
     @Test
@@ -84,7 +98,7 @@ class ServiceBusSessionProcessorClientBuilderFactoryTests extends AbstractServic
             messageListener,
             errorHandler);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> factory.build());
+        Assertions.assertThrows(IllegalArgumentException.class, factory::build);
     }
 
     @Override
@@ -99,11 +113,34 @@ class ServiceBusSessionProcessorClientBuilderFactoryTests extends AbstractServic
 
     @Override
     protected ServiceBusSessionProcessorClientBuilderFactory createClientBuilderFactoryWithMockBuilder(ServiceBusProcessorClientTestProperties properties) {
-        return spy(new ServiceBusSessionProcessorClientBuilderFactoryExt(mock(ServiceBusClientBuilder.class), properties));
+        return spy(new ServiceBusSessionProcessorClientBuilderFactoryExt(getSharedServiceBusClientBuilder(properties), properties));
     }
 
     @Override
     void verifyServicePropertiesConfigured(boolean isShareServiceClientBuilder) {
+        ServiceBusProcessorClientTestProperties properties = getServiceBusProcessorClientTestProperties(isShareServiceClientBuilder);
+
+        final ServiceBusSessionProcessorClientBuilderFactory factory = createClientBuilderFactoryWithMockBuilder(properties);
+        final ServiceBusClientBuilder.ServiceBusSessionProcessorClientBuilder builder = factory.build();
+        doReturn(isShareServiceClientBuilder).when(factory).isShareServiceBusClientBuilder();
+        builder.buildProcessorClient();
+
+        verify(factory.getServiceBusClientBuilder(), times(1)).customEndpointAddress(customEndpoint);
+
+        verify(builder, times(1)).topicName("test-topic");
+        verify(builder, times(1)).subscriptionName("test-subscription");
+        verify(builder, times(1)).receiveMode(ServiceBusReceiveMode.PEEK_LOCK);
+        verify(builder, times(1)).subQueue(SubQueue.NONE);
+        verify(builder, times(1)).prefetchCount(100);
+        verify(builder, times(1)).maxAutoLockRenewDuration(Duration.ofSeconds(5));
+        verify(builder, times(1)).disableAutoComplete();
+        verify(builder, times(1)).maxConcurrentCalls(10);
+        verify(builder, times(1)).maxConcurrentSessions(20);
+
+        verify(factory.getServiceBusClientBuilder(), atLeast(1)).fullyQualifiedNamespace(properties.getFullyQualifiedNamespace());
+    }
+
+    private ServiceBusProcessorClientTestProperties getServiceBusProcessorClientTestProperties(boolean isShareServiceClientBuilder) {
         ServiceBusProcessorClientTestProperties properties = new ServiceBusProcessorClientTestProperties();
         properties.setNamespace("test-namespace");
         properties.setEntityName("test-topic");
@@ -116,24 +153,9 @@ class ServiceBusSessionProcessorClientBuilderFactoryTests extends AbstractServic
         properties.setAutoComplete(false);
         properties.setMaxConcurrentCalls(10);
         properties.setMaxConcurrentSessions(20);
-
-        final ServiceBusSessionProcessorClientBuilderFactory factory = createClientBuilderFactoryWithMockBuilder(properties);
-        doReturn(isShareServiceClientBuilder).when(factory).isShareServiceBusClientBuilder();
-        final ServiceBusClientBuilder.ServiceBusSessionProcessorClientBuilder builder = factory.build();
-        builder.buildProcessorClient();
-
-        verify(builder, times(1)).topicName("test-topic");
-        verify(builder, times(1)).subscriptionName("test-subscription");
-        verify(builder, times(1)).receiveMode(ServiceBusReceiveMode.PEEK_LOCK);
-        verify(builder, times(1)).subQueue(SubQueue.NONE);
-        verify(builder, times(1)).prefetchCount(100);
-        verify(builder, times(1)).maxAutoLockRenewDuration(Duration.ofSeconds(5));
-        verify(builder, times(1)).disableAutoComplete();
-        verify(builder, times(1)).maxConcurrentCalls(10);
-        verify(builder, times(1)).maxConcurrentSessions(20);
-
-        VerificationMode calledTimes = isShareServiceClientBuilder ? times(0) : times(1);
-        verify(factory.getServiceBusClientBuilder(), calledTimes).fullyQualifiedNamespace(properties.getFullyQualifiedNamespace());
+        properties.setCustomEndpointAddress(this.customEndpoint);
+        properties.setShareServiceBusClientBuilder(isShareServiceClientBuilder);
+        return properties;
     }
 
     @Override
@@ -142,14 +164,29 @@ class ServiceBusSessionProcessorClientBuilderFactoryTests extends AbstractServic
     }
 
     static class ServiceBusSessionProcessorClientBuilderFactoryExt extends ServiceBusSessionProcessorClientBuilderFactory {
-        ServiceBusSessionProcessorClientBuilderFactoryExt(ServiceBusClientBuilder clientBuilder,
+        private ServiceBusClientBuilder serviceBusClientBuilder;
+        private final ServiceBusProcessorClientTestProperties properties;
+        ServiceBusSessionProcessorClientBuilderFactoryExt(ServiceBusClientBuilder serviceBusClientBuilder,
                                                           ServiceBusProcessorClientTestProperties properties) {
-            super(clientBuilder, properties, (ServiceBusRecordMessageListener) message -> { }, errorContext -> { });
+            super(serviceBusClientBuilder, properties, (ServiceBusRecordMessageListener) message -> { }, errorContext -> { });
+            this.properties = properties;
+            if (properties.isShareServiceBusClientBuilder() && serviceBusClientBuilder != null) {
+                this.serviceBusClientBuilder = serviceBusClientBuilder;
+            }
         }
 
         @Override
         public ServiceBusClientBuilder.ServiceBusSessionProcessorClientBuilder createBuilderInstance() {
             return mock(ServiceBusClientBuilder.ServiceBusSessionProcessorClientBuilder.class);
+        }
+
+        @Override
+        protected ServiceBusClientBuilder getServiceBusClientBuilder() {
+            if (!this.isShareServiceBusClientBuilder() && this.serviceBusClientBuilder == null) {
+                TestServiceBusClientBuilderFactory clientBuilderFactory = spy(new TestServiceBusClientBuilderFactory(properties));
+                this.serviceBusClientBuilder = clientBuilderFactory.build();
+            }
+            return this.serviceBusClientBuilder;
         }
     }
 }

@@ -34,7 +34,11 @@ public class SqlSampleTests extends SamplesTestBase {
         Assertions.assertTrue(ManageSqlDatabaseInElasticPool.runSample(azureResourceManager));
     }
 
+    /**
+     * CI playback run timeout.
+     */
     @Test
+    @DoNotRecord(skipInPlayback = true)
     public void testManageSqlDatabasesAcrossDifferentDataCenters() {
         Assertions.assertTrue(ManageSqlDatabasesAcrossDifferentDataCenters.runSample(azureResourceManager));
     }
@@ -95,7 +99,9 @@ public class SqlSampleTests extends SamplesTestBase {
             if (servicePrincipalClientId == null || servicePrincipalClientId.isEmpty()) {
                 String envSecondaryServicePrincipal = System.getenv("AZURE_AUTH_LOCATION_2");
 
-                if (envSecondaryServicePrincipal == null || !envSecondaryServicePrincipal.isEmpty() || !Files.exists(Paths.get(envSecondaryServicePrincipal))) {
+                if (envSecondaryServicePrincipal == null
+                    || !envSecondaryServicePrincipal.isEmpty()
+                    || !Files.exists(Paths.get(envSecondaryServicePrincipal))) {
                     envSecondaryServicePrincipal = System.getenv("AZURE_AUTH_LOCATION");
                 }
                 try {
@@ -105,7 +111,8 @@ public class SqlSampleTests extends SamplesTestBase {
                 }
             }
 
-            Assertions.assertTrue(ManageSqlServerKeysWithAzureKeyVaultKey.runSample(azureResourceManager, servicePrincipalClientId));
+            Assertions.assertTrue(
+                ManageSqlServerKeysWithAzureKeyVaultKey.runSample(azureResourceManager, servicePrincipalClientId));
         }
     }
 }

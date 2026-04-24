@@ -14,34 +14,26 @@ import org.junit.jupiter.api.Assertions;
 public final class PrivateLinkResourcesInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        PrivateLinkResourcesInner model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"id\":\"kuwhh\",\"name\":\"ykojoxafnndlpic\",\"type\":\"o\",\"properties\":{\"groupId\":\"kcdyhbpk\",\"requiredMembers\":[],\"requiredZoneNames\":[]}},{\"id\":\"reqnovvqfov\",\"name\":\"xywsuws\",\"type\":\"s\",\"properties\":{\"groupId\":\"sytgadgvraea\",\"requiredMembers\":[],\"requiredZoneNames\":[]}}]}")
-                .toObject(PrivateLinkResourcesInner.class);
-        Assertions.assertEquals("kcdyhbpk", model.value().get(0).properties().groupId());
+        PrivateLinkResourcesInner model = BinaryData.fromString(
+            "{\"value\":[{\"id\":\"foqreyfkzik\",\"name\":\"aw\",\"type\":\"a\",\"properties\":{\"groupId\":\"xwczelpcire\",\"requiredMembers\":[\"eae\",\"wabfatkl\"],\"requiredZoneNames\":[\"bjhwuaan\",\"zjosp\",\"youlp\",\"rvxaglrvimjwosy\"]}},{\"id\":\"itc\",\"name\":\"fcktqumiekke\",\"type\":\"ikh\",\"properties\":{\"groupId\":\"fjhdg\",\"requiredMembers\":[\"ebdunyg\",\"eqidbqfatpx\",\"lr\"],\"requiredZoneNames\":[\"jmoadsuv\",\"r\"]}}]}")
+            .toObject(PrivateLinkResourcesInner.class);
+        Assertions.assertEquals("xwczelpcire", model.value().get(0).properties().groupId());
+        Assertions.assertEquals("eae", model.value().get(0).properties().requiredMembers().get(0));
+        Assertions.assertEquals("bjhwuaan", model.value().get(0).properties().requiredZoneNames().get(0));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        PrivateLinkResourcesInner model =
-            new PrivateLinkResourcesInner()
-                .withValue(
-                    Arrays
-                        .asList(
-                            new GroupIdInformationInner()
-                                .withProperties(
-                                    new GroupIdInformationProperties()
-                                        .withGroupId("kcdyhbpk")
-                                        .withRequiredMembers(Arrays.asList())
-                                        .withRequiredZoneNames(Arrays.asList())),
-                            new GroupIdInformationInner()
-                                .withProperties(
-                                    new GroupIdInformationProperties()
-                                        .withGroupId("sytgadgvraea")
-                                        .withRequiredMembers(Arrays.asList())
-                                        .withRequiredZoneNames(Arrays.asList()))));
+        PrivateLinkResourcesInner model = new PrivateLinkResourcesInner().withValue(Arrays.asList(
+            new GroupIdInformationInner().withProperties(new GroupIdInformationProperties().withGroupId("xwczelpcire")
+                .withRequiredMembers(Arrays.asList("eae", "wabfatkl"))
+                .withRequiredZoneNames(Arrays.asList("bjhwuaan", "zjosp", "youlp", "rvxaglrvimjwosy"))),
+            new GroupIdInformationInner().withProperties(new GroupIdInformationProperties().withGroupId("fjhdg")
+                .withRequiredMembers(Arrays.asList("ebdunyg", "eqidbqfatpx", "lr"))
+                .withRequiredZoneNames(Arrays.asList("jmoadsuv", "r")))));
         model = BinaryData.fromObject(model).toObject(PrivateLinkResourcesInner.class);
-        Assertions.assertEquals("kcdyhbpk", model.value().get(0).properties().groupId());
+        Assertions.assertEquals("xwczelpcire", model.value().get(0).properties().groupId());
+        Assertions.assertEquals("eae", model.value().get(0).properties().requiredMembers().get(0));
+        Assertions.assertEquals("bjhwuaan", model.value().get(0).properties().requiredZoneNames().get(0));
     }
 }

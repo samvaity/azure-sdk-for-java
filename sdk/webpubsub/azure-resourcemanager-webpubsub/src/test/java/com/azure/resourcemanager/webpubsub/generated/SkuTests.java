@@ -10,11 +10,9 @@ import com.azure.resourcemanager.webpubsub.models.Sku;
 public final class SkuTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        Sku model =
-            BinaryData
-                .fromString(
-                    "{\"resourceType\":\"pvdwxf\",\"sku\":{\"name\":\"iivwzjbhyzsxjrka\",\"tier\":\"Premium\",\"size\":\"negvmnvuqe\",\"family\":\"lds\",\"capacity\":312186085},\"capacity\":{\"minimum\":900352978,\"maximum\":1155931033,\"default\":1616776415,\"allowedValues\":[1814054603],\"scaleType\":\"Manual\"}}")
-                .toObject(Sku.class);
+        Sku model = BinaryData.fromString(
+            "{\"resourceType\":\"vf\",\"sku\":{\"name\":\"awzqadfl\",\"tier\":\"Free\",\"size\":\"iglaecx\",\"family\":\"t\",\"capacity\":1510056241},\"capacity\":{\"minimum\":675680646,\"maximum\":635512255,\"default\":2090573911,\"allowedValues\":[412723764,443285023,763019330],\"scaleType\":\"None\"}}")
+            .toObject(Sku.class);
     }
 
     @org.junit.jupiter.api.Test

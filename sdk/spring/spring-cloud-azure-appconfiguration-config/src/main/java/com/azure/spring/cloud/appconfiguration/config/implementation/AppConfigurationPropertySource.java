@@ -3,58 +3,88 @@
 package com.azure.spring.cloud.appconfiguration.config.implementation;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.core.env.EnumerablePropertySource;
 
-import com.azure.data.appconfiguration.ConfigurationClient;
+import com.azure.core.util.Context;
 
 /**
- * Azure App Configuration PropertySource unique per Store Label(Profile) combo.
- *
+ * Abstract base class for Azure App Configuration PropertySource implementations.
+ * 
  * <p>
- * i.e. If connecting to 2 stores and have 2 labels set 4 AppConfigurationPropertySources need to be created.
+ * Each PropertySource is unique per Store-Label(Profile) combination. For example, if connecting to 2 stores with 2
+ * labels each, 4 AppConfigurationPropertySources need to be created.
  * </p>
  */
-abstract class AppConfigurationPropertySource extends EnumerablePropertySource<ConfigurationClient> {
+abstract class AppConfigurationPropertySource extends EnumerablePropertySource<AppConfigurationReplicaClient> {
 
-    protected final String keyFilter;
-
-    protected final String[] labelFilter;
-
+    /**
+     * Cache for storing configuration properties retrieved from Azure App Configuration.
+     */
     protected final Map<String, Object> properties = new LinkedHashMap<>();
 
+    /**
+     * Client for communicating with Azure App Configuration service.
+     */
     protected final AppConfigurationReplicaClient replicaClient;
 
-    AppConfigurationPropertySource(String originEndpoint, AppConfigurationReplicaClient replicaClient, String keyFilter,
-        String[] labelFilter) {
+    /**
+     * Creates a new AppConfigurationPropertySource.
+     * 
+     * @param name the name of this property source, should be unique to identify the store-label combination
+     * @param replicaClient the client for communicating with Azure App Configuration
+     */
+    AppConfigurationPropertySource(String name, AppConfigurationReplicaClient replicaClient) {
         // The context alone does not uniquely define a PropertySource, append storeName
         // and label to uniquely define a PropertySource
-        super(
-            keyFilter + originEndpoint + "/" + getLabelName(labelFilter));
+        super(name, replicaClient);
         this.replicaClient = replicaClient;
-        this.keyFilter = keyFilter;
-        this.labelFilter = labelFilter;
     }
 
+    /**
+     * Returns the names of all properties in this property source.
+     * 
+     * @return array of property names
+     */
     @Override
     public String[] getPropertyNames() {
-        Set<String> keySet = properties.keySet();
-        return keySet.toArray(new String[keySet.size()]);
+        return properties.keySet().toArray(String[]::new);
     }
 
+    /**
+     * Returns the value of the specified property.
+     * 
+     * @param name the name of the property to retrieve
+     * @return the value of the property, or null if not found
+     */
     @Override
     public Object getProperty(String name) {
         return properties.get(name);
     }
 
-    private static String getLabelName(String[] labelFilter) {
-        StringBuilder labelName = new StringBuilder();
-        for (String label : labelFilter) {
-
-            labelName.append((labelName.length() == 0) ? label : "," + label);
+    /**
+     * Creates a comma-separated string from the given label filters.
+     * 
+     * @param labelFilters array of label filters, may be null
+     * @return comma-separated string of labels, or empty string if null/empty
+     */
+    protected static String getLabelName(String[] labelFilters) {
+        if (labelFilters == null || labelFilters.length == 0) {
+            return "";
         }
-        return labelName.toString();
+        return String.join(",", labelFilters);
     }
+
+    /**
+     * Initializes the properties for this property source by loading them from Azure App Configuration.
+     * 
+     * @param trim list of key prefixes to trim from configuration keys
+     * @param context the context for loading properties, may contain additional metadata
+     * @throws InvalidConfigurationPropertyValueException if there are issues with the configuration properties
+     */
+    protected abstract void initProperties(List<String> trim, Context context)
+        throws InvalidConfigurationPropertyValueException;
 }

@@ -15,25 +15,22 @@ import org.junit.jupiter.api.Assertions;
 public final class IdentityTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        Identity model =
-            BinaryData
-                .fromString(
-                    "{\"type\":\"SystemAssigned,"
-                        + " UserAssigned\",\"tenantId\":\"kohdbiha\",\"principalId\":\"fhfcb\",\"userAssignedIdentities\":{\"yscnpqxu\":{\"principalId\":\"git\",\"clientId\":\"qhabifpikxwcz\"}}}")
-                .toObject(Identity.class);
+        Identity model = BinaryData.fromString(
+            "{\"type\":\"SystemAssigned, UserAssigned\",\"tenantId\":\"lx\",\"principalId\":\"kuksjtxukcdm\",\"userAssignedIdentities\":{\"mt\":{\"principalId\":\"ryuanzwuxzdxtay\",\"clientId\":\"hmwhfpmrqo\"},\"mglzufcy\":{\"principalId\":\"knryrtihfxtij\",\"clientId\":\"zvgnwzs\"},\"s\":{\"principalId\":\"ohdbihanufh\",\"clientId\":\"bj\"},\"npqxuh\":{\"principalId\":\"ithxqhabifpi\",\"clientId\":\"wczbys\"}}}")
+            .toObject(Identity.class);
         Assertions.assertEquals(ResourceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED, model.type());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        Identity model =
-            new Identity()
-                .withType(ResourceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED)
-                .withUserAssignedIdentities(mapOf("yscnpqxu", new UserAssignedIdentity()));
+        Identity model = new Identity().withType(ResourceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED)
+            .withUserAssignedIdentities(mapOf("mt", new UserAssignedIdentity(), "mglzufcy", new UserAssignedIdentity(),
+                "s", new UserAssignedIdentity(), "npqxuh", new UserAssignedIdentity()));
         model = BinaryData.fromObject(model).toObject(Identity.class);
         Assertions.assertEquals(ResourceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED, model.type());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

@@ -5,55 +5,66 @@
 package com.azure.data.tables.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The properties for the table response. */
-@JacksonXmlRootElement(localName = "TableResponseProperties")
+/**
+ * The properties for the table response.
+ */
 @Fluent
-public class TableResponseProperties {
+public class TableResponseProperties implements JsonSerializable<TableResponseProperties> {
     /*
      * The name of the table.
      */
-    @JsonProperty(value = "TableName")
+    @Generated
     private String tableName;
 
     /*
      * The odata type of the table.
      */
-    @JsonProperty(value = "odata.type")
+    @Generated
     private String odataType;
 
     /*
      * The id of the table.
      */
-    @JsonProperty(value = "odata.id")
+    @Generated
     private String odataId;
 
     /*
      * The edit link of the table.
      */
-    @JsonProperty(value = "odata.editLink")
+    @Generated
     private String odataEditLink;
 
-    /** Creates an instance of TableResponseProperties class. */
-    public TableResponseProperties() {}
+    /**
+     * Creates an instance of TableResponseProperties class.
+     */
+    @Generated
+    public TableResponseProperties() {
+    }
 
     /**
      * Get the tableName property: The name of the table.
-     *
+     * 
      * @return the tableName value.
      */
+    @Generated
     public String getTableName() {
         return this.tableName;
     }
 
     /**
      * Set the tableName property: The name of the table.
-     *
+     * 
      * @param tableName the tableName value to set.
      * @return the TableResponseProperties object itself.
      */
+    @Generated
     public TableResponseProperties setTableName(String tableName) {
         this.tableName = tableName;
         return this;
@@ -61,19 +72,21 @@ public class TableResponseProperties {
 
     /**
      * Get the odataType property: The odata type of the table.
-     *
+     * 
      * @return the odataType value.
      */
+    @Generated
     public String getOdataType() {
         return this.odataType;
     }
 
     /**
      * Set the odataType property: The odata type of the table.
-     *
+     * 
      * @param odataType the odataType value to set.
      * @return the TableResponseProperties object itself.
      */
+    @Generated
     public TableResponseProperties setOdataType(String odataType) {
         this.odataType = odataType;
         return this;
@@ -81,19 +94,21 @@ public class TableResponseProperties {
 
     /**
      * Get the odataId property: The id of the table.
-     *
+     * 
      * @return the odataId value.
      */
+    @Generated
     public String getOdataId() {
         return this.odataId;
     }
 
     /**
      * Set the odataId property: The id of the table.
-     *
+     * 
      * @param odataId the odataId value to set.
      * @return the TableResponseProperties object itself.
      */
+    @Generated
     public TableResponseProperties setOdataId(String odataId) {
         this.odataId = odataId;
         return this;
@@ -101,21 +116,70 @@ public class TableResponseProperties {
 
     /**
      * Get the odataEditLink property: The edit link of the table.
-     *
+     * 
      * @return the odataEditLink value.
      */
+    @Generated
     public String getOdataEditLink() {
         return this.odataEditLink;
     }
 
     /**
      * Set the odataEditLink property: The edit link of the table.
-     *
+     * 
      * @param odataEditLink the odataEditLink value to set.
      * @return the TableResponseProperties object itself.
      */
+    @Generated
     public TableResponseProperties setOdataEditLink(String odataEditLink) {
         this.odataEditLink = odataEditLink;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("TableName", this.tableName);
+        jsonWriter.writeStringField("odata.type", this.odataType);
+        jsonWriter.writeStringField("odata.id", this.odataId);
+        jsonWriter.writeStringField("odata.editLink", this.odataEditLink);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of TableResponseProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of TableResponseProperties if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the TableResponseProperties.
+     */
+    @Generated
+    public static TableResponseProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            TableResponseProperties deserializedTableResponseProperties = new TableResponseProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("TableName".equals(fieldName)) {
+                    deserializedTableResponseProperties.tableName = reader.getString();
+                } else if ("odata.type".equals(fieldName)) {
+                    deserializedTableResponseProperties.odataType = reader.getString();
+                } else if ("odata.id".equals(fieldName)) {
+                    deserializedTableResponseProperties.odataId = reader.getString();
+                } else if ("odata.editLink".equals(fieldName)) {
+                    deserializedTableResponseProperties.odataEditLink = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedTableResponseProperties;
+        });
     }
 }

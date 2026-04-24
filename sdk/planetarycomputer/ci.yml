@@ -1,0 +1,58 @@
+# NOTE: Please refer to https://aka.ms/azsdk/engsys/ci-yaml before editing this file.
+
+trigger:
+  branches:
+    include:
+      - main
+      - hotfix/*
+      - release/*
+  paths:
+    include:
+      - sdk/planetarycomputer/ci.yml
+      - sdk/planetarycomputer/azure-analytics-planetarycomputer/
+      - sdk/planetarycomputer/azure-resourcemanager-planetarycomputer/
+    exclude:
+      - sdk/planetarycomputer/pom.xml
+      - sdk/planetarycomputer/azure-analytics-planetarycomputer/pom.xml
+      - sdk/planetarycomputer/azure-resourcemanager-planetarycomputer/pom.xml
+
+pr:
+  branches:
+    include:
+      - main
+      - feature/*
+      - hotfix/*
+      - release/*
+  paths:
+    include:
+      - sdk/planetarycomputer/ci.yml
+      - sdk/planetarycomputer/azure-analytics-planetarycomputer/
+      - sdk/planetarycomputer/azure-resourcemanager-planetarycomputer/
+    exclude:
+      - sdk/planetarycomputer/pom.xml
+      - sdk/planetarycomputer/azure-analytics-planetarycomputer/pom.xml
+      - sdk/planetarycomputer/azure-resourcemanager-planetarycomputer/pom.xml
+
+parameters:
+  - name: release_azureanalyticsplanetarycomputer
+    displayName: azure-analytics-planetarycomputer
+    type: boolean
+    default: false
+  - name: release_azureresourcemanagerplanetarycomputer
+    displayName: azure-resourcemanager-planetarycomputer
+    type: boolean
+    default: false
+
+extends:
+  template: ../../eng/pipelines/templates/stages/archetype-sdk-client.yml
+  parameters:
+    ServiceDirectory: planetarycomputer
+    Artifacts:
+      - name: azure-analytics-planetarycomputer
+        groupId: com.azure
+        safeName: azureanalyticsplanetarycomputer
+        releaseInBatch: ${{ parameters.release_azureanalyticsplanetarycomputer }}
+      - name: azure-resourcemanager-planetarycomputer
+        groupId: com.azure.resourcemanager
+        safeName: azureresourcemanagerplanetarycomputer
+        releaseInBatch: ${{ parameters.release_azureresourcemanagerplanetarycomputer }}

@@ -10,11 +10,9 @@ import com.azure.resourcemanager.networkcloud.models.MachineSkuSlot;
 public final class MachineSkuSlotTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MachineSkuSlot model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"bootstrapProtocol\":\"PXE\",\"cpuCores\":5997587449917439733,\"cpuSockets\":7198774832435959008,\"disks\":[{\"capacityGB\":5971236881688553019,\"connection\":\"PCIE\",\"type\":\"SSD\"},{\"capacityGB\":4180557428227255332,\"connection\":\"SATA\",\"type\":\"SSD\"},{\"capacityGB\":5330345201564576468,\"connection\":\"RAID\",\"type\":\"HDD\"}],\"generation\":\"pwijnhy\",\"hardwareVersion\":\"vfycxzb\",\"memoryCapacityGB\":6720131909300742836,\"model\":\"vrvmtgjqppyost\",\"networkInterfaces\":[{\"address\":\"myhgfipnsxkmc\",\"deviceConnectionType\":\"PCI\",\"model\":\"rrjreafxtsgu\",\"physicalSlot\":5426531018037158287,\"portCount\":4260202501305129373,\"portSpeed\":1724623473761671606,\"vendor\":\"lo\"}],\"totalThreads\":3996169992007046944,\"vendor\":\"uzlm\"},\"rackSlot\":4397404082163755540}")
-                .toObject(MachineSkuSlot.class);
+        MachineSkuSlot model = BinaryData.fromString(
+            "{\"properties\":{\"bootstrapProtocol\":\"PXE\",\"cpuCores\":3955378754753814141,\"cpuSockets\":6478797052084392248,\"disks\":[{\"capacityGB\":5234398548126737926,\"connection\":\"SATA\",\"type\":\"SSD\"}],\"generation\":\"jrngif\",\"hardwareVersion\":\"z\",\"memoryCapacityGB\":1555196494956757044,\"model\":\"biuimzdlyjdfq\",\"networkInterfaces\":[{\"address\":\"oq\",\"deviceConnectionType\":\"PCI\",\"model\":\"ruzslzoj\",\"physicalSlot\":2650325028757147436,\"portCount\":1377563080214000034,\"portSpeed\":2513451830292217319,\"vendor\":\"ngfdgugeyzihgrky\"},{\"address\":\"zabs\",\"deviceConnectionType\":\"PCI\",\"model\":\"phojeevyhy\",\"physicalSlot\":3597759724277023056,\"portCount\":2624052315369945941,\"portSpeed\":1704315015203532161,\"vendor\":\"fgbegl\"}],\"totalThreads\":7540927851450246514,\"vendor\":\"hibetnluankrr\"},\"rackSlot\":2941839870830389436}")
+            .toObject(MachineSkuSlot.class);
     }
 
     @org.junit.jupiter.api.Test

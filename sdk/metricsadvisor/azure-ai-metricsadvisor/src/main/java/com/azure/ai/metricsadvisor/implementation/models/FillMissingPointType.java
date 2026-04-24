@@ -4,48 +4,65 @@
 
 package com.azure.ai.metricsadvisor.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** the type of fill missing point for anomaly detection. */
+/**
+ * the type of fill missing point for anomaly detection.
+ */
 public final class FillMissingPointType extends ExpandableStringEnum<FillMissingPointType> {
-    /** Static value SmartFilling for FillMissingPointType. */
+    /**
+     * Static value SmartFilling for FillMissingPointType.
+     */
+    @Generated
     public static final FillMissingPointType SMART_FILLING = fromString("SmartFilling");
 
-    /** Static value PreviousValue for FillMissingPointType. */
+    /**
+     * Static value PreviousValue for FillMissingPointType.
+     */
+    @Generated
     public static final FillMissingPointType PREVIOUS_VALUE = fromString("PreviousValue");
 
-    /** Static value CustomValue for FillMissingPointType. */
+    /**
+     * Static value CustomValue for FillMissingPointType.
+     */
+    @Generated
     public static final FillMissingPointType CUSTOM_VALUE = fromString("CustomValue");
 
-    /** Static value NoFilling for FillMissingPointType. */
+    /**
+     * Static value NoFilling for FillMissingPointType.
+     */
+    @Generated
     public static final FillMissingPointType NO_FILLING = fromString("NoFilling");
 
     /**
      * Creates a new instance of FillMissingPointType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public FillMissingPointType() {}
+    public FillMissingPointType() {
+    }
 
     /**
      * Creates or finds a FillMissingPointType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding FillMissingPointType.
      */
-    @JsonCreator
+    @Generated
     public static FillMissingPointType fromString(String name) {
         return fromString(name, FillMissingPointType.class);
     }
 
     /**
      * Gets known FillMissingPointType values.
-     *
+     * 
      * @return known FillMissingPointType values.
      */
+    @Generated
     public static Collection<FillMissingPointType> values() {
         return values(FillMissingPointType.class);
     }

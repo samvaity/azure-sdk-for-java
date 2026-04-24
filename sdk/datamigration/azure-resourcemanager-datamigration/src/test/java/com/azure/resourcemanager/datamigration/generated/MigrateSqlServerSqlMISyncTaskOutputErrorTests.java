@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.MigrateSqlServerSqlMISyncT
 public final class MigrateSqlServerSqlMISyncTaskOutputErrorTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlMISyncTaskOutputError model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"ErrorOutput\",\"error\":{\"message\":\"nvbroylaxx\",\"actionableMessage\":\"cdisd\",\"filePath\":\"fj\",\"lineNumber\":\"svgjrwhryvy\",\"hResult\":70772777,\"stackTrace\":\"c\"},\"id\":\"gc\"}")
-                .toObject(MigrateSqlServerSqlMISyncTaskOutputError.class);
+        MigrateSqlServerSqlMISyncTaskOutputError model = BinaryData.fromString(
+            "{\"resultType\":\"ErrorOutput\",\"error\":{\"message\":\"yxvrqtvbczsul\",\"actionableMessage\":\"gglmepjpfsey\",\"filePath\":\"sa\",\"lineNumber\":\"psznga\",\"hResult\":26308391,\"stackTrace\":\"lkvec\"},\"id\":\"jcngoadyed\"}")
+            .toObject(MigrateSqlServerSqlMISyncTaskOutputError.class);
     }
 
     @org.junit.jupiter.api.Test

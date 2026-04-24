@@ -5,7 +5,6 @@
 package com.azure.resourcemanager.servicefabric.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
 /**
@@ -13,15 +12,19 @@ import java.util.Collection;
  * node type with multiple Availability Zones is already present in the cluster.
  */
 public final class SfZonalUpgradeMode extends ExpandableStringEnum<SfZonalUpgradeMode> {
-    /** Static value Parallel for SfZonalUpgradeMode. */
+    /**
+     * Static value Parallel for SfZonalUpgradeMode.
+     */
     public static final SfZonalUpgradeMode PARALLEL = fromString("Parallel");
 
-    /** Static value Hierarchical for SfZonalUpgradeMode. */
+    /**
+     * Static value Hierarchical for SfZonalUpgradeMode.
+     */
     public static final SfZonalUpgradeMode HIERARCHICAL = fromString("Hierarchical");
 
     /**
      * Creates a new instance of SfZonalUpgradeMode value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -30,18 +33,17 @@ public final class SfZonalUpgradeMode extends ExpandableStringEnum<SfZonalUpgrad
 
     /**
      * Creates or finds a SfZonalUpgradeMode from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding SfZonalUpgradeMode.
      */
-    @JsonCreator
     public static SfZonalUpgradeMode fromString(String name) {
         return fromString(name, SfZonalUpgradeMode.class);
     }
 
     /**
      * Gets known SfZonalUpgradeMode values.
-     *
+     * 
      * @return known SfZonalUpgradeMode values.
      */
     public static Collection<SfZonalUpgradeMode> values() {

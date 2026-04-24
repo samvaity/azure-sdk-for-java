@@ -6,7 +6,6 @@ package com.azure.communication.callautomation.models;
 import com.azure.communication.callautomation.implementation.accesshelpers.RemoveParticipantResponseConstructorProxy;
 import com.azure.communication.callautomation.implementation.models.RemoveParticipantResponseInternal;
 import com.azure.core.annotation.Immutable;
-
 import java.util.Objects;
 
 /** The RemoveParticipantResult model. */
@@ -18,8 +17,8 @@ public final class RemoveParticipantResult {
     private final String operationContext;
 
     static {
-        RemoveParticipantResponseConstructorProxy.setAccessor(
-            new RemoveParticipantResponseConstructorProxy.RemoveParticipantResponseConstructorAccessor() {
+        RemoveParticipantResponseConstructorProxy
+            .setAccessor(new RemoveParticipantResponseConstructorProxy.RemoveParticipantResponseConstructorAccessor() {
                 @Override
                 public RemoveParticipantResult create(RemoveParticipantResponseInternal internalHeaders) {
                     return new RemoveParticipantResult(internalHeaders);
@@ -28,8 +27,7 @@ public final class RemoveParticipantResult {
     }
 
     /**
-     * Public constructor.
-     *
+     * Initializes a new instance of RemoveParticipantResult.
      */
     public RemoveParticipantResult() {
         this.operationContext = null;

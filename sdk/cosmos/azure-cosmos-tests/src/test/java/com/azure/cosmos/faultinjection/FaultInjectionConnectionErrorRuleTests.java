@@ -8,6 +8,7 @@ import com.azure.cosmos.CosmosAsyncClient;
 import com.azure.cosmos.CosmosAsyncContainer;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.cosmos.CosmosContainerProactiveInitConfigBuilder;
+import com.azure.cosmos.TestObject;
 import com.azure.cosmos.implementation.AsyncDocumentClient;
 import com.azure.cosmos.implementation.DatabaseAccount;
 import com.azure.cosmos.implementation.DatabaseAccountLocation;
@@ -16,11 +17,9 @@ import com.azure.cosmos.implementation.TestConfigurations;
 import com.azure.cosmos.implementation.directconnectivity.ReflectionUtils;
 import com.azure.cosmos.implementation.directconnectivity.RntbdTransportClient;
 import com.azure.cosmos.implementation.directconnectivity.rntbd.RntbdEndpoint;
-import com.azure.cosmos.implementation.throughputControl.TestItem;
 import com.azure.cosmos.models.CosmosContainerIdentity;
 import com.azure.cosmos.models.FeedRange;
 import com.azure.cosmos.models.PartitionKey;
-import com.azure.cosmos.rx.TestSuiteBase;
 import com.azure.cosmos.test.faultinjection.CosmosFaultInjectionHelper;
 import com.azure.cosmos.test.faultinjection.FaultInjectionConditionBuilder;
 import com.azure.cosmos.test.faultinjection.FaultInjectionConnectionErrorType;
@@ -48,7 +47,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.fail;
 
-public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
+public class FaultInjectionConnectionErrorRuleTests extends FaultInjectionTestBase {
     private static final int TIMEOUT = 60000;
     private CosmosAsyncClient client;
     private DatabaseAccount databaseAccount;
@@ -67,7 +66,7 @@ public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
         super(clientBuilder);
     }
 
-    @BeforeClass(groups = {"multi-region", "simple"}, timeOut = TIMEOUT)
+    @BeforeClass(groups = {"multi-region", "long"}, timeOut = TIMEOUT)
     public void beforeClass() {
         try {
             client = getClientBuilder().buildAsyncClient();
@@ -76,12 +75,20 @@ public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
 
             this.databaseAccount = globalEndpointManager.getLatestDatabaseAccount();
             this.writeRegionMap = getRegionMap(this.databaseAccount, true);
+
+            // This test runs against a real account
+            // Creating collections can take some time in the remote region
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         } finally {
             safeClose(client);
         }
     }
 
-    @Test(groups = {"simple"}, dataProvider = "connectionErrorTypeProvider", timeOut = TIMEOUT)
+    @Test(groups = {"long"}, dataProvider = "connectionErrorTypeProvider", timeOut = TIMEOUT)
     public void faultInjectionConnectionErrorRuleTestWithNoConnectionWarmup(FaultInjectionConnectionErrorType errorType) {
 
         client = new CosmosClientBuilder()
@@ -90,13 +97,14 @@ public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
                 .contentResponseOnWriteEnabled(true)
                 .directMode()
                 .buildAsyncClient();
+        FaultInjectionRule connectionErrorRule = null;
 
         try {
             // using single partition here so that all write operations will be on the same physical partitions
             CosmosAsyncContainer singlePartitionContainer = getSharedSinglePartitionCosmosContainer(client);
 
             // validate one channel exists
-            TestItem createdItem = TestItem.createNewItem();
+            TestObject createdItem = TestObject.create();
             singlePartitionContainer.createItem(createdItem).block();
 
             RntbdTransportClient rntbdTransportClient = (RntbdTransportClient) ReflectionUtils.getTransportClient(this.client);
@@ -106,7 +114,7 @@ public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
 
             // now enable the connection error rule which expected to close the connections
             String ruleId = "connectionErrorRule-close-" + UUID.randomUUID();
-            FaultInjectionRule connectionErrorRule =
+            connectionErrorRule =
                     new FaultInjectionRuleBuilder(ruleId)
                             .condition(
                                     new FaultInjectionConditionBuilder()
@@ -139,7 +147,7 @@ public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
             assertThat(connectionErrorRule.getHitCountDetails()).isNull();
 
             // do another request to open a new connection
-            singlePartitionContainer.createItem(TestItem.createNewItem()).block();
+            singlePartitionContainer.createItem(TestObject.create()).block();
 
             Thread.sleep(Duration.ofSeconds(2).toMillis());
             // the configured connection rule should have disabled after 2s, so the connection will remain open
@@ -151,6 +159,10 @@ public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         } finally {
+            if (connectionErrorRule != null) {
+                connectionErrorRule.disable();
+            }
+
             safeClose(client);
         }
     }
@@ -193,7 +205,7 @@ public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
             singlePartitionContainer = connectionWarmupClient.getDatabase(databaseId).getContainer(containerId);
 
             // validate one channel exists
-            TestItem createdItem = TestItem.createNewItem();
+            TestObject createdItem = TestObject.create();
             singlePartitionContainer.createItem(createdItem).block();
 
             RntbdTransportClient rntbdTransportClient = (RntbdTransportClient) ReflectionUtils.getTransportClient(connectionWarmupClient);
@@ -262,7 +274,7 @@ public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
             assertThat(connectionErrorRule.getHitCountDetails()).isNull();
 
             // do another request to open a new connection
-            singlePartitionContainer.createItem(TestItem.createNewItem()).block();
+            singlePartitionContainer.createItem(TestObject.create()).block();
 
             Thread.sleep(Duration.ofSeconds(2).toMillis());
             // the configured connection rule should have disabled after 2s, so the connection will remain open
@@ -293,7 +305,7 @@ public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
             CosmosAsyncContainer singlePartitionContainer = getSharedSinglePartitionCosmosContainer(client);
 
             // validate one channel exists
-            TestItem createdItem = TestItem.createNewItem();
+            TestObject createdItem = TestObject.create();
             singlePartitionContainer.createItem(createdItem).block();
 
             RntbdTransportClient rntbdTransportClient = (RntbdTransportClient) ReflectionUtils.getTransportClient(this.client);
@@ -332,7 +344,7 @@ public class FaultInjectionConnectionErrorRuleTests extends TestSuiteBase {
             assertThat(connectionErrorRule.getHitCountDetails()).isNull();
 
             // do another request to open a new connection
-            singlePartitionContainer.createItem(TestItem.createNewItem()).block();
+            singlePartitionContainer.createItem(TestObject.create()).block();
 
             Thread.sleep(Duration.ofSeconds(2).toMillis());
             // the configured connection rule should have disabled after 2s, so the connection will remain open

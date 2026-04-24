@@ -7,7 +7,6 @@ import com.azure.cosmos.CosmosAsyncContainer;
 import com.azure.cosmos.CosmosAsyncDatabase;
 import com.azure.cosmos.CosmosBridgeInternal;
 import com.azure.cosmos.implementation.AsyncDocumentClient;
-import com.azure.cosmos.implementation.Document;
 import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import com.azure.cosmos.implementation.PartitionKeyRange;
 import com.azure.cosmos.implementation.changefeed.ChangeFeedContextClient;
@@ -26,7 +25,6 @@ import com.azure.cosmos.models.CosmosItemRequestOptions;
 import com.azure.cosmos.models.CosmosItemResponse;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.FeedResponse;
-import com.azure.cosmos.models.ModelBridgeInternal;
 import com.azure.cosmos.models.PartitionKey;
 import com.azure.cosmos.models.SqlQuerySpec;
 import org.slf4j.Logger;
@@ -39,7 +37,6 @@ import reactor.core.scheduler.Schedulers;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.azure.cosmos.CosmosBridgeInternal.getContextClient;
 import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNotNull;
@@ -48,6 +45,10 @@ import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNo
  * Implementation for ChangeFeedDocumentClient.
  */
 public class ChangeFeedContextClientImpl implements ChangeFeedContextClient {
+    private static ImplementationBridgeHelpers.CosmosChangeFeedRequestOptionsHelper.CosmosChangeFeedRequestOptionsAccessor changeFeedOptionsAccessor() {
+        return ImplementationBridgeHelpers.CosmosChangeFeedRequestOptionsHelper.getCosmosChangeFeedRequestOptionsAccessor();
+    }
+
     private static final Logger logger = LoggerFactory.getLogger(ChangeFeedContextClientImpl.class);
 
     private final AsyncDocumentClient documentClient;
@@ -87,7 +88,7 @@ public class ChangeFeedContextClientImpl implements ChangeFeedContextClient {
     }
 
     @Override
-    public Mono<List<PartitionKeyRange>> getOverlappingRanges(Range<String> range) {
+    public Mono<List<PartitionKeyRange>> getOverlappingRanges(Range<String> range, boolean forceRefresh) {
         AsyncDocumentClient clientWrapper =
                 CosmosBridgeInternal.getAsyncDocumentClient(this.cosmosContainer.getDatabase());
 
@@ -99,7 +100,7 @@ public class ChangeFeedContextClientImpl implements ChangeFeedContextClient {
                             null,
                             collection.getResourceId(),
                             range,
-                            true,
+                            forceRefresh,
                             null);
                 })
                 .flatMap(pkRangesValueHolder -> {
@@ -124,46 +125,31 @@ public class ChangeFeedContextClientImpl implements ChangeFeedContextClient {
                                                                    CosmosChangeFeedRequestOptions changeFeedRequestOptions,
                                                                    Class<T> klass) {
 
+        return this.createDocumentChangeFeedQuery(collectionLink, changeFeedRequestOptions, klass, true);
+    }
+
+    @Override
+    public  <T> Flux<FeedResponse<T>> createDocumentChangeFeedQuery(CosmosAsyncContainer collectionLink,
+                                                                    CosmosChangeFeedRequestOptions changeFeedRequestOptions,
+                                                                    Class<T> klass,
+                                                                    boolean isSplitHandlingDisabled) {
+
+        // Case 1: when split handling should be disabled
         // ChangeFeed processor relies on getting GoneException signals
         // to handle split of leases - so we need to suppress the split-proofing
         // in the underlying fetcher/pipeline for the change feed processor.
-        CosmosChangeFeedRequestOptions effectiveRequestOptions =
-            ModelBridgeInternal.disableSplitHandling(changeFeedRequestOptions);
-
-        AsyncDocumentClient clientWrapper =
-            CosmosBridgeInternal.getAsyncDocumentClient(collectionLink.getDatabase());
-        Flux<FeedResponse<T>> feedResponseFlux =
-            clientWrapper
-                .getCollectionCache()
-                .resolveByNameAsync(
-                    null,
-                    BridgeInternal.extractContainerSelfLink(collectionLink),
-                    null)
-                .flatMapMany((collection) -> {
-                    if (collection == null) {
-                        throw new IllegalStateException("Collection cannot be null");
-                    }
-
-                    return clientWrapper
-                        .queryDocumentChangeFeed(collection, effectiveRequestOptions, Document.class)
-                        .map(response -> {
-                            List<T> results = response.getResults()
-                                                             .stream()
-                                                             .map(document ->
-                                                                 ModelBridgeInternal.toObjectFromJsonSerializable(
-                                                                     document,
-                                                                     klass))
-                                                             .collect(Collectors.toList());
-                            return BridgeInternal.toFeedResponsePage(
-                                results,
-                                response.getResponseHeaders(),
-                                ImplementationBridgeHelpers
-                                    .FeedResponseHelper
-                                    .getFeedResponseAccessor().getNoChanges(response),
-                                response.getCosmosDiagnostics());
-                        });
-                });
-        return feedResponseFlux.publishOn(this.scheduler);
+        // Case 2: when split handling should be enabled
+        // A ChangeFeedProcessor instance which is backed by a client with a stale
+        // PKRange cache will run into 410/1002s (PartitionKeyRangeGone) if disable split handling is true
+        // in getCurrentState and getEstimatedLag scenarios therefore disable split handling should explicitly be set to false
+        if (isSplitHandlingDisabled) {
+            changeFeedOptionsAccessor()
+                .disableSplitHandling(changeFeedRequestOptions);
+        }
+        return collectionLink
+            .queryChangeFeed(changeFeedRequestOptions, klass)
+            .byPage().take(1, true)
+            .publishOn(this.scheduler);
     }
 
     @Override

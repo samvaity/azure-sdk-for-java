@@ -6,62 +6,75 @@ package com.azure.resourcemanager.communication.fluent.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.communication.models.CommunicationServicesProvisioningState;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.resourcemanager.communication.models.PublicNetworkAccess;
+import java.io.IOException;
 import java.util.List;
 
-/** A class that describes the properties of the CommunicationService. */
+/**
+ * A class that describes the properties of the CommunicationService.
+ */
 @Fluent
-public final class CommunicationServiceProperties {
+public final class CommunicationServiceProperties implements JsonSerializable<CommunicationServiceProperties> {
     /*
      * Provisioning state of the resource.
      */
-    @JsonProperty(value = "provisioningState", access = JsonProperty.Access.WRITE_ONLY)
     private CommunicationServicesProvisioningState provisioningState;
 
     /*
      * FQDN of the CommunicationService instance.
      */
-    @JsonProperty(value = "hostName", access = JsonProperty.Access.WRITE_ONLY)
     private String hostname;
 
     /*
      * The location where the communication service stores its data at rest.
      */
-    @JsonProperty(value = "dataLocation", required = true)
     private String dataLocation;
 
     /*
      * Resource ID of an Azure Notification Hub linked to this resource.
      */
-    @JsonProperty(value = "notificationHubId", access = JsonProperty.Access.WRITE_ONLY)
     private String notificationHubId;
 
     /*
      * Version of the CommunicationService resource. Probably you need the same or higher version of client SDKs.
      */
-    @JsonProperty(value = "version", access = JsonProperty.Access.WRITE_ONLY)
     private String version;
 
     /*
      * The immutable resource Id of the communication service.
      */
-    @JsonProperty(value = "immutableResourceId", access = JsonProperty.Access.WRITE_ONLY)
     private String immutableResourceId;
 
     /*
      * List of email Domain resource Ids.
      */
-    @JsonProperty(value = "linkedDomains")
     private List<String> linkedDomains;
 
-    /** Creates an instance of CommunicationServiceProperties class. */
+    /*
+     * Allow, disallow, or let network security perimeter configuration control public network access to the protected
+     * resource. Value is optional but if passed in, it must be 'Enabled', 'Disabled' or 'SecuredByPerimeter'.
+     */
+    private PublicNetworkAccess publicNetworkAccess;
+
+    /*
+     * Disable local authentication for the CommunicationService.
+     */
+    private Boolean disableLocalAuth;
+
+    /**
+     * Creates an instance of CommunicationServiceProperties class.
+     */
     public CommunicationServiceProperties() {
     }
 
     /**
      * Get the provisioningState property: Provisioning state of the resource.
-     *
+     * 
      * @return the provisioningState value.
      */
     public CommunicationServicesProvisioningState provisioningState() {
@@ -70,7 +83,7 @@ public final class CommunicationServiceProperties {
 
     /**
      * Get the hostname property: FQDN of the CommunicationService instance.
-     *
+     * 
      * @return the hostname value.
      */
     public String hostname() {
@@ -79,7 +92,7 @@ public final class CommunicationServiceProperties {
 
     /**
      * Get the dataLocation property: The location where the communication service stores its data at rest.
-     *
+     * 
      * @return the dataLocation value.
      */
     public String dataLocation() {
@@ -88,7 +101,7 @@ public final class CommunicationServiceProperties {
 
     /**
      * Set the dataLocation property: The location where the communication service stores its data at rest.
-     *
+     * 
      * @param dataLocation the dataLocation value to set.
      * @return the CommunicationServiceProperties object itself.
      */
@@ -99,7 +112,7 @@ public final class CommunicationServiceProperties {
 
     /**
      * Get the notificationHubId property: Resource ID of an Azure Notification Hub linked to this resource.
-     *
+     * 
      * @return the notificationHubId value.
      */
     public String notificationHubId() {
@@ -109,7 +122,7 @@ public final class CommunicationServiceProperties {
     /**
      * Get the version property: Version of the CommunicationService resource. Probably you need the same or higher
      * version of client SDKs.
-     *
+     * 
      * @return the version value.
      */
     public String version() {
@@ -118,7 +131,7 @@ public final class CommunicationServiceProperties {
 
     /**
      * Get the immutableResourceId property: The immutable resource Id of the communication service.
-     *
+     * 
      * @return the immutableResourceId value.
      */
     public String immutableResourceId() {
@@ -127,7 +140,7 @@ public final class CommunicationServiceProperties {
 
     /**
      * Get the linkedDomains property: List of email Domain resource Ids.
-     *
+     * 
      * @return the linkedDomains value.
      */
     public List<String> linkedDomains() {
@@ -136,7 +149,7 @@ public final class CommunicationServiceProperties {
 
     /**
      * Set the linkedDomains property: List of email Domain resource Ids.
-     *
+     * 
      * @param linkedDomains the linkedDomains value to set.
      * @return the CommunicationServiceProperties object itself.
      */
@@ -146,18 +159,124 @@ public final class CommunicationServiceProperties {
     }
 
     /**
+     * Get the publicNetworkAccess property: Allow, disallow, or let network security perimeter configuration control
+     * public network access to the protected resource. Value is optional but if passed in, it must be 'Enabled',
+     * 'Disabled' or 'SecuredByPerimeter'.
+     * 
+     * @return the publicNetworkAccess value.
+     */
+    public PublicNetworkAccess publicNetworkAccess() {
+        return this.publicNetworkAccess;
+    }
+
+    /**
+     * Set the publicNetworkAccess property: Allow, disallow, or let network security perimeter configuration control
+     * public network access to the protected resource. Value is optional but if passed in, it must be 'Enabled',
+     * 'Disabled' or 'SecuredByPerimeter'.
+     * 
+     * @param publicNetworkAccess the publicNetworkAccess value to set.
+     * @return the CommunicationServiceProperties object itself.
+     */
+    public CommunicationServiceProperties withPublicNetworkAccess(PublicNetworkAccess publicNetworkAccess) {
+        this.publicNetworkAccess = publicNetworkAccess;
+        return this;
+    }
+
+    /**
+     * Get the disableLocalAuth property: Disable local authentication for the CommunicationService.
+     * 
+     * @return the disableLocalAuth value.
+     */
+    public Boolean disableLocalAuth() {
+        return this.disableLocalAuth;
+    }
+
+    /**
+     * Set the disableLocalAuth property: Disable local authentication for the CommunicationService.
+     * 
+     * @param disableLocalAuth the disableLocalAuth value to set.
+     * @return the CommunicationServiceProperties object itself.
+     */
+    public CommunicationServiceProperties withDisableLocalAuth(Boolean disableLocalAuth) {
+        this.disableLocalAuth = disableLocalAuth;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (dataLocation() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property dataLocation in model CommunicationServiceProperties"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property dataLocation in model CommunicationServiceProperties"));
         }
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(CommunicationServiceProperties.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("dataLocation", this.dataLocation);
+        jsonWriter.writeArrayField("linkedDomains", this.linkedDomains,
+            (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("publicNetworkAccess",
+            this.publicNetworkAccess == null ? null : this.publicNetworkAccess.toString());
+        jsonWriter.writeBooleanField("disableLocalAuth", this.disableLocalAuth);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CommunicationServiceProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CommunicationServiceProperties if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the CommunicationServiceProperties.
+     */
+    public static CommunicationServiceProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CommunicationServiceProperties deserializedCommunicationServiceProperties
+                = new CommunicationServiceProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("dataLocation".equals(fieldName)) {
+                    deserializedCommunicationServiceProperties.dataLocation = reader.getString();
+                } else if ("provisioningState".equals(fieldName)) {
+                    deserializedCommunicationServiceProperties.provisioningState
+                        = CommunicationServicesProvisioningState.fromString(reader.getString());
+                } else if ("hostName".equals(fieldName)) {
+                    deserializedCommunicationServiceProperties.hostname = reader.getString();
+                } else if ("notificationHubId".equals(fieldName)) {
+                    deserializedCommunicationServiceProperties.notificationHubId = reader.getString();
+                } else if ("version".equals(fieldName)) {
+                    deserializedCommunicationServiceProperties.version = reader.getString();
+                } else if ("immutableResourceId".equals(fieldName)) {
+                    deserializedCommunicationServiceProperties.immutableResourceId = reader.getString();
+                } else if ("linkedDomains".equals(fieldName)) {
+                    List<String> linkedDomains = reader.readArray(reader1 -> reader1.getString());
+                    deserializedCommunicationServiceProperties.linkedDomains = linkedDomains;
+                } else if ("publicNetworkAccess".equals(fieldName)) {
+                    deserializedCommunicationServiceProperties.publicNetworkAccess
+                        = PublicNetworkAccess.fromString(reader.getString());
+                } else if ("disableLocalAuth".equals(fieldName)) {
+                    deserializedCommunicationServiceProperties.disableLocalAuth
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedCommunicationServiceProperties;
+        });
+    }
 }

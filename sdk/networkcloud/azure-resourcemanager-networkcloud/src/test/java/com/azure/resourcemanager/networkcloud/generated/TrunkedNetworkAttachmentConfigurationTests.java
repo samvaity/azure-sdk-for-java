@@ -12,22 +12,20 @@ import org.junit.jupiter.api.Assertions;
 public final class TrunkedNetworkAttachmentConfigurationTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        TrunkedNetworkAttachmentConfiguration model =
-            BinaryData
-                .fromString("{\"networkId\":\"wakbogqxndl\",\"pluginType\":\"IPVLAN\"}")
+        TrunkedNetworkAttachmentConfiguration model
+            = BinaryData.fromString("{\"networkId\":\"ghvxndzwmkrefa\",\"pluginType\":\"DPDK\"}")
                 .toObject(TrunkedNetworkAttachmentConfiguration.class);
-        Assertions.assertEquals("wakbogqxndl", model.networkId());
-        Assertions.assertEquals(KubernetesPluginType.IPVLAN, model.pluginType());
+        Assertions.assertEquals("ghvxndzwmkrefa", model.networkId());
+        Assertions.assertEquals(KubernetesPluginType.DPDK, model.pluginType());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        TrunkedNetworkAttachmentConfiguration model =
-            new TrunkedNetworkAttachmentConfiguration()
-                .withNetworkId("wakbogqxndl")
-                .withPluginType(KubernetesPluginType.IPVLAN);
+        TrunkedNetworkAttachmentConfiguration model
+            = new TrunkedNetworkAttachmentConfiguration().withNetworkId("ghvxndzwmkrefa")
+                .withPluginType(KubernetesPluginType.DPDK);
         model = BinaryData.fromObject(model).toObject(TrunkedNetworkAttachmentConfiguration.class);
-        Assertions.assertEquals("wakbogqxndl", model.networkId());
-        Assertions.assertEquals(KubernetesPluginType.IPVLAN, model.pluginType());
+        Assertions.assertEquals("ghvxndzwmkrefa", model.networkId());
+        Assertions.assertEquals(KubernetesPluginType.DPDK, model.pluginType());
     }
 }

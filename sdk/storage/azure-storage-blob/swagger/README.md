@@ -15,26 +15,22 @@ autorest
 
 ### Code generation settings
 ``` yaml
-use: '@autorest/java@4.1.16'
-input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/3e6f238a1f74d77ba6970f297c77995a9f1f374e/specification/storage/data-plane/Microsoft.BlobStorage/preview/2021-12-02/blob.json
+use: '@autorest/java@4.1.63'
+input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/15d7f54a5389d5906ffb4e56bb2f38fe5525c0d3/specification/storage/data-plane/Microsoft.BlobStorage/stable/2026-06-06/blob.json
 java: true
 output-folder: ../
 namespace: com.azure.storage.blob
-enable-xml: true
 generate-client-as-impl: true
-generate-client-interfaces: false
-service-interface-as-public: true
 license-header: MICROSOFT_MIT_SMALL
-context-client-method-parameter: true
+enable-sync-stack: true
 optional-constant-as-enum: true
-default-http-exception-type: com.azure.storage.blob.models.BlobStorageException
+default-http-exception-type: com.azure.storage.blob.implementation.models.BlobStorageExceptionInternal
 models-subpackage: implementation.models
-custom-types: BlobAccessPolicy,AccessTier,AccountKind,ArchiveStatus,BlobHttpHeaders,BlobContainerItem,BlobContainerItemProperties,BlobContainerEncryptionScope,BlobServiceProperties,BlobType,Block,BlockList,BlockListType,BlockLookupList,ClearRange,CopyStatusType,BlobCorsRule,CpkInfo,CustomerProvidedKeyInfo,DeleteSnapshotsOptionType,EncryptionAlgorithmType,FilterBlobsItem,GeoReplication,GeoReplicationStatusType,KeyInfo,LeaseDurationType,LeaseStateType,LeaseStatusType,ListBlobContainersIncludeType,ListBlobsIncludeItem,BlobAnalyticsLogging,BlobMetrics,PageList,PageRange,PathRenameMode,PublicAccessType,RehydratePriority,BlobRetentionPolicy,SequenceNumberActionType,BlobSignedIdentifier,SkuName,StaticWebsite,BlobErrorCode,BlobServiceStatistics,SyncCopyStatusType,UserDelegationKey,BlobQueryHeaders,GeoReplicationStatus,BlobImmutabilityPolicyMode,BlobCopySourceTagsMode
+custom-types: BlobAccessPolicy,AccessTier,AccountKind,ArchiveStatus,BlobHttpHeaders,BlobContainerItem,BlobContainerItemProperties,BlobContainerEncryptionScope,BlobServiceProperties,BlobType,Block,BlockList,BlockListType,BlockLookupList,ClearRange,CopyStatusType,BlobCorsRule,CpkInfo,CustomerProvidedKeyInfo,DeleteSnapshotsOptionType,EncryptionAlgorithmType,FilterBlobsItem,GeoReplication,GeoReplicationStatusType,KeyInfo,LeaseDurationType,LeaseStateType,LeaseStatusType,ListBlobContainersIncludeType,ListBlobsIncludeItem,BlobAnalyticsLogging,BlobMetrics,PageList,PageRange,PathRenameMode,PublicAccessType,RehydratePriority,BlobRetentionPolicy,SequenceNumberActionType,BlobSignedIdentifier,SkuName,StaticWebsite,BlobErrorCode,BlobServiceStatistics,SyncCopyStatusType,UserDelegationKey,BlobQueryHeaders,GeoReplicationStatus,BlobImmutabilityPolicyMode,BlobCopySourceTagsMode,FileShareTokenIntent
 custom-types-subpackage: models
 customization-class: src/main/java/BlobStorageCustomization.java
-generic-response-type: true
 use-input-stream-for-binary: true
-no-custom-headers: true
+disable-client-builder: true
 ```
 
 ### /{containerName}/{blob}
@@ -358,6 +354,7 @@ directive:
   transform: >
     $.enum.push("SnaphotOperationRateExceeded");
     $.enum.push("IncrementalCopyOfEralierVersionSnapshotNotAllowed");
+    $.enum.push("IncrementalCopyOfEarlierVersionSnapshotNotAllowed");
 ```
 
 ### BlobServiceProperties, BlobAnalyticsLogging, BlobMetrics, BlobCorsRule, and BlobRetentionPolicy
@@ -402,6 +399,12 @@ directive:
 - rename-model:
     from: BlobPrefix
     to: BlobPrefixInternal
+    
+- from: swagger-document
+  where: $.definitions
+  transform: >
+    $.BlobServiceStatistics.xml = { "name": "StorageServiceStats" };
+    $.BlobPrefixInternal.xml = { "name": "BlobPrefix" };
 ```
 
 ### BlobAccessPolicy and BlobSignedIdentifier
@@ -450,6 +453,16 @@ directive:
   transform: >
     $.properties.SignedOid["x-ms-client-name"] = "signedObjectId";
     $.properties.SignedTid["x-ms-client-name"] = "signedTenantId";
+    $.properties.SignedDelegatedUserTid["x-ms-client-name"] = "signedDelegatedUserTenantId";
+```
+
+### Rename KeyInfo DelegatedUserTid
+``` yaml
+directive:
+- from: swagger-document
+  where: $.definitions.KeyInfo
+  transform: >
+    $.properties.DelegatedUserTid["x-ms-client-name"] = "delegatedUserTenantId";
 ```
 
 ### Remove AccessConditions parameter groupings
@@ -471,6 +484,13 @@ directive:
     delete $.IfNoneMatch["x-ms-parameter-grouping"];
     delete $.IfUnmodifiedSince["x-ms-parameter-grouping"];
     delete $.IfTags["x-ms-parameter-grouping"];
+- from: swagger-document
+  where: $.parameters
+  transform: >
+    delete $.IfBlobMatch["x-ms-parameter-grouping"];
+    delete $.IfBlobModifiedSince["x-ms-parameter-grouping"];
+    delete $.IfBlobNoneMatch["x-ms-parameter-grouping"];
+    delete $.IfBlobUnmodifiedSince["x-ms-parameter-grouping"];
 - from: swagger-document
   where: $.parameters
   transform: >
@@ -617,6 +637,17 @@ directive:
     $.description = "The Put Blob from URL operation creates a new Block Blob where the contents of the blob are read from a given URL.  This API is supported beginning with the 2020-04-08 version. Partial updates are not supported with Put Blob from URL; the content of an existing blob is overwritten with the content of the new blob.  To perform partial updates to a block blob's contents using a source URL, use the Put Block from URL API in conjunction with Put Block List.";
 ```
 
+### Remove source CPK parameter grouping
+``` yaml
+directive:
+- from: swagger-document
+  where: $.parameters
+  transform: >
+    delete $.SourceEncryptionKey["x-ms-parameter-grouping"];
+    delete $.SourceEncryptionKeySha256["x-ms-parameter-grouping"];
+    delete $.SourceEncryptionAlgorithm["x-ms-parameter-grouping"];
+```
+
 ### Rename ListBlobsIncludeItem Enums to be underscore cased
 ```yaml
 directive:
@@ -677,4 +708,4 @@ directive:
       ];
 ```
 
-![Impressions](https://azure-sdk-impressions.azurewebsites.net/api/impressions/azure-sdk-for-java%2Fsdk%2Fstorage%2Fazure-storage-blob%2Fswagger%2FREADME.png)
+

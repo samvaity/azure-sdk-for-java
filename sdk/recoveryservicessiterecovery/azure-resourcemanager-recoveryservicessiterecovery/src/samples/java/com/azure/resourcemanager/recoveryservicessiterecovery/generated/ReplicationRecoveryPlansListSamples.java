@@ -4,18 +4,22 @@
 
 package com.azure.resourcemanager.recoveryservicessiterecovery.generated;
 
-/** Samples for ReplicationRecoveryPlans List. */
+/**
+ * Samples for ReplicationRecoveryPlans List.
+ */
 public final class ReplicationRecoveryPlansListSamples {
     /*
-     * x-ms-original-file: specification/recoveryservicessiterecovery/resource-manager/Microsoft.RecoveryServices/stable/2022-10-01/examples/ReplicationRecoveryPlans_List.json
+     * x-ms-original-file:
+     * specification/recoveryservicessiterecovery/resource-manager/Microsoft.RecoveryServices/stable/2025-01-01/examples
+     * /ReplicationRecoveryPlans_List.json
      */
     /**
      * Sample code: Gets the list of recovery plans.
-     *
+     * 
      * @param manager Entry point to SiteRecoveryManager.
      */
-    public static void getsTheListOfRecoveryPlans(
-        com.azure.resourcemanager.recoveryservicessiterecovery.SiteRecoveryManager manager) {
-        manager.replicationRecoveryPlans().list("vault1", "resourceGroupPS1", com.azure.core.util.Context.NONE);
+    public static void
+        getsTheListOfRecoveryPlans(com.azure.resourcemanager.recoveryservicessiterecovery.SiteRecoveryManager manager) {
+        manager.replicationRecoveryPlans().list("resourceGroupPS1", "vault1", com.azure.core.util.Context.NONE);
     }
 }

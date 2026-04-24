@@ -5,83 +5,107 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Oracle Service Cloud linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("OracleServiceCloud")
-@JsonFlatten
+/**
+ * Oracle Service Cloud linked service.
+ */
 @Fluent
 public class OracleServiceCloudLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "OracleServiceCloud";
+
+    /*
      * The URL of the Oracle Service Cloud instance.
      */
-    @JsonProperty(value = "typeProperties.host", required = true)
+    @Generated
     private Object host;
 
     /*
      * The user name that you use to access Oracle Service Cloud server.
      */
-    @JsonProperty(value = "typeProperties.username", required = true)
+    @Generated
     private Object username;
 
     /*
      * The password corresponding to the user name that you provided in the username key.
      */
-    @JsonProperty(value = "typeProperties.password", required = true)
+    @Generated
     private SecretBase password;
 
     /*
      * Specifies whether the data source endpoints are encrypted using HTTPS. The default value is true. Type: boolean
      * (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "typeProperties.useEncryptedEndpoints")
+    @Generated
     private Object useEncryptedEndpoints;
 
     /*
      * Specifies whether to require the host name in the server's certificate to match the host name of the server when
      * connecting over SSL. The default value is true. Type: boolean (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "typeProperties.useHostVerification")
+    @Generated
     private Object useHostVerification;
 
     /*
-     * Specifies whether to verify the identity of the server when connecting over SSL. The default value is true.
-     * Type: boolean (or Expression with resultType boolean).
+     * Specifies whether to verify the identity of the server when connecting over SSL. The default value is true. Type:
+     * boolean (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "typeProperties.usePeerVerification")
+    @Generated
     private Object usePeerVerification;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of OracleServiceCloudLinkedService class. */
-    public OracleServiceCloudLinkedService() {}
+    /**
+     * Creates an instance of OracleServiceCloudLinkedService class.
+     */
+    @Generated
+    public OracleServiceCloudLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the host property: The URL of the Oracle Service Cloud instance.
-     *
+     * 
      * @return the host value.
      */
+    @Generated
     public Object getHost() {
         return this.host;
     }
 
     /**
      * Set the host property: The URL of the Oracle Service Cloud instance.
-     *
+     * 
      * @param host the host value to set.
      * @return the OracleServiceCloudLinkedService object itself.
      */
+    @Generated
     public OracleServiceCloudLinkedService setHost(Object host) {
         this.host = host;
         return this;
@@ -89,19 +113,21 @@ public class OracleServiceCloudLinkedService extends LinkedService {
 
     /**
      * Get the username property: The user name that you use to access Oracle Service Cloud server.
-     *
+     * 
      * @return the username value.
      */
+    @Generated
     public Object getUsername() {
         return this.username;
     }
 
     /**
      * Set the username property: The user name that you use to access Oracle Service Cloud server.
-     *
+     * 
      * @param username the username value to set.
      * @return the OracleServiceCloudLinkedService object itself.
      */
+    @Generated
     public OracleServiceCloudLinkedService setUsername(Object username) {
         this.username = username;
         return this;
@@ -109,19 +135,21 @@ public class OracleServiceCloudLinkedService extends LinkedService {
 
     /**
      * Get the password property: The password corresponding to the user name that you provided in the username key.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: The password corresponding to the user name that you provided in the username key.
-     *
+     * 
      * @param password the password value to set.
      * @return the OracleServiceCloudLinkedService object itself.
      */
+    @Generated
     public OracleServiceCloudLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -130,9 +158,10 @@ public class OracleServiceCloudLinkedService extends LinkedService {
     /**
      * Get the useEncryptedEndpoints property: Specifies whether the data source endpoints are encrypted using HTTPS.
      * The default value is true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the useEncryptedEndpoints value.
      */
+    @Generated
     public Object getUseEncryptedEndpoints() {
         return this.useEncryptedEndpoints;
     }
@@ -140,10 +169,11 @@ public class OracleServiceCloudLinkedService extends LinkedService {
     /**
      * Set the useEncryptedEndpoints property: Specifies whether the data source endpoints are encrypted using HTTPS.
      * The default value is true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param useEncryptedEndpoints the useEncryptedEndpoints value to set.
      * @return the OracleServiceCloudLinkedService object itself.
      */
+    @Generated
     public OracleServiceCloudLinkedService setUseEncryptedEndpoints(Object useEncryptedEndpoints) {
         this.useEncryptedEndpoints = useEncryptedEndpoints;
         return this;
@@ -153,9 +183,10 @@ public class OracleServiceCloudLinkedService extends LinkedService {
      * Get the useHostVerification property: Specifies whether to require the host name in the server's certificate to
      * match the host name of the server when connecting over SSL. The default value is true. Type: boolean (or
      * Expression with resultType boolean).
-     *
+     * 
      * @return the useHostVerification value.
      */
+    @Generated
     public Object getUseHostVerification() {
         return this.useHostVerification;
     }
@@ -164,10 +195,11 @@ public class OracleServiceCloudLinkedService extends LinkedService {
      * Set the useHostVerification property: Specifies whether to require the host name in the server's certificate to
      * match the host name of the server when connecting over SSL. The default value is true. Type: boolean (or
      * Expression with resultType boolean).
-     *
+     * 
      * @param useHostVerification the useHostVerification value to set.
      * @return the OracleServiceCloudLinkedService object itself.
      */
+    @Generated
     public OracleServiceCloudLinkedService setUseHostVerification(Object useHostVerification) {
         this.useHostVerification = useHostVerification;
         return this;
@@ -176,9 +208,10 @@ public class OracleServiceCloudLinkedService extends LinkedService {
     /**
      * Get the usePeerVerification property: Specifies whether to verify the identity of the server when connecting over
      * SSL. The default value is true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the usePeerVerification value.
      */
+    @Generated
     public Object getUsePeerVerification() {
         return this.usePeerVerification;
     }
@@ -186,10 +219,11 @@ public class OracleServiceCloudLinkedService extends LinkedService {
     /**
      * Set the usePeerVerification property: Specifies whether to verify the identity of the server when connecting over
      * SSL. The default value is true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param usePeerVerification the usePeerVerification value to set.
      * @return the OracleServiceCloudLinkedService object itself.
      */
+    @Generated
     public OracleServiceCloudLinkedService setUsePeerVerification(Object usePeerVerification) {
         this.usePeerVerification = usePeerVerification;
         return this;
@@ -198,9 +232,10 @@ public class OracleServiceCloudLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -208,40 +243,181 @@ public class OracleServiceCloudLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the OracleServiceCloudLinkedService object itself.
      */
+    @Generated
     public OracleServiceCloudLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public OracleServiceCloudLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public OracleServiceCloudLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public OracleServiceCloudLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public OracleServiceCloudLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public OracleServiceCloudLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (host != null
+            || username != null
+            || password != null
+            || useEncryptedEndpoints != null
+            || useHostVerification != null
+            || usePeerVerification != null
+            || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("host", this.host);
+            jsonWriter.writeUntypedField("username", this.username);
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.useEncryptedEndpoints != null) {
+                jsonWriter.writeUntypedField("useEncryptedEndpoints", this.useEncryptedEndpoints);
+            }
+            if (this.useHostVerification != null) {
+                jsonWriter.writeUntypedField("useHostVerification", this.useHostVerification);
+            }
+            if (this.usePeerVerification != null) {
+                jsonWriter.writeUntypedField("usePeerVerification", this.usePeerVerification);
+            }
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of OracleServiceCloudLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of OracleServiceCloudLinkedService if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the OracleServiceCloudLinkedService.
+     */
+    @Generated
+    public static OracleServiceCloudLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            OracleServiceCloudLinkedService deserializedOracleServiceCloudLinkedService
+                = new OracleServiceCloudLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedOracleServiceCloudLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedOracleServiceCloudLinkedService
+                        .setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedOracleServiceCloudLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedOracleServiceCloudLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedOracleServiceCloudLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedOracleServiceCloudLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("host".equals(fieldName)) {
+                            deserializedOracleServiceCloudLinkedService.host = reader.readUntyped();
+                        } else if ("username".equals(fieldName)) {
+                            deserializedOracleServiceCloudLinkedService.username = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedOracleServiceCloudLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("useEncryptedEndpoints".equals(fieldName)) {
+                            deserializedOracleServiceCloudLinkedService.useEncryptedEndpoints = reader.readUntyped();
+                        } else if ("useHostVerification".equals(fieldName)) {
+                            deserializedOracleServiceCloudLinkedService.useHostVerification = reader.readUntyped();
+                        } else if ("usePeerVerification".equals(fieldName)) {
+                            deserializedOracleServiceCloudLinkedService.usePeerVerification = reader.readUntyped();
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedOracleServiceCloudLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedOracleServiceCloudLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedOracleServiceCloudLinkedService;
+        });
     }
 }

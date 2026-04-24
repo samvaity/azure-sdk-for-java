@@ -10,11 +10,9 @@ import com.azure.resourcemanager.databox.fluent.models.RegionConfigurationRespon
 public final class RegionConfigurationResponseInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        RegionConfigurationResponseInner model =
-            BinaryData
-                .fromString(
-                    "{\"scheduleAvailabilityResponse\":{\"availableDates\":[\"2021-08-23T15:54:41Z\"]},\"transportAvailabilityResponse\":{\"transportAvailabilityDetails\":[{\"shipmentType\":\"MicrosoftManaged\"},{\"shipmentType\":\"MicrosoftManaged\"},{\"shipmentType\":\"MicrosoftManaged\"},{\"shipmentType\":\"CustomerManaged\"}]},\"datacenterAddressResponse\":{\"datacenterAddressType\":\"DatacenterAddressResponse\",\"supportedCarriersForReturnShipment\":[\"pppcqeqxo\",\"z\"],\"dataCenterAzureLocation\":\"hzxct\"}}")
-                .toObject(RegionConfigurationResponseInner.class);
+        RegionConfigurationResponseInner model = BinaryData.fromString(
+            "{\"scheduleAvailabilityResponse\":{\"availableDates\":[\"2021-09-19T17:10:39Z\",\"2021-01-16T00:33:56Z\",\"2021-01-22T07:28:26Z\",\"2021-11-13T02:15:02Z\"]},\"transportAvailabilityResponse\":{\"transportAvailabilityDetails\":[{\"shipmentType\":\"CustomerManaged\"},{\"shipmentType\":\"CustomerManaged\"},{\"shipmentType\":\"MicrosoftManaged\"},{\"shipmentType\":\"MicrosoftManaged\"}]},\"datacenterAddressResponse\":{\"datacenterAddressType\":\"DatacenterAddressResponse\",\"supportedCarriersForReturnShipment\":[\"podxunkb\",\"bxmubyynt\",\"lrb\",\"tkoievseotgq\"],\"dataCenterAzureLocation\":\"ltmuwlauwzizx\"},\"deviceCapabilityResponse\":{\"deviceCapabilityDetails\":[{\"hardwareEncryption\":\"Disabled\"}]}}")
+            .toObject(RegionConfigurationResponseInner.class);
     }
 
     @org.junit.jupiter.api.Test

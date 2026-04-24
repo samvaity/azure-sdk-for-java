@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter xmlns="https://github.com/spotbugs/filter/3.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+  <Match>
+    <Bug pattern="DM_DEFAULT_ENCODING" />
+    <Class name="com.azure.ai.formrecognizer.training.models.CopyAuthorization" />
+  </Match>
+  <Match>
+    <Bug pattern="EI_EXPOSE_STATIC_REP2" />
+    <Or>
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.AddressValueHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.AnalyzeResultHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.AnalyzedDocumentHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.BoundingRegionHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.CurrencyValueHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentBarcodeHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentClassifierDetailsHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentFieldHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentFieldSchemaHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentFormulaHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentKeyValueElementHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentKeyValuePairHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentLanguageHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentLineHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentModelBuildOperationDetailsHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentModelComposeOperationDetailsHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentModelCopyToOperationDetailsHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentModelDetailsHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentModelSummaryHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentPageHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentParagraphHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentSelectionMarkHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentSpanHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentStyleHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentTableCellHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentTableHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentTypeDetailsHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.DocumentWordHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.OperationDetailsHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.OperationResultHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.OperationSummaryHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.PointHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.QuotaDetailsHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.ResourceDetailsHelper" />
+      <Class name="com.azure.ai.formrecognizer.documentanalysis.implementation.util.TypedDocumentFieldHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.CustomFormModelHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.CustomFormModelInfoHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.CustomFormModelPropertiesHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.CustomFormSubmodelHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.FormLineHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.FormPageHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.FormSelectionMarkHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.FormTableHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.RecognizedFormHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.TextAppearanceHelper" />
+      <Class name="com.azure.ai.formrecognizer.implementation.TrainingDocumentInfoHelper" />
+    </Or>
+  </Match>
+</FindBugsFilter>

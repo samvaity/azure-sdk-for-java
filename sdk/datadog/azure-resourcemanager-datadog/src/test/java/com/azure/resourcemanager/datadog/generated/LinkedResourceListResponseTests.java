@@ -13,29 +13,21 @@ import org.junit.jupiter.api.Assertions;
 public final class LinkedResourceListResponseTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        LinkedResourceListResponse model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"id\":\"ckbasyypndd\"},{\"id\":\"gcbacphejkot\"},{\"id\":\"qgoulznd\"},{\"id\":\"kwy\"}],\"nextLink\":\"gfgibm\"}")
-                .toObject(LinkedResourceListResponse.class);
-        Assertions.assertEquals("ckbasyypndd", model.value().get(0).id());
-        Assertions.assertEquals("gfgibm", model.nextLink());
+        LinkedResourceListResponse model = BinaryData.fromString(
+            "{\"value\":[{\"id\":\"hmuouqfprwzwbn\"},{\"id\":\"itnwuizgazxufi\"},{\"id\":\"ckyfih\"}],\"nextLink\":\"idf\"}")
+            .toObject(LinkedResourceListResponse.class);
+        Assertions.assertEquals("hmuouqfprwzwbn", model.value().get(0).id());
+        Assertions.assertEquals("idf", model.nextLink());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        LinkedResourceListResponse model =
-            new LinkedResourceListResponse()
-                .withValue(
-                    Arrays
-                        .asList(
-                            new LinkedResourceInner().withId("ckbasyypndd"),
-                            new LinkedResourceInner().withId("gcbacphejkot"),
-                            new LinkedResourceInner().withId("qgoulznd"),
-                            new LinkedResourceInner().withId("kwy")))
-                .withNextLink("gfgibm");
+        LinkedResourceListResponse model = new LinkedResourceListResponse()
+            .withValue(Arrays.asList(new LinkedResourceInner().withId("hmuouqfprwzwbn"),
+                new LinkedResourceInner().withId("itnwuizgazxufi"), new LinkedResourceInner().withId("ckyfih")))
+            .withNextLink("idf");
         model = BinaryData.fromObject(model).toObject(LinkedResourceListResponse.class);
-        Assertions.assertEquals("ckbasyypndd", model.value().get(0).id());
-        Assertions.assertEquals("gfgibm", model.nextLink());
+        Assertions.assertEquals("hmuouqfprwzwbn", model.value().get(0).id());
+        Assertions.assertEquals("idf", model.nextLink());
     }
 }

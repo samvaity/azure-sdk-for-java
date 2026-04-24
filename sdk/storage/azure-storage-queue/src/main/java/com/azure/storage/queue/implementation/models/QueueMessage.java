@@ -5,39 +5,109 @@
 package com.azure.storage.queue.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** A Message object which can be stored in a Queue. */
-@JacksonXmlRootElement(localName = "QueueMessage")
+/**
+ * A Message object which can be stored in a Queue.
+ */
 @Fluent
-public final class QueueMessage {
+public final class QueueMessage implements XmlSerializable<QueueMessage> {
     /*
      * The content of the message
      */
-    @JsonProperty(value = "MessageText", required = true)
+    @Generated
     private String messageText;
 
-    /** Creates an instance of QueueMessage class. */
-    public QueueMessage() {}
+    /**
+     * Creates an instance of QueueMessage class.
+     */
+    @Generated
+    public QueueMessage() {
+    }
 
     /**
      * Get the messageText property: The content of the message.
-     *
+     * 
      * @return the messageText value.
      */
+    @Generated
     public String getMessageText() {
         return this.messageText;
     }
 
     /**
      * Set the messageText property: The content of the message.
-     *
+     * 
      * @param messageText the messageText value to set.
      * @return the QueueMessage object itself.
      */
+    @Generated
     public QueueMessage setMessageText(String messageText) {
         this.messageText = messageText;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "QueueMessage" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeStringElement("MessageText", this.messageText);
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of QueueMessage from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of QueueMessage if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the QueueMessage.
+     */
+    @Generated
+    public static QueueMessage fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of QueueMessage from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of QueueMessage if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the QueueMessage.
+     */
+    @Generated
+    public static QueueMessage fromXml(XmlReader xmlReader, String rootElementName) throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "QueueMessage" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            QueueMessage deserializedQueueMessage = new QueueMessage();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("MessageText".equals(elementName.getLocalPart())) {
+                    deserializedQueueMessage.messageText = reader.getStringElement();
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedQueueMessage;
+        });
     }
 }

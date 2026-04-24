@@ -5,45 +5,63 @@
 package com.azure.ai.formrecognizer.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
-/** Summary of all trained custom models. */
+/**
+ * Summary of all trained custom models.
+ */
 @Fluent
-public final class ModelsSummary {
+public final class ModelsSummary implements JsonSerializable<ModelsSummary> {
     /*
      * Current count of trained custom models.
      */
-    @JsonProperty(value = "count", required = true)
+    @Generated
     private int count;
 
     /*
      * Max number of models that can be trained for this account.
      */
-    @JsonProperty(value = "limit", required = true)
+    @Generated
     private int limit;
 
     /*
      * Date and time (UTC) when the summary was last updated.
      */
-    @JsonProperty(value = "lastUpdatedDateTime", required = true)
+    @Generated
     private OffsetDateTime lastUpdatedDateTime;
 
     /**
+     * Creates an instance of ModelsSummary class.
+     */
+    @Generated
+    public ModelsSummary() {
+    }
+
+    /**
      * Get the count property: Current count of trained custom models.
-     *
+     * 
      * @return the count value.
      */
+    @Generated
     public int getCount() {
         return this.count;
     }
 
     /**
      * Set the count property: Current count of trained custom models.
-     *
+     * 
      * @param count the count value to set.
      * @return the ModelsSummary object itself.
      */
+    @Generated
     public ModelsSummary setCount(int count) {
         this.count = count;
         return this;
@@ -51,19 +69,21 @@ public final class ModelsSummary {
 
     /**
      * Get the limit property: Max number of models that can be trained for this account.
-     *
+     * 
      * @return the limit value.
      */
+    @Generated
     public int getLimit() {
         return this.limit;
     }
 
     /**
      * Set the limit property: Max number of models that can be trained for this account.
-     *
+     * 
      * @param limit the limit value to set.
      * @return the ModelsSummary object itself.
      */
+    @Generated
     public ModelsSummary setLimit(int limit) {
         this.limit = limit;
         return this;
@@ -71,21 +91,72 @@ public final class ModelsSummary {
 
     /**
      * Get the lastUpdatedDateTime property: Date and time (UTC) when the summary was last updated.
-     *
+     * 
      * @return the lastUpdatedDateTime value.
      */
+    @Generated
     public OffsetDateTime getLastUpdatedDateTime() {
         return this.lastUpdatedDateTime;
     }
 
     /**
      * Set the lastUpdatedDateTime property: Date and time (UTC) when the summary was last updated.
-     *
+     * 
      * @param lastUpdatedDateTime the lastUpdatedDateTime value to set.
      * @return the ModelsSummary object itself.
      */
+    @Generated
     public ModelsSummary setLastUpdatedDateTime(OffsetDateTime lastUpdatedDateTime) {
         this.lastUpdatedDateTime = lastUpdatedDateTime;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeIntField("count", this.count);
+        jsonWriter.writeIntField("limit", this.limit);
+        jsonWriter.writeStringField("lastUpdatedDateTime",
+            this.lastUpdatedDateTime == null
+                ? null
+                : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.lastUpdatedDateTime));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ModelsSummary from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ModelsSummary if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ModelsSummary.
+     */
+    @Generated
+    public static ModelsSummary fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ModelsSummary deserializedModelsSummary = new ModelsSummary();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("count".equals(fieldName)) {
+                    deserializedModelsSummary.count = reader.getInt();
+                } else if ("limit".equals(fieldName)) {
+                    deserializedModelsSummary.limit = reader.getInt();
+                } else if ("lastUpdatedDateTime".equals(fieldName)) {
+                    deserializedModelsSummary.lastUpdatedDateTime = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedModelsSummary;
+        });
     }
 }

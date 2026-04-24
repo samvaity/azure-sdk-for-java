@@ -20,12 +20,13 @@ import com.azure.cosmos.models.SqlQuerySpec;
 import com.azure.cosmos.util.CosmosPagedFlux;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.reactivex.subscribers.TestSubscriber;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +54,7 @@ public class FeedRangeQueryTests extends TestSuiteBase {
         random = new Random();
     }
 
-    @Test(groups = {"simple"}, timeOut = TIMEOUT)
+    @Test(groups = {"query"}, timeOut = TIMEOUT)
     public void queryWithFeedRange() {
         String query = "select * from root";
 
@@ -78,7 +80,7 @@ public class FeedRangeQueryTests extends TestSuiteBase {
         assertThat(feedResultIds).containsExactlyElementsOf(actualIds);
     }
 
-    @Test(groups = {"simple"}, timeOut = TIMEOUT)
+    @Test(groups = {"query"}, timeOut = TIMEOUT)
     public void queryWithFeedRangePartitionKey() {
         String query = "select * from root";
         FeedRange feedRange = FeedRange.forLogicalPartition(new PartitionKey(PK_2));
@@ -97,7 +99,7 @@ public class FeedRangeQueryTests extends TestSuiteBase {
         assertThat(actualIds).containsExactlyInAnyOrderElementsOf(expectedIds);
     }
 
-    @Test(groups = {"simple"}, timeOut = TIMEOUT)
+    @Test(groups = {"query"}, timeOut = TIMEOUT)
     public void queryWithFeedRangeFiltering() {
 
         String query = "select * from root";
@@ -134,7 +136,7 @@ public class FeedRangeQueryTests extends TestSuiteBase {
 
     }
 
-    @Test(groups = {"simple"}, timeOut = TIMEOUT, expectedExceptions = IllegalArgumentException.class)
+    @Test(groups = {"query"}, timeOut = TIMEOUT, expectedExceptions = IllegalArgumentException.class)
     public void queryWithPartitionKeyAndFeedRange() {
         String query = "select * from root";
         FeedRange feedRange = FeedRange.forLogicalPartition(new PartitionKey(PK_2));
@@ -147,19 +149,19 @@ public class FeedRangeQueryTests extends TestSuiteBase {
 
     private <T> List<T> queryAndGetResults(SqlQuerySpec querySpec, CosmosQueryRequestOptions options, Class<T> type) {
         CosmosPagedFlux<T> queryPagedFlux = createdContainer.queryItems(querySpec, options, type);
-        TestSubscriber<T> testSubscriber = new TestSubscriber<>();
-        queryPagedFlux.subscribe(testSubscriber);
-        testSubscriber.awaitTerminalEvent(TIMEOUT, TimeUnit.MILLISECONDS);
-        testSubscriber.assertNoErrors();
-        testSubscriber.assertComplete();
-        return testSubscriber.values();
+        AtomicReference<List<T>> value = new AtomicReference<>();
+        StepVerifier.create(queryPagedFlux.collectList())
+            .consumeNextWith(value::set)
+            .expectComplete()
+            .verify(Duration.ofMillis(TIMEOUT));
+        return value.get();
     }
 
-    @BeforeClass(groups = {"simple"}, timeOut = SETUP_TIMEOUT)
+    @BeforeClass(groups = {"query"}, timeOut = SETUP_TIMEOUT)
     public void beforeClass() throws Exception {
         client = this.getClientBuilder().buildAsyncClient();
         createdContainer = getSharedMultiPartitionCosmosContainer(client);
-        truncateCollection(createdContainer);
+        cleanUpContainer(createdContainer);
 
         createdDocuments.addAll(this.insertDocuments(
             DEFAULT_NUM_DOCUMENTS_PER_PKEY,
@@ -185,7 +187,7 @@ public class FeedRangeQueryTests extends TestSuiteBase {
                                                                                                               .size()))));
         }
 
-        List<JsonNode> documentInserted = bulkInsertBlocking(container, documentsToInsert);
+        List<JsonNode> documentInserted = insertAllItemsBlocking(container, documentsToInsert, true);
 
         waitIfNeededForReplicasToCatchUp(this.getClientBuilder());
 

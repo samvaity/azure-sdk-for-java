@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.azure.core.amqp.implementation.AmqpLoggingUtils.addKeyValueIfNotNull;
+import static com.azure.core.amqp.implementation.ClientConstants.DELIVERY_STATE_KEY;
 import static com.azure.core.amqp.implementation.ClientConstants.ENTITY_PATH_KEY;
 import static com.azure.core.amqp.implementation.ClientConstants.ERROR_CONDITION_KEY;
 import static com.azure.core.amqp.implementation.ClientConstants.ERROR_DESCRIPTION_KEY;
@@ -32,16 +33,24 @@ import static com.azure.core.amqp.implementation.ClientConstants.ERROR_DESCRIPTI
  */
 public class ManagementChannel implements AmqpManagementNode {
     private final TokenManager tokenManager;
-    private final AmqpChannelProcessor<RequestResponseChannel> createChannel;
+    private final ChannelCacheWrapper channelCache;
     private final String fullyQualifiedNamespace;
     private final ClientLogger logger;
     private final String entityPath;
 
-    public ManagementChannel(AmqpChannelProcessor<RequestResponseChannel> createChannel,
-        String fullyQualifiedNamespace, String entityPath, TokenManager tokenManager) {
-        this.createChannel = Objects.requireNonNull(createChannel, "'createChannel' cannot be null.");
-        this.fullyQualifiedNamespace = Objects.requireNonNull(fullyQualifiedNamespace,
-            "'fullyQualifiedNamespace' cannot be null.");
+    /**
+     * Creates a new instance of ManagementChannel.
+     *
+     * @param channelCache The request response channel cache.
+     * @param fullyQualifiedNamespace Fully qualified namespace for the message broker.
+     * @param entityPath The entity path for the message broker.
+     * @param tokenManager Manages tokens for authorization.
+     */
+    public ManagementChannel(ChannelCacheWrapper channelCache, String fullyQualifiedNamespace, String entityPath,
+        TokenManager tokenManager) {
+        this.channelCache = Objects.requireNonNull(channelCache, "'channelCache' cannot be null.");
+        this.fullyQualifiedNamespace
+            = Objects.requireNonNull(fullyQualifiedNamespace, "'fullyQualifiedNamespace' cannot be null.");
         this.entityPath = Objects.requireNonNull(entityPath, "'entityPath' cannot be null.");
 
         Map<String, Object> globalLoggingContext = new HashMap<>();
@@ -53,36 +62,32 @@ public class ManagementChannel implements AmqpManagementNode {
 
     @Override
     public Mono<AmqpAnnotatedMessage> send(AmqpAnnotatedMessage message) {
-        return isAuthorized().then(createChannel.flatMap(channel -> {
+        return isAuthorized().then(channelCache.get().flatMap(channel -> {
             final Message protonJMessage = MessageUtils.toProtonJMessage(message);
 
             return channel.sendWithAck(protonJMessage)
-                .handle((Message responseMessage, SynchronousSink<AmqpAnnotatedMessage> sink) ->
-                    handleResponse(responseMessage, sink, channel.getErrorContext()))
-                .switchIfEmpty(Mono.error(() -> new AmqpException(true, String.format(
-                    "entityPath[%s] No response received from management channel.", entityPath),
-                    channel.getErrorContext())));
+                .handle((Message responseMessage, SynchronousSink<AmqpAnnotatedMessage> sink) -> handleResponse(
+                    responseMessage, sink, channel.getErrorContext()))
+                .switchIfEmpty(errorIfEmpty(channel, null));
         }));
     }
 
     @Override
     public Mono<AmqpAnnotatedMessage> send(AmqpAnnotatedMessage message, DeliveryOutcome deliveryOutcome) {
-        return isAuthorized().then(createChannel.flatMap(channel -> {
+        return isAuthorized().then(channelCache.get().flatMap(channel -> {
             final Message protonJMessage = MessageUtils.toProtonJMessage(message);
             final DeliveryState protonJDeliveryState = MessageUtils.toProtonJDeliveryState(deliveryOutcome);
 
             return channel.sendWithAck(protonJMessage, protonJDeliveryState)
-                .handle((Message responseMessage, SynchronousSink<AmqpAnnotatedMessage> sink) ->
-                    handleResponse(responseMessage, sink, channel.getErrorContext()))
-                .switchIfEmpty(Mono.error(() -> new AmqpException(true, String.format(
-                    "entityPath[%s] outcome[%s] No response received from management channel.", entityPath,
-                    deliveryOutcome.getDeliveryState()), channel.getErrorContext())));
+                .handle((Message responseMessage, SynchronousSink<AmqpAnnotatedMessage> sink) -> handleResponse(
+                    responseMessage, sink, channel.getErrorContext()))
+                .switchIfEmpty(errorIfEmpty(channel, deliveryOutcome.getDeliveryState()));
         }));
     }
 
     @Override
     public Mono<Void> closeAsync() {
-        return createChannel.flatMap(channel -> channel.closeAsync()).cache();
+        return channelCache.closeAsync().cache();
     }
 
     private void handleResponse(Message response, SynchronousSink<AmqpAnnotatedMessage> sink,
@@ -126,6 +131,17 @@ public class ManagementChannel implements AmqpManagementNode {
         sink.error(throwable);
     }
 
+    private <T> Mono<T> errorIfEmpty(RequestResponseChannel channel,
+        com.azure.core.amqp.models.DeliveryState deliveryState) {
+        return Mono.error(() -> {
+            String error
+                = String.format("entityPath[%s] deliveryState[%s] No response received from management channel.",
+                    entityPath, deliveryState);
+            AmqpException exception = new AmqpException(true, error, channel.getErrorContext());
+            return logger.atWarning().addKeyValue(DELIVERY_STATE_KEY, deliveryState).log(exception);
+        });
+    }
+
     private Mono<Void> isAuthorized() {
         return tokenManager.getAuthorizationResults()
             .next()
@@ -135,10 +151,11 @@ public class ManagementChannel implements AmqpManagementNode {
                 if (RequestResponseUtils.isSuccessful(response)) {
                     sink.complete();
                 } else {
-                    final String message = String.format("User does not have authorization to perform operation "
-                        + "on entity [%s]. Response: [%s]", entityPath, response);
-                    sink.error(ExceptionUtil.amqpResponseCodeToException(response.getValue(), message,
-                        getErrorContext()));
+                    final String message = String.format(
+                        "User does not have authorization to perform operation " + "on entity [%s]. Response: [%s]",
+                        entityPath, response);
+                    sink.error(
+                        ExceptionUtil.amqpResponseCodeToException(response.getValue(), message, getErrorContext()));
                 }
             });
     }

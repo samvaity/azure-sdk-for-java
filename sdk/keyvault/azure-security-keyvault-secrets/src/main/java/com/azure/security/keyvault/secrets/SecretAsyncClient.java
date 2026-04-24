@@ -9,58 +9,173 @@ import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.exception.HttpResponseException;
 import com.azure.core.exception.ResourceModifiedException;
 import com.azure.core.exception.ResourceNotFoundException;
-import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.PagedFlux;
+import com.azure.core.http.rest.PagedResponse;
+import com.azure.core.http.rest.PagedResponseBase;
+import com.azure.core.http.rest.RequestOptions;
 import com.azure.core.http.rest.Response;
-import com.azure.core.util.FluxUtil;
+import com.azure.core.http.rest.SimpleResponse;
+import com.azure.core.util.BinaryData;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.paging.PageRetriever;
+import com.azure.core.util.polling.LongRunningOperationStatus;
+import com.azure.core.util.polling.PollResponse;
 import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.PollingContext;
 import com.azure.security.keyvault.secrets.implementation.SecretClientImpl;
+import com.azure.security.keyvault.secrets.implementation.models.BackupSecretResult;
+import com.azure.security.keyvault.secrets.implementation.models.DeletedSecretBundle;
+import com.azure.security.keyvault.secrets.implementation.models.DeletedSecretItem;
+import com.azure.security.keyvault.secrets.implementation.models.SecretBundle;
+import com.azure.security.keyvault.secrets.implementation.models.SecretItem;
+import com.azure.security.keyvault.secrets.implementation.models.SecretRestoreParameters;
+import com.azure.security.keyvault.secrets.implementation.models.SecretSetParameters;
+import com.azure.security.keyvault.secrets.implementation.models.SecretsModelsUtils;
 import com.azure.security.keyvault.secrets.models.DeletedSecret;
 import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
 import com.azure.security.keyvault.secrets.models.SecretProperties;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.azure.core.util.FluxUtil.monoError;
-import static com.azure.core.util.FluxUtil.withContext;
+import static com.azure.core.util.FluxUtil.pagedFluxError;
+import static com.azure.security.keyvault.secrets.SecretClient.prepareSecretSetParameters;
+import static com.azure.security.keyvault.secrets.SecretClient.prepareUpdateSecretParameters;
+import static com.azure.security.keyvault.secrets.implementation.models.SecretsModelsUtils.createDeletedSecret;
+import static com.azure.security.keyvault.secrets.implementation.models.SecretsModelsUtils.createKeyVaultSecret;
+import static com.azure.security.keyvault.secrets.implementation.models.SecretsModelsUtils.createSecretProperties;
 
 /**
  * The SecretAsyncClient provides asynchronous methods to manage {@link KeyVaultSecret secrets} in the Azure Key Vault.
  * The client supports creating, retrieving, updating, deleting, purging, backing up, restoring, and listing the
  * {@link KeyVaultSecret secrets}. The client also supports listing {@link DeletedSecret deleted secrets} for a
- * soft-delete enabled Azure Key Vault.
+ * soft-delete enabled key vault.
  *
- * <p><strong>Construct the async client</strong></p>
+ * <h2>Getting Started</h2>
+ *
+ * <p>In order to interact with the Azure Key Vault service, you will need to create an instance of the
+ * {@link com.azure.security.keyvault.secrets.SecretAsyncClient} class, a vault url and a credential object.</p>
+ *
+ * <p>The examples shown in this document use a credential object named DefaultAzureCredential for authentication,
+ * which is appropriate for most scenarios, including local development and production environments. Additionally,
+ * we recommend using a
+ * <a href="https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/">
+ * managed identity</a> for authentication in production environments.
+ * You can find more information on different ways of authenticating and their corresponding credential types in the
+ * <a href="https://learn.microsoft.com/java/api/overview/azure/identity-readme?view=azure-java-stable">
+ * Azure Identity documentation"</a>.</p>
+ *
+ * <p><strong>Sample: Construct Asynchronous Secret Client</strong></p>
+ *
  * <!-- src_embed com.azure.security.keyvault.secrets.SecretAsyncClient.instantiation -->
  * <pre>
  * SecretAsyncClient secretAsyncClient = new SecretClientBuilder&#40;&#41;
  *     .credential&#40;new DefaultAzureCredentialBuilder&#40;&#41;.build&#40;&#41;&#41;
  *     .vaultUrl&#40;&quot;&lt;your-key-vault-url&gt;&quot;&#41;
- *     .httpLogOptions&#40;new HttpLogOptions&#40;&#41;.setLogLevel&#40;HttpLogDetailLevel.BODY_AND_HEADERS&#41;&#41;
  *     .buildAsyncClient&#40;&#41;;
  * </pre>
  * <!-- end com.azure.security.keyvault.secrets.SecretAsyncClient.instantiation -->
  *
+ * <br/>
+ *
+ * <hr/>
+ *
+ * <h2>Create a Secret</h2>
+ * The {@link SecretAsyncClient} can be used to create a secret in the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to create and store a secret in the key vault, using the
+ * {@link SecretAsyncClient#setSecret(String, String)} API.</p>
+ *
+ * <!-- src_embed com.azure.keyvault.secrets.SecretClient.setSecret#string-string -->
+ * <pre>
+ * secretAsyncClient.setSecret&#40;&quot;secretName&quot;, &quot;secretValue&quot;&#41;
+ *     .subscribe&#40;secretResponse -&gt;
+ *         System.out.printf&#40;&quot;Secret is created with name %s and value %s%n&quot;,
+ *             secretResponse.getName&#40;&#41;, secretResponse.getValue&#40;&#41;&#41;&#41;;
+ * </pre>
+ * <!-- end com.azure.keyvault.secrets.SecretClient.setSecret#string-string -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link SecretClient}.</p>
+ *
+ * <br/>
+ *
+ * <hr/>
+ *
+ * <h2>Get a Secret</h2>
+ * The {@link SecretAsyncClient} can be used to retrieve a secret from the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to synchronously retrieve a previously stored secret from the
+ * key vault, using the {@link SecretAsyncClient#getSecret(String)} API.</p>
+ *
+ * <!-- src_embed com.azure.keyvault.secrets.SecretClient.getSecret#string -->
+ * <pre>
+ * secretAsyncClient.getSecret&#40;&quot;secretName&quot;&#41;
+ *     .subscribe&#40;secretWithVersion -&gt;
+ *         System.out.printf&#40;&quot;Secret is returned with name %s and value %s %n&quot;,
+ *             secretWithVersion.getName&#40;&#41;, secretWithVersion.getValue&#40;&#41;&#41;&#41;;
+ * </pre>
+ * <!-- end com.azure.keyvault.secrets.SecretClient.getSecret#string -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link SecretClient}.</p>
+ *
+ * <br/>
+ *
+ * <hr/>
+ *
+ * <h2>Delete a Secret</h2>
+ * The {@link SecretAsyncClient} can be used to delete a secret from the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to delete a secret from the key vault, using the
+ * {@link SecretAsyncClient#beginDeleteSecret(String)} API.</p>
+ *
+ * <!-- src_embed com.azure.keyvault.secrets.SecretClient.deleteSecret#String -->
+ * <pre>
+ * secretAsyncClient.beginDeleteSecret&#40;&quot;secretName&quot;&#41;
+ *     .subscribe&#40;pollResponse -&gt; &#123;
+ *         System.out.println&#40;&quot;Delete Status: &quot; + pollResponse.getStatus&#40;&#41;.toString&#40;&#41;&#41;;
+ *         System.out.println&#40;&quot;Deleted Secret Name: &quot; + pollResponse.getValue&#40;&#41;.getName&#40;&#41;&#41;;
+ *         System.out.println&#40;&quot;Deleted Secret Value: &quot; + pollResponse.getValue&#40;&#41;.getValue&#40;&#41;&#41;;
+ *     &#125;&#41;;
+ * </pre>
+ * <!-- end com.azure.keyvault.secrets.SecretClient.deleteSecret#String -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link SecretClient}.</p>
+ *
  * @see SecretClientBuilder
+ * @see PollerFlux
  * @see PagedFlux
  */
-@ServiceClient(builder = SecretClientBuilder.class, isAsync = true,
-    serviceInterfaces = SecretClientImpl.SecretService.class)
+@ServiceClient(
+    builder = SecretClientBuilder.class,
+    isAsync = true,
+    serviceInterfaces = SecretClientImpl.SecretClientService.class)
 public final class SecretAsyncClient {
     private static final ClientLogger LOGGER = new ClientLogger(SecretAsyncClient.class);
 
+    static final RequestOptions EMPTY_OPTIONS = new RequestOptions();
+
     private final SecretClientImpl implClient;
+    private final String vaultUrl;
 
     /**
      * Creates a SecretAsyncClient to service requests
      *
-     * @param implClient the implementation client.
+     * @param implClient The implementation client.
+     * @param vaultUrl The vault url.
      */
-    SecretAsyncClient(SecretClientImpl implClient) {
+    SecretAsyncClient(SecretClientImpl implClient, String vaultUrl) {
         this.implClient = implClient;
+        this.vaultUrl = vaultUrl;
     }
 
     /**
@@ -68,16 +183,7 @@ public final class SecretAsyncClient {
      * @return the vault endpoint url.
      */
     public String getVaultUrl() {
-        return implClient.getVaultUrl();
-    }
-
-    /**
-     * Gets the {@link HttpPipeline} powering this client.
-     *
-     * @return The pipeline.
-     */
-    HttpPipeline getHttpPipeline() {
-        return implClient.getHttpPipeline();
+        return vaultUrl;
     }
 
     /**
@@ -117,9 +223,13 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultSecret> setSecret(KeyVaultSecret secret) {
         try {
-            return setSecretWithResponse(secret).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient
+                .setSecretWithResponseAsync(secret.getName(), BinaryData.fromObject(prepareSecretSetParameters(secret)),
+                    EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, SecretAsyncClient::mapSetSecretException)
+                .map(response -> createKeyVaultSecret(response.getValue().toObject(SecretBundle.class)));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -148,10 +258,12 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultSecret> setSecret(String name, String value) {
         try {
-            return withContext(context ->
-                implClient.setSecretWithResponseAsync(name, value, context)).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient
+                .setSecretWithResponseAsync(name, BinaryData.fromObject(new SecretSetParameters(value)), EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, SecretAsyncClient::mapSetSecretException)
+                .map(response -> createKeyVaultSecret(response.getValue().toObject(SecretBundle.class)));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -190,10 +302,23 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultSecret>> setSecretWithResponse(KeyVaultSecret secret) {
         try {
-            return withContext(context -> implClient.setSecretWithResponseAsync(secret, context));
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient
+                .setSecretWithResponseAsync(secret.getName(), BinaryData.fromObject(prepareSecretSetParameters(secret)),
+                    EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, SecretAsyncClient::mapSetSecretException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultSecret(response.getValue().toObject(SecretBundle.class))));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
+    }
+
+    // For some reason, the service does not return a 409 when a secret with the same name exists. Instead, it returns
+    // a 400.
+    static HttpResponseException mapSetSecretException(HttpResponseException e) {
+        return (e.getResponse() != null && e.getResponse().getStatusCode() == 400)
+            ? new ResourceModifiedException(e.getMessage(), e.getResponse(), e.getValue())
+            : e;
     }
 
     /**
@@ -214,16 +339,13 @@ public final class SecretAsyncClient {
      *
      * @param name The name of the secret.
      * @return A {@link Mono} containing the requested {@link KeyVaultSecret secret}.
-     * @throws ResourceNotFoundException when a secret with {@code name} doesn't exist in the key vault.
-     * @throws HttpResponseException if {@code name} is empty string.
+     * @throws IllegalArgumentException If {@code name} is either {@code null} or empty.
+     * @throws ResourceNotFoundException When a secret with the given {@code name} doesn't exist in the vault.
+     * @throws HttpResponseException If the server reports an error when executing the request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultSecret> getSecret(String name) {
-        try {
-            return getSecretWithResponse(name, "").flatMap(FluxUtil::toMono);
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
-        }
+        return getSecret(name, "");
     }
 
     /**
@@ -252,16 +374,23 @@ public final class SecretAsyncClient {
      * call is equivalent to calling {@link #getSecret(String)}, with the latest version being retrieved.
      * @return A {@link Mono} containing a {@link Response} whose {@link Response#getValue() value} contains the
      * requested {@link KeyVaultSecret secret}.
-     * @throws ResourceNotFoundException when a secret with {@code name} and {@code version} doesn't exist in the key
-     * vault.
-     * @throws HttpResponseException if {@code name}  name} or {@code version} is empty string.
+     * @throws ResourceNotFoundException When a secret with the given {@code name} and {@code version} doesn't exist in
+     * the vault.
+     * @throws IllegalArgumentException If {@code name} is either {@code null} or empty.
+     * @throws HttpResponseException If the server reports an error when executing the request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultSecret> getSecret(String name, String version) {
+        if (CoreUtils.isNullOrEmpty(name)) {
+            return monoError(LOGGER, new IllegalArgumentException("'name' cannot be null or empty."));
+        }
+
         try {
-            return getSecretWithResponse(name, version).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient.getSecretWithResponseAsync(name, version, EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, SecretAsyncClient::mapGetSecretException)
+                .map(response -> createKeyVaultSecret(response.getValue().toObject(SecretBundle.class)));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -290,16 +419,116 @@ public final class SecretAsyncClient {
      * to calling {@link #getSecret(String)}, with the latest version being retrieved.
      * @return A {@link Mono} containing a {@link Response} whose {@link Response#getValue() value} contains the
      * requested {@link KeyVaultSecret secret}.
-     * @throws ResourceNotFoundException when a secret with {@code name} and {@code version} doesn't exist in the key
-     * vault.
-     * @throws HttpResponseException if {@code name}  name} or {@code version} is empty string.
+     * @throws ResourceNotFoundException When a secret with the given {@code name} and {@code version} doesn't exist in
+     * the vault.
+     * @throws IllegalArgumentException If {@code name} is either {@code null} or empty.
+     * @throws HttpResponseException If the server reports an error when executing the request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultSecret>> getSecretWithResponse(String name, String version) {
+        if (CoreUtils.isNullOrEmpty(name)) {
+            return monoError(LOGGER, new IllegalArgumentException("'name' cannot be null or empty."));
+        }
+
         try {
-            return withContext(context -> implClient.getSecretWithResponseAsync(name, version, context));
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient.getSecretWithResponseAsync(name, version, EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, SecretAsyncClient::mapGetSecretException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultSecret(response.getValue().toObject(SecretBundle.class))));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
+        }
+    }
+
+    /**
+     * Gets the specified secret with specified version from the key vault, optionally converting the secret content
+     * to the specified format. This operation requires the {@code secrets/get} permission.
+     *
+     * <p>The {@code outContentType} parameter is used to request conversion of the secret content. Currently, only
+     * PFX to PEM conversion is supported for certificate-backed secrets. Allowed values are
+     * {@code "application/x-pkcs12"} and {@code "application/x-pem-file"}.</p>
+     *
+     * @param name The name of the secret, cannot be null.
+     * @param version The version of the secret to retrieve. If this is an empty string or null, this
+     * call is equivalent to calling {@link #getSecret(String)}, with the latest version being retrieved.
+     * @param outContentType The desired content type for the secret. If {@code null}, the secret is returned in its
+     * original format. Allowed values: {@code "application/x-pkcs12"}, {@code "application/x-pem-file"}.
+     * @return A {@link Mono} containing the requested {@link KeyVaultSecret secret}.
+     * @throws ResourceNotFoundException When a secret with the given {@code name} and {@code version} doesn't exist in
+     * the vault.
+     * @throws IllegalArgumentException If {@code name} is either {@code null} or empty.
+     * @throws HttpResponseException If the server reports an error when executing the request.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<KeyVaultSecret> getSecret(String name, String version, String outContentType) {
+        if (CoreUtils.isNullOrEmpty(name)) {
+            return monoError(LOGGER, new IllegalArgumentException("'name' cannot be null or empty."));
+        }
+
+        try {
+            RequestOptions requestOptions = new RequestOptions();
+
+            if (!CoreUtils.isNullOrEmpty(outContentType)) {
+                requestOptions.addQueryParam("outContentType", outContentType);
+            }
+
+            return implClient.getSecretWithResponseAsync(name, version, requestOptions)
+                .onErrorMap(HttpResponseException.class, SecretAsyncClient::mapGetSecretException)
+                .map(response -> createKeyVaultSecret(response.getValue().toObject(SecretBundle.class)));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
+        }
+    }
+
+    /**
+     * Gets the specified secret with specified version from the key vault, optionally converting the secret content
+     * to the specified format. This operation requires the {@code secrets/get} permission.
+     *
+     * <p>The {@code outContentType} parameter is used to request conversion of the secret content. Currently, only
+     * PFX to PEM conversion is supported for certificate-backed secrets. Allowed values are
+     * {@code "application/x-pkcs12"} and {@code "application/x-pem-file"}.</p>
+     *
+     * @param name The name of the secret, cannot be null.
+     * @param version The version of the secret to retrieve. If this is an empty string or null, this call is equivalent
+     * to calling {@link #getSecret(String)}, with the latest version being retrieved.
+     * @param outContentType The desired content type for the secret. If {@code null}, the secret is returned in its
+     * original format. Allowed values: {@code "application/x-pkcs12"}, {@code "application/x-pem-file"}.
+     * @return A {@link Mono} containing a {@link Response} whose {@link Response#getValue() value} contains the
+     * requested {@link KeyVaultSecret secret}.
+     * @throws ResourceNotFoundException When a secret with the given {@code name} and {@code version} doesn't exist in
+     * the vault.
+     * @throws IllegalArgumentException If {@code name} is either {@code null} or empty.
+     * @throws HttpResponseException If the server reports an error when executing the request.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<KeyVaultSecret>> getSecretWithResponse(String name, String version, String outContentType) {
+        if (CoreUtils.isNullOrEmpty(name)) {
+            return monoError(LOGGER, new IllegalArgumentException("'name' cannot be null or empty."));
+        }
+
+        try {
+            RequestOptions requestOptions = new RequestOptions();
+
+            if (!CoreUtils.isNullOrEmpty(outContentType)) {
+                requestOptions.addQueryParam("outContentType", outContentType);
+            }
+
+            return implClient.getSecretWithResponseAsync(name, version, requestOptions)
+                .onErrorMap(HttpResponseException.class, SecretAsyncClient::mapGetSecretException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultSecret(response.getValue().toObject(SecretBundle.class))));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
+        }
+    }
+
+    // For some reason, the service does not return a 409 when a secret with the same name exists. Instead, it returns
+    // a 403.
+    static HttpResponseException mapGetSecretException(HttpResponseException e) {
+        if (e.getResponse() != null && e.getResponse().getStatusCode() == 403) {
+            return new ResourceModifiedException(e.getMessage(), e.getResponse(), e.getValue());
+        } else {
+            return e;
         }
     }
 
@@ -342,9 +571,12 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<SecretProperties> updateSecretProperties(SecretProperties secretProperties) {
         try {
-            return updateSecretPropertiesWithResponse(secretProperties).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient
+                .updateSecretWithResponseAsync(secretProperties.getName(), secretProperties.getVersion(),
+                    BinaryData.fromObject(prepareUpdateSecretParameters(secretProperties)), EMPTY_OPTIONS)
+                .map(response -> createSecretProperties(response.getValue().toObject(SecretBundle.class)));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -388,10 +620,13 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<SecretProperties>> updateSecretPropertiesWithResponse(SecretProperties secretProperties) {
         try {
-            return withContext(context ->
-                implClient.updateSecretPropertiesWithResponseAsync(secretProperties, context));
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient
+                .updateSecretWithResponseAsync(secretProperties.getName(), secretProperties.getVersion(),
+                    BinaryData.fromObject(prepareUpdateSecretParameters(secretProperties)), EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response,
+                    createSecretProperties(response.getValue().toObject(SecretBundle.class))));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -422,7 +657,44 @@ public final class SecretAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<DeletedSecret, Void> beginDeleteSecret(String name) {
-        return implClient.beginDeleteSecretAsync(name);
+        return new PollerFlux<>(Duration.ofSeconds(1), deleteActivationOperation(name), deletePollOperation(name),
+            (context, firstResponse) -> Mono.empty(), context -> Mono.empty());
+    }
+
+    private Function<PollingContext<DeletedSecret>, Mono<DeletedSecret>> deleteActivationOperation(String name) {
+        return pollingContext -> {
+            try {
+                return implClient.deleteSecretWithResponseAsync(name, EMPTY_OPTIONS)
+                    .map(response -> createDeletedSecret(response.getValue().toObject(DeletedSecretBundle.class)));
+            } catch (RuntimeException e) {
+                return monoError(LOGGER, e);
+            }
+        };
+    }
+
+    private Function<PollingContext<DeletedSecret>, Mono<PollResponse<DeletedSecret>>>
+        deletePollOperation(String name) {
+
+        return pollingContext -> implClient.getDeletedSecretWithResponseAsync(name, EMPTY_OPTIONS)
+            .map(response -> new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                createDeletedSecret(response.getValue().toObject(DeletedSecretBundle.class))))
+            .onErrorResume(HttpResponseException.class, exception -> {
+                if (exception.getResponse() != null && exception.getResponse().getStatusCode() == 404) {
+                    return Mono.just(new PollResponse<>(LongRunningOperationStatus.IN_PROGRESS,
+                        pollingContext.getLatestResponse().getValue()));
+                } else {
+                    // This means either vault has soft-delete disabled or permission is not granted for the get deleted
+                    // key operation. In both cases deletion operation was successful when activation operation
+                    // succeeded before reaching here.
+                    return Mono.just(new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                        pollingContext.getLatestResponse().getValue()));
+                }
+            })
+            // This means either vault has soft-delete disabled or permission is not granted for the get deleted key
+            // operation. In both cases deletion operation was successful when activation operation succeeded before
+            // reaching here.
+            .onErrorReturn(new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                pollingContext.getLatestResponse().getValue()));
     }
 
     /**
@@ -449,9 +721,10 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<DeletedSecret> getDeletedSecret(String name) {
         try {
-            return getDeletedSecretWithResponse(name).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient.getDeletedSecretWithResponseAsync(name, EMPTY_OPTIONS)
+                .map(response -> createDeletedSecret(response.getValue().toObject(DeletedSecretBundle.class)));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -481,9 +754,11 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<DeletedSecret>> getDeletedSecretWithResponse(String name) {
         try {
-            return withContext(context -> implClient.getDeletedSecretWithResponseAsync(name, context));
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient.getDeletedSecretWithResponseAsync(name, EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response,
+                    createDeletedSecret(response.getValue().toObject(DeletedSecretBundle.class))));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -512,9 +787,10 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Void> purgeDeletedSecret(String name) {
         try {
-            return purgeDeletedSecretWithResponse(name).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient.purgeDeletedSecretWithResponseAsync(name, EMPTY_OPTIONS)
+                .flatMap(response -> Mono.empty());
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -542,9 +818,9 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Void>> purgeDeletedSecretWithResponse(String name) {
         try {
-            return withContext(context -> implClient.purgeDeletedSecretWithResponseAsync(name, context));
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient.purgeDeletedSecretWithResponseAsync(name, EMPTY_OPTIONS);
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -574,7 +850,42 @@ public final class SecretAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<KeyVaultSecret, Void> beginRecoverDeletedSecret(String name) {
-        return implClient.beginRecoverDeletedSecretAsync(name);
+        return new PollerFlux<>(Duration.ofSeconds(1), recoverActivationOperation(name), recoverPollOperation(name),
+            (context, firstResponse) -> Mono.empty(), context -> Mono.empty());
+    }
+
+    private Function<PollingContext<KeyVaultSecret>, Mono<KeyVaultSecret>> recoverActivationOperation(String name) {
+        return pollingContext -> {
+            try {
+                return implClient.recoverDeletedSecretWithResponseAsync(name, EMPTY_OPTIONS)
+                    .map(response -> createKeyVaultSecret(response.getValue().toObject(SecretBundle.class)));
+            } catch (RuntimeException e) {
+                return monoError(LOGGER, e);
+            }
+        };
+    }
+
+    private Function<PollingContext<KeyVaultSecret>, Mono<PollResponse<KeyVaultSecret>>>
+        recoverPollOperation(String name) {
+
+        return pollingContext -> implClient.getSecretWithResponseAsync(name, "", EMPTY_OPTIONS)
+            .map(response -> new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                createKeyVaultSecret(response.getValue().toObject(SecretBundle.class))))
+            .onErrorResume(HttpResponseException.class, exception -> {
+                if (exception.getResponse() != null && exception.getResponse().getStatusCode() == 404) {
+                    return Mono.just(new PollResponse<>(LongRunningOperationStatus.IN_PROGRESS,
+                        pollingContext.getLatestResponse().getValue()));
+                } else {
+                    // This means permission is not granted for the get deleted key operation. In both cases the
+                    // deletion operation was successful when activation operation succeeded before reaching here.
+                    return Mono.just(new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                        pollingContext.getLatestResponse().getValue()));
+                }
+            })
+            // This means permission is not granted for the get deleted key operation. In both cases the deletion
+            // operation was successful when activation operation succeeded before reaching here.
+            .onErrorReturn(new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                pollingContext.getLatestResponse().getValue()));
     }
 
     /**
@@ -601,9 +912,11 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<byte[]> backupSecret(String name) {
         try {
-            return backupSecretWithResponse(name).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient.backupSecretWithResponseAsync(name, EMPTY_OPTIONS)
+                .map(response -> response.getValue().toObject(BackupSecretResult.class))
+                .mapNotNull(BackupSecretResult::getValue);
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -632,9 +945,10 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<byte[]>> backupSecretWithResponse(String name) {
         try {
-            return withContext(context -> implClient.backupSecretWithResponseAsync(name, context));
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient.backupSecretWithResponseAsync(name, EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response, response.getValue().toBytes()));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -663,9 +977,13 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultSecret> restoreSecretBackup(byte[] backup) {
         try {
-            return restoreSecretBackupWithResponse(backup).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient
+                .restoreSecretWithResponseAsync(BinaryData.fromObject(new SecretRestoreParameters(backup)),
+                    EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, SecretAsyncClient::mapRestoreSecretException)
+                .map(response -> createKeyVaultSecret(response.getValue().toObject(SecretBundle.class)));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
     }
 
@@ -695,10 +1013,22 @@ public final class SecretAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultSecret>> restoreSecretBackupWithResponse(byte[] backup) {
         try {
-            return withContext(context -> implClient.restoreSecretBackupWithResponseAsync(backup, context));
-        } catch (RuntimeException ex) {
-            return monoError(LOGGER, ex);
+            return implClient
+                .restoreSecretWithResponseAsync(BinaryData.fromObject(new SecretRestoreParameters(backup)),
+                    EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, SecretAsyncClient::mapRestoreSecretException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultSecret(response.getValue().toObject(SecretBundle.class))));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
         }
+    }
+
+    // For some reason, the service does not return a 409 but a 400 in this case.
+    static HttpResponseException mapRestoreSecretException(HttpResponseException e) {
+        return (e.getResponse() != null && e.getResponse().getStatusCode() == 400)
+            ? new ResourceModifiedException(e.getMessage(), e.getResponse(), e.getValue())
+            : e;
     }
 
     /**
@@ -729,7 +1059,12 @@ public final class SecretAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<SecretProperties> listPropertiesOfSecrets() {
-        return implClient.listPropertiesOfSecretsAsync();
+        try {
+            return mapPages(implClient.getSecretsAsync(EMPTY_OPTIONS),
+                binaryData -> SecretsModelsUtils.createSecretProperties(binaryData.toObject(SecretItem.class)));
+        } catch (RuntimeException e) {
+            return pagedFluxError(LOGGER, e);
+        }
     }
 
     /**
@@ -752,7 +1087,12 @@ public final class SecretAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<DeletedSecret> listDeletedSecrets() {
-        return implClient.listDeletedSecretsAsync();
+        try {
+            return mapPages(implClient.getDeletedSecretsAsync(EMPTY_OPTIONS),
+                binaryData -> SecretsModelsUtils.createDeletedSecret(binaryData.toObject(DeletedSecretItem.class)));
+        } catch (RuntimeException e) {
+            return pagedFluxError(LOGGER, e);
+        }
     }
 
     /**
@@ -784,6 +1124,27 @@ public final class SecretAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<SecretProperties> listPropertiesOfSecretVersions(String name) {
-        return implClient.listPropertiesOfSecretVersionsAsync(name);
+        try {
+            return mapPages(implClient.getSecretVersionsAsync(name, EMPTY_OPTIONS),
+                binaryData -> SecretsModelsUtils.createSecretProperties(binaryData.toObject(SecretItem.class)));
+        } catch (RuntimeException e) {
+            return pagedFluxError(LOGGER, e);
+        }
+    }
+
+    private static <R, T> PagedFlux<R> mapPages(PagedFlux<T> pagedFlux, Function<T, R> mapper) {
+        final Function<PagedResponse<T>, PagedResponse<R>> responseMapper
+            = inputResponse -> new PagedResponseBase<Void, R>(inputResponse.getRequest(), inputResponse.getStatusCode(),
+                inputResponse.getHeaders(), inputResponse.getValue().stream().map(mapper).collect(Collectors.toList()),
+                inputResponse.getContinuationToken(), null);
+
+        final Supplier<PageRetriever<String, PagedResponse<R>>> provider = () -> (continuationToken, pageSize) -> {
+            Flux<PagedResponse<T>> flux
+                = (continuationToken == null) ? pagedFlux.byPage() : pagedFlux.byPage(continuationToken);
+
+            return flux.map(responseMapper);
+        };
+
+        return PagedFlux.create(provider);
     }
 }

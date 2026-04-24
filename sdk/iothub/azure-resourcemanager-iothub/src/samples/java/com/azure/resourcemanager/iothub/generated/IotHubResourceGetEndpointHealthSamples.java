@@ -4,14 +4,18 @@
 
 package com.azure.resourcemanager.iothub.generated;
 
-/** Samples for IotHubResource GetEndpointHealth. */
+/**
+ * Samples for IotHubResource GetEndpointHealth.
+ */
 public final class IotHubResourceGetEndpointHealthSamples {
     /*
-     * x-ms-original-file: specification/iothub/resource-manager/Microsoft.Devices/preview/2022-11-15-preview/examples/iothub_routingendpointhealth.json
+     * x-ms-original-file:
+     * specification/iothub/resource-manager/Microsoft.Devices/IoTHub/preview/2025-08-01-preview/examples/
+     * iothub_routingendpointhealth.json
      */
     /**
      * Sample code: IotHubResource_GetEndpointHealth.
-     *
+     * 
      * @param manager Entry point to IotHubManager.
      */
     public static void iotHubResourceGetEndpointHealth(com.azure.resourcemanager.iothub.IotHubManager manager) {

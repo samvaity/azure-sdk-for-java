@@ -5,68 +5,126 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.UUID;
 
-/** The workspace managed identity. */
+/**
+ * The workspace managed identity.
+ */
 @Fluent
-public final class ManagedIdentity {
+public final class ManagedIdentity implements JsonSerializable<ManagedIdentity> {
     /*
      * The principal ID of the workspace managed identity
      */
-    @JsonProperty(value = "principalId", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private String principalId;
 
     /*
      * The tenant ID of the workspace managed identity
      */
-    @JsonProperty(value = "tenantId", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private UUID tenantId;
 
     /*
      * The type of managed identity for the workspace
      */
-    @JsonProperty(value = "type")
+    @Generated
     private ResourceIdentityType type;
 
-    /** Creates an instance of ManagedIdentity class. */
-    public ManagedIdentity() {}
+    /**
+     * Creates an instance of ManagedIdentity class.
+     */
+    @Generated
+    public ManagedIdentity() {
+    }
 
     /**
      * Get the principalId property: The principal ID of the workspace managed identity.
-     *
+     * 
      * @return the principalId value.
      */
+    @Generated
     public String getPrincipalId() {
         return this.principalId;
     }
 
     /**
      * Get the tenantId property: The tenant ID of the workspace managed identity.
-     *
+     * 
      * @return the tenantId value.
      */
+    @Generated
     public UUID getTenantId() {
         return this.tenantId;
     }
 
     /**
      * Get the type property: The type of managed identity for the workspace.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public ResourceIdentityType getType() {
         return this.type;
     }
 
     /**
      * Set the type property: The type of managed identity for the workspace.
-     *
+     * 
      * @param type the type value to set.
      * @return the ManagedIdentity object itself.
      */
+    @Generated
     public ManagedIdentity setType(ResourceIdentityType type) {
         this.type = type;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("type", this.type == null ? null : this.type.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ManagedIdentity from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ManagedIdentity if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ManagedIdentity.
+     */
+    @Generated
+    public static ManagedIdentity fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ManagedIdentity deserializedManagedIdentity = new ManagedIdentity();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("principalId".equals(fieldName)) {
+                    deserializedManagedIdentity.principalId = reader.getString();
+                } else if ("tenantId".equals(fieldName)) {
+                    deserializedManagedIdentity.tenantId
+                        = reader.getNullable(nonNullReader -> UUID.fromString(nonNullReader.getString()));
+                } else if ("type".equals(fieldName)) {
+                    deserializedManagedIdentity.type = ResourceIdentityType.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedManagedIdentity;
+        });
     }
 }

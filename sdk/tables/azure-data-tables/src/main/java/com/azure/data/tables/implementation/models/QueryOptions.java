@@ -5,56 +5,62 @@
 package com.azure.data.tables.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
 
-/** Parameter group. */
-@JacksonXmlRootElement(localName = "QueryOptions")
+/**
+ * Parameter group.
+ */
 @Fluent
 public final class QueryOptions {
     /*
      * Specifies the media type for the response.
      */
-    @JsonProperty(value = "Format")
+    @Generated
     private OdataMetadataFormat format;
 
     /*
      * Maximum number of records to return.
      */
-    @JsonProperty(value = "Top")
+    @Generated
     private Integer top;
 
     /*
      * Select expression using OData notation. Limits the columns on each record to just those requested, e.g.
      * "$select=PolicyAssignmentId, ResourceId".
      */
-    @JsonProperty(value = "Select")
+    @Generated
     private String select;
 
     /*
      * OData filter expression.
      */
-    @JsonProperty(value = "Filter")
+    @Generated
     private String filter;
 
-    /** Creates an instance of QueryOptions class. */
-    public QueryOptions() {}
+    /**
+     * Creates an instance of QueryOptions class.
+     */
+    @Generated
+    public QueryOptions() {
+    }
 
     /**
      * Get the format property: Specifies the media type for the response.
-     *
+     * 
      * @return the format value.
      */
+    @Generated
     public OdataMetadataFormat getFormat() {
         return this.format;
     }
 
     /**
      * Set the format property: Specifies the media type for the response.
-     *
+     * 
      * @param format the format value to set.
      * @return the QueryOptions object itself.
      */
+    @Generated
     public QueryOptions setFormat(OdataMetadataFormat format) {
         this.format = format;
         return this;
@@ -62,19 +68,21 @@ public final class QueryOptions {
 
     /**
      * Get the top property: Maximum number of records to return.
-     *
+     * 
      * @return the top value.
      */
+    @Generated
     public Integer getTop() {
         return this.top;
     }
 
     /**
      * Set the top property: Maximum number of records to return.
-     *
+     * 
      * @param top the top value to set.
      * @return the QueryOptions object itself.
      */
+    @Generated
     public QueryOptions setTop(Integer top) {
         this.top = top;
         return this;
@@ -83,9 +91,10 @@ public final class QueryOptions {
     /**
      * Get the select property: Select expression using OData notation. Limits the columns on each record to just those
      * requested, e.g. "$select=PolicyAssignmentId, ResourceId".
-     *
+     * 
      * @return the select value.
      */
+    @Generated
     public String getSelect() {
         return this.select;
     }
@@ -93,10 +102,11 @@ public final class QueryOptions {
     /**
      * Set the select property: Select expression using OData notation. Limits the columns on each record to just those
      * requested, e.g. "$select=PolicyAssignmentId, ResourceId".
-     *
+     * 
      * @param select the select value to set.
      * @return the QueryOptions object itself.
      */
+    @Generated
     public QueryOptions setSelect(String select) {
         this.select = select;
         return this;
@@ -104,19 +114,21 @@ public final class QueryOptions {
 
     /**
      * Get the filter property: OData filter expression.
-     *
+     * 
      * @return the filter value.
      */
+    @Generated
     public String getFilter() {
         return this.filter;
     }
 
     /**
      * Set the filter property: OData filter expression.
-     *
+     * 
      * @param filter the filter value to set.
      * @return the QueryOptions object itself.
      */
+    @Generated
     public QueryOptions setFilter(String filter) {
         this.filter = filter;
         return this;

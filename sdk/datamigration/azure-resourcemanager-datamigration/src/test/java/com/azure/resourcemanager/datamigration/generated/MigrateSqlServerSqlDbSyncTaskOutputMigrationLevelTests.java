@@ -10,17 +10,15 @@ import com.azure.resourcemanager.datamigration.models.MigrateSqlServerSqlDbSyncT
 public final class MigrateSqlServerSqlDbSyncTaskOutputMigrationLevelTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlDbSyncTaskOutputMigrationLevel model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"MigrationLevelOutput\",\"startedOn\":\"2021-06-30T11:22:33Z\",\"endedOn\":\"2021-05-14T16:05:17Z\",\"sourceServerVersion\":\"fffiak\",\"sourceServer\":\"pqqmted\",\"targetServerVersion\":\"mmji\",\"targetServer\":\"eozphv\",\"databaseCount\":1760801565,\"id\":\"qncygupkvi\"}")
-                .toObject(MigrateSqlServerSqlDbSyncTaskOutputMigrationLevel.class);
+        MigrateSqlServerSqlDbSyncTaskOutputMigrationLevel model = BinaryData.fromString(
+            "{\"resultType\":\"MigrationLevelOutput\",\"startedOn\":\"2021-02-19T13:46:30Z\",\"endedOn\":\"2021-06-27T17:10:34Z\",\"sourceServerVersion\":\"pjrtws\",\"sourceServer\":\"vv\",\"targetServerVersion\":\"c\",\"targetServer\":\"vtrrmhwrbfdpyflu\",\"databaseCount\":2023214586,\"id\":\"glrocuy\"}")
+            .toObject(MigrateSqlServerSqlDbSyncTaskOutputMigrationLevel.class);
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MigrateSqlServerSqlDbSyncTaskOutputMigrationLevel model =
-            new MigrateSqlServerSqlDbSyncTaskOutputMigrationLevel();
+        MigrateSqlServerSqlDbSyncTaskOutputMigrationLevel model
+            = new MigrateSqlServerSqlDbSyncTaskOutputMigrationLevel();
         model = BinaryData.fromObject(model).toObject(MigrateSqlServerSqlDbSyncTaskOutputMigrationLevel.class);
     }
 }

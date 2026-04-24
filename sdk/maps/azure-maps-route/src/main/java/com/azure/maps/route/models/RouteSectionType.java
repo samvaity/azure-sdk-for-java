@@ -4,64 +4,113 @@
 
 package com.azure.maps.route.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for ResponseSectionType. */
+/**
+ * Section types of the reported route response.
+ */
 public final class RouteSectionType extends ExpandableStringEnum<RouteSectionType> {
-    /** Static value CAR_TRAIN for ResponseSectionType. */
+    /**
+     * Sections of the route that are cars or trains.
+     */
+    @Generated
     public static final RouteSectionType CAR_OR_TRAIN = fromString("CAR_TRAIN");
 
-    /** Static value COUNTRY for ResponseSectionType. */
+    /**
+     * Sections indicating which countries/regions the route is in.
+     */
+    @Generated
     public static final RouteSectionType COUNTRY = fromString("COUNTRY");
 
-    /** Static value FERRY for ResponseSectionType. */
+    /**
+     * Sections of the route that are ferries.
+     */
+    @Generated
     public static final RouteSectionType FERRY = fromString("FERRY");
 
-    /** Static value MOTORWAY for ResponseSectionType. */
+    /**
+     * Sections of the route that are motorways.
+     */
+    @Generated
     public static final RouteSectionType MOTORWAY = fromString("MOTORWAY");
 
-    /** Static value PEDESTRIAN for ResponseSectionType. */
+    /**
+     * Sections of the route that are only suited for pedestrians.
+     */
+    @Generated
     public static final RouteSectionType PEDESTRIAN = fromString("PEDESTRIAN");
 
-    /** Static value TOLL_ROAD for ResponseSectionType. */
+    /**
+     * Sections of the route that require a toll to be payed.
+     */
+    @Generated
     public static final RouteSectionType TOLL_ROAD = fromString("TOLL_ROAD");
 
-    /** Static value TOLL_VIGNETTE for ResponseSectionType. */
+    /**
+     * Sections of the route that require a toll vignette to be present.
+     */
+    @Generated
     public static final RouteSectionType TOLL_VIGNETTE = fromString("TOLL_VIGNETTE");
 
-    /** Static value TRAFFIC for ResponseSectionType. */
+    /**
+     * Sections of the route that contain traffic information.
+     */
+    @Generated
     public static final RouteSectionType TRAFFIC = fromString("TRAFFIC");
 
-    /** Static value TRAVEL_MODE for ResponseSectionType. */
+    /**
+     * Sections in relation to the request parameter `travelMode`.
+     */
+    @Generated
     public static final RouteSectionType TRAVEL_MODE = fromString("TRAVEL_MODE");
 
-    /** Static value TUNNEL for ResponseSectionType. */
+    /**
+     * Sections of the route that are tunnels.
+     */
+    @Generated
     public static final RouteSectionType TUNNEL = fromString("TUNNEL");
 
-    /** Static value CARPOOL for ResponseSectionType. */
+    /**
+     * Sections of the route that require use of carpool (HOV/High Occupancy Vehicle) lanes.
+     */
+    @Generated
     public static final RouteSectionType CARPOOL = fromString("CARPOOL");
 
-    /** Static value URBAN for ResponseSectionType. */
+    /**
+     * Sections of the route that are located within urban areas.
+     */
+    @Generated
     public static final RouteSectionType URBAN = fromString("URBAN");
 
     /**
-     * Creates or finds a ResponseSectionType from its string representation.
-     *
-     * @param name a name to look for.
-     * @return the corresponding ResponseSectionType.
+     * Creates a new instance of RouteSectionType value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
      */
-    @JsonCreator
+    @Generated
+    @Deprecated
+    public RouteSectionType() {
+    }
+
+    /**
+     * Creates or finds a RouteSectionType from its string representation.
+     * 
+     * @param name a name to look for.
+     * @return the corresponding RouteSectionType.
+     */
+    @Generated
     public static RouteSectionType fromString(String name) {
         return fromString(name, RouteSectionType.class);
     }
 
     /**
-     * Gets known ResponseSectionType values.
-     *
-     * @return known ResponseSectionType values.
+     * Gets known RouteSectionType values.
+     * 
+     * @return known RouteSectionType values.
      */
+    @Generated
     public static Collection<RouteSectionType> values() {
         return values(RouteSectionType.class);
     }

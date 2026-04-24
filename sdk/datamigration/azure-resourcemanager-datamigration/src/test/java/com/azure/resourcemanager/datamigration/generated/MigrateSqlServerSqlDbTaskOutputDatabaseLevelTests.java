@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.MigrateSqlServerSqlDbTaskO
 public final class MigrateSqlServerSqlDbTaskOutputDatabaseLevelTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlDbTaskOutputDatabaseLevel model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"DatabaseLevelOutput\",\"databaseName\":\"wqiok\",\"startedOn\":\"2021-01-14T10:23:46Z\",\"endedOn\":\"2021-04-14T11:00:49Z\",\"state\":\"None\",\"stage\":\"Restore\",\"statusMessage\":\"p\",\"message\":\"prvkwcfzqljyxgtc\",\"numberOfObjects\":6617307512008189308,\"numberOfObjectsCompleted\":8137125616448530907,\"errorCount\":7885236864962595949,\"errorPrefix\":\"kx\",\"resultPrefix\":\"ehvbbxurip\",\"exceptionsAndWarnings\":[{\"message\":\"htba\",\"actionableMessage\":\"gx\",\"filePath\":\"rc\",\"lineNumber\":\"yklyhpluodpvruud\",\"hResult\":1016035136,\"stackTrace\":\"bth\"},{\"message\":\"tgk\",\"actionableMessage\":\"tvdxeclzedqb\",\"filePath\":\"hzlhplodqkdlww\",\"lineNumber\":\"bum\",\"hResult\":1849056321,\"stackTrace\":\"rqjfsmlm\"},{\"message\":\"xhwgfwsrtaw\",\"actionableMessage\":\"ezbrhubskh\",\"filePath\":\"ygo\",\"lineNumber\":\"kkqfqjbvle\",\"hResult\":1730138654,\"stackTrace\":\"luiqtqzfavyvnqq\"}],\"objectSummary\":\"aryeu\",\"id\":\"jkqa\"}")
-                .toObject(MigrateSqlServerSqlDbTaskOutputDatabaseLevel.class);
+        MigrateSqlServerSqlDbTaskOutputDatabaseLevel model = BinaryData.fromString(
+            "{\"resultType\":\"DatabaseLevelOutput\",\"databaseName\":\"blml\",\"startedOn\":\"2021-11-18T09:26:02Z\",\"endedOn\":\"2020-12-30T00:44:59Z\",\"state\":\"Stopped\",\"stage\":\"FileCopy\",\"statusMessage\":\"wqagnepzwa\",\"message\":\"sbs\",\"numberOfObjects\":7564934443349359609,\"numberOfObjectsCompleted\":2673651470345316296,\"errorCount\":7712060287887351454,\"errorPrefix\":\"omzisglrrcz\",\"resultPrefix\":\"k\",\"exceptionsAndWarnings\":[{\"message\":\"njad\",\"actionableMessage\":\"oawjqoyueay\",\"filePath\":\"pcmsplbyrrueqth\",\"lineNumber\":\"gnmbscbbxigdhx\",\"hResult\":115297328,\"stackTrace\":\"opedbwdpyqyybxub\"}],\"objectSummary\":\"nafcbq\",\"id\":\"e\"}")
+            .toObject(MigrateSqlServerSqlDbTaskOutputDatabaseLevel.class);
     }
 
     @org.junit.jupiter.api.Test

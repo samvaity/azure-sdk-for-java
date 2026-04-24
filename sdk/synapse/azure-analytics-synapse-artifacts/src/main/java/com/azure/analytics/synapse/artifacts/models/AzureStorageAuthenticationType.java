@@ -4,51 +4,71 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The type used for authentication. Type: string. */
+/**
+ * The type used for authentication. Type: string.
+ */
 public final class AzureStorageAuthenticationType extends ExpandableStringEnum<AzureStorageAuthenticationType> {
-    /** Static value Anonymous for AzureStorageAuthenticationType. */
+    /**
+     * Static value Anonymous for AzureStorageAuthenticationType.
+     */
+    @Generated
     public static final AzureStorageAuthenticationType ANONYMOUS = fromString("Anonymous");
 
-    /** Static value AccountKey for AzureStorageAuthenticationType. */
+    /**
+     * Static value AccountKey for AzureStorageAuthenticationType.
+     */
+    @Generated
     public static final AzureStorageAuthenticationType ACCOUNT_KEY = fromString("AccountKey");
 
-    /** Static value SasUri for AzureStorageAuthenticationType. */
+    /**
+     * Static value SasUri for AzureStorageAuthenticationType.
+     */
+    @Generated
     public static final AzureStorageAuthenticationType SAS_URI = fromString("SasUri");
 
-    /** Static value ServicePrincipal for AzureStorageAuthenticationType. */
+    /**
+     * Static value ServicePrincipal for AzureStorageAuthenticationType.
+     */
+    @Generated
     public static final AzureStorageAuthenticationType SERVICE_PRINCIPAL = fromString("ServicePrincipal");
 
-    /** Static value Msi for AzureStorageAuthenticationType. */
+    /**
+     * Static value Msi for AzureStorageAuthenticationType.
+     */
+    @Generated
     public static final AzureStorageAuthenticationType MSI = fromString("Msi");
 
     /**
      * Creates a new instance of AzureStorageAuthenticationType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public AzureStorageAuthenticationType() {}
+    public AzureStorageAuthenticationType() {
+    }
 
     /**
      * Creates or finds a AzureStorageAuthenticationType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding AzureStorageAuthenticationType.
      */
-    @JsonCreator
+    @Generated
     public static AzureStorageAuthenticationType fromString(String name) {
         return fromString(name, AzureStorageAuthenticationType.class);
     }
 
     /**
      * Gets known AzureStorageAuthenticationType values.
-     *
+     * 
      * @return known AzureStorageAuthenticationType values.
      */
+    @Generated
     public static Collection<AzureStorageAuthenticationType> values() {
         return values(AzureStorageAuthenticationType.class);
     }

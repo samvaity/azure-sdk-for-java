@@ -13,36 +13,24 @@ import org.junit.jupiter.api.Assertions;
 public final class PrivateEndpointAclTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        PrivateEndpointAcl model =
-            BinaryData
-                .fromString(
-                    "{\"name\":\"fdsd\",\"allow\":[\"ServerConnection\",\"RESTAPI\",\"RESTAPI\"],\"deny\":[\"ClientConnection\",\"Trace\",\"ClientConnection\"]}")
-                .toObject(PrivateEndpointAcl.class);
-        Assertions.assertEquals(WebPubSubRequestType.SERVER_CONNECTION, model.allow().get(0));
-        Assertions.assertEquals(WebPubSubRequestType.CLIENT_CONNECTION, model.deny().get(0));
-        Assertions.assertEquals("fdsd", model.name());
+        PrivateEndpointAcl model = BinaryData.fromString(
+            "{\"name\":\"hz\",\"allow\":[\"RESTAPI\",\"RESTAPI\",\"Trace\",\"ServerConnection\"],\"deny\":[\"ServerConnection\"]}")
+            .toObject(PrivateEndpointAcl.class);
+        Assertions.assertEquals(WebPubSubRequestType.RESTAPI, model.allow().get(0));
+        Assertions.assertEquals(WebPubSubRequestType.SERVER_CONNECTION, model.deny().get(0));
+        Assertions.assertEquals("hz", model.name());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        PrivateEndpointAcl model =
-            new PrivateEndpointAcl()
-                .withAllow(
-                    Arrays
-                        .asList(
-                            WebPubSubRequestType.SERVER_CONNECTION,
-                            WebPubSubRequestType.RESTAPI,
-                            WebPubSubRequestType.RESTAPI))
-                .withDeny(
-                    Arrays
-                        .asList(
-                            WebPubSubRequestType.CLIENT_CONNECTION,
-                            WebPubSubRequestType.TRACE,
-                            WebPubSubRequestType.CLIENT_CONNECTION))
-                .withName("fdsd");
+        PrivateEndpointAcl model = new PrivateEndpointAcl()
+            .withAllow(Arrays.asList(WebPubSubRequestType.RESTAPI, WebPubSubRequestType.RESTAPI,
+                WebPubSubRequestType.TRACE, WebPubSubRequestType.SERVER_CONNECTION))
+            .withDeny(Arrays.asList(WebPubSubRequestType.SERVER_CONNECTION))
+            .withName("hz");
         model = BinaryData.fromObject(model).toObject(PrivateEndpointAcl.class);
-        Assertions.assertEquals(WebPubSubRequestType.SERVER_CONNECTION, model.allow().get(0));
-        Assertions.assertEquals(WebPubSubRequestType.CLIENT_CONNECTION, model.deny().get(0));
-        Assertions.assertEquals("fdsd", model.name());
+        Assertions.assertEquals(WebPubSubRequestType.RESTAPI, model.allow().get(0));
+        Assertions.assertEquals(WebPubSubRequestType.SERVER_CONNECTION, model.deny().get(0));
+        Assertions.assertEquals("hz", model.name());
     }
 }

@@ -5,71 +5,72 @@
 package com.azure.resourcemanager.eventgrid.fluent.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.eventgrid.models.DeliveryAttributeMapping;
 import com.azure.resourcemanager.eventgrid.models.TlsVersion;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.util.List;
 
-/** Information about the webhook destination properties for an event subscription. */
+/**
+ * Information about the webhook destination properties for an event subscription.
+ */
 @Fluent
-public final class WebhookEventSubscriptionDestinationProperties {
+public final class WebhookEventSubscriptionDestinationProperties
+    implements JsonSerializable<WebhookEventSubscriptionDestinationProperties> {
     /*
      * The URL that represents the endpoint of the destination of an event subscription.
      */
-    @JsonProperty(value = "endpointUrl")
     private String endpointUrl;
 
     /*
      * The base URL that represents the endpoint of the destination of an event subscription.
      */
-    @JsonProperty(value = "endpointBaseUrl", access = JsonProperty.Access.WRITE_ONLY)
     private String endpointBaseUrl;
 
     /*
      * Maximum number of events per batch.
      */
-    @JsonProperty(value = "maxEventsPerBatch")
     private Integer maxEventsPerBatch;
 
     /*
      * Preferred batch size in Kilobytes.
      */
-    @JsonProperty(value = "preferredBatchSizeInKilobytes")
     private Integer preferredBatchSizeInKilobytes;
 
     /*
-     * The Azure Active Directory Tenant ID to get the access token that will be included as the bearer token in
-     * delivery requests.
+     * The Microsoft Entra ID Tenant ID to get the access token that will be included as the bearer token in delivery
+     * requests.
      */
-    @JsonProperty(value = "azureActiveDirectoryTenantId")
     private String azureActiveDirectoryTenantId;
 
     /*
-     * The Azure Active Directory Application ID or URI to get the access token that will be included as the bearer
-     * token in delivery requests.
+     * The Microsoft Entra ID Application ID or URI to get the access token that will be included as the bearer token in
+     * delivery requests.
      */
-    @JsonProperty(value = "azureActiveDirectoryApplicationIdOrUri")
     private String azureActiveDirectoryApplicationIdOrUri;
 
     /*
      * Delivery attribute details.
      */
-    @JsonProperty(value = "deliveryAttributeMappings")
     private List<DeliveryAttributeMapping> deliveryAttributeMappings;
 
     /*
      * Minimum TLS version that should be supported by webhook endpoint
      */
-    @JsonProperty(value = "minimumTlsVersionAllowed")
     private TlsVersion minimumTlsVersionAllowed;
 
-    /** Creates an instance of WebhookEventSubscriptionDestinationProperties class. */
+    /**
+     * Creates an instance of WebhookEventSubscriptionDestinationProperties class.
+     */
     public WebhookEventSubscriptionDestinationProperties() {
     }
 
     /**
      * Get the endpointUrl property: The URL that represents the endpoint of the destination of an event subscription.
-     *
+     * 
      * @return the endpointUrl value.
      */
     public String endpointUrl() {
@@ -78,7 +79,7 @@ public final class WebhookEventSubscriptionDestinationProperties {
 
     /**
      * Set the endpointUrl property: The URL that represents the endpoint of the destination of an event subscription.
-     *
+     * 
      * @param endpointUrl the endpointUrl value to set.
      * @return the WebhookEventSubscriptionDestinationProperties object itself.
      */
@@ -90,7 +91,7 @@ public final class WebhookEventSubscriptionDestinationProperties {
     /**
      * Get the endpointBaseUrl property: The base URL that represents the endpoint of the destination of an event
      * subscription.
-     *
+     * 
      * @return the endpointBaseUrl value.
      */
     public String endpointBaseUrl() {
@@ -99,7 +100,7 @@ public final class WebhookEventSubscriptionDestinationProperties {
 
     /**
      * Get the maxEventsPerBatch property: Maximum number of events per batch.
-     *
+     * 
      * @return the maxEventsPerBatch value.
      */
     public Integer maxEventsPerBatch() {
@@ -108,7 +109,7 @@ public final class WebhookEventSubscriptionDestinationProperties {
 
     /**
      * Set the maxEventsPerBatch property: Maximum number of events per batch.
-     *
+     * 
      * @param maxEventsPerBatch the maxEventsPerBatch value to set.
      * @return the WebhookEventSubscriptionDestinationProperties object itself.
      */
@@ -119,7 +120,7 @@ public final class WebhookEventSubscriptionDestinationProperties {
 
     /**
      * Get the preferredBatchSizeInKilobytes property: Preferred batch size in Kilobytes.
-     *
+     * 
      * @return the preferredBatchSizeInKilobytes value.
      */
     public Integer preferredBatchSizeInKilobytes() {
@@ -128,20 +129,20 @@ public final class WebhookEventSubscriptionDestinationProperties {
 
     /**
      * Set the preferredBatchSizeInKilobytes property: Preferred batch size in Kilobytes.
-     *
+     * 
      * @param preferredBatchSizeInKilobytes the preferredBatchSizeInKilobytes value to set.
      * @return the WebhookEventSubscriptionDestinationProperties object itself.
      */
-    public WebhookEventSubscriptionDestinationProperties withPreferredBatchSizeInKilobytes(
-        Integer preferredBatchSizeInKilobytes) {
+    public WebhookEventSubscriptionDestinationProperties
+        withPreferredBatchSizeInKilobytes(Integer preferredBatchSizeInKilobytes) {
         this.preferredBatchSizeInKilobytes = preferredBatchSizeInKilobytes;
         return this;
     }
 
     /**
-     * Get the azureActiveDirectoryTenantId property: The Azure Active Directory Tenant ID to get the access token that
-     * will be included as the bearer token in delivery requests.
-     *
+     * Get the azureActiveDirectoryTenantId property: The Microsoft Entra ID Tenant ID to get the access token that will
+     * be included as the bearer token in delivery requests.
+     * 
      * @return the azureActiveDirectoryTenantId value.
      */
     public String azureActiveDirectoryTenantId() {
@@ -149,22 +150,22 @@ public final class WebhookEventSubscriptionDestinationProperties {
     }
 
     /**
-     * Set the azureActiveDirectoryTenantId property: The Azure Active Directory Tenant ID to get the access token that
-     * will be included as the bearer token in delivery requests.
-     *
+     * Set the azureActiveDirectoryTenantId property: The Microsoft Entra ID Tenant ID to get the access token that will
+     * be included as the bearer token in delivery requests.
+     * 
      * @param azureActiveDirectoryTenantId the azureActiveDirectoryTenantId value to set.
      * @return the WebhookEventSubscriptionDestinationProperties object itself.
      */
-    public WebhookEventSubscriptionDestinationProperties withAzureActiveDirectoryTenantId(
-        String azureActiveDirectoryTenantId) {
+    public WebhookEventSubscriptionDestinationProperties
+        withAzureActiveDirectoryTenantId(String azureActiveDirectoryTenantId) {
         this.azureActiveDirectoryTenantId = azureActiveDirectoryTenantId;
         return this;
     }
 
     /**
-     * Get the azureActiveDirectoryApplicationIdOrUri property: The Azure Active Directory Application ID or URI to get
-     * the access token that will be included as the bearer token in delivery requests.
-     *
+     * Get the azureActiveDirectoryApplicationIdOrUri property: The Microsoft Entra ID Application ID or URI to get the
+     * access token that will be included as the bearer token in delivery requests.
+     * 
      * @return the azureActiveDirectoryApplicationIdOrUri value.
      */
     public String azureActiveDirectoryApplicationIdOrUri() {
@@ -172,21 +173,21 @@ public final class WebhookEventSubscriptionDestinationProperties {
     }
 
     /**
-     * Set the azureActiveDirectoryApplicationIdOrUri property: The Azure Active Directory Application ID or URI to get
-     * the access token that will be included as the bearer token in delivery requests.
-     *
+     * Set the azureActiveDirectoryApplicationIdOrUri property: The Microsoft Entra ID Application ID or URI to get the
+     * access token that will be included as the bearer token in delivery requests.
+     * 
      * @param azureActiveDirectoryApplicationIdOrUri the azureActiveDirectoryApplicationIdOrUri value to set.
      * @return the WebhookEventSubscriptionDestinationProperties object itself.
      */
-    public WebhookEventSubscriptionDestinationProperties withAzureActiveDirectoryApplicationIdOrUri(
-        String azureActiveDirectoryApplicationIdOrUri) {
+    public WebhookEventSubscriptionDestinationProperties
+        withAzureActiveDirectoryApplicationIdOrUri(String azureActiveDirectoryApplicationIdOrUri) {
         this.azureActiveDirectoryApplicationIdOrUri = azureActiveDirectoryApplicationIdOrUri;
         return this;
     }
 
     /**
      * Get the deliveryAttributeMappings property: Delivery attribute details.
-     *
+     * 
      * @return the deliveryAttributeMappings value.
      */
     public List<DeliveryAttributeMapping> deliveryAttributeMappings() {
@@ -195,19 +196,19 @@ public final class WebhookEventSubscriptionDestinationProperties {
 
     /**
      * Set the deliveryAttributeMappings property: Delivery attribute details.
-     *
+     * 
      * @param deliveryAttributeMappings the deliveryAttributeMappings value to set.
      * @return the WebhookEventSubscriptionDestinationProperties object itself.
      */
-    public WebhookEventSubscriptionDestinationProperties withDeliveryAttributeMappings(
-        List<DeliveryAttributeMapping> deliveryAttributeMappings) {
+    public WebhookEventSubscriptionDestinationProperties
+        withDeliveryAttributeMappings(List<DeliveryAttributeMapping> deliveryAttributeMappings) {
         this.deliveryAttributeMappings = deliveryAttributeMappings;
         return this;
     }
 
     /**
      * Get the minimumTlsVersionAllowed property: Minimum TLS version that should be supported by webhook endpoint.
-     *
+     * 
      * @return the minimumTlsVersionAllowed value.
      */
     public TlsVersion minimumTlsVersionAllowed() {
@@ -216,24 +217,92 @@ public final class WebhookEventSubscriptionDestinationProperties {
 
     /**
      * Set the minimumTlsVersionAllowed property: Minimum TLS version that should be supported by webhook endpoint.
-     *
+     * 
      * @param minimumTlsVersionAllowed the minimumTlsVersionAllowed value to set.
      * @return the WebhookEventSubscriptionDestinationProperties object itself.
      */
-    public WebhookEventSubscriptionDestinationProperties withMinimumTlsVersionAllowed(
-        TlsVersion minimumTlsVersionAllowed) {
+    public WebhookEventSubscriptionDestinationProperties
+        withMinimumTlsVersionAllowed(TlsVersion minimumTlsVersionAllowed) {
         this.minimumTlsVersionAllowed = minimumTlsVersionAllowed;
         return this;
     }
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (deliveryAttributeMappings() != null) {
             deliveryAttributeMappings().forEach(e -> e.validate());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("endpointUrl", this.endpointUrl);
+        jsonWriter.writeNumberField("maxEventsPerBatch", this.maxEventsPerBatch);
+        jsonWriter.writeNumberField("preferredBatchSizeInKilobytes", this.preferredBatchSizeInKilobytes);
+        jsonWriter.writeStringField("azureActiveDirectoryTenantId", this.azureActiveDirectoryTenantId);
+        jsonWriter.writeStringField("azureActiveDirectoryApplicationIdOrUri",
+            this.azureActiveDirectoryApplicationIdOrUri);
+        jsonWriter.writeArrayField("deliveryAttributeMappings", this.deliveryAttributeMappings,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("minimumTlsVersionAllowed",
+            this.minimumTlsVersionAllowed == null ? null : this.minimumTlsVersionAllowed.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of WebhookEventSubscriptionDestinationProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of WebhookEventSubscriptionDestinationProperties if the JsonReader was pointing to an
+     * instance of it, or null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the WebhookEventSubscriptionDestinationProperties.
+     */
+    public static WebhookEventSubscriptionDestinationProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            WebhookEventSubscriptionDestinationProperties deserializedWebhookEventSubscriptionDestinationProperties
+                = new WebhookEventSubscriptionDestinationProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("endpointUrl".equals(fieldName)) {
+                    deserializedWebhookEventSubscriptionDestinationProperties.endpointUrl = reader.getString();
+                } else if ("endpointBaseUrl".equals(fieldName)) {
+                    deserializedWebhookEventSubscriptionDestinationProperties.endpointBaseUrl = reader.getString();
+                } else if ("maxEventsPerBatch".equals(fieldName)) {
+                    deserializedWebhookEventSubscriptionDestinationProperties.maxEventsPerBatch
+                        = reader.getNullable(JsonReader::getInt);
+                } else if ("preferredBatchSizeInKilobytes".equals(fieldName)) {
+                    deserializedWebhookEventSubscriptionDestinationProperties.preferredBatchSizeInKilobytes
+                        = reader.getNullable(JsonReader::getInt);
+                } else if ("azureActiveDirectoryTenantId".equals(fieldName)) {
+                    deserializedWebhookEventSubscriptionDestinationProperties.azureActiveDirectoryTenantId
+                        = reader.getString();
+                } else if ("azureActiveDirectoryApplicationIdOrUri".equals(fieldName)) {
+                    deserializedWebhookEventSubscriptionDestinationProperties.azureActiveDirectoryApplicationIdOrUri
+                        = reader.getString();
+                } else if ("deliveryAttributeMappings".equals(fieldName)) {
+                    List<DeliveryAttributeMapping> deliveryAttributeMappings
+                        = reader.readArray(reader1 -> DeliveryAttributeMapping.fromJson(reader1));
+                    deserializedWebhookEventSubscriptionDestinationProperties.deliveryAttributeMappings
+                        = deliveryAttributeMappings;
+                } else if ("minimumTlsVersionAllowed".equals(fieldName)) {
+                    deserializedWebhookEventSubscriptionDestinationProperties.minimumTlsVersionAllowed
+                        = TlsVersion.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedWebhookEventSubscriptionDestinationProperties;
+        });
     }
 }

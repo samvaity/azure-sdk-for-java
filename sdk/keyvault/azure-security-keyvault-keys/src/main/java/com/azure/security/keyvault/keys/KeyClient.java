@@ -11,12 +11,34 @@ import com.azure.core.exception.ResourceModifiedException;
 import com.azure.core.exception.ResourceNotFoundException;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.http.rest.RequestOptions;
 import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.SimpleResponse;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
+import com.azure.core.util.CoreUtils;
+import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.polling.LongRunningOperationStatus;
+import com.azure.core.util.polling.PollResponse;
+import com.azure.core.util.polling.PollingContext;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.security.keyvault.keys.cryptography.CryptographyClient;
 import com.azure.security.keyvault.keys.cryptography.CryptographyClientBuilder;
 import com.azure.security.keyvault.keys.implementation.KeyClientImpl;
+import com.azure.security.keyvault.keys.implementation.KeyVaultKeysUtils;
+import com.azure.security.keyvault.keys.implementation.models.BackupKeyResult;
+import com.azure.security.keyvault.keys.implementation.models.DeletedKeyBundle;
+import com.azure.security.keyvault.keys.implementation.models.DeletedKeyItem;
+import com.azure.security.keyvault.keys.implementation.models.GetRandomBytesRequest;
+import com.azure.security.keyvault.keys.implementation.models.KeyBundle;
+import com.azure.security.keyvault.keys.implementation.models.KeyCreateParameters;
+import com.azure.security.keyvault.keys.implementation.models.KeyImportParameters;
+import com.azure.security.keyvault.keys.implementation.models.KeyItem;
+import com.azure.security.keyvault.keys.implementation.models.KeyReleaseParameters;
+import com.azure.security.keyvault.keys.implementation.models.KeyRestoreParameters;
+import com.azure.security.keyvault.keys.implementation.models.KeyUpdateParameters;
+import com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils;
+import com.azure.security.keyvault.keys.implementation.models.RandomBytes;
 import com.azure.security.keyvault.keys.models.CreateEcKeyOptions;
 import com.azure.security.keyvault.keys.models.CreateKeyOptions;
 import com.azure.security.keyvault.keys.models.CreateOctKeyOptions;
@@ -25,6 +47,7 @@ import com.azure.security.keyvault.keys.models.DeletedKey;
 import com.azure.security.keyvault.keys.models.ImportKeyOptions;
 import com.azure.security.keyvault.keys.models.JsonWebKey;
 import com.azure.security.keyvault.keys.models.KeyCurveName;
+import com.azure.security.keyvault.keys.models.KeyExportEncryptionAlgorithm;
 import com.azure.security.keyvault.keys.models.KeyOperation;
 import com.azure.security.keyvault.keys.models.KeyProperties;
 import com.azure.security.keyvault.keys.models.KeyRotationPolicy;
@@ -33,13 +56,46 @@ import com.azure.security.keyvault.keys.models.KeyVaultKey;
 import com.azure.security.keyvault.keys.models.ReleaseKeyOptions;
 import com.azure.security.keyvault.keys.models.ReleaseKeyResult;
 
+import java.net.HttpURLConnection;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.function.Function;
+
+import static com.azure.security.keyvault.keys.implementation.KeyVaultKeysUtils.EMPTY_OPTIONS;
+import static com.azure.security.keyvault.keys.implementation.KeyVaultKeysUtils.callWithMappedException;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.createDeletedKey;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.createKeyAttributes;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.createKeyVaultKey;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.mapJsonWebKey;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.mapKeyReleasePolicy;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.mapKeyRotationPolicy;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.mapKeyRotationPolicyImpl;
+
 /**
  * The {@link KeyClient} provides synchronous methods to manage {@link KeyVaultKey keys} in the Azure Key Vault. The
  * client supports creating, retrieving, updating, deleting, purging, backing up, restoring, listing, releasing and
  * rotating the {@link KeyVaultKey keys}. The client also supports listing {@link DeletedKey deleted keys} for a
  * soft-delete enabled Azure Key Vault.
  *
- * <p><strong>Samples to construct the sync client</strong></p>
+ * <h2>Getting Started</h2>
+ *
+ * <p>In order to interact with the Azure Key Vault service, you will need to create an instance of the
+ * {@link KeyClient} class, a vault url and a credential object.</p>
+ *
+ * <p>The examples shown in this document use a credential object named DefaultAzureCredential for authentication,
+ * which is appropriate for most scenarios, including local development and production environments. Additionally,
+ * we recommend using a
+ * <a href="https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/">
+ * managed identity</a> for authentication in production environments.
+ * You can find more information on different ways of authenticating and their corresponding credential types in the
+ * <a href="https://learn.microsoft.com/java/api/overview/azure/identity-readme?view=azure-java-stable">
+ * Azure Identity documentation"</a>.</p>
+ *
+ * <p><strong>Sample: Construct Synchronous Key Client</strong></p>
+ *
+ * <p>The following code sample demonstrates the creation of a {@link KeyClient}, using the {@link KeyClientBuilder}
+ * to configure it.</p>
+ *
  * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.instantiation -->
  * <pre>
  * KeyClient keyClient = new KeyClientBuilder&#40;&#41;
@@ -49,20 +105,100 @@ import com.azure.security.keyvault.keys.models.ReleaseKeyResult;
  * </pre>
  * <!-- end com.azure.security.keyvault.keys.KeyClient.instantiation -->
  *
+ * <br>
+ *
+ * <hr>
+ *
+ * <h2>Create a Cryptographic Key</h2>
+ * The {@link KeyClient} can be used to create a key in the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to synchronously create a cryptographic key in the key vault,
+ * using the {@link KeyClient#createKey(String, KeyType)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.createKey#String-KeyType -->
+ * <pre>
+ * KeyVaultKey key = keyClient.createKey&#40;&quot;keyName&quot;, KeyType.EC&#41;;
+ * System.out.printf&#40;&quot;Created key with name: %s and id: %s%n&quot;, key.getName&#40;&#41;, key.getId&#40;&#41;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.keys.KeyClient.createKey#String-KeyType -->
+ *
+ * <p><strong>Note:</strong> For the asynchronous sample, refer to {@link KeyAsyncClient}.</p>
+ *
+ * <br>
+ *
+ * <hr>
+ *
+ * <h2>Get a Cryptographic Key</h2>
+ * The {@link KeyClient} can be used to retrieve a key from the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to synchronously retrieve a key from the key vault, using
+ * the {@link KeyClient#getKey(String)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.getKey#String -->
+ * <pre>
+ * KeyVaultKey keyWithVersionValue = keyClient.getKey&#40;&quot;keyName&quot;&#41;;
+ *
+ * System.out.printf&#40;&quot;Retrieved key with name: %s and: id %s%n&quot;, keyWithVersionValue.getName&#40;&#41;,
+ *     keyWithVersionValue.getId&#40;&#41;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.keys.KeyClient.getKey#String -->
+ *
+ * <p><strong>Note:</strong> For the asynchronous sample, refer to {@link KeyAsyncClient}.</p>
+ *
+ * <br>
+ *
+ * <hr>
+ *
+ * <h2>Delete a Cryptographic Key</h2>
+ * The {@link KeyClient} can be used to delete a key from the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to synchronously delete a key from the
+ * key vault, using the {@link KeyClient#beginDeleteKey(String)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.deleteKey#String -->
+ * <pre>
+ * SyncPoller&lt;DeletedKey, Void&gt; deleteKeyPoller = keyClient.beginDeleteKey&#40;&quot;keyName&quot;&#41;;
+ * PollResponse&lt;DeletedKey&gt; deleteKeyPollResponse = deleteKeyPoller.poll&#40;&#41;;
+ *
+ * &#47;&#47; Deleted date only works for SoftDelete Enabled Key Vault.
+ * DeletedKey deletedKey = deleteKeyPollResponse.getValue&#40;&#41;;
+ *
+ * System.out.printf&#40;&quot;Key delete date: %s%n&quot;, deletedKey.getDeletedOn&#40;&#41;&#41;;
+ * System.out.printf&#40;&quot;Deleted key's recovery id: %s%n&quot;, deletedKey.getRecoveryId&#40;&#41;&#41;;
+ *
+ * &#47;&#47; Key is being deleted on the server.
+ * deleteKeyPoller.waitForCompletion&#40;&#41;;
+ * &#47;&#47; Key is deleted
+ * </pre>
+ * <!-- end com.azure.security.keyvault.keys.KeyClient.deleteKey#String -->
+ *
+ * <p><strong>Note:</strong> For the asynchronous sample, refer to {@link KeyAsyncClient}.</p>
+ *
+ * @see com.azure.security.keyvault.keys
  * @see KeyClientBuilder
- * @see PagedIterable
  */
-@ServiceClient(builder = KeyClientBuilder.class, serviceInterfaces = KeyClientImpl.KeyService.class)
+@ServiceClient(builder = KeyClientBuilder.class, serviceInterfaces = KeyClientImpl.KeyClientService.class)
 public final class KeyClient {
+    private static final ClientLogger LOGGER = new ClientLogger(KeyClient.class);
+
     private final KeyClientImpl implClient;
+    private final String vaultUrl;
+    private final KeyServiceVersion serviceVersion;
 
     /**
      * Creates a {@link KeyClient} that uses a {@link KeyClientImpl} to service requests.
      *
      * @param implClient the impl client.
+     * @param vaultUrl the vault url.
+     * @param serviceVersion the service version.
      */
-    KeyClient(KeyClientImpl implClient) {
+    KeyClient(KeyClientImpl implClient, String vaultUrl, KeyServiceVersion serviceVersion) {
         this.implClient = implClient;
+        this.vaultUrl = vaultUrl;
+        this.serviceVersion = serviceVersion;
     }
 
     /**
@@ -71,7 +207,11 @@ public final class KeyClient {
      * @return The vault endpoint url.
      */
     public String getVaultUrl() {
-        return implClient.getVaultUrl();
+        return vaultUrl;
+    }
+
+    HttpPipeline getHttpPipeline() {
+        return implClient.getHttpPipeline();
     }
 
     /**
@@ -94,7 +234,7 @@ public final class KeyClient {
      * @throws IllegalArgumentException If {@code keyName} is {@code null} or empty.
      */
     public CryptographyClient getCryptographyClient(String keyName) {
-        return implClient.getCryptographyClientBuilder(keyName, null).buildClient();
+        return getCryptographyClient(keyName, null);
     }
 
     /**
@@ -109,7 +249,9 @@ public final class KeyClient {
      * @throws IllegalArgumentException If {@code keyName} is {@code null} or empty.
      */
     public CryptographyClient getCryptographyClient(String keyName, String keyVersion) {
-        return implClient.getCryptographyClientBuilder(keyName, keyVersion).buildClient();
+        return KeyVaultKeysUtils
+            .getCryptographyClientBuilder(keyName, keyVersion, vaultUrl, getHttpPipeline(), serviceVersion)
+            .buildClient();
     }
 
     /**
@@ -127,7 +269,6 @@ public final class KeyClient {
      * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.createKey#String-KeyType -->
      * <pre>
      * KeyVaultKey key = keyClient.createKey&#40;&quot;keyName&quot;, KeyType.EC&#41;;
-     *
      * System.out.printf&#40;&quot;Created key with name: %s and id: %s%n&quot;, key.getName&#40;&#41;, key.getId&#40;&#41;&#41;;
      * </pre>
      * <!-- end com.azure.security.keyvault.keys.KeyClient.createKey#String-KeyType -->
@@ -232,7 +373,23 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyVaultKey> createKeyWithResponse(CreateKeyOptions createKeyOptions, Context context) {
-        return implClient.createKeyWithResponse(createKeyOptions, context);
+        if (createKeyOptions == null) {
+            throw LOGGER.logExceptionAsError(new NullPointerException("'createKeyOptions' cannot be null."));
+        }
+
+        KeyCreateParameters keyCreateParameters = new KeyCreateParameters(createKeyOptions.getKeyType())
+            .setKeyAttributes(createKeyAttributes(createKeyOptions))
+            .setKeyOps(createKeyOptions.getKeyOperations())
+            .setReleasePolicy(mapKeyReleasePolicy(createKeyOptions.getReleasePolicy()))
+            .setTags(createKeyOptions.getTags())
+            .setReleasePolicy(mapKeyReleasePolicy(createKeyOptions.getReleasePolicy()));
+
+        Response<BinaryData> response = callWithMappedException(
+            () -> implClient.createKeyWithResponse(createKeyOptions.getName(),
+                BinaryData.fromObject(keyCreateParameters), new RequestOptions().setContext(context)),
+            KeyAsyncClient::mapCreateKeyException);
+
+        return new SimpleResponse<>(response, createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
     }
 
     /**
@@ -324,7 +481,24 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyVaultKey> createRsaKeyWithResponse(CreateRsaKeyOptions createRsaKeyOptions, Context context) {
-        return implClient.createRsaKeyWithResponse(createRsaKeyOptions, context);
+        if (createRsaKeyOptions == null) {
+            throw LOGGER.logExceptionAsError(new NullPointerException("'createRsaKeyOptions' cannot be null."));
+        }
+
+        KeyCreateParameters keyCreateParameters
+            = new KeyCreateParameters(createRsaKeyOptions.getKeyType()).setKeySize(createRsaKeyOptions.getKeySize())
+                .setPublicExponent(createRsaKeyOptions.getPublicExponent())
+                .setKeyOps(createRsaKeyOptions.getKeyOperations())
+                .setKeyAttributes(createKeyAttributes(createRsaKeyOptions))
+                .setTags(createRsaKeyOptions.getTags())
+                .setReleasePolicy(mapKeyReleasePolicy(createRsaKeyOptions.getReleasePolicy()));
+
+        Response<BinaryData> response = callWithMappedException(
+            () -> implClient.createKeyWithResponse(createRsaKeyOptions.getName(),
+                BinaryData.fromObject(keyCreateParameters), new RequestOptions().setContext(context)),
+            KeyAsyncClient::mapCreateKeyException);
+
+        return new SimpleResponse<>(response, createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
     }
 
     /**
@@ -419,7 +593,23 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyVaultKey> createEcKeyWithResponse(CreateEcKeyOptions createEcKeyOptions, Context context) {
-        return implClient.createEcKeyWithResponse(createEcKeyOptions, context);
+        if (createEcKeyOptions == null) {
+            throw LOGGER.logExceptionAsError(new NullPointerException("'createEcKeyOptions' cannot be null."));
+        }
+
+        KeyCreateParameters keyCreateParameters
+            = new KeyCreateParameters(createEcKeyOptions.getKeyType()).setKeyOps(createEcKeyOptions.getKeyOperations())
+                .setKeyAttributes(createKeyAttributes(createEcKeyOptions))
+                .setTags(createEcKeyOptions.getTags())
+                .setCurve(createEcKeyOptions.getCurveName())
+                .setReleasePolicy(mapKeyReleasePolicy(createEcKeyOptions.getReleasePolicy()));
+
+        Response<BinaryData> response = callWithMappedException(
+            () -> implClient.createKeyWithResponse(createEcKeyOptions.getName(),
+                BinaryData.fromObject(keyCreateParameters), new RequestOptions().setContext(context)),
+            KeyAsyncClient::mapCreateKeyException);
+
+        return new SimpleResponse<>(response, createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
     }
 
     /**
@@ -505,7 +695,23 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyVaultKey> createOctKeyWithResponse(CreateOctKeyOptions createOctKeyOptions, Context context) {
-        return implClient.createOctKeyWithResponse(createOctKeyOptions, context);
+        if (createOctKeyOptions == null) {
+            throw LOGGER.logExceptionAsError(new NullPointerException("'createOctKeyOptions' cannot be null."));
+        }
+
+        KeyCreateParameters keyCreateParameters
+            = new KeyCreateParameters(createOctKeyOptions.getKeyType()).setKeySize(createOctKeyOptions.getKeySize())
+                .setKeyOps(createOctKeyOptions.getKeyOperations())
+                .setKeyAttributes(createKeyAttributes(createOctKeyOptions))
+                .setTags(createOctKeyOptions.getTags())
+                .setReleasePolicy(mapKeyReleasePolicy(createOctKeyOptions.getReleasePolicy()));
+
+        Response<BinaryData> response = callWithMappedException(
+            () -> implClient.createKeyWithResponse(createOctKeyOptions.getName(),
+                BinaryData.fromObject(keyCreateParameters), new RequestOptions().setContext(context)),
+            KeyAsyncClient::mapCreateKeyException);
+
+        return new SimpleResponse<>(response, createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
     }
 
     /**
@@ -619,7 +825,20 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyVaultKey> importKeyWithResponse(ImportKeyOptions importKeyOptions, Context context) {
-        return implClient.importKeyWithResponse(importKeyOptions, context);
+        if (importKeyOptions == null) {
+            throw LOGGER.logExceptionAsError(new RuntimeException("'importKeyOptions' cannot be null."));
+        }
+
+        KeyImportParameters keyImportParameters = new KeyImportParameters(mapJsonWebKey(importKeyOptions.getKey()))
+            .setHsm(importKeyOptions.isHardwareProtected())
+            .setKeyAttributes(createKeyAttributes(importKeyOptions))
+            .setTags(importKeyOptions.getTags())
+            .setReleasePolicy(mapKeyReleasePolicy(importKeyOptions.getReleasePolicy()));
+
+        Response<BinaryData> response = implClient.importKeyWithResponse(importKeyOptions.getName(),
+            BinaryData.fromObject(keyImportParameters), new RequestOptions().setContext(context));
+
+        return new SimpleResponse<>(response, createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
     }
 
     /**
@@ -631,7 +850,7 @@ public final class KeyClient {
      * {@link KeyVaultKey retrieved key}.</p>
      * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.getKey#String-String -->
      * <pre>
-     * String keyVersion = &quot;6A385B124DEF4096AF1361A85B16C204&quot;;
+     * String keyVersion = &quot;&lt;key-version&gt;&quot;;
      * KeyVaultKey keyWithVersion = keyClient.getKey&#40;&quot;keyName&quot;, keyVersion&#41;;
      *
      * System.out.printf&#40;&quot;Retrieved key with name: %s and: id %s%n&quot;, keyWithVersion.getName&#40;&#41;,
@@ -665,7 +884,7 @@ public final class KeyClient {
      * {@link KeyVaultKey retrieved key}.</p>
      * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.getKeyWithResponse#String-String-Context -->
      * <pre>
-     * String keyVersion = &quot;6A385B124DEF4096AF1361A85B16C204&quot;;
+     * String keyVersion = &quot;&lt;key-version&gt;&quot;;
      * Response&lt;KeyVaultKey&gt; getKeyResponse =
      *     keyClient.getKeyWithResponse&#40;&quot;keyName&quot;, keyVersion, new Context&#40;&quot;key1&quot;, &quot;value1&quot;&#41;&#41;;
      *
@@ -691,7 +910,11 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyVaultKey> getKeyWithResponse(String name, String version, Context context) {
-        return implClient.getKeyWithResponse(name, version, context);
+        Response<BinaryData> response = callWithMappedException(
+            () -> implClient.getKeyWithResponse(name, version, new RequestOptions().setContext(context)),
+            KeyAsyncClient::mapGetKeyException);
+
+        return new SimpleResponse<>(response, createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
     }
 
     /**
@@ -720,7 +943,7 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public KeyVaultKey getKey(String name) {
-        return getKeyWithResponse(name, "", Context.NONE).getValue();
+        return getKeyWithResponse(name, null, Context.NONE).getValue();
     }
 
     /**
@@ -800,14 +1023,29 @@ public final class KeyClient {
      *
      * @throws HttpResponseException If {@link KeyProperties#getName() name} or
      * {@link KeyProperties#getVersion() version} is an empty string.
-     * @throws NullPointerException If {@code key} is {@code null}.
+     * @throws NullPointerException If {@code keyProperties} is null.
      * @throws ResourceNotFoundException When a key with {@link KeyProperties#getName() name} and
      * {@link KeyProperties#getVersion() version} doesn't exist in the key vault.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyVaultKey> updateKeyPropertiesWithResponse(KeyProperties keyProperties, Context context,
-                                                                 KeyOperation... keyOperations) {
-        return implClient.updateKeyPropertiesWithResponse(keyProperties, context, keyOperations);
+        KeyOperation... keyOperations) {
+
+        if (keyProperties == null) {
+            throw LOGGER.logExceptionAsError(new NullPointerException("'keyProperties' cannot be null."));
+        }
+
+        KeyUpdateParameters keyUpdateParameters
+            = new KeyUpdateParameters().setKeyOps(keyOperations == null ? null : Arrays.asList(keyOperations))
+                .setKeyAttributes(createKeyAttributes(keyProperties))
+                .setTags(keyProperties.getTags())
+                .setReleasePolicy(mapKeyReleasePolicy(keyProperties.getReleasePolicy()));
+
+        Response<BinaryData> response
+            = implClient.updateKeyWithResponse(keyProperties.getName(), keyProperties.getVersion(),
+                BinaryData.fromObject(keyUpdateParameters), new RequestOptions().setContext(context));
+
+        return new SimpleResponse<>(response, createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
     }
 
     /**
@@ -849,7 +1087,41 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<DeletedKey, Void> beginDeleteKey(String name) {
-        return implClient.beginDeleteKey(name, Context.NONE);
+        return SyncPoller.createPoller(Duration.ofSeconds(1), deleteActivationOperation(name),
+            deletePollOperation(name), (pollingContext, firstResponse) -> null, pollingContext -> null);
+    }
+
+    private Function<PollingContext<DeletedKey>, PollResponse<DeletedKey>> deleteActivationOperation(String name) {
+        return pollingContext -> new PollResponse<>(LongRunningOperationStatus.NOT_STARTED, createDeletedKey(
+            implClient.deleteKeyWithResponse(name, EMPTY_OPTIONS).getValue().toObject(DeletedKeyBundle.class)));
+    }
+
+    private Function<PollingContext<DeletedKey>, PollResponse<DeletedKey>> deletePollOperation(String name) {
+        return pollingContext -> {
+            try {
+                return new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                    createDeletedKey(implClient.getDeletedKeyWithResponse(name, EMPTY_OPTIONS)
+                        .getValue()
+                        .toObject(DeletedKeyBundle.class)));
+            } catch (HttpResponseException e) {
+                if (e.getResponse() != null && e.getResponse().getStatusCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+                    return new PollResponse<>(LongRunningOperationStatus.IN_PROGRESS,
+                        pollingContext.getLatestResponse().getValue());
+                } else {
+                    // This means either vault has soft-delete disabled or permission is not granted for the get deleted key
+                    // operation. In both cases deletion operation was successful when activation operation succeeded before
+                    // reaching here.
+                    return new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                        pollingContext.getLatestResponse().getValue());
+                }
+            } catch (RuntimeException e) {
+                // This means either vault has soft-delete disabled or permission is not granted for the get deleted key
+                // operation. In both cases deletion operation was successful when activation operation succeeded before
+                // reaching here.
+                return new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                    pollingContext.getLatestResponse().getValue());
+            }
+        };
     }
 
     /**
@@ -906,7 +1178,10 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<DeletedKey> getDeletedKeyWithResponse(String name, Context context) {
-        return implClient.getDeletedKeyWithResponse(name, context);
+        Response<BinaryData> response
+            = implClient.getDeletedKeyWithResponse(name, new RequestOptions().setContext(context));
+
+        return new SimpleResponse<>(response, createDeletedKey(response.getValue().toObject(DeletedKeyBundle.class)));
     }
 
     /**
@@ -959,7 +1234,7 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Void> purgeDeletedKeyWithResponse(String name, Context context) {
-        return implClient.purgeDeletedKeyWithResponse(name, context);
+        return implClient.purgeDeletedKeyWithResponse(name, new RequestOptions().setContext(context));
     }
 
     /**
@@ -995,7 +1270,37 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<KeyVaultKey, Void> beginRecoverDeletedKey(String name) {
-        return implClient.beginRecoverDeletedKey(name, Context.NONE);
+        return SyncPoller.createPoller(Duration.ofSeconds(1), recoverActivationOperation(name),
+            recoverPollOperation(name), (pollingContext, firstResponse) -> null, pollingContext -> null);
+    }
+
+    private Function<PollingContext<KeyVaultKey>, PollResponse<KeyVaultKey>> recoverActivationOperation(String name) {
+        return pollingContext -> new PollResponse<>(LongRunningOperationStatus.NOT_STARTED, createKeyVaultKey(
+            implClient.recoverDeletedKeyWithResponse(name, EMPTY_OPTIONS).getValue().toObject(KeyBundle.class)));
+    }
+
+    private Function<PollingContext<KeyVaultKey>, PollResponse<KeyVaultKey>> recoverPollOperation(String keyName) {
+        return pollingContext -> {
+            try {
+                return new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED, createKeyVaultKey(
+                    implClient.getKeyWithResponse(keyName, null, EMPTY_OPTIONS).getValue().toObject(KeyBundle.class)));
+            } catch (HttpResponseException e) {
+                if (e.getResponse() != null && e.getResponse().getStatusCode() == 404) {
+                    return new PollResponse<>(LongRunningOperationStatus.IN_PROGRESS,
+                        pollingContext.getLatestResponse().getValue());
+                } else {
+                    // This means permission is not granted for the get key operation. In both cases recovery operation
+                    // was successful when activation operation succeeded before reaching here.
+                    return new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                        pollingContext.getLatestResponse().getValue());
+                }
+            } catch (RuntimeException e) {
+                // This means permission is not granted for the get deleted key operation. In both cases deletion
+                // operation was successful when activation operation succeeded before reaching here.
+                return new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                    pollingContext.getLatestResponse().getValue());
+            }
+        };
     }
 
     /**
@@ -1068,7 +1373,10 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<byte[]> backupKeyWithResponse(String name, Context context) {
-        return implClient.backupKeyWithResponse(name, context);
+        Response<BinaryData> response
+            = implClient.backupKeyWithResponse(name, new RequestOptions().setContext(context));
+
+        return new SimpleResponse<>(response, response.getValue().toObject(BackupKeyResult.class).getValue());
     }
 
     /**
@@ -1143,7 +1451,14 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyVaultKey> restoreKeyBackupWithResponse(byte[] backup, Context context) {
-        return implClient.restoreKeyBackupWithResponse(backup, context);
+        KeyRestoreParameters keyRestoreParameters = new KeyRestoreParameters(backup);
+
+        Response<BinaryData> response = callWithMappedException(
+            () -> implClient.restoreKeyWithResponse(BinaryData.fromObject(keyRestoreParameters),
+                new RequestOptions().setContext(context)),
+            KeyAsyncClient::mapRestoreKeyException);
+
+        return new SimpleResponse<>(response, createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
     }
 
     /**
@@ -1243,7 +1558,8 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<KeyProperties> listPropertiesOfKeys(Context context) {
-        return implClient.listPropertiesOfKeys(context);
+        return implClient.getKeys(new RequestOptions().setContext(context))
+            .mapPage(binaryData -> KeyVaultKeysModelsUtils.createKeyProperties(binaryData.toObject(KeyItem.class)));
     }
 
     /**
@@ -1322,7 +1638,8 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<DeletedKey> listDeletedKeys(Context context) {
-        return implClient.listDeletedKeys(context);
+        return implClient.getDeletedKeys(new RequestOptions().setContext(context))
+            .mapPage(binaryData -> KeyVaultKeysModelsUtils.createDeletedKey(binaryData.toObject(DeletedKeyItem.class)));
     }
 
     /**
@@ -1421,7 +1738,8 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<KeyProperties> listPropertiesOfKeyVersions(String name, Context context) {
-        return implClient.listPropertiesOfKeyVersions(name, context);
+        return implClient.getKeyVersions(name, new RequestOptions().setContext(context))
+            .mapPage(binaryData -> KeyVaultKeysModelsUtils.createKeyProperties(binaryData.toObject(KeyItem.class)));
     }
 
     /**
@@ -1474,7 +1792,12 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<byte[]> getRandomBytesWithResponse(int count, Context context) {
-        return implClient.getRandomBytesWithResponse(count, context);
+        GetRandomBytesRequest getRandomBytesRequest = new GetRandomBytesRequest(count);
+
+        Response<BinaryData> response = implClient.getRandomBytesWithResponse(
+            BinaryData.fromObject(getRandomBytesRequest), new RequestOptions().setContext(context));
+
+        return new SimpleResponse<>(response, response.getValue().toObject(RandomBytes.class).getValue());
     }
 
     /**
@@ -1504,7 +1827,7 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ReleaseKeyResult releaseKey(String name, String targetAttestationToken) {
-        return releaseKeyWithResponse(name, "", targetAttestationToken, new ReleaseKeyOptions(), Context.NONE)
+        return releaseKeyWithResponse(name, null, targetAttestationToken, new ReleaseKeyOptions(), Context.NONE)
             .getValue();
     }
 
@@ -1518,7 +1841,7 @@ public final class KeyClient {
      * <p>Releases a {@link KeyVaultKey key}. Prints out the signed object that contains the release key.</p>
      * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.releaseKey#String-String-String -->
      * <pre>
-     * String myKeyVersion = &quot;6A385B124DEF4096AF1361A85B16C204&quot;;
+     * String myKeyVersion = &quot;&lt;key-version&gt;&quot;;
      * String myTargetAttestationToken = &quot;someAttestationToken&quot;;
      * ReleaseKeyResult releaseKeyVersionResult =
      *     keyClient.releaseKey&#40;&quot;keyName&quot;, myKeyVersion, myTargetAttestationToken&#41;;
@@ -1553,7 +1876,7 @@ public final class KeyClient {
      * {@link Response HTTP Response} details and the signed object that contains the release key.</p>
      * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.releaseKeyWithResponse#String-String-String-ReleaseKeyOptions-Context -->
      * <pre>
-     * String releaseKeyVersion = &quot;6A385B124DEF4096AF1361A85B16C204&quot;;
+     * String releaseKeyVersion = &quot;&lt;key-version&gt;&quot;;
      * String someTargetAttestationToken = &quot;someAttestationToken&quot;;
      * ReleaseKeyOptions releaseKeyOptions = new ReleaseKeyOptions&#40;&#41;
      *     .setAlgorithm&#40;KeyExportEncryptionAlgorithm.RSA_AES_KEY_WRAP_256&#41;
@@ -1586,8 +1909,21 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ReleaseKeyResult> releaseKeyWithResponse(String name, String version, String targetAttestationToken,
-                                                             ReleaseKeyOptions releaseKeyOptions, Context context) {
-        return implClient.releaseKeyWithResponse(name, version, targetAttestationToken, releaseKeyOptions, context);
+        ReleaseKeyOptions releaseKeyOptions, Context context) {
+        if (CoreUtils.isNullOrEmpty(name) || CoreUtils.isNullOrEmpty(targetAttestationToken)) {
+            throw LOGGER.logExceptionAsError(
+                new IllegalArgumentException("'name' or 'targetAttestationToken' cannot be null or empty."));
+        }
+
+        String nonce = releaseKeyOptions == null ? null : releaseKeyOptions.getNonce();
+        KeyExportEncryptionAlgorithm algorithm = releaseKeyOptions == null ? null : releaseKeyOptions.getAlgorithm();
+        KeyReleaseParameters keyReleaseParameters
+            = new KeyReleaseParameters(targetAttestationToken).setEnc(algorithm).setNonce(nonce);
+
+        Response<BinaryData> response = implClient.releaseWithResponse(name, version,
+            BinaryData.fromObject(keyReleaseParameters), new RequestOptions().setContext(context));
+
+        return new SimpleResponse<>(response, response.getValue().toObject(ReleaseKeyResult.class));
     }
 
     /**
@@ -1648,7 +1984,10 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyVaultKey> rotateKeyWithResponse(String name, Context context) {
-        return implClient.rotateKeyWithResponse(name, context);
+        Response<BinaryData> response
+            = implClient.rotateKeyWithResponse(name, new RequestOptions().setContext(context));
+
+        return new SimpleResponse<>(response, createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
     }
 
     /**
@@ -1707,7 +2046,11 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyRotationPolicy> getKeyRotationPolicyWithResponse(String keyName, Context context) {
-        return implClient.getKeyRotationPolicyWithResponse(keyName, context);
+        Response<BinaryData> response
+            = implClient.getKeyRotationPolicyWithResponse(keyName, new RequestOptions().setContext(context));
+
+        return new SimpleResponse<>(response, mapKeyRotationPolicyImpl(response.getValue()
+            .toObject(com.azure.security.keyvault.keys.implementation.models.KeyRotationPolicy.class)));
     }
 
     /**
@@ -1795,8 +2138,110 @@ public final class KeyClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<KeyRotationPolicy> updateKeyRotationPolicyWithResponse(String keyName,
-                                                                           KeyRotationPolicy keyRotationPolicy,
-                                                                           Context context) {
-        return implClient.updateKeyRotationPolicyWithResponse(keyName, keyRotationPolicy, context);
+        KeyRotationPolicy keyRotationPolicy, Context context) {
+
+        Response<BinaryData> response = implClient.updateKeyRotationPolicyWithResponse(keyName,
+            BinaryData.fromObject(mapKeyRotationPolicy(keyRotationPolicy)), new RequestOptions().setContext(context));
+
+        return new SimpleResponse<>(response, mapKeyRotationPolicyImpl(response.getValue()
+            .toObject(com.azure.security.keyvault.keys.implementation.models.KeyRotationPolicy.class)));
+    }
+
+    /**
+     * Gets the public part of the latest version of the specified {@link KeyVaultKey key}, including its key
+     * attestation information. The get key operation is applicable to all {@link KeyType key types} and it requires the
+     * {@code keys/get} permission.
+     *
+     * <p><strong>Code Samples</strong></p>
+     * <p>Gets the latest version of the {@link KeyVaultKey key} in the key vault, including its attestation
+     * information. Prints out the details of the {@link KeyVaultKey retrieved key}.</p>
+     * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.getKeyAttestation#String -->
+     * <pre>
+     * KeyVaultKey keyVaultKey = keyClient.getKeyAttestation&#40;&quot;keyName&quot;&#41;;
+     *
+     * System.out.printf&#40;&quot;Retrieved key with name: %s and: id %s%n&quot;, keyVaultKey.getName&#40;&#41;,
+     *     keyVaultKey.getId&#40;&#41;&#41;;
+     *
+     * KeyAttestation keyAttestationInfo = keyVaultKey.getProperties&#40;&#41;.getKeyAttestation&#40;&#41;;
+     *
+     * System.out.printf&#40;&quot;Attestation information details: %n&quot;
+     *         + &quot;Certificate PEM file: %s%n&quot;
+     *         + &quot;Private key attestation: %s%n&quot;
+     *         + &quot;Public key attestation: %s%n&quot;
+     *         + &quot;Version: %s&quot;,
+     *     Base64Url.encode&#40;keyAttestationInfo.getCertificatePemFile&#40;&#41;&#41;,
+     *     Base64Url.encode&#40;keyAttestationInfo.getPrivateKeyAttestation&#40;&#41;&#41;,
+     *     Base64Url.encode&#40;keyAttestationInfo.getPublicKeyAttestation&#40;&#41;&#41;,
+     *     keyAttestationInfo.getVersion&#40;&#41;&#41;;
+     * </pre>
+     * <!-- end com.azure.security.keyvault.keys.KeyClient.getKeyAttestation#String -->
+     *
+     * @param name The name of the {@link KeyVaultKey key}, cannot be {@code null}.
+     *
+     * @return The requested {@link KeyVaultKey key}. The content of the {@link KeyVaultKey key}  is {@code null} if
+     * both {@code name} and {@code version} are {@code null} or empty.
+     *
+     * @throws HttpResponseException If a valid {@code name} and a non-null/empty {@code version} is specified.
+     * @throws ResourceNotFoundException When a {@link KeyVaultKey key} with the provided {@code name} doesn't exist in
+     * the key vault or an empty/{@code null} {@code name} and a non-null/empty {@code version} is provided.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public KeyVaultKey getKeyAttestation(String name) {
+        return getKeyAttestationWithResponse(name, "", Context.NONE).getValue();
+    }
+
+    /**
+     * Gets the public part of the specified {@link KeyVaultKey key} and key version, including its key attestation
+     * information. The get key operation is applicable to all {@link KeyType key types} and it requires the
+     * {@code keys/get} permission.
+     *
+     * <p><strong>Code Samples</strong></p>
+     * <p>Gets a specific version of the {@link KeyVaultKey key} in the key vault, including its attestation
+     * information. Prints out the details of the {@link KeyVaultKey retrieved key}.</p>
+     * <!-- src_embed com.azure.security.keyvault.keys.KeyClient.getKeyAttestationWithResponse#String-String-Context -->
+     * <pre>
+     * String keyVersion = &quot;&lt;key-version&gt;&quot;;
+     * Response&lt;KeyVaultKey&gt; getKeyResponse =
+     *     keyClient.getKeyAttestationWithResponse&#40;&quot;keyName&quot;, keyVersion, new Context&#40;&quot;key1&quot;, &quot;value1&quot;&#41;&#41;;
+     * KeyVaultKey keyVaultKey = getKeyResponse.getValue&#40;&#41;;
+     *
+     * System.out.printf&#40;&quot;Retrieved key with name: %s and: id %s%n&quot;, keyVaultKey.getName&#40;&#41;, keyVaultKey.getId&#40;&#41;&#41;;
+     *
+     * KeyAttestation keyAttestationInfo = keyVaultKey.getProperties&#40;&#41;.getKeyAttestation&#40;&#41;;
+     *
+     * System.out.printf&#40;&quot;Attestation information details: %n&quot;
+     *         + &quot;Certificate PEM file: %s%n&quot;
+     *         + &quot;Private key attestation: %s%n&quot;
+     *         + &quot;Public key attestation: %s%n&quot;
+     *         + &quot;Version: %s&quot;,
+     *     Base64Url.encode&#40;keyAttestationInfo.getCertificatePemFile&#40;&#41;&#41;,
+     *     Base64Url.encode&#40;keyAttestationInfo.getPrivateKeyAttestation&#40;&#41;&#41;,
+     *     Base64Url.encode&#40;keyAttestationInfo.getPublicKeyAttestation&#40;&#41;&#41;,
+     *     keyAttestationInfo.getVersion&#40;&#41;&#41;;
+     * </pre>
+     * <!-- end com.azure.security.keyvault.keys.KeyClient.getKeyAttestationWithResponse#String-String-Context -->
+     *
+     * @param name The name of the {@link KeyVaultKey key}, cannot be {@code null}.
+     * @param context Additional {@link Context} that is passed through the {@link HttpPipeline} during the service
+     * call.
+     * @param version The version of the {@link KeyVaultKey key}  to retrieve. If this is an empty string or
+     * {@code null}, this call is equivalent to calling {@link KeyClient#getKey(String)}, with the latest version
+     * being retrieved.
+     *
+     * @return A {@link Response} whose {@link Response#getValue() value} contains the requested
+     * {@link KeyVaultKey key}. The content of the {@link KeyVaultKey key} is {@code null} if both {@code name} and
+     * {@code version} are {@code null} or empty.
+     *
+     * @throws HttpResponseException If a valid {@code name} and a non-null/empty {@code version} is specified.
+     * @throws ResourceNotFoundException When a {@link KeyVaultKey key} with the provided {@code name} doesn't exist in
+     * the key vault or an empty/{@code null} {@code name} and a non-null/empty {@code version} is provided.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<KeyVaultKey> getKeyAttestationWithResponse(String name, String version, Context context) {
+        Response<BinaryData> response = callWithMappedException(
+            () -> implClient.getKeyAttestationWithResponse(name, version, new RequestOptions().setContext(context)),
+            KeyAsyncClient::mapGetKeyException);
+
+        return new SimpleResponse<>(response, createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
     }
 }

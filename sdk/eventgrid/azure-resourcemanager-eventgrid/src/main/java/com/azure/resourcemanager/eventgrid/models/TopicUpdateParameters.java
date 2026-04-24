@@ -5,47 +5,49 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.eventgrid.fluent.models.TopicUpdateParameterProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/** Properties of the Topic update. */
+/**
+ * Properties of the Topic update.
+ */
 @Fluent
-public final class TopicUpdateParameters {
+public final class TopicUpdateParameters implements JsonSerializable<TopicUpdateParameters> {
     /*
      * Tags of the Topic resource.
      */
-    @JsonProperty(value = "tags")
-    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, String> tags;
 
     /*
      * Topic resource identity information.
      */
-    @JsonProperty(value = "identity")
     private IdentityInfo identity;
 
     /*
      * Properties of the Topic resource.
      */
-    @JsonProperty(value = "properties")
     private TopicUpdateParameterProperties innerProperties;
 
     /*
      * The Sku pricing tier for the topic.
      */
-    @JsonProperty(value = "sku")
     private ResourceSku sku;
 
-    /** Creates an instance of TopicUpdateParameters class. */
+    /**
+     * Creates an instance of TopicUpdateParameters class.
+     */
     public TopicUpdateParameters() {
     }
 
     /**
      * Get the tags property: Tags of the Topic resource.
-     *
+     * 
      * @return the tags value.
      */
     public Map<String, String> tags() {
@@ -54,7 +56,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Set the tags property: Tags of the Topic resource.
-     *
+     * 
      * @param tags the tags value to set.
      * @return the TopicUpdateParameters object itself.
      */
@@ -65,7 +67,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Get the identity property: Topic resource identity information.
-     *
+     * 
      * @return the identity value.
      */
     public IdentityInfo identity() {
@@ -74,7 +76,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Set the identity property: Topic resource identity information.
-     *
+     * 
      * @param identity the identity value to set.
      * @return the TopicUpdateParameters object itself.
      */
@@ -85,7 +87,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Get the innerProperties property: Properties of the Topic resource.
-     *
+     * 
      * @return the innerProperties value.
      */
     private TopicUpdateParameterProperties innerProperties() {
@@ -94,7 +96,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Get the sku property: The Sku pricing tier for the topic.
-     *
+     * 
      * @return the sku value.
      */
     public ResourceSku sku() {
@@ -103,7 +105,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Set the sku property: The Sku pricing tier for the topic.
-     *
+     * 
      * @param sku the sku value to set.
      * @return the TopicUpdateParameters object itself.
      */
@@ -114,10 +116,11 @@ public final class TopicUpdateParameters {
 
     /**
      * Get the publicNetworkAccess property: This determines if traffic is allowed over public network. By default it is
-     * enabled. You can further restrict to specific IPs by configuring &lt;seealso
+     * enabled.
+     * You can further restrict to specific IPs by configuring &lt;seealso
      * cref="P:Microsoft.Azure.Events.ResourceProvider.Common.Contracts.TopicUpdateParameterProperties.InboundIpRules"
      * /&gt;.
-     *
+     * 
      * @return the publicNetworkAccess value.
      */
     public PublicNetworkAccess publicNetworkAccess() {
@@ -126,10 +129,11 @@ public final class TopicUpdateParameters {
 
     /**
      * Set the publicNetworkAccess property: This determines if traffic is allowed over public network. By default it is
-     * enabled. You can further restrict to specific IPs by configuring &lt;seealso
+     * enabled.
+     * You can further restrict to specific IPs by configuring &lt;seealso
      * cref="P:Microsoft.Azure.Events.ResourceProvider.Common.Contracts.TopicUpdateParameterProperties.InboundIpRules"
      * /&gt;.
-     *
+     * 
      * @param publicNetworkAccess the publicNetworkAccess value to set.
      * @return the TopicUpdateParameters object itself.
      */
@@ -144,7 +148,7 @@ public final class TopicUpdateParameters {
     /**
      * Get the inboundIpRules property: This can be used to restrict traffic from specific IPs instead of all IPs. Note:
      * These are considered only if PublicNetworkAccess is enabled.
-     *
+     * 
      * @return the inboundIpRules value.
      */
     public List<InboundIpRule> inboundIpRules() {
@@ -154,7 +158,7 @@ public final class TopicUpdateParameters {
     /**
      * Set the inboundIpRules property: This can be used to restrict traffic from specific IPs instead of all IPs. Note:
      * These are considered only if PublicNetworkAccess is enabled.
-     *
+     * 
      * @param inboundIpRules the inboundIpRules value to set.
      * @return the TopicUpdateParameters object itself.
      */
@@ -169,7 +173,7 @@ public final class TopicUpdateParameters {
     /**
      * Get the minimumTlsVersionAllowed property: Minimum TLS version of the publisher allowed to publish to this
      * domain.
-     *
+     * 
      * @return the minimumTlsVersionAllowed value.
      */
     public TlsVersion minimumTlsVersionAllowed() {
@@ -179,7 +183,7 @@ public final class TopicUpdateParameters {
     /**
      * Set the minimumTlsVersionAllowed property: Minimum TLS version of the publisher allowed to publish to this
      * domain.
-     *
+     * 
      * @param minimumTlsVersionAllowed the minimumTlsVersionAllowed value to set.
      * @return the TopicUpdateParameters object itself.
      */
@@ -193,9 +197,9 @@ public final class TopicUpdateParameters {
 
     /**
      * Get the disableLocalAuth property: This boolean is used to enable or disable local auth. Default value is false.
-     * When the property is set to true, only AAD token will be used to authenticate if user is allowed to publish to
-     * the topic.
-     *
+     * When the property is set to true, only Microsoft Entra ID token will be used to authenticate if user is allowed
+     * to publish to the topic.
+     * 
      * @return the disableLocalAuth value.
      */
     public Boolean disableLocalAuth() {
@@ -204,9 +208,9 @@ public final class TopicUpdateParameters {
 
     /**
      * Set the disableLocalAuth property: This boolean is used to enable or disable local auth. Default value is false.
-     * When the property is set to true, only AAD token will be used to authenticate if user is allowed to publish to
-     * the topic.
-     *
+     * When the property is set to true, only Microsoft Entra ID token will be used to authenticate if user is allowed
+     * to publish to the topic.
+     * 
      * @param disableLocalAuth the disableLocalAuth value to set.
      * @return the TopicUpdateParameters object itself.
      */
@@ -220,7 +224,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Get the dataResidencyBoundary property: The data residency boundary for the topic.
-     *
+     * 
      * @return the dataResidencyBoundary value.
      */
     public DataResidencyBoundary dataResidencyBoundary() {
@@ -229,7 +233,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Set the dataResidencyBoundary property: The data residency boundary for the topic.
-     *
+     * 
      * @param dataResidencyBoundary the dataResidencyBoundary value to set.
      * @return the TopicUpdateParameters object itself.
      */
@@ -243,7 +247,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Get the eventTypeInfo property: The eventTypeInfo for the topic.
-     *
+     * 
      * @return the eventTypeInfo value.
      */
     public EventTypeInfo eventTypeInfo() {
@@ -252,7 +256,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Set the eventTypeInfo property: The eventTypeInfo for the topic.
-     *
+     * 
      * @param eventTypeInfo the eventTypeInfo value to set.
      * @return the TopicUpdateParameters object itself.
      */
@@ -266,7 +270,7 @@ public final class TopicUpdateParameters {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -279,5 +283,51 @@ public final class TopicUpdateParameters {
         if (sku() != null) {
             sku().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeMapField("tags", this.tags, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeJsonField("identity", this.identity);
+        jsonWriter.writeJsonField("properties", this.innerProperties);
+        jsonWriter.writeJsonField("sku", this.sku);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of TopicUpdateParameters from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of TopicUpdateParameters if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the TopicUpdateParameters.
+     */
+    public static TopicUpdateParameters fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            TopicUpdateParameters deserializedTopicUpdateParameters = new TopicUpdateParameters();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("tags".equals(fieldName)) {
+                    Map<String, String> tags = reader.readMap(reader1 -> reader1.getString());
+                    deserializedTopicUpdateParameters.tags = tags;
+                } else if ("identity".equals(fieldName)) {
+                    deserializedTopicUpdateParameters.identity = IdentityInfo.fromJson(reader);
+                } else if ("properties".equals(fieldName)) {
+                    deserializedTopicUpdateParameters.innerProperties = TopicUpdateParameterProperties.fromJson(reader);
+                } else if ("sku".equals(fieldName)) {
+                    deserializedTopicUpdateParameters.sku = ResourceSku.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedTopicUpdateParameters;
+        });
     }
 }

@@ -5,23 +5,61 @@ package com.azure.cosmos.models;
 
 import com.azure.cosmos.ConsistencyLevel;
 import com.azure.cosmos.CosmosDiagnosticsThresholds;
+import com.azure.cosmos.CosmosEndToEndOperationLatencyPolicyConfig;
+import com.azure.cosmos.CosmosItemSerializer;
 import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import com.azure.cosmos.implementation.RequestOptions;
 import com.azure.cosmos.implementation.apachecommons.collections.list.UnmodifiableList;
+import com.azure.cosmos.implementation.spark.OperationContextAndListenerTuple;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Encapsulates options that can be specified for a {@link CosmosBatch}.
  */
 public final class CosmosBatchRequestOptions {
+    private static final Set<String> EMPTY_KEYWORD_IDENTIFIERS = Collections.unmodifiableSet(new HashSet<>());
+
     private ConsistencyLevel consistencyLevel;
     private String sessionToken;
     private Map<String, String> customOptions;
     private CosmosDiagnosticsThresholds thresholds = new CosmosDiagnosticsThresholds();
     private List<String> excludeRegions;
+
+    private CosmosItemSerializer customSerializer;
+    private Set<String> keywordIdentifiers;
+    private String throughputControlGroupName;
+    private CosmosEndToEndOperationLatencyPolicyConfig e2ePolicy;
+    private OperationContextAndListenerTuple operationContextAndListenerTuple;
+    private boolean disableRetryForThrottledBatchRequest = false;
+
+    /**
+     * Creates an instance of the CosmosBatchRequestOptions class
+     */
+    public CosmosBatchRequestOptions() {
+    }
+
+
+    CosmosBatchRequestOptions(CosmosBatchRequestOptions toBeCloned) {
+        this.consistencyLevel = toBeCloned.consistencyLevel;
+        this.sessionToken = toBeCloned.sessionToken;
+        this.customOptions = toBeCloned.customOptions;
+        this.thresholds = toBeCloned.thresholds;
+        this.customSerializer = toBeCloned.customSerializer;
+        this.throughputControlGroupName = toBeCloned.throughputControlGroupName;
+
+        if (toBeCloned.excludeRegions != null) {
+            this.excludeRegions = new ArrayList<>(toBeCloned.excludeRegions);
+        }
+
+        this.disableRetryForThrottledBatchRequest = toBeCloned.disableRetryForThrottledBatchRequest;
+    }
 
     /**
      * Gets the consistency level required for the request.
@@ -75,17 +113,42 @@ public final class CosmosBatchRequestOptions {
         return this;
     }
 
+    /**
+     * Gets the diagnostic thresholds used as an override for a specific operation. If no operation specific
+     * diagnostic threshold has been specified, this method will return null, although at runtime the default
+     * thresholds specified at the client-level will be used.
+     * @return the diagnostic thresholds used as an override for a specific operation.
+     */
+    public CosmosDiagnosticsThresholds getDiagnosticsThresholds() {
+        return this.thresholds;
+    }
+
+    boolean shouldDisableRetryForThrottledBatchRequest() {
+        return disableRetryForThrottledBatchRequest;
+    }
+
+    CosmosBatchRequestOptions setDisableRetryForThrottledBatchRequest(boolean disableRetryForThrottledBatchRequest) {
+        this.disableRetryForThrottledBatchRequest = disableRetryForThrottledBatchRequest;
+        return this;
+    }
+
     RequestOptions toRequestOptions() {
         final RequestOptions requestOptions = new RequestOptions();
         requestOptions.setConsistencyLevel(getConsistencyLevel());
         requestOptions.setSessionToken(sessionToken);
         requestOptions.setDiagnosticsThresholds(thresholds);
+        requestOptions.setEffectiveItemSerializer(this.customSerializer);
+
         if(this.customOptions != null) {
             for(Map.Entry<String, String> entry : this.customOptions.entrySet()) {
                 requestOptions.setHeader(entry.getKey(), entry.getValue());
             }
         }
-        requestOptions.setExcludeRegions(excludeRegions);
+        requestOptions.setExcludedRegions(excludeRegions);
+        requestOptions.setKeywordIdentifiers(keywordIdentifiers);
+        requestOptions.setThroughputControlGroupName(this.throughputControlGroupName);
+        requestOptions.setCosmosEndToEndLatencyPolicyConfig(this.e2ePolicy);
+        requestOptions.setOperationContextAndListenerTuple(this.operationContextAndListenerTuple);
 
         return requestOptions;
     }
@@ -107,8 +170,10 @@ public final class CosmosBatchRequestOptions {
     }
 
     /**
-     * List of regions to exclude for the request/retries. Example "East US" or "East US, West US"
-     * These regions will be excluded from the preferred regions list
+     * List of regions to be excluded for the request/retries. Example "East US" or "East US, West US"
+     * These regions will be excluded from the preferred regions list. If all the regions are excluded,
+     * the request will be sent to the primary region for the account. The primary region is the write region in a
+     * single master account and the hub region in a multi-master account.
      *
      * @param excludeRegions list of regions
      * @return the {@link CosmosBatchRequestOptions}
@@ -132,12 +197,72 @@ public final class CosmosBatchRequestOptions {
     }
 
     /**
+     * Gets the custom item serializer defined for this instance of request options
+     * @return the custom item serializer
+     */
+    public CosmosItemSerializer getCustomItemSerializer() {
+        return this.customSerializer;
+    }
+
+    /**
+     * Allows specifying a custom item serializer to be used for this operation. If the serializer
+     * on the request options is null, the serializer on CosmosClientBuilder is used. If both serializers
+     * are null (the default), an internal Jackson ObjectMapper is ued for serialization/deserialization.
+     * @param customItemSerializer the custom item serializer for this operation
+     * @return  the CosmosItemRequestOptions.
+     */
+    public CosmosBatchRequestOptions setCustomItemSerializer(CosmosItemSerializer customItemSerializer) {
+        this.customSerializer = customItemSerializer;
+
+        return this;
+    }
+
+    /**
      * Gets the custom batch request options
      *
      * @return Map of custom request options
      */
     Map<String, String> getHeaders() {
         return this.customOptions;
+    }
+
+    /**
+     * Sets the custom ids.
+     *
+     * @param keywordIdentifiers the custom ids.
+     * @return the current request options.
+     */
+    public CosmosBatchRequestOptions setKeywordIdentifiers(Set<String> keywordIdentifiers) {
+        if (keywordIdentifiers != null) {
+            this.keywordIdentifiers = Collections.unmodifiableSet(keywordIdentifiers);
+        } else {
+            this.keywordIdentifiers = EMPTY_KEYWORD_IDENTIFIERS;
+        }
+        return this;
+    }
+
+    /**
+     * Gets the custom ids.
+     *
+     * @return the custom ids.
+     */
+    public Set<String> getKeywordIdentifiers() {
+        return keywordIdentifiers;
+    }
+
+    CosmosBatchRequestOptions setThroughputControlGroupName(String throughputControlGroupName) {
+        this.throughputControlGroupName = throughputControlGroupName;
+        return this;
+    }
+
+    CosmosBatchRequestOptions setEndToEndOperationLatencyPolicyConfig(CosmosEndToEndOperationLatencyPolicyConfig e2ePolicy) {
+        this.e2ePolicy = e2ePolicy;
+        return this;
+    }
+
+    CosmosBatchRequestOptions setOperationContextAndListenerTuple(OperationContextAndListenerTuple operationContextAndListenerTuple) {
+        this.operationContextAndListenerTuple = operationContextAndListenerTuple;
+        return this;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -157,9 +282,9 @@ public final class CosmosBatchRequestOptions {
                 }
 
                 @Override
-                public CosmosBatchRequestOptions setHeader(CosmosBatchRequestOptions cosmosItemRequestOptions,
+                public CosmosBatchRequestOptions setHeader(CosmosBatchRequestOptions cosmosBatchRequestOptions,
                                                            String name, String value) {
-                    return cosmosItemRequestOptions.setHeader(name, value);
+                    return cosmosBatchRequestOptions.setHeader(name, value);
                 }
 
                 @Override
@@ -168,9 +293,44 @@ public final class CosmosBatchRequestOptions {
                 }
 
                 @Override
-                public List<String> getExcludeRegions(CosmosBatchRequestOptions cosmosBatchRequestOptions) {
-                    return cosmosBatchRequestOptions.excludeRegions;
+                public CosmosBatchRequestOptions clone(CosmosBatchRequestOptions toBeCloned) {
+                    return new CosmosBatchRequestOptions(toBeCloned);
                 }
+
+              @Override
+              public CosmosBatchRequestOptions setThroughputControlGroupName(
+                CosmosBatchRequestOptions cosmosBatchRequestOptions,
+                String throughputControlGroupName) {
+                return cosmosBatchRequestOptions.setThroughputControlGroupName(throughputControlGroupName);
+              }
+
+              @Override
+              public CosmosBatchRequestOptions setEndToEndOperationLatencyPolicyConfig(
+                CosmosBatchRequestOptions cosmosBatchRequestOptions,
+                CosmosEndToEndOperationLatencyPolicyConfig e2ePolicy) {
+                return cosmosBatchRequestOptions.setEndToEndOperationLatencyPolicyConfig(e2ePolicy);
+              }
+
+              @Override
+              public CosmosBatchRequestOptions setOperationContextAndListenerTuple(
+                CosmosBatchRequestOptions cosmosBatchRequestOptions,
+                OperationContextAndListenerTuple operationContextAndListenerTuple) {
+                return cosmosBatchRequestOptions.setOperationContextAndListenerTuple(operationContextAndListenerTuple);
+              }
+
+                @Override
+                public CosmosBatchRequestOptions setDisableRetryForThrottledBatchRequest(
+                    CosmosBatchRequestOptions cosmosBatchRequestOptions,
+                    boolean disableRetryForThrottledBatchRequest) {
+                    return cosmosBatchRequestOptions.setDisableRetryForThrottledBatchRequest(disableRetryForThrottledBatchRequest);
+                }
+
+                @Override
+                public boolean shouldDisableRetryForThrottledBatchRequest(CosmosBatchRequestOptions cosmosBatchRequestOptions) {
+                    return cosmosBatchRequestOptions.shouldDisableRetryForThrottledBatchRequest();
+                }
+
+
             }
         );
     }

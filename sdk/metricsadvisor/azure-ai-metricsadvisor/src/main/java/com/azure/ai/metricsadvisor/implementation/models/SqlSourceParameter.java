@@ -5,41 +5,54 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The SqlSourceParameter model. */
+/**
+ * The SqlSourceParameter model.
+ */
 @Fluent
-public final class SqlSourceParameter {
+public final class SqlSourceParameter implements JsonSerializable<SqlSourceParameter> {
     /*
      * The connection string of this database
      */
-    @JsonProperty(value = "connectionString")
+    @Generated
     private String connectionString;
 
     /*
      * The script to query this database
      */
-    @JsonProperty(value = "query", required = true)
+    @Generated
     private String query;
 
-    /** Creates an instance of SqlSourceParameter class. */
-    public SqlSourceParameter() {}
+    /**
+     * Creates an instance of SqlSourceParameter class.
+     */
+    @Generated
+    public SqlSourceParameter() {
+    }
 
     /**
      * Get the connectionString property: The connection string of this database.
-     *
+     * 
      * @return the connectionString value.
      */
+    @Generated
     public String getConnectionString() {
         return this.connectionString;
     }
 
     /**
      * Set the connectionString property: The connection string of this database.
-     *
+     * 
      * @param connectionString the connectionString value to set.
      * @return the SqlSourceParameter object itself.
      */
+    @Generated
     public SqlSourceParameter setConnectionString(String connectionString) {
         this.connectionString = connectionString;
         return this;
@@ -47,21 +60,65 @@ public final class SqlSourceParameter {
 
     /**
      * Get the query property: The script to query this database.
-     *
+     * 
      * @return the query value.
      */
+    @Generated
     public String getQuery() {
         return this.query;
     }
 
     /**
      * Set the query property: The script to query this database.
-     *
+     * 
      * @param query the query value to set.
      * @return the SqlSourceParameter object itself.
      */
+    @Generated
     public SqlSourceParameter setQuery(String query) {
         this.query = query;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("query", this.query);
+        jsonWriter.writeStringField("connectionString", this.connectionString);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SqlSourceParameter from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SqlSourceParameter if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SqlSourceParameter.
+     */
+    @Generated
+    public static SqlSourceParameter fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SqlSourceParameter deserializedSqlSourceParameter = new SqlSourceParameter();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("query".equals(fieldName)) {
+                    deserializedSqlSourceParameter.query = reader.getString();
+                } else if ("connectionString".equals(fieldName)) {
+                    deserializedSqlSourceParameter.connectionString = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSqlSourceParameter;
+        });
     }
 }

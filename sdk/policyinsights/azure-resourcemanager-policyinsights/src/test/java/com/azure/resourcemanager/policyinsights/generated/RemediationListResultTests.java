@@ -6,20 +6,17 @@ package com.azure.resourcemanager.policyinsights.generated;
 
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.policyinsights.models.RemediationListResult;
-import org.junit.jupiter.api.Test;
 
 public final class RemediationListResultTests {
-    @Test
-    public void testDeserialize() {
-        RemediationListResult model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"properties\":{\"policyAssignmentId\":\"lfp\",\"policyDefinitionReferenceId\":\"s\",\"resourceDiscoveryMode\":\"ExistingNonCompliant\",\"provisioningState\":\"qux\",\"createdOn\":\"2021-08-27T02:48:22Z\",\"lastUpdatedOn\":\"2021-10-09T04:02:02Z\",\"statusMessage\":\"aoyfhrtxilnerkuj\",\"correlationId\":\"vlejuvfqa\",\"resourceCount\":1479576759,\"parallelDeployments\":1242969129},\"id\":\"kcprbnw\",\"name\":\"xgjvtbv\",\"type\":\"ysszdnrujqguh\"},{\"properties\":{\"policyAssignmentId\":\"uqfprwzw\",\"policyDefinitionReferenceId\":\"g\",\"resourceDiscoveryMode\":\"ExistingNonCompliant\",\"provisioningState\":\"wu\",\"createdOn\":\"2021-10-03T15:35:19Z\",\"lastUpdatedOn\":\"2021-02-12T15:23:48Z\",\"statusMessage\":\"izuckyfihrfidfvz\",\"correlationId\":\"zuhtymwisdkfthwx\",\"resourceCount\":61317803,\"parallelDeployments\":6933169},\"id\":\"opvkmijcm\",\"name\":\"xdcu\",\"type\":\"uf\"}],\"nextLink\":\"pymzidnsezcxtbzs\"}")
-                .toObject(RemediationListResult.class);
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        RemediationListResult model = BinaryData.fromString(
+            "{\"value\":[{\"properties\":{\"policyAssignmentId\":\"ljavbqid\",\"policyDefinitionReferenceId\":\"ajzyul\",\"resourceDiscoveryMode\":\"ExistingNonCompliant\",\"provisioningState\":\"jkrlkhbzhfepg\",\"createdOn\":\"2021-05-11T01:37:32Z\",\"lastUpdatedOn\":\"2021-01-12T19:50:26Z\",\"filters\":{\"locations\":[\"c\",\"scpai\",\"rhhbcs\",\"l\"],\"resourceIds\":[\"a\",\"tjaodxobnb\"]},\"deploymentStatus\":{\"totalDeployments\":515992017,\"successfulDeployments\":397818750,\"failedDeployments\":54322845},\"statusMessage\":\"jionpimexgstxgc\",\"correlationId\":\"dg\",\"resourceCount\":1860899173,\"parallelDeployments\":37175495,\"failureThreshold\":{\"percentage\":45.24782}},\"id\":\"wzrlovmclwhij\",\"name\":\"oejctbzaqsqsy\",\"type\":\"bkbfkgukdkex\"},{\"properties\":{\"policyAssignmentId\":\"ofmx\",\"policyDefinitionReferenceId\":\"c\",\"resourceDiscoveryMode\":\"ExistingNonCompliant\",\"provisioningState\":\"ddtocjjxhvp\",\"createdOn\":\"2021-08-27T12:13:52Z\",\"lastUpdatedOn\":\"2021-11-28T20:33:32Z\",\"filters\":{\"locations\":[\"xibqeojnx\",\"bzv\"],\"resourceIds\":[\"t\",\"ndei\",\"btwnpzaoqvuhrhcf\",\"cyddglmjthjqk\"]},\"deploymentStatus\":{\"totalDeployments\":1725264760,\"successfulDeployments\":1516038621,\"failedDeployments\":775876395},\"statusMessage\":\"ciwqvhk\",\"correlationId\":\"xuigdtopbobj\",\"resourceCount\":493996268,\"parallelDeployments\":13446913,\"failureThreshold\":{\"percentage\":0.8249521}},\"id\":\"a\",\"name\":\"hrzayvvtpgvdf\",\"type\":\"iotkftutqxl\"},{\"properties\":{\"policyAssignmentId\":\"lefgugnxk\",\"policyDefinitionReferenceId\":\"dqmidtt\",\"resourceDiscoveryMode\":\"ExistingNonCompliant\",\"provisioningState\":\"qdrabhjybigehoqf\",\"createdOn\":\"2021-09-11T07:53:16Z\",\"lastUpdatedOn\":\"2021-05-06T05:02:34Z\",\"filters\":{\"locations\":[\"ktzlcuiywg\"],\"resourceIds\":[\"gndrvynh\",\"gpphrcgyn\",\"ocpecfvmmco\",\"fsxlzevgbmqjqa\"]},\"deploymentStatus\":{\"totalDeployments\":138991761,\"successfulDeployments\":1896643633,\"failedDeployments\":1275704162},\"statusMessage\":\"lzu\",\"correlationId\":\"c\",\"resourceCount\":1704525857,\"parallelDeployments\":1351999022,\"failureThreshold\":{\"percentage\":36.531948}},\"id\":\"ionle\",\"name\":\"x\",\"type\":\"tqgtzxdpnqbqq\"},{\"properties\":{\"policyAssignmentId\":\"jfeallnwsub\",\"policyDefinitionReferenceId\":\"njampm\",\"resourceDiscoveryMode\":\"ExistingNonCompliant\",\"provisioningState\":\"scxaq\",\"createdOn\":\"2021-09-09T16:13:56Z\",\"lastUpdatedOn\":\"2021-03-15T17:36Z\",\"filters\":{\"locations\":[\"nqvpkvlrxnje\"],\"resourceIds\":[\"ipheoflokeyyien\",\"bdlwtgrhpdjpj\",\"masxazjpqyegu\",\"lhbxxhejjzzvdud\"]},\"deploymentStatus\":{\"totalDeployments\":1894973970,\"successfulDeployments\":1125077483,\"failedDeployments\":1742026379},\"statusMessage\":\"wmc\",\"correlationId\":\"pwlbjnpg\",\"resourceCount\":1146215181,\"parallelDeployments\":1348050771,\"failureThreshold\":{\"percentage\":1.3006687}},\"id\":\"nltyfsoppusuesnz\",\"name\":\"dejbavo\",\"type\":\"xzdmohctb\"}],\"nextLink\":\"udwxdndnvowguj\"}")
+            .toObject(RemediationListResult.class);
     }
 
-    @Test
-    public void testSerialize() {
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
         RemediationListResult model = new RemediationListResult();
         model = BinaryData.fromObject(model).toObject(RemediationListResult.class);
     }

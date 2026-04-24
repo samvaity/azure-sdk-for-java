@@ -8,13 +8,15 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of MigrationRecoveryPoints. */
+/**
+ * Resource collection API of MigrationRecoveryPoints.
+ */
 public interface MigrationRecoveryPoints {
     /**
      * Gets the recovery points for a migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -23,18 +25,14 @@ public interface MigrationRecoveryPoints {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the recovery points for a migration item as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<MigrationRecoveryPoint> listByReplicationMigrationItems(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName);
+    PagedIterable<MigrationRecoveryPoint> listByReplicationMigrationItems(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String migrationItemName);
 
     /**
      * Gets the recovery points for a migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -44,19 +42,14 @@ public interface MigrationRecoveryPoints {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the recovery points for a migration item as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<MigrationRecoveryPoint> listByReplicationMigrationItems(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        Context context);
+    PagedIterable<MigrationRecoveryPoint> listByReplicationMigrationItems(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String migrationItemName, Context context);
 
     /**
      * Gets a recovery point for a migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -67,20 +60,14 @@ public interface MigrationRecoveryPoints {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a recovery point for a migration item along with {@link Response}.
      */
-    Response<MigrationRecoveryPoint> getWithResponse(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        String migrationRecoveryPointName,
-        Context context);
+    Response<MigrationRecoveryPoint> getWithResponse(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, String migrationRecoveryPointName, Context context);
 
     /**
      * Gets a recovery point for a migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -90,11 +77,6 @@ public interface MigrationRecoveryPoints {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a recovery point for a migration item.
      */
-    MigrationRecoveryPoint get(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        String migrationRecoveryPointName);
+    MigrationRecoveryPoint get(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, String migrationRecoveryPointName);
 }

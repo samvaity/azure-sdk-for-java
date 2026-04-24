@@ -5,30 +5,56 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity ODBC sink. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("OdbcSink")
+/**
+ * A copy activity ODBC sink.
+ */
 @Fluent
 public final class OdbcSink extends CopySink {
     /*
+     * Copy sink type.
+     */
+    @Generated
+    private String type = "OdbcSink";
+
+    /*
      * A query to execute before starting the copy. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "preCopyScript")
+    @Generated
     private Object preCopyScript;
 
-    /** Creates an instance of OdbcSink class. */
-    public OdbcSink() {}
+    /**
+     * Creates an instance of OdbcSink class.
+     */
+    @Generated
+    public OdbcSink() {
+    }
+
+    /**
+     * Get the type property: Copy sink type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the preCopyScript property: A query to execute before starting the copy. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the preCopyScript value.
      */
+    @Generated
     public Object getPreCopyScript() {
         return this.preCopyScript;
     }
@@ -36,47 +62,142 @@ public final class OdbcSink extends CopySink {
     /**
      * Set the preCopyScript property: A query to execute before starting the copy. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param preCopyScript the preCopyScript value to set.
      * @return the OdbcSink object itself.
      */
+    @Generated
     public OdbcSink setPreCopyScript(Object preCopyScript) {
         this.preCopyScript = preCopyScript;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public OdbcSink setWriteBatchSize(Object writeBatchSize) {
         super.setWriteBatchSize(writeBatchSize);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public OdbcSink setWriteBatchTimeout(Object writeBatchTimeout) {
         super.setWriteBatchTimeout(writeBatchTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public OdbcSink setSinkRetryCount(Object sinkRetryCount) {
         super.setSinkRetryCount(sinkRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public OdbcSink setSinkRetryWait(Object sinkRetryWait) {
         super.setSinkRetryWait(sinkRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public OdbcSink setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getWriteBatchSize() != null) {
+            jsonWriter.writeUntypedField("writeBatchSize", getWriteBatchSize());
+        }
+        if (getWriteBatchTimeout() != null) {
+            jsonWriter.writeUntypedField("writeBatchTimeout", getWriteBatchTimeout());
+        }
+        if (getSinkRetryCount() != null) {
+            jsonWriter.writeUntypedField("sinkRetryCount", getSinkRetryCount());
+        }
+        if (getSinkRetryWait() != null) {
+            jsonWriter.writeUntypedField("sinkRetryWait", getSinkRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.preCopyScript != null) {
+            jsonWriter.writeUntypedField("preCopyScript", this.preCopyScript);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of OdbcSink from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of OdbcSink if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IOException If an error occurs while reading the OdbcSink.
+     */
+    @Generated
+    public static OdbcSink fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            OdbcSink deserializedOdbcSink = new OdbcSink();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("writeBatchSize".equals(fieldName)) {
+                    deserializedOdbcSink.setWriteBatchSize(reader.readUntyped());
+                } else if ("writeBatchTimeout".equals(fieldName)) {
+                    deserializedOdbcSink.setWriteBatchTimeout(reader.readUntyped());
+                } else if ("sinkRetryCount".equals(fieldName)) {
+                    deserializedOdbcSink.setSinkRetryCount(reader.readUntyped());
+                } else if ("sinkRetryWait".equals(fieldName)) {
+                    deserializedOdbcSink.setSinkRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedOdbcSink.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedOdbcSink.type = reader.getString();
+                } else if ("preCopyScript".equals(fieldName)) {
+                    deserializedOdbcSink.preCopyScript = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedOdbcSink.setAdditionalProperties(additionalProperties);
+
+            return deserializedOdbcSink;
+        });
     }
 }

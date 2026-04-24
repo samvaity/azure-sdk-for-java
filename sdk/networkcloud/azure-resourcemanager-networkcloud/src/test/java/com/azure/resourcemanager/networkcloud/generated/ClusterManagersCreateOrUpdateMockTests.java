@@ -6,15 +6,15 @@ package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.networkcloud.NetworkCloudManager;
 import com.azure.resourcemanager.networkcloud.models.ClusterManager;
 import com.azure.resourcemanager.networkcloud.models.ManagedResourceGroupConfiguration;
-import java.nio.ByteBuffer;
+import com.azure.resourcemanager.networkcloud.models.ManagedServiceIdentity;
+import com.azure.resourcemanager.networkcloud.models.ManagedServiceIdentityType;
+import com.azure.resourcemanager.networkcloud.models.UserAssignedIdentity;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -22,72 +22,51 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class ClusterManagersCreateOrUpdateMockTests {
     @Test
     public void testCreateOrUpdate() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"etag\":\"jzudrtpzk\",\"identity\":{\"principalId\":\"19c209e9-2462-4760-8fcf-146cae39fbf6\",\"tenantId\":\"acdb03ff-10f1-4595-a7a8-ec545fc29e30\",\"type\":\"SystemAssigned,UserAssigned\",\"userAssignedIdentities\":{\"zzqrhmngqbedy\":{\"principalId\":\"c828392d-3a1a-42c3-b786-83ca1ad92cd5\",\"clientId\":\"cc6d702b-ad32-423c-bfb1-802d174e1a19\"},\"rzwnyk\":{\"principalId\":\"b02a034a-4cb1-4b5f-b67f-6786b63622ae\",\"clientId\":\"43bde164-3d4c-4738-8d89-bf0701473625\"},\"jch\":{\"principalId\":\"b5e23b4a-ece9-45f5-926a-99abde2da6b1\",\"clientId\":\"cddfa36b-fd4f-4f3d-b9b7-43aa816a2a63\"}}},\"properties\":{\"analyticsWorkspaceId\":\"mpwctoflds\",\"availabilityZones\":[\"dhztxkbr\"],\"clusterVersions\":[{\"supportExpiryDate\":\"wjiyewhfjsrwq\",\"targetClusterVersion\":\"etfgcwvrrmdqntyc\"},{\"supportExpiryDate\":\"wthv\",\"targetClusterVersion\":\"xgnuyeamcmhu\"}],\"detailedStatus\":\"Available\",\"detailedStatusMessage\":\"cehokw\",\"fabricControllerId\":\"pqtwloesqrggvrb\",\"managedResourceGroupConfiguration\":{\"location\":\"ukoila\",\"name\":\"duwjleipjlhwy\"},\"managerExtendedLocation\":{\"name\":\"zr\",\"type\":\"z\"},\"provisioningState\":\"Succeeded\",\"vmSize\":\"kkwhbgxvellvulnx\"},\"location\":\"nitmujdtvmclyymf\",\"tags\":{\"xfzuvrzmzqmzj\":\"jpddn\",\"pv\":\"rb\",\"pglaoh\":\"mdyfoebojtj\"},\"id\":\"qk\",\"name\":\"jtnqjil\",\"type\":\"ywkdcwmqsy\"}";
 
-        String responseStr =
-            "{\"properties\":{\"analyticsWorkspaceId\":\"linhmdptysprqs\",\"availabilityZones\":[\"xojpslsvjgp\",\"iufiqwo\",\"xqvapcohh\"],\"clusterVersions\":[],\"detailedStatus\":\"Provisioning\",\"detailedStatusMessage\":\"oj\",\"fabricControllerId\":\"cxzrzdcgdzben\",\"managedResourceGroupConfiguration\":{\"location\":\"cawetzqddt\",\"name\":\"fljhznamtua\"},\"managerExtendedLocation\":{\"name\":\"zwcjjncqtj\",\"type\":\"mizvgbgatzuuvbx\"},\"provisioningState\":\"Succeeded\",\"vmSize\":\"bwggahtt\"},\"location\":\"swvajqfu\",\"tags\":{\"unwqr\":\"joqza\"},\"id\":\"zfrgqhaohcm\",\"name\":\"uocnjrohmbpyr\",\"type\":\"xameblydyvkfkm\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        NetworkCloudManager manager = NetworkCloudManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        ClusterManager response = manager.clusterManagers()
+            .define("uzowpuohdkcpr")
+            .withRegion("ekrdr")
+            .withExistingResourceGroup("flanfkgxsyao")
+            .withFabricControllerId("wohpmwhqnucs")
+            .withTags(mapOf("yehqbeivdlhydwb", "olr", "mpathubtah", "bfgrlpunytjlkes"))
+            .withIdentity(new ManagedServiceIdentity().withType(ManagedServiceIdentityType.SYSTEM_ASSIGNED)
+                .withUserAssignedIdentities(mapOf("mqrud", new UserAssignedIdentity(), "cbfzmc",
+                    new UserAssignedIdentity(), "fhi", new UserAssignedIdentity())))
+            .withAnalyticsWorkspaceId("nmfbc")
+            .withAvailabilityZones(Arrays.asList("ktkrumzuedky", "bfvxovqkxiuxq", "gvqrnhyhlwcj", "qggjhf"))
+            .withManagedResourceGroupConfiguration(
+                new ManagedResourceGroupConfiguration().withLocation("sidsjtd").withName("bninjgazlsvbzfc"))
+            .withVmSize("ciklh")
+            .withIfMatch("gravaqogfkbebauz")
+            .withIfNoneMatch("qbtxxwpf")
+            .create();
 
-        NetworkCloudManager manager =
-            NetworkCloudManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        ClusterManager response =
-            manager
-                .clusterManagers()
-                .define("s")
-                .withRegion("mjel")
-                .withExistingResourceGroup("a")
-                .withFabricControllerId("oawjqoyueay")
-                .withTags(mapOf("kjopwbeon", "cigeleohdbvqvw", "soqfyiaseqchkrt", "lkwzdqybxceakxcp"))
-                .withAnalyticsWorkspaceId("xrblmliowxihs")
-                .withAvailabilityZones(Arrays.asList("wqagnepzwa", "lsbs", "qqqagwwrxaomzi"))
-                .withManagedResourceGroupConfiguration(
-                    new ManagedResourceGroupConfiguration().withLocation("cmsp").withName("yrrueqth"))
-                .withVmSize("xubmdnafcbqw")
-                .create();
-
-        Assertions.assertEquals("swvajqfu", response.location());
-        Assertions.assertEquals("joqza", response.tags().get("unwqr"));
-        Assertions.assertEquals("linhmdptysprqs", response.analyticsWorkspaceId());
-        Assertions.assertEquals("xojpslsvjgp", response.availabilityZones().get(0));
-        Assertions.assertEquals("cxzrzdcgdzben", response.fabricControllerId());
-        Assertions.assertEquals("cawetzqddt", response.managedResourceGroupConfiguration().location());
-        Assertions.assertEquals("fljhznamtua", response.managedResourceGroupConfiguration().name());
-        Assertions.assertEquals("bwggahtt", response.vmSize());
+        Assertions.assertEquals("nitmujdtvmclyymf", response.location());
+        Assertions.assertEquals("jpddn", response.tags().get("xfzuvrzmzqmzj"));
+        Assertions.assertEquals(ManagedServiceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED, response.identity().type());
+        Assertions.assertEquals("mpwctoflds", response.analyticsWorkspaceId());
+        Assertions.assertEquals("dhztxkbr", response.availabilityZones().get(0));
+        Assertions.assertEquals("pqtwloesqrggvrb", response.fabricControllerId());
+        Assertions.assertEquals("ukoila", response.managedResourceGroupConfiguration().location());
+        Assertions.assertEquals("duwjleipjlhwy", response.managedResourceGroupConfiguration().name());
+        Assertions.assertEquals("kkwhbgxvellvulnx", response.vmSize());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

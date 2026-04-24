@@ -6,7 +6,12 @@ package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.ai.textanalytics.models.HealthcareEntityRelationType;
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -14,34 +19,39 @@ import java.util.List;
  * within the relation context.
  */
 @Fluent
-public final class HealthcareRelation {
+public final class HealthcareRelation implements JsonSerializable<HealthcareRelation> {
     /*
      * Type of relation. Examples include: `DosageOfMedication` or 'FrequencyOfMedication', etc.
      */
-    @JsonProperty(value = "relationType", required = true)
+    @Generated
     private HealthcareEntityRelationType relationType;
 
     /*
      * Confidence score between 0 and 1 of the extracted relation.
      */
-    @JsonProperty(value = "confidenceScore")
+    @Generated
     private Double confidenceScore;
 
     /*
      * The entities in the relation.
      */
-    @JsonProperty(value = "entities", required = true)
+    @Generated
     private List<HealthcareRelationEntity> entities;
 
-    /** Creates an instance of HealthcareRelation class. */
-    public HealthcareRelation() {}
+    /**
+     * Creates an instance of HealthcareRelation class.
+     */
+    @Generated
+    public HealthcareRelation() {
+    }
 
     /**
      * Get the relationType property: Type of relation. Examples include: `DosageOfMedication` or
      * 'FrequencyOfMedication', etc.
-     *
+     * 
      * @return the relationType value.
      */
+    @Generated
     public HealthcareEntityRelationType getRelationType() {
         return this.relationType;
     }
@@ -49,10 +59,11 @@ public final class HealthcareRelation {
     /**
      * Set the relationType property: Type of relation. Examples include: `DosageOfMedication` or
      * 'FrequencyOfMedication', etc.
-     *
+     * 
      * @param relationType the relationType value to set.
      * @return the HealthcareRelation object itself.
      */
+    @Generated
     public HealthcareRelation setRelationType(HealthcareEntityRelationType relationType) {
         this.relationType = relationType;
         return this;
@@ -60,19 +71,21 @@ public final class HealthcareRelation {
 
     /**
      * Get the confidenceScore property: Confidence score between 0 and 1 of the extracted relation.
-     *
+     * 
      * @return the confidenceScore value.
      */
+    @Generated
     public Double getConfidenceScore() {
         return this.confidenceScore;
     }
 
     /**
      * Set the confidenceScore property: Confidence score between 0 and 1 of the extracted relation.
-     *
+     * 
      * @param confidenceScore the confidenceScore value to set.
      * @return the HealthcareRelation object itself.
      */
+    @Generated
     public HealthcareRelation setConfidenceScore(Double confidenceScore) {
         this.confidenceScore = confidenceScore;
         return this;
@@ -80,21 +93,71 @@ public final class HealthcareRelation {
 
     /**
      * Get the entities property: The entities in the relation.
-     *
+     * 
      * @return the entities value.
      */
+    @Generated
     public List<HealthcareRelationEntity> getEntities() {
         return this.entities;
     }
 
     /**
      * Set the entities property: The entities in the relation.
-     *
+     * 
      * @param entities the entities value to set.
      * @return the HealthcareRelation object itself.
      */
+    @Generated
     public HealthcareRelation setEntities(List<HealthcareRelationEntity> entities) {
         this.entities = entities;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("relationType", this.relationType == null ? null : this.relationType.toString());
+        jsonWriter.writeArrayField("entities", this.entities, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeNumberField("confidenceScore", this.confidenceScore);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of HealthcareRelation from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of HealthcareRelation if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the HealthcareRelation.
+     */
+    @Generated
+    public static HealthcareRelation fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            HealthcareRelation deserializedHealthcareRelation = new HealthcareRelation();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("relationType".equals(fieldName)) {
+                    deserializedHealthcareRelation.relationType
+                        = HealthcareEntityRelationType.fromString(reader.getString());
+                } else if ("entities".equals(fieldName)) {
+                    List<HealthcareRelationEntity> entities
+                        = reader.readArray(reader1 -> HealthcareRelationEntity.fromJson(reader1));
+                    deserializedHealthcareRelation.entities = entities;
+                } else if ("confidenceScore".equals(fieldName)) {
+                    deserializedHealthcareRelation.confidenceScore = reader.getNullable(JsonReader::getDouble);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedHealthcareRelation;
+        });
     }
 }

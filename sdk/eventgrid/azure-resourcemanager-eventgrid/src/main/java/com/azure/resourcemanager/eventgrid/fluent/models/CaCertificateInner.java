@@ -7,32 +7,52 @@ package com.azure.resourcemanager.eventgrid.fluent.models;
 import com.azure.core.annotation.Fluent;
 import com.azure.core.management.ProxyResource;
 import com.azure.core.management.SystemData;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.eventgrid.models.CaCertificateProvisioningState;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.time.OffsetDateTime;
 
-/** The CA Certificate resource. */
+/**
+ * The CA Certificate resource.
+ */
 @Fluent
 public final class CaCertificateInner extends ProxyResource {
     /*
      * The properties of CA certificate.
      */
-    @JsonProperty(value = "properties")
     private CaCertificateProperties innerProperties;
 
     /*
-     * The system metadata relating to the CaCertificate resource.
+     * The system metadata relating to the Event Grid resource.
      */
-    @JsonProperty(value = "systemData", access = JsonProperty.Access.WRITE_ONLY)
     private SystemData systemData;
 
-    /** Creates an instance of CaCertificateInner class. */
+    /*
+     * The type of the resource.
+     */
+    private String type;
+
+    /*
+     * The name of the resource.
+     */
+    private String name;
+
+    /*
+     * Fully qualified resource Id for the resource.
+     */
+    private String id;
+
+    /**
+     * Creates an instance of CaCertificateInner class.
+     */
     public CaCertificateInner() {
     }
 
     /**
      * Get the innerProperties property: The properties of CA certificate.
-     *
+     * 
      * @return the innerProperties value.
      */
     private CaCertificateProperties innerProperties() {
@@ -40,8 +60,8 @@ public final class CaCertificateInner extends ProxyResource {
     }
 
     /**
-     * Get the systemData property: The system metadata relating to the CaCertificate resource.
-     *
+     * Get the systemData property: The system metadata relating to the Event Grid resource.
+     * 
      * @return the systemData value.
      */
     public SystemData systemData() {
@@ -49,8 +69,38 @@ public final class CaCertificateInner extends ProxyResource {
     }
 
     /**
+     * Get the type property: The type of the resource.
+     * 
+     * @return the type value.
+     */
+    @Override
+    public String type() {
+        return this.type;
+    }
+
+    /**
+     * Get the name property: The name of the resource.
+     * 
+     * @return the name value.
+     */
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    /**
+     * Get the id property: Fully qualified resource Id for the resource.
+     * 
+     * @return the id value.
+     */
+    @Override
+    public String id() {
+        return this.id;
+    }
+
+    /**
      * Get the description property: Description for the CA Certificate resource.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -59,7 +109,7 @@ public final class CaCertificateInner extends ProxyResource {
 
     /**
      * Set the description property: Description for the CA Certificate resource.
-     *
+     * 
      * @param description the description value to set.
      * @return the CaCertificateInner object itself.
      */
@@ -73,7 +123,7 @@ public final class CaCertificateInner extends ProxyResource {
 
     /**
      * Get the encodedCertificate property: Base64 encoded PEM (Privacy Enhanced Mail) format certificate data.
-     *
+     * 
      * @return the encodedCertificate value.
      */
     public String encodedCertificate() {
@@ -82,7 +132,7 @@ public final class CaCertificateInner extends ProxyResource {
 
     /**
      * Set the encodedCertificate property: Base64 encoded PEM (Privacy Enhanced Mail) format certificate data.
-     *
+     * 
      * @param encodedCertificate the encodedCertificate value to set.
      * @return the CaCertificateInner object itself.
      */
@@ -96,7 +146,7 @@ public final class CaCertificateInner extends ProxyResource {
 
     /**
      * Get the issueTimeInUtc property: Certificate issue time in UTC. This is a read-only field.
-     *
+     * 
      * @return the issueTimeInUtc value.
      */
     public OffsetDateTime issueTimeInUtc() {
@@ -105,7 +155,7 @@ public final class CaCertificateInner extends ProxyResource {
 
     /**
      * Get the expiryTimeInUtc property: Certificate expiry time in UTC. This is a read-only field.
-     *
+     * 
      * @return the expiryTimeInUtc value.
      */
     public OffsetDateTime expiryTimeInUtc() {
@@ -114,7 +164,7 @@ public final class CaCertificateInner extends ProxyResource {
 
     /**
      * Get the provisioningState property: Provisioning state of the CA Certificate resource.
-     *
+     * 
      * @return the provisioningState value.
      */
     public CaCertificateProvisioningState provisioningState() {
@@ -123,12 +173,57 @@ public final class CaCertificateInner extends ProxyResource {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (innerProperties() != null) {
             innerProperties().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("properties", this.innerProperties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CaCertificateInner from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CaCertificateInner if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the CaCertificateInner.
+     */
+    public static CaCertificateInner fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CaCertificateInner deserializedCaCertificateInner = new CaCertificateInner();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedCaCertificateInner.id = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedCaCertificateInner.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedCaCertificateInner.type = reader.getString();
+                } else if ("properties".equals(fieldName)) {
+                    deserializedCaCertificateInner.innerProperties = CaCertificateProperties.fromJson(reader);
+                } else if ("systemData".equals(fieldName)) {
+                    deserializedCaCertificateInner.systemData = SystemData.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedCaCertificateInner;
+        });
     }
 }

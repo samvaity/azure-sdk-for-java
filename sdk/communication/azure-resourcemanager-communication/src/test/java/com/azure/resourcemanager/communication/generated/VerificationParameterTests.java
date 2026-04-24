@@ -12,15 +12,15 @@ import org.junit.jupiter.api.Assertions;
 public final class VerificationParameterTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        VerificationParameter model =
-            BinaryData.fromString("{\"verificationType\":\"SPF\"}").toObject(VerificationParameter.class);
-        Assertions.assertEquals(VerificationType.SPF, model.verificationType());
+        VerificationParameter model
+            = BinaryData.fromString("{\"verificationType\":\"DMARC\"}").toObject(VerificationParameter.class);
+        Assertions.assertEquals(VerificationType.DMARC, model.verificationType());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        VerificationParameter model = new VerificationParameter().withVerificationType(VerificationType.SPF);
+        VerificationParameter model = new VerificationParameter().withVerificationType(VerificationType.DMARC);
         model = BinaryData.fromObject(model).toObject(VerificationParameter.class);
-        Assertions.assertEquals(VerificationType.SPF, model.verificationType());
+        Assertions.assertEquals(VerificationType.DMARC, model.verificationType());
     }
 }

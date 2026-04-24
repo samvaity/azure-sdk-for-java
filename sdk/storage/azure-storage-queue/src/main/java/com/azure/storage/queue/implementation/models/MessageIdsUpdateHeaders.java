@@ -5,167 +5,127 @@
 package com.azure.storage.queue.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.util.DateTimeRfc1123;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.time.OffsetDateTime;
 
-/** The MessageIdsUpdateHeaders model. */
-@JacksonXmlRootElement(localName = "null")
+/**
+ * The MessageIdsUpdateHeaders model.
+ */
 @Fluent
 public final class MessageIdsUpdateHeaders {
     /*
-     * The x-ms-version property.
-     */
-    @JsonProperty(value = "x-ms-version")
-    private String xMsVersion;
-
-    /*
-     * The x-ms-time-next-visible property.
-     */
-    @JsonProperty(value = "x-ms-time-next-visible")
-    private DateTimeRfc1123 xMsTimeNextVisible;
-
-    /*
      * The x-ms-request-id property.
      */
-    @JsonProperty(value = "x-ms-request-id")
+    @Generated
     private String xMsRequestId;
 
     /*
-     * The x-ms-popreceipt property.
+     * The x-ms-version property.
      */
-    @JsonProperty(value = "x-ms-popreceipt")
-    private String xMsPopreceipt;
+    @Generated
+    private String xMsVersion;
 
     /*
      * The Date property.
      */
-    @JsonProperty(value = "Date")
+    @Generated
     private DateTimeRfc1123 date;
+
+    /*
+     * The x-ms-popreceipt property.
+     */
+    @Generated
+    private String xMsPopreceipt;
+
+    /*
+     * The x-ms-time-next-visible property.
+     */
+    @Generated
+    private DateTimeRfc1123 xMsTimeNextVisible;
 
     private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
 
-    private static final HttpHeaderName X_MS_TIME_NEXT_VISIBLE = HttpHeaderName.fromString("x-ms-time-next-visible");
-
-    private static final HttpHeaderName X_MS_REQUEST_ID = HttpHeaderName.fromString("x-ms-request-id");
-
     private static final HttpHeaderName X_MS_POPRECEIPT = HttpHeaderName.fromString("x-ms-popreceipt");
+
+    private static final HttpHeaderName X_MS_TIME_NEXT_VISIBLE = HttpHeaderName.fromString("x-ms-time-next-visible");
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of MessageIdsUpdateHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public MessageIdsUpdateHeaders(HttpHeaders rawHeaders) {
+        this.xMsRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_REQUEST_ID);
         this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
-        String xMsTimeNextVisible = rawHeaders.getValue(X_MS_TIME_NEXT_VISIBLE);
-        if (xMsTimeNextVisible != null) {
-            this.xMsTimeNextVisible = new DateTimeRfc1123(xMsTimeNextVisible);
-        }
-        this.xMsRequestId = rawHeaders.getValue(X_MS_REQUEST_ID);
-        this.xMsPopreceipt = rawHeaders.getValue(X_MS_POPRECEIPT);
         String date = rawHeaders.getValue(HttpHeaderName.DATE);
         if (date != null) {
             this.date = new DateTimeRfc1123(date);
-        }
-    }
-
-    /**
-     * Get the xMsVersion property: The x-ms-version property.
-     *
-     * @return the xMsVersion value.
-     */
-    public String getXMsVersion() {
-        return this.xMsVersion;
-    }
-
-    /**
-     * Set the xMsVersion property: The x-ms-version property.
-     *
-     * @param xMsVersion the xMsVersion value to set.
-     * @return the MessageIdsUpdateHeaders object itself.
-     */
-    public MessageIdsUpdateHeaders setXMsVersion(String xMsVersion) {
-        this.xMsVersion = xMsVersion;
-        return this;
-    }
-
-    /**
-     * Get the xMsTimeNextVisible property: The x-ms-time-next-visible property.
-     *
-     * @return the xMsTimeNextVisible value.
-     */
-    public OffsetDateTime getXMsTimeNextVisible() {
-        if (this.xMsTimeNextVisible == null) {
-            return null;
-        }
-        return this.xMsTimeNextVisible.getDateTime();
-    }
-
-    /**
-     * Set the xMsTimeNextVisible property: The x-ms-time-next-visible property.
-     *
-     * @param xMsTimeNextVisible the xMsTimeNextVisible value to set.
-     * @return the MessageIdsUpdateHeaders object itself.
-     */
-    public MessageIdsUpdateHeaders setXMsTimeNextVisible(OffsetDateTime xMsTimeNextVisible) {
-        if (xMsTimeNextVisible == null) {
-            this.xMsTimeNextVisible = null;
         } else {
-            this.xMsTimeNextVisible = new DateTimeRfc1123(xMsTimeNextVisible);
+            this.date = null;
         }
-        return this;
+        this.xMsPopreceipt = rawHeaders.getValue(X_MS_POPRECEIPT);
+        String xMsTimeNextVisible = rawHeaders.getValue(X_MS_TIME_NEXT_VISIBLE);
+        if (xMsTimeNextVisible != null) {
+            this.xMsTimeNextVisible = new DateTimeRfc1123(xMsTimeNextVisible);
+        } else {
+            this.xMsTimeNextVisible = null;
+        }
     }
 
     /**
      * Get the xMsRequestId property: The x-ms-request-id property.
-     *
+     * 
      * @return the xMsRequestId value.
      */
+    @Generated
     public String getXMsRequestId() {
         return this.xMsRequestId;
     }
 
     /**
      * Set the xMsRequestId property: The x-ms-request-id property.
-     *
+     * 
      * @param xMsRequestId the xMsRequestId value to set.
      * @return the MessageIdsUpdateHeaders object itself.
      */
+    @Generated
     public MessageIdsUpdateHeaders setXMsRequestId(String xMsRequestId) {
         this.xMsRequestId = xMsRequestId;
         return this;
     }
 
     /**
-     * Get the xMsPopreceipt property: The x-ms-popreceipt property.
-     *
-     * @return the xMsPopreceipt value.
+     * Get the xMsVersion property: The x-ms-version property.
+     * 
+     * @return the xMsVersion value.
      */
-    public String getXMsPopreceipt() {
-        return this.xMsPopreceipt;
+    @Generated
+    public String getXMsVersion() {
+        return this.xMsVersion;
     }
 
     /**
-     * Set the xMsPopreceipt property: The x-ms-popreceipt property.
-     *
-     * @param xMsPopreceipt the xMsPopreceipt value to set.
+     * Set the xMsVersion property: The x-ms-version property.
+     * 
+     * @param xMsVersion the xMsVersion value to set.
      * @return the MessageIdsUpdateHeaders object itself.
      */
-    public MessageIdsUpdateHeaders setXMsPopreceipt(String xMsPopreceipt) {
-        this.xMsPopreceipt = xMsPopreceipt;
+    @Generated
+    public MessageIdsUpdateHeaders setXMsVersion(String xMsVersion) {
+        this.xMsVersion = xMsVersion;
         return this;
     }
 
     /**
      * Get the date property: The Date property.
-     *
+     * 
      * @return the date value.
      */
+    @Generated
     public OffsetDateTime getDate() {
         if (this.date == null) {
             return null;
@@ -175,15 +135,67 @@ public final class MessageIdsUpdateHeaders {
 
     /**
      * Set the date property: The Date property.
-     *
+     * 
      * @param date the date value to set.
      * @return the MessageIdsUpdateHeaders object itself.
      */
+    @Generated
     public MessageIdsUpdateHeaders setDate(OffsetDateTime date) {
         if (date == null) {
             this.date = null;
         } else {
             this.date = new DateTimeRfc1123(date);
+        }
+        return this;
+    }
+
+    /**
+     * Get the xMsPopreceipt property: The x-ms-popreceipt property.
+     * 
+     * @return the xMsPopreceipt value.
+     */
+    @Generated
+    public String getXMsPopreceipt() {
+        return this.xMsPopreceipt;
+    }
+
+    /**
+     * Set the xMsPopreceipt property: The x-ms-popreceipt property.
+     * 
+     * @param xMsPopreceipt the xMsPopreceipt value to set.
+     * @return the MessageIdsUpdateHeaders object itself.
+     */
+    @Generated
+    public MessageIdsUpdateHeaders setXMsPopreceipt(String xMsPopreceipt) {
+        this.xMsPopreceipt = xMsPopreceipt;
+        return this;
+    }
+
+    /**
+     * Get the xMsTimeNextVisible property: The x-ms-time-next-visible property.
+     * 
+     * @return the xMsTimeNextVisible value.
+     */
+    @Generated
+    public OffsetDateTime getXMsTimeNextVisible() {
+        if (this.xMsTimeNextVisible == null) {
+            return null;
+        }
+        return this.xMsTimeNextVisible.getDateTime();
+    }
+
+    /**
+     * Set the xMsTimeNextVisible property: The x-ms-time-next-visible property.
+     * 
+     * @param xMsTimeNextVisible the xMsTimeNextVisible value to set.
+     * @return the MessageIdsUpdateHeaders object itself.
+     */
+    @Generated
+    public MessageIdsUpdateHeaders setXMsTimeNextVisible(OffsetDateTime xMsTimeNextVisible) {
+        if (xMsTimeNextVisible == null) {
+            this.xMsTimeNextVisible = null;
+        } else {
+            this.xMsTimeNextVisible = new DateTimeRfc1123(xMsTimeNextVisible);
         }
         return this;
     }

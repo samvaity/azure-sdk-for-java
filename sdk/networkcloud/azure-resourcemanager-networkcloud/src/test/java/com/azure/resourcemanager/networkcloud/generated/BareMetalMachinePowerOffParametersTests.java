@@ -12,16 +12,16 @@ import org.junit.jupiter.api.Assertions;
 public final class BareMetalMachinePowerOffParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        BareMetalMachinePowerOffParameters model =
-            BinaryData.fromString("{\"skipShutdown\":\"False\"}").toObject(BareMetalMachinePowerOffParameters.class);
-        Assertions.assertEquals(BareMetalMachineSkipShutdown.FALSE, model.skipShutdown());
+        BareMetalMachinePowerOffParameters model
+            = BinaryData.fromString("{\"skipShutdown\":\"True\"}").toObject(BareMetalMachinePowerOffParameters.class);
+        Assertions.assertEquals(BareMetalMachineSkipShutdown.TRUE, model.skipShutdown());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        BareMetalMachinePowerOffParameters model =
-            new BareMetalMachinePowerOffParameters().withSkipShutdown(BareMetalMachineSkipShutdown.FALSE);
+        BareMetalMachinePowerOffParameters model
+            = new BareMetalMachinePowerOffParameters().withSkipShutdown(BareMetalMachineSkipShutdown.TRUE);
         model = BinaryData.fromObject(model).toObject(BareMetalMachinePowerOffParameters.class);
-        Assertions.assertEquals(BareMetalMachineSkipShutdown.FALSE, model.skipShutdown());
+        Assertions.assertEquals(BareMetalMachineSkipShutdown.TRUE, model.skipShutdown());
     }
 }

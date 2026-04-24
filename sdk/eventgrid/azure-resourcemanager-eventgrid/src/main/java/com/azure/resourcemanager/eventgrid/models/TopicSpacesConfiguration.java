@@ -5,15 +5,21 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.List;
 
-/** Properties of the Topic Spaces Configuration. */
+/**
+ * Properties of the Topic Spaces Configuration.
+ */
 @Fluent
-public final class TopicSpacesConfiguration {
+public final class TopicSpacesConfiguration implements JsonSerializable<TopicSpacesConfiguration> {
     /*
      * Indicate if Topic Spaces Configuration is enabled for the namespace. Default is Disabled.
      */
-    @JsonProperty(value = "state")
     private TopicSpacesConfigurationState state;
 
     /*
@@ -23,54 +29,54 @@ public final class TopicSpacesConfiguration {
      * '/subscriptions/{subId}/resourcegroups/{resourceGroupName}/providers/microsoft.EventGrid/topics/{topicName}'.
      * This topic should reside in the same region where namespace is located.
      */
-    @JsonProperty(value = "routeTopicResourceId")
     private String routeTopicResourceId;
 
     /*
      * The endpoint for the topic spaces configuration. This is a read-only property.
      */
-    @JsonProperty(value = "hostname", access = JsonProperty.Access.WRITE_ONLY)
     private String hostname;
 
     /*
      * Routing enrichments for topic spaces configuration
      */
-    @JsonProperty(value = "routingEnrichments")
     private RoutingEnrichments routingEnrichments;
 
     /*
      * Client authentication settings for topic spaces configuration.
      */
-    @JsonProperty(value = "clientAuthentication")
     private ClientAuthenticationSettings clientAuthentication;
 
     /*
      * The maximum session expiry in hours. The property default value is 1 hour.
      * Min allowed value is 1 hour and max allowed value is 8 hours.
      */
-    @JsonProperty(value = "maximumSessionExpiryInHours")
     private Integer maximumSessionExpiryInHours;
 
     /*
      * The maximum number of sessions per authentication name. The property default value is 1.
      * Min allowed value is 1 and max allowed value is 100.
      */
-    @JsonProperty(value = "maximumClientSessionsPerAuthenticationName")
     private Integer maximumClientSessionsPerAuthenticationName;
 
     /*
      * Routing identity info for topic spaces configuration.
      */
-    @JsonProperty(value = "routingIdentityInfo")
     private RoutingIdentityInfo routingIdentityInfo;
 
-    /** Creates an instance of TopicSpacesConfiguration class. */
+    /*
+     * List of custom domain configurations for the namespace.
+     */
+    private List<CustomDomainConfiguration> customDomains;
+
+    /**
+     * Creates an instance of TopicSpacesConfiguration class.
+     */
     public TopicSpacesConfiguration() {
     }
 
     /**
      * Get the state property: Indicate if Topic Spaces Configuration is enabled for the namespace. Default is Disabled.
-     *
+     * 
      * @return the state value.
      */
     public TopicSpacesConfigurationState state() {
@@ -79,7 +85,7 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Set the state property: Indicate if Topic Spaces Configuration is enabled for the namespace. Default is Disabled.
-     *
+     * 
      * @param state the state value to set.
      * @return the TopicSpacesConfiguration object itself.
      */
@@ -90,10 +96,11 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Get the routeTopicResourceId property: Fully qualified Azure Resource Id for the Event Grid Topic to which events
-     * will be routed to from TopicSpaces under a namespace. This property should be in the following format
+     * will be routed to from TopicSpaces under a namespace.
+     * This property should be in the following format
      * '/subscriptions/{subId}/resourcegroups/{resourceGroupName}/providers/microsoft.EventGrid/topics/{topicName}'.
      * This topic should reside in the same region where namespace is located.
-     *
+     * 
      * @return the routeTopicResourceId value.
      */
     public String routeTopicResourceId() {
@@ -102,10 +109,11 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Set the routeTopicResourceId property: Fully qualified Azure Resource Id for the Event Grid Topic to which events
-     * will be routed to from TopicSpaces under a namespace. This property should be in the following format
+     * will be routed to from TopicSpaces under a namespace.
+     * This property should be in the following format
      * '/subscriptions/{subId}/resourcegroups/{resourceGroupName}/providers/microsoft.EventGrid/topics/{topicName}'.
      * This topic should reside in the same region where namespace is located.
-     *
+     * 
      * @param routeTopicResourceId the routeTopicResourceId value to set.
      * @return the TopicSpacesConfiguration object itself.
      */
@@ -116,7 +124,7 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Get the hostname property: The endpoint for the topic spaces configuration. This is a read-only property.
-     *
+     * 
      * @return the hostname value.
      */
     public String hostname() {
@@ -125,7 +133,7 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Get the routingEnrichments property: Routing enrichments for topic spaces configuration.
-     *
+     * 
      * @return the routingEnrichments value.
      */
     public RoutingEnrichments routingEnrichments() {
@@ -134,7 +142,7 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Set the routingEnrichments property: Routing enrichments for topic spaces configuration.
-     *
+     * 
      * @param routingEnrichments the routingEnrichments value to set.
      * @return the TopicSpacesConfiguration object itself.
      */
@@ -145,7 +153,7 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Get the clientAuthentication property: Client authentication settings for topic spaces configuration.
-     *
+     * 
      * @return the clientAuthentication value.
      */
     public ClientAuthenticationSettings clientAuthentication() {
@@ -154,7 +162,7 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Set the clientAuthentication property: Client authentication settings for topic spaces configuration.
-     *
+     * 
      * @param clientAuthentication the clientAuthentication value to set.
      * @return the TopicSpacesConfiguration object itself.
      */
@@ -165,8 +173,9 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Get the maximumSessionExpiryInHours property: The maximum session expiry in hours. The property default value is
-     * 1 hour. Min allowed value is 1 hour and max allowed value is 8 hours.
-     *
+     * 1 hour.
+     * Min allowed value is 1 hour and max allowed value is 8 hours.
+     * 
      * @return the maximumSessionExpiryInHours value.
      */
     public Integer maximumSessionExpiryInHours() {
@@ -175,8 +184,9 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Set the maximumSessionExpiryInHours property: The maximum session expiry in hours. The property default value is
-     * 1 hour. Min allowed value is 1 hour and max allowed value is 8 hours.
-     *
+     * 1 hour.
+     * Min allowed value is 1 hour and max allowed value is 8 hours.
+     * 
      * @param maximumSessionExpiryInHours the maximumSessionExpiryInHours value to set.
      * @return the TopicSpacesConfiguration object itself.
      */
@@ -187,8 +197,9 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Get the maximumClientSessionsPerAuthenticationName property: The maximum number of sessions per authentication
-     * name. The property default value is 1. Min allowed value is 1 and max allowed value is 100.
-     *
+     * name. The property default value is 1.
+     * Min allowed value is 1 and max allowed value is 100.
+     * 
      * @return the maximumClientSessionsPerAuthenticationName value.
      */
     public Integer maximumClientSessionsPerAuthenticationName() {
@@ -197,20 +208,21 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Set the maximumClientSessionsPerAuthenticationName property: The maximum number of sessions per authentication
-     * name. The property default value is 1. Min allowed value is 1 and max allowed value is 100.
-     *
+     * name. The property default value is 1.
+     * Min allowed value is 1 and max allowed value is 100.
+     * 
      * @param maximumClientSessionsPerAuthenticationName the maximumClientSessionsPerAuthenticationName value to set.
      * @return the TopicSpacesConfiguration object itself.
      */
-    public TopicSpacesConfiguration withMaximumClientSessionsPerAuthenticationName(
-        Integer maximumClientSessionsPerAuthenticationName) {
+    public TopicSpacesConfiguration
+        withMaximumClientSessionsPerAuthenticationName(Integer maximumClientSessionsPerAuthenticationName) {
         this.maximumClientSessionsPerAuthenticationName = maximumClientSessionsPerAuthenticationName;
         return this;
     }
 
     /**
      * Get the routingIdentityInfo property: Routing identity info for topic spaces configuration.
-     *
+     * 
      * @return the routingIdentityInfo value.
      */
     public RoutingIdentityInfo routingIdentityInfo() {
@@ -219,7 +231,7 @@ public final class TopicSpacesConfiguration {
 
     /**
      * Set the routingIdentityInfo property: Routing identity info for topic spaces configuration.
-     *
+     * 
      * @param routingIdentityInfo the routingIdentityInfo value to set.
      * @return the TopicSpacesConfiguration object itself.
      */
@@ -229,8 +241,28 @@ public final class TopicSpacesConfiguration {
     }
 
     /**
+     * Get the customDomains property: List of custom domain configurations for the namespace.
+     * 
+     * @return the customDomains value.
+     */
+    public List<CustomDomainConfiguration> customDomains() {
+        return this.customDomains;
+    }
+
+    /**
+     * Set the customDomains property: List of custom domain configurations for the namespace.
+     * 
+     * @param customDomains the customDomains value to set.
+     * @return the TopicSpacesConfiguration object itself.
+     */
+    public TopicSpacesConfiguration withCustomDomains(List<CustomDomainConfiguration> customDomains) {
+        this.customDomains = customDomains;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -243,5 +275,74 @@ public final class TopicSpacesConfiguration {
         if (routingIdentityInfo() != null) {
             routingIdentityInfo().validate();
         }
+        if (customDomains() != null) {
+            customDomains().forEach(e -> e.validate());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("state", this.state == null ? null : this.state.toString());
+        jsonWriter.writeStringField("routeTopicResourceId", this.routeTopicResourceId);
+        jsonWriter.writeJsonField("routingEnrichments", this.routingEnrichments);
+        jsonWriter.writeJsonField("clientAuthentication", this.clientAuthentication);
+        jsonWriter.writeNumberField("maximumSessionExpiryInHours", this.maximumSessionExpiryInHours);
+        jsonWriter.writeNumberField("maximumClientSessionsPerAuthenticationName",
+            this.maximumClientSessionsPerAuthenticationName);
+        jsonWriter.writeJsonField("routingIdentityInfo", this.routingIdentityInfo);
+        jsonWriter.writeArrayField("customDomains", this.customDomains, (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of TopicSpacesConfiguration from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of TopicSpacesConfiguration if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the TopicSpacesConfiguration.
+     */
+    public static TopicSpacesConfiguration fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            TopicSpacesConfiguration deserializedTopicSpacesConfiguration = new TopicSpacesConfiguration();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("state".equals(fieldName)) {
+                    deserializedTopicSpacesConfiguration.state
+                        = TopicSpacesConfigurationState.fromString(reader.getString());
+                } else if ("routeTopicResourceId".equals(fieldName)) {
+                    deserializedTopicSpacesConfiguration.routeTopicResourceId = reader.getString();
+                } else if ("hostname".equals(fieldName)) {
+                    deserializedTopicSpacesConfiguration.hostname = reader.getString();
+                } else if ("routingEnrichments".equals(fieldName)) {
+                    deserializedTopicSpacesConfiguration.routingEnrichments = RoutingEnrichments.fromJson(reader);
+                } else if ("clientAuthentication".equals(fieldName)) {
+                    deserializedTopicSpacesConfiguration.clientAuthentication
+                        = ClientAuthenticationSettings.fromJson(reader);
+                } else if ("maximumSessionExpiryInHours".equals(fieldName)) {
+                    deserializedTopicSpacesConfiguration.maximumSessionExpiryInHours
+                        = reader.getNullable(JsonReader::getInt);
+                } else if ("maximumClientSessionsPerAuthenticationName".equals(fieldName)) {
+                    deserializedTopicSpacesConfiguration.maximumClientSessionsPerAuthenticationName
+                        = reader.getNullable(JsonReader::getInt);
+                } else if ("routingIdentityInfo".equals(fieldName)) {
+                    deserializedTopicSpacesConfiguration.routingIdentityInfo = RoutingIdentityInfo.fromJson(reader);
+                } else if ("customDomains".equals(fieldName)) {
+                    List<CustomDomainConfiguration> customDomains
+                        = reader.readArray(reader1 -> CustomDomainConfiguration.fromJson(reader1));
+                    deserializedTopicSpacesConfiguration.customDomains = customDomains;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedTopicSpacesConfiguration;
+        });
     }
 }

@@ -7,33 +7,53 @@ package com.azure.resourcemanager.eventgrid.fluent.models;
 import com.azure.core.annotation.Fluent;
 import com.azure.core.management.ProxyResource;
 import com.azure.core.management.SystemData;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.eventgrid.models.EventInputSchema;
 import com.azure.resourcemanager.eventgrid.models.NamespaceTopicProvisioningState;
 import com.azure.resourcemanager.eventgrid.models.PublisherType;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 
-/** Namespace topic details. */
+/**
+ * Namespace topic details.
+ */
 @Fluent
 public final class NamespaceTopicInner extends ProxyResource {
     /*
      * Properties of the namespace topic.
      */
-    @JsonProperty(value = "properties")
     private NamespaceTopicProperties innerProperties;
 
     /*
-     * The system metadata relating to namespace topic resource.
+     * The system metadata relating to the Event Grid resource.
      */
-    @JsonProperty(value = "systemData", access = JsonProperty.Access.WRITE_ONLY)
     private SystemData systemData;
 
-    /** Creates an instance of NamespaceTopicInner class. */
+    /*
+     * The type of the resource.
+     */
+    private String type;
+
+    /*
+     * The name of the resource.
+     */
+    private String name;
+
+    /*
+     * Fully qualified resource Id for the resource.
+     */
+    private String id;
+
+    /**
+     * Creates an instance of NamespaceTopicInner class.
+     */
     public NamespaceTopicInner() {
     }
 
     /**
      * Get the innerProperties property: Properties of the namespace topic.
-     *
+     * 
      * @return the innerProperties value.
      */
     private NamespaceTopicProperties innerProperties() {
@@ -41,8 +61,8 @@ public final class NamespaceTopicInner extends ProxyResource {
     }
 
     /**
-     * Get the systemData property: The system metadata relating to namespace topic resource.
-     *
+     * Get the systemData property: The system metadata relating to the Event Grid resource.
+     * 
      * @return the systemData value.
      */
     public SystemData systemData() {
@@ -50,8 +70,38 @@ public final class NamespaceTopicInner extends ProxyResource {
     }
 
     /**
+     * Get the type property: The type of the resource.
+     * 
+     * @return the type value.
+     */
+    @Override
+    public String type() {
+        return this.type;
+    }
+
+    /**
+     * Get the name property: The name of the resource.
+     * 
+     * @return the name value.
+     */
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    /**
+     * Get the id property: Fully qualified resource Id for the resource.
+     * 
+     * @return the id value.
+     */
+    @Override
+    public String id() {
+        return this.id;
+    }
+
+    /**
      * Get the provisioningState property: Provisioning state of the namespace topic.
-     *
+     * 
      * @return the provisioningState value.
      */
     public NamespaceTopicProvisioningState provisioningState() {
@@ -60,7 +110,7 @@ public final class NamespaceTopicInner extends ProxyResource {
 
     /**
      * Get the publisherType property: Publisher type of the namespace topic.
-     *
+     * 
      * @return the publisherType value.
      */
     public PublisherType publisherType() {
@@ -69,7 +119,7 @@ public final class NamespaceTopicInner extends ProxyResource {
 
     /**
      * Set the publisherType property: Publisher type of the namespace topic.
-     *
+     * 
      * @param publisherType the publisherType value to set.
      * @return the NamespaceTopicInner object itself.
      */
@@ -84,7 +134,7 @@ public final class NamespaceTopicInner extends ProxyResource {
     /**
      * Get the inputSchema property: This determines the format that is expected for incoming events published to the
      * topic.
-     *
+     * 
      * @return the inputSchema value.
      */
     public EventInputSchema inputSchema() {
@@ -94,7 +144,7 @@ public final class NamespaceTopicInner extends ProxyResource {
     /**
      * Set the inputSchema property: This determines the format that is expected for incoming events published to the
      * topic.
-     *
+     * 
      * @param inputSchema the inputSchema value to set.
      * @return the NamespaceTopicInner object itself.
      */
@@ -108,9 +158,9 @@ public final class NamespaceTopicInner extends ProxyResource {
 
     /**
      * Get the eventRetentionInDays property: Event retention for the namespace topic expressed in days. The property
-     * default value is 1 day. Min event retention duration value is 1 day and max event retention duration value is 1
-     * day.
-     *
+     * default value is 1 day.
+     * Min event retention duration value is 1 day and max event retention duration value is 1 day.
+     * 
      * @return the eventRetentionInDays value.
      */
     public Integer eventRetentionInDays() {
@@ -119,9 +169,9 @@ public final class NamespaceTopicInner extends ProxyResource {
 
     /**
      * Set the eventRetentionInDays property: Event retention for the namespace topic expressed in days. The property
-     * default value is 1 day. Min event retention duration value is 1 day and max event retention duration value is 1
-     * day.
-     *
+     * default value is 1 day.
+     * Min event retention duration value is 1 day and max event retention duration value is 1 day.
+     * 
      * @param eventRetentionInDays the eventRetentionInDays value to set.
      * @return the NamespaceTopicInner object itself.
      */
@@ -135,12 +185,57 @@ public final class NamespaceTopicInner extends ProxyResource {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (innerProperties() != null) {
             innerProperties().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("properties", this.innerProperties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of NamespaceTopicInner from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of NamespaceTopicInner if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the NamespaceTopicInner.
+     */
+    public static NamespaceTopicInner fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            NamespaceTopicInner deserializedNamespaceTopicInner = new NamespaceTopicInner();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedNamespaceTopicInner.id = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedNamespaceTopicInner.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedNamespaceTopicInner.type = reader.getString();
+                } else if ("properties".equals(fieldName)) {
+                    deserializedNamespaceTopicInner.innerProperties = NamespaceTopicProperties.fromJson(reader);
+                } else if ("systemData".equals(fieldName)) {
+                    deserializedNamespaceTopicInner.systemData = SystemData.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedNamespaceTopicInner;
+        });
     }
 }

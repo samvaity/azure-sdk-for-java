@@ -5,7 +5,12 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -13,55 +18,61 @@ import java.util.Map;
  * https://github.com/Microsoft/api-guidelines/blob/vNext/Guidelines.md#7102-error-condition-responses.
  */
 @Fluent
-public final class InnerErrorModel {
+public final class InnerErrorModel implements JsonSerializable<InnerErrorModel> {
     /*
      * One of a server-defined set of error codes.
      */
-    @JsonProperty(value = "code", required = true)
+    @Generated
     private InnerErrorCode code;
 
     /*
      * Error message.
      */
-    @JsonProperty(value = "message", required = true)
+    @Generated
     private String message;
 
     /*
      * Error details.
      */
-    @JsonProperty(value = "details")
+    @Generated
     private Map<String, String> details;
 
     /*
      * Error target.
      */
-    @JsonProperty(value = "target")
+    @Generated
     private String target;
 
     /*
      * An object containing more specific information than the current object about the error.
      */
-    @JsonProperty(value = "innererror")
+    @Generated
     private InnerErrorModel innererror;
 
-    /** Creates an instance of InnerErrorModel class. */
-    public InnerErrorModel() {}
+    /**
+     * Creates an instance of InnerErrorModel class.
+     */
+    @Generated
+    public InnerErrorModel() {
+    }
 
     /**
      * Get the code property: One of a server-defined set of error codes.
-     *
+     * 
      * @return the code value.
      */
+    @Generated
     public InnerErrorCode getCode() {
         return this.code;
     }
 
     /**
      * Set the code property: One of a server-defined set of error codes.
-     *
+     * 
      * @param code the code value to set.
      * @return the InnerErrorModel object itself.
      */
+    @Generated
     public InnerErrorModel setCode(InnerErrorCode code) {
         this.code = code;
         return this;
@@ -69,19 +80,21 @@ public final class InnerErrorModel {
 
     /**
      * Get the message property: Error message.
-     *
+     * 
      * @return the message value.
      */
+    @Generated
     public String getMessage() {
         return this.message;
     }
 
     /**
      * Set the message property: Error message.
-     *
+     * 
      * @param message the message value to set.
      * @return the InnerErrorModel object itself.
      */
+    @Generated
     public InnerErrorModel setMessage(String message) {
         this.message = message;
         return this;
@@ -89,19 +102,21 @@ public final class InnerErrorModel {
 
     /**
      * Get the details property: Error details.
-     *
+     * 
      * @return the details value.
      */
+    @Generated
     public Map<String, String> getDetails() {
         return this.details;
     }
 
     /**
      * Set the details property: Error details.
-     *
+     * 
      * @param details the details value to set.
      * @return the InnerErrorModel object itself.
      */
+    @Generated
     public InnerErrorModel setDetails(Map<String, String> details) {
         this.details = details;
         return this;
@@ -109,19 +124,21 @@ public final class InnerErrorModel {
 
     /**
      * Get the target property: Error target.
-     *
+     * 
      * @return the target value.
      */
+    @Generated
     public String getTarget() {
         return this.target;
     }
 
     /**
      * Set the target property: Error target.
-     *
+     * 
      * @param target the target value to set.
      * @return the InnerErrorModel object itself.
      */
+    @Generated
     public InnerErrorModel setTarget(String target) {
         this.target = target;
         return this;
@@ -130,9 +147,10 @@ public final class InnerErrorModel {
     /**
      * Get the innererror property: An object containing more specific information than the current object about the
      * error.
-     *
+     * 
      * @return the innererror value.
      */
+    @Generated
     public InnerErrorModel getInnererror() {
         return this.innererror;
     }
@@ -140,12 +158,65 @@ public final class InnerErrorModel {
     /**
      * Set the innererror property: An object containing more specific information than the current object about the
      * error.
-     *
+     * 
      * @param innererror the innererror value to set.
      * @return the InnerErrorModel object itself.
      */
+    @Generated
     public InnerErrorModel setInnererror(InnerErrorModel innererror) {
         this.innererror = innererror;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("code", this.code == null ? null : this.code.toString());
+        jsonWriter.writeStringField("message", this.message);
+        jsonWriter.writeMapField("details", this.details, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("target", this.target);
+        jsonWriter.writeJsonField("innererror", this.innererror);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of InnerErrorModel from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of InnerErrorModel if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the InnerErrorModel.
+     */
+    @Generated
+    public static InnerErrorModel fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            InnerErrorModel deserializedInnerErrorModel = new InnerErrorModel();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("code".equals(fieldName)) {
+                    deserializedInnerErrorModel.code = InnerErrorCode.fromString(reader.getString());
+                } else if ("message".equals(fieldName)) {
+                    deserializedInnerErrorModel.message = reader.getString();
+                } else if ("details".equals(fieldName)) {
+                    Map<String, String> details = reader.readMap(reader1 -> reader1.getString());
+                    deserializedInnerErrorModel.details = details;
+                } else if ("target".equals(fieldName)) {
+                    deserializedInnerErrorModel.target = reader.getString();
+                } else if ("innererror".equals(fieldName)) {
+                    deserializedInnerErrorModel.innererror = InnerErrorModel.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedInnerErrorModel;
+        });
     }
 }

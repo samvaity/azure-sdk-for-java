@@ -6,18 +6,17 @@ import com.azure.cosmos.models.PartitionKey;
 import com.azure.spring.data.cosmos.ReactiveIntegrationTestCollectionManager;
 import com.azure.spring.data.cosmos.core.ReactiveCosmosTemplate;
 import com.azure.spring.data.cosmos.domain.LongIdDomainPartition;
-import com.azure.spring.data.cosmos.exception.CosmosAccessException;
+import com.azure.spring.data.cosmos.exception.CosmosNotFoundException;
 import com.azure.spring.data.cosmos.repository.TestRepositoryConfig;
 import com.azure.spring.data.cosmos.repository.repository.ReactiveLongIdDomainPartitionRepository;
 import com.azure.spring.data.cosmos.repository.support.CosmosEntityInformation;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -25,7 +24,9 @@ import reactor.test.StepVerifier;
 import java.util.Arrays;
 import java.util.Objects;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestRepositoryConfig.class)
 public class ReactiveLongIdDomainPartitionPartitionRepositoryIT {
 
@@ -35,10 +36,13 @@ public class ReactiveLongIdDomainPartitionPartitionRepositoryIT {
     private static final Long ID_2 = 67890L;
     private static final String NAME_2 = "camille";
 
+    private static final Long ID_3 = 98765L;
+
     private static final LongIdDomainPartition DOMAIN_1 = new LongIdDomainPartition(ID_1, NAME_1);
     private static final LongIdDomainPartition DOMAIN_2 = new LongIdDomainPartition(ID_2, NAME_2);
+    private static final LongIdDomainPartition DOMAIN_3 = new LongIdDomainPartition(ID_3, NAME_1);
 
-    @ClassRule
+
     public static final ReactiveIntegrationTestCollectionManager collectionManager = new ReactiveIntegrationTestCollectionManager();
 
     @Autowired
@@ -49,7 +53,7 @@ public class ReactiveLongIdDomainPartitionPartitionRepositoryIT {
 
     private CosmosEntityInformation<LongIdDomainPartition, ?> entityInformation;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         collectionManager.ensureContainersCreatedAndEmpty(template, LongIdDomainPartition.class);
         entityInformation = collectionManager.getEntityInformation(LongIdDomainPartition.class);
@@ -81,9 +85,10 @@ public class ReactiveLongIdDomainPartitionPartitionRepositoryIT {
         StepVerifier.create(afterDelIdMono).expectNextCount(0).verifyComplete();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInvalidDomain() {
-        new CosmosEntityInformation<InvalidDomain, Long>(InvalidDomain.class);
+        assertThrows(IllegalArgumentException.class, () ->
+            new CosmosEntityInformation<InvalidDomain, Long>(InvalidDomain.class));
     }
 
     @Test
@@ -107,7 +112,7 @@ public class ReactiveLongIdDomainPartitionPartitionRepositoryIT {
     @Test
     public void testDeleteByIdWithoutPartitionKey() {
         final Mono<Void> deleteMono = repository.deleteById(DOMAIN_1.getNumber());
-        StepVerifier.create(deleteMono).expectError(CosmosAccessException.class).verify();
+        StepVerifier.create(deleteMono).expectError(CosmosNotFoundException.class).verify();
     }
 
     @Test
@@ -128,7 +133,7 @@ public class ReactiveLongIdDomainPartitionPartitionRepositoryIT {
 
         final Mono<Void> deleteIdMono = repository.deleteById(DOMAIN_1.getNumber(),
             new PartitionKey(entityInformation.getPartitionKeyFieldValue(DOMAIN_1)));
-        StepVerifier.create(deleteIdMono).expectError(CosmosAccessException.class).verify();
+        StepVerifier.create(deleteIdMono).expectError(CosmosNotFoundException.class).verify();
     }
 
     @Test
@@ -149,7 +154,7 @@ public class ReactiveLongIdDomainPartitionPartitionRepositoryIT {
         StepVerifier.create(deletedMono).thenAwait().verifyComplete();
 
         Mono<Void> deleteIdMono = this.repository.delete(DOMAIN_1);
-        StepVerifier.create(deleteIdMono).expectError(CosmosAccessException.class).verify();
+        StepVerifier.create(deleteIdMono).expectError(CosmosNotFoundException.class).verify();
     }
 
     @Test
@@ -171,6 +176,9 @@ public class ReactiveLongIdDomainPartitionPartitionRepositoryIT {
 
         Mono<Boolean> booleanMono = this.repository.existsById(DOMAIN_1.getNumber());
         StepVerifier.create(booleanMono).expectNext(true).expectComplete().verify();
+
+        booleanMono = this.repository.existsById(0L);
+        StepVerifier.create(booleanMono).expectNext(false).expectComplete().verify();
     }
 
     @Test
@@ -187,6 +195,18 @@ public class ReactiveLongIdDomainPartitionPartitionRepositoryIT {
         final Sort descSort = Sort.by(Sort.Direction.DESC, "number");
         Flux<LongIdDomainPartition> descAllFlux = this.repository.findAll(descSort);
         StepVerifier.create(descAllFlux).expectNext(DOMAIN_2, other, DOMAIN_1).verifyComplete();
+    }
+
+    @Test
+    public void testSum() {
+        Mono<Long> sum1 = this.repository.annotatedSumLongIdValuesByName(NAME_1);
+        StepVerifier.create(sum1).expectNext(12345L).verifyComplete();
+
+        Mono<LongIdDomainPartition> saveMono = this.repository.save(DOMAIN_3);
+        StepVerifier.create(saveMono).expectNext(DOMAIN_3).expectComplete().verify();
+
+        Mono<Long> sum2 = this.repository.annotatedSumLongIdValuesByName(NAME_1);
+        StepVerifier.create(sum2).expectNext(111110L).verifyComplete();
     }
 
     private static class InvalidDomain {

@@ -6,59 +6,31 @@ package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.networkcloud.NetworkCloudManager;
 import com.azure.resourcemanager.networkcloud.models.RackSku;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class RackSkusGetWithResponseMockTests {
     @Test
     public void testGetWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"properties\":{\"computeMachines\":[{\"properties\":{\"bootstrapProtocol\":\"PXE\",\"cpuCores\":7398212917026464085,\"cpuSockets\":3217645883529381427,\"disks\":[{},{}],\"generation\":\"j\",\"hardwareVersion\":\"fjvmy\",\"memoryCapacityGB\":9084716446399188642,\"model\":\"ecu\",\"networkInterfaces\":[{},{},{},{}],\"totalThreads\":7522546301995825386,\"vendor\":\"cljkxpyl\"},\"rackSlot\":2345400298196051360},{\"properties\":{\"bootstrapProtocol\":\"PXE\",\"cpuCores\":528905546739813580,\"cpuSockets\":1575324159221214779,\"disks\":[{},{}],\"generation\":\"pdvrbkerdkdkga\",\"hardwareVersion\":\"wjxildfkcefeyg\",\"memoryCapacityGB\":5332491482208229411,\"model\":\"isf\",\"networkInterfaces\":[{},{},{},{}],\"totalThreads\":8884348619543253450,\"vendor\":\"nxumentqo\"},\"rackSlot\":2688228130519055124},{\"properties\":{\"bootstrapProtocol\":\"PXE\",\"cpuCores\":3977889157056232744,\"cpuSockets\":2243722311789555333,\"disks\":[{}],\"generation\":\"o\",\"hardwareVersion\":\"h\",\"memoryCapacityGB\":5041206217177609908,\"model\":\"ybajasqubf\",\"networkInterfaces\":[{},{}],\"totalThreads\":3583033519488051677,\"vendor\":\"qwmchqohtfxc\"},\"rackSlot\":7040725443783124983},{\"properties\":{\"bootstrapProtocol\":\"PXE\",\"cpuCores\":621499668266759027,\"cpuSockets\":7050693210687877420,\"disks\":[{},{},{}],\"generation\":\"tiwsmosaonhqn\",\"hardwareVersion\":\"p\",\"memoryCapacityGB\":3714794711313037679,\"model\":\"ssaekewnaze\",\"networkInterfaces\":[{},{},{}],\"totalThreads\":1230944535065154544,\"vendor\":\"cyizy\"},\"rackSlot\":6203270097433231501}],\"controllerMachines\":[{\"properties\":{\"bootstrapProtocol\":\"PXE\",\"cpuCores\":5873155808619890798,\"cpuSockets\":6747440066419835499,\"disks\":[{},{}],\"generation\":\"sqlv\",\"hardwareVersion\":\"cpwgoljtzxnmxsd\",\"memoryCapacityGB\":5219563148012298828,\"model\":\"ogxqap\",\"networkInterfaces\":[{}],\"totalThreads\":6874264411354040379,\"vendor\":\"fucsaodjnosdkvi\"},\"rackSlot\":2977721245192896961}],\"description\":\"matrnzpducd\",\"maxClusterSlots\":341694644915957080,\"provisioningState\":\"Failed\",\"rackType\":\"Aggregator\",\"storageAppliances\":[{\"properties\":{\"capacityGB\":3896774780386506577,\"model\":\"pqdowkppnwyy\"},\"rackSlot\":5796315231758189739}],\"supportedRackSkuIds\":[\"fjikffffgkuhznw\",\"vuldbkkejjk\",\"igaw\",\"azmxjqi\"]},\"id\":\"ujjs\",\"name\":\"cmlzaahz\",\"type\":\"hu\"}";
 
-        String responseStr =
-            "{\"properties\":{\"computeMachines\":[],\"controllerMachines\":[],\"description\":\"lfihcj\",\"maxClusterSlots\":2110046772829254579,\"provisioningState\":\"Succeeded\",\"rackType\":\"Aggregator\",\"storageAppliances\":[],\"supportedRackSkuIds\":[\"cwg\",\"xf\",\"vaknokzwjj\",\"r\"]},\"id\":\"ixldzyyfy\",\"name\":\"pqsixymmp\",\"type\":\"jivyqlkjuv\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        NetworkCloudManager manager = NetworkCloudManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        RackSku response
+            = manager.rackSkus().getWithResponse("cskiioshjgc", com.azure.core.util.Context.NONE).getValue();
 
-        NetworkCloudManager manager =
-            NetworkCloudManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        RackSku response =
-            manager.rackSkus().getWithResponse("bqbnaomhjrmkuh", com.azure.core.util.Context.NONE).getValue();
     }
 }

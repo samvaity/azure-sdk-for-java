@@ -29,36 +29,45 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.management.polling.PollResult;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.resourcemanager.networkcloud.fluent.VirtualMachinesClient;
+import com.azure.resourcemanager.networkcloud.fluent.models.OperationStatusResultInner;
 import com.azure.resourcemanager.networkcloud.fluent.models.VirtualMachineInner;
+import com.azure.resourcemanager.networkcloud.models.VirtualMachineAssignRelayParameters;
 import com.azure.resourcemanager.networkcloud.models.VirtualMachineList;
 import com.azure.resourcemanager.networkcloud.models.VirtualMachinePatchParameters;
 import com.azure.resourcemanager.networkcloud.models.VirtualMachinePowerOffParameters;
-import com.azure.resourcemanager.networkcloud.models.VirtualMachineVolumeParameters;
 import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in VirtualMachinesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in VirtualMachinesClient.
+ */
 public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final VirtualMachinesService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final NetworkCloudImpl client;
 
     /**
      * Initializes an instance of VirtualMachinesClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     VirtualMachinesClientImpl(NetworkCloudImpl client) {
-        this.service =
-            RestProxy.create(VirtualMachinesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(VirtualMachinesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -67,342 +76,428 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "NetworkCloudVirtualM")
+    @ServiceInterface(name = "NetworkCloudVirtualMachines")
     public interface VirtualMachinesService {
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/virtualMachines")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<VirtualMachineList>> list(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<VirtualMachineList>> list(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @QueryParam("$top") Integer top, @QueryParam("$skipToken") String skipToken,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.NetworkCloud/virtualMachines")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<VirtualMachineList> listSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @QueryParam("$top") Integer top, @QueryParam("$skipToken") String skipToken,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<VirtualMachineList>> listByResourceGroup(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("$top") Integer top,
+            @QueryParam("$skipToken") String skipToken, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<VirtualMachineList> listByResourceGroupSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("$top") Integer top,
+            @QueryParam("$skipToken") String skipToken, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<VirtualMachineInner>> getByResourceGroup(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<VirtualMachineList>> listByResourceGroup(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
+        Response<VirtualMachineInner> getByResourceGroupSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @HeaderParam("Accept") String accept,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<VirtualMachineInner>> getByResourceGroup(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> createOrUpdate(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("virtualMachineName") String virtualMachineName,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
-        @ExpectedResponses({200, 201})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> createOrUpdate(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("virtualMachineName") String virtualMachineName,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("If-Match") String ifMatch,
+            @HeaderParam("If-None-Match") String ifNoneMatch,
             @BodyParam("application/json") VirtualMachineInner virtualMachineParameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
-        @ExpectedResponses({200, 202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> delete(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
+        Response<BinaryData> createOrUpdateSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("virtualMachineName") String virtualMachineName,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("If-Match") String ifMatch,
+            @HeaderParam("If-None-Match") String ifNoneMatch,
+            @BodyParam("application/json") VirtualMachineInner virtualMachineParameters,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Patch(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
+        @ExpectedResponses({ 200, 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> update(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> delete(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("virtualMachineName") String virtualMachineName,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("If-Match") String ifMatch,
+            @HeaderParam("If-None-Match") String ifNoneMatch, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
+        @ExpectedResponses({ 200, 202, 204 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> deleteSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("If-Match") String ifMatch,
+            @HeaderParam("If-None-Match") String ifNoneMatch, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> update(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("If-Match") String ifMatch,
+            @HeaderParam("If-None-Match") String ifNoneMatch,
             @BodyParam("application/json") VirtualMachinePatchParameters virtualMachineUpdateParameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/attachVolume")
-        @ExpectedResponses({202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> attachVolume(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
+        Response<BinaryData> updateSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("If-Match") String ifMatch,
+            @HeaderParam("If-None-Match") String ifNoneMatch,
+            @BodyParam("application/json") VirtualMachinePatchParameters virtualMachineUpdateParameters,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/assignRelay")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> assignRelay(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("virtualMachineName") String virtualMachineName,
-            @BodyParam("application/json") VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @BodyParam("application/json") VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/detachVolume")
-        @ExpectedResponses({202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/assignRelay")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> detachVolume(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
+        Response<BinaryData> assignRelaySync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("virtualMachineName") String virtualMachineName,
-            @BodyParam("application/json") VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @BodyParam("application/json") VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/powerOff")
-        @ExpectedResponses({202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/powerOff")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> powerOff(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> powerOff(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("virtualMachineName") String virtualMachineName,
             @BodyParam("application/json") VirtualMachinePowerOffParameters virtualMachinePowerOffParameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/reimage")
-        @ExpectedResponses({202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/powerOff")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> reimage(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
+        Response<BinaryData> powerOffSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("virtualMachineName") String virtualMachineName,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @BodyParam("application/json") VirtualMachinePowerOffParameters virtualMachinePowerOffParameters,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/restart")
-        @ExpectedResponses({202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/reimage")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> restart(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> reimage(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("virtualMachineName") String virtualMachineName,
-            @HeaderParam("Accept") String accept,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/start")
-        @ExpectedResponses({202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/reimage")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> start(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
+        Response<BinaryData> reimageSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("virtualMachineName") String virtualMachineName,
-            @HeaderParam("Accept") String accept,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/restart")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> restart(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/restart")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> restartSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/start")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> start(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.NetworkCloud/virtualMachines/{virtualMachineName}/start")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> startSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("virtualMachineName") String virtualMachineName, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<VirtualMachineList>> listBySubscriptionNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<VirtualMachineList> listBySubscriptionNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<VirtualMachineList>> listByResourceGroupNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<VirtualMachineList> listByResourceGroupNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * List virtual machines in the subscription.
-     *
-     * <p>Get a list of virtual machines in the provided subscription.
-     *
+     * 
+     * Get a list of virtual machines in the provided subscription.
+     * 
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of virtual machines in the provided subscription along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<VirtualMachineInner>> listSinglePageAsync() {
+    private Mono<PagedResponse<VirtualMachineInner>> listSinglePageAsync(Integer top, String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            accept,
-                            context))
-            .<PagedResponse<VirtualMachineInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.list(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), top, skipToken, accept, context))
+            .<PagedResponse<VirtualMachineInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * List virtual machines in the subscription.
-     *
-     * <p>Get a list of virtual machines in the provided subscription.
-     *
-     * @param context The context to associate with this operation.
+     * 
+     * Get a list of virtual machines in the provided subscription.
+     * 
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of virtual machines in the provided subscription along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * @return a list of virtual machines in the provided subscription as paginated response with {@link PagedFlux}.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<VirtualMachineInner>> listSinglePageAsync(Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .list(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<VirtualMachineInner> listAsync(Integer top, String skipToken) {
+        return new PagedFlux<>(() -> listSinglePageAsync(top, skipToken),
+            nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
     }
 
     /**
      * List virtual machines in the subscription.
-     *
-     * <p>Get a list of virtual machines in the provided subscription.
-     *
+     * 
+     * Get a list of virtual machines in the provided subscription.
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of virtual machines in the provided subscription as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<VirtualMachineInner> listAsync() {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(), nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
+        final Integer top = null;
+        final String skipToken = null;
+        return new PagedFlux<>(() -> listSinglePageAsync(top, skipToken),
+            nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
     }
 
     /**
      * List virtual machines in the subscription.
-     *
-     * <p>Get a list of virtual machines in the provided subscription.
-     *
+     * 
+     * Get a list of virtual machines in the provided subscription.
+     * 
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of virtual machines in the provided subscription along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<VirtualMachineInner> listSinglePage(Integer top, String skipToken) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<VirtualMachineList> res = service.listSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), top, skipToken, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * List virtual machines in the subscription.
+     * 
+     * Get a list of virtual machines in the provided subscription.
+     * 
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of virtual machines in the provided subscription as paginated response with {@link PagedFlux}.
+     * @return a list of virtual machines in the provided subscription along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<VirtualMachineInner> listAsync(Context context) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(context), nextLink -> listBySubscriptionNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<VirtualMachineInner> listSinglePage(Integer top, String skipToken, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<VirtualMachineList> res = service.listSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), top, skipToken, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * List virtual machines in the subscription.
-     *
-     * <p>Get a list of virtual machines in the provided subscription.
-     *
+     * 
+     * Get a list of virtual machines in the provided subscription.
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of virtual machines in the provided subscription as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<VirtualMachineInner> list() {
-        return new PagedIterable<>(listAsync());
+        final Integer top = null;
+        final String skipToken = null;
+        return new PagedIterable<>(() -> listSinglePage(top, skipToken),
+            nextLink -> listBySubscriptionNextSinglePage(nextLink));
     }
 
     /**
      * List virtual machines in the subscription.
-     *
-     * <p>Get a list of virtual machines in the provided subscription.
-     *
+     * 
+     * Get a list of virtual machines in the provided subscription.
+     * 
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -410,35 +505,36 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * @return a list of virtual machines in the provided subscription as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<VirtualMachineInner> list(Context context) {
-        return new PagedIterable<>(listAsync(context));
+    public PagedIterable<VirtualMachineInner> list(Integer top, String skipToken, Context context) {
+        return new PagedIterable<>(() -> listSinglePage(top, skipToken, context),
+            nextLink -> listBySubscriptionNextSinglePage(nextLink, context));
     }
 
     /**
      * List virtual machines in the resource group.
-     *
-     * <p>Get a list of virtual machines in the provided resource group.
-     *
+     * 
+     * Get a list of virtual machines in the provided resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of virtual machines in the provided resource group along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<VirtualMachineInner>> listByResourceGroupSinglePageAsync(String resourceGroupName) {
+    private Mono<PagedResponse<VirtualMachineInner>> listByResourceGroupSinglePageAsync(String resourceGroupName,
+        Integer top, String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -446,86 +542,39 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listByResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            accept,
-                            context))
-            .<PagedResponse<VirtualMachineInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.listByResourceGroup(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, top, skipToken, accept, context))
+            .<PagedResponse<VirtualMachineInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * List virtual machines in the resource group.
-     *
-     * <p>Get a list of virtual machines in the provided resource group.
-     *
+     * 
+     * Get a list of virtual machines in the provided resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param context The context to associate with this operation.
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of virtual machines in the provided resource group along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * @return a list of virtual machines in the provided resource group as paginated response with {@link PagedFlux}.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<VirtualMachineInner>> listByResourceGroupSinglePageAsync(
-        String resourceGroupName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<VirtualMachineInner> listByResourceGroupAsync(String resourceGroupName, Integer top,
+        String skipToken) {
+        return new PagedFlux<>(() -> listByResourceGroupSinglePageAsync(resourceGroupName, top, skipToken),
+            nextLink -> listByResourceGroupNextSinglePageAsync(nextLink));
     }
 
     /**
      * List virtual machines in the resource group.
-     *
-     * <p>Get a list of virtual machines in the provided resource group.
-     *
+     * 
+     * Get a list of virtual machines in the provided resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -534,92 +583,157 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<VirtualMachineInner> listByResourceGroupAsync(String resourceGroupName) {
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName),
+        final Integer top = null;
+        final String skipToken = null;
+        return new PagedFlux<>(() -> listByResourceGroupSinglePageAsync(resourceGroupName, top, skipToken),
             nextLink -> listByResourceGroupNextSinglePageAsync(nextLink));
     }
 
     /**
      * List virtual machines in the resource group.
-     *
-     * <p>Get a list of virtual machines in the provided resource group.
-     *
+     * 
+     * Get a list of virtual machines in the provided resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param context The context to associate with this operation.
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of virtual machines in the provided resource group as paginated response with {@link PagedFlux}.
+     * @return a list of virtual machines in the provided resource group along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<VirtualMachineInner> listByResourceGroupAsync(String resourceGroupName, Context context) {
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, context),
-            nextLink -> listByResourceGroupNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<VirtualMachineInner> listByResourceGroupSinglePage(String resourceGroupName, Integer top,
+        String skipToken) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<VirtualMachineList> res
+            = service.listByResourceGroupSync(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, top, skipToken, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * List virtual machines in the resource group.
-     *
-     * <p>Get a list of virtual machines in the provided resource group.
-     *
+     * 
+     * Get a list of virtual machines in the provided resource group.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of virtual machines in the provided resource group along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<VirtualMachineInner> listByResourceGroupSinglePage(String resourceGroupName, Integer top,
+        String skipToken, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<VirtualMachineList> res
+            = service.listByResourceGroupSync(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, top, skipToken, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * List virtual machines in the resource group.
+     * 
+     * Get a list of virtual machines in the provided resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of virtual machines in the provided resource group as paginated response with {@link
-     *     PagedIterable}.
+     * @return a list of virtual machines in the provided resource group as paginated response with
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<VirtualMachineInner> listByResourceGroup(String resourceGroupName) {
-        return new PagedIterable<>(listByResourceGroupAsync(resourceGroupName));
+        final Integer top = null;
+        final String skipToken = null;
+        return new PagedIterable<>(() -> listByResourceGroupSinglePage(resourceGroupName, top, skipToken),
+            nextLink -> listByResourceGroupNextSinglePage(nextLink));
     }
 
     /**
      * List virtual machines in the resource group.
-     *
-     * <p>Get a list of virtual machines in the provided resource group.
-     *
+     * 
+     * Get a list of virtual machines in the provided resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of virtual machines in the provided resource group as paginated response with {@link
-     *     PagedIterable}.
+     * @return a list of virtual machines in the provided resource group as paginated response with
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<VirtualMachineInner> listByResourceGroup(String resourceGroupName, Context context) {
-        return new PagedIterable<>(listByResourceGroupAsync(resourceGroupName, context));
+    public PagedIterable<VirtualMachineInner> listByResourceGroup(String resourceGroupName, Integer top,
+        String skipToken, Context context) {
+        return new PagedIterable<>(() -> listByResourceGroupSinglePage(resourceGroupName, top, skipToken, context),
+            nextLink -> listByResourceGroupNextSinglePage(nextLink, context));
     }
 
     /**
      * Retrieve the virtual machine.
-     *
-     * <p>Get properties of the provided virtual machine.
-     *
+     * 
+     * Get properties of the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties of the provided virtual machine along with {@link Response} on successful completion of {@link
-     *     Mono}.
+     * @return properties of the provided virtual machine along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<VirtualMachineInner>> getByResourceGroupWithResponseAsync(
-        String resourceGroupName, String virtualMachineName) {
+    private Mono<Response<VirtualMachineInner>> getByResourceGroupWithResponseAsync(String resourceGroupName,
+        String virtualMachineName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -631,75 +745,16 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getByResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            virtualMachineName,
-                            accept,
-                            context))
+            .withContext(context -> service.getByResourceGroup(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Retrieve the virtual machine.
-     *
-     * <p>Get properties of the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties of the provided virtual machine along with {@link Response} on successful completion of {@link
-     *     Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<VirtualMachineInner>> getByResourceGroupWithResponseAsync(
-        String resourceGroupName, String virtualMachineName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getByResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                virtualMachineName,
-                accept,
-                context);
-    }
-
-    /**
-     * Retrieve the virtual machine.
-     *
-     * <p>Get properties of the provided virtual machine.
-     *
+     * 
+     * Get properties of the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -715,9 +770,9 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
 
     /**
      * Retrieve the virtual machine.
-     *
-     * <p>Get properties of the provided virtual machine.
-     *
+     * 
+     * Get properties of the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param context The context to associate with this operation.
@@ -727,16 +782,36 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * @return properties of the provided virtual machine along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<VirtualMachineInner> getByResourceGroupWithResponse(
-        String resourceGroupName, String virtualMachineName, Context context) {
-        return getByResourceGroupWithResponseAsync(resourceGroupName, virtualMachineName, context).block();
+    public Response<VirtualMachineInner> getByResourceGroupWithResponse(String resourceGroupName,
+        String virtualMachineName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (virtualMachineName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getByResourceGroupSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, context);
     }
 
     /**
      * Retrieve the virtual machine.
-     *
-     * <p>Get properties of the provided virtual machine.
-     *
+     * 
+     * Get properties of the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -751,32 +826,32 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
 
     /**
      * Create or update the virtual machine.
-     *
-     * <p>Create a new virtual machine or update the properties of the existing virtual machine.
-     *
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachineParameters The request body.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return virtualMachine represents the on-premises Network Cloud virtual machine along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(
-        String resourceGroupName, String virtualMachineName, VirtualMachineInner virtualMachineParameters) {
+    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(String resourceGroupName,
+        String virtualMachineName, VirtualMachineInner virtualMachineParameters, String ifMatch, String ifNoneMatch) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -787,96 +862,155 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
                 .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
         if (virtualMachineParameters == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter virtualMachineParameters is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter virtualMachineParameters is required and cannot be null."));
         } else {
             virtualMachineParameters.validate();
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .createOrUpdate(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            virtualMachineName,
-                            virtualMachineParameters,
-                            accept,
-                            context))
+            .withContext(context -> service.createOrUpdate(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+                virtualMachineParameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Create or update the virtual machine.
-     *
-     * <p>Create a new virtual machine or update the properties of the existing virtual machine.
-     *
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachineParameters The request body.
-     * @param context The context to associate with this operation.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return virtualMachine represents the on-premises Network Cloud virtual machine along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * @return virtualMachine represents the on-premises Network Cloud virtual machine along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineInner virtualMachineParameters,
-        Context context) {
+    private Response<BinaryData> createOrUpdateWithResponse(String resourceGroupName, String virtualMachineName,
+        VirtualMachineInner virtualMachineParameters, String ifMatch, String ifNoneMatch) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
         if (virtualMachineParameters == null) {
-            return Mono
-                .error(
+            throw LOGGER.atError()
+                .log(
                     new IllegalArgumentException("Parameter virtualMachineParameters is required and cannot be null."));
         } else {
             virtualMachineParameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .createOrUpdate(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                virtualMachineName,
-                virtualMachineParameters,
-                accept,
-                context);
+        return service.createOrUpdateSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+            virtualMachineParameters, accept, Context.NONE);
     }
 
     /**
      * Create or update the virtual machine.
-     *
-     * <p>Create a new virtual machine or update the properties of the existing virtual machine.
-     *
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param virtualMachineParameters The request body.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return virtualMachine represents the on-premises Network Cloud virtual machine along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createOrUpdateWithResponse(String resourceGroupName, String virtualMachineName,
+        VirtualMachineInner virtualMachineParameters, String ifMatch, String ifNoneMatch, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (virtualMachineName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+        }
+        if (virtualMachineParameters == null) {
+            throw LOGGER.atError()
+                .log(
+                    new IllegalArgumentException("Parameter virtualMachineParameters is required and cannot be null."));
+        } else {
+            virtualMachineParameters.validate();
+        }
+        final String accept = "application/json";
+        return service.createOrUpdateSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+            virtualMachineParameters, accept, context);
+    }
+
+    /**
+     * Create or update the virtual machine.
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param virtualMachineParameters The request body.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of virtualMachine represents the on-premises Network Cloud virtual
+     * machine.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<VirtualMachineInner>, VirtualMachineInner> beginCreateOrUpdateAsync(
+        String resourceGroupName, String virtualMachineName, VirtualMachineInner virtualMachineParameters,
+        String ifMatch, String ifNoneMatch) {
+        Mono<Response<Flux<ByteBuffer>>> mono = createOrUpdateWithResponseAsync(resourceGroupName, virtualMachineName,
+            virtualMachineParameters, ifMatch, ifNoneMatch);
+        return this.client.<VirtualMachineInner, VirtualMachineInner>getLroResult(mono, this.client.getHttpPipeline(),
+            VirtualMachineInner.class, VirtualMachineInner.class, this.client.getContext());
+    }
+
+    /**
+     * Create or update the virtual machine.
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachineParameters The request body.
@@ -884,58 +1018,52 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the {@link PollerFlux} for polling of virtualMachine represents the on-premises Network Cloud virtual
-     *     machine.
+     * machine.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<VirtualMachineInner>, VirtualMachineInner> beginCreateOrUpdateAsync(
         String resourceGroupName, String virtualMachineName, VirtualMachineInner virtualMachineParameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachineParameters);
-        return this
-            .client
-            .<VirtualMachineInner, VirtualMachineInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                VirtualMachineInner.class,
-                VirtualMachineInner.class,
-                this.client.getContext());
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
+        Mono<Response<Flux<ByteBuffer>>> mono = createOrUpdateWithResponseAsync(resourceGroupName, virtualMachineName,
+            virtualMachineParameters, ifMatch, ifNoneMatch);
+        return this.client.<VirtualMachineInner, VirtualMachineInner>getLroResult(mono, this.client.getHttpPipeline(),
+            VirtualMachineInner.class, VirtualMachineInner.class, this.client.getContext());
     }
 
     /**
      * Create or update the virtual machine.
-     *
-     * <p>Create a new virtual machine or update the properties of the existing virtual machine.
-     *
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachineParameters The request body.
-     * @param context The context to associate with this operation.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of virtualMachine represents the on-premises Network Cloud virtual
-     *     machine.
+     * @return the {@link SyncPoller} for polling of virtualMachine represents the on-premises Network Cloud virtual
+     * machine.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<VirtualMachineInner>, VirtualMachineInner> beginCreateOrUpdateAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineInner virtualMachineParameters,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachineParameters, context);
-        return this
-            .client
-            .<VirtualMachineInner, VirtualMachineInner>getLroResult(
-                mono, this.client.getHttpPipeline(), VirtualMachineInner.class, VirtualMachineInner.class, context);
+    public SyncPoller<PollResult<VirtualMachineInner>, VirtualMachineInner> beginCreateOrUpdate(
+        String resourceGroupName, String virtualMachineName, VirtualMachineInner virtualMachineParameters,
+        String ifMatch, String ifNoneMatch) {
+        Response<BinaryData> response = createOrUpdateWithResponse(resourceGroupName, virtualMachineName,
+            virtualMachineParameters, ifMatch, ifNoneMatch);
+        return this.client.<VirtualMachineInner, VirtualMachineInner>getLroResult(response, VirtualMachineInner.class,
+            VirtualMachineInner.class, Context.NONE);
     }
 
     /**
      * Create or update the virtual machine.
-     *
-     * <p>Create a new virtual machine or update the properties of the existing virtual machine.
-     *
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachineParameters The request body.
@@ -943,47 +1071,78 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the {@link SyncPoller} for polling of virtualMachine represents the on-premises Network Cloud virtual
-     *     machine.
+     * machine.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<VirtualMachineInner>, VirtualMachineInner> beginCreateOrUpdate(
         String resourceGroupName, String virtualMachineName, VirtualMachineInner virtualMachineParameters) {
-        return this
-            .beginCreateOrUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineParameters)
-            .getSyncPoller();
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
+        Response<BinaryData> response = createOrUpdateWithResponse(resourceGroupName, virtualMachineName,
+            virtualMachineParameters, ifMatch, ifNoneMatch);
+        return this.client.<VirtualMachineInner, VirtualMachineInner>getLroResult(response, VirtualMachineInner.class,
+            VirtualMachineInner.class, Context.NONE);
     }
 
     /**
      * Create or update the virtual machine.
-     *
-     * <p>Create a new virtual machine or update the properties of the existing virtual machine.
-     *
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachineParameters The request body.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the {@link SyncPoller} for polling of virtualMachine represents the on-premises Network Cloud virtual
-     *     machine.
+     * machine.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<VirtualMachineInner>, VirtualMachineInner> beginCreateOrUpdate(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineInner virtualMachineParameters,
-        Context context) {
-        return this
-            .beginCreateOrUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineParameters, context)
-            .getSyncPoller();
+        String resourceGroupName, String virtualMachineName, VirtualMachineInner virtualMachineParameters,
+        String ifMatch, String ifNoneMatch, Context context) {
+        Response<BinaryData> response = createOrUpdateWithResponse(resourceGroupName, virtualMachineName,
+            virtualMachineParameters, ifMatch, ifNoneMatch, context);
+        return this.client.<VirtualMachineInner, VirtualMachineInner>getLroResult(response, VirtualMachineInner.class,
+            VirtualMachineInner.class, context);
     }
 
     /**
      * Create or update the virtual machine.
-     *
-     * <p>Create a new virtual machine or update the properties of the existing virtual machine.
-     *
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param virtualMachineParameters The request body.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return virtualMachine represents the on-premises Network Cloud virtual machine on successful completion of
+     * {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<VirtualMachineInner> createOrUpdateAsync(String resourceGroupName, String virtualMachineName,
+        VirtualMachineInner virtualMachineParameters, String ifMatch, String ifNoneMatch) {
+        return beginCreateOrUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineParameters, ifMatch,
+            ifNoneMatch).last().flatMap(this.client::getLroFinalResultOrError);
+    }
+
+    /**
+     * Create or update the virtual machine.
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachineParameters The request body.
@@ -991,47 +1150,22 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return virtualMachine represents the on-premises Network Cloud virtual machine on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<VirtualMachineInner> createOrUpdateAsync(
-        String resourceGroupName, String virtualMachineName, VirtualMachineInner virtualMachineParameters) {
-        return beginCreateOrUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineParameters)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<VirtualMachineInner> createOrUpdateAsync(String resourceGroupName, String virtualMachineName,
+        VirtualMachineInner virtualMachineParameters) {
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
+        return beginCreateOrUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineParameters, ifMatch,
+            ifNoneMatch).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Create or update the virtual machine.
-     *
-     * <p>Create a new virtual machine or update the properties of the existing virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineParameters The request body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return virtualMachine represents the on-premises Network Cloud virtual machine on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<VirtualMachineInner> createOrUpdateAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineInner virtualMachineParameters,
-        Context context) {
-        return beginCreateOrUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineParameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Create or update the virtual machine.
-     *
-     * <p>Create a new virtual machine or update the properties of the existing virtual machine.
-     *
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachineParameters The request body.
@@ -1041,19 +1175,26 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * @return virtualMachine represents the on-premises Network Cloud virtual machine.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public VirtualMachineInner createOrUpdate(
-        String resourceGroupName, String virtualMachineName, VirtualMachineInner virtualMachineParameters) {
-        return createOrUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineParameters).block();
+    public VirtualMachineInner createOrUpdate(String resourceGroupName, String virtualMachineName,
+        VirtualMachineInner virtualMachineParameters) {
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
+        return beginCreateOrUpdate(resourceGroupName, virtualMachineName, virtualMachineParameters, ifMatch,
+            ifNoneMatch).getFinalResult();
     }
 
     /**
      * Create or update the virtual machine.
-     *
-     * <p>Create a new virtual machine or update the properties of the existing virtual machine.
-     *
+     * 
+     * Create a new virtual machine or update the properties of the existing virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachineParameters The request body.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1061,40 +1202,39 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * @return virtualMachine represents the on-premises Network Cloud virtual machine.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public VirtualMachineInner createOrUpdate(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineInner virtualMachineParameters,
-        Context context) {
-        return createOrUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineParameters, context).block();
+    public VirtualMachineInner createOrUpdate(String resourceGroupName, String virtualMachineName,
+        VirtualMachineInner virtualMachineParameters, String ifMatch, String ifNoneMatch, Context context) {
+        return beginCreateOrUpdate(resourceGroupName, virtualMachineName, virtualMachineParameters, ifMatch,
+            ifNoneMatch, context).getFinalResult();
     }
 
     /**
      * Delete the virtual machine.
-     *
-     * <p>Delete the provided virtual machine.
-     *
+     * 
+     * Delete the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String virtualMachineName) {
+    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName,
+        String virtualMachineName, String ifMatch, String ifNoneMatch) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1106,252 +1246,336 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            virtualMachineName,
-                            accept,
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Delete the virtual machine.
-     *
-     * <p>Delete the provided virtual machine.
-     *
+     * 
+     * Delete the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String virtualMachineName, Context context) {
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String virtualMachineName, String ifMatch,
+        String ifNoneMatch) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                virtualMachineName,
-                accept,
-                context);
+        return service.deleteSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch, accept,
+            Context.NONE);
     }
 
     /**
      * Delete the virtual machine.
-     *
-     * <p>Delete the provided virtual machine.
-     *
+     * 
+     * Delete the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String virtualMachineName) {
-        Mono<Response<Flux<ByteBuffer>>> mono = deleteWithResponseAsync(resourceGroupName, virtualMachineName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
-    }
-
-    /**
-     * Delete the virtual machine.
-     *
-     * <p>Delete the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceGroupName, String virtualMachineName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono = deleteWithResponseAsync(resourceGroupName, virtualMachineName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Delete the virtual machine.
-     *
-     * <p>Delete the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String virtualMachineName) {
-        return this.beginDeleteAsync(resourceGroupName, virtualMachineName).getSyncPoller();
-    }
-
-    /**
-     * Delete the virtual machine.
-     *
-     * <p>Delete the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceGroupName, String virtualMachineName, Context context) {
-        return this.beginDeleteAsync(resourceGroupName, virtualMachineName, context).getSyncPoller();
-    }
-
-    /**
-     * Delete the virtual machine.
-     *
-     * <p>Delete the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the current status of an async operation along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(String resourceGroupName, String virtualMachineName) {
-        return beginDeleteAsync(resourceGroupName, virtualMachineName)
-            .last()
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String virtualMachineName, String ifMatch,
+        String ifNoneMatch, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (virtualMachineName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.deleteSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch, accept,
+            context);
+    }
+
+    /**
+     * Delete the virtual machine.
+     * 
+     * Delete the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginDeleteAsync(String resourceGroupName, String virtualMachineName, String ifMatch, String ifNoneMatch) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = deleteWithResponseAsync(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(mono,
+            this.client.getHttpPipeline(), OperationStatusResultInner.class, OperationStatusResultInner.class,
+            this.client.getContext());
+    }
+
+    /**
+     * Delete the virtual machine.
+     * 
+     * Delete the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginDeleteAsync(String resourceGroupName, String virtualMachineName) {
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = deleteWithResponseAsync(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(mono,
+            this.client.getHttpPipeline(), OperationStatusResultInner.class, OperationStatusResultInner.class,
+            this.client.getContext());
+    }
+
+    /**
+     * Delete the virtual machine.
+     * 
+     * Delete the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginDelete(String resourceGroupName, String virtualMachineName, String ifMatch, String ifNoneMatch) {
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, Context.NONE);
+    }
+
+    /**
+     * Delete the virtual machine.
+     * 
+     * Delete the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginDelete(String resourceGroupName, String virtualMachineName) {
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, Context.NONE);
+    }
+
+    /**
+     * Delete the virtual machine.
+     * 
+     * Delete the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner> beginDelete(
+        String resourceGroupName, String virtualMachineName, String ifMatch, String ifNoneMatch, Context context) {
+        Response<BinaryData> response
+            = deleteWithResponse(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch, context);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, context);
+    }
+
+    /**
+     * Delete the virtual machine.
+     * 
+     * Delete the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<OperationStatusResultInner> deleteAsync(String resourceGroupName, String virtualMachineName,
+        String ifMatch, String ifNoneMatch) {
+        return beginDeleteAsync(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Delete the virtual machine.
-     *
-     * <p>Delete the provided virtual machine.
-     *
+     * 
+     * Delete the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the current status of an async operation on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(String resourceGroupName, String virtualMachineName, Context context) {
-        return beginDeleteAsync(resourceGroupName, virtualMachineName, context)
-            .last()
+    private Mono<OperationStatusResultInner> deleteAsync(String resourceGroupName, String virtualMachineName) {
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
+        return beginDeleteAsync(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Delete the virtual machine.
-     *
-     * <p>Delete the provided virtual machine.
-     *
+     * 
+     * Delete the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void delete(String resourceGroupName, String virtualMachineName) {
-        deleteAsync(resourceGroupName, virtualMachineName).block();
+    public OperationStatusResultInner delete(String resourceGroupName, String virtualMachineName) {
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
+        return beginDelete(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch).getFinalResult();
     }
 
     /**
      * Delete the virtual machine.
-     *
-     * <p>Delete the provided virtual machine.
-     *
+     * 
+     * Delete the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void delete(String resourceGroupName, String virtualMachineName, Context context) {
-        deleteAsync(resourceGroupName, virtualMachineName, context).block();
+    public OperationStatusResultInner delete(String resourceGroupName, String virtualMachineName, String ifMatch,
+        String ifNoneMatch, Context context) {
+        return beginDelete(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch, context).getFinalResult();
     }
 
     /**
      * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
      * Properties and tag updates can be done independently.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param virtualMachineUpdateParameters The request body.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return virtualMachine represents the on-premises Network Cloud virtual machine along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(
-        String resourceGroupName,
-        String virtualMachineName,
+    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(String resourceGroupName,
+        String virtualMachineName, String ifMatch, String ifNoneMatch,
         VirtualMachinePatchParameters virtualMachineUpdateParameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1366,303 +1590,304 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .update(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            virtualMachineName,
-                            virtualMachineUpdateParameters,
-                            accept,
-                            context))
+            .withContext(context -> service.update(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+                virtualMachineUpdateParameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
      * Properties and tag updates can be done independently.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param virtualMachineUpdateParameters The request body.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return virtualMachine represents the on-premises Network Cloud virtual machine along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * @return virtualMachine represents the on-premises Network Cloud virtual machine along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePatchParameters virtualMachineUpdateParameters,
-        Context context) {
+    private Response<BinaryData> updateWithResponse(String resourceGroupName, String virtualMachineName, String ifMatch,
+        String ifNoneMatch, VirtualMachinePatchParameters virtualMachineUpdateParameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
         if (virtualMachineUpdateParameters != null) {
             virtualMachineUpdateParameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .update(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                virtualMachineName,
-                virtualMachineUpdateParameters,
-                accept,
-                context);
+        return service.updateSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+            virtualMachineUpdateParameters, accept, Context.NONE);
     }
 
     /**
      * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
      * Properties and tag updates can be done independently.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineUpdateParameters The request body.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of virtualMachine represents the on-premises Network Cloud virtual
-     *     machine.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<VirtualMachineInner>, VirtualMachineInner> beginUpdateAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePatchParameters virtualMachineUpdateParameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachineUpdateParameters);
-        return this
-            .client
-            .<VirtualMachineInner, VirtualMachineInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                VirtualMachineInner.class,
-                VirtualMachineInner.class,
-                this.client.getContext());
-    }
-
-    /**
-     * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
-     * Properties and tag updates can be done independently.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of virtualMachine represents the on-premises Network Cloud virtual
-     *     machine.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<VirtualMachineInner>, VirtualMachineInner> beginUpdateAsync(
-        String resourceGroupName, String virtualMachineName) {
-        final VirtualMachinePatchParameters virtualMachineUpdateParameters = null;
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachineUpdateParameters);
-        return this
-            .client
-            .<VirtualMachineInner, VirtualMachineInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                VirtualMachineInner.class,
-                VirtualMachineInner.class,
-                this.client.getContext());
-    }
-
-    /**
-     * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
-     * Properties and tag updates can be done independently.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param virtualMachineUpdateParameters The request body.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of virtualMachine represents the on-premises Network Cloud virtual
-     *     machine.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<VirtualMachineInner>, VirtualMachineInner> beginUpdateAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePatchParameters virtualMachineUpdateParameters,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachineUpdateParameters, context);
-        return this
-            .client
-            .<VirtualMachineInner, VirtualMachineInner>getLroResult(
-                mono, this.client.getHttpPipeline(), VirtualMachineInner.class, VirtualMachineInner.class, context);
-    }
-
-    /**
-     * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
-     * Properties and tag updates can be done independently.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of virtualMachine represents the on-premises Network Cloud virtual
-     *     machine.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<VirtualMachineInner>, VirtualMachineInner> beginUpdate(
-        String resourceGroupName, String virtualMachineName) {
-        final VirtualMachinePatchParameters virtualMachineUpdateParameters = null;
-        return this
-            .beginUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineUpdateParameters)
-            .getSyncPoller();
-    }
-
-    /**
-     * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
-     * Properties and tag updates can be done independently.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineUpdateParameters The request body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of virtualMachine represents the on-premises Network Cloud virtual
-     *     machine.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<VirtualMachineInner>, VirtualMachineInner> beginUpdate(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePatchParameters virtualMachineUpdateParameters,
-        Context context) {
-        return this
-            .beginUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineUpdateParameters, context)
-            .getSyncPoller();
-    }
-
-    /**
-     * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
-     * Properties and tag updates can be done independently.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineUpdateParameters The request body.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return virtualMachine represents the on-premises Network Cloud virtual machine on successful completion of
-     *     {@link Mono}.
+     * @return virtualMachine represents the on-premises Network Cloud virtual machine along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<VirtualMachineInner> updateAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePatchParameters virtualMachineUpdateParameters) {
-        return beginUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineUpdateParameters)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Response<BinaryData> updateWithResponse(String resourceGroupName, String virtualMachineName, String ifMatch,
+        String ifNoneMatch, VirtualMachinePatchParameters virtualMachineUpdateParameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (virtualMachineName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+        }
+        if (virtualMachineUpdateParameters != null) {
+            virtualMachineUpdateParameters.validate();
+        }
+        final String accept = "application/json";
+        return service.updateSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+            virtualMachineUpdateParameters, accept, context);
     }
 
     /**
      * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
      * Properties and tag updates can be done independently.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @param virtualMachineUpdateParameters The request body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of virtualMachine represents the on-premises Network Cloud virtual
+     * machine.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<VirtualMachineInner>, VirtualMachineInner> beginUpdateAsync(String resourceGroupName,
+        String virtualMachineName, String ifMatch, String ifNoneMatch,
+        VirtualMachinePatchParameters virtualMachineUpdateParameters) {
+        Mono<Response<Flux<ByteBuffer>>> mono = updateWithResponseAsync(resourceGroupName, virtualMachineName, ifMatch,
+            ifNoneMatch, virtualMachineUpdateParameters);
+        return this.client.<VirtualMachineInner, VirtualMachineInner>getLroResult(mono, this.client.getHttpPipeline(),
+            VirtualMachineInner.class, VirtualMachineInner.class, this.client.getContext());
+    }
+
+    /**
+     * Patch the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * Properties and tag updates can be done independently.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of virtualMachine represents the on-premises Network Cloud virtual
+     * machine.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<VirtualMachineInner>, VirtualMachineInner> beginUpdateAsync(String resourceGroupName,
+        String virtualMachineName) {
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
+        final VirtualMachinePatchParameters virtualMachineUpdateParameters = null;
+        Mono<Response<Flux<ByteBuffer>>> mono = updateWithResponseAsync(resourceGroupName, virtualMachineName, ifMatch,
+            ifNoneMatch, virtualMachineUpdateParameters);
+        return this.client.<VirtualMachineInner, VirtualMachineInner>getLroResult(mono, this.client.getHttpPipeline(),
+            VirtualMachineInner.class, VirtualMachineInner.class, this.client.getContext());
+    }
+
+    /**
+     * Patch the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * Properties and tag updates can be done independently.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @param virtualMachineUpdateParameters The request body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of virtualMachine represents the on-premises Network Cloud virtual
+     * machine.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<VirtualMachineInner>, VirtualMachineInner> beginUpdate(String resourceGroupName,
+        String virtualMachineName, String ifMatch, String ifNoneMatch,
+        VirtualMachinePatchParameters virtualMachineUpdateParameters) {
+        Response<BinaryData> response = updateWithResponse(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+            virtualMachineUpdateParameters);
+        return this.client.<VirtualMachineInner, VirtualMachineInner>getLroResult(response, VirtualMachineInner.class,
+            VirtualMachineInner.class, Context.NONE);
+    }
+
+    /**
+     * Patch the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * Properties and tag updates can be done independently.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of virtualMachine represents the on-premises Network Cloud virtual
+     * machine.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<VirtualMachineInner>, VirtualMachineInner> beginUpdate(String resourceGroupName,
+        String virtualMachineName) {
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
+        final VirtualMachinePatchParameters virtualMachineUpdateParameters = null;
+        Response<BinaryData> response = updateWithResponse(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+            virtualMachineUpdateParameters);
+        return this.client.<VirtualMachineInner, VirtualMachineInner>getLroResult(response, VirtualMachineInner.class,
+            VirtualMachineInner.class, Context.NONE);
+    }
+
+    /**
+     * Patch the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * Properties and tag updates can be done independently.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @param virtualMachineUpdateParameters The request body.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of virtualMachine represents the on-premises Network Cloud virtual
+     * machine.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<VirtualMachineInner>, VirtualMachineInner> beginUpdate(String resourceGroupName,
+        String virtualMachineName, String ifMatch, String ifNoneMatch,
+        VirtualMachinePatchParameters virtualMachineUpdateParameters, Context context) {
+        Response<BinaryData> response = updateWithResponse(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+            virtualMachineUpdateParameters, context);
+        return this.client.<VirtualMachineInner, VirtualMachineInner>getLroResult(response, VirtualMachineInner.class,
+            VirtualMachineInner.class, context);
+    }
+
+    /**
+     * Patch the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * Properties and tag updates can be done independently.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
+     * @param virtualMachineUpdateParameters The request body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return virtualMachine represents the on-premises Network Cloud virtual machine on successful completion of
+     * {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<VirtualMachineInner> updateAsync(String resourceGroupName, String virtualMachineName, String ifMatch,
+        String ifNoneMatch, VirtualMachinePatchParameters virtualMachineUpdateParameters) {
+        return beginUpdateAsync(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+            virtualMachineUpdateParameters).last().flatMap(this.client::getLroFinalResultOrError);
+    }
+
+    /**
+     * Patch the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * Properties and tag updates can be done independently.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return virtualMachine represents the on-premises Network Cloud virtual machine on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<VirtualMachineInner> updateAsync(String resourceGroupName, String virtualMachineName) {
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
         final VirtualMachinePatchParameters virtualMachineUpdateParameters = null;
-        return beginUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineUpdateParameters)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginUpdateAsync(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch,
+            virtualMachineUpdateParameters).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
      * Properties and tag updates can be done independently.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineUpdateParameters The request body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return virtualMachine represents the on-premises Network Cloud virtual machine on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<VirtualMachineInner> updateAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePatchParameters virtualMachineUpdateParameters,
-        Context context) {
-        return beginUpdateAsync(resourceGroupName, virtualMachineName, virtualMachineUpdateParameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
-     * Properties and tag updates can be done independently.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1672,18 +1897,25 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public VirtualMachineInner update(String resourceGroupName, String virtualMachineName) {
+        final String ifMatch = null;
+        final String ifNoneMatch = null;
         final VirtualMachinePatchParameters virtualMachineUpdateParameters = null;
-        return updateAsync(resourceGroupName, virtualMachineName, virtualMachineUpdateParameters).block();
+        return beginUpdate(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch, virtualMachineUpdateParameters)
+            .getFinalResult();
     }
 
     /**
      * Patch the virtual machine.
-     *
-     * <p>Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
+     * 
+     * Patch the properties of the provided virtual machine, or update the tags associated with the virtual machine.
      * Properties and tag updates can be done independently.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param virtualMachineUpdateParameters The request body.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1692,43 +1924,36 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * @return virtualMachine represents the on-premises Network Cloud virtual machine.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public VirtualMachineInner update(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePatchParameters virtualMachineUpdateParameters,
-        Context context) {
-        return updateAsync(resourceGroupName, virtualMachineName, virtualMachineUpdateParameters, context).block();
+    public VirtualMachineInner update(String resourceGroupName, String virtualMachineName, String ifMatch,
+        String ifNoneMatch, VirtualMachinePatchParameters virtualMachineUpdateParameters, Context context) {
+        return beginUpdate(resourceGroupName, virtualMachineName, ifMatch, ifNoneMatch, virtualMachineUpdateParameters,
+            context).getFinalResult();
     }
 
     /**
-     * Attach volume to the virtual machine.
-     *
-     * <p>Attach volume to the provided virtual machine.
-     *
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineAttachVolumeParameters The request body.
+     * @param virtualMachineAssignRelayParameters The request body.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> attachVolumeWithResponseAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters) {
+    private Mono<Response<Flux<ByteBuffer>>> assignRelayWithResponseAsync(String resourceGroupName,
+        String virtualMachineName, VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1738,637 +1963,323 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
             return Mono
                 .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
-        if (virtualMachineAttachVolumeParameters == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter virtualMachineAttachVolumeParameters is required and cannot be null."));
-        } else {
-            virtualMachineAttachVolumeParameters.validate();
+        if (virtualMachineAssignRelayParameters != null) {
+            virtualMachineAssignRelayParameters.validate();
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .attachVolume(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            virtualMachineName,
-                            virtualMachineAttachVolumeParameters,
-                            accept,
-                            context))
+            .withContext(context -> service.assignRelay(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, virtualMachineName,
+                virtualMachineAssignRelayParameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
-     * Attach volume to the virtual machine.
-     *
-     * <p>Attach volume to the provided virtual machine.
-     *
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineAttachVolumeParameters The request body.
-     * @param context The context to associate with this operation.
+     * @param virtualMachineAssignRelayParameters The request body.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> attachVolumeWithResponseAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters,
-        Context context) {
+    private Response<BinaryData> assignRelayWithResponse(String resourceGroupName, String virtualMachineName,
+        VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
-        if (virtualMachineAttachVolumeParameters == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter virtualMachineAttachVolumeParameters is required and cannot be null."));
-        } else {
-            virtualMachineAttachVolumeParameters.validate();
+        if (virtualMachineAssignRelayParameters != null) {
+            virtualMachineAssignRelayParameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .attachVolume(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                virtualMachineName,
-                virtualMachineAttachVolumeParameters,
-                accept,
-                context);
+        return service.assignRelaySync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters,
+            accept, Context.NONE);
     }
 
     /**
-     * Attach volume to the virtual machine.
-     *
-     * <p>Attach volume to the provided virtual machine.
-     *
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineAttachVolumeParameters The request body.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginAttachVolumeAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            attachVolumeWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachineAttachVolumeParameters);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
-    }
-
-    /**
-     * Attach volume to the virtual machine.
-     *
-     * <p>Attach volume to the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineAttachVolumeParameters The request body.
+     * @param virtualMachineAssignRelayParameters The request body.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginAttachVolumeAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            attachVolumeWithResponseAsync(
-                resourceGroupName, virtualMachineName, virtualMachineAttachVolumeParameters, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Attach volume to the virtual machine.
-     *
-     * <p>Attach volume to the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineAttachVolumeParameters The request body.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginAttachVolume(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters) {
-        return this
-            .beginAttachVolumeAsync(resourceGroupName, virtualMachineName, virtualMachineAttachVolumeParameters)
-            .getSyncPoller();
-    }
-
-    /**
-     * Attach volume to the virtual machine.
-     *
-     * <p>Attach volume to the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineAttachVolumeParameters The request body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginAttachVolume(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters,
-        Context context) {
-        return this
-            .beginAttachVolumeAsync(
-                resourceGroupName, virtualMachineName, virtualMachineAttachVolumeParameters, context)
-            .getSyncPoller();
-    }
-
-    /**
-     * Attach volume to the virtual machine.
-     *
-     * <p>Attach volume to the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineAttachVolumeParameters The request body.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the current status of an async operation along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> attachVolumeAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters) {
-        return beginAttachVolumeAsync(resourceGroupName, virtualMachineName, virtualMachineAttachVolumeParameters)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Attach volume to the virtual machine.
-     *
-     * <p>Attach volume to the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineAttachVolumeParameters The request body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> attachVolumeAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters,
-        Context context) {
-        return beginAttachVolumeAsync(
-                resourceGroupName, virtualMachineName, virtualMachineAttachVolumeParameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Attach volume to the virtual machine.
-     *
-     * <p>Attach volume to the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineAttachVolumeParameters The request body.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void attachVolume(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters) {
-        attachVolumeAsync(resourceGroupName, virtualMachineName, virtualMachineAttachVolumeParameters).block();
-    }
-
-    /**
-     * Attach volume to the virtual machine.
-     *
-     * <p>Attach volume to the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineAttachVolumeParameters The request body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void attachVolume(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineAttachVolumeParameters,
-        Context context) {
-        attachVolumeAsync(resourceGroupName, virtualMachineName, virtualMachineAttachVolumeParameters, context).block();
-    }
-
-    /**
-     * Detach volume from the virtual machine.
-     *
-     * <p>Detach volume from the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineDetachVolumeParameters The request body.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> detachVolumeWithResponseAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters) {
+    private Response<BinaryData> assignRelayWithResponse(String resourceGroupName, String virtualMachineName,
+        VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
-        if (virtualMachineDetachVolumeParameters == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter virtualMachineDetachVolumeParameters is required and cannot be null."));
-        } else {
-            virtualMachineDetachVolumeParameters.validate();
+        if (virtualMachineAssignRelayParameters != null) {
+            virtualMachineAssignRelayParameters.validate();
         }
         final String accept = "application/json";
-        return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .detachVolume(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            virtualMachineName,
-                            virtualMachineDetachVolumeParameters,
-                            accept,
-                            context))
-            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+        return service.assignRelaySync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters,
+            accept, context);
     }
 
     /**
-     * Detach volume from the virtual machine.
-     *
-     * <p>Detach volume from the provided virtual machine.
-     *
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineDetachVolumeParameters The request body.
+     * @param virtualMachineAssignRelayParameters The request body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<OperationStatusResultInner>, OperationStatusResultInner> beginAssignRelayAsync(
+        String resourceGroupName, String virtualMachineName,
+        VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = assignRelayWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(mono,
+            this.client.getHttpPipeline(), OperationStatusResultInner.class, OperationStatusResultInner.class,
+            this.client.getContext());
+    }
+
+    /**
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginAssignRelayAsync(String resourceGroupName, String virtualMachineName) {
+        final VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters = null;
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = assignRelayWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(mono,
+            this.client.getHttpPipeline(), OperationStatusResultInner.class, OperationStatusResultInner.class,
+            this.client.getContext());
+    }
+
+    /**
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param virtualMachineAssignRelayParameters The request body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner> beginAssignRelay(
+        String resourceGroupName, String virtualMachineName,
+        VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters) {
+        Response<BinaryData> response
+            = assignRelayWithResponse(resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, Context.NONE);
+    }
+
+    /**
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginAssignRelay(String resourceGroupName, String virtualMachineName) {
+        final VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters = null;
+        Response<BinaryData> response
+            = assignRelayWithResponse(resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, Context.NONE);
+    }
+
+    /**
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param virtualMachineAssignRelayParameters The request body.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner> beginAssignRelay(
+        String resourceGroupName, String virtualMachineName,
+        VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters, Context context) {
+        Response<BinaryData> response = assignRelayWithResponse(resourceGroupName, virtualMachineName,
+            virtualMachineAssignRelayParameters, context);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, context);
+    }
+
+    /**
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param virtualMachineAssignRelayParameters The request body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> detachVolumeWithResponseAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
-        }
-        if (virtualMachineDetachVolumeParameters == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter virtualMachineDetachVolumeParameters is required and cannot be null."));
-        } else {
-            virtualMachineDetachVolumeParameters.validate();
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .detachVolume(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                virtualMachineName,
-                virtualMachineDetachVolumeParameters,
-                accept,
-                context);
-    }
-
-    /**
-     * Detach volume from the virtual machine.
-     *
-     * <p>Detach volume from the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineDetachVolumeParameters The request body.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDetachVolumeAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            detachVolumeWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachineDetachVolumeParameters);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
-    }
-
-    /**
-     * Detach volume from the virtual machine.
-     *
-     * <p>Detach volume from the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineDetachVolumeParameters The request body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDetachVolumeAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            detachVolumeWithResponseAsync(
-                resourceGroupName, virtualMachineName, virtualMachineDetachVolumeParameters, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Detach volume from the virtual machine.
-     *
-     * <p>Detach volume from the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineDetachVolumeParameters The request body.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDetachVolume(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters) {
-        return this
-            .beginDetachVolumeAsync(resourceGroupName, virtualMachineName, virtualMachineDetachVolumeParameters)
-            .getSyncPoller();
-    }
-
-    /**
-     * Detach volume from the virtual machine.
-     *
-     * <p>Detach volume from the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineDetachVolumeParameters The request body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDetachVolume(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters,
-        Context context) {
-        return this
-            .beginDetachVolumeAsync(
-                resourceGroupName, virtualMachineName, virtualMachineDetachVolumeParameters, context)
-            .getSyncPoller();
-    }
-
-    /**
-     * Detach volume from the virtual machine.
-     *
-     * <p>Detach volume from the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineDetachVolumeParameters The request body.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> detachVolumeAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters) {
-        return beginDetachVolumeAsync(resourceGroupName, virtualMachineName, virtualMachineDetachVolumeParameters)
-            .last()
+    private Mono<OperationStatusResultInner> assignRelayAsync(String resourceGroupName, String virtualMachineName,
+        VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters) {
+        return beginAssignRelayAsync(resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
-     * Detach volume from the virtual machine.
-     *
-     * <p>Detach volume from the provided virtual machine.
-     *
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineDetachVolumeParameters The request body.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the current status of an async operation on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> detachVolumeAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters,
-        Context context) {
-        return beginDetachVolumeAsync(
-                resourceGroupName, virtualMachineName, virtualMachineDetachVolumeParameters, context)
-            .last()
+    private Mono<OperationStatusResultInner> assignRelayAsync(String resourceGroupName, String virtualMachineName) {
+        final VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters = null;
+        return beginAssignRelayAsync(resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
-     * Detach volume from the virtual machine.
-     *
-     * <p>Detach volume from the provided virtual machine.
-     *
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineDetachVolumeParameters The request body.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void detachVolume(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters) {
-        detachVolumeAsync(resourceGroupName, virtualMachineName, virtualMachineDetachVolumeParameters).block();
+    public OperationStatusResultInner assignRelay(String resourceGroupName, String virtualMachineName) {
+        final VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters = null;
+        return beginAssignRelay(resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters)
+            .getFinalResult();
     }
 
     /**
-     * Detach volume from the virtual machine.
-     *
-     * <p>Detach volume from the provided virtual machine.
-     *
+     * Assigns a relay to the specified Microsoft.HybridCompute machine.
+     * 
+     * Assigns a relay to the specified Microsoft.HybridCompute machine associated with the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachineDetachVolumeParameters The request body.
+     * @param virtualMachineAssignRelayParameters The request body.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void detachVolume(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachineVolumeParameters virtualMachineDetachVolumeParameters,
-        Context context) {
-        detachVolumeAsync(resourceGroupName, virtualMachineName, virtualMachineDetachVolumeParameters, context).block();
+    public OperationStatusResultInner assignRelay(String resourceGroupName, String virtualMachineName,
+        VirtualMachineAssignRelayParameters virtualMachineAssignRelayParameters, Context context) {
+        return beginAssignRelay(resourceGroupName, virtualMachineName, virtualMachineAssignRelayParameters, context)
+            .getFinalResult();
     }
 
     /**
      * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
+     * 
+     * Power off the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachinePowerOffParameters The request body.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> powerOffWithResponseAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters) {
+    private Mono<Response<Flux<ByteBuffer>>> powerOffWithResponseAsync(String resourceGroupName,
+        String virtualMachineName, VirtualMachinePowerOffParameters virtualMachinePowerOffParameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -2383,248 +2294,196 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .powerOff(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            virtualMachineName,
-                            virtualMachinePowerOffParameters,
-                            accept,
-                            context))
+            .withContext(context -> service.powerOff(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, virtualMachineName,
+                virtualMachinePowerOffParameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
+     * 
+     * Power off the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachinePowerOffParameters The request body.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> powerOffWithResponseAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters,
-        Context context) {
+    private Response<BinaryData> powerOffWithResponse(String resourceGroupName, String virtualMachineName,
+        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
         if (virtualMachinePowerOffParameters != null) {
             virtualMachinePowerOffParameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .powerOff(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                virtualMachineName,
-                virtualMachinePowerOffParameters,
-                accept,
-                context);
+        return service.powerOffSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters,
+            accept, Context.NONE);
     }
 
     /**
      * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
+     * 
+     * Power off the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param virtualMachinePowerOffParameters The request body.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> powerOffWithResponse(String resourceGroupName, String virtualMachineName,
+        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (virtualMachineName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+        }
+        if (virtualMachinePowerOffParameters != null) {
+            virtualMachinePowerOffParameters.validate();
+        }
+        final String accept = "application/json";
+        return service.powerOffSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters,
+            accept, context);
+    }
+
+    /**
+     * Power off the virtual machine.
+     * 
+     * Power off the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachinePowerOffParameters The request body.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
+     * @return the {@link PollerFlux} for polling of the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginPowerOffAsync(
-        String resourceGroupName,
-        String virtualMachineName,
+    private PollerFlux<PollResult<OperationStatusResultInner>, OperationStatusResultInner> beginPowerOffAsync(
+        String resourceGroupName, String virtualMachineName,
         VirtualMachinePowerOffParameters virtualMachinePowerOffParameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            powerOffWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = powerOffWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(mono,
+            this.client.getHttpPipeline(), OperationStatusResultInner.class, OperationStatusResultInner.class,
+            this.client.getContext());
     }
 
     /**
      * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
+     * 
+     * Power off the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
+     * @return the {@link PollerFlux} for polling of the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginPowerOffAsync(String resourceGroupName, String virtualMachineName) {
+    private PollerFlux<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginPowerOffAsync(String resourceGroupName, String virtualMachineName) {
         final VirtualMachinePowerOffParameters virtualMachinePowerOffParameters = null;
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            powerOffWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = powerOffWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(mono,
+            this.client.getHttpPipeline(), OperationStatusResultInner.class, OperationStatusResultInner.class,
+            this.client.getContext());
     }
 
     /**
      * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachinePowerOffParameters The request body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginPowerOffAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            powerOffWithResponseAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginPowerOff(String resourceGroupName, String virtualMachineName) {
-        final VirtualMachinePowerOffParameters virtualMachinePowerOffParameters = null;
-        return this
-            .beginPowerOffAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters)
-            .getSyncPoller();
-    }
-
-    /**
-     * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param virtualMachinePowerOffParameters The request body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginPowerOff(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters,
-        Context context) {
-        return this
-            .beginPowerOffAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters, context)
-            .getSyncPoller();
-    }
-
-    /**
-     * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
+     * 
+     * Power off the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachinePowerOffParameters The request body.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> powerOffAsync(
-        String resourceGroupName,
-        String virtualMachineName,
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner> beginPowerOff(
+        String resourceGroupName, String virtualMachineName,
         VirtualMachinePowerOffParameters virtualMachinePowerOffParameters) {
-        return beginPowerOffAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        Response<BinaryData> response
+            = powerOffWithResponse(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, Context.NONE);
     }
 
     /**
      * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
+     * 
+     * Power off the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> powerOffAsync(String resourceGroupName, String virtualMachineName) {
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginPowerOff(String resourceGroupName, String virtualMachineName) {
         final VirtualMachinePowerOffParameters virtualMachinePowerOffParameters = null;
-        return beginPowerOffAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        Response<BinaryData> response
+            = powerOffWithResponse(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, Context.NONE);
     }
 
     /**
      * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
+     * 
+     * Power off the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachinePowerOffParameters The request body.
@@ -2632,41 +2491,80 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner> beginPowerOff(
+        String resourceGroupName, String virtualMachineName,
+        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters, Context context) {
+        Response<BinaryData> response
+            = powerOffWithResponse(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters, context);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, context);
+    }
+
+    /**
+     * Power off the virtual machine.
+     * 
+     * Power off the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param virtualMachinePowerOffParameters The request body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> powerOffAsync(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters,
-        Context context) {
-        return beginPowerOffAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters, context)
-            .last()
+    private Mono<OperationStatusResultInner> powerOffAsync(String resourceGroupName, String virtualMachineName,
+        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters) {
+        return beginPowerOffAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
+     * 
+     * Power off the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void powerOff(String resourceGroupName, String virtualMachineName) {
+    private Mono<OperationStatusResultInner> powerOffAsync(String resourceGroupName, String virtualMachineName) {
         final VirtualMachinePowerOffParameters virtualMachinePowerOffParameters = null;
-        powerOffAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters).block();
+        return beginPowerOffAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters).last()
+            .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Power off the virtual machine.
-     *
-     * <p>Power off the provided virtual machine.
-     *
+     * 
+     * Power off the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public OperationStatusResultInner powerOff(String resourceGroupName, String virtualMachineName) {
+        final VirtualMachinePowerOffParameters virtualMachinePowerOffParameters = null;
+        return beginPowerOff(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters).getFinalResult();
+    }
+
+    /**
+     * Power off the virtual machine.
+     * 
+     * Power off the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param virtualMachinePowerOffParameters The request body.
@@ -2674,42 +2572,38 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void powerOff(
-        String resourceGroupName,
-        String virtualMachineName,
-        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters,
-        Context context) {
-        powerOffAsync(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters, context).block();
+    public OperationStatusResultInner powerOff(String resourceGroupName, String virtualMachineName,
+        VirtualMachinePowerOffParameters virtualMachinePowerOffParameters, Context context) {
+        return beginPowerOff(resourceGroupName, virtualMachineName, virtualMachinePowerOffParameters, context)
+            .getFinalResult();
     }
 
     /**
      * Reimage the virtual machine.
-     *
-     * <p>Reimage the provided virtual machine.
-     *
+     * 
+     * Reimage the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> reimageWithResponseAsync(
-        String resourceGroupName, String virtualMachineName) {
+    private Mono<Response<Flux<ByteBuffer>>> reimageWithResponseAsync(String resourceGroupName,
+        String virtualMachineName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -2721,248 +2615,225 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .reimage(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            virtualMachineName,
-                            accept,
-                            context))
+            .withContext(context -> service.reimage(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Reimage the virtual machine.
-     *
-     * <p>Reimage the provided virtual machine.
-     *
+     * 
+     * Reimage the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> reimageWithResponse(String resourceGroupName, String virtualMachineName) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (virtualMachineName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.reimageSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, Context.NONE);
+    }
+
+    /**
+     * Reimage the virtual machine.
+     * 
+     * Reimage the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> reimageWithResponseAsync(
-        String resourceGroupName, String virtualMachineName, Context context) {
+    private Response<BinaryData> reimageWithResponse(String resourceGroupName, String virtualMachineName,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .reimage(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                virtualMachineName,
-                accept,
-                context);
+        return service.reimageSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, context);
     }
 
     /**
      * Reimage the virtual machine.
-     *
-     * <p>Reimage the provided virtual machine.
-     *
+     * 
+     * Reimage the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
+     * @return the {@link PollerFlux} for polling of the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginReimageAsync(String resourceGroupName, String virtualMachineName) {
+    private PollerFlux<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginReimageAsync(String resourceGroupName, String virtualMachineName) {
         Mono<Response<Flux<ByteBuffer>>> mono = reimageWithResponseAsync(resourceGroupName, virtualMachineName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(mono,
+            this.client.getHttpPipeline(), OperationStatusResultInner.class, OperationStatusResultInner.class,
+            this.client.getContext());
     }
 
     /**
      * Reimage the virtual machine.
-     *
-     * <p>Reimage the provided virtual machine.
-     *
+     * 
+     * Reimage the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginReimage(String resourceGroupName, String virtualMachineName) {
+        Response<BinaryData> response = reimageWithResponse(resourceGroupName, virtualMachineName);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, Context.NONE);
+    }
+
+    /**
+     * Reimage the virtual machine.
+     * 
+     * Reimage the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginReimageAsync(
-        String resourceGroupName, String virtualMachineName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            reimageWithResponseAsync(resourceGroupName, virtualMachineName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginReimage(String resourceGroupName, String virtualMachineName, Context context) {
+        Response<BinaryData> response = reimageWithResponse(resourceGroupName, virtualMachineName, context);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, context);
     }
 
     /**
      * Reimage the virtual machine.
-     *
-     * <p>Reimage the provided virtual machine.
-     *
+     * 
+     * Reimage the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginReimage(String resourceGroupName, String virtualMachineName) {
-        return this.beginReimageAsync(resourceGroupName, virtualMachineName).getSyncPoller();
-    }
-
-    /**
-     * Reimage the virtual machine.
-     *
-     * <p>Reimage the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginReimage(
-        String resourceGroupName, String virtualMachineName, Context context) {
-        return this.beginReimageAsync(resourceGroupName, virtualMachineName, context).getSyncPoller();
-    }
-
-    /**
-     * Reimage the virtual machine.
-     *
-     * <p>Reimage the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the current status of an async operation on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> reimageAsync(String resourceGroupName, String virtualMachineName) {
-        return beginReimageAsync(resourceGroupName, virtualMachineName)
-            .last()
+    private Mono<OperationStatusResultInner> reimageAsync(String resourceGroupName, String virtualMachineName) {
+        return beginReimageAsync(resourceGroupName, virtualMachineName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Reimage the virtual machine.
-     *
-     * <p>Reimage the provided virtual machine.
-     *
+     * 
+     * Reimage the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public OperationStatusResultInner reimage(String resourceGroupName, String virtualMachineName) {
+        return beginReimage(resourceGroupName, virtualMachineName).getFinalResult();
+    }
+
+    /**
+     * Reimage the virtual machine.
+     * 
+     * Reimage the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> reimageAsync(String resourceGroupName, String virtualMachineName, Context context) {
-        return beginReimageAsync(resourceGroupName, virtualMachineName, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Reimage the virtual machine.
-     *
-     * <p>Reimage the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void reimage(String resourceGroupName, String virtualMachineName) {
-        reimageAsync(resourceGroupName, virtualMachineName).block();
-    }
-
-    /**
-     * Reimage the virtual machine.
-     *
-     * <p>Reimage the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void reimage(String resourceGroupName, String virtualMachineName, Context context) {
-        reimageAsync(resourceGroupName, virtualMachineName, context).block();
+    public OperationStatusResultInner reimage(String resourceGroupName, String virtualMachineName, Context context) {
+        return beginReimage(resourceGroupName, virtualMachineName, context).getFinalResult();
     }
 
     /**
      * Restart the virtual machine.
-     *
-     * <p>Restart the provided virtual machine.
-     *
+     * 
+     * Restart the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> restartWithResponseAsync(
-        String resourceGroupName, String virtualMachineName) {
+    private Mono<Response<Flux<ByteBuffer>>> restartWithResponseAsync(String resourceGroupName,
+        String virtualMachineName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -2974,248 +2845,225 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .restart(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            virtualMachineName,
-                            accept,
-                            context))
+            .withContext(context -> service.restart(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Restart the virtual machine.
-     *
-     * <p>Restart the provided virtual machine.
-     *
+     * 
+     * Restart the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> restartWithResponse(String resourceGroupName, String virtualMachineName) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (virtualMachineName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.restartSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, Context.NONE);
+    }
+
+    /**
+     * Restart the virtual machine.
+     * 
+     * Restart the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> restartWithResponseAsync(
-        String resourceGroupName, String virtualMachineName, Context context) {
+    private Response<BinaryData> restartWithResponse(String resourceGroupName, String virtualMachineName,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .restart(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                virtualMachineName,
-                accept,
-                context);
+        return service.restartSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, context);
     }
 
     /**
      * Restart the virtual machine.
-     *
-     * <p>Restart the provided virtual machine.
-     *
+     * 
+     * Restart the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
+     * @return the {@link PollerFlux} for polling of the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginRestartAsync(String resourceGroupName, String virtualMachineName) {
+    private PollerFlux<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginRestartAsync(String resourceGroupName, String virtualMachineName) {
         Mono<Response<Flux<ByteBuffer>>> mono = restartWithResponseAsync(resourceGroupName, virtualMachineName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(mono,
+            this.client.getHttpPipeline(), OperationStatusResultInner.class, OperationStatusResultInner.class,
+            this.client.getContext());
     }
 
     /**
      * Restart the virtual machine.
-     *
-     * <p>Restart the provided virtual machine.
-     *
+     * 
+     * Restart the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginRestart(String resourceGroupName, String virtualMachineName) {
+        Response<BinaryData> response = restartWithResponse(resourceGroupName, virtualMachineName);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, Context.NONE);
+    }
+
+    /**
+     * Restart the virtual machine.
+     * 
+     * Restart the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginRestartAsync(
-        String resourceGroupName, String virtualMachineName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            restartWithResponseAsync(resourceGroupName, virtualMachineName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginRestart(String resourceGroupName, String virtualMachineName, Context context) {
+        Response<BinaryData> response = restartWithResponse(resourceGroupName, virtualMachineName, context);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, context);
     }
 
     /**
      * Restart the virtual machine.
-     *
-     * <p>Restart the provided virtual machine.
-     *
+     * 
+     * Restart the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginRestart(String resourceGroupName, String virtualMachineName) {
-        return this.beginRestartAsync(resourceGroupName, virtualMachineName).getSyncPoller();
-    }
-
-    /**
-     * Restart the virtual machine.
-     *
-     * <p>Restart the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginRestart(
-        String resourceGroupName, String virtualMachineName, Context context) {
-        return this.beginRestartAsync(resourceGroupName, virtualMachineName, context).getSyncPoller();
-    }
-
-    /**
-     * Restart the virtual machine.
-     *
-     * <p>Restart the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the current status of an async operation on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> restartAsync(String resourceGroupName, String virtualMachineName) {
-        return beginRestartAsync(resourceGroupName, virtualMachineName)
-            .last()
+    private Mono<OperationStatusResultInner> restartAsync(String resourceGroupName, String virtualMachineName) {
+        return beginRestartAsync(resourceGroupName, virtualMachineName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Restart the virtual machine.
-     *
-     * <p>Restart the provided virtual machine.
-     *
+     * 
+     * Restart the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public OperationStatusResultInner restart(String resourceGroupName, String virtualMachineName) {
+        return beginRestart(resourceGroupName, virtualMachineName).getFinalResult();
+    }
+
+    /**
+     * Restart the virtual machine.
+     * 
+     * Restart the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> restartAsync(String resourceGroupName, String virtualMachineName, Context context) {
-        return beginRestartAsync(resourceGroupName, virtualMachineName, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Restart the virtual machine.
-     *
-     * <p>Restart the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void restart(String resourceGroupName, String virtualMachineName) {
-        restartAsync(resourceGroupName, virtualMachineName).block();
-    }
-
-    /**
-     * Restart the virtual machine.
-     *
-     * <p>Restart the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void restart(String resourceGroupName, String virtualMachineName, Context context) {
-        restartAsync(resourceGroupName, virtualMachineName, context).block();
+    public OperationStatusResultInner restart(String resourceGroupName, String virtualMachineName, Context context) {
+        return beginRestart(resourceGroupName, virtualMachineName, context).getFinalResult();
     }
 
     /**
      * Start the virtual machine.
-     *
-     * <p>Start the provided virtual machine.
-     *
+     * 
+     * Start the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> startWithResponseAsync(
-        String resourceGroupName, String virtualMachineName) {
+    private Mono<Response<Flux<ByteBuffer>>> startWithResponseAsync(String resourceGroupName,
+        String virtualMachineName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -3227,231 +3075,213 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .start(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            virtualMachineName,
-                            accept,
-                            context))
+            .withContext(context -> service.start(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Start the virtual machine.
-     *
-     * <p>Start the provided virtual machine.
-     *
+     * 
+     * Start the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the current status of an async operation along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> startWithResponseAsync(
-        String resourceGroupName, String virtualMachineName, Context context) {
+    private Response<BinaryData> startWithResponse(String resourceGroupName, String virtualMachineName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (virtualMachineName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .start(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                virtualMachineName,
-                accept,
-                context);
+        return service.startSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, Context.NONE);
     }
 
     /**
      * Start the virtual machine.
-     *
-     * <p>Start the provided virtual machine.
-     *
+     * 
+     * Start the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> startWithResponse(String resourceGroupName, String virtualMachineName,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (virtualMachineName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter virtualMachineName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.startSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, virtualMachineName, accept, context);
+    }
+
+    /**
+     * Start the virtual machine.
+     * 
+     * Start the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
+     * @return the {@link PollerFlux} for polling of the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginStartAsync(String resourceGroupName, String virtualMachineName) {
+    private PollerFlux<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginStartAsync(String resourceGroupName, String virtualMachineName) {
         Mono<Response<Flux<ByteBuffer>>> mono = startWithResponseAsync(resourceGroupName, virtualMachineName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(mono,
+            this.client.getHttpPipeline(), OperationStatusResultInner.class, OperationStatusResultInner.class,
+            this.client.getContext());
     }
 
     /**
      * Start the virtual machine.
-     *
-     * <p>Start the provided virtual machine.
-     *
+     * 
+     * Start the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginStart(String resourceGroupName, String virtualMachineName) {
+        Response<BinaryData> response = startWithResponse(resourceGroupName, virtualMachineName);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, Context.NONE);
+    }
+
+    /**
+     * Start the virtual machine.
+     * 
+     * Start the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
+     * @return the {@link SyncPoller} for polling of the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginStartAsync(
-        String resourceGroupName, String virtualMachineName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono = startWithResponseAsync(resourceGroupName, virtualMachineName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
+    public SyncPoller<PollResult<OperationStatusResultInner>, OperationStatusResultInner>
+        beginStart(String resourceGroupName, String virtualMachineName, Context context) {
+        Response<BinaryData> response = startWithResponse(resourceGroupName, virtualMachineName, context);
+        return this.client.<OperationStatusResultInner, OperationStatusResultInner>getLroResult(response,
+            OperationStatusResultInner.class, OperationStatusResultInner.class, context);
     }
 
     /**
      * Start the virtual machine.
-     *
-     * <p>Start the provided virtual machine.
-     *
+     * 
+     * Start the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginStart(String resourceGroupName, String virtualMachineName) {
-        return this.beginStartAsync(resourceGroupName, virtualMachineName).getSyncPoller();
-    }
-
-    /**
-     * Start the virtual machine.
-     *
-     * <p>Start the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginStart(
-        String resourceGroupName, String virtualMachineName, Context context) {
-        return this.beginStartAsync(resourceGroupName, virtualMachineName, context).getSyncPoller();
-    }
-
-    /**
-     * Start the virtual machine.
-     *
-     * <p>Start the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the current status of an async operation on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> startAsync(String resourceGroupName, String virtualMachineName) {
-        return beginStartAsync(resourceGroupName, virtualMachineName)
-            .last()
+    private Mono<OperationStatusResultInner> startAsync(String resourceGroupName, String virtualMachineName) {
+        return beginStartAsync(resourceGroupName, virtualMachineName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Start the virtual machine.
-     *
-     * <p>Start the provided virtual machine.
-     *
+     * 
+     * Start the provided virtual machine.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param virtualMachineName The name of the virtual machine.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public OperationStatusResultInner start(String resourceGroupName, String virtualMachineName) {
+        return beginStart(resourceGroupName, virtualMachineName).getFinalResult();
+    }
+
+    /**
+     * Start the virtual machine.
+     * 
+     * Start the provided virtual machine.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param virtualMachineName The name of the virtual machine.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return the current status of an async operation.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> startAsync(String resourceGroupName, String virtualMachineName, Context context) {
-        return beginStartAsync(resourceGroupName, virtualMachineName, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    public OperationStatusResultInner start(String resourceGroupName, String virtualMachineName, Context context) {
+        return beginStart(resourceGroupName, virtualMachineName, context).getFinalResult();
     }
 
     /**
-     * Start the virtual machine.
-     *
-     * <p>Start the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void start(String resourceGroupName, String virtualMachineName) {
-        startAsync(resourceGroupName, virtualMachineName).block();
-    }
-
-    /**
-     * Start the virtual machine.
-     *
-     * <p>Start the provided virtual machine.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param virtualMachineName The name of the virtual machine.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void start(String resourceGroupName, String virtualMachineName, Context context) {
-        startAsync(resourceGroupName, virtualMachineName, context).block();
-    }
-
-    /**
+     * List virtual machines in the subscription.
+     * 
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return virtualMachineList represents a list of virtual machines along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * @return a list of virtual machines in the provided subscription along with {@link PagedResponse} on successful
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<VirtualMachineInner>> listBySubscriptionNextSinglePageAsync(String nextLink) {
@@ -3459,76 +3289,88 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listBySubscriptionNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<VirtualMachineInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<VirtualMachineInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
+     * List virtual machines in the subscription.
+     * 
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of virtual machines in the provided subscription along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<VirtualMachineInner> listBySubscriptionNextSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<VirtualMachineList> res
+            = service.listBySubscriptionNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * List virtual machines in the subscription.
+     * 
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return virtualMachineList represents a list of virtual machines along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * @return a list of virtual machines in the provided subscription along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<VirtualMachineInner>> listBySubscriptionNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<VirtualMachineInner> listBySubscriptionNextSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listBySubscriptionNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<VirtualMachineList> res
+            = service.listBySubscriptionNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
+     * List virtual machines in the resource group.
+     * 
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return virtualMachineList represents a list of virtual machines along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * @return a list of virtual machines in the provided resource group along with {@link PagedResponse} on successful
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<VirtualMachineInner>> listByResourceGroupNextSinglePageAsync(String nextLink) {
@@ -3536,63 +3378,76 @@ public final class VirtualMachinesClientImpl implements VirtualMachinesClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listByResourceGroupNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<VirtualMachineInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<VirtualMachineInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
+     * List virtual machines in the resource group.
+     * 
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of virtual machines in the provided resource group along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<VirtualMachineInner> listByResourceGroupNextSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<VirtualMachineList> res
+            = service.listByResourceGroupNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * List virtual machines in the resource group.
+     * 
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return virtualMachineList represents a list of virtual machines along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * @return a list of virtual machines in the provided resource group along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<VirtualMachineInner>> listByResourceGroupNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<VirtualMachineInner> listByResourceGroupNextSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByResourceGroupNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<VirtualMachineList> res
+            = service.listByResourceGroupNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(VirtualMachinesClientImpl.class);
 }

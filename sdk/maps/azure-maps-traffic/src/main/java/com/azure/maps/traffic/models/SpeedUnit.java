@@ -4,34 +4,53 @@
 
 package com.azure.maps.traffic.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for SpeedUnit. */
+/**
+ * Defines values for SpeedUnit.
+ */
 public final class SpeedUnit extends ExpandableStringEnum<SpeedUnit> {
-    /** Static value KMPH for SpeedUnit. */
+    /**
+     * Kilometers Per Hour.
+     */
+    @Generated
     public static final SpeedUnit KMPH = fromString("KMPH");
 
-    /** Static value MPH for SpeedUnit. */
+    /**
+     * Miles Per Hour.
+     */
+    @Generated
     public static final SpeedUnit MPH = fromString("MPH");
 
     /**
+     * Creates a new instance of SpeedUnit value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public SpeedUnit() {
+    }
+
+    /**
      * Creates or finds a SpeedUnit from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding SpeedUnit.
      */
-    @JsonCreator
+    @Generated
     public static SpeedUnit fromString(String name) {
         return fromString(name, SpeedUnit.class);
     }
 
     /**
      * Gets known SpeedUnit values.
-     *
+     * 
      * @return known SpeedUnit values.
      */
+    @Generated
     public static Collection<SpeedUnit> values() {
         return values(SpeedUnit.class);
     }

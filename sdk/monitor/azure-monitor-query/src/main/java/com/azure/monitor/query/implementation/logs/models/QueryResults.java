@@ -5,75 +5,82 @@
 package com.azure.monitor.query.implementation.logs.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
 /**
  * A query response.
- *
- * <p>Contains the tables, columns &amp; rows resulting from a query.
+ * 
+ * Contains the tables, columns &amp; rows resulting from a query.
  */
 @Fluent
-public final class QueryResults {
+public final class QueryResults implements JsonSerializable<QueryResults> {
     /*
-     * The list of tables, columns and rows.
+     * The results of the query in tabular format.
      */
-    @JsonProperty(value = "tables", required = true)
-    private List<Table> tables;
+    @Generated
+    private final List<Table> tables;
 
     /*
      * Statistics represented in JSON format.
      */
-    @JsonProperty(value = "statistics")
+    @Generated
     private Object statistics;
 
     /*
      * Visualization data in JSON format.
      */
-    @JsonProperty(value = "render")
+    @Generated
     private Object render;
 
     /*
      * The code and message for an error.
      */
-    @JsonProperty(value = "error")
+    @Generated
     private ErrorInfo error;
 
     /**
      * Creates an instance of QueryResults class.
-     *
+     * 
      * @param tables the tables value to set.
      */
-    @JsonCreator
-    public QueryResults(@JsonProperty(value = "tables", required = true) List<Table> tables) {
+    @Generated
+    public QueryResults(List<Table> tables) {
         this.tables = tables;
     }
 
     /**
-     * Get the tables property: The list of tables, columns and rows.
-     *
+     * Get the tables property: The results of the query in tabular format.
+     * 
      * @return the tables value.
      */
+    @Generated
     public List<Table> getTables() {
         return this.tables;
     }
 
     /**
      * Get the statistics property: Statistics represented in JSON format.
-     *
+     * 
      * @return the statistics value.
      */
+    @Generated
     public Object getStatistics() {
         return this.statistics;
     }
 
     /**
      * Set the statistics property: Statistics represented in JSON format.
-     *
+     * 
      * @param statistics the statistics value to set.
      * @return the QueryResults object itself.
      */
+    @Generated
     public QueryResults setStatistics(Object statistics) {
         this.statistics = statistics;
         return this;
@@ -81,19 +88,21 @@ public final class QueryResults {
 
     /**
      * Get the render property: Visualization data in JSON format.
-     *
+     * 
      * @return the render value.
      */
+    @Generated
     public Object getRender() {
         return this.render;
     }
 
     /**
      * Set the render property: Visualization data in JSON format.
-     *
+     * 
      * @param render the render value to set.
      * @return the QueryResults object itself.
      */
+    @Generated
     public QueryResults setRender(Object render) {
         this.render = render;
         return this;
@@ -101,37 +110,87 @@ public final class QueryResults {
 
     /**
      * Get the error property: The code and message for an error.
-     *
+     * 
      * @return the error value.
      */
+    @Generated
     public ErrorInfo getError() {
         return this.error;
     }
 
     /**
      * Set the error property: The code and message for an error.
-     *
+     * 
      * @param error the error value to set.
      * @return the QueryResults object itself.
      */
+    @Generated
     public QueryResults setError(ErrorInfo error) {
         this.error = error;
         return this;
     }
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * {@inheritDoc}
      */
-    public void validate() {
-        if (getTables() == null) {
-            throw new IllegalArgumentException("Missing required property tables in model QueryResults");
-        } else {
-            getTables().forEach(e -> e.validate());
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("tables", this.tables, (writer, element) -> writer.writeJson(element));
+        if (this.statistics != null) {
+            jsonWriter.writeUntypedField("statistics", this.statistics);
         }
-        if (getError() != null) {
-            getError().validate();
+        if (this.render != null) {
+            jsonWriter.writeUntypedField("render", this.render);
         }
+        jsonWriter.writeJsonField("error", this.error);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of QueryResults from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of QueryResults if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the QueryResults.
+     */
+    @Generated
+    public static QueryResults fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            boolean tablesFound = false;
+            List<Table> tables = null;
+            Object statistics = null;
+            Object render = null;
+            ErrorInfo error = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("tables".equals(fieldName)) {
+                    tables = reader.readArray(reader1 -> Table.fromJson(reader1));
+                    tablesFound = true;
+                } else if ("statistics".equals(fieldName)) {
+                    statistics = reader.readUntyped();
+                } else if ("render".equals(fieldName)) {
+                    render = reader.readUntyped();
+                } else if ("error".equals(fieldName)) {
+                    error = ErrorInfo.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (tablesFound) {
+                QueryResults deserializedQueryResults = new QueryResults(tables);
+                deserializedQueryResults.statistics = statistics;
+                deserializedQueryResults.render = render;
+                deserializedQueryResults.error = error;
+
+                return deserializedQueryResults;
+            }
+            throw new IllegalStateException("Missing required property: tables");
+        });
     }
 }

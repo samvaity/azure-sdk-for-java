@@ -3,9 +3,7 @@
 
 package com.azure.cosmos;
 
-import com.azure.cosmos.implementation.CosmosSchedulers;
-import com.azure.cosmos.implementation.apachecommons.lang.tuple.ImmutablePair;
-import com.azure.cosmos.implementation.throughputControl.config.GlobalThroughputControlGroup;
+import com.azure.cosmos.implementation.throughputControl.sdk.config.GlobalThroughputControlGroup;
 import com.azure.cosmos.models.CosmosBatch;
 import com.azure.cosmos.models.CosmosBatchOperationResult;
 import com.azure.cosmos.models.CosmosBatchRequestOptions;
@@ -23,12 +21,14 @@ import com.azure.cosmos.models.CosmosItemResponse;
 import com.azure.cosmos.models.CosmosPatchItemRequestOptions;
 import com.azure.cosmos.models.CosmosPatchOperations;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
+import com.azure.cosmos.models.CosmosReadManyRequestOptions;
 import com.azure.cosmos.models.FeedRange;
 import com.azure.cosmos.models.FeedResponse;
 import com.azure.cosmos.models.PartitionKey;
 import com.azure.cosmos.models.SqlQuerySpec;
 import com.azure.cosmos.models.ThroughputProperties;
 import com.azure.cosmos.models.ThroughputResponse;
+import com.azure.cosmos.util.Beta;
 import com.azure.cosmos.util.CosmosPagedFlux;
 import com.azure.cosmos.util.CosmosPagedIterable;
 import org.slf4j.Logger;
@@ -36,9 +36,7 @@ import org.slf4j.LoggerFactory;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
 
-import java.time.Duration;
 import java.util.List;
 
 import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNotNull;
@@ -471,7 +469,7 @@ public class CosmosContainer {
         List<CosmosItemIdentity> itemIdentityList,
         Class<T> classType) {
 
-        return this.readMany(itemIdentityList, null, classType);
+        return this.readMany(itemIdentityList, (CosmosReadManyRequestOptions)null, classType);
     }
 
     /**
@@ -505,6 +503,40 @@ public class CosmosContainer {
             this.asyncContainer.readMany(
                 itemIdentityList,
                 sessionToken,
+                classType));
+    }
+
+    /**
+     * Reads many documents.
+     * Useful for reading many documents with a particular id and partition key in a single request.
+     * If any document from the list is missing, no exception will be thrown.
+     * <!-- src_embed com.azure.cosmos.CosmosContainer.readMany -->
+     * <pre>
+     * List&lt;CosmosItemIdentity&gt; itemIdentityList = new ArrayList&lt;&gt;&#40;&#41;;
+     * itemIdentityList.add&#40;new CosmosItemIdentity&#40;new PartitionKey&#40;passenger1Id&#41;, passenger1Id&#41;&#41;;
+     * itemIdentityList.add&#40;new CosmosItemIdentity&#40;new PartitionKey&#40;passenger2Id&#41;, passenger2Id&#41;&#41;;
+     *
+     * FeedResponse&lt;Passenger&gt; passengerFeedResponse = cosmosContainer.readMany&#40;itemIdentityList, Passenger.class&#41;;
+     * for &#40;Passenger passenger : passengerFeedResponse.getResults&#40;&#41;&#41; &#123;
+     *     System.out.println&#40;passenger&#41;;
+     * &#125;
+     * </pre>
+     * <!-- end com.azure.cosmos.CosmosContainer.readMany -->
+     * @param <T> the type parameter
+     * @param itemIdentityList CosmosItem id and partition key tuple of items that that needs to be read
+     * @param options the optional request options
+     * @param classType   class type
+     * @return a Mono with feed response of cosmos items
+     */
+    public <T> FeedResponse<T> readMany(
+        List<CosmosItemIdentity> itemIdentityList,
+        CosmosReadManyRequestOptions options,
+        Class<T> classType) {
+
+        return this.blockFeedResponse(
+            this.asyncContainer.readMany(
+                itemIdentityList,
+                options,
                 classType));
     }
 
@@ -917,7 +949,6 @@ public class CosmosContainer {
     }
 
     // TODO: should make partitionkey public in CosmosAsyncItem and fix the below call
-
     private <T> CosmosPagedIterable<T> getCosmosPagedIterable(CosmosPagedFlux<T> cosmosPagedFlux) {
         return new CosmosPagedIterable<>(cosmosPagedFlux);
     }
@@ -997,6 +1028,28 @@ public class CosmosContainer {
      */
     public void enableGlobalThroughputControlGroup(ThroughputControlGroupConfig groupConfig, GlobalThroughputControlConfig globalControlConfig) {
         this.asyncContainer.enableGlobalThroughputControlGroup(groupConfig, globalControlConfig);
+    }
+
+    /***
+     * Enable the server throughput control group.
+     *
+     * <!-- src_embed com.azure.cosmos.throughputControl.serverControl -->
+     * <pre>
+     * ThroughputControlGroupConfig groupConfig =
+     *     new ThroughputControlGroupConfigBuilder&#40;&#41;
+     *         .groupName&#40;&quot;localControlGroup&quot;&#41;
+     *         .throughputBucket&#40;2&#41;
+     *         .build&#40;&#41;;
+     *
+     * container.enableServerThroughputControlGroup&#40;groupConfig&#41;;
+     * </pre>
+     * <!-- end com.azure.cosmos.throughputControl.serverControl -->
+     *
+     * @param groupConfig the throughput control group config, see {@link ThroughputControlGroupConfig}.
+     */
+    @Beta(value = Beta.SinceVersion.V4_74_0, warningText = Beta.PREVIEW_SUBJECT_TO_CHANGE_WARNING)
+    public void enableServerThroughputControlGroup(ThroughputControlGroupConfig groupConfig) {
+        this.asyncContainer.enableServerThroughputControlGroup(groupConfig);
     }
 
     /**

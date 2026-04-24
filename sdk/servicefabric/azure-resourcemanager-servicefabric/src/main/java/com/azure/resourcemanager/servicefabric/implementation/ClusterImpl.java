@@ -271,20 +271,16 @@ public final class ClusterImpl implements Cluster, Cluster.Definition, Cluster.U
     }
 
     public Cluster create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getClusters()
-                .createOrUpdate(resourceGroupName, clusterName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getClusters()
+            .createOrUpdate(resourceGroupName, clusterName, this.innerModel(), Context.NONE);
         return this;
     }
 
     public Cluster create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getClusters()
-                .createOrUpdate(resourceGroupName, clusterName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getClusters()
+            .createOrUpdate(resourceGroupName, clusterName, this.innerModel(), context);
         return this;
     }
 
@@ -300,54 +296,45 @@ public final class ClusterImpl implements Cluster, Cluster.Definition, Cluster.U
     }
 
     public Cluster apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getClusters()
-                .update(resourceGroupName, clusterName, updateParameters, Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getClusters()
+            .update(resourceGroupName, clusterName, updateParameters, Context.NONE);
         return this;
     }
 
     public Cluster apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getClusters()
-                .update(resourceGroupName, clusterName, updateParameters, context);
+        this.innerObject = serviceManager.serviceClient()
+            .getClusters()
+            .update(resourceGroupName, clusterName, updateParameters, context);
         return this;
     }
 
     ClusterImpl(ClusterInner innerObject, com.azure.resourcemanager.servicefabric.ServiceFabricManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.clusterName = Utils.getValueFromIdByName(innerObject.id(), "clusters");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.clusterName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "clusters");
     }
 
     public Cluster refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getClusters()
-                .getByResourceGroupWithResponse(resourceGroupName, clusterName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getClusters()
+            .getByResourceGroupWithResponse(resourceGroupName, clusterName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public Cluster refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getClusters()
-                .getByResourceGroupWithResponse(resourceGroupName, clusterName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getClusters()
+            .getByResourceGroupWithResponse(resourceGroupName, clusterName, context)
+            .getValue();
         return this;
     }
 
-    public Response<UpgradableVersionPathResult> listUpgradableVersionsWithResponse(
-        UpgradableVersionsDescription versionsDescription, Context context) {
-        return serviceManager
-            .clusters()
+    public Response<UpgradableVersionPathResult>
+        listUpgradableVersionsWithResponse(UpgradableVersionsDescription versionsDescription, Context context) {
+        return serviceManager.clusters()
             .listUpgradableVersionsWithResponse(resourceGroupName, clusterName, versionsDescription, context);
     }
 
@@ -410,8 +397,8 @@ public final class ClusterImpl implements Cluster, Cluster.Definition, Cluster.U
         }
     }
 
-    public ClusterImpl withClientCertificateCommonNames(
-        List<ClientCertificateCommonName> clientCertificateCommonNames) {
+    public ClusterImpl
+        withClientCertificateCommonNames(List<ClientCertificateCommonName> clientCertificateCommonNames) {
         if (isInCreateMode()) {
             this.innerModel().withClientCertificateCommonNames(clientCertificateCommonNames);
             return this;
@@ -421,8 +408,8 @@ public final class ClusterImpl implements Cluster, Cluster.Definition, Cluster.U
         }
     }
 
-    public ClusterImpl withClientCertificateThumbprints(
-        List<ClientCertificateThumbprint> clientCertificateThumbprints) {
+    public ClusterImpl
+        withClientCertificateThumbprints(List<ClientCertificateThumbprint> clientCertificateThumbprints) {
         if (isInCreateMode()) {
             this.innerModel().withClientCertificateThumbprints(clientCertificateThumbprints);
             return this;
@@ -442,8 +429,8 @@ public final class ClusterImpl implements Cluster, Cluster.Definition, Cluster.U
         }
     }
 
-    public ClusterImpl withDiagnosticsStorageAccountConfig(
-        DiagnosticsStorageAccountConfig diagnosticsStorageAccountConfig) {
+    public ClusterImpl
+        withDiagnosticsStorageAccountConfig(DiagnosticsStorageAccountConfig diagnosticsStorageAccountConfig) {
         this.innerModel().withDiagnosticsStorageAccountConfig(diagnosticsStorageAccountConfig);
         return this;
     }
@@ -503,8 +490,8 @@ public final class ClusterImpl implements Cluster, Cluster.Definition, Cluster.U
         }
     }
 
-    public ClusterImpl withReverseProxyCertificateCommonNames(
-        ServerCertificateCommonNames reverseProxyCertificateCommonNames) {
+    public ClusterImpl
+        withReverseProxyCertificateCommonNames(ServerCertificateCommonNames reverseProxyCertificateCommonNames) {
         this.innerModel().withReverseProxyCertificateCommonNames(reverseProxyCertificateCommonNames);
         return this;
     }

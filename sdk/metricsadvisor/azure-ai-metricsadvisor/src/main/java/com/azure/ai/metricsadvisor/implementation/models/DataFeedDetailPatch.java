@@ -5,182 +5,189 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/** The DataFeedDetailPatch model. */
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "dataSourceType",
-        defaultImpl = DataFeedDetailPatch.class)
-@JsonTypeName("DataFeedDetailPatch")
-@JsonSubTypes({
-    @JsonSubTypes.Type(name = "AzureApplicationInsights", value = AzureApplicationInsightsDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "AzureBlob", value = AzureBlobDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "AzureCosmosDB", value = AzureCosmosDBDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "AzureDataExplorer", value = AzureDataExplorerDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "AzureDataLakeStorageGen2", value = AzureDataLakeStorageGen2DataFeedPatch.class),
-    @JsonSubTypes.Type(name = "AzureEventHubs", value = AzureEventHubsDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "AzureLogAnalytics", value = AzureLogAnalyticsDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "AzureTable", value = AzureTableDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "InfluxDB", value = InfluxDBDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "MySql", value = MySqlDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "PostgreSql", value = PostgreSqlDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "SqlServer", value = SQLServerDataFeedPatch.class),
-    @JsonSubTypes.Type(name = "MongoDB", value = MongoDBDataFeedPatch.class)
-})
+/**
+ * The DataFeedDetailPatch model.
+ */
 @Fluent
-public class DataFeedDetailPatch {
+public class DataFeedDetailPatch implements JsonSerializable<DataFeedDetailPatch> {
+    /*
+     * data source type
+     */
+    @Generated
+    private DataSourceType dataSourceType = DataSourceType.fromString("DataFeedDetailPatch");
+
     /*
      * data feed name
      */
-    @JsonProperty(value = "dataFeedName")
+    @Generated
     private String dataFeedName;
 
     /*
      * data feed description
      */
-    @JsonProperty(value = "dataFeedDescription")
+    @Generated
     private String dataFeedDescription;
 
     /*
-     * user-defined timestamp column. if timestampColumn is null, start time of every time slice will be used as
-     * default value.
+     * user-defined timestamp column. if timestampColumn is null, start time of every time slice will be used as default
+     * value.
      */
-    @JsonProperty(value = "timestampColumn")
+    @Generated
     private String timestampColumn;
 
     /*
      * ingestion start time
      */
-    @JsonProperty(value = "dataStartFrom")
+    @Generated
     private OffsetDateTime dataStartFrom;
 
     /*
      * the time that the beginning of data ingestion task will delay for every data slice according to this offset.
      */
-    @JsonProperty(value = "startOffsetInSeconds")
+    @Generated
     private Long startOffsetInSeconds;
 
     /*
      * the max concurrency of data ingestion queries against user data source. 0 means no limitation.
      */
-    @JsonProperty(value = "maxConcurrency")
+    @Generated
     private Integer maxConcurrency;
 
     /*
      * the min retry interval for failed data ingestion tasks.
      */
-    @JsonProperty(value = "minRetryIntervalInSeconds")
+    @Generated
     private Long minRetryIntervalInSeconds;
 
     /*
      * stop retry data ingestion after the data slice first schedule time in seconds.
      */
-    @JsonProperty(value = "stopRetryAfterInSeconds")
+    @Generated
     private Long stopRetryAfterInSeconds;
 
     /*
      * mark if the data feed need rollup
      */
-    @JsonProperty(value = "needRollup")
+    @Generated
     private NeedRollupEnum needRollup;
 
     /*
      * roll up method
      */
-    @JsonProperty(value = "rollUpMethod")
+    @Generated
     private RollUpMethod rollUpMethod;
 
     /*
      * roll up columns
      */
-    @JsonProperty(value = "rollUpColumns")
+    @Generated
     private List<String> rollUpColumns;
 
     /*
      * the identification value for the row of calculated all-up value.
      */
-    @JsonProperty(value = "allUpIdentification")
+    @Generated
     private String allUpIdentification;
 
     /*
      * the type of fill missing point for anomaly detection
      */
-    @JsonProperty(value = "fillMissingPointType")
+    @Generated
     private FillMissingPointType fillMissingPointType;
 
     /*
      * the value of fill missing point for anomaly detection
      */
-    @JsonProperty(value = "fillMissingPointValue")
+    @Generated
     private Double fillMissingPointValue;
 
     /*
      * data feed access mode, default is Private
      */
-    @JsonProperty(value = "viewMode")
+    @Generated
     private ViewMode viewMode;
 
     /*
      * data feed administrator
      */
-    @JsonProperty(value = "admins")
+    @Generated
     private List<String> admins;
 
     /*
      * data feed viewer
      */
-    @JsonProperty(value = "viewers")
+    @Generated
     private List<String> viewers;
 
     /*
      * data feed status
      */
-    @JsonProperty(value = "status")
+    @Generated
     private EntityStatus status;
 
     /*
      * action link for alert
      */
-    @JsonProperty(value = "actionLinkTemplate")
+    @Generated
     private String actionLinkTemplate;
 
     /*
      * authentication type for corresponding data source
      */
-    @JsonProperty(value = "authenticationType")
+    @Generated
     private AuthenticationTypeEnum authenticationType;
 
     /*
      * The credential entity id
      */
-    @JsonProperty(value = "credentialId")
+    @Generated
     private String credentialId;
 
-    /** Creates an instance of DataFeedDetailPatch class. */
-    public DataFeedDetailPatch() {}
+    /**
+     * Creates an instance of DataFeedDetailPatch class.
+     */
+    @Generated
+    public DataFeedDetailPatch() {
+    }
+
+    /**
+     * Get the dataSourceType property: data source type.
+     * 
+     * @return the dataSourceType value.
+     */
+    @Generated
+    public DataSourceType getDataSourceType() {
+        return this.dataSourceType;
+    }
 
     /**
      * Get the dataFeedName property: data feed name.
-     *
+     * 
      * @return the dataFeedName value.
      */
+    @Generated
     public String getDataFeedName() {
         return this.dataFeedName;
     }
 
     /**
      * Set the dataFeedName property: data feed name.
-     *
+     * 
      * @param dataFeedName the dataFeedName value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setDataFeedName(String dataFeedName) {
         this.dataFeedName = dataFeedName;
         return this;
@@ -188,19 +195,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the dataFeedDescription property: data feed description.
-     *
+     * 
      * @return the dataFeedDescription value.
      */
+    @Generated
     public String getDataFeedDescription() {
         return this.dataFeedDescription;
     }
 
     /**
      * Set the dataFeedDescription property: data feed description.
-     *
+     * 
      * @param dataFeedDescription the dataFeedDescription value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setDataFeedDescription(String dataFeedDescription) {
         this.dataFeedDescription = dataFeedDescription;
         return this;
@@ -209,9 +218,10 @@ public class DataFeedDetailPatch {
     /**
      * Get the timestampColumn property: user-defined timestamp column. if timestampColumn is null, start time of every
      * time slice will be used as default value.
-     *
+     * 
      * @return the timestampColumn value.
      */
+    @Generated
     public String getTimestampColumn() {
         return this.timestampColumn;
     }
@@ -219,10 +229,11 @@ public class DataFeedDetailPatch {
     /**
      * Set the timestampColumn property: user-defined timestamp column. if timestampColumn is null, start time of every
      * time slice will be used as default value.
-     *
+     * 
      * @param timestampColumn the timestampColumn value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setTimestampColumn(String timestampColumn) {
         this.timestampColumn = timestampColumn;
         return this;
@@ -230,19 +241,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the dataStartFrom property: ingestion start time.
-     *
+     * 
      * @return the dataStartFrom value.
      */
+    @Generated
     public OffsetDateTime getDataStartFrom() {
         return this.dataStartFrom;
     }
 
     /**
      * Set the dataStartFrom property: ingestion start time.
-     *
+     * 
      * @param dataStartFrom the dataStartFrom value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setDataStartFrom(OffsetDateTime dataStartFrom) {
         this.dataStartFrom = dataStartFrom;
         return this;
@@ -251,9 +264,10 @@ public class DataFeedDetailPatch {
     /**
      * Get the startOffsetInSeconds property: the time that the beginning of data ingestion task will delay for every
      * data slice according to this offset.
-     *
+     * 
      * @return the startOffsetInSeconds value.
      */
+    @Generated
     public Long getStartOffsetInSeconds() {
         return this.startOffsetInSeconds;
     }
@@ -261,10 +275,11 @@ public class DataFeedDetailPatch {
     /**
      * Set the startOffsetInSeconds property: the time that the beginning of data ingestion task will delay for every
      * data slice according to this offset.
-     *
+     * 
      * @param startOffsetInSeconds the startOffsetInSeconds value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setStartOffsetInSeconds(Long startOffsetInSeconds) {
         this.startOffsetInSeconds = startOffsetInSeconds;
         return this;
@@ -273,9 +288,10 @@ public class DataFeedDetailPatch {
     /**
      * Get the maxConcurrency property: the max concurrency of data ingestion queries against user data source. 0 means
      * no limitation.
-     *
+     * 
      * @return the maxConcurrency value.
      */
+    @Generated
     public Integer getMaxConcurrency() {
         return this.maxConcurrency;
     }
@@ -283,10 +299,11 @@ public class DataFeedDetailPatch {
     /**
      * Set the maxConcurrency property: the max concurrency of data ingestion queries against user data source. 0 means
      * no limitation.
-     *
+     * 
      * @param maxConcurrency the maxConcurrency value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setMaxConcurrency(Integer maxConcurrency) {
         this.maxConcurrency = maxConcurrency;
         return this;
@@ -294,19 +311,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the minRetryIntervalInSeconds property: the min retry interval for failed data ingestion tasks.
-     *
+     * 
      * @return the minRetryIntervalInSeconds value.
      */
+    @Generated
     public Long getMinRetryIntervalInSeconds() {
         return this.minRetryIntervalInSeconds;
     }
 
     /**
      * Set the minRetryIntervalInSeconds property: the min retry interval for failed data ingestion tasks.
-     *
+     * 
      * @param minRetryIntervalInSeconds the minRetryIntervalInSeconds value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setMinRetryIntervalInSeconds(Long minRetryIntervalInSeconds) {
         this.minRetryIntervalInSeconds = minRetryIntervalInSeconds;
         return this;
@@ -315,9 +334,10 @@ public class DataFeedDetailPatch {
     /**
      * Get the stopRetryAfterInSeconds property: stop retry data ingestion after the data slice first schedule time in
      * seconds.
-     *
+     * 
      * @return the stopRetryAfterInSeconds value.
      */
+    @Generated
     public Long getStopRetryAfterInSeconds() {
         return this.stopRetryAfterInSeconds;
     }
@@ -325,10 +345,11 @@ public class DataFeedDetailPatch {
     /**
      * Set the stopRetryAfterInSeconds property: stop retry data ingestion after the data slice first schedule time in
      * seconds.
-     *
+     * 
      * @param stopRetryAfterInSeconds the stopRetryAfterInSeconds value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setStopRetryAfterInSeconds(Long stopRetryAfterInSeconds) {
         this.stopRetryAfterInSeconds = stopRetryAfterInSeconds;
         return this;
@@ -336,19 +357,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the needRollup property: mark if the data feed need rollup.
-     *
+     * 
      * @return the needRollup value.
      */
+    @Generated
     public NeedRollupEnum getNeedRollup() {
         return this.needRollup;
     }
 
     /**
      * Set the needRollup property: mark if the data feed need rollup.
-     *
+     * 
      * @param needRollup the needRollup value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setNeedRollup(NeedRollupEnum needRollup) {
         this.needRollup = needRollup;
         return this;
@@ -356,19 +379,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the rollUpMethod property: roll up method.
-     *
+     * 
      * @return the rollUpMethod value.
      */
+    @Generated
     public RollUpMethod getRollUpMethod() {
         return this.rollUpMethod;
     }
 
     /**
      * Set the rollUpMethod property: roll up method.
-     *
+     * 
      * @param rollUpMethod the rollUpMethod value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setRollUpMethod(RollUpMethod rollUpMethod) {
         this.rollUpMethod = rollUpMethod;
         return this;
@@ -376,19 +401,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the rollUpColumns property: roll up columns.
-     *
+     * 
      * @return the rollUpColumns value.
      */
+    @Generated
     public List<String> getRollUpColumns() {
         return this.rollUpColumns;
     }
 
     /**
      * Set the rollUpColumns property: roll up columns.
-     *
+     * 
      * @param rollUpColumns the rollUpColumns value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setRollUpColumns(List<String> rollUpColumns) {
         this.rollUpColumns = rollUpColumns;
         return this;
@@ -396,19 +423,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the allUpIdentification property: the identification value for the row of calculated all-up value.
-     *
+     * 
      * @return the allUpIdentification value.
      */
+    @Generated
     public String getAllUpIdentification() {
         return this.allUpIdentification;
     }
 
     /**
      * Set the allUpIdentification property: the identification value for the row of calculated all-up value.
-     *
+     * 
      * @param allUpIdentification the allUpIdentification value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setAllUpIdentification(String allUpIdentification) {
         this.allUpIdentification = allUpIdentification;
         return this;
@@ -416,19 +445,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the fillMissingPointType property: the type of fill missing point for anomaly detection.
-     *
+     * 
      * @return the fillMissingPointType value.
      */
+    @Generated
     public FillMissingPointType getFillMissingPointType() {
         return this.fillMissingPointType;
     }
 
     /**
      * Set the fillMissingPointType property: the type of fill missing point for anomaly detection.
-     *
+     * 
      * @param fillMissingPointType the fillMissingPointType value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setFillMissingPointType(FillMissingPointType fillMissingPointType) {
         this.fillMissingPointType = fillMissingPointType;
         return this;
@@ -436,19 +467,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the fillMissingPointValue property: the value of fill missing point for anomaly detection.
-     *
+     * 
      * @return the fillMissingPointValue value.
      */
+    @Generated
     public Double getFillMissingPointValue() {
         return this.fillMissingPointValue;
     }
 
     /**
      * Set the fillMissingPointValue property: the value of fill missing point for anomaly detection.
-     *
+     * 
      * @param fillMissingPointValue the fillMissingPointValue value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setFillMissingPointValue(Double fillMissingPointValue) {
         this.fillMissingPointValue = fillMissingPointValue;
         return this;
@@ -456,19 +489,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the viewMode property: data feed access mode, default is Private.
-     *
+     * 
      * @return the viewMode value.
      */
+    @Generated
     public ViewMode getViewMode() {
         return this.viewMode;
     }
 
     /**
      * Set the viewMode property: data feed access mode, default is Private.
-     *
+     * 
      * @param viewMode the viewMode value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setViewMode(ViewMode viewMode) {
         this.viewMode = viewMode;
         return this;
@@ -476,19 +511,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the admins property: data feed administrator.
-     *
+     * 
      * @return the admins value.
      */
+    @Generated
     public List<String> getAdmins() {
         return this.admins;
     }
 
     /**
      * Set the admins property: data feed administrator.
-     *
+     * 
      * @param admins the admins value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setAdmins(List<String> admins) {
         this.admins = admins;
         return this;
@@ -496,19 +533,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the viewers property: data feed viewer.
-     *
+     * 
      * @return the viewers value.
      */
+    @Generated
     public List<String> getViewers() {
         return this.viewers;
     }
 
     /**
      * Set the viewers property: data feed viewer.
-     *
+     * 
      * @param viewers the viewers value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setViewers(List<String> viewers) {
         this.viewers = viewers;
         return this;
@@ -516,19 +555,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the status property: data feed status.
-     *
+     * 
      * @return the status value.
      */
+    @Generated
     public EntityStatus getStatus() {
         return this.status;
     }
 
     /**
      * Set the status property: data feed status.
-     *
+     * 
      * @param status the status value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setStatus(EntityStatus status) {
         this.status = status;
         return this;
@@ -536,19 +577,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the actionLinkTemplate property: action link for alert.
-     *
+     * 
      * @return the actionLinkTemplate value.
      */
+    @Generated
     public String getActionLinkTemplate() {
         return this.actionLinkTemplate;
     }
 
     /**
      * Set the actionLinkTemplate property: action link for alert.
-     *
+     * 
      * @param actionLinkTemplate the actionLinkTemplate value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setActionLinkTemplate(String actionLinkTemplate) {
         this.actionLinkTemplate = actionLinkTemplate;
         return this;
@@ -556,19 +599,21 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the authenticationType property: authentication type for corresponding data source.
-     *
+     * 
      * @return the authenticationType value.
      */
+    @Generated
     public AuthenticationTypeEnum getAuthenticationType() {
         return this.authenticationType;
     }
 
     /**
      * Set the authenticationType property: authentication type for corresponding data source.
-     *
+     * 
      * @param authenticationType the authenticationType value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setAuthenticationType(AuthenticationTypeEnum authenticationType) {
         this.authenticationType = authenticationType;
         return this;
@@ -576,21 +621,185 @@ public class DataFeedDetailPatch {
 
     /**
      * Get the credentialId property: The credential entity id.
-     *
+     * 
      * @return the credentialId value.
      */
+    @Generated
     public String getCredentialId() {
         return this.credentialId;
     }
 
     /**
      * Set the credentialId property: The credential entity id.
-     *
+     * 
      * @param credentialId the credentialId value to set.
      * @return the DataFeedDetailPatch object itself.
      */
+    @Generated
     public DataFeedDetailPatch setCredentialId(String credentialId) {
         this.credentialId = credentialId;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("dataSourceType",
+            this.dataSourceType == null ? null : this.dataSourceType.toString());
+        jsonWriter.writeStringField("dataFeedName", this.dataFeedName);
+        jsonWriter.writeStringField("dataFeedDescription", this.dataFeedDescription);
+        jsonWriter.writeStringField("timestampColumn", this.timestampColumn);
+        jsonWriter.writeStringField("dataStartFrom",
+            this.dataStartFrom == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.dataStartFrom));
+        jsonWriter.writeNumberField("startOffsetInSeconds", this.startOffsetInSeconds);
+        jsonWriter.writeNumberField("maxConcurrency", this.maxConcurrency);
+        jsonWriter.writeNumberField("minRetryIntervalInSeconds", this.minRetryIntervalInSeconds);
+        jsonWriter.writeNumberField("stopRetryAfterInSeconds", this.stopRetryAfterInSeconds);
+        jsonWriter.writeStringField("needRollup", this.needRollup == null ? null : this.needRollup.toString());
+        jsonWriter.writeStringField("rollUpMethod", this.rollUpMethod == null ? null : this.rollUpMethod.toString());
+        jsonWriter.writeArrayField("rollUpColumns", this.rollUpColumns,
+            (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("allUpIdentification", this.allUpIdentification);
+        jsonWriter.writeStringField("fillMissingPointType",
+            this.fillMissingPointType == null ? null : this.fillMissingPointType.toString());
+        jsonWriter.writeNumberField("fillMissingPointValue", this.fillMissingPointValue);
+        jsonWriter.writeStringField("viewMode", this.viewMode == null ? null : this.viewMode.toString());
+        jsonWriter.writeArrayField("admins", this.admins, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeArrayField("viewers", this.viewers, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("status", this.status == null ? null : this.status.toString());
+        jsonWriter.writeStringField("actionLinkTemplate", this.actionLinkTemplate);
+        jsonWriter.writeStringField("authenticationType",
+            this.authenticationType == null ? null : this.authenticationType.toString());
+        jsonWriter.writeStringField("credentialId", this.credentialId);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DataFeedDetailPatch from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DataFeedDetailPatch if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the DataFeedDetailPatch.
+     */
+    @Generated
+    public static DataFeedDetailPatch fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            String discriminatorValue = null;
+            try (JsonReader readerToUse = reader.bufferObject()) {
+                readerToUse.nextToken(); // Prepare for reading
+                while (readerToUse.nextToken() != JsonToken.END_OBJECT) {
+                    String fieldName = readerToUse.getFieldName();
+                    readerToUse.nextToken();
+                    if ("dataSourceType".equals(fieldName)) {
+                        discriminatorValue = readerToUse.getString();
+                        break;
+                    } else {
+                        readerToUse.skipChildren();
+                    }
+                }
+                // Use the discriminator value to determine which subtype should be deserialized.
+                if ("AzureApplicationInsights".equals(discriminatorValue)) {
+                    return AzureApplicationInsightsDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("AzureBlob".equals(discriminatorValue)) {
+                    return AzureBlobDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("AzureCosmosDB".equals(discriminatorValue)) {
+                    return AzureCosmosDBDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("AzureDataExplorer".equals(discriminatorValue)) {
+                    return AzureDataExplorerDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("AzureDataLakeStorageGen2".equals(discriminatorValue)) {
+                    return AzureDataLakeStorageGen2DataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("AzureEventHubs".equals(discriminatorValue)) {
+                    return AzureEventHubsDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("AzureLogAnalytics".equals(discriminatorValue)) {
+                    return AzureLogAnalyticsDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("AzureTable".equals(discriminatorValue)) {
+                    return AzureTableDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("InfluxDB".equals(discriminatorValue)) {
+                    return InfluxDBDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("MySql".equals(discriminatorValue)) {
+                    return MySqlDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("PostgreSql".equals(discriminatorValue)) {
+                    return PostgreSqlDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("SqlServer".equals(discriminatorValue)) {
+                    return SQLServerDataFeedPatch.fromJson(readerToUse.reset());
+                } else if ("MongoDB".equals(discriminatorValue)) {
+                    return MongoDBDataFeedPatch.fromJson(readerToUse.reset());
+                } else {
+                    return fromJsonKnownDiscriminator(readerToUse.reset());
+                }
+            }
+        });
+    }
+
+    @Generated
+    static DataFeedDetailPatch fromJsonKnownDiscriminator(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DataFeedDetailPatch deserializedDataFeedDetailPatch = new DataFeedDetailPatch();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("dataSourceType".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.dataSourceType = DataSourceType.fromString(reader.getString());
+                } else if ("dataFeedName".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.dataFeedName = reader.getString();
+                } else if ("dataFeedDescription".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.dataFeedDescription = reader.getString();
+                } else if ("timestampColumn".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.timestampColumn = reader.getString();
+                } else if ("dataStartFrom".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.dataStartFrom = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("startOffsetInSeconds".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.startOffsetInSeconds = reader.getNullable(JsonReader::getLong);
+                } else if ("maxConcurrency".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.maxConcurrency = reader.getNullable(JsonReader::getInt);
+                } else if ("minRetryIntervalInSeconds".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.minRetryIntervalInSeconds = reader.getNullable(JsonReader::getLong);
+                } else if ("stopRetryAfterInSeconds".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.stopRetryAfterInSeconds = reader.getNullable(JsonReader::getLong);
+                } else if ("needRollup".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.needRollup = NeedRollupEnum.fromString(reader.getString());
+                } else if ("rollUpMethod".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.rollUpMethod = RollUpMethod.fromString(reader.getString());
+                } else if ("rollUpColumns".equals(fieldName)) {
+                    List<String> rollUpColumns = reader.readArray(reader1 -> reader1.getString());
+                    deserializedDataFeedDetailPatch.rollUpColumns = rollUpColumns;
+                } else if ("allUpIdentification".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.allUpIdentification = reader.getString();
+                } else if ("fillMissingPointType".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.fillMissingPointType
+                        = FillMissingPointType.fromString(reader.getString());
+                } else if ("fillMissingPointValue".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.fillMissingPointValue = reader.getNullable(JsonReader::getDouble);
+                } else if ("viewMode".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.viewMode = ViewMode.fromString(reader.getString());
+                } else if ("admins".equals(fieldName)) {
+                    List<String> admins = reader.readArray(reader1 -> reader1.getString());
+                    deserializedDataFeedDetailPatch.admins = admins;
+                } else if ("viewers".equals(fieldName)) {
+                    List<String> viewers = reader.readArray(reader1 -> reader1.getString());
+                    deserializedDataFeedDetailPatch.viewers = viewers;
+                } else if ("status".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.status = EntityStatus.fromString(reader.getString());
+                } else if ("actionLinkTemplate".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.actionLinkTemplate = reader.getString();
+                } else if ("authenticationType".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.authenticationType
+                        = AuthenticationTypeEnum.fromString(reader.getString());
+                } else if ("credentialId".equals(fieldName)) {
+                    deserializedDataFeedDetailPatch.credentialId = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedDataFeedDetailPatch;
+        });
     }
 }

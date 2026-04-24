@@ -8,45 +8,50 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of AgentPools. */
+/**
+ * Resource collection API of AgentPools.
+ */
 public interface AgentPools {
     /**
      * List agent pools of the Kubernetes cluster.
-     *
-     * <p>Get a list of agent pools for the provided Kubernetes cluster.
-     *
+     * 
+     * Get a list of agent pools for the provided Kubernetes cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of agent pools for the provided Kubernetes cluster as paginated response with {@link
-     *     PagedIterable}.
+     * @return a list of agent pools for the provided Kubernetes cluster as paginated response with
+     * {@link PagedIterable}.
      */
     PagedIterable<AgentPool> listByKubernetesCluster(String resourceGroupName, String kubernetesClusterName);
 
     /**
      * List agent pools of the Kubernetes cluster.
-     *
-     * <p>Get a list of agent pools for the provided Kubernetes cluster.
-     *
+     * 
+     * Get a list of agent pools for the provided Kubernetes cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of agent pools for the provided Kubernetes cluster as paginated response with {@link
-     *     PagedIterable}.
+     * @return a list of agent pools for the provided Kubernetes cluster as paginated response with
+     * {@link PagedIterable}.
      */
-    PagedIterable<AgentPool> listByKubernetesCluster(
-        String resourceGroupName, String kubernetesClusterName, Context context);
+    PagedIterable<AgentPool> listByKubernetesCluster(String resourceGroupName, String kubernetesClusterName,
+        Integer top, String skipToken, Context context);
 
     /**
      * Retrieve the Kubernetes cluster agent pool.
-     *
-     * <p>Get properties of the provided Kubernetes cluster agent pool.
-     *
+     * 
+     * Get properties of the provided Kubernetes cluster agent pool.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
      * @param agentPoolName The name of the Kubernetes cluster agent pool.
@@ -56,14 +61,14 @@ public interface AgentPools {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return properties of the provided Kubernetes cluster agent pool along with {@link Response}.
      */
-    Response<AgentPool> getWithResponse(
-        String resourceGroupName, String kubernetesClusterName, String agentPoolName, Context context);
+    Response<AgentPool> getWithResponse(String resourceGroupName, String kubernetesClusterName, String agentPoolName,
+        Context context);
 
     /**
      * Retrieve the Kubernetes cluster agent pool.
-     *
-     * <p>Get properties of the provided Kubernetes cluster agent pool.
-     *
+     * 
+     * Get properties of the provided Kubernetes cluster agent pool.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
      * @param agentPoolName The name of the Kubernetes cluster agent pool.
@@ -76,38 +81,45 @@ public interface AgentPools {
 
     /**
      * Delete the Kubernetes cluster agent pool.
-     *
-     * <p>Delete the provided Kubernetes cluster agent pool.
-     *
+     * 
+     * Delete the provided Kubernetes cluster agent pool.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
      * @param agentPoolName The name of the Kubernetes cluster agent pool.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void delete(String resourceGroupName, String kubernetesClusterName, String agentPoolName);
+    OperationStatusResult delete(String resourceGroupName, String kubernetesClusterName, String agentPoolName);
 
     /**
      * Delete the Kubernetes cluster agent pool.
-     *
-     * <p>Delete the provided Kubernetes cluster agent pool.
-     *
+     * 
+     * Delete the provided Kubernetes cluster agent pool.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param kubernetesClusterName The name of the Kubernetes cluster.
      * @param agentPoolName The name of the Kubernetes cluster agent pool.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void delete(String resourceGroupName, String kubernetesClusterName, String agentPoolName, Context context);
+    OperationStatusResult delete(String resourceGroupName, String kubernetesClusterName, String agentPoolName,
+        String ifMatch, String ifNoneMatch, Context context);
 
     /**
      * Retrieve the Kubernetes cluster agent pool.
-     *
-     * <p>Get properties of the provided Kubernetes cluster agent pool.
-     *
+     * 
+     * Get properties of the provided Kubernetes cluster agent pool.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -118,9 +130,9 @@ public interface AgentPools {
 
     /**
      * Retrieve the Kubernetes cluster agent pool.
-     *
-     * <p>Get properties of the provided Kubernetes cluster agent pool.
-     *
+     * 
+     * Get properties of the provided Kubernetes cluster agent pool.
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -132,32 +144,38 @@ public interface AgentPools {
 
     /**
      * Delete the Kubernetes cluster agent pool.
-     *
-     * <p>Delete the provided Kubernetes cluster agent pool.
-     *
+     * 
+     * Delete the provided Kubernetes cluster agent pool.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void deleteById(String id);
+    OperationStatusResult deleteById(String id);
 
     /**
      * Delete the Kubernetes cluster agent pool.
-     *
-     * <p>Delete the provided Kubernetes cluster agent pool.
-     *
+     * 
+     * Delete the provided Kubernetes cluster agent pool.
+     * 
      * @param id the resource ID.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void deleteByIdWithResponse(String id, Context context);
+    OperationStatusResult deleteByIdWithResponse(String id, String ifMatch, String ifNoneMatch, Context context);
 
     /**
      * Begins definition for a new AgentPool resource.
-     *
+     * 
      * @param name resource name.
      * @return the first stage of the new AgentPool definition.
      */

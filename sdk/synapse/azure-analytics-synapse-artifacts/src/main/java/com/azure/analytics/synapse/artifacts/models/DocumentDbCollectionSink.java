@@ -5,37 +5,63 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity Document Database Collection sink. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("DocumentDbCollectionSink")
+/**
+ * A copy activity Document Database Collection sink.
+ */
 @Fluent
 public final class DocumentDbCollectionSink extends CopySink {
     /*
+     * Copy sink type.
+     */
+    @Generated
+    private String type = "DocumentDbCollectionSink";
+
+    /*
      * Nested properties separator. Default is . (dot). Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "nestingSeparator")
+    @Generated
     private Object nestingSeparator;
 
     /*
      * Describes how to write data to Azure Cosmos DB. Type: string (or Expression with resultType string). Allowed
      * values: insert and upsert.
      */
-    @JsonProperty(value = "writeBehavior")
+    @Generated
     private Object writeBehavior;
 
-    /** Creates an instance of DocumentDbCollectionSink class. */
-    public DocumentDbCollectionSink() {}
+    /**
+     * Creates an instance of DocumentDbCollectionSink class.
+     */
+    @Generated
+    public DocumentDbCollectionSink() {
+    }
+
+    /**
+     * Get the type property: Copy sink type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the nestingSeparator property: Nested properties separator. Default is . (dot). Type: string (or Expression
      * with resultType string).
-     *
+     * 
      * @return the nestingSeparator value.
      */
+    @Generated
     public Object getNestingSeparator() {
         return this.nestingSeparator;
     }
@@ -43,10 +69,11 @@ public final class DocumentDbCollectionSink extends CopySink {
     /**
      * Set the nestingSeparator property: Nested properties separator. Default is . (dot). Type: string (or Expression
      * with resultType string).
-     *
+     * 
      * @param nestingSeparator the nestingSeparator value to set.
      * @return the DocumentDbCollectionSink object itself.
      */
+    @Generated
     public DocumentDbCollectionSink setNestingSeparator(Object nestingSeparator) {
         this.nestingSeparator = nestingSeparator;
         return this;
@@ -55,9 +82,10 @@ public final class DocumentDbCollectionSink extends CopySink {
     /**
      * Get the writeBehavior property: Describes how to write data to Azure Cosmos DB. Type: string (or Expression with
      * resultType string). Allowed values: insert and upsert.
-     *
+     * 
      * @return the writeBehavior value.
      */
+    @Generated
     public Object getWriteBehavior() {
         return this.writeBehavior;
     }
@@ -65,47 +93,147 @@ public final class DocumentDbCollectionSink extends CopySink {
     /**
      * Set the writeBehavior property: Describes how to write data to Azure Cosmos DB. Type: string (or Expression with
      * resultType string). Allowed values: insert and upsert.
-     *
+     * 
      * @param writeBehavior the writeBehavior value to set.
      * @return the DocumentDbCollectionSink object itself.
      */
+    @Generated
     public DocumentDbCollectionSink setWriteBehavior(Object writeBehavior) {
         this.writeBehavior = writeBehavior;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DocumentDbCollectionSink setWriteBatchSize(Object writeBatchSize) {
         super.setWriteBatchSize(writeBatchSize);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DocumentDbCollectionSink setWriteBatchTimeout(Object writeBatchTimeout) {
         super.setWriteBatchTimeout(writeBatchTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DocumentDbCollectionSink setSinkRetryCount(Object sinkRetryCount) {
         super.setSinkRetryCount(sinkRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DocumentDbCollectionSink setSinkRetryWait(Object sinkRetryWait) {
         super.setSinkRetryWait(sinkRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DocumentDbCollectionSink setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getWriteBatchSize() != null) {
+            jsonWriter.writeUntypedField("writeBatchSize", getWriteBatchSize());
+        }
+        if (getWriteBatchTimeout() != null) {
+            jsonWriter.writeUntypedField("writeBatchTimeout", getWriteBatchTimeout());
+        }
+        if (getSinkRetryCount() != null) {
+            jsonWriter.writeUntypedField("sinkRetryCount", getSinkRetryCount());
+        }
+        if (getSinkRetryWait() != null) {
+            jsonWriter.writeUntypedField("sinkRetryWait", getSinkRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.nestingSeparator != null) {
+            jsonWriter.writeUntypedField("nestingSeparator", this.nestingSeparator);
+        }
+        if (this.writeBehavior != null) {
+            jsonWriter.writeUntypedField("writeBehavior", this.writeBehavior);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DocumentDbCollectionSink from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DocumentDbCollectionSink if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the DocumentDbCollectionSink.
+     */
+    @Generated
+    public static DocumentDbCollectionSink fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DocumentDbCollectionSink deserializedDocumentDbCollectionSink = new DocumentDbCollectionSink();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("writeBatchSize".equals(fieldName)) {
+                    deserializedDocumentDbCollectionSink.setWriteBatchSize(reader.readUntyped());
+                } else if ("writeBatchTimeout".equals(fieldName)) {
+                    deserializedDocumentDbCollectionSink.setWriteBatchTimeout(reader.readUntyped());
+                } else if ("sinkRetryCount".equals(fieldName)) {
+                    deserializedDocumentDbCollectionSink.setSinkRetryCount(reader.readUntyped());
+                } else if ("sinkRetryWait".equals(fieldName)) {
+                    deserializedDocumentDbCollectionSink.setSinkRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedDocumentDbCollectionSink.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedDocumentDbCollectionSink.type = reader.getString();
+                } else if ("nestingSeparator".equals(fieldName)) {
+                    deserializedDocumentDbCollectionSink.nestingSeparator = reader.readUntyped();
+                } else if ("writeBehavior".equals(fieldName)) {
+                    deserializedDocumentDbCollectionSink.writeBehavior = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedDocumentDbCollectionSink.setAdditionalProperties(additionalProperties);
+
+            return deserializedDocumentDbCollectionSink;
+        });
     }
 }

@@ -5,55 +5,62 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Open Data Protocol (OData) linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("OData")
-@JsonFlatten
+/**
+ * Open Data Protocol (OData) linked service.
+ */
 @Fluent
 public class ODataLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "OData";
+
+    /*
      * The URL of the OData service endpoint. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.url", required = true)
+    @Generated
     private Object url;
 
     /*
      * Type of authentication used to connect to the OData service.
      */
-    @JsonProperty(value = "typeProperties.authenticationType")
+    @Generated
     private ODataAuthenticationType authenticationType;
 
     /*
      * User name of the OData service. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.userName")
+    @Generated
     private Object userName;
 
     /*
      * Password of the OData service.
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private SecretBase password;
 
     /*
      * Specify the tenant information (domain name or tenant ID) under which your application resides. Type: string (or
      * Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.tenant")
+    @Generated
     private Object tenant;
 
     /*
      * Specify the application id of your application registered in Azure Active Directory. Type: string (or Expression
      * with resultType string).
      */
-    @JsonProperty(value = "typeProperties.servicePrincipalId")
+    @Generated
     private Object servicePrincipalId;
 
     /*
@@ -61,68 +68,85 @@ public class ODataLinkedService extends LinkedService {
      * AzureUsGovernment, AzureGermany. Default value is the data factory regions’ cloud type. Type: string (or
      * Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.azureCloudType")
+    @Generated
     private Object azureCloudType;
 
     /*
      * Specify the resource you are requesting authorization to use Directory. Type: string (or Expression with
      * resultType string).
      */
-    @JsonProperty(value = "typeProperties.aadResourceId")
+    @Generated
     private Object aadResourceId;
 
     /*
      * Specify the credential type (key or cert) is used for service principal.
      */
-    @JsonProperty(value = "typeProperties.aadServicePrincipalCredentialType")
+    @Generated
     private ODataAadServicePrincipalCredentialType aadServicePrincipalCredentialType;
 
     /*
      * Specify the secret of your application registered in Azure Active Directory. Type: string (or Expression with
      * resultType string).
      */
-    @JsonProperty(value = "typeProperties.servicePrincipalKey")
+    @Generated
     private SecretBase servicePrincipalKey;
 
     /*
-     * Specify the base64 encoded certificate of your application registered in Azure Active Directory. Type: string
-     * (or Expression with resultType string).
+     * Specify the base64 encoded certificate of your application registered in Azure Active Directory. Type: string (or
+     * Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.servicePrincipalEmbeddedCert")
+    @Generated
     private SecretBase servicePrincipalEmbeddedCert;
 
     /*
-     * Specify the password of your certificate if your certificate has a password and you are using
-     * AadServicePrincipal authentication. Type: string (or Expression with resultType string).
+     * Specify the password of your certificate if your certificate has a password and you are using AadServicePrincipal
+     * authentication. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.servicePrincipalEmbeddedCertPassword")
+    @Generated
     private SecretBase servicePrincipalEmbeddedCertPassword;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of ODataLinkedService class. */
-    public ODataLinkedService() {}
+    /**
+     * Creates an instance of ODataLinkedService class.
+     */
+    @Generated
+    public ODataLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the url property: The URL of the OData service endpoint. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the url value.
      */
+    @Generated
     public Object getUrl() {
         return this.url;
     }
 
     /**
      * Set the url property: The URL of the OData service endpoint. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param url the url value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setUrl(Object url) {
         this.url = url;
         return this;
@@ -130,19 +154,21 @@ public class ODataLinkedService extends LinkedService {
 
     /**
      * Get the authenticationType property: Type of authentication used to connect to the OData service.
-     *
+     * 
      * @return the authenticationType value.
      */
+    @Generated
     public ODataAuthenticationType getAuthenticationType() {
         return this.authenticationType;
     }
 
     /**
      * Set the authenticationType property: Type of authentication used to connect to the OData service.
-     *
+     * 
      * @param authenticationType the authenticationType value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setAuthenticationType(ODataAuthenticationType authenticationType) {
         this.authenticationType = authenticationType;
         return this;
@@ -150,19 +176,21 @@ public class ODataLinkedService extends LinkedService {
 
     /**
      * Get the userName property: User name of the OData service. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the userName value.
      */
+    @Generated
     public Object getUserName() {
         return this.userName;
     }
 
     /**
      * Set the userName property: User name of the OData service. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param userName the userName value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setUserName(Object userName) {
         this.userName = userName;
         return this;
@@ -170,19 +198,21 @@ public class ODataLinkedService extends LinkedService {
 
     /**
      * Get the password property: Password of the OData service.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: Password of the OData service.
-     *
+     * 
      * @param password the password value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -191,9 +221,10 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Get the tenant property: Specify the tenant information (domain name or tenant ID) under which your application
      * resides. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the tenant value.
      */
+    @Generated
     public Object getTenant() {
         return this.tenant;
     }
@@ -201,10 +232,11 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Set the tenant property: Specify the tenant information (domain name or tenant ID) under which your application
      * resides. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param tenant the tenant value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setTenant(Object tenant) {
         this.tenant = tenant;
         return this;
@@ -213,9 +245,10 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Get the servicePrincipalId property: Specify the application id of your application registered in Azure Active
      * Directory. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the servicePrincipalId value.
      */
+    @Generated
     public Object getServicePrincipalId() {
         return this.servicePrincipalId;
     }
@@ -223,10 +256,11 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Set the servicePrincipalId property: Specify the application id of your application registered in Azure Active
      * Directory. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param servicePrincipalId the servicePrincipalId value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setServicePrincipalId(Object servicePrincipalId) {
         this.servicePrincipalId = servicePrincipalId;
         return this;
@@ -236,9 +270,10 @@ public class ODataLinkedService extends LinkedService {
      * Get the azureCloudType property: Indicates the azure cloud type of the service principle auth. Allowed values are
      * AzurePublic, AzureChina, AzureUsGovernment, AzureGermany. Default value is the data factory regions’ cloud type.
      * Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the azureCloudType value.
      */
+    @Generated
     public Object getAzureCloudType() {
         return this.azureCloudType;
     }
@@ -247,10 +282,11 @@ public class ODataLinkedService extends LinkedService {
      * Set the azureCloudType property: Indicates the azure cloud type of the service principle auth. Allowed values are
      * AzurePublic, AzureChina, AzureUsGovernment, AzureGermany. Default value is the data factory regions’ cloud type.
      * Type: string (or Expression with resultType string).
-     *
+     * 
      * @param azureCloudType the azureCloudType value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setAzureCloudType(Object azureCloudType) {
         this.azureCloudType = azureCloudType;
         return this;
@@ -259,9 +295,10 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Get the aadResourceId property: Specify the resource you are requesting authorization to use Directory. Type:
      * string (or Expression with resultType string).
-     *
+     * 
      * @return the aadResourceId value.
      */
+    @Generated
     public Object getAadResourceId() {
         return this.aadResourceId;
     }
@@ -269,10 +306,11 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Set the aadResourceId property: Specify the resource you are requesting authorization to use Directory. Type:
      * string (or Expression with resultType string).
-     *
+     * 
      * @param aadResourceId the aadResourceId value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setAadResourceId(Object aadResourceId) {
         this.aadResourceId = aadResourceId;
         return this;
@@ -281,9 +319,10 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Get the aadServicePrincipalCredentialType property: Specify the credential type (key or cert) is used for service
      * principal.
-     *
+     * 
      * @return the aadServicePrincipalCredentialType value.
      */
+    @Generated
     public ODataAadServicePrincipalCredentialType getAadServicePrincipalCredentialType() {
         return this.aadServicePrincipalCredentialType;
     }
@@ -291,12 +330,13 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Set the aadServicePrincipalCredentialType property: Specify the credential type (key or cert) is used for service
      * principal.
-     *
+     * 
      * @param aadServicePrincipalCredentialType the aadServicePrincipalCredentialType value to set.
      * @return the ODataLinkedService object itself.
      */
-    public ODataLinkedService setAadServicePrincipalCredentialType(
-            ODataAadServicePrincipalCredentialType aadServicePrincipalCredentialType) {
+    @Generated
+    public ODataLinkedService
+        setAadServicePrincipalCredentialType(ODataAadServicePrincipalCredentialType aadServicePrincipalCredentialType) {
         this.aadServicePrincipalCredentialType = aadServicePrincipalCredentialType;
         return this;
     }
@@ -304,9 +344,10 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Get the servicePrincipalKey property: Specify the secret of your application registered in Azure Active
      * Directory. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the servicePrincipalKey value.
      */
+    @Generated
     public SecretBase getServicePrincipalKey() {
         return this.servicePrincipalKey;
     }
@@ -314,10 +355,11 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Set the servicePrincipalKey property: Specify the secret of your application registered in Azure Active
      * Directory. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param servicePrincipalKey the servicePrincipalKey value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setServicePrincipalKey(SecretBase servicePrincipalKey) {
         this.servicePrincipalKey = servicePrincipalKey;
         return this;
@@ -326,9 +368,10 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Get the servicePrincipalEmbeddedCert property: Specify the base64 encoded certificate of your application
      * registered in Azure Active Directory. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the servicePrincipalEmbeddedCert value.
      */
+    @Generated
     public SecretBase getServicePrincipalEmbeddedCert() {
         return this.servicePrincipalEmbeddedCert;
     }
@@ -336,10 +379,11 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Set the servicePrincipalEmbeddedCert property: Specify the base64 encoded certificate of your application
      * registered in Azure Active Directory. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param servicePrincipalEmbeddedCert the servicePrincipalEmbeddedCert value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setServicePrincipalEmbeddedCert(SecretBase servicePrincipalEmbeddedCert) {
         this.servicePrincipalEmbeddedCert = servicePrincipalEmbeddedCert;
         return this;
@@ -349,9 +393,10 @@ public class ODataLinkedService extends LinkedService {
      * Get the servicePrincipalEmbeddedCertPassword property: Specify the password of your certificate if your
      * certificate has a password and you are using AadServicePrincipal authentication. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the servicePrincipalEmbeddedCertPassword value.
      */
+    @Generated
     public SecretBase getServicePrincipalEmbeddedCertPassword() {
         return this.servicePrincipalEmbeddedCertPassword;
     }
@@ -360,10 +405,11 @@ public class ODataLinkedService extends LinkedService {
      * Set the servicePrincipalEmbeddedCertPassword property: Specify the password of your certificate if your
      * certificate has a password and you are using AadServicePrincipal authentication. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param servicePrincipalEmbeddedCertPassword the servicePrincipalEmbeddedCertPassword value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setServicePrincipalEmbeddedCertPassword(SecretBase servicePrincipalEmbeddedCertPassword) {
         this.servicePrincipalEmbeddedCertPassword = servicePrincipalEmbeddedCertPassword;
         return this;
@@ -372,9 +418,10 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -382,40 +429,215 @@ public class ODataLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the ODataLinkedService object itself.
      */
+    @Generated
     public ODataLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public ODataLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ODataLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ODataLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ODataLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ODataLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (url != null
+            || authenticationType != null
+            || userName != null
+            || password != null
+            || tenant != null
+            || servicePrincipalId != null
+            || azureCloudType != null
+            || aadResourceId != null
+            || aadServicePrincipalCredentialType != null
+            || servicePrincipalKey != null
+            || servicePrincipalEmbeddedCert != null
+            || servicePrincipalEmbeddedCertPassword != null
+            || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("url", this.url);
+            jsonWriter.writeStringField("authenticationType",
+                this.authenticationType == null ? null : this.authenticationType.toString());
+            if (this.userName != null) {
+                jsonWriter.writeUntypedField("userName", this.userName);
+            }
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.tenant != null) {
+                jsonWriter.writeUntypedField("tenant", this.tenant);
+            }
+            if (this.servicePrincipalId != null) {
+                jsonWriter.writeUntypedField("servicePrincipalId", this.servicePrincipalId);
+            }
+            if (this.azureCloudType != null) {
+                jsonWriter.writeUntypedField("azureCloudType", this.azureCloudType);
+            }
+            if (this.aadResourceId != null) {
+                jsonWriter.writeUntypedField("aadResourceId", this.aadResourceId);
+            }
+            jsonWriter.writeStringField("aadServicePrincipalCredentialType",
+                this.aadServicePrincipalCredentialType == null
+                    ? null
+                    : this.aadServicePrincipalCredentialType.toString());
+            jsonWriter.writeJsonField("servicePrincipalKey", this.servicePrincipalKey);
+            jsonWriter.writeJsonField("servicePrincipalEmbeddedCert", this.servicePrincipalEmbeddedCert);
+            jsonWriter.writeJsonField("servicePrincipalEmbeddedCertPassword",
+                this.servicePrincipalEmbeddedCertPassword);
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ODataLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ODataLinkedService if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ODataLinkedService.
+     */
+    @Generated
+    public static ODataLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ODataLinkedService deserializedODataLinkedService = new ODataLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedODataLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedODataLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedODataLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedODataLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedODataLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedODataLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("url".equals(fieldName)) {
+                            deserializedODataLinkedService.url = reader.readUntyped();
+                        } else if ("authenticationType".equals(fieldName)) {
+                            deserializedODataLinkedService.authenticationType
+                                = ODataAuthenticationType.fromString(reader.getString());
+                        } else if ("userName".equals(fieldName)) {
+                            deserializedODataLinkedService.userName = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedODataLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("tenant".equals(fieldName)) {
+                            deserializedODataLinkedService.tenant = reader.readUntyped();
+                        } else if ("servicePrincipalId".equals(fieldName)) {
+                            deserializedODataLinkedService.servicePrincipalId = reader.readUntyped();
+                        } else if ("azureCloudType".equals(fieldName)) {
+                            deserializedODataLinkedService.azureCloudType = reader.readUntyped();
+                        } else if ("aadResourceId".equals(fieldName)) {
+                            deserializedODataLinkedService.aadResourceId = reader.readUntyped();
+                        } else if ("aadServicePrincipalCredentialType".equals(fieldName)) {
+                            deserializedODataLinkedService.aadServicePrincipalCredentialType
+                                = ODataAadServicePrincipalCredentialType.fromString(reader.getString());
+                        } else if ("servicePrincipalKey".equals(fieldName)) {
+                            deserializedODataLinkedService.servicePrincipalKey = SecretBase.fromJson(reader);
+                        } else if ("servicePrincipalEmbeddedCert".equals(fieldName)) {
+                            deserializedODataLinkedService.servicePrincipalEmbeddedCert = SecretBase.fromJson(reader);
+                        } else if ("servicePrincipalEmbeddedCertPassword".equals(fieldName)) {
+                            deserializedODataLinkedService.servicePrincipalEmbeddedCertPassword
+                                = SecretBase.fromJson(reader);
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedODataLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedODataLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedODataLinkedService;
+        });
     }
 }

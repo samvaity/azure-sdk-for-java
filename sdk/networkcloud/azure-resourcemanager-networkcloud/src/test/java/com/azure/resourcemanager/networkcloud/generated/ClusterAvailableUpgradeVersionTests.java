@@ -10,11 +10,9 @@ import com.azure.resourcemanager.networkcloud.models.ClusterAvailableUpgradeVers
 public final class ClusterAvailableUpgradeVersionTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ClusterAvailableUpgradeVersion model =
-            BinaryData
-                .fromString(
-                    "{\"controlImpact\":\"True\",\"expectedDuration\":\"qvkelnsm\",\"impactDescription\":\"xwyjsflhhc\",\"supportExpiryDate\":\"lnjixisxya\",\"targetClusterVersion\":\"oyaqcslyjpkiid\",\"workloadImpact\":\"False\"}")
-                .toObject(ClusterAvailableUpgradeVersion.class);
+        ClusterAvailableUpgradeVersion model = BinaryData.fromString(
+            "{\"controlImpact\":\"False\",\"expectedDuration\":\"qwcsdbnwdcfhuc\",\"impactDescription\":\"pfuvglsbjjca\",\"supportExpiryDate\":\"xbvtvudu\",\"targetClusterVersion\":\"cormr\",\"workloadImpact\":\"False\"}")
+            .toObject(ClusterAvailableUpgradeVersion.class);
     }
 
     @org.junit.jupiter.api.Test

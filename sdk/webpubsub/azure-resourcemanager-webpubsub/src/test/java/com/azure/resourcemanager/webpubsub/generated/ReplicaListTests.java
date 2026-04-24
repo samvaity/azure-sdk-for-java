@@ -17,104 +17,47 @@ import org.junit.jupiter.api.Assertions;
 public final class ReplicaListTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ReplicaList model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"sku\":{\"name\":\"btx\",\"tier\":\"Basic\",\"size\":\"wsrt\",\"family\":\"coezbrhubskh\",\"capacity\":662703919},\"properties\":{\"provisioningState\":\"Moving\"},\"location\":\"kkqfqjbvle\",\"tags\":{\"iqtqzfavyvnq\":\"ml\",\"euayjkqabqgzsles\":\"ybar\",\"vbquwr\":\"cbhernntiewdj\",\"uffkmrqemvvh\":\"ehwagoh\"},\"id\":\"xtdr\",\"name\":\"futacoebjvewzc\",\"type\":\"znmwcp\"},{\"sku\":{\"name\":\"uaadraufactkahzo\",\"tier\":\"Standard\",\"size\":\"ziuxxpshnee\",\"family\":\"lfg\",\"capacity\":1157333655},\"properties\":{\"provisioningState\":\"Failed\"},\"location\":\"dlenrdsutujbazpj\",\"tags\":{\"uvwpklvxwmyg\":\"minyflnorwm\",\"hiszepnnbjcrxgib\":\"xpgpq\",\"kwbqplhlvnuu\":\"daxconfozauorsuk\",\"soldweyuqdunv\":\"pzlrphw\"},\"id\":\"nnrwrbiork\",\"name\":\"alywjhhgdn\",\"type\":\"xmsivfomiloxggdu\"},{\"sku\":{\"name\":\"q\",\"tier\":\"Premium\",\"size\":\"uzaofjchvcyyy\",\"family\":\"gdotcubiipuipwo\",\"capacity\":1120696384},\"properties\":{\"provisioningState\":\"Failed\"},\"location\":\"ekni\",\"tags\":{\"pevf\":\"qvci\",\"smiccwrwfscj\":\"mblrrilbywd\",\"nszqujiz\":\"n\",\"byowbblgyavutp\":\"voqyt\"},\"id\":\"hjoxo\",\"name\":\"smsks\",\"type\":\"pi\"},{\"sku\":{\"name\":\"qolj\",\"tier\":\"Basic\",\"size\":\"xxlxsffgcvizq\",\"family\":\"wlvwlyoupf\",\"capacity\":1825475274},\"properties\":{\"provisioningState\":\"Canceled\"},\"location\":\"dyhgkfminsg\",\"tags\":{\"lahb\":\"fttsttk\",\"qtgqqqxhrnxr\":\"actxtgzukxitm\",\"okqdzfvaz\":\"cpjuisa\",\"ajlkatnw\":\"vjlfrqtt\"},\"id\":\"yiopi\",\"name\":\"kqqfk\",\"type\":\"vscx\"}],\"nextLink\":\"mligov\"}")
-                .toObject(ReplicaList.class);
-        Assertions.assertEquals("kkqfqjbvle", model.value().get(0).location());
-        Assertions.assertEquals("ml", model.value().get(0).tags().get("iqtqzfavyvnq"));
-        Assertions.assertEquals("btx", model.value().get(0).sku().name());
+        ReplicaList model = BinaryData.fromString(
+            "{\"value\":[{\"sku\":{\"name\":\"qplhlvnu\",\"tier\":\"Basic\",\"size\":\"lrphwzsoldw\",\"family\":\"uqdunvmnnrwrbi\",\"capacity\":2098382686},\"properties\":{\"provisioningState\":\"Unknown\",\"regionEndpointEnabled\":\"wjhhgdnhxmsivf\",\"resourceStopped\":\"iloxggdufiq\"},\"location\":\"ieuzaofjchvcyyy\",\"tags\":{\"oqonma\":\"dotcubiipuip\",\"cimpevfg\":\"jeknizshq\",\"rrilbywdxsmic\":\"b\",\"qujizdvo\":\"wrwfscjfnyns\"},\"id\":\"ytibyow\",\"name\":\"blgyavutpthj\",\"type\":\"xoi\"},{\"sku\":{\"name\":\"sks\",\"tier\":\"Free\",\"size\":\"lqol\",\"family\":\"kcgxxlxsffgcvi\",\"capacity\":1820797792},\"properties\":{\"provisioningState\":\"Failed\",\"regionEndpointEnabled\":\"w\",\"resourceStopped\":\"oupfgfb\"},\"location\":\"ubdyhgk\",\"tags\":{\"ktlahbqa\":\"nsgowzfttst\"},\"id\":\"tx\",\"name\":\"gzukxitmm\",\"type\":\"tg\"}],\"nextLink\":\"q\"}")
+            .toObject(ReplicaList.class);
+        Assertions.assertEquals("ieuzaofjchvcyyy", model.value().get(0).location());
+        Assertions.assertEquals("dotcubiipuip", model.value().get(0).tags().get("oqonma"));
+        Assertions.assertEquals("qplhlvnu", model.value().get(0).sku().name());
         Assertions.assertEquals(WebPubSubSkuTier.BASIC, model.value().get(0).sku().tier());
-        Assertions.assertEquals(662703919, model.value().get(0).sku().capacity());
-        Assertions.assertEquals("mligov", model.nextLink());
+        Assertions.assertEquals(2098382686, model.value().get(0).sku().capacity());
+        Assertions.assertEquals("wjhhgdnhxmsivf", model.value().get(0).regionEndpointEnabled());
+        Assertions.assertEquals("iloxggdufiq", model.value().get(0).resourceStopped());
+        Assertions.assertEquals("q", model.nextLink());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ReplicaList model =
-            new ReplicaList()
-                .withValue(
-                    Arrays
-                        .asList(
-                            new ReplicaInner()
-                                .withLocation("kkqfqjbvle")
-                                .withTags(
-                                    mapOf(
-                                        "iqtqzfavyvnq",
-                                        "ml",
-                                        "euayjkqabqgzsles",
-                                        "ybar",
-                                        "vbquwr",
-                                        "cbhernntiewdj",
-                                        "uffkmrqemvvh",
-                                        "ehwagoh"))
-                                .withSku(
-                                    new ResourceSku()
-                                        .withName("btx")
-                                        .withTier(WebPubSubSkuTier.BASIC)
-                                        .withCapacity(662703919)),
-                            new ReplicaInner()
-                                .withLocation("dlenrdsutujbazpj")
-                                .withTags(
-                                    mapOf(
-                                        "uvwpklvxwmyg",
-                                        "minyflnorwm",
-                                        "hiszepnnbjcrxgib",
-                                        "xpgpq",
-                                        "kwbqplhlvnuu",
-                                        "daxconfozauorsuk",
-                                        "soldweyuqdunv",
-                                        "pzlrphw"))
-                                .withSku(
-                                    new ResourceSku()
-                                        .withName("uaadraufactkahzo")
-                                        .withTier(WebPubSubSkuTier.STANDARD)
-                                        .withCapacity(1157333655)),
-                            new ReplicaInner()
-                                .withLocation("ekni")
-                                .withTags(
-                                    mapOf(
-                                        "pevf",
-                                        "qvci",
-                                        "smiccwrwfscj",
-                                        "mblrrilbywd",
-                                        "nszqujiz",
-                                        "n",
-                                        "byowbblgyavutp",
-                                        "voqyt"))
-                                .withSku(
-                                    new ResourceSku()
-                                        .withName("q")
-                                        .withTier(WebPubSubSkuTier.PREMIUM)
-                                        .withCapacity(1120696384)),
-                            new ReplicaInner()
-                                .withLocation("dyhgkfminsg")
-                                .withTags(
-                                    mapOf(
-                                        "lahb",
-                                        "fttsttk",
-                                        "qtgqqqxhrnxr",
-                                        "actxtgzukxitm",
-                                        "okqdzfvaz",
-                                        "cpjuisa",
-                                        "ajlkatnw",
-                                        "vjlfrqtt"))
-                                .withSku(
-                                    new ResourceSku()
-                                        .withName("qolj")
-                                        .withTier(WebPubSubSkuTier.BASIC)
-                                        .withCapacity(1825475274))))
-                .withNextLink("mligov");
+        ReplicaList model = new ReplicaList().withValue(Arrays.asList(
+            new ReplicaInner().withLocation("ieuzaofjchvcyyy")
+                .withTags(mapOf("oqonma", "dotcubiipuip", "cimpevfg", "jeknizshq", "rrilbywdxsmic", "b", "qujizdvo",
+                    "wrwfscjfnyns"))
+                .withSku(
+                    new ResourceSku().withName("qplhlvnu").withTier(WebPubSubSkuTier.BASIC).withCapacity(2098382686))
+                .withRegionEndpointEnabled("wjhhgdnhxmsivf")
+                .withResourceStopped("iloxggdufiq"),
+            new ReplicaInner().withLocation("ubdyhgk")
+                .withTags(mapOf("ktlahbqa", "nsgowzfttst"))
+                .withSku(new ResourceSku().withName("sks").withTier(WebPubSubSkuTier.FREE).withCapacity(1820797792))
+                .withRegionEndpointEnabled("w")
+                .withResourceStopped("oupfgfb")))
+            .withNextLink("q");
         model = BinaryData.fromObject(model).toObject(ReplicaList.class);
-        Assertions.assertEquals("kkqfqjbvle", model.value().get(0).location());
-        Assertions.assertEquals("ml", model.value().get(0).tags().get("iqtqzfavyvnq"));
-        Assertions.assertEquals("btx", model.value().get(0).sku().name());
+        Assertions.assertEquals("ieuzaofjchvcyyy", model.value().get(0).location());
+        Assertions.assertEquals("dotcubiipuip", model.value().get(0).tags().get("oqonma"));
+        Assertions.assertEquals("qplhlvnu", model.value().get(0).sku().name());
         Assertions.assertEquals(WebPubSubSkuTier.BASIC, model.value().get(0).sku().tier());
-        Assertions.assertEquals(662703919, model.value().get(0).sku().capacity());
-        Assertions.assertEquals("mligov", model.nextLink());
+        Assertions.assertEquals(2098382686, model.value().get(0).sku().capacity());
+        Assertions.assertEquals("wjhhgdnhxmsivf", model.value().get(0).regionEndpointEnabled());
+        Assertions.assertEquals("iloxggdufiq", model.value().get(0).resourceStopped());
+        Assertions.assertEquals("q", model.nextLink());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

@@ -6,69 +6,40 @@ package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.networkcloud.NetworkCloudManager;
 import com.azure.resourcemanager.networkcloud.models.Rack;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class RacksListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"etag\":\"irhhmo\",\"extendedLocation\":{\"name\":\"usuzgfjzcvaaxo\",\"type\":\"alahf\"},\"properties\":{\"availabilityZone\":\"wcco\",\"clusterId\":\"xkukm\",\"detailedStatus\":\"Error\",\"detailedStatusMessage\":\"nuhhoqeqshav\",\"provisioningState\":\"Succeeded\",\"rackLocation\":\"k\",\"rackSerialNumber\":\"yrqolnthbbnkgz\",\"rackSkuId\":\"kwdrnzkjthfc\"},\"location\":\"jncjmlfuyfjbp\",\"tags\":{\"fuiocuselq\":\"dhlrufzcqyjmq\",\"qmdtffi\":\"rsazrhxud\",\"khmwdmd\":\"jmr\"},\"id\":\"gyqi\",\"name\":\"okwtjawhvagnqfqq\",\"type\":\"lcvmyolcaymjch\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"extendedLocation\":{\"name\":\"mbmslzoyov\",\"type\":\"zdbpqv\"},\"properties\":{\"availabilityZone\":\"befgvmxn\",\"clusterId\":\"cvtlubseskvc\",\"detailedStatus\":\"Provisioning\",\"detailedStatusMessage\":\"rhunlp\",\"provisioningState\":\"Provisioning\",\"rackLocation\":\"kycndzfqivjreuy\",\"rackSerialNumber\":\"bbmnwagltb\",\"rackSkuId\":\"oeeonqlnfwm\"},\"location\":\"mvqdbpbhfckdvez\",\"tags\":{\"kalehp\":\"ssbzhddubbnqfbl\",\"iqjtiogqgdmin\":\"vawu\",\"gspnbonhpczykm\":\"ctteajohi\"},\"id\":\"tp\",\"name\":\"wxqcsehchkhufmpq\",\"type\":\"mqyjgy\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        NetworkCloudManager manager = NetworkCloudManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<Rack> response = manager.racks().list(648783991, "olk", com.azure.core.util.Context.NONE);
 
-        NetworkCloudManager manager =
-            NetworkCloudManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<Rack> response = manager.racks().list(com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("mvqdbpbhfckdvez", response.iterator().next().location());
-        Assertions.assertEquals("ssbzhddubbnqfbl", response.iterator().next().tags().get("kalehp"));
-        Assertions.assertEquals("mbmslzoyov", response.iterator().next().extendedLocation().name());
-        Assertions.assertEquals("zdbpqv", response.iterator().next().extendedLocation().type());
-        Assertions.assertEquals("befgvmxn", response.iterator().next().availabilityZone());
-        Assertions.assertEquals("kycndzfqivjreuy", response.iterator().next().rackLocation());
-        Assertions.assertEquals("bbmnwagltb", response.iterator().next().rackSerialNumber());
-        Assertions.assertEquals("oeeonqlnfwm", response.iterator().next().rackSkuId());
+        Assertions.assertEquals("jncjmlfuyfjbp", response.iterator().next().location());
+        Assertions.assertEquals("dhlrufzcqyjmq", response.iterator().next().tags().get("fuiocuselq"));
+        Assertions.assertEquals("usuzgfjzcvaaxo", response.iterator().next().extendedLocation().name());
+        Assertions.assertEquals("alahf", response.iterator().next().extendedLocation().type());
+        Assertions.assertEquals("wcco", response.iterator().next().availabilityZone());
+        Assertions.assertEquals("k", response.iterator().next().rackLocation());
+        Assertions.assertEquals("yrqolnthbbnkgz", response.iterator().next().rackSerialNumber());
+        Assertions.assertEquals("kwdrnzkjthfc", response.iterator().next().rackSkuId());
     }
 }

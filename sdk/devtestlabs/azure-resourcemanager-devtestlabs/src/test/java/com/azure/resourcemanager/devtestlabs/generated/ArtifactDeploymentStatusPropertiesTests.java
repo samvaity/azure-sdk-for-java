@@ -11,26 +11,22 @@ import org.junit.jupiter.api.Assertions;
 public final class ArtifactDeploymentStatusPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ArtifactDeploymentStatusProperties model =
-            BinaryData
-                .fromString(
-                    "{\"deploymentStatus\":\"mxelnwcltyjed\",\"artifactsApplied\":427218214,\"totalArtifacts\":979401460}")
-                .toObject(ArtifactDeploymentStatusProperties.class);
-        Assertions.assertEquals("mxelnwcltyjed", model.deploymentStatus());
-        Assertions.assertEquals(427218214, model.artifactsApplied());
-        Assertions.assertEquals(979401460, model.totalArtifacts());
+        ArtifactDeploymentStatusProperties model = BinaryData
+            .fromString("{\"deploymentStatus\":\"bf\",\"artifactsApplied\":1699550993,\"totalArtifacts\":1064887368}")
+            .toObject(ArtifactDeploymentStatusProperties.class);
+        Assertions.assertEquals("bf", model.deploymentStatus());
+        Assertions.assertEquals(1699550993, model.artifactsApplied());
+        Assertions.assertEquals(1064887368, model.totalArtifacts());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ArtifactDeploymentStatusProperties model =
-            new ArtifactDeploymentStatusProperties()
-                .withDeploymentStatus("mxelnwcltyjed")
-                .withArtifactsApplied(427218214)
-                .withTotalArtifacts(979401460);
+        ArtifactDeploymentStatusProperties model = new ArtifactDeploymentStatusProperties().withDeploymentStatus("bf")
+            .withArtifactsApplied(1699550993)
+            .withTotalArtifacts(1064887368);
         model = BinaryData.fromObject(model).toObject(ArtifactDeploymentStatusProperties.class);
-        Assertions.assertEquals("mxelnwcltyjed", model.deploymentStatus());
-        Assertions.assertEquals(427218214, model.artifactsApplied());
-        Assertions.assertEquals(979401460, model.totalArtifacts());
+        Assertions.assertEquals("bf", model.deploymentStatus());
+        Assertions.assertEquals(1699550993, model.artifactsApplied());
+        Assertions.assertEquals(1064887368, model.totalArtifacts());
     }
 }

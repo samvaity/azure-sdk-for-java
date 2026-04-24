@@ -5,51 +5,77 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** Delimited text write settings. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("DelimitedTextWriteSettings")
+/**
+ * Delimited text write settings.
+ */
 @Fluent
 public final class DelimitedTextWriteSettings extends FormatWriteSettings {
+    /*
+     * The write setting type.
+     */
+    @Generated
+    private String type = "DelimitedTextWriteSettings";
+
     /*
      * Indicates whether string values should always be enclosed with quotes. Type: boolean (or Expression with
      * resultType boolean).
      */
-    @JsonProperty(value = "quoteAllText")
+    @Generated
     private Object quoteAllText;
 
     /*
      * The file extension used to create the files. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "fileExtension", required = true)
+    @Generated
     private Object fileExtension;
 
     /*
      * Limit the written file's row count to be smaller than or equal to the specified count. Type: integer (or
      * Expression with resultType integer).
      */
-    @JsonProperty(value = "maxRowsPerFile")
+    @Generated
     private Object maxRowsPerFile;
 
     /*
      * Specifies the file name pattern <fileNamePrefix>_<fileIndex>.<fileExtension> when copy from non-file based store
      * without partitionOptions. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "fileNamePrefix")
+    @Generated
     private Object fileNamePrefix;
 
-    /** Creates an instance of DelimitedTextWriteSettings class. */
-    public DelimitedTextWriteSettings() {}
+    /**
+     * Creates an instance of DelimitedTextWriteSettings class.
+     */
+    @Generated
+    public DelimitedTextWriteSettings() {
+    }
+
+    /**
+     * Get the type property: The write setting type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the quoteAllText property: Indicates whether string values should always be enclosed with quotes. Type:
      * boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the quoteAllText value.
      */
+    @Generated
     public Object getQuoteAllText() {
         return this.quoteAllText;
     }
@@ -57,10 +83,11 @@ public final class DelimitedTextWriteSettings extends FormatWriteSettings {
     /**
      * Set the quoteAllText property: Indicates whether string values should always be enclosed with quotes. Type:
      * boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param quoteAllText the quoteAllText value to set.
      * @return the DelimitedTextWriteSettings object itself.
      */
+    @Generated
     public DelimitedTextWriteSettings setQuoteAllText(Object quoteAllText) {
         this.quoteAllText = quoteAllText;
         return this;
@@ -69,9 +96,10 @@ public final class DelimitedTextWriteSettings extends FormatWriteSettings {
     /**
      * Get the fileExtension property: The file extension used to create the files. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the fileExtension value.
      */
+    @Generated
     public Object getFileExtension() {
         return this.fileExtension;
     }
@@ -79,10 +107,11 @@ public final class DelimitedTextWriteSettings extends FormatWriteSettings {
     /**
      * Set the fileExtension property: The file extension used to create the files. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param fileExtension the fileExtension value to set.
      * @return the DelimitedTextWriteSettings object itself.
      */
+    @Generated
     public DelimitedTextWriteSettings setFileExtension(Object fileExtension) {
         this.fileExtension = fileExtension;
         return this;
@@ -91,9 +120,10 @@ public final class DelimitedTextWriteSettings extends FormatWriteSettings {
     /**
      * Get the maxRowsPerFile property: Limit the written file's row count to be smaller than or equal to the specified
      * count. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @return the maxRowsPerFile value.
      */
+    @Generated
     public Object getMaxRowsPerFile() {
         return this.maxRowsPerFile;
     }
@@ -101,10 +131,11 @@ public final class DelimitedTextWriteSettings extends FormatWriteSettings {
     /**
      * Set the maxRowsPerFile property: Limit the written file's row count to be smaller than or equal to the specified
      * count. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @param maxRowsPerFile the maxRowsPerFile value to set.
      * @return the DelimitedTextWriteSettings object itself.
      */
+    @Generated
     public DelimitedTextWriteSettings setMaxRowsPerFile(Object maxRowsPerFile) {
         this.maxRowsPerFile = maxRowsPerFile;
         return this;
@@ -114,9 +145,10 @@ public final class DelimitedTextWriteSettings extends FormatWriteSettings {
      * Get the fileNamePrefix property: Specifies the file name pattern
      * &lt;fileNamePrefix&gt;_&lt;fileIndex&gt;.&lt;fileExtension&gt; when copy from non-file based store without
      * partitionOptions. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the fileNamePrefix value.
      */
+    @Generated
     public Object getFileNamePrefix() {
         return this.fileNamePrefix;
     }
@@ -125,12 +157,81 @@ public final class DelimitedTextWriteSettings extends FormatWriteSettings {
      * Set the fileNamePrefix property: Specifies the file name pattern
      * &lt;fileNamePrefix&gt;_&lt;fileIndex&gt;.&lt;fileExtension&gt; when copy from non-file based store without
      * partitionOptions. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param fileNamePrefix the fileNamePrefix value to set.
      * @return the DelimitedTextWriteSettings object itself.
      */
+    @Generated
     public DelimitedTextWriteSettings setFileNamePrefix(Object fileNamePrefix) {
         this.fileNamePrefix = fileNamePrefix;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeUntypedField("fileExtension", this.fileExtension);
+        jsonWriter.writeStringField("type", this.type);
+        if (this.quoteAllText != null) {
+            jsonWriter.writeUntypedField("quoteAllText", this.quoteAllText);
+        }
+        if (this.maxRowsPerFile != null) {
+            jsonWriter.writeUntypedField("maxRowsPerFile", this.maxRowsPerFile);
+        }
+        if (this.fileNamePrefix != null) {
+            jsonWriter.writeUntypedField("fileNamePrefix", this.fileNamePrefix);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DelimitedTextWriteSettings from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DelimitedTextWriteSettings if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DelimitedTextWriteSettings.
+     */
+    @Generated
+    public static DelimitedTextWriteSettings fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DelimitedTextWriteSettings deserializedDelimitedTextWriteSettings = new DelimitedTextWriteSettings();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("fileExtension".equals(fieldName)) {
+                    deserializedDelimitedTextWriteSettings.fileExtension = reader.readUntyped();
+                } else if ("type".equals(fieldName)) {
+                    deserializedDelimitedTextWriteSettings.type = reader.getString();
+                } else if ("quoteAllText".equals(fieldName)) {
+                    deserializedDelimitedTextWriteSettings.quoteAllText = reader.readUntyped();
+                } else if ("maxRowsPerFile".equals(fieldName)) {
+                    deserializedDelimitedTextWriteSettings.maxRowsPerFile = reader.readUntyped();
+                } else if ("fileNamePrefix".equals(fieldName)) {
+                    deserializedDelimitedTextWriteSettings.fileNamePrefix = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedDelimitedTextWriteSettings.setAdditionalProperties(additionalProperties);
+
+            return deserializedDelimitedTextWriteSettings;
+        });
     }
 }

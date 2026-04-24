@@ -14,6 +14,7 @@ import com.azure.core.annotation.Host;
 import com.azure.core.annotation.HostParam;
 import com.azure.core.annotation.Patch;
 import com.azure.core.annotation.PathParam;
+import com.azure.core.annotation.Post;
 import com.azure.core.annotation.Put;
 import com.azure.core.annotation.QueryParam;
 import com.azure.core.annotation.ReturnType;
@@ -28,33 +29,45 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.management.polling.PollResult;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.resourcemanager.confidentialledger.fluent.ManagedCcfsClient;
+import com.azure.resourcemanager.confidentialledger.fluent.models.ManagedCcfBackupResponseInner;
 import com.azure.resourcemanager.confidentialledger.fluent.models.ManagedCcfInner;
+import com.azure.resourcemanager.confidentialledger.fluent.models.ManagedCcfRestoreResponseInner;
+import com.azure.resourcemanager.confidentialledger.models.ManagedCcfBackup;
 import com.azure.resourcemanager.confidentialledger.models.ManagedCcfList;
+import com.azure.resourcemanager.confidentialledger.models.ManagedCcfRestore;
 import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ManagedCcfsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ManagedCcfsClient.
+ */
 public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ManagedCcfsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final ConfidentialLedgerManagementClientImpl client;
 
     /**
      * Initializes an instance of ManagedCcfsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ManagedCcfsClientImpl(ConfidentialLedgerManagementClientImpl client) {
-        this.service =
-            RestProxy.create(ManagedCcfsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(ManagedCcfsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -65,116 +78,194 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
     @Host("{$host}")
     @ServiceInterface(name = "ConfidentialLedgerMa")
     public interface ManagedCcfsService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ManagedCcfInner>> getByResourceGroup(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("appName") String appName,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<ManagedCcfInner>> getByResourceGroup(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ManagedCcfInner> getByResourceGroupSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
+        @ExpectedResponses({ 200, 202, 204 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> delete(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
+        @ExpectedResponses({ 200, 202, 204 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> deleteSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
+        @ExpectedResponses({ 200, 201 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> create(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @BodyParam("application/json") ManagedCcfInner managedCcf, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
-        @ExpectedResponses({200, 202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> delete(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("appName") String appName,
-            @HeaderParam("Accept") String accept,
+        Response<BinaryData> createSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @BodyParam("application/json") ManagedCcfInner managedCcf, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
-        @ExpectedResponses({200, 201})
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> create(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("appName") String appName,
-            @BodyParam("application/json") ManagedCcfInner managedCcf,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<Flux<ByteBuffer>>> update(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @BodyParam("application/json") ManagedCcfInner managedCcf, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Patch(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> update(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("appName") String appName,
-            @BodyParam("application/json") ManagedCcfInner managedCcf,
-            @HeaderParam("Accept") String accept,
+        Response<BinaryData> updateSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @BodyParam("application/json") ManagedCcfInner managedCcf, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ManagedCcfList>> listByResourceGroup(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @QueryParam("$filter") String filter,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<ManagedCcfList>> listByResourceGroup(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("$filter") String filter,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ManagedCcfList> listByResourceGroupSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("$filter") String filter,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("/subscriptions/{subscriptionId}/providers/Microsoft.ConfidentialLedger/managedCCFs/")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ManagedCcfList>> list(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @QueryParam("$filter") String filter,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<ManagedCcfList>> list(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @QueryParam("$filter") String filter, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.ConfidentialLedger/managedCCFs/")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ManagedCcfList> listSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @QueryParam("$filter") String filter, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}/backup")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> backup(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @BodyParam("application/json") ManagedCcfBackup managedCcf, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}/backup")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> backupSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @BodyParam("application/json") ManagedCcfBackup managedCcf, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}/restore")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> restore(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @BodyParam("application/json") ManagedCcfRestore managedCcf, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ConfidentialLedger/managedCCFs/{appName}/restore")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> restoreSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("appName") String appName,
+            @BodyParam("application/json") ManagedCcfRestore managedCcf, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<ManagedCcfList>> listByResourceGroupNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ManagedCcfList> listByResourceGroupNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<ManagedCcfList>> listBySubscriptionNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ManagedCcfList> listBySubscriptionNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Retrieves information about a Managed CCF resource.
-     *
-     * <p>Retrieves the properties of a Managed CCF app.
-     *
+     * 
+     * Retrieves the properties of a Managed CCF app.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -183,19 +274,15 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @return managed CCF along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ManagedCcfInner>> getByResourceGroupWithResponseAsync(
-        String resourceGroupName, String appName) {
+    private Mono<Response<ManagedCcfInner>> getByResourceGroupWithResponseAsync(String resourceGroupName,
+        String appName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -206,73 +293,16 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getByResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            appName,
-                            accept,
-                            context))
+            .withContext(context -> service.getByResourceGroup(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, appName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Retrieves information about a Managed CCF resource.
-     *
-     * <p>Retrieves the properties of a Managed CCF app.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param appName Name of the Managed CCF.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return managed CCF along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ManagedCcfInner>> getByResourceGroupWithResponseAsync(
-        String resourceGroupName, String appName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (appName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter appName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getByResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                appName,
-                accept,
-                context);
-    }
-
-    /**
-     * Retrieves information about a Managed CCF resource.
-     *
-     * <p>Retrieves the properties of a Managed CCF app.
-     *
+     * 
+     * Retrieves the properties of a Managed CCF app.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -288,9 +318,9 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
 
     /**
      * Retrieves information about a Managed CCF resource.
-     *
-     * <p>Retrieves the properties of a Managed CCF app.
-     *
+     * 
+     * Retrieves the properties of a Managed CCF app.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param context The context to associate with this operation.
@@ -300,16 +330,36 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @return managed CCF along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ManagedCcfInner> getByResourceGroupWithResponse(
-        String resourceGroupName, String appName, Context context) {
-        return getByResourceGroupWithResponseAsync(resourceGroupName, appName, context).block();
+    public Response<ManagedCcfInner> getByResourceGroupWithResponse(String resourceGroupName, String appName,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (appName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getByResourceGroupSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, accept, context);
     }
 
     /**
      * Retrieves information about a Managed CCF resource.
-     *
-     * <p>Retrieves the properties of a Managed CCF app.
-     *
+     * 
+     * Retrieves the properties of a Managed CCF app.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -324,9 +374,9 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
 
     /**
      * Deletes a Managed CCF resource.
-     *
-     * <p>Deletes an existing Managed CCF.
-     *
+     * 
+     * Deletes an existing Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -337,16 +387,12 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName, String appName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -357,73 +403,91 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            appName,
-                            accept,
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, appName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Deletes a Managed CCF resource.
-     *
-     * <p>Deletes an existing Managed CCF.
-     *
+     * 
+     * Deletes an existing Managed CCF.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String appName) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (appName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.deleteSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, accept, Context.NONE);
+    }
+
+    /**
+     * Deletes a Managed CCF resource.
+     * 
+     * Deletes an existing Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String appName, Context context) {
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String appName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (appName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                appName,
-                accept,
-                context);
+        return service.deleteSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, accept, context);
     }
 
     /**
      * Deletes a Managed CCF resource.
-     *
-     * <p>Deletes an existing Managed CCF.
-     *
+     * 
+     * Deletes an existing Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -434,40 +498,15 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String appName) {
         Mono<Response<Flux<ByteBuffer>>> mono = deleteWithResponseAsync(resourceGroupName, appName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Deletes a Managed CCF resource.
-     *
-     * <p>Deletes an existing Managed CCF.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param appName Name of the Managed CCF.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceGroupName, String appName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono = deleteWithResponseAsync(resourceGroupName, appName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Deletes a Managed CCF resource.
-     *
-     * <p>Deletes an existing Managed CCF.
-     *
+     * 
+     * Deletes an existing Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -477,14 +516,15 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String appName) {
-        return this.beginDeleteAsync(resourceGroupName, appName).getSyncPoller();
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, appName);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Deletes a Managed CCF resource.
-     *
-     * <p>Deletes an existing Managed CCF.
-     *
+     * 
+     * Deletes an existing Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param context The context to associate with this operation.
@@ -495,14 +535,15 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String appName, Context context) {
-        return this.beginDeleteAsync(resourceGroupName, appName, context).getSyncPoller();
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, appName, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Deletes a Managed CCF resource.
-     *
-     * <p>Deletes an existing Managed CCF.
-     *
+     * 
+     * Deletes an existing Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -517,29 +558,9 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
 
     /**
      * Deletes a Managed CCF resource.
-     *
-     * <p>Deletes an existing Managed CCF.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param appName Name of the Managed CCF.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(String resourceGroupName, String appName, Context context) {
-        return beginDeleteAsync(resourceGroupName, appName, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Deletes a Managed CCF resource.
-     *
-     * <p>Deletes an existing Managed CCF.
-     *
+     * 
+     * Deletes an existing Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -548,14 +569,14 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String appName) {
-        deleteAsync(resourceGroupName, appName).block();
+        beginDelete(resourceGroupName, appName).getFinalResult();
     }
 
     /**
      * Deletes a Managed CCF resource.
-     *
-     * <p>Deletes an existing Managed CCF.
-     *
+     * 
+     * Deletes an existing Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param context The context to associate with this operation.
@@ -565,14 +586,14 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String appName, Context context) {
-        deleteAsync(resourceGroupName, appName, context).block();
+        beginDelete(resourceGroupName, appName, context).getFinalResult();
     }
 
     /**
      * Creates a Managed CCF.
-     *
-     * <p>Creates a Managed CCF with the specified Managed CCF parameters.
-     *
+     * 
+     * Creates a Managed CCF with the specified Managed CCF parameters.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Managed CCF Create Request Body.
@@ -582,19 +603,15 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @return managed CCF along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
+    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(String resourceGroupName, String appName,
+        ManagedCcfInner managedCcf) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -610,81 +627,107 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .create(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            appName,
-                            managedCcf,
-                            accept,
-                            context))
+            .withContext(context -> service.create(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Creates a Managed CCF.
-     *
-     * <p>Creates a Managed CCF with the specified Managed CCF parameters.
-     *
+     * 
+     * Creates a Managed CCF with the specified Managed CCF parameters.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Managed CCF Create Request Body.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return managed CCF along with {@link Response} on successful completion of {@link Mono}.
+     * @return managed CCF along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf, Context context) {
+    private Response<BinaryData> createWithResponse(String resourceGroupName, String appName,
+        ManagedCcfInner managedCcf) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (appName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
         }
         if (managedCcf == null) {
-            return Mono.error(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
         } else {
             managedCcf.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .create(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                appName,
-                managedCcf,
-                accept,
-                context);
+        return service.createSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, Context.NONE);
     }
 
     /**
      * Creates a Managed CCF.
-     *
-     * <p>Creates a Managed CCF with the specified Managed CCF parameters.
-     *
+     * 
+     * Creates a Managed CCF with the specified Managed CCF parameters.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Create Request Body.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return managed CCF along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createWithResponse(String resourceGroupName, String appName,
+        ManagedCcfInner managedCcf, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (appName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+        }
+        if (managedCcf == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
+        } else {
+            managedCcf.validate();
+        }
+        final String accept = "application/json";
+        return service.createSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, context);
+    }
+
+    /**
+     * Creates a Managed CCF.
+     * 
+     * Creates a Managed CCF with the specified Managed CCF parameters.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Managed CCF Create Request Body.
@@ -694,50 +737,18 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @return the {@link PollerFlux} for polling of managed CCF.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<ManagedCcfInner>, ManagedCcfInner> beginCreateAsync(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
+    private PollerFlux<PollResult<ManagedCcfInner>, ManagedCcfInner> beginCreateAsync(String resourceGroupName,
+        String appName, ManagedCcfInner managedCcf) {
         Mono<Response<Flux<ByteBuffer>>> mono = createWithResponseAsync(resourceGroupName, appName, managedCcf);
-        return this
-            .client
-            .<ManagedCcfInner, ManagedCcfInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ManagedCcfInner.class,
-                ManagedCcfInner.class,
-                this.client.getContext());
+        return this.client.<ManagedCcfInner, ManagedCcfInner>getLroResult(mono, this.client.getHttpPipeline(),
+            ManagedCcfInner.class, ManagedCcfInner.class, this.client.getContext());
     }
 
     /**
      * Creates a Managed CCF.
-     *
-     * <p>Creates a Managed CCF with the specified Managed CCF parameters.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param appName Name of the Managed CCF.
-     * @param managedCcf Managed CCF Create Request Body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of managed CCF.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<ManagedCcfInner>, ManagedCcfInner> beginCreateAsync(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createWithResponseAsync(resourceGroupName, appName, managedCcf, context);
-        return this
-            .client
-            .<ManagedCcfInner, ManagedCcfInner>getLroResult(
-                mono, this.client.getHttpPipeline(), ManagedCcfInner.class, ManagedCcfInner.class, context);
-    }
-
-    /**
-     * Creates a Managed CCF.
-     *
-     * <p>Creates a Managed CCF with the specified Managed CCF parameters.
-     *
+     * 
+     * Creates a Managed CCF with the specified Managed CCF parameters.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Managed CCF Create Request Body.
@@ -747,16 +758,18 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @return the {@link SyncPoller} for polling of managed CCF.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<ManagedCcfInner>, ManagedCcfInner> beginCreate(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
-        return this.beginCreateAsync(resourceGroupName, appName, managedCcf).getSyncPoller();
+    public SyncPoller<PollResult<ManagedCcfInner>, ManagedCcfInner> beginCreate(String resourceGroupName,
+        String appName, ManagedCcfInner managedCcf) {
+        Response<BinaryData> response = createWithResponse(resourceGroupName, appName, managedCcf);
+        return this.client.<ManagedCcfInner, ManagedCcfInner>getLroResult(response, ManagedCcfInner.class,
+            ManagedCcfInner.class, Context.NONE);
     }
 
     /**
      * Creates a Managed CCF.
-     *
-     * <p>Creates a Managed CCF with the specified Managed CCF parameters.
-     *
+     * 
+     * Creates a Managed CCF with the specified Managed CCF parameters.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Managed CCF Create Request Body.
@@ -767,16 +780,18 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @return the {@link SyncPoller} for polling of managed CCF.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<ManagedCcfInner>, ManagedCcfInner> beginCreate(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf, Context context) {
-        return this.beginCreateAsync(resourceGroupName, appName, managedCcf, context).getSyncPoller();
+    public SyncPoller<PollResult<ManagedCcfInner>, ManagedCcfInner> beginCreate(String resourceGroupName,
+        String appName, ManagedCcfInner managedCcf, Context context) {
+        Response<BinaryData> response = createWithResponse(resourceGroupName, appName, managedCcf, context);
+        return this.client.<ManagedCcfInner, ManagedCcfInner>getLroResult(response, ManagedCcfInner.class,
+            ManagedCcfInner.class, context);
     }
 
     /**
      * Creates a Managed CCF.
-     *
-     * <p>Creates a Managed CCF with the specified Managed CCF parameters.
-     *
+     * 
+     * Creates a Managed CCF with the specified Managed CCF parameters.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Managed CCF Create Request Body.
@@ -787,38 +802,15 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<ManagedCcfInner> createAsync(String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
-        return beginCreateAsync(resourceGroupName, appName, managedCcf)
-            .last()
+        return beginCreateAsync(resourceGroupName, appName, managedCcf).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Creates a Managed CCF.
-     *
-     * <p>Creates a Managed CCF with the specified Managed CCF parameters.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param appName Name of the Managed CCF.
-     * @param managedCcf Managed CCF Create Request Body.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return managed CCF on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ManagedCcfInner> createAsync(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf, Context context) {
-        return beginCreateAsync(resourceGroupName, appName, managedCcf, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Creates a Managed CCF.
-     *
-     * <p>Creates a Managed CCF with the specified Managed CCF parameters.
-     *
+     * 
+     * Creates a Managed CCF with the specified Managed CCF parameters.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Managed CCF Create Request Body.
@@ -829,14 +821,14 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ManagedCcfInner create(String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
-        return createAsync(resourceGroupName, appName, managedCcf).block();
+        return beginCreate(resourceGroupName, appName, managedCcf).getFinalResult();
     }
 
     /**
      * Creates a Managed CCF.
-     *
-     * <p>Creates a Managed CCF with the specified Managed CCF parameters.
-     *
+     * 
+     * Creates a Managed CCF with the specified Managed CCF parameters.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Managed CCF Create Request Body.
@@ -847,38 +839,34 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @return managed CCF.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ManagedCcfInner create(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf, Context context) {
-        return createAsync(resourceGroupName, appName, managedCcf, context).block();
+    public ManagedCcfInner create(String resourceGroupName, String appName, ManagedCcfInner managedCcf,
+        Context context) {
+        return beginCreate(resourceGroupName, appName, managedCcf, context).getFinalResult();
     }
 
     /**
      * Update Managed CCF properties
-     *
-     * <p>Updates properties of Managed CCF.
-     *
+     * 
+     * Updates properties of Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Request body for Updating Managed CCF App.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return managed CCF along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
+    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(String resourceGroupName, String appName,
+        ManagedCcfInner managedCcf) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -894,26 +882,61 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .update(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            appName,
-                            managedCcf,
-                            accept,
-                            context))
+            .withContext(context -> service.update(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Update Managed CCF properties
-     *
-     * <p>Updates properties of Managed CCF.
-     *
+     * 
+     * Updates properties of Managed CCF.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Request body for Updating Managed CCF App.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return managed CCF along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> updateWithResponse(String resourceGroupName, String appName,
+        ManagedCcfInner managedCcf) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (appName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+        }
+        if (managedCcf == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
+        } else {
+            managedCcf.validate();
+        }
+        final String accept = "application/json";
+        return service.updateSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, Context.NONE);
+    }
+
+    /**
+     * Update Managed CCF properties
+     * 
+     * Updates properties of Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Request body for Updating Managed CCF App.
@@ -921,77 +944,87 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return managed CCF along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf, Context context) {
+    private Response<BinaryData> updateWithResponse(String resourceGroupName, String appName,
+        ManagedCcfInner managedCcf, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (appName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
         }
         if (managedCcf == null) {
-            return Mono.error(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
         } else {
             managedCcf.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .update(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                appName,
-                managedCcf,
-                accept,
-                context);
+        return service.updateSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, context);
     }
 
     /**
      * Update Managed CCF properties
-     *
-     * <p>Updates properties of Managed CCF.
-     *
+     * 
+     * Updates properties of Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Request body for Updating Managed CCF App.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
+     * @return the {@link PollerFlux} for polling of managed CCF.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginUpdateAsync(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
+    private PollerFlux<PollResult<ManagedCcfInner>, ManagedCcfInner> beginUpdateAsync(String resourceGroupName,
+        String appName, ManagedCcfInner managedCcf) {
         Mono<Response<Flux<ByteBuffer>>> mono = updateWithResponseAsync(resourceGroupName, appName, managedCcf);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+        return this.client.<ManagedCcfInner, ManagedCcfInner>getLroResult(mono, this.client.getHttpPipeline(),
+            ManagedCcfInner.class, ManagedCcfInner.class, this.client.getContext());
     }
 
     /**
      * Update Managed CCF properties
-     *
-     * <p>Updates properties of Managed CCF.
-     *
+     * 
+     * Updates properties of Managed CCF.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Request body for Updating Managed CCF App.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of managed CCF.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<ManagedCcfInner>, ManagedCcfInner> beginUpdate(String resourceGroupName,
+        String appName, ManagedCcfInner managedCcf) {
+        Response<BinaryData> response = updateWithResponse(resourceGroupName, appName, managedCcf);
+        return this.client.<ManagedCcfInner, ManagedCcfInner>getLroResult(response, ManagedCcfInner.class,
+            ManagedCcfInner.class, Context.NONE);
+    }
+
+    /**
+     * Update Managed CCF properties
+     * 
+     * Updates properties of Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Request body for Updating Managed CCF App.
@@ -999,83 +1032,58 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
+     * @return the {@link SyncPoller} for polling of managed CCF.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginUpdateAsync(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateWithResponseAsync(resourceGroupName, appName, managedCcf, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
+    public SyncPoller<PollResult<ManagedCcfInner>, ManagedCcfInner> beginUpdate(String resourceGroupName,
+        String appName, ManagedCcfInner managedCcf, Context context) {
+        Response<BinaryData> response = updateWithResponse(resourceGroupName, appName, managedCcf, context);
+        return this.client.<ManagedCcfInner, ManagedCcfInner>getLroResult(response, ManagedCcfInner.class,
+            ManagedCcfInner.class, context);
     }
 
     /**
      * Update Managed CCF properties
-     *
-     * <p>Updates properties of Managed CCF.
-     *
+     * 
+     * Updates properties of Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Request body for Updating Managed CCF App.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginUpdate(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
-        return this.beginUpdateAsync(resourceGroupName, appName, managedCcf).getSyncPoller();
-    }
-
-    /**
-     * Update Managed CCF properties
-     *
-     * <p>Updates properties of Managed CCF.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param appName Name of the Managed CCF.
-     * @param managedCcf Request body for Updating Managed CCF App.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginUpdate(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf, Context context) {
-        return this.beginUpdateAsync(resourceGroupName, appName, managedCcf, context).getSyncPoller();
-    }
-
-    /**
-     * Update Managed CCF properties
-     *
-     * <p>Updates properties of Managed CCF.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param appName Name of the Managed CCF.
-     * @param managedCcf Request body for Updating Managed CCF App.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return managed CCF on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> updateAsync(String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
-        return beginUpdateAsync(resourceGroupName, appName, managedCcf)
-            .last()
+    private Mono<ManagedCcfInner> updateAsync(String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
+        return beginUpdateAsync(resourceGroupName, appName, managedCcf).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Update Managed CCF properties
-     *
-     * <p>Updates properties of Managed CCF.
-     *
+     * 
+     * Updates properties of Managed CCF.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Request body for Updating Managed CCF App.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return managed CCF.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ManagedCcfInner update(String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
+        return beginUpdate(resourceGroupName, appName, managedCcf).getFinalResult();
+    }
+
+    /**
+     * Update Managed CCF properties
+     * 
+     * Updates properties of Managed CCF.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param appName Name of the Managed CCF.
      * @param managedCcf Request body for Updating Managed CCF App.
@@ -1083,78 +1091,37 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
+     * @return managed CCF.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> updateAsync(
-        String resourceGroupName, String appName, ManagedCcfInner managedCcf, Context context) {
-        return beginUpdateAsync(resourceGroupName, appName, managedCcf, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Update Managed CCF properties
-     *
-     * <p>Updates properties of Managed CCF.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param appName Name of the Managed CCF.
-     * @param managedCcf Request body for Updating Managed CCF App.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void update(String resourceGroupName, String appName, ManagedCcfInner managedCcf) {
-        updateAsync(resourceGroupName, appName, managedCcf).block();
-    }
-
-    /**
-     * Update Managed CCF properties
-     *
-     * <p>Updates properties of Managed CCF.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param appName Name of the Managed CCF.
-     * @param managedCcf Request body for Updating Managed CCF App.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void update(String resourceGroupName, String appName, ManagedCcfInner managedCcf, Context context) {
-        updateAsync(resourceGroupName, appName, managedCcf, context).block();
+    public ManagedCcfInner update(String resourceGroupName, String appName, ManagedCcfInner managedCcf,
+        Context context) {
+        return beginUpdate(resourceGroupName, appName, managedCcf, context).getFinalResult();
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription and resource group
-     *
-     * <p>Retrieves the properties of all Managed CCF apps.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF apps.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return object that includes an array of Managed CCF and a possible link for next set along with {@link
-     *     PagedResponse} on successful completion of {@link Mono}.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ManagedCcfInner>> listByResourceGroupSinglePageAsync(
-        String resourceGroupName, String filter) {
+    private Mono<PagedResponse<ManagedCcfInner>> listByResourceGroupSinglePageAsync(String resourceGroupName,
+        String filter) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1162,169 +1129,150 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listByResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            filter,
-                            accept,
-                            context))
-            .<PagedResponse<ManagedCcfInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.listByResourceGroup(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, filter, accept, context))
+            .<PagedResponse<ManagedCcfInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription and resource group
-     *
-     * <p>Retrieves the properties of all Managed CCF apps.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return object that includes an array of Managed CCF and a possible link for next set along with {@link
-     *     PagedResponse} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ManagedCcfInner>> listByResourceGroupSinglePageAsync(
-        String resourceGroupName, String filter, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                filter,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * Retrieves information about all Managed CCF resources under the given subscription and resource group
-     *
-     * <p>Retrieves the properties of all Managed CCF apps.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF apps.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return object that includes an array of Managed CCF and a possible link for next set as paginated response with
-     *     {@link PagedFlux}.
+     * {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<ManagedCcfInner> listByResourceGroupAsync(String resourceGroupName, String filter) {
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, filter),
+        return new PagedFlux<>(() -> listByResourceGroupSinglePageAsync(resourceGroupName, filter),
             nextLink -> listByResourceGroupNextSinglePageAsync(nextLink));
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription and resource group
-     *
-     * <p>Retrieves the properties of all Managed CCF apps.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF apps.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return object that includes an array of Managed CCF and a possible link for next set as paginated response with
-     *     {@link PagedFlux}.
+     * {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<ManagedCcfInner> listByResourceGroupAsync(String resourceGroupName) {
         final String filter = null;
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, filter),
+        return new PagedFlux<>(() -> listByResourceGroupSinglePageAsync(resourceGroupName, filter),
             nextLink -> listByResourceGroupNextSinglePageAsync(nextLink));
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription and resource group
-     *
-     * <p>Retrieves the properties of all Managed CCF apps.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF apps.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ManagedCcfInner> listByResourceGroupSinglePage(String resourceGroupName, String filter) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ManagedCcfList> res
+            = service.listByResourceGroupSync(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, filter, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Retrieves information about all Managed CCF resources under the given subscription and resource group
+     * 
+     * Retrieves the properties of all Managed CCF apps.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return object that includes an array of Managed CCF and a possible link for next set as paginated response with
-     *     {@link PagedFlux}.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ManagedCcfInner> listByResourceGroupAsync(
-        String resourceGroupName, String filter, Context context) {
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, filter, context),
-            nextLink -> listByResourceGroupNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ManagedCcfInner> listByResourceGroupSinglePage(String resourceGroupName, String filter,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ManagedCcfList> res = service.listByResourceGroupSync(this.client.getEndpoint(),
+            this.client.getApiVersion(), this.client.getSubscriptionId(), resourceGroupName, filter, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription and resource group
-     *
-     * <p>Retrieves the properties of all Managed CCF apps.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF apps.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return object that includes an array of Managed CCF and a possible link for next set as paginated response with
-     *     {@link PagedIterable}.
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ManagedCcfInner> listByResourceGroup(String resourceGroupName) {
         final String filter = null;
-        return new PagedIterable<>(listByResourceGroupAsync(resourceGroupName, filter));
+        return new PagedIterable<>(() -> listByResourceGroupSinglePage(resourceGroupName, filter),
+            nextLink -> listByResourceGroupNextSinglePage(nextLink));
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription and resource group
-     *
-     * <p>Retrieves the properties of all Managed CCF apps.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF apps.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
      * @param context The context to associate with this operation.
@@ -1332,211 +1280,708 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return object that includes an array of Managed CCF and a possible link for next set as paginated response with
-     *     {@link PagedIterable}.
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<ManagedCcfInner> listByResourceGroup(
-        String resourceGroupName, String filter, Context context) {
-        return new PagedIterable<>(listByResourceGroupAsync(resourceGroupName, filter, context));
+    public PagedIterable<ManagedCcfInner> listByResourceGroup(String resourceGroupName, String filter,
+        Context context) {
+        return new PagedIterable<>(() -> listByResourceGroupSinglePage(resourceGroupName, filter, context),
+            nextLink -> listByResourceGroupNextSinglePage(nextLink, context));
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription
-     *
-     * <p>Retrieves the properties of all Managed CCF.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF.
+     * 
      * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return object that includes an array of Managed CCF and a possible link for next set along with {@link
-     *     PagedResponse} on successful completion of {@link Mono}.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ManagedCcfInner>> listSinglePageAsync(String filter) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            filter,
-                            accept,
-                            context))
-            .<PagedResponse<ManagedCcfInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.list(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), filter, accept, context))
+            .<PagedResponse<ManagedCcfInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription
-     *
-     * <p>Retrieves the properties of all Managed CCF.
-     *
-     * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return object that includes an array of Managed CCF and a possible link for next set along with {@link
-     *     PagedResponse} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ManagedCcfInner>> listSinglePageAsync(String filter, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .list(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                filter,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * Retrieves information about all Managed CCF resources under the given subscription
-     *
-     * <p>Retrieves the properties of all Managed CCF.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF.
+     * 
      * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return object that includes an array of Managed CCF and a possible link for next set as paginated response with
-     *     {@link PagedFlux}.
+     * {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<ManagedCcfInner> listAsync(String filter) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(filter), nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
+        return new PagedFlux<>(() -> listSinglePageAsync(filter),
+            nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription
-     *
-     * <p>Retrieves the properties of all Managed CCF.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF.
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return object that includes an array of Managed CCF and a possible link for next set as paginated response with
-     *     {@link PagedFlux}.
+     * {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<ManagedCcfInner> listAsync() {
         final String filter = null;
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(filter), nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
+        return new PagedFlux<>(() -> listSinglePageAsync(filter),
+            nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription
-     *
-     * <p>Retrieves the properties of all Managed CCF.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF.
+     * 
+     * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ManagedCcfInner> listSinglePage(String filter) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ManagedCcfList> res = service.listSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), filter, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Retrieves information about all Managed CCF resources under the given subscription
+     * 
+     * Retrieves the properties of all Managed CCF.
+     * 
      * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return object that includes an array of Managed CCF and a possible link for next set as paginated response with
-     *     {@link PagedFlux}.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ManagedCcfInner> listAsync(String filter, Context context) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(filter, context),
-            nextLink -> listBySubscriptionNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ManagedCcfInner> listSinglePage(String filter, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ManagedCcfList> res = service.listSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), filter, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription
-     *
-     * <p>Retrieves the properties of all Managed CCF.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF.
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return object that includes an array of Managed CCF and a possible link for next set as paginated response with
-     *     {@link PagedIterable}.
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ManagedCcfInner> list() {
         final String filter = null;
-        return new PagedIterable<>(listAsync(filter));
+        return new PagedIterable<>(() -> listSinglePage(filter),
+            nextLink -> listBySubscriptionNextSinglePage(nextLink));
     }
 
     /**
      * Retrieves information about all Managed CCF resources under the given subscription
-     *
-     * <p>Retrieves the properties of all Managed CCF.
-     *
+     * 
+     * Retrieves the properties of all Managed CCF.
+     * 
      * @param filter The filter to apply on the list operation. eg. $filter=ledgerType eq 'Public'.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return object that includes an array of Managed CCF and a possible link for next set as paginated response with
-     *     {@link PagedIterable}.
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ManagedCcfInner> list(String filter, Context context) {
-        return new PagedIterable<>(listAsync(filter, context));
+        return new PagedIterable<>(() -> listSinglePage(filter, context),
+            nextLink -> listBySubscriptionNextSinglePage(nextLink, context));
+    }
+
+    /**
+     * Performs the backup operation on a Managed CCF Resource.
+     * 
+     * Backs up a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Backup Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the backup response of a Managed CCF Resource along with {@link Response} on
+     * successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<Flux<ByteBuffer>>> backupWithResponseAsync(String resourceGroupName, String appName,
+        ManagedCcfBackup managedCcf) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            return Mono
+                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (appName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+        }
+        if (managedCcf == null) {
+            return Mono.error(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
+        } else {
+            managedCcf.validate();
+        }
+        final String accept = "application/json";
+        return FluxUtil
+            .withContext(context -> service.backup(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, context))
+            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+    }
+
+    /**
+     * Performs the backup operation on a Managed CCF Resource.
+     * 
+     * Backs up a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Backup Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the backup response of a Managed CCF Resource along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> backupWithResponse(String resourceGroupName, String appName,
+        ManagedCcfBackup managedCcf) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (appName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+        }
+        if (managedCcf == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
+        } else {
+            managedCcf.validate();
+        }
+        final String accept = "application/json";
+        return service.backupSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, Context.NONE);
+    }
+
+    /**
+     * Performs the backup operation on a Managed CCF Resource.
+     * 
+     * Backs up a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Backup Request Body.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the backup response of a Managed CCF Resource along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> backupWithResponse(String resourceGroupName, String appName,
+        ManagedCcfBackup managedCcf, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (appName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+        }
+        if (managedCcf == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
+        } else {
+            managedCcf.validate();
+        }
+        final String accept = "application/json";
+        return service.backupSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, context);
+    }
+
+    /**
+     * Performs the backup operation on a Managed CCF Resource.
+     * 
+     * Backs up a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Backup Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of object representing the backup response of a Managed CCF Resource.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<ManagedCcfBackupResponseInner>, ManagedCcfBackupResponseInner>
+        beginBackupAsync(String resourceGroupName, String appName, ManagedCcfBackup managedCcf) {
+        Mono<Response<Flux<ByteBuffer>>> mono = backupWithResponseAsync(resourceGroupName, appName, managedCcf);
+        return this.client.<ManagedCcfBackupResponseInner, ManagedCcfBackupResponseInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ManagedCcfBackupResponseInner.class, ManagedCcfBackupResponseInner.class,
+            this.client.getContext());
+    }
+
+    /**
+     * Performs the backup operation on a Managed CCF Resource.
+     * 
+     * Backs up a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Backup Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of object representing the backup response of a Managed CCF Resource.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<ManagedCcfBackupResponseInner>, ManagedCcfBackupResponseInner>
+        beginBackup(String resourceGroupName, String appName, ManagedCcfBackup managedCcf) {
+        Response<BinaryData> response = backupWithResponse(resourceGroupName, appName, managedCcf);
+        return this.client.<ManagedCcfBackupResponseInner, ManagedCcfBackupResponseInner>getLroResult(response,
+            ManagedCcfBackupResponseInner.class, ManagedCcfBackupResponseInner.class, Context.NONE);
+    }
+
+    /**
+     * Performs the backup operation on a Managed CCF Resource.
+     * 
+     * Backs up a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Backup Request Body.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of object representing the backup response of a Managed CCF Resource.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<ManagedCcfBackupResponseInner>, ManagedCcfBackupResponseInner>
+        beginBackup(String resourceGroupName, String appName, ManagedCcfBackup managedCcf, Context context) {
+        Response<BinaryData> response = backupWithResponse(resourceGroupName, appName, managedCcf, context);
+        return this.client.<ManagedCcfBackupResponseInner, ManagedCcfBackupResponseInner>getLroResult(response,
+            ManagedCcfBackupResponseInner.class, ManagedCcfBackupResponseInner.class, context);
+    }
+
+    /**
+     * Performs the backup operation on a Managed CCF Resource.
+     * 
+     * Backs up a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Backup Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the backup response of a Managed CCF Resource on successful completion of
+     * {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<ManagedCcfBackupResponseInner> backupAsync(String resourceGroupName, String appName,
+        ManagedCcfBackup managedCcf) {
+        return beginBackupAsync(resourceGroupName, appName, managedCcf).last()
+            .flatMap(this.client::getLroFinalResultOrError);
+    }
+
+    /**
+     * Performs the backup operation on a Managed CCF Resource.
+     * 
+     * Backs up a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Backup Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the backup response of a Managed CCF Resource.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ManagedCcfBackupResponseInner backup(String resourceGroupName, String appName, ManagedCcfBackup managedCcf) {
+        return beginBackup(resourceGroupName, appName, managedCcf).getFinalResult();
+    }
+
+    /**
+     * Performs the backup operation on a Managed CCF Resource.
+     * 
+     * Backs up a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Backup Request Body.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the backup response of a Managed CCF Resource.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ManagedCcfBackupResponseInner backup(String resourceGroupName, String appName, ManagedCcfBackup managedCcf,
+        Context context) {
+        return beginBackup(resourceGroupName, appName, managedCcf, context).getFinalResult();
+    }
+
+    /**
+     * Performs the restore operation to spin up a newly restored Managed CCF Resource.
+     * 
+     * Restores a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Restore Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the restore response of a Managed CCF Resource along with {@link Response} on
+     * successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<Flux<ByteBuffer>>> restoreWithResponseAsync(String resourceGroupName, String appName,
+        ManagedCcfRestore managedCcf) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            return Mono
+                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (appName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+        }
+        if (managedCcf == null) {
+            return Mono.error(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
+        } else {
+            managedCcf.validate();
+        }
+        final String accept = "application/json";
+        return FluxUtil
+            .withContext(context -> service.restore(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, context))
+            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+    }
+
+    /**
+     * Performs the restore operation to spin up a newly restored Managed CCF Resource.
+     * 
+     * Restores a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Restore Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the restore response of a Managed CCF Resource along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> restoreWithResponse(String resourceGroupName, String appName,
+        ManagedCcfRestore managedCcf) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (appName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+        }
+        if (managedCcf == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
+        } else {
+            managedCcf.validate();
+        }
+        final String accept = "application/json";
+        return service.restoreSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, Context.NONE);
+    }
+
+    /**
+     * Performs the restore operation to spin up a newly restored Managed CCF Resource.
+     * 
+     * Restores a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Restore Request Body.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the restore response of a Managed CCF Resource along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> restoreWithResponse(String resourceGroupName, String appName,
+        ManagedCcfRestore managedCcf, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (appName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter appName is required and cannot be null."));
+        }
+        if (managedCcf == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter managedCcf is required and cannot be null."));
+        } else {
+            managedCcf.validate();
+        }
+        final String accept = "application/json";
+        return service.restoreSync(this.client.getEndpoint(), this.client.getApiVersion(),
+            this.client.getSubscriptionId(), resourceGroupName, appName, managedCcf, accept, context);
+    }
+
+    /**
+     * Performs the restore operation to spin up a newly restored Managed CCF Resource.
+     * 
+     * Restores a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Restore Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of object representing the restore response of a Managed CCF Resource.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<ManagedCcfRestoreResponseInner>, ManagedCcfRestoreResponseInner>
+        beginRestoreAsync(String resourceGroupName, String appName, ManagedCcfRestore managedCcf) {
+        Mono<Response<Flux<ByteBuffer>>> mono = restoreWithResponseAsync(resourceGroupName, appName, managedCcf);
+        return this.client.<ManagedCcfRestoreResponseInner, ManagedCcfRestoreResponseInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ManagedCcfRestoreResponseInner.class, ManagedCcfRestoreResponseInner.class,
+            this.client.getContext());
+    }
+
+    /**
+     * Performs the restore operation to spin up a newly restored Managed CCF Resource.
+     * 
+     * Restores a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Restore Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of object representing the restore response of a Managed CCF Resource.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<ManagedCcfRestoreResponseInner>, ManagedCcfRestoreResponseInner>
+        beginRestore(String resourceGroupName, String appName, ManagedCcfRestore managedCcf) {
+        Response<BinaryData> response = restoreWithResponse(resourceGroupName, appName, managedCcf);
+        return this.client.<ManagedCcfRestoreResponseInner, ManagedCcfRestoreResponseInner>getLroResult(response,
+            ManagedCcfRestoreResponseInner.class, ManagedCcfRestoreResponseInner.class, Context.NONE);
+    }
+
+    /**
+     * Performs the restore operation to spin up a newly restored Managed CCF Resource.
+     * 
+     * Restores a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Restore Request Body.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of object representing the restore response of a Managed CCF Resource.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<ManagedCcfRestoreResponseInner>, ManagedCcfRestoreResponseInner>
+        beginRestore(String resourceGroupName, String appName, ManagedCcfRestore managedCcf, Context context) {
+        Response<BinaryData> response = restoreWithResponse(resourceGroupName, appName, managedCcf, context);
+        return this.client.<ManagedCcfRestoreResponseInner, ManagedCcfRestoreResponseInner>getLroResult(response,
+            ManagedCcfRestoreResponseInner.class, ManagedCcfRestoreResponseInner.class, context);
+    }
+
+    /**
+     * Performs the restore operation to spin up a newly restored Managed CCF Resource.
+     * 
+     * Restores a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Restore Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the restore response of a Managed CCF Resource on successful completion of
+     * {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<ManagedCcfRestoreResponseInner> restoreAsync(String resourceGroupName, String appName,
+        ManagedCcfRestore managedCcf) {
+        return beginRestoreAsync(resourceGroupName, appName, managedCcf).last()
+            .flatMap(this.client::getLroFinalResultOrError);
+    }
+
+    /**
+     * Performs the restore operation to spin up a newly restored Managed CCF Resource.
+     * 
+     * Restores a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Restore Request Body.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the restore response of a Managed CCF Resource.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ManagedCcfRestoreResponseInner restore(String resourceGroupName, String appName,
+        ManagedCcfRestore managedCcf) {
+        return beginRestore(resourceGroupName, appName, managedCcf).getFinalResult();
+    }
+
+    /**
+     * Performs the restore operation to spin up a newly restored Managed CCF Resource.
+     * 
+     * Restores a Managed CCF Resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param appName Name of the Managed CCF.
+     * @param managedCcf Managed CCF Restore Request Body.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object representing the restore response of a Managed CCF Resource.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public ManagedCcfRestoreResponseInner restore(String resourceGroupName, String appName,
+        ManagedCcfRestore managedCcf, Context context) {
+        return beginRestore(resourceGroupName, appName, managedCcf, context).getFinalResult();
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return object that includes an array of Managed CCF and a possible link for next set along with {@link
-     *     PagedResponse} on successful completion of {@link Mono}.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ManagedCcfInner>> listByResourceGroupNextSinglePageAsync(String nextLink) {
@@ -1544,76 +1989,84 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listByResourceGroupNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<ManagedCcfInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<ManagedCcfInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
-     * @param context The context to associate with this operation.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return object that includes an array of Managed CCF and a possible link for next set along with {@link
-     *     PagedResponse} on successful completion of {@link Mono}.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ManagedCcfInner>> listByResourceGroupNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<ManagedCcfInner> listByResourceGroupNextSinglePage(String nextLink) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByResourceGroupNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<ManagedCcfList> res
+            = service.listByResourceGroupNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return object that includes an array of Managed CCF and a possible link for next set along with {@link
-     *     PagedResponse} on successful completion of {@link Mono}.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ManagedCcfInner> listByResourceGroupNextSinglePage(String nextLink, Context context) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ManagedCcfList> res
+            = service.listByResourceGroupNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ManagedCcfInner>> listBySubscriptionNextSinglePageAsync(String nextLink) {
@@ -1621,63 +2074,74 @@ public final class ManagedCcfsClientImpl implements ManagedCcfsClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listBySubscriptionNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<ManagedCcfInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<ManagedCcfInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ManagedCcfInner> listBySubscriptionNextSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ManagedCcfList> res
+            = service.listBySubscriptionNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return object that includes an array of Managed CCF and a possible link for next set along with {@link
-     *     PagedResponse} on successful completion of {@link Mono}.
+     * @return object that includes an array of Managed CCF and a possible link for next set along with
+     * {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ManagedCcfInner>> listBySubscriptionNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<ManagedCcfInner> listBySubscriptionNextSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listBySubscriptionNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<ManagedCcfList> res
+            = service.listBySubscriptionNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(ManagedCcfsClientImpl.class);
 }

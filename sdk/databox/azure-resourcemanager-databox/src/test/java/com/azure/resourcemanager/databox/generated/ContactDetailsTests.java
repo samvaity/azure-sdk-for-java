@@ -14,42 +14,35 @@ import org.junit.jupiter.api.Assertions;
 public final class ContactDetailsTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ContactDetails model =
-            BinaryData
-                .fromString(
-                    "{\"contactName\":\"kwh\",\"phone\":\"soifiyipjxsqw\",\"phoneExtension\":\"rjb\",\"mobile\":\"orcjxvsnby\",\"emailList\":[\"abnmocpcyshu\",\"zafb\"],\"notificationPreference\":[{\"stageName\":\"DataCopy\",\"sendNotification\":true}]}")
-                .toObject(ContactDetails.class);
-        Assertions.assertEquals("kwh", model.contactName());
-        Assertions.assertEquals("soifiyipjxsqw", model.phone());
-        Assertions.assertEquals("rjb", model.phoneExtension());
-        Assertions.assertEquals("orcjxvsnby", model.mobile());
-        Assertions.assertEquals("abnmocpcyshu", model.emailList().get(0));
-        Assertions.assertEquals(NotificationStageName.DATA_COPY, model.notificationPreference().get(0).stageName());
+        ContactDetails model = BinaryData.fromString(
+            "{\"contactName\":\"ltmrldh\",\"phone\":\"gjzzdatqxhocdg\",\"phoneExtension\":\"blgphuticn\",\"mobile\":\"kao\",\"emailList\":[\"yiftyhxhuro\",\"ftyxolniw\",\"wcukjfkgiawxk\"],\"notificationPreference\":[{\"stageName\":\"PickedUp\",\"sendNotification\":true}]}")
+            .toObject(ContactDetails.class);
+        Assertions.assertEquals("ltmrldh", model.contactName());
+        Assertions.assertEquals("gjzzdatqxhocdg", model.phone());
+        Assertions.assertEquals("blgphuticn", model.phoneExtension());
+        Assertions.assertEquals("kao", model.mobile());
+        Assertions.assertEquals("yiftyhxhuro", model.emailList().get(0));
+        Assertions.assertEquals(NotificationStageName.PICKED_UP, model.notificationPreference().get(0).stageName());
         Assertions.assertEquals(true, model.notificationPreference().get(0).sendNotification());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ContactDetails model =
-            new ContactDetails()
-                .withContactName("kwh")
-                .withPhone("soifiyipjxsqw")
-                .withPhoneExtension("rjb")
-                .withMobile("orcjxvsnby")
-                .withEmailList(Arrays.asList("abnmocpcyshu", "zafb"))
-                .withNotificationPreference(
-                    Arrays
-                        .asList(
-                            new NotificationPreference()
-                                .withStageName(NotificationStageName.DATA_COPY)
-                                .withSendNotification(true)));
+        ContactDetails model = new ContactDetails().withContactName("ltmrldh")
+            .withPhone("gjzzdatqxhocdg")
+            .withPhoneExtension("blgphuticn")
+            .withMobile("kao")
+            .withEmailList(Arrays.asList("yiftyhxhuro", "ftyxolniw", "wcukjfkgiawxk"))
+            .withNotificationPreference(
+                Arrays.asList(new NotificationPreference().withStageName(NotificationStageName.PICKED_UP)
+                    .withSendNotification(true)));
         model = BinaryData.fromObject(model).toObject(ContactDetails.class);
-        Assertions.assertEquals("kwh", model.contactName());
-        Assertions.assertEquals("soifiyipjxsqw", model.phone());
-        Assertions.assertEquals("rjb", model.phoneExtension());
-        Assertions.assertEquals("orcjxvsnby", model.mobile());
-        Assertions.assertEquals("abnmocpcyshu", model.emailList().get(0));
-        Assertions.assertEquals(NotificationStageName.DATA_COPY, model.notificationPreference().get(0).stageName());
+        Assertions.assertEquals("ltmrldh", model.contactName());
+        Assertions.assertEquals("gjzzdatqxhocdg", model.phone());
+        Assertions.assertEquals("blgphuticn", model.phoneExtension());
+        Assertions.assertEquals("kao", model.mobile());
+        Assertions.assertEquals("yiftyhxhuro", model.emailList().get(0));
+        Assertions.assertEquals(NotificationStageName.PICKED_UP, model.notificationPreference().get(0).stageName());
         Assertions.assertEquals(true, model.notificationPreference().get(0).sendNotification());
     }
 }

@@ -3,15 +3,15 @@
 
 package com.azure.security.keyvault.secrets;
 
+import com.azure.core.exception.HttpResponseException;
 import com.azure.core.exception.ResourceModifiedException;
 import com.azure.core.exception.ResourceNotFoundException;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpPipeline;
 import com.azure.core.test.http.AssertingHttpClientBuilder;
-import com.azure.core.util.polling.PollResponse;
+import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.logging.LogLevel;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.security.keyvault.secrets.implementation.KeyVaultCredentialPolicy;
-import com.azure.security.keyvault.secrets.implementation.SecretClientImpl;
 import com.azure.security.keyvault.secrets.models.DeletedSecret;
 import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
 import com.azure.security.keyvault.secrets.models.SecretProperties;
@@ -20,17 +20,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.net.HttpURLConnection;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 public class SecretClientTest extends SecretClientTestBase {
+    private static final ClientLogger LOGGER = new ClientLogger(SecretClientTest.class);
+
     private SecretClient secretClient;
 
     @Override
@@ -43,21 +43,19 @@ public class SecretClientTest extends SecretClientTestBase {
     }
 
     private void createClient(HttpClient httpClient, SecretServiceVersion serviceVersion, String testTenantId) {
-        HttpPipeline httpPipeline = getHttpPipeline(buildSyncAssertingClient(
-            interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient), testTenantId);
-        SecretClientImpl implClient = spy(new SecretClientImpl(getEndpoint(), httpPipeline, serviceVersion));
+        secretClient = getClientBuilder(
+            buildSyncAssertingClient(
+                interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient),
+            testTenantId, getEndpoint(), serviceVersion).buildClient();
 
-        if (interceptorManager.isPlaybackMode()) {
-            when(implClient.getDefaultPollingInterval()).thenReturn(Duration.ofMillis(10));
+        if (!interceptorManager.isLiveMode()) {
+            // Remove `id` and `name` sanitizers from the list of common sanitizers.
+            interceptorManager.removeSanitizers("AZSDK3430", "AZSDK3493");
         }
-
-        secretClient = new SecretClient(implClient);
     }
 
     private HttpClient buildSyncAssertingClient(HttpClient httpClient) {
-        return new AssertingHttpClientBuilder(httpClient)
-            .assertSync()
-            .build();
+        return new AssertingHttpClientBuilder(httpClient).assertSync().build();
     }
 
     /**
@@ -95,7 +93,8 @@ public class SecretClientTest extends SecretClientTestBase {
     public void setSecretEmptyName(HttpClient httpClient, SecretServiceVersion serviceVersion) {
         createClient(httpClient, serviceVersion);
 
-        assertRestException(() -> secretClient.setSecret("", "A value"), HttpURLConnection.HTTP_BAD_METHOD);
+        assertRestException(() -> secretClient.setSecret("", "A value"), HttpResponseException.class,
+            HttpURLConnection.HTTP_BAD_METHOD);
     }
 
     /**
@@ -119,12 +118,11 @@ public class SecretClientTest extends SecretClientTestBase {
     @MethodSource("getTestParameters")
     public void setSecretNull(HttpClient httpClient, SecretServiceVersion serviceVersion) {
         createClient(httpClient, serviceVersion);
-
-        assertRunnableThrowsException(() -> secretClient.setSecret(null), NullPointerException.class);
+        assertThrows(NullPointerException.class, () -> secretClient.setSecret(null));
     }
 
     /**
-     * Tests that a secret is able to be updated when it exists.
+     * Tests that a secret can be updated when it exists.
      */
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getTestParameters")
@@ -144,7 +142,7 @@ public class SecretClientTest extends SecretClientTestBase {
     }
 
     /**
-     * Tests that a secret is not able to be updated when it is disabled. 403 error is expected.
+     * Tests that a secret cannot be updated when it is disabled. 403 error is expected.
      */
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getTestParameters")
@@ -153,8 +151,8 @@ public class SecretClientTest extends SecretClientTestBase {
 
         updateDisabledSecretRunner((originalSecret, updatedSecret) -> {
             assertSecretEquals(originalSecret, secretClient.setSecret(originalSecret));
-            assertRestException(() -> secretClient.getSecret(originalSecret.getName()),
-                ResourceModifiedException.class, HttpURLConnection.HTTP_FORBIDDEN);
+            assertRestException(() -> secretClient.getSecret(originalSecret.getName()), ResourceModifiedException.class,
+                HttpURLConnection.HTTP_FORBIDDEN);
         });
     }
 
@@ -200,8 +198,8 @@ public class SecretClientTest extends SecretClientTestBase {
     public void getSecretNotFound(HttpClient httpClient, SecretServiceVersion serviceVersion) {
         createClient(httpClient, serviceVersion);
 
-        assertRestException(() -> secretClient.getSecret("non-existing"),
-            ResourceNotFoundException.class, HttpURLConnection.HTTP_NOT_FOUND);
+        assertRestException(() -> secretClient.getSecret("non-existing"), ResourceNotFoundException.class,
+            HttpURLConnection.HTTP_NOT_FOUND);
     }
 
     /**
@@ -215,17 +213,10 @@ public class SecretClientTest extends SecretClientTestBase {
         deleteSecretRunner((secretToDelete) -> {
             assertSecretEquals(secretToDelete, secretClient.setSecret(secretToDelete));
 
-            SyncPoller<DeletedSecret, Void> poller = secretClient.beginDeleteSecret(secretToDelete.getName());
+            SyncPoller<DeletedSecret, Void> poller
+                = setPlaybackSyncPollerPollInterval(secretClient.beginDeleteSecret(secretToDelete.getName()));
 
-            PollResponse<DeletedSecret> pollResponse = poller.poll();
-
-            while (!pollResponse.getStatus().isComplete()) {
-                sleepInRecordMode(1000);
-
-                pollResponse = poller.poll();
-            }
-
-            DeletedSecret deletedSecret = pollResponse.getValue();
+            DeletedSecret deletedSecret = poller.waitForCompletion().getValue();
 
             assertNotNull(deletedSecret.getDeletedOn());
             assertNotNull(deletedSecret.getRecoveryId());
@@ -239,8 +230,8 @@ public class SecretClientTest extends SecretClientTestBase {
     public void deleteSecretNotFound(HttpClient httpClient, SecretServiceVersion serviceVersion) {
         createClient(httpClient, serviceVersion);
 
-        assertRestException(() -> secretClient.beginDeleteSecret("non-existing"),
-            ResourceNotFoundException.class, HttpResponseStatus.NOT_FOUND.code());
+        assertRestException(() -> secretClient.beginDeleteSecret("non-existing"), ResourceNotFoundException.class,
+            HttpResponseStatus.NOT_FOUND.code());
     }
 
     /**
@@ -254,14 +245,10 @@ public class SecretClientTest extends SecretClientTestBase {
         getDeletedSecretRunner((secretToDeleteAndGet) -> {
             assertSecretEquals(secretToDeleteAndGet, secretClient.setSecret(secretToDeleteAndGet));
 
-            SyncPoller<DeletedSecret, Void> poller = secretClient.beginDeleteSecret(secretToDeleteAndGet.getName());
-            PollResponse<DeletedSecret> pollResponse = poller.poll();
+            SyncPoller<DeletedSecret, Void> poller
+                = setPlaybackSyncPollerPollInterval(secretClient.beginDeleteSecret(secretToDeleteAndGet.getName()));
 
-            while (!pollResponse.getStatus().isComplete()) {
-                sleepInRecordMode(1000);
-
-                pollResponse = poller.poll();
-            }
+            poller.waitForCompletion();
 
             DeletedSecret deletedSecret = secretClient.getDeletedSecret(secretToDeleteAndGet.getName());
 
@@ -273,17 +260,16 @@ public class SecretClientTest extends SecretClientTestBase {
     }
 
     /**
-     * Tests that an attempt to retrieve a non existing deleted secret throws an error on a soft-delete enabled vault.
+     * Tests that an attempt to retrieve a non-existing deleted secret throws an error on a soft-delete enabled vault.
      */
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getTestParameters")
     public void getDeletedSecretNotFound(HttpClient httpClient, SecretServiceVersion serviceVersion) {
         createClient(httpClient, serviceVersion);
 
-        assertRestException(() -> secretClient.getDeletedSecret("non-existing"),
-            ResourceNotFoundException.class, HttpURLConnection.HTTP_NOT_FOUND);
+        assertRestException(() -> secretClient.getDeletedSecret("non-existing"), ResourceNotFoundException.class,
+            HttpURLConnection.HTTP_NOT_FOUND);
     }
-
 
     /**
      * Tests that a deleted secret can be recovered on a soft-delete enabled vault.
@@ -296,27 +282,15 @@ public class SecretClientTest extends SecretClientTestBase {
         recoverDeletedSecretRunner((secretToDeleteAndRecover) -> {
             assertSecretEquals(secretToDeleteAndRecover, secretClient.setSecret(secretToDeleteAndRecover));
 
-            SyncPoller<DeletedSecret, Void> delPoller =
-                secretClient.beginDeleteSecret(secretToDeleteAndRecover.getName());
-            PollResponse<DeletedSecret> pollResponse = delPoller.poll();
+            SyncPoller<DeletedSecret, Void> delPoller
+                = setPlaybackSyncPollerPollInterval(secretClient.beginDeleteSecret(secretToDeleteAndRecover.getName()));
 
-            while (!pollResponse.getStatus().isComplete()) {
-                sleepInRecordMode(1000);
+            delPoller.waitForCompletion();
 
-                pollResponse = delPoller.poll();
-            }
+            SyncPoller<KeyVaultSecret, Void> poller = setPlaybackSyncPollerPollInterval(
+                secretClient.beginRecoverDeletedSecret(secretToDeleteAndRecover.getName()));
 
-            SyncPoller<KeyVaultSecret, Void> poller =
-                secretClient.beginRecoverDeletedSecret(secretToDeleteAndRecover.getName());
-            PollResponse<KeyVaultSecret> response = poller.poll();
-
-            while (!response.getStatus().isComplete()) {
-                sleepInRecordMode(1000);
-
-                response = poller.poll();
-            }
-
-            KeyVaultSecret recoveredSecret = response.getValue();
+            KeyVaultSecret recoveredSecret = poller.waitForCompletion().getValue();
 
             assertEquals(secretToDeleteAndRecover.getName(), recoveredSecret.getName());
             assertEquals(secretToDeleteAndRecover.getProperties().getNotBefore(),
@@ -327,7 +301,7 @@ public class SecretClientTest extends SecretClientTestBase {
     }
 
     /**
-     * Tests that an attempt to recover a non existing deleted secret throws an error on a soft-delete enabled vault.
+     * Tests that an attempt to recover a non-existing deleted secret throws an error on a soft-delete enabled vault.
      */
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getTestParameters")
@@ -357,15 +331,15 @@ public class SecretClientTest extends SecretClientTestBase {
     }
 
     /**
-     * Tests that an attempt to backup a non existing secret throws an error.
+     * Tests that an attempt to back up a non-existing secret throws an error.
      */
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getTestParameters")
     public void backupSecretNotFound(HttpClient httpClient, SecretServiceVersion serviceVersion) {
         createClient(httpClient, serviceVersion);
 
-        assertRestException(() -> secretClient.backupSecret("non-existing"),
-            ResourceNotFoundException.class, HttpURLConnection.HTTP_NOT_FOUND);
+        assertRestException(() -> secretClient.backupSecret("non-existing"), ResourceNotFoundException.class,
+            HttpURLConnection.HTTP_NOT_FOUND);
     }
 
     /**
@@ -384,19 +358,15 @@ public class SecretClientTest extends SecretClientTestBase {
             assertNotNull(backupBytes);
             assertTrue(backupBytes.length > 0);
 
-            SyncPoller<DeletedSecret, Void> poller = secretClient.beginDeleteSecret(secretToBackupAndRestore.getName());
-            PollResponse<DeletedSecret> pollResponse = poller.poll();
+            SyncPoller<DeletedSecret, Void> poller
+                = setPlaybackSyncPollerPollInterval(secretClient.beginDeleteSecret(secretToBackupAndRestore.getName()));
 
-            while (!pollResponse.getStatus().isComplete()) {
-                sleepInRecordMode(1000);
-
-                pollResponse = poller.poll();
-            }
+            poller.waitForCompletion();
 
             secretClient.purgeDeletedSecret(secretToBackupAndRestore.getName());
             pollOnSecretPurge(secretToBackupAndRestore.getName());
 
-            sleepInRecordMode(60000);
+            sleepIfRunningAgainstService(60000);
 
             KeyVaultSecret restoredSecret = secretClient.restoreSecretBackup(backupBytes);
 
@@ -416,8 +386,8 @@ public class SecretClientTest extends SecretClientTestBase {
 
         byte[] secretBackupBytes = "non-existing".getBytes();
 
-        assertRestException(() -> secretClient.restoreSecretBackup(secretBackupBytes),
-            ResourceModifiedException.class, HttpURLConnection.HTTP_BAD_REQUEST);
+        assertRestException(() -> secretClient.restoreSecretBackup(secretBackupBytes), ResourceModifiedException.class,
+            HttpURLConnection.HTTP_BAD_REQUEST);
     }
 
     /**
@@ -466,17 +436,13 @@ public class SecretClientTest extends SecretClientTestBase {
             }
 
             for (KeyVaultSecret secret : secretsToSetAndDelete.values()) {
-                SyncPoller<DeletedSecret, Void> poller = secretClient.beginDeleteSecret(secret.getName());
-                PollResponse<DeletedSecret> pollResponse = poller.poll();
+                SyncPoller<DeletedSecret, Void> poller
+                    = setPlaybackSyncPollerPollInterval(secretClient.beginDeleteSecret(secret.getName()));
 
-                while (!pollResponse.getStatus().isComplete()) {
-                    sleepInRecordMode(1000);
-
-                    pollResponse = poller.poll();
-                }
+                poller.waitForCompletion();
             }
 
-            sleepInRecordMode(120000);
+            sleepIfRunningAgainstService(60000);
 
             Iterable<DeletedSecret> deletedSecrets = secretClient.listDeletedSecrets();
 
@@ -498,10 +464,9 @@ public class SecretClientTest extends SecretClientTestBase {
         createClient(httpClient, serviceVersion);
 
         listSecretVersionsRunner((secretsToSetAndList) -> {
-            List<KeyVaultSecret> secretVersions = secretsToSetAndList;
             String secretName = null;
 
-            for (KeyVaultSecret secret : secretVersions) {
+            for (KeyVaultSecret secret : secretsToSetAndList) {
                 secretName = secret.getName();
 
                 assertSecretEquals(secret, secretClient.setSecret(secret));
@@ -512,9 +477,85 @@ public class SecretClientTest extends SecretClientTestBase {
 
             secretVersionsOutput.forEach(secretVersionsList::add);
 
-            assertEquals(secretVersions.size(), secretVersionsList.size());
+            assertEquals(secretsToSetAndList.size(), secretVersionsList.size());
         });
 
+    }
+
+    /**
+     * Tests that when two versions of a secret exist, the previousVersion property is correctly mapped from the
+     * service response. If the service returns previousVersion (API version 7.6+), it should match the first version.
+     */
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("getTestParameters")
+    public void previousVersionOnSecondVersion(HttpClient httpClient, SecretServiceVersion serviceVersion) {
+        createClient(httpClient, serviceVersion);
+
+        String secretName = testResourceNamer.randomName("prevVerTest", 20);
+
+        // Create first version
+        KeyVaultSecret v1 = secretClient.setSecret(secretName, "value-v1");
+        String v1Version = v1.getProperties().getVersion();
+        assertNotNull(v1Version);
+
+        // Create second version
+        KeyVaultSecret v2 = secretClient.setSecret(secretName, "value-v2");
+        String v2Version = v2.getProperties().getVersion();
+        assertNotNull(v2Version);
+
+        // Get the second version and verify the response is correctly deserialized.
+        // previousVersion may be null if the service has not deployed this feature yet.
+        KeyVaultSecret retrieved = secretClient.getSecret(secretName, v2Version);
+        assertEquals("value-v2", retrieved.getValue());
+        assertEquals(v2Version, retrieved.getProperties().getVersion());
+
+        String previousVersion = retrieved.getProperties().getPreviousVersion();
+        if (previousVersion != null) {
+            assertEquals(v1Version, previousVersion);
+        }
+    }
+
+    /**
+     * Tests that getSecret with outContentType parameter correctly sends the query parameter and returns a secret.
+     * Note: outContentType requires service API version >= 2025-06-01-preview. When using api-version 7.6, only null
+     * is accepted. This test exercises the new method overload end-to-end.
+     */
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("getTestParameters")
+    public void getSecretWithOutContentType(HttpClient httpClient, SecretServiceVersion serviceVersion) {
+        createClient(httpClient, serviceVersion);
+
+        String secretName = testResourceNamer.randomName("outCtTest", 20);
+        KeyVaultSecret created = secretClient.setSecret(secretName, "test-value");
+
+        // Call getSecret with outContentType overload - exercises the new method end-to-end
+        KeyVaultSecret retrieved = secretClient.getSecret(secretName, created.getProperties().getVersion(), null);
+        assertNotNull(retrieved);
+        assertEquals(secretName, retrieved.getName());
+        assertEquals("test-value", retrieved.getValue());
+    }
+
+    /**
+     * Tests that getSecretWithResponse with outContentType parameter works correctly.
+     * Note: outContentType requires service API version >= 2025-06-01-preview. See getSecretWithOutContentType
+     * for details. This test exercises the Response-returning overload end-to-end.
+     */
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("getTestParameters")
+    public void getSecretWithOutContentTypeResponse(HttpClient httpClient, SecretServiceVersion serviceVersion) {
+        createClient(httpClient, serviceVersion);
+
+        String secretName = testResourceNamer.randomName("outCtRespTest", 20);
+        KeyVaultSecret created = secretClient.setSecret(secretName, "response-test-value");
+
+        // Call getSecretWithResponse with outContentType overload - exercises the new method end-to-end
+        com.azure.core.http.rest.Response<KeyVaultSecret> response = secretClient.getSecretWithResponse(secretName,
+            created.getProperties().getVersion(), null, com.azure.core.util.Context.NONE);
+
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCode());
+        assertEquals(secretName, response.getValue().getName());
+        assertEquals("response-test-value", response.getValue().getValue());
     }
 
     private void pollOnSecretPurge(String secretName) {
@@ -529,13 +570,13 @@ public class SecretClientTest extends SecretClientTestBase {
             }
 
             if (deletedSecret != null) {
-                sleepInRecordMode(2000);
+                sleepIfRunningAgainstService(2000);
                 pendingPollCount += 1;
             } else {
                 return;
             }
         }
 
-        System.err.printf("Deleted Secret %s was not purged \n", secretName);
+        LOGGER.log(LogLevel.VERBOSE, () -> "Deleted Secret " + secretName + " was not purged");
     }
 }

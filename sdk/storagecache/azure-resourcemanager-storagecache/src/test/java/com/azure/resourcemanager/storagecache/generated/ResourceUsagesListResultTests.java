@@ -10,11 +10,9 @@ import com.azure.resourcemanager.storagecache.models.ResourceUsagesListResult;
 public final class ResourceUsagesListResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ResourceUsagesListResult model =
-            BinaryData
-                .fromString(
-                    "{\"nextLink\":\"conuqszfkbeype\",\"value\":[{\"limit\":1769488182,\"unit\":\"vvjektcxsenhwlrs\",\"currentValue\":1160903159,\"name\":{\"value\":\"wvlqdqgb\",\"localizedValue\":\"ylihkaetckt\"}},{\"limit\":1161915494,\"unit\":\"vf\",\"currentValue\":1439839130,\"name\":{\"value\":\"uctqhjfbe\",\"localizedValue\":\"jcxerfuwu\"}},{\"limit\":743526122,\"unit\":\"fvjrbirphxepcy\",\"currentValue\":1901169400,\"name\":{\"value\":\"ljkyqxjvuuj\",\"localizedValue\":\"idokgjlj\"}}]}")
-                .toObject(ResourceUsagesListResult.class);
+        ResourceUsagesListResult model = BinaryData.fromString(
+            "{\"nextLink\":\"asrru\",\"value\":[{\"limit\":1393923794,\"unit\":\"fsubcgjbirxbpy\",\"currentValue\":1098405292,\"name\":{\"value\":\"jfdtwssotftpvj\",\"localizedValue\":\"exilzznfqqnvwpmq\"}},{\"limit\":1628769376,\"unit\":\"oujmkcjhwqytj\",\"currentValue\":778428037,\"name\":{\"value\":\"jewgdrjerv\",\"localizedValue\":\"enq\"}},{\"limit\":682074960,\"unit\":\"ndoygmifthnzdnd\",\"currentValue\":962281735,\"name\":{\"value\":\"yq\",\"localizedValue\":\"ynduha\"}},{\"limit\":1204451627,\"unit\":\"kthumaqolbgycdui\",\"currentValue\":1108910411,\"name\":{\"value\":\"cym\",\"localizedValue\":\"olpsslqlf\"}}]}")
+            .toObject(ResourceUsagesListResult.class);
     }
 
     @org.junit.jupiter.api.Test

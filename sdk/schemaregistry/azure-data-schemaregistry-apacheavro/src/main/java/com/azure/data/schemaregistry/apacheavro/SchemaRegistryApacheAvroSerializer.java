@@ -74,6 +74,7 @@ import static com.azure.core.util.FluxUtil.monoError;
  * Person person = Person.newBuilder&#40;&#41;
  *     .setName&#40;&quot;Chase&quot;&#41;
  *     .setFavouriteColour&#40;&quot;Turquoise&quot;&#41;
+ *     .setFavouriteNumber&#40;3&#41;
  *     .build&#40;&#41;;
  *
  * EventData eventData = serializer.serialize&#40;person, TypeReference.createInstance&#40;EventData.class&#41;&#41;;
@@ -226,8 +227,7 @@ public final class SchemaRegistryApacheAvroSerializer {
      *     SchemaRegistryApacheAvroSerializerBuilder#autoRegisterSchemas(boolean)} is false.
      * @throws HttpResponseException if an error occurred while trying to fetch the schema from the service.
      */
-    public <T extends MessageContent> Mono<T> serializeAsync(Object object,
-        TypeReference<T> typeReference) {
+    public <T extends MessageContent> Mono<T> serializeAsync(Object object, TypeReference<T> typeReference) {
 
         return serializeAsync(object, typeReference, null);
     }
@@ -254,8 +254,8 @@ public final class SchemaRegistryApacheAvroSerializer {
      *     SchemaRegistryApacheAvroSerializerBuilder#autoRegisterSchemas(boolean)} is false.
      * @throws HttpResponseException if an error occurred while trying to fetch the schema from the service.
      */
-    public <T extends MessageContent> Mono<T> serializeAsync(Object object,
-        TypeReference<T> typeReference, Function<BinaryData, T> messageFactory) {
+    public <T extends MessageContent> Mono<T> serializeAsync(Object object, TypeReference<T> typeReference,
+        Function<BinaryData, T> messageFactory) {
 
         if (object == null) {
             return monoError(logger, new NullPointerException(
@@ -264,8 +264,8 @@ public final class SchemaRegistryApacheAvroSerializer {
             return monoError(logger, new NullPointerException("'typeReference' cannot be null."));
         }
 
-        final Optional<Constructor<?>> constructor =
-            Arrays.stream(typeReference.getJavaClass().getDeclaredConstructors())
+        final Optional<Constructor<?>> constructor
+            = Arrays.stream(typeReference.getJavaClass().getDeclaredConstructors())
                 .filter(c -> c.getParameterCount() == 0)
                 .findFirst();
 
@@ -274,8 +274,7 @@ public final class SchemaRegistryApacheAvroSerializer {
                 + "constructor to create a new instance of T with. Use the overload that accepts 'messageFactory'."));
         }
 
-        final Function<BinaryData, T> messageFactoryToUse = messageFactory != null ? messageFactory
-            : binaryData -> {
+        final Function<BinaryData, T> messageFactoryToUse = messageFactory != null ? messageFactory : binaryData -> {
             final T instance = createNoArgumentInstance(typeReference);
             instance.setBodyAsBinaryData(binaryData);
 
@@ -304,8 +303,9 @@ public final class SchemaRegistryApacheAvroSerializer {
                 // we already wrap in an exception, so we don't want to wrap it again.
                 sink.error(e);
             } catch (Exception e) {
-                sink.error(new SchemaRegistryApacheAvroException(String.format(
-                    "Error encountered serializing object: %s with schemaId '%s'.", object, schemaId), e, schemaId));
+                sink.error(new SchemaRegistryApacheAvroException(
+                    String.format("Error encountered serializing object: %s with schemaId '%s'.", object, schemaId), e,
+                    schemaId));
             }
         });
     }
@@ -381,28 +381,29 @@ public final class SchemaRegistryApacheAvroSerializer {
         // It is the new format, so we parse the mime-type.
         final String[] parts = message.getContentType().split("\\+");
         if (parts.length != 2) {
-            return monoError(logger, new IllegalArgumentException(
-                "Content type was not in the expected format of MIME type + schema ID. Actual: "
-                    + message.getContentType()));
+            return monoError(logger,
+                new IllegalArgumentException(
+                    "Content type was not in the expected format of MIME type + schema ID. Actual: "
+                        + message.getContentType()));
         }
 
         if (!AVRO_MIME_TYPE.equalsIgnoreCase(parts[0])) {
-            return monoError(logger, new IllegalArgumentException(
-                "An avro encoder may only be used on content that is of 'avro/binary' type. Actual: "
-                    + message.getContentType()));
+            return monoError(logger,
+                new IllegalArgumentException(
+                    "An avro encoder may only be used on content that is of 'avro/binary' type. Actual: "
+                        + message.getContentType()));
         }
 
         final String schemaId = parts[1];
 
-        return this.schemaCache.getSchema(schemaId)
-            .handle((schema, sink) -> {
-                try {
-                    final T decode = avroSerializer.deserialize(contents, schema, typeReference);
-                    sink.next(decode);
-                } catch (Exception e) {
-                    sink.error(e);
-                }
-            });
+        return this.schemaCache.getSchema(schemaId).handle((schema, sink) -> {
+            try {
+                final T decode = avroSerializer.deserialize(contents, schema, typeReference);
+                sink.next(decode);
+            } catch (Exception e) {
+                sink.error(e);
+            }
+        });
     }
 
     /**
@@ -418,8 +419,8 @@ public final class SchemaRegistryApacheAvroSerializer {
     @SuppressWarnings("unchecked")
     private static <T extends MessageContent> T createNoArgumentInstance(TypeReference<T> typeReference) {
 
-        final Optional<Constructor<?>> constructor =
-            Arrays.stream(typeReference.getJavaClass().getDeclaredConstructors())
+        final Optional<Constructor<?>> constructor
+            = Arrays.stream(typeReference.getJavaClass().getDeclaredConstructors())
                 .filter(c -> c.getParameterCount() == 0)
                 .findFirst();
 
@@ -432,16 +433,15 @@ public final class SchemaRegistryApacheAvroSerializer {
         try {
             newObject = constructor.get().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(String.format(
-                "Could not instantiate '%s' with no-arg constructor.", typeReference.getJavaClass()), e);
+            throw new RuntimeException(
+                String.format("Could not instantiate '%s' with no-arg constructor.", typeReference.getJavaClass()), e);
         }
 
         if (!typeReference.getJavaClass().isInstance(newObject)) {
-            throw new RuntimeException(String.format(
-                "Constructed '%s' object was not an instanceof T '%s'.", newObject, typeReference.getJavaClass()));
+            throw new RuntimeException(String.format("Constructed '%s' object was not an instanceof T '%s'.", newObject,
+                typeReference.getJavaClass()));
         } else {
             return (T) newObject;
         }
     }
 }
-

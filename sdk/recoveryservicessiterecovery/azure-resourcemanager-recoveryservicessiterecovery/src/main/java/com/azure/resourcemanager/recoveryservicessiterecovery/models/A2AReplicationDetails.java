@@ -5,344 +5,326 @@
 package com.azure.resourcemanager.recoveryservicessiterecovery.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/** A2A provider specific settings. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "instanceType")
-@JsonTypeName("A2A")
+/**
+ * A2A provider specific settings.
+ */
 @Fluent
 public final class A2AReplicationDetails extends ReplicationProviderSpecificSettings {
     /*
+     * Gets the Instance type.
+     */
+    private String instanceType = "A2A";
+
+    /*
      * The fabric specific object Id of the virtual machine.
      */
-    @JsonProperty(value = "fabricObjectId")
     private String fabricObjectId;
 
     /*
      * The initial primary availability zone.
      */
-    @JsonProperty(value = "initialPrimaryZone", access = JsonProperty.Access.WRITE_ONLY)
     private String initialPrimaryZone;
 
     /*
      * The initial primary fabric location.
      */
-    @JsonProperty(value = "initialPrimaryFabricLocation", access = JsonProperty.Access.WRITE_ONLY)
     private String initialPrimaryFabricLocation;
 
     /*
      * The initial recovery availability zone.
      */
-    @JsonProperty(value = "initialRecoveryZone", access = JsonProperty.Access.WRITE_ONLY)
     private String initialRecoveryZone;
 
     /*
      * The initial primary extended location.
      */
-    @JsonProperty(value = "initialPrimaryExtendedLocation")
     private ExtendedLocation initialPrimaryExtendedLocation;
 
     /*
      * The initial recovery extended location.
      */
-    @JsonProperty(value = "initialRecoveryExtendedLocation")
     private ExtendedLocation initialRecoveryExtendedLocation;
 
     /*
      * The initial recovery fabric location.
      */
-    @JsonProperty(value = "initialRecoveryFabricLocation", access = JsonProperty.Access.WRITE_ONLY)
     private String initialRecoveryFabricLocation;
 
     /*
      * The multi vm group Id.
      */
-    @JsonProperty(value = "multiVmGroupId")
     private String multiVmGroupId;
 
     /*
      * The multi vm group name.
      */
-    @JsonProperty(value = "multiVmGroupName")
     private String multiVmGroupName;
 
     /*
      * Whether Multi VM group is auto created or specified by user.
      */
-    @JsonProperty(value = "multiVmGroupCreateOption")
     private MultiVmGroupCreateOption multiVmGroupCreateOption;
 
     /*
      * The management Id.
      */
-    @JsonProperty(value = "managementId")
     private String managementId;
+
+    /*
+     * The replication protection cluster Id.
+     */
+    private String protectionClusterId;
+
+    /*
+     * A value indicating if the cluster infra is ready or not.
+     */
+    private Boolean isClusterInfraReady;
 
     /*
      * The list of protected disks.
      */
-    @JsonProperty(value = "protectedDisks")
     private List<A2AProtectedDiskDetails> protectedDisks;
 
     /*
      * The list of unprotected disks.
      */
-    @JsonProperty(value = "unprotectedDisks")
     private List<A2AUnprotectedDiskDetails> unprotectedDisks;
 
     /*
      * The list of protected managed disks.
      */
-    @JsonProperty(value = "protectedManagedDisks")
     private List<A2AProtectedManagedDiskDetails> protectedManagedDisks;
 
     /*
      * The recovery boot diagnostic storage account Arm Id.
      */
-    @JsonProperty(value = "recoveryBootDiagStorageAccountId")
     private String recoveryBootDiagStorageAccountId;
 
     /*
      * Primary fabric location.
      */
-    @JsonProperty(value = "primaryFabricLocation")
     private String primaryFabricLocation;
 
     /*
      * The recovery fabric location.
      */
-    @JsonProperty(value = "recoveryFabricLocation")
     private String recoveryFabricLocation;
 
     /*
      * The type of operating system.
      */
-    @JsonProperty(value = "osType")
     private String osType;
 
     /*
      * The size of recovery virtual machine.
      */
-    @JsonProperty(value = "recoveryAzureVMSize")
     private String recoveryAzureVMSize;
 
     /*
      * The name of recovery virtual machine.
      */
-    @JsonProperty(value = "recoveryAzureVMName")
     private String recoveryAzureVMName;
 
     /*
      * The recovery resource group.
      */
-    @JsonProperty(value = "recoveryAzureResourceGroupId")
     private String recoveryAzureResourceGroupId;
 
     /*
      * The recovery cloud service.
      */
-    @JsonProperty(value = "recoveryCloudService")
     private String recoveryCloudService;
 
     /*
      * The recovery availability set.
      */
-    @JsonProperty(value = "recoveryAvailabilitySet")
     private String recoveryAvailabilitySet;
 
     /*
      * The recovery virtual network.
      */
-    @JsonProperty(value = "selectedRecoveryAzureNetworkId")
     private String selectedRecoveryAzureNetworkId;
 
     /*
      * The test failover virtual network.
      */
-    @JsonProperty(value = "selectedTfoAzureNetworkId")
     private String selectedTfoAzureNetworkId;
 
     /*
      * The virtual machine nic details.
      */
-    @JsonProperty(value = "vmNics")
     private List<VMNicDetails> vmNics;
 
     /*
      * The synced configuration details.
      */
-    @JsonProperty(value = "vmSyncedConfigDetails")
     private AzureToAzureVmSyncedConfigDetails vmSyncedConfigDetails;
 
     /*
      * The percentage of the monitoring job. The type of the monitoring job is defined by MonitoringJobType property.
      */
-    @JsonProperty(value = "monitoringPercentageCompletion")
     private Integer monitoringPercentageCompletion;
 
     /*
      * The type of the monitoring job. The progress is contained in MonitoringPercentageCompletion property.
      */
-    @JsonProperty(value = "monitoringJobType")
     private String monitoringJobType;
 
     /*
      * The last heartbeat received from the source server.
      */
-    @JsonProperty(value = "lastHeartbeat")
     private OffsetDateTime lastHeartbeat;
 
     /*
      * The agent version.
      */
-    @JsonProperty(value = "agentVersion")
     private String agentVersion;
 
     /*
      * Agent expiry date.
      */
-    @JsonProperty(value = "agentExpiryDate")
     private OffsetDateTime agentExpiryDate;
 
     /*
      * A value indicating whether replication agent update is required.
      */
-    @JsonProperty(value = "isReplicationAgentUpdateRequired")
     private Boolean isReplicationAgentUpdateRequired;
 
     /*
      * Agent certificate expiry date.
      */
-    @JsonProperty(value = "agentCertificateExpiryDate", access = JsonProperty.Access.WRITE_ONLY)
     private OffsetDateTime agentCertificateExpiryDate;
 
     /*
      * A value indicating whether agent certificate update is required.
      */
-    @JsonProperty(value = "isReplicationAgentCertificateUpdateRequired")
     private Boolean isReplicationAgentCertificateUpdateRequired;
 
     /*
      * The recovery fabric object Id.
      */
-    @JsonProperty(value = "recoveryFabricObjectId")
     private String recoveryFabricObjectId;
 
     /*
      * The protection state for the vm.
      */
-    @JsonProperty(value = "vmProtectionState")
     private String vmProtectionState;
 
     /*
      * The protection state description for the vm.
      */
-    @JsonProperty(value = "vmProtectionStateDescription")
     private String vmProtectionStateDescription;
 
     /*
-     * An id associated with the PE that survives actions like switch protection which change the backing PE/CPE
-     * objects internally.The lifecycle id gets carried forward to have a link/continuity in being able to have an Id
-     * that denotes the "same" protected item even though other internal Ids/ARM Id might be changing.
+     * An id associated with the PE that survives actions like switch protection which change the backing PE/CPE objects
+     * internally.The lifecycle id gets carried forward to have a link/continuity in being able to have an Id that
+     * denotes the "same" protected item even though other internal Ids/ARM Id might be changing.
      */
-    @JsonProperty(value = "lifecycleId")
     private String lifecycleId;
 
     /*
      * The test failover fabric object Id.
      */
-    @JsonProperty(value = "testFailoverRecoveryFabricObjectId")
     private String testFailoverRecoveryFabricObjectId;
 
     /*
      * The last RPO value in seconds.
      */
-    @JsonProperty(value = "rpoInSeconds")
     private Long rpoInSeconds;
 
     /*
      * The time (in UTC) when the last RPO value was calculated by Protection Service.
      */
-    @JsonProperty(value = "lastRpoCalculatedTime")
     private OffsetDateTime lastRpoCalculatedTime;
 
     /*
      * The primary availability zone.
      */
-    @JsonProperty(value = "primaryAvailabilityZone")
     private String primaryAvailabilityZone;
 
     /*
      * The recovery availability zone.
      */
-    @JsonProperty(value = "recoveryAvailabilityZone")
     private String recoveryAvailabilityZone;
 
     /*
      * The primary Extended Location.
      */
-    @JsonProperty(value = "primaryExtendedLocation")
     private ExtendedLocation primaryExtendedLocation;
 
     /*
      * The recovery Extended Location.
      */
-    @JsonProperty(value = "recoveryExtendedLocation")
     private ExtendedLocation recoveryExtendedLocation;
 
     /*
      * The encryption type of the VM.
      */
-    @JsonProperty(value = "vmEncryptionType", access = JsonProperty.Access.WRITE_ONLY)
     private VmEncryptionType vmEncryptionType;
 
     /*
      * The test failover vm name.
      */
-    @JsonProperty(value = "tfoAzureVMName")
     private String tfoAzureVMName;
 
     /*
      * The recovery azure generation.
      */
-    @JsonProperty(value = "recoveryAzureGeneration", access = JsonProperty.Access.WRITE_ONLY)
     private String recoveryAzureGeneration;
 
     /*
      * The recovery proximity placement group Id.
      */
-    @JsonProperty(value = "recoveryProximityPlacementGroupId")
     private String recoveryProximityPlacementGroupId;
 
     /*
      * A value indicating whether the auto protection is enabled.
      */
-    @JsonProperty(value = "autoProtectionOfDataDisk")
     private AutoProtectionOfDataDisk autoProtectionOfDataDisk;
 
     /*
      * The recovery virtual machine scale set id.
      */
-    @JsonProperty(value = "recoveryVirtualMachineScaleSetId")
     private String recoveryVirtualMachineScaleSetId;
 
     /*
      * The recovery capacity reservation group Id.
      */
-    @JsonProperty(value = "recoveryCapacityReservationGroupId")
     private String recoveryCapacityReservationGroupId;
 
-    /** Creates an instance of A2AReplicationDetails class. */
+    /*
+     * A value indicating the churn option selected by user.
+     */
+    private ChurnOptionSelected churnOptionSelected;
+
+    /**
+     * Creates an instance of A2AReplicationDetails class.
+     */
     public A2AReplicationDetails() {
     }
 
     /**
+     * Get the instanceType property: Gets the Instance type.
+     * 
+     * @return the instanceType value.
+     */
+    @Override
+    public String instanceType() {
+        return this.instanceType;
+    }
+
+    /**
      * Get the fabricObjectId property: The fabric specific object Id of the virtual machine.
-     *
+     * 
      * @return the fabricObjectId value.
      */
     public String fabricObjectId() {
@@ -351,7 +333,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the fabricObjectId property: The fabric specific object Id of the virtual machine.
-     *
+     * 
      * @param fabricObjectId the fabricObjectId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -362,7 +344,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the initialPrimaryZone property: The initial primary availability zone.
-     *
+     * 
      * @return the initialPrimaryZone value.
      */
     public String initialPrimaryZone() {
@@ -371,7 +353,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the initialPrimaryFabricLocation property: The initial primary fabric location.
-     *
+     * 
      * @return the initialPrimaryFabricLocation value.
      */
     public String initialPrimaryFabricLocation() {
@@ -380,7 +362,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the initialRecoveryZone property: The initial recovery availability zone.
-     *
+     * 
      * @return the initialRecoveryZone value.
      */
     public String initialRecoveryZone() {
@@ -389,7 +371,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the initialPrimaryExtendedLocation property: The initial primary extended location.
-     *
+     * 
      * @return the initialPrimaryExtendedLocation value.
      */
     public ExtendedLocation initialPrimaryExtendedLocation() {
@@ -398,7 +380,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the initialPrimaryExtendedLocation property: The initial primary extended location.
-     *
+     * 
      * @param initialPrimaryExtendedLocation the initialPrimaryExtendedLocation value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -409,7 +391,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the initialRecoveryExtendedLocation property: The initial recovery extended location.
-     *
+     * 
      * @return the initialRecoveryExtendedLocation value.
      */
     public ExtendedLocation initialRecoveryExtendedLocation() {
@@ -418,7 +400,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the initialRecoveryExtendedLocation property: The initial recovery extended location.
-     *
+     * 
      * @param initialRecoveryExtendedLocation the initialRecoveryExtendedLocation value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -429,7 +411,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the initialRecoveryFabricLocation property: The initial recovery fabric location.
-     *
+     * 
      * @return the initialRecoveryFabricLocation value.
      */
     public String initialRecoveryFabricLocation() {
@@ -438,7 +420,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the multiVmGroupId property: The multi vm group Id.
-     *
+     * 
      * @return the multiVmGroupId value.
      */
     public String multiVmGroupId() {
@@ -447,7 +429,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the multiVmGroupId property: The multi vm group Id.
-     *
+     * 
      * @param multiVmGroupId the multiVmGroupId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -458,7 +440,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the multiVmGroupName property: The multi vm group name.
-     *
+     * 
      * @return the multiVmGroupName value.
      */
     public String multiVmGroupName() {
@@ -467,7 +449,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the multiVmGroupName property: The multi vm group name.
-     *
+     * 
      * @param multiVmGroupName the multiVmGroupName value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -478,7 +460,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the multiVmGroupCreateOption property: Whether Multi VM group is auto created or specified by user.
-     *
+     * 
      * @return the multiVmGroupCreateOption value.
      */
     public MultiVmGroupCreateOption multiVmGroupCreateOption() {
@@ -487,7 +469,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the multiVmGroupCreateOption property: Whether Multi VM group is auto created or specified by user.
-     *
+     * 
      * @param multiVmGroupCreateOption the multiVmGroupCreateOption value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -498,7 +480,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the managementId property: The management Id.
-     *
+     * 
      * @return the managementId value.
      */
     public String managementId() {
@@ -507,7 +489,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the managementId property: The management Id.
-     *
+     * 
      * @param managementId the managementId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -517,8 +499,48 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     }
 
     /**
+     * Get the protectionClusterId property: The replication protection cluster Id.
+     * 
+     * @return the protectionClusterId value.
+     */
+    public String protectionClusterId() {
+        return this.protectionClusterId;
+    }
+
+    /**
+     * Set the protectionClusterId property: The replication protection cluster Id.
+     * 
+     * @param protectionClusterId the protectionClusterId value to set.
+     * @return the A2AReplicationDetails object itself.
+     */
+    public A2AReplicationDetails withProtectionClusterId(String protectionClusterId) {
+        this.protectionClusterId = protectionClusterId;
+        return this;
+    }
+
+    /**
+     * Get the isClusterInfraReady property: A value indicating if the cluster infra is ready or not.
+     * 
+     * @return the isClusterInfraReady value.
+     */
+    public Boolean isClusterInfraReady() {
+        return this.isClusterInfraReady;
+    }
+
+    /**
+     * Set the isClusterInfraReady property: A value indicating if the cluster infra is ready or not.
+     * 
+     * @param isClusterInfraReady the isClusterInfraReady value to set.
+     * @return the A2AReplicationDetails object itself.
+     */
+    public A2AReplicationDetails withIsClusterInfraReady(Boolean isClusterInfraReady) {
+        this.isClusterInfraReady = isClusterInfraReady;
+        return this;
+    }
+
+    /**
      * Get the protectedDisks property: The list of protected disks.
-     *
+     * 
      * @return the protectedDisks value.
      */
     public List<A2AProtectedDiskDetails> protectedDisks() {
@@ -527,7 +549,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the protectedDisks property: The list of protected disks.
-     *
+     * 
      * @param protectedDisks the protectedDisks value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -538,7 +560,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the unprotectedDisks property: The list of unprotected disks.
-     *
+     * 
      * @return the unprotectedDisks value.
      */
     public List<A2AUnprotectedDiskDetails> unprotectedDisks() {
@@ -547,7 +569,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the unprotectedDisks property: The list of unprotected disks.
-     *
+     * 
      * @param unprotectedDisks the unprotectedDisks value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -558,7 +580,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the protectedManagedDisks property: The list of protected managed disks.
-     *
+     * 
      * @return the protectedManagedDisks value.
      */
     public List<A2AProtectedManagedDiskDetails> protectedManagedDisks() {
@@ -567,7 +589,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the protectedManagedDisks property: The list of protected managed disks.
-     *
+     * 
      * @param protectedManagedDisks the protectedManagedDisks value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -578,7 +600,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryBootDiagStorageAccountId property: The recovery boot diagnostic storage account Arm Id.
-     *
+     * 
      * @return the recoveryBootDiagStorageAccountId value.
      */
     public String recoveryBootDiagStorageAccountId() {
@@ -587,7 +609,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryBootDiagStorageAccountId property: The recovery boot diagnostic storage account Arm Id.
-     *
+     * 
      * @param recoveryBootDiagStorageAccountId the recoveryBootDiagStorageAccountId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -598,7 +620,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the primaryFabricLocation property: Primary fabric location.
-     *
+     * 
      * @return the primaryFabricLocation value.
      */
     public String primaryFabricLocation() {
@@ -607,7 +629,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the primaryFabricLocation property: Primary fabric location.
-     *
+     * 
      * @param primaryFabricLocation the primaryFabricLocation value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -618,7 +640,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryFabricLocation property: The recovery fabric location.
-     *
+     * 
      * @return the recoveryFabricLocation value.
      */
     public String recoveryFabricLocation() {
@@ -627,7 +649,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryFabricLocation property: The recovery fabric location.
-     *
+     * 
      * @param recoveryFabricLocation the recoveryFabricLocation value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -638,7 +660,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the osType property: The type of operating system.
-     *
+     * 
      * @return the osType value.
      */
     public String osType() {
@@ -647,7 +669,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the osType property: The type of operating system.
-     *
+     * 
      * @param osType the osType value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -658,7 +680,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryAzureVMSize property: The size of recovery virtual machine.
-     *
+     * 
      * @return the recoveryAzureVMSize value.
      */
     public String recoveryAzureVMSize() {
@@ -667,7 +689,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryAzureVMSize property: The size of recovery virtual machine.
-     *
+     * 
      * @param recoveryAzureVMSize the recoveryAzureVMSize value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -678,7 +700,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryAzureVMName property: The name of recovery virtual machine.
-     *
+     * 
      * @return the recoveryAzureVMName value.
      */
     public String recoveryAzureVMName() {
@@ -687,7 +709,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryAzureVMName property: The name of recovery virtual machine.
-     *
+     * 
      * @param recoveryAzureVMName the recoveryAzureVMName value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -698,7 +720,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryAzureResourceGroupId property: The recovery resource group.
-     *
+     * 
      * @return the recoveryAzureResourceGroupId value.
      */
     public String recoveryAzureResourceGroupId() {
@@ -707,7 +729,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryAzureResourceGroupId property: The recovery resource group.
-     *
+     * 
      * @param recoveryAzureResourceGroupId the recoveryAzureResourceGroupId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -718,7 +740,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryCloudService property: The recovery cloud service.
-     *
+     * 
      * @return the recoveryCloudService value.
      */
     public String recoveryCloudService() {
@@ -727,7 +749,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryCloudService property: The recovery cloud service.
-     *
+     * 
      * @param recoveryCloudService the recoveryCloudService value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -738,7 +760,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryAvailabilitySet property: The recovery availability set.
-     *
+     * 
      * @return the recoveryAvailabilitySet value.
      */
     public String recoveryAvailabilitySet() {
@@ -747,7 +769,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryAvailabilitySet property: The recovery availability set.
-     *
+     * 
      * @param recoveryAvailabilitySet the recoveryAvailabilitySet value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -758,7 +780,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the selectedRecoveryAzureNetworkId property: The recovery virtual network.
-     *
+     * 
      * @return the selectedRecoveryAzureNetworkId value.
      */
     public String selectedRecoveryAzureNetworkId() {
@@ -767,7 +789,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the selectedRecoveryAzureNetworkId property: The recovery virtual network.
-     *
+     * 
      * @param selectedRecoveryAzureNetworkId the selectedRecoveryAzureNetworkId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -778,7 +800,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the selectedTfoAzureNetworkId property: The test failover virtual network.
-     *
+     * 
      * @return the selectedTfoAzureNetworkId value.
      */
     public String selectedTfoAzureNetworkId() {
@@ -787,7 +809,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the selectedTfoAzureNetworkId property: The test failover virtual network.
-     *
+     * 
      * @param selectedTfoAzureNetworkId the selectedTfoAzureNetworkId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -798,7 +820,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the vmNics property: The virtual machine nic details.
-     *
+     * 
      * @return the vmNics value.
      */
     public List<VMNicDetails> vmNics() {
@@ -807,7 +829,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the vmNics property: The virtual machine nic details.
-     *
+     * 
      * @param vmNics the vmNics value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -818,7 +840,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the vmSyncedConfigDetails property: The synced configuration details.
-     *
+     * 
      * @return the vmSyncedConfigDetails value.
      */
     public AzureToAzureVmSyncedConfigDetails vmSyncedConfigDetails() {
@@ -827,7 +849,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the vmSyncedConfigDetails property: The synced configuration details.
-     *
+     * 
      * @param vmSyncedConfigDetails the vmSyncedConfigDetails value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -839,7 +861,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     /**
      * Get the monitoringPercentageCompletion property: The percentage of the monitoring job. The type of the monitoring
      * job is defined by MonitoringJobType property.
-     *
+     * 
      * @return the monitoringPercentageCompletion value.
      */
     public Integer monitoringPercentageCompletion() {
@@ -849,7 +871,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     /**
      * Set the monitoringPercentageCompletion property: The percentage of the monitoring job. The type of the monitoring
      * job is defined by MonitoringJobType property.
-     *
+     * 
      * @param monitoringPercentageCompletion the monitoringPercentageCompletion value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -861,7 +883,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     /**
      * Get the monitoringJobType property: The type of the monitoring job. The progress is contained in
      * MonitoringPercentageCompletion property.
-     *
+     * 
      * @return the monitoringJobType value.
      */
     public String monitoringJobType() {
@@ -871,7 +893,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     /**
      * Set the monitoringJobType property: The type of the monitoring job. The progress is contained in
      * MonitoringPercentageCompletion property.
-     *
+     * 
      * @param monitoringJobType the monitoringJobType value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -882,7 +904,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the lastHeartbeat property: The last heartbeat received from the source server.
-     *
+     * 
      * @return the lastHeartbeat value.
      */
     public OffsetDateTime lastHeartbeat() {
@@ -891,7 +913,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the lastHeartbeat property: The last heartbeat received from the source server.
-     *
+     * 
      * @param lastHeartbeat the lastHeartbeat value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -902,7 +924,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the agentVersion property: The agent version.
-     *
+     * 
      * @return the agentVersion value.
      */
     public String agentVersion() {
@@ -911,7 +933,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the agentVersion property: The agent version.
-     *
+     * 
      * @param agentVersion the agentVersion value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -922,7 +944,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the agentExpiryDate property: Agent expiry date.
-     *
+     * 
      * @return the agentExpiryDate value.
      */
     public OffsetDateTime agentExpiryDate() {
@@ -931,7 +953,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the agentExpiryDate property: Agent expiry date.
-     *
+     * 
      * @param agentExpiryDate the agentExpiryDate value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -943,7 +965,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     /**
      * Get the isReplicationAgentUpdateRequired property: A value indicating whether replication agent update is
      * required.
-     *
+     * 
      * @return the isReplicationAgentUpdateRequired value.
      */
     public Boolean isReplicationAgentUpdateRequired() {
@@ -953,7 +975,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     /**
      * Set the isReplicationAgentUpdateRequired property: A value indicating whether replication agent update is
      * required.
-     *
+     * 
      * @param isReplicationAgentUpdateRequired the isReplicationAgentUpdateRequired value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -964,7 +986,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the agentCertificateExpiryDate property: Agent certificate expiry date.
-     *
+     * 
      * @return the agentCertificateExpiryDate value.
      */
     public OffsetDateTime agentCertificateExpiryDate() {
@@ -974,7 +996,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     /**
      * Get the isReplicationAgentCertificateUpdateRequired property: A value indicating whether agent certificate update
      * is required.
-     *
+     * 
      * @return the isReplicationAgentCertificateUpdateRequired value.
      */
     public Boolean isReplicationAgentCertificateUpdateRequired() {
@@ -984,19 +1006,19 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     /**
      * Set the isReplicationAgentCertificateUpdateRequired property: A value indicating whether agent certificate update
      * is required.
-     *
+     * 
      * @param isReplicationAgentCertificateUpdateRequired the isReplicationAgentCertificateUpdateRequired value to set.
      * @return the A2AReplicationDetails object itself.
      */
-    public A2AReplicationDetails withIsReplicationAgentCertificateUpdateRequired(
-        Boolean isReplicationAgentCertificateUpdateRequired) {
+    public A2AReplicationDetails
+        withIsReplicationAgentCertificateUpdateRequired(Boolean isReplicationAgentCertificateUpdateRequired) {
         this.isReplicationAgentCertificateUpdateRequired = isReplicationAgentCertificateUpdateRequired;
         return this;
     }
 
     /**
      * Get the recoveryFabricObjectId property: The recovery fabric object Id.
-     *
+     * 
      * @return the recoveryFabricObjectId value.
      */
     public String recoveryFabricObjectId() {
@@ -1005,7 +1027,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryFabricObjectId property: The recovery fabric object Id.
-     *
+     * 
      * @param recoveryFabricObjectId the recoveryFabricObjectId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1016,7 +1038,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the vmProtectionState property: The protection state for the vm.
-     *
+     * 
      * @return the vmProtectionState value.
      */
     public String vmProtectionState() {
@@ -1025,7 +1047,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the vmProtectionState property: The protection state for the vm.
-     *
+     * 
      * @param vmProtectionState the vmProtectionState value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1036,7 +1058,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the vmProtectionStateDescription property: The protection state description for the vm.
-     *
+     * 
      * @return the vmProtectionStateDescription value.
      */
     public String vmProtectionStateDescription() {
@@ -1045,7 +1067,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the vmProtectionStateDescription property: The protection state description for the vm.
-     *
+     * 
      * @param vmProtectionStateDescription the vmProtectionStateDescription value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1059,7 +1081,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
      * change the backing PE/CPE objects internally.The lifecycle id gets carried forward to have a link/continuity in
      * being able to have an Id that denotes the "same" protected item even though other internal Ids/ARM Id might be
      * changing.
-     *
+     * 
      * @return the lifecycleId value.
      */
     public String lifecycleId() {
@@ -1071,7 +1093,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
      * change the backing PE/CPE objects internally.The lifecycle id gets carried forward to have a link/continuity in
      * being able to have an Id that denotes the "same" protected item even though other internal Ids/ARM Id might be
      * changing.
-     *
+     * 
      * @param lifecycleId the lifecycleId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1082,7 +1104,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the testFailoverRecoveryFabricObjectId property: The test failover fabric object Id.
-     *
+     * 
      * @return the testFailoverRecoveryFabricObjectId value.
      */
     public String testFailoverRecoveryFabricObjectId() {
@@ -1091,7 +1113,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the testFailoverRecoveryFabricObjectId property: The test failover fabric object Id.
-     *
+     * 
      * @param testFailoverRecoveryFabricObjectId the testFailoverRecoveryFabricObjectId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1102,7 +1124,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the rpoInSeconds property: The last RPO value in seconds.
-     *
+     * 
      * @return the rpoInSeconds value.
      */
     public Long rpoInSeconds() {
@@ -1111,7 +1133,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the rpoInSeconds property: The last RPO value in seconds.
-     *
+     * 
      * @param rpoInSeconds the rpoInSeconds value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1123,7 +1145,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     /**
      * Get the lastRpoCalculatedTime property: The time (in UTC) when the last RPO value was calculated by Protection
      * Service.
-     *
+     * 
      * @return the lastRpoCalculatedTime value.
      */
     public OffsetDateTime lastRpoCalculatedTime() {
@@ -1133,7 +1155,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     /**
      * Set the lastRpoCalculatedTime property: The time (in UTC) when the last RPO value was calculated by Protection
      * Service.
-     *
+     * 
      * @param lastRpoCalculatedTime the lastRpoCalculatedTime value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1144,7 +1166,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the primaryAvailabilityZone property: The primary availability zone.
-     *
+     * 
      * @return the primaryAvailabilityZone value.
      */
     public String primaryAvailabilityZone() {
@@ -1153,7 +1175,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the primaryAvailabilityZone property: The primary availability zone.
-     *
+     * 
      * @param primaryAvailabilityZone the primaryAvailabilityZone value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1164,7 +1186,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryAvailabilityZone property: The recovery availability zone.
-     *
+     * 
      * @return the recoveryAvailabilityZone value.
      */
     public String recoveryAvailabilityZone() {
@@ -1173,7 +1195,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryAvailabilityZone property: The recovery availability zone.
-     *
+     * 
      * @param recoveryAvailabilityZone the recoveryAvailabilityZone value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1184,7 +1206,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the primaryExtendedLocation property: The primary Extended Location.
-     *
+     * 
      * @return the primaryExtendedLocation value.
      */
     public ExtendedLocation primaryExtendedLocation() {
@@ -1193,7 +1215,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the primaryExtendedLocation property: The primary Extended Location.
-     *
+     * 
      * @param primaryExtendedLocation the primaryExtendedLocation value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1204,7 +1226,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryExtendedLocation property: The recovery Extended Location.
-     *
+     * 
      * @return the recoveryExtendedLocation value.
      */
     public ExtendedLocation recoveryExtendedLocation() {
@@ -1213,7 +1235,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryExtendedLocation property: The recovery Extended Location.
-     *
+     * 
      * @param recoveryExtendedLocation the recoveryExtendedLocation value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1224,7 +1246,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the vmEncryptionType property: The encryption type of the VM.
-     *
+     * 
      * @return the vmEncryptionType value.
      */
     public VmEncryptionType vmEncryptionType() {
@@ -1233,7 +1255,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the tfoAzureVMName property: The test failover vm name.
-     *
+     * 
      * @return the tfoAzureVMName value.
      */
     public String tfoAzureVMName() {
@@ -1242,7 +1264,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the tfoAzureVMName property: The test failover vm name.
-     *
+     * 
      * @param tfoAzureVMName the tfoAzureVMName value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1253,7 +1275,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryAzureGeneration property: The recovery azure generation.
-     *
+     * 
      * @return the recoveryAzureGeneration value.
      */
     public String recoveryAzureGeneration() {
@@ -1262,7 +1284,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryProximityPlacementGroupId property: The recovery proximity placement group Id.
-     *
+     * 
      * @return the recoveryProximityPlacementGroupId value.
      */
     public String recoveryProximityPlacementGroupId() {
@@ -1271,7 +1293,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryProximityPlacementGroupId property: The recovery proximity placement group Id.
-     *
+     * 
      * @param recoveryProximityPlacementGroupId the recoveryProximityPlacementGroupId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1282,7 +1304,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the autoProtectionOfDataDisk property: A value indicating whether the auto protection is enabled.
-     *
+     * 
      * @return the autoProtectionOfDataDisk value.
      */
     public AutoProtectionOfDataDisk autoProtectionOfDataDisk() {
@@ -1291,7 +1313,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the autoProtectionOfDataDisk property: A value indicating whether the auto protection is enabled.
-     *
+     * 
      * @param autoProtectionOfDataDisk the autoProtectionOfDataDisk value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1302,7 +1324,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryVirtualMachineScaleSetId property: The recovery virtual machine scale set id.
-     *
+     * 
      * @return the recoveryVirtualMachineScaleSetId value.
      */
     public String recoveryVirtualMachineScaleSetId() {
@@ -1311,7 +1333,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryVirtualMachineScaleSetId property: The recovery virtual machine scale set id.
-     *
+     * 
      * @param recoveryVirtualMachineScaleSetId the recoveryVirtualMachineScaleSetId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1322,7 +1344,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Get the recoveryCapacityReservationGroupId property: The recovery capacity reservation group Id.
-     *
+     * 
      * @return the recoveryCapacityReservationGroupId value.
      */
     public String recoveryCapacityReservationGroupId() {
@@ -1331,7 +1353,7 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
 
     /**
      * Set the recoveryCapacityReservationGroupId property: The recovery capacity reservation group Id.
-     *
+     * 
      * @param recoveryCapacityReservationGroupId the recoveryCapacityReservationGroupId value to set.
      * @return the A2AReplicationDetails object itself.
      */
@@ -1341,13 +1363,21 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
     }
 
     /**
+     * Get the churnOptionSelected property: A value indicating the churn option selected by user.
+     * 
+     * @return the churnOptionSelected value.
+     */
+    public ChurnOptionSelected churnOptionSelected() {
+        return this.churnOptionSelected;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
     public void validate() {
-        super.validate();
         if (initialPrimaryExtendedLocation() != null) {
             initialPrimaryExtendedLocation().validate();
         }
@@ -1375,5 +1405,233 @@ public final class A2AReplicationDetails extends ReplicationProviderSpecificSett
         if (recoveryExtendedLocation() != null) {
             recoveryExtendedLocation().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("instanceType", this.instanceType);
+        jsonWriter.writeStringField("fabricObjectId", this.fabricObjectId);
+        jsonWriter.writeJsonField("initialPrimaryExtendedLocation", this.initialPrimaryExtendedLocation);
+        jsonWriter.writeJsonField("initialRecoveryExtendedLocation", this.initialRecoveryExtendedLocation);
+        jsonWriter.writeStringField("multiVmGroupId", this.multiVmGroupId);
+        jsonWriter.writeStringField("multiVmGroupName", this.multiVmGroupName);
+        jsonWriter.writeStringField("multiVmGroupCreateOption",
+            this.multiVmGroupCreateOption == null ? null : this.multiVmGroupCreateOption.toString());
+        jsonWriter.writeStringField("managementId", this.managementId);
+        jsonWriter.writeStringField("protectionClusterId", this.protectionClusterId);
+        jsonWriter.writeBooleanField("isClusterInfraReady", this.isClusterInfraReady);
+        jsonWriter.writeArrayField("protectedDisks", this.protectedDisks,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("unprotectedDisks", this.unprotectedDisks,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("protectedManagedDisks", this.protectedManagedDisks,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("recoveryBootDiagStorageAccountId", this.recoveryBootDiagStorageAccountId);
+        jsonWriter.writeStringField("primaryFabricLocation", this.primaryFabricLocation);
+        jsonWriter.writeStringField("recoveryFabricLocation", this.recoveryFabricLocation);
+        jsonWriter.writeStringField("osType", this.osType);
+        jsonWriter.writeStringField("recoveryAzureVMSize", this.recoveryAzureVMSize);
+        jsonWriter.writeStringField("recoveryAzureVMName", this.recoveryAzureVMName);
+        jsonWriter.writeStringField("recoveryAzureResourceGroupId", this.recoveryAzureResourceGroupId);
+        jsonWriter.writeStringField("recoveryCloudService", this.recoveryCloudService);
+        jsonWriter.writeStringField("recoveryAvailabilitySet", this.recoveryAvailabilitySet);
+        jsonWriter.writeStringField("selectedRecoveryAzureNetworkId", this.selectedRecoveryAzureNetworkId);
+        jsonWriter.writeStringField("selectedTfoAzureNetworkId", this.selectedTfoAzureNetworkId);
+        jsonWriter.writeArrayField("vmNics", this.vmNics, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("vmSyncedConfigDetails", this.vmSyncedConfigDetails);
+        jsonWriter.writeNumberField("monitoringPercentageCompletion", this.monitoringPercentageCompletion);
+        jsonWriter.writeStringField("monitoringJobType", this.monitoringJobType);
+        jsonWriter.writeStringField("lastHeartbeat",
+            this.lastHeartbeat == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.lastHeartbeat));
+        jsonWriter.writeStringField("agentVersion", this.agentVersion);
+        jsonWriter.writeStringField("agentExpiryDate",
+            this.agentExpiryDate == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.agentExpiryDate));
+        jsonWriter.writeBooleanField("isReplicationAgentUpdateRequired", this.isReplicationAgentUpdateRequired);
+        jsonWriter.writeBooleanField("isReplicationAgentCertificateUpdateRequired",
+            this.isReplicationAgentCertificateUpdateRequired);
+        jsonWriter.writeStringField("recoveryFabricObjectId", this.recoveryFabricObjectId);
+        jsonWriter.writeStringField("vmProtectionState", this.vmProtectionState);
+        jsonWriter.writeStringField("vmProtectionStateDescription", this.vmProtectionStateDescription);
+        jsonWriter.writeStringField("lifecycleId", this.lifecycleId);
+        jsonWriter.writeStringField("testFailoverRecoveryFabricObjectId", this.testFailoverRecoveryFabricObjectId);
+        jsonWriter.writeNumberField("rpoInSeconds", this.rpoInSeconds);
+        jsonWriter.writeStringField("lastRpoCalculatedTime",
+            this.lastRpoCalculatedTime == null
+                ? null
+                : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.lastRpoCalculatedTime));
+        jsonWriter.writeStringField("primaryAvailabilityZone", this.primaryAvailabilityZone);
+        jsonWriter.writeStringField("recoveryAvailabilityZone", this.recoveryAvailabilityZone);
+        jsonWriter.writeJsonField("primaryExtendedLocation", this.primaryExtendedLocation);
+        jsonWriter.writeJsonField("recoveryExtendedLocation", this.recoveryExtendedLocation);
+        jsonWriter.writeStringField("tfoAzureVMName", this.tfoAzureVMName);
+        jsonWriter.writeStringField("recoveryProximityPlacementGroupId", this.recoveryProximityPlacementGroupId);
+        jsonWriter.writeStringField("autoProtectionOfDataDisk",
+            this.autoProtectionOfDataDisk == null ? null : this.autoProtectionOfDataDisk.toString());
+        jsonWriter.writeStringField("recoveryVirtualMachineScaleSetId", this.recoveryVirtualMachineScaleSetId);
+        jsonWriter.writeStringField("recoveryCapacityReservationGroupId", this.recoveryCapacityReservationGroupId);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of A2AReplicationDetails from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of A2AReplicationDetails if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the A2AReplicationDetails.
+     */
+    public static A2AReplicationDetails fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            A2AReplicationDetails deserializedA2AReplicationDetails = new A2AReplicationDetails();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("instanceType".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.instanceType = reader.getString();
+                } else if ("fabricObjectId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.fabricObjectId = reader.getString();
+                } else if ("initialPrimaryZone".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.initialPrimaryZone = reader.getString();
+                } else if ("initialPrimaryFabricLocation".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.initialPrimaryFabricLocation = reader.getString();
+                } else if ("initialRecoveryZone".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.initialRecoveryZone = reader.getString();
+                } else if ("initialPrimaryExtendedLocation".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.initialPrimaryExtendedLocation
+                        = ExtendedLocation.fromJson(reader);
+                } else if ("initialRecoveryExtendedLocation".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.initialRecoveryExtendedLocation
+                        = ExtendedLocation.fromJson(reader);
+                } else if ("initialRecoveryFabricLocation".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.initialRecoveryFabricLocation = reader.getString();
+                } else if ("multiVmGroupId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.multiVmGroupId = reader.getString();
+                } else if ("multiVmGroupName".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.multiVmGroupName = reader.getString();
+                } else if ("multiVmGroupCreateOption".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.multiVmGroupCreateOption
+                        = MultiVmGroupCreateOption.fromString(reader.getString());
+                } else if ("managementId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.managementId = reader.getString();
+                } else if ("protectionClusterId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.protectionClusterId = reader.getString();
+                } else if ("isClusterInfraReady".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.isClusterInfraReady = reader.getNullable(JsonReader::getBoolean);
+                } else if ("protectedDisks".equals(fieldName)) {
+                    List<A2AProtectedDiskDetails> protectedDisks
+                        = reader.readArray(reader1 -> A2AProtectedDiskDetails.fromJson(reader1));
+                    deserializedA2AReplicationDetails.protectedDisks = protectedDisks;
+                } else if ("unprotectedDisks".equals(fieldName)) {
+                    List<A2AUnprotectedDiskDetails> unprotectedDisks
+                        = reader.readArray(reader1 -> A2AUnprotectedDiskDetails.fromJson(reader1));
+                    deserializedA2AReplicationDetails.unprotectedDisks = unprotectedDisks;
+                } else if ("protectedManagedDisks".equals(fieldName)) {
+                    List<A2AProtectedManagedDiskDetails> protectedManagedDisks
+                        = reader.readArray(reader1 -> A2AProtectedManagedDiskDetails.fromJson(reader1));
+                    deserializedA2AReplicationDetails.protectedManagedDisks = protectedManagedDisks;
+                } else if ("recoveryBootDiagStorageAccountId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryBootDiagStorageAccountId = reader.getString();
+                } else if ("primaryFabricLocation".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.primaryFabricLocation = reader.getString();
+                } else if ("recoveryFabricLocation".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryFabricLocation = reader.getString();
+                } else if ("osType".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.osType = reader.getString();
+                } else if ("recoveryAzureVMSize".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryAzureVMSize = reader.getString();
+                } else if ("recoveryAzureVMName".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryAzureVMName = reader.getString();
+                } else if ("recoveryAzureResourceGroupId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryAzureResourceGroupId = reader.getString();
+                } else if ("recoveryCloudService".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryCloudService = reader.getString();
+                } else if ("recoveryAvailabilitySet".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryAvailabilitySet = reader.getString();
+                } else if ("selectedRecoveryAzureNetworkId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.selectedRecoveryAzureNetworkId = reader.getString();
+                } else if ("selectedTfoAzureNetworkId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.selectedTfoAzureNetworkId = reader.getString();
+                } else if ("vmNics".equals(fieldName)) {
+                    List<VMNicDetails> vmNics = reader.readArray(reader1 -> VMNicDetails.fromJson(reader1));
+                    deserializedA2AReplicationDetails.vmNics = vmNics;
+                } else if ("vmSyncedConfigDetails".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.vmSyncedConfigDetails
+                        = AzureToAzureVmSyncedConfigDetails.fromJson(reader);
+                } else if ("monitoringPercentageCompletion".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.monitoringPercentageCompletion
+                        = reader.getNullable(JsonReader::getInt);
+                } else if ("monitoringJobType".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.monitoringJobType = reader.getString();
+                } else if ("lastHeartbeat".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.lastHeartbeat = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("agentVersion".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.agentVersion = reader.getString();
+                } else if ("agentExpiryDate".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.agentExpiryDate = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("isReplicationAgentUpdateRequired".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.isReplicationAgentUpdateRequired
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("agentCertificateExpiryDate".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.agentCertificateExpiryDate = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("isReplicationAgentCertificateUpdateRequired".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.isReplicationAgentCertificateUpdateRequired
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("recoveryFabricObjectId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryFabricObjectId = reader.getString();
+                } else if ("vmProtectionState".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.vmProtectionState = reader.getString();
+                } else if ("vmProtectionStateDescription".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.vmProtectionStateDescription = reader.getString();
+                } else if ("lifecycleId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.lifecycleId = reader.getString();
+                } else if ("testFailoverRecoveryFabricObjectId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.testFailoverRecoveryFabricObjectId = reader.getString();
+                } else if ("rpoInSeconds".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.rpoInSeconds = reader.getNullable(JsonReader::getLong);
+                } else if ("lastRpoCalculatedTime".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.lastRpoCalculatedTime = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("primaryAvailabilityZone".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.primaryAvailabilityZone = reader.getString();
+                } else if ("recoveryAvailabilityZone".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryAvailabilityZone = reader.getString();
+                } else if ("primaryExtendedLocation".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.primaryExtendedLocation = ExtendedLocation.fromJson(reader);
+                } else if ("recoveryExtendedLocation".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryExtendedLocation = ExtendedLocation.fromJson(reader);
+                } else if ("vmEncryptionType".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.vmEncryptionType
+                        = VmEncryptionType.fromString(reader.getString());
+                } else if ("tfoAzureVMName".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.tfoAzureVMName = reader.getString();
+                } else if ("recoveryAzureGeneration".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryAzureGeneration = reader.getString();
+                } else if ("recoveryProximityPlacementGroupId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryProximityPlacementGroupId = reader.getString();
+                } else if ("autoProtectionOfDataDisk".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.autoProtectionOfDataDisk
+                        = AutoProtectionOfDataDisk.fromString(reader.getString());
+                } else if ("recoveryVirtualMachineScaleSetId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryVirtualMachineScaleSetId = reader.getString();
+                } else if ("recoveryCapacityReservationGroupId".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.recoveryCapacityReservationGroupId = reader.getString();
+                } else if ("churnOptionSelected".equals(fieldName)) {
+                    deserializedA2AReplicationDetails.churnOptionSelected
+                        = ChurnOptionSelected.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedA2AReplicationDetails;
+        });
     }
 }

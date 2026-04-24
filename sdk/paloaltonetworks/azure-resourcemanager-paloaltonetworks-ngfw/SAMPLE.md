@@ -93,9 +93,23 @@
 - [Revert](#localrulestacks_revert)
 - [Update](#localrulestacks_update)
 
+## MetricsObjectFirewall
+
+- [CreateOrUpdate](#metricsobjectfirewall_createorupdate)
+- [Delete](#metricsobjectfirewall_delete)
+- [Get](#metricsobjectfirewall_get)
+- [ListByFirewalls](#metricsobjectfirewall_listbyfirewalls)
+
 ## Operations
 
 - [List](#operations_list)
+
+## PaloAltoNetworksCloudngfwOperations
+
+- [CreateProductSerialNumber](#paloaltonetworkscloudngfwoperations_createproductserialnumber)
+- [ListCloudManagerTenants](#paloaltonetworkscloudngfwoperations_listcloudmanagertenants)
+- [ListProductSerialNumberStatus](#paloaltonetworkscloudngfwoperations_listproductserialnumberstatus)
+- [ListSupportInfo](#paloaltonetworkscloudngfwoperations_listsupportinfo)
 
 ## PostRules
 
@@ -136,44 +150,39 @@
 import com.azure.resourcemanager.paloaltonetworks.ngfw.fluent.models.CertificateObjectGlobalRulestackResourceInner;
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.BooleanEnum;
 
-/** Samples for CertificateObjectGlobalRulestack CreateOrUpdate. */
+/**
+ * Samples for CertificateObjectGlobalRulestack CreateOrUpdate.
+ */
 public final class CertificateObjectGlobalRulestackCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectGlobalRulestack_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectGlobalRulestack_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectGlobalRulestack_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectGlobalRulestackCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectGlobalRulestacks()
-            .createOrUpdate(
-                "praval",
-                "armid1",
+        manager.certificateObjectGlobalRulestacks()
+            .createOrUpdate("praval", "armid1",
                 new CertificateObjectGlobalRulestackResourceInner().withCertificateSelfSigned(BooleanEnum.TRUE),
                 com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectGlobalRulestack_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectGlobalRulestack_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectGlobalRulestack_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectGlobalRulestackCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectGlobalRulestacks()
-            .createOrUpdate(
-                "praval",
-                "armid1",
-                new CertificateObjectGlobalRulestackResourceInner()
-                    .withCertificateSignerResourceId("")
+        manager.certificateObjectGlobalRulestacks()
+            .createOrUpdate("praval", "armid1",
+                new CertificateObjectGlobalRulestackResourceInner().withCertificateSignerResourceId("")
                     .withCertificateSelfSigned(BooleanEnum.TRUE)
                     .withAuditComment("comment")
                     .withDescription("description")
@@ -186,14 +195,16 @@ public final class CertificateObjectGlobalRulestackCreateOrUpdateSamples {
 ### CertificateObjectGlobalRulestack_Delete
 
 ```java
-/** Samples for CertificateObjectGlobalRulestack Delete. */
+/**
+ * Samples for CertificateObjectGlobalRulestack Delete.
+ */
 public final class CertificateObjectGlobalRulestackDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectGlobalRulestack_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectGlobalRulestack_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectGlobalRulestack_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectGlobalRulestackDeleteMaximumSetGen(
@@ -202,11 +213,11 @@ public final class CertificateObjectGlobalRulestackDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectGlobalRulestack_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectGlobalRulestack_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectGlobalRulestack_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectGlobalRulestackDeleteMinimumSetGen(
@@ -219,35 +230,35 @@ public final class CertificateObjectGlobalRulestackDeleteSamples {
 ### CertificateObjectGlobalRulestack_Get
 
 ```java
-/** Samples for CertificateObjectGlobalRulestack Get. */
+/**
+ * Samples for CertificateObjectGlobalRulestack Get.
+ */
 public final class CertificateObjectGlobalRulestackGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectGlobalRulestack_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectGlobalRulestack_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectGlobalRulestack_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectGlobalRulestackGetMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectGlobalRulestacks()
+        manager.certificateObjectGlobalRulestacks()
             .getWithResponse("praval", "armid1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectGlobalRulestack_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectGlobalRulestack_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectGlobalRulestack_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectGlobalRulestackGetMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectGlobalRulestacks()
+        manager.certificateObjectGlobalRulestacks()
             .getWithResponse("praval", "armid1", com.azure.core.util.Context.NONE);
     }
 }
@@ -256,14 +267,16 @@ public final class CertificateObjectGlobalRulestackGetSamples {
 ### CertificateObjectGlobalRulestack_List
 
 ```java
-/** Samples for CertificateObjectGlobalRulestack List. */
+/**
+ * Samples for CertificateObjectGlobalRulestack List.
+ */
 public final class CertificateObjectGlobalRulestackListSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectGlobalRulestack_List_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectGlobalRulestack_List_MaximumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectGlobalRulestack_List_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectGlobalRulestackListMaximumSetGen(
@@ -272,11 +285,11 @@ public final class CertificateObjectGlobalRulestackListSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectGlobalRulestack_List_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectGlobalRulestack_List_MinimumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectGlobalRulestack_List_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectGlobalRulestackListMinimumSetGen(
@@ -291,20 +304,21 @@ public final class CertificateObjectGlobalRulestackListSamples {
 ```java
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.BooleanEnum;
 
-/** Samples for CertificateObjectLocalRulestack CreateOrUpdate. */
+/**
+ * Samples for CertificateObjectLocalRulestack CreateOrUpdate.
+ */
 public final class CertificateObjectLocalRulestackCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectLocalRulestack_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectLocalRulestack_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectLocalRulestack_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectLocalRulestackCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectLocalRulestacks()
+        manager.certificateObjectLocalRulestacks()
             .define("armid1")
             .withExistingLocalRulestack("rgopenapi", "lrs1")
             .withCertificateSelfSigned(BooleanEnum.TRUE)
@@ -312,17 +326,16 @@ public final class CertificateObjectLocalRulestackCreateOrUpdateSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectLocalRulestack_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectLocalRulestack_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectLocalRulestack_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectLocalRulestackCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectLocalRulestacks()
+        manager.certificateObjectLocalRulestacks()
             .define("armid1")
             .withExistingLocalRulestack("rgopenapi", "lrs1")
             .withCertificateSelfSigned(BooleanEnum.TRUE)
@@ -338,35 +351,35 @@ public final class CertificateObjectLocalRulestackCreateOrUpdateSamples {
 ### CertificateObjectLocalRulestack_Delete
 
 ```java
-/** Samples for CertificateObjectLocalRulestack Delete. */
+/**
+ * Samples for CertificateObjectLocalRulestack Delete.
+ */
 public final class CertificateObjectLocalRulestackDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectLocalRulestack_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectLocalRulestack_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectLocalRulestack_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectLocalRulestackDeleteMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectLocalRulestacks()
+        manager.certificateObjectLocalRulestacks()
             .delete("rgopenapi", "lrs1", "armid1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectLocalRulestack_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectLocalRulestack_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectLocalRulestack_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectLocalRulestackDeleteMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectLocalRulestacks()
+        manager.certificateObjectLocalRulestacks()
             .delete("rgopenapi", "lrs1", "armid1", com.azure.core.util.Context.NONE);
     }
 }
@@ -375,35 +388,35 @@ public final class CertificateObjectLocalRulestackDeleteSamples {
 ### CertificateObjectLocalRulestack_Get
 
 ```java
-/** Samples for CertificateObjectLocalRulestack Get. */
+/**
+ * Samples for CertificateObjectLocalRulestack Get.
+ */
 public final class CertificateObjectLocalRulestackGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectLocalRulestack_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectLocalRulestack_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectLocalRulestack_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectLocalRulestackGetMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectLocalRulestacks()
+        manager.certificateObjectLocalRulestacks()
             .getWithResponse("rgopenapi", "lrs1", "armid1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectLocalRulestack_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectLocalRulestack_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectLocalRulestack_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectLocalRulestackGetMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectLocalRulestacks()
+        manager.certificateObjectLocalRulestacks()
             .getWithResponse("rgopenapi", "lrs1", "armid1", com.azure.core.util.Context.NONE);
     }
 }
@@ -412,35 +425,35 @@ public final class CertificateObjectLocalRulestackGetSamples {
 ### CertificateObjectLocalRulestack_ListByLocalRulestacks
 
 ```java
-/** Samples for CertificateObjectLocalRulestack ListByLocalRulestacks. */
+/**
+ * Samples for CertificateObjectLocalRulestack ListByLocalRulestacks.
+ */
 public final class CertificateObjectLocalRulestackListByLocalRulestacksSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectLocalRulestack_ListByLocalRulestacks_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectLocalRulestack_ListByLocalRulestacks_MaximumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectLocalRulestack_ListByLocalRulestacks_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectLocalRulestackListByLocalRulestacksMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectLocalRulestacks()
+        manager.certificateObjectLocalRulestacks()
             .listByLocalRulestacks("rgopenapi", "lrs1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/CertificateObjectLocalRulestack_ListByLocalRulestacks_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/CertificateObjectLocalRulestack_ListByLocalRulestacks_MinimumSet_Gen.json
      */
     /**
      * Sample code: CertificateObjectLocalRulestack_ListByLocalRulestacks_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void certificateObjectLocalRulestackListByLocalRulestacksMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .certificateObjectLocalRulestacks()
+        manager.certificateObjectLocalRulestacks()
             .listByLocalRulestacks("rgopenapi", "lrs1", com.azure.core.util.Context.NONE);
     }
 }
@@ -449,14 +462,16 @@ public final class CertificateObjectLocalRulestackListByLocalRulestacksSamples {
 ### FirewallStatus_Get
 
 ```java
-/** Samples for FirewallStatus Get. */
+/**
+ * Samples for FirewallStatus Get.
+ */
 public final class FirewallStatusGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FirewallStatus_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FirewallStatus_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: FirewallStatus_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallStatusGetMinimumSetGen(
@@ -465,11 +480,11 @@ public final class FirewallStatusGetSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FirewallStatus_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FirewallStatus_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: FirewallStatus_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallStatusGetMaximumSetGen(
@@ -482,14 +497,16 @@ public final class FirewallStatusGetSamples {
 ### FirewallStatus_ListByFirewalls
 
 ```java
-/** Samples for FirewallStatus ListByFirewalls. */
+/**
+ * Samples for FirewallStatus ListByFirewalls.
+ */
 public final class FirewallStatusListByFirewallsSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FirewallStatus_ListByFirewalls_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FirewallStatus_ListByFirewalls_MaximumSet_Gen.json
      */
     /**
      * Sample code: FirewallStatus_ListByFirewalls_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallStatusListByFirewallsMaximumSetGen(
@@ -498,11 +515,11 @@ public final class FirewallStatusListByFirewallsSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FirewallStatus_ListByFirewalls_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FirewallStatus_ListByFirewalls_MinimumSet_Gen.json
      */
     /**
      * Sample code: FirewallStatus_ListByFirewalls_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallStatusListByFirewallsMinimumSetGen(
@@ -543,173 +560,114 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for Firewalls CreateOrUpdate. */
+/**
+ * Samples for Firewalls CreateOrUpdate.
+ */
 public final class FirewallsCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .firewalls()
+        manager.firewalls()
             .define("firewall1")
             .withRegion("eastus")
             .withExistingResourceGroup("firewall-rg")
-            .withNetworkProfile(
-                new NetworkProfile()
-                    .withVnetConfiguration(
-                        new VnetConfiguration()
-                            .withVnet(
-                                new IpAddressSpace()
-                                    .withResourceId(
-                                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet")
-                                    .withAddressSpace("10.1.0.0/16"))
-                            .withTrustSubnet(
-                                new IpAddressSpace()
-                                    .withResourceId(
-                                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-trust-subnet")
-                                    .withAddressSpace("10.1.1.0/24"))
-                            .withUnTrustSubnet(
-                                new IpAddressSpace()
-                                    .withResourceId(
-                                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
-                                    .withAddressSpace("10.1.1.0/24"))
-                            .withIpOfTrustSubnetForUdr(
-                                new IpAddress()
-                                    .withResourceId(
-                                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
-                                    .withAddress("10.1.1.0/24")))
-                    .withVwanConfiguration(
-                        new VwanConfiguration()
-                            .withNetworkVirtualApplianceId("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
-                            .withVHub(
-                                new IpAddressSpace()
-                                    .withResourceId(
-                                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
-                                    .withAddressSpace("10.1.1.0/24"))
-                            .withTrustSubnet(
-                                new IpAddressSpace()
-                                    .withResourceId(
-                                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-trust-subnet")
-                                    .withAddressSpace("10.1.1.0/24"))
-                            .withUnTrustSubnet(
-                                new IpAddressSpace()
-                                    .withResourceId(
-                                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
-                                    .withAddressSpace("10.1.1.0/24"))
-                            .withIpOfTrustSubnetForUdr(
-                                new IpAddress()
-                                    .withResourceId(
-                                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
-                                    .withAddress("10.1.1.0/24")))
-                    .withNetworkType(NetworkType.VNET)
-                    .withPublicIps(
-                        Arrays
-                            .asList(
-                                new IpAddress()
-                                    .withResourceId(
-                                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-PublicIp1")
-                                    .withAddress("20.22.92.11")))
-                    .withEnableEgressNat(EgressNat.ENABLED)
-                    .withEgressNatIp(
-                        Arrays
-                            .asList(
-                                new IpAddress()
-                                    .withResourceId(
-                                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-egressNatIp1")
-                                    .withAddress("20.22.92.111"))))
-            .withDnsSettings(
-                new DnsSettings()
-                    .withEnableDnsProxy(DnsProxy.DISABLED)
-                    .withEnabledDnsType(EnabledDnsType.CUSTOM)
-                    .withDnsServers(
-                        Arrays
-                            .asList(
-                                new IpAddress()
-                                    .withResourceId(
-                                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-egressNatIp1")
-                                    .withAddress("20.22.92.111"))))
-            .withPlanData(
-                new PlanData()
-                    .withUsageType(UsageType.PAYG)
-                    .withBillingCycle(BillingCycle.MONTHLY)
-                    .withPlanId("liftrpantestplan"))
-            .withMarketplaceDetails(
-                new MarketplaceDetails()
-                    .withOfferId("liftr-pan-ame-test")
-                    .withPublisherId("isvtestuklegacy")
-                    .withMarketplaceSubscriptionStatus(MarketplaceSubscriptionStatus.PENDING_FULFILLMENT_START))
+            .withNetworkProfile(new NetworkProfile().withVnetConfiguration(new VnetConfiguration()
+                .withVnet(new IpAddressSpace().withResourceId(
+                    "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet")
+                    .withAddressSpace("10.1.0.0/16"))
+                .withTrustSubnet(new IpAddressSpace().withResourceId(
+                    "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-trust-subnet")
+                    .withAddressSpace("10.1.1.0/24"))
+                .withUnTrustSubnet(new IpAddressSpace().withResourceId(
+                    "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
+                    .withAddressSpace("10.1.1.0/24"))
+                .withIpOfTrustSubnetForUdr(new IpAddress().withResourceId(
+                    "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
+                    .withAddress("10.1.1.0/24")))
+                .withVwanConfiguration(new VwanConfiguration()
+                    .withNetworkVirtualApplianceId("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
+                    .withVHub(new IpAddressSpace().withResourceId(
+                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
+                        .withAddressSpace("10.1.1.0/24"))
+                    .withTrustSubnet(new IpAddressSpace().withResourceId(
+                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-trust-subnet")
+                        .withAddressSpace("10.1.1.0/24"))
+                    .withUnTrustSubnet(new IpAddressSpace().withResourceId(
+                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
+                        .withAddressSpace("10.1.1.0/24"))
+                    .withIpOfTrustSubnetForUdr(new IpAddress().withResourceId(
+                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
+                        .withAddress("10.1.1.0/24")))
+                .withNetworkType(NetworkType.VNET)
+                .withPublicIps(Arrays.asList(new IpAddress().withResourceId(
+                    "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-PublicIp1")
+                    .withAddress("20.22.92.11")))
+                .withEnableEgressNat(EgressNat.ENABLED)
+                .withEgressNatIp(Arrays.asList(new IpAddress().withResourceId(
+                    "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-egressNatIp1")
+                    .withAddress("20.22.92.111")))
+                .withTrustedRanges(Arrays.asList("20.22.92.11"))
+                .withPrivateSourceNatRulesDestination(Arrays.asList("20.22.92.11")))
+            .withDnsSettings(new DnsSettings().withEnableDnsProxy(DnsProxy.DISABLED)
+                .withEnabledDnsType(EnabledDnsType.CUSTOM)
+                .withDnsServers(Arrays.asList(new IpAddress().withResourceId(
+                    "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-egressNatIp1")
+                    .withAddress("20.22.92.111"))))
+            .withPlanData(new PlanData().withUsageType(UsageType.PAYG)
+                .withBillingCycle(BillingCycle.MONTHLY)
+                .withPlanId("liftrpantestplan"))
+            .withMarketplaceDetails(new MarketplaceDetails().withOfferId("liftr-pan-ame-test")
+                .withPublisherId("isvtestuklegacy")
+                .withMarketplaceSubscriptionStatus(MarketplaceSubscriptionStatus.PENDING_FULFILLMENT_START))
             .withTags(mapOf("tagName", "value"))
-            .withIdentity(
-                new AzureResourceManagerManagedIdentityProperties()
-                    .withType(ManagedIdentityType.NONE)
-                    .withUserAssignedIdentities(
-                        mapOf(
-                            "key16",
-                            new AzureResourceManagerUserAssignedIdentity()
-                                .withClientId("aaaa")
-                                .withPrincipalId("aaaaaaaaaaaaaaa"))))
+            .withIdentity(new AzureResourceManagerManagedIdentityProperties().withType(ManagedIdentityType.NONE)
+                .withUserAssignedIdentities(mapOf("key16",
+                    new AzureResourceManagerUserAssignedIdentity().withClientId("aaaa")
+                        .withPrincipalId("aaaaaaaaaaaaaaa"))))
             .withPanEtag("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
             .withIsPanoramaManaged(BooleanEnum.TRUE)
             .withPanoramaConfig(new PanoramaConfig().withConfigString("bas64EncodedString"))
             .withAssociatedRulestack(
                 new RulestackDetails().withResourceId("lrs1").withRulestackId("PANRSID").withLocation("eastus"))
-            .withFrontEndSettings(
-                Arrays
-                    .asList(
-                        new FrontendSetting()
-                            .withName("frontendsetting11")
-                            .withProtocol(ProtocolType.TCP)
-                            .withFrontendConfiguration(
-                                new EndpointConfiguration()
-                                    .withPort("80")
-                                    .withAddress(
-                                        new IpAddress()
-                                            .withResourceId(
-                                                "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-frontendSettingIp1")
-                                            .withAddress("20.22.91.251")))
-                            .withBackendConfiguration(
-                                new EndpointConfiguration()
-                                    .withPort("80")
-                                    .withAddress(
-                                        new IpAddress()
-                                            .withResourceId(
-                                                "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-frontendSettingIp2")
-                                            .withAddress("20.22.32.136")))))
+            .withFrontEndSettings(Arrays.asList(new FrontendSetting().withName("frontendsetting11")
+                .withProtocol(ProtocolType.TCP)
+                .withFrontendConfiguration(new EndpointConfiguration().withPort("80")
+                    .withAddress(new IpAddress().withResourceId(
+                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-frontendSettingIp1")
+                        .withAddress("20.22.91.251")))
+                .withBackendConfiguration(new EndpointConfiguration().withPort("80")
+                    .withAddress(new IpAddress().withResourceId(
+                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-frontendSettingIp2")
+                        .withAddress("20.22.32.136")))))
             .create();
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .firewalls()
+        manager.firewalls()
             .define("firewall1")
             .withRegion("eastus")
             .withExistingResourceGroup("firewall-rg")
-            .withNetworkProfile(
-                new NetworkProfile()
-                    .withNetworkType(NetworkType.VNET)
-                    .withPublicIps(
-                        Arrays
-                            .asList(
-                                new IpAddress()
-                                    .withResourceId(
-                                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-PublicIp1")
-                                    .withAddress("20.22.92.11")))
-                    .withEnableEgressNat(EgressNat.ENABLED))
+            .withNetworkProfile(new NetworkProfile().withNetworkType(NetworkType.VNET)
+                .withPublicIps(Arrays.asList(new IpAddress().withResourceId(
+                    "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-PublicIp1")
+                    .withAddress("20.22.92.11")))
+                .withEnableEgressNat(EgressNat.ENABLED))
             .withDnsSettings(new DnsSettings())
             .withPlanData(new PlanData().withBillingCycle(BillingCycle.MONTHLY).withPlanId("liftrpantestplan"))
             .withMarketplaceDetails(
@@ -717,6 +675,7 @@ public final class FirewallsCreateOrUpdateSamples {
             .create();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();
@@ -733,14 +692,16 @@ public final class FirewallsCreateOrUpdateSamples {
 ### Firewalls_Delete
 
 ```java
-/** Samples for Firewalls Delete. */
+/**
+ * Samples for Firewalls Delete.
+ */
 public final class FirewallsDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsDeleteMinimumSetGen(
@@ -749,11 +710,11 @@ public final class FirewallsDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsDeleteMaximumSetGen(
@@ -766,35 +727,35 @@ public final class FirewallsDeleteSamples {
 ### Firewalls_GetByResourceGroup
 
 ```java
-/** Samples for Firewalls GetByResourceGroup. */
+/**
+ * Samples for Firewalls GetByResourceGroup.
+ */
 public final class FirewallsGetByResourceGroupSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
-    public static void firewallsGetMaximumSetGen(
-        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .firewalls()
+    public static void
+        firewallsGetMaximumSetGen(com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.firewalls()
             .getByResourceGroupWithResponse("firewall-rg", "firewall1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
-    public static void firewallsGetMinimumSetGen(
-        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .firewalls()
+    public static void
+        firewallsGetMinimumSetGen(com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.firewalls()
             .getByResourceGroupWithResponse("firewall-rg", "firewall1", com.azure.core.util.Context.NONE);
     }
 }
@@ -803,35 +764,35 @@ public final class FirewallsGetByResourceGroupSamples {
 ### Firewalls_GetGlobalRulestack
 
 ```java
-/** Samples for Firewalls GetGlobalRulestack. */
+/**
+ * Samples for Firewalls GetGlobalRulestack.
+ */
 public final class FirewallsGetGlobalRulestackSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_getGlobalRulestack_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_getGlobalRulestack_MaximumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_getGlobalRulestack_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsGetGlobalRulestackMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .firewalls()
+        manager.firewalls()
             .getGlobalRulestackWithResponse("firewall-rg", "firewall1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_getGlobalRulestack_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_getGlobalRulestack_MinimumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_getGlobalRulestack_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsGetGlobalRulestackMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .firewalls()
+        manager.firewalls()
             .getGlobalRulestackWithResponse("firewall-rg", "firewall1", com.azure.core.util.Context.NONE);
     }
 }
@@ -840,14 +801,16 @@ public final class FirewallsGetGlobalRulestackSamples {
 ### Firewalls_GetLogProfile
 
 ```java
-/** Samples for Firewalls GetLogProfile. */
+/**
+ * Samples for Firewalls GetLogProfile.
+ */
 public final class FirewallsGetLogProfileSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_getLogProfile_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_getLogProfile_MinimumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_getLogProfile_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsGetLogProfileMinimumSetGen(
@@ -856,11 +819,11 @@ public final class FirewallsGetLogProfileSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_getLogProfile_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_getLogProfile_MaximumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_getLogProfile_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsGetLogProfileMaximumSetGen(
@@ -873,35 +836,35 @@ public final class FirewallsGetLogProfileSamples {
 ### Firewalls_GetSupportInfo
 
 ```java
-/** Samples for Firewalls GetSupportInfo. */
+/**
+ * Samples for Firewalls GetSupportInfo.
+ */
 public final class FirewallsGetSupportInfoSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_getSupportInfo_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_getSupportInfo_MinimumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_getSupportInfo_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsGetSupportInfoMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .firewalls()
+        manager.firewalls()
             .getSupportInfoWithResponse("rgopenapi", "firewall1", null, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_getSupportInfo_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_getSupportInfo_MaximumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_getSupportInfo_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsGetSupportInfoMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .firewalls()
+        manager.firewalls()
             .getSupportInfoWithResponse("rgopenapi", "firewall1", "user1@domain.com", com.azure.core.util.Context.NONE);
     }
 }
@@ -910,14 +873,16 @@ public final class FirewallsGetSupportInfoSamples {
 ### Firewalls_List
 
 ```java
-/** Samples for Firewalls List. */
+/**
+ * Samples for Firewalls List.
+ */
 public final class FirewallsListSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_ListBySubscription_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_ListBySubscription_MinimumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_ListBySubscription_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsListBySubscriptionMinimumSetGen(
@@ -926,11 +891,11 @@ public final class FirewallsListSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_ListBySubscription_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_ListBySubscription_MaximumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_ListBySubscription_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsListBySubscriptionMaximumSetGen(
@@ -943,14 +908,16 @@ public final class FirewallsListSamples {
 ### Firewalls_ListByResourceGroup
 
 ```java
-/** Samples for Firewalls ListByResourceGroup. */
+/**
+ * Samples for Firewalls ListByResourceGroup.
+ */
 public final class FirewallsListByResourceGroupSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_ListByResourceGroup_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_ListByResourceGroup_MaximumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_ListByResourceGroup_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsListByResourceGroupMaximumSetGen(
@@ -959,11 +926,11 @@ public final class FirewallsListByResourceGroupSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_ListByResourceGroup_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_ListByResourceGroup_MinimumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_ListByResourceGroup_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsListByResourceGroupMinimumSetGen(
@@ -985,127 +952,96 @@ import com.azure.resourcemanager.paloaltonetworks.ngfw.models.LogType;
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.MonitorLog;
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.StorageAccount;
 
-/** Samples for Firewalls SaveLogProfile. */
+/**
+ * Samples for Firewalls SaveLogProfile.
+ */
 public final class FirewallsSaveLogProfileSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_saveLogProfile_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_saveLogProfile_MaximumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_saveLogProfile_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsSaveLogProfileMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .firewalls()
-            .saveLogProfileWithResponse(
-                "firewall-rg",
-                "firewall1",
-                new LogSettingsInner()
-                    .withLogType(LogType.TRAFFIC)
+        manager.firewalls()
+            .saveLogProfileWithResponse("firewall-rg", "firewall1",
+                new LogSettingsInner().withLogType(LogType.TRAFFIC)
                     .withLogOption(LogOption.SAME_DESTINATION)
                     .withApplicationInsights(
                         new ApplicationInsights().withId("aaaaaaaaaaaaaaaa").withKey("fakeTokenPlaceholder"))
-                    .withCommonDestination(
-                        new LogDestination()
-                            .withStorageConfigurations(
-                                new StorageAccount()
-                                    .withId("aaaaaaaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaa")
-                                    .withAccountName("aaaaaaaaaaaaaaaaaaaaaaa"))
-                            .withEventHubConfigurations(
-                                new EventHub()
-                                    .withId("aaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaaa")
-                                    .withName("aaaaaaaa")
-                                    .withNameSpace("aaaaaaaaaaaaaaaaaaaaa")
-                                    .withPolicyName("aaaaaaaaaaaa"))
-                            .withMonitorConfigurations(
-                                new MonitorLog()
-                                    .withId("aaaaaaaaaaaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaaaaaa")
-                                    .withWorkspace("aaaaaaaaaaa")
-                                    .withPrimaryKey("fakeTokenPlaceholder")
-                                    .withSecondaryKey("fakeTokenPlaceholder")))
-                    .withTrafficLogDestination(
-                        new LogDestination()
-                            .withStorageConfigurations(
-                                new StorageAccount()
-                                    .withId("aaaaaaaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaa")
-                                    .withAccountName("aaaaaaaaaaaaaaaaaaaaaaa"))
-                            .withEventHubConfigurations(
-                                new EventHub()
-                                    .withId("aaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaaa")
-                                    .withName("aaaaaaaa")
-                                    .withNameSpace("aaaaaaaaaaaaaaaaaaaaa")
-                                    .withPolicyName("aaaaaaaaaaaa"))
-                            .withMonitorConfigurations(
-                                new MonitorLog()
-                                    .withId("aaaaaaaaaaaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaaaaaa")
-                                    .withWorkspace("aaaaaaaaaaa")
-                                    .withPrimaryKey("fakeTokenPlaceholder")
-                                    .withSecondaryKey("fakeTokenPlaceholder")))
-                    .withThreatLogDestination(
-                        new LogDestination()
-                            .withStorageConfigurations(
-                                new StorageAccount()
-                                    .withId("aaaaaaaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaa")
-                                    .withAccountName("aaaaaaaaaaaaaaaaaaaaaaa"))
-                            .withEventHubConfigurations(
-                                new EventHub()
-                                    .withId("aaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaaa")
-                                    .withName("aaaaaaaa")
-                                    .withNameSpace("aaaaaaaaaaaaaaaaaaaaa")
-                                    .withPolicyName("aaaaaaaaaaaa"))
-                            .withMonitorConfigurations(
-                                new MonitorLog()
-                                    .withId("aaaaaaaaaaaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaaaaaa")
-                                    .withWorkspace("aaaaaaaaaaa")
-                                    .withPrimaryKey("fakeTokenPlaceholder")
-                                    .withSecondaryKey("fakeTokenPlaceholder")))
-                    .withDecryptLogDestination(
-                        new LogDestination()
-                            .withStorageConfigurations(
-                                new StorageAccount()
-                                    .withId("aaaaaaaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaa")
-                                    .withAccountName("aaaaaaaaaaaaaaaaaaaaaaa"))
-                            .withEventHubConfigurations(
-                                new EventHub()
-                                    .withId("aaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaaa")
-                                    .withName("aaaaaaaa")
-                                    .withNameSpace("aaaaaaaaaaaaaaaaaaaaa")
-                                    .withPolicyName("aaaaaaaaaaaa"))
-                            .withMonitorConfigurations(
-                                new MonitorLog()
-                                    .withId("aaaaaaaaaaaaaaaaaaa")
-                                    .withSubscriptionId("aaaaaaaaaaaaa")
-                                    .withWorkspace("aaaaaaaaaaa")
-                                    .withPrimaryKey("fakeTokenPlaceholder")
-                                    .withSecondaryKey("fakeTokenPlaceholder"))),
+                    .withCommonDestination(new LogDestination()
+                        .withStorageConfigurations(new StorageAccount().withId("aaaaaaaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaa")
+                            .withAccountName("aaaaaaaaaaaaaaaaaaaaaaa"))
+                        .withEventHubConfigurations(new EventHub().withId("aaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaaa")
+                            .withName("aaaaaaaa")
+                            .withNameSpace("aaaaaaaaaaaaaaaaaaaaa")
+                            .withPolicyName("aaaaaaaaaaaa"))
+                        .withMonitorConfigurations(new MonitorLog().withId("aaaaaaaaaaaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaaaaaa")
+                            .withWorkspace("aaaaaaaaaaa")
+                            .withPrimaryKey("fakeTokenPlaceholder")
+                            .withSecondaryKey("fakeTokenPlaceholder")))
+                    .withTrafficLogDestination(new LogDestination()
+                        .withStorageConfigurations(new StorageAccount().withId("aaaaaaaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaa")
+                            .withAccountName("aaaaaaaaaaaaaaaaaaaaaaa"))
+                        .withEventHubConfigurations(new EventHub().withId("aaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaaa")
+                            .withName("aaaaaaaa")
+                            .withNameSpace("aaaaaaaaaaaaaaaaaaaaa")
+                            .withPolicyName("aaaaaaaaaaaa"))
+                        .withMonitorConfigurations(new MonitorLog().withId("aaaaaaaaaaaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaaaaaa")
+                            .withWorkspace("aaaaaaaaaaa")
+                            .withPrimaryKey("fakeTokenPlaceholder")
+                            .withSecondaryKey("fakeTokenPlaceholder")))
+                    .withThreatLogDestination(new LogDestination()
+                        .withStorageConfigurations(new StorageAccount().withId("aaaaaaaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaa")
+                            .withAccountName("aaaaaaaaaaaaaaaaaaaaaaa"))
+                        .withEventHubConfigurations(new EventHub().withId("aaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaaa")
+                            .withName("aaaaaaaa")
+                            .withNameSpace("aaaaaaaaaaaaaaaaaaaaa")
+                            .withPolicyName("aaaaaaaaaaaa"))
+                        .withMonitorConfigurations(new MonitorLog().withId("aaaaaaaaaaaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaaaaaa")
+                            .withWorkspace("aaaaaaaaaaa")
+                            .withPrimaryKey("fakeTokenPlaceholder")
+                            .withSecondaryKey("fakeTokenPlaceholder")))
+                    .withDecryptLogDestination(new LogDestination()
+                        .withStorageConfigurations(new StorageAccount().withId("aaaaaaaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaa")
+                            .withAccountName("aaaaaaaaaaaaaaaaaaaaaaa"))
+                        .withEventHubConfigurations(new EventHub().withId("aaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaaa")
+                            .withName("aaaaaaaa")
+                            .withNameSpace("aaaaaaaaaaaaaaaaaaaaa")
+                            .withPolicyName("aaaaaaaaaaaa"))
+                        .withMonitorConfigurations(new MonitorLog().withId("aaaaaaaaaaaaaaaaaaa")
+                            .withSubscriptionId("aaaaaaaaaaaaa")
+                            .withWorkspace("aaaaaaaaaaa")
+                            .withPrimaryKey("fakeTokenPlaceholder")
+                            .withSecondaryKey("fakeTokenPlaceholder"))),
                 com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_saveLogProfile_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_saveLogProfile_MinimumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_saveLogProfile_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsSaveLogProfileMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .firewalls()
+        manager.firewalls()
             .saveLogProfileWithResponse("firewall-rg", "firewall1", null, com.azure.core.util.Context.NONE);
     }
 }
@@ -1144,173 +1080,113 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for Firewalls Update. */
+/**
+ * Samples for Firewalls Update.
+ */
 public final class FirewallsUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_Update_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_Update_MinimumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_Update_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        FirewallResource resource =
-            manager
-                .firewalls()
-                .getByResourceGroupWithResponse("firewall-rg", "firewall1", com.azure.core.util.Context.NONE)
-                .getValue();
+        FirewallResource resource = manager.firewalls()
+            .getByResourceGroupWithResponse("firewall-rg", "firewall1", com.azure.core.util.Context.NONE)
+            .getValue();
         resource.update().apply();
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Firewalls_Update_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Firewalls_Update_MaximumSet_Gen.json
      */
     /**
      * Sample code: Firewalls_Update_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void firewallsUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        FirewallResource resource =
-            manager
-                .firewalls()
-                .getByResourceGroupWithResponse("firewall-rg", "firewall1", com.azure.core.util.Context.NONE)
-                .getValue();
-        resource
-            .update()
+        FirewallResource resource = manager.firewalls()
+            .getByResourceGroupWithResponse("firewall-rg", "firewall1", com.azure.core.util.Context.NONE)
+            .getValue();
+        resource.update()
             .withTags(mapOf("tagName", "value"))
-            .withIdentity(
-                new AzureResourceManagerManagedIdentityProperties()
-                    .withType(ManagedIdentityType.NONE)
-                    .withUserAssignedIdentities(
-                        mapOf(
-                            "key16",
-                            new AzureResourceManagerUserAssignedIdentity()
-                                .withClientId("aaaa")
-                                .withPrincipalId("aaaaaaaaaaaaaaa"))))
-            .withProperties(
-                new FirewallResourceUpdateProperties()
-                    .withPanEtag("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
-                    .withNetworkProfile(
-                        new NetworkProfile()
-                            .withVnetConfiguration(
-                                new VnetConfiguration()
-                                    .withVnet(
-                                        new IpAddressSpace()
-                                            .withResourceId(
-                                                "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet")
-                                            .withAddressSpace("10.1.0.0/16"))
-                                    .withTrustSubnet(
-                                        new IpAddressSpace()
-                                            .withResourceId(
-                                                "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-trust-subnet")
-                                            .withAddressSpace("10.1.1.0/24"))
-                                    .withUnTrustSubnet(
-                                        new IpAddressSpace()
-                                            .withResourceId(
-                                                "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
-                                            .withAddressSpace("10.1.1.0/24"))
-                                    .withIpOfTrustSubnetForUdr(
-                                        new IpAddress()
-                                            .withResourceId(
-                                                "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
-                                            .withAddress("10.1.1.0/24")))
-                            .withVwanConfiguration(
-                                new VwanConfiguration()
-                                    .withNetworkVirtualApplianceId("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
-                                    .withVHub(
-                                        new IpAddressSpace()
-                                            .withResourceId(
-                                                "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
-                                            .withAddressSpace("10.1.1.0/24"))
-                                    .withTrustSubnet(
-                                        new IpAddressSpace()
-                                            .withResourceId(
-                                                "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-trust-subnet")
-                                            .withAddressSpace("10.1.1.0/24"))
-                                    .withUnTrustSubnet(
-                                        new IpAddressSpace()
-                                            .withResourceId(
-                                                "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
-                                            .withAddressSpace("10.1.1.0/24"))
-                                    .withIpOfTrustSubnetForUdr(
-                                        new IpAddress()
-                                            .withResourceId(
-                                                "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
-                                            .withAddress("10.1.1.0/24")))
-                            .withNetworkType(NetworkType.VNET)
-                            .withPublicIps(
-                                Arrays
-                                    .asList(
-                                        new IpAddress()
-                                            .withResourceId(
-                                                "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-PublicIp1")
-                                            .withAddress("20.22.92.11")))
-                            .withEnableEgressNat(EgressNat.ENABLED)
-                            .withEgressNatIp(
-                                Arrays
-                                    .asList(
-                                        new IpAddress()
-                                            .withResourceId(
-                                                "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-egressNatIp1")
-                                            .withAddress("20.22.92.111"))))
-                    .withIsPanoramaManaged(BooleanEnum.TRUE)
-                    .withPanoramaConfig(new PanoramaConfig().withConfigString("bas64EncodedString"))
-                    .withAssociatedRulestack(
-                        new RulestackDetails()
-                            .withResourceId("aaaaaaaaaa")
-                            .withRulestackId("aaaaaaaaaaaaaaaa")
-                            .withLocation("eastus"))
-                    .withDnsSettings(
-                        new DnsSettings()
-                            .withEnableDnsProxy(DnsProxy.DISABLED)
-                            .withEnabledDnsType(EnabledDnsType.CUSTOM)
-                            .withDnsServers(
-                                Arrays
-                                    .asList(
-                                        new IpAddress()
-                                            .withResourceId(
-                                                "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-egressNatIp1")
-                                            .withAddress("20.22.92.111"))))
-                    .withFrontEndSettings(
-                        Arrays
-                            .asList(
-                                new FrontendSetting()
-                                    .withName("frontendsetting11")
-                                    .withProtocol(ProtocolType.TCP)
-                                    .withFrontendConfiguration(
-                                        new EndpointConfiguration()
-                                            .withPort("80")
-                                            .withAddress(
-                                                new IpAddress()
-                                                    .withResourceId(
-                                                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-frontendSettingIp1")
-                                                    .withAddress("20.22.91.251")))
-                                    .withBackendConfiguration(
-                                        new EndpointConfiguration()
-                                            .withPort("80")
-                                            .withAddress(
-                                                new IpAddress()
-                                                    .withResourceId(
-                                                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-frontendSettingIp2")
-                                                    .withAddress("20.22.32.136")))))
-                    .withPlanData(
-                        new PlanData()
-                            .withUsageType(UsageType.PAYG)
-                            .withBillingCycle(BillingCycle.WEEKLY)
-                            .withPlanId("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
-                    .withMarketplaceDetails(
-                        new MarketplaceDetails()
-                            .withOfferId("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-                            .withPublisherId("aaaa")
-                            .withMarketplaceSubscriptionStatus(
-                                MarketplaceSubscriptionStatus.PENDING_FULFILLMENT_START)))
+            .withIdentity(new AzureResourceManagerManagedIdentityProperties().withType(ManagedIdentityType.NONE)
+                .withUserAssignedIdentities(mapOf("key16",
+                    new AzureResourceManagerUserAssignedIdentity().withClientId("aaaa")
+                        .withPrincipalId("aaaaaaaaaaaaaaa"))))
+            .withProperties(new FirewallResourceUpdateProperties().withPanEtag("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
+                .withNetworkProfile(new NetworkProfile().withVnetConfiguration(new VnetConfiguration()
+                    .withVnet(new IpAddressSpace().withResourceId(
+                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet")
+                        .withAddressSpace("10.1.0.0/16"))
+                    .withTrustSubnet(new IpAddressSpace().withResourceId(
+                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-trust-subnet")
+                        .withAddressSpace("10.1.1.0/24"))
+                    .withUnTrustSubnet(new IpAddressSpace().withResourceId(
+                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
+                        .withAddressSpace("10.1.1.0/24"))
+                    .withIpOfTrustSubnetForUdr(new IpAddress().withResourceId(
+                        "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
+                        .withAddress("10.1.1.0/24")))
+                    .withVwanConfiguration(new VwanConfiguration()
+                        .withNetworkVirtualApplianceId("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
+                        .withVHub(new IpAddressSpace().withResourceId(
+                            "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
+                            .withAddressSpace("10.1.1.0/24"))
+                        .withTrustSubnet(new IpAddressSpace().withResourceId(
+                            "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-trust-subnet")
+                            .withAddressSpace("10.1.1.0/24"))
+                        .withUnTrustSubnet(new IpAddressSpace().withResourceId(
+                            "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
+                            .withAddressSpace("10.1.1.0/24"))
+                        .withIpOfTrustSubnetForUdr(new IpAddress().withResourceId(
+                            "/subscriptions/2bf4a339-294d-4c25-b0b2-ef649e9f5c27/resourceGroups/os-liftr-integration/providers/Microsoft.Network/virtualNetworks/os-liftr-integration-vnet/subnets/os-liftr-integration-untrust-subnet")
+                            .withAddress("10.1.1.0/24")))
+                    .withNetworkType(NetworkType.VNET)
+                    .withPublicIps(Arrays.asList(new IpAddress().withResourceId(
+                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-PublicIp1")
+                        .withAddress("20.22.92.11")))
+                    .withEnableEgressNat(EgressNat.ENABLED)
+                    .withEgressNatIp(Arrays.asList(new IpAddress().withResourceId(
+                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-egressNatIp1")
+                        .withAddress("20.22.92.111")))
+                    .withTrustedRanges(Arrays.asList("20.22.92.11"))
+                    .withPrivateSourceNatRulesDestination(Arrays.asList("20.22.92.11")))
+                .withIsPanoramaManaged(BooleanEnum.TRUE)
+                .withPanoramaConfig(new PanoramaConfig().withConfigString("bas64EncodedString"))
+                .withAssociatedRulestack(new RulestackDetails().withResourceId("aaaaaaaaaa")
+                    .withRulestackId("aaaaaaaaaaaaaaaa")
+                    .withLocation("eastus"))
+                .withDnsSettings(new DnsSettings().withEnableDnsProxy(DnsProxy.DISABLED)
+                    .withEnabledDnsType(EnabledDnsType.CUSTOM)
+                    .withDnsServers(Arrays.asList(new IpAddress().withResourceId(
+                        "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-egressNatIp1")
+                        .withAddress("20.22.92.111"))))
+                .withFrontEndSettings(Arrays.asList(new FrontendSetting().withName("frontendsetting11")
+                    .withProtocol(ProtocolType.TCP)
+                    .withFrontendConfiguration(new EndpointConfiguration().withPort("80")
+                        .withAddress(new IpAddress().withResourceId(
+                            "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-frontendSettingIp1")
+                            .withAddress("20.22.91.251")))
+                    .withBackendConfiguration(new EndpointConfiguration().withPort("80")
+                        .withAddress(new IpAddress().withResourceId(
+                            "/subscriptions/01c7d41f-afaf-464e-8a8b-5c6f9f98cee8/resourceGroups/mj-liftr-integration/providers/Microsoft.Network/publicIPAddresses/mj-liftr-integration-frontendSettingIp2")
+                            .withAddress("20.22.32.136")))))
+                .withPlanData(new PlanData().withUsageType(UsageType.PAYG)
+                    .withBillingCycle(BillingCycle.WEEKLY)
+                    .withPlanId("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
+                .withMarketplaceDetails(new MarketplaceDetails().withOfferId("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    .withPublisherId("aaaa")
+                    .withMarketplaceSubscriptionStatus(MarketplaceSubscriptionStatus.PENDING_FULFILLMENT_START)))
             .apply();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();
@@ -1330,25 +1206,23 @@ public final class FirewallsUpdateSamples {
 import com.azure.resourcemanager.paloaltonetworks.ngfw.fluent.models.FqdnListGlobalRulestackResourceInner;
 import java.util.Arrays;
 
-/** Samples for FqdnListGlobalRulestack CreateOrUpdate. */
+/**
+ * Samples for FqdnListGlobalRulestack CreateOrUpdate.
+ */
 public final class FqdnListGlobalRulestackCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListGlobalRulestack_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListGlobalRulestack_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: FqdnListGlobalRulestack_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListGlobalRulestackCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .fqdnListGlobalRulestacks()
-            .createOrUpdate(
-                "praval",
-                "armid1",
-                new FqdnListGlobalRulestackResourceInner()
-                    .withDescription("string")
+        manager.fqdnListGlobalRulestacks()
+            .createOrUpdate("praval", "armid1",
+                new FqdnListGlobalRulestackResourceInner().withDescription("string")
                     .withFqdnList(Arrays.asList("string1", "string2"))
                     .withEtag("aaaaaaaaaaaaaaaaaa")
                     .withAuditComment("string"),
@@ -1356,20 +1230,17 @@ public final class FqdnListGlobalRulestackCreateOrUpdateSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListGlobalRulestack_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListGlobalRulestack_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: FqdnListGlobalRulestack_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListGlobalRulestackCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .fqdnListGlobalRulestacks()
-            .createOrUpdate(
-                "praval",
-                "armid1",
+        manager.fqdnListGlobalRulestacks()
+            .createOrUpdate("praval", "armid1",
                 new FqdnListGlobalRulestackResourceInner().withFqdnList(Arrays.asList("string1", "string2")),
                 com.azure.core.util.Context.NONE);
     }
@@ -1379,14 +1250,16 @@ public final class FqdnListGlobalRulestackCreateOrUpdateSamples {
 ### FqdnListGlobalRulestack_Delete
 
 ```java
-/** Samples for FqdnListGlobalRulestack Delete. */
+/**
+ * Samples for FqdnListGlobalRulestack Delete.
+ */
 public final class FqdnListGlobalRulestackDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListGlobalRulestack_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListGlobalRulestack_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: FqdnListGlobalRulestack_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListGlobalRulestackDeleteMaximumSetGen(
@@ -1395,11 +1268,11 @@ public final class FqdnListGlobalRulestackDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListGlobalRulestack_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListGlobalRulestack_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: FqdnListGlobalRulestack_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListGlobalRulestackDeleteMinimumSetGen(
@@ -1412,14 +1285,16 @@ public final class FqdnListGlobalRulestackDeleteSamples {
 ### FqdnListGlobalRulestack_Get
 
 ```java
-/** Samples for FqdnListGlobalRulestack Get. */
+/**
+ * Samples for FqdnListGlobalRulestack Get.
+ */
 public final class FqdnListGlobalRulestackGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListGlobalRulestack_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListGlobalRulestack_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: FqdnListGlobalRulestack_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListGlobalRulestackGetMaximumSetGen(
@@ -1428,11 +1303,11 @@ public final class FqdnListGlobalRulestackGetSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListGlobalRulestack_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListGlobalRulestack_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: FqdnListGlobalRulestack_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListGlobalRulestackGetMinimumSetGen(
@@ -1445,14 +1320,16 @@ public final class FqdnListGlobalRulestackGetSamples {
 ### FqdnListGlobalRulestack_List
 
 ```java
-/** Samples for FqdnListGlobalRulestack List. */
+/**
+ * Samples for FqdnListGlobalRulestack List.
+ */
 public final class FqdnListGlobalRulestackListSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListGlobalRulestack_List_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListGlobalRulestack_List_MinimumSet_Gen.json
      */
     /**
      * Sample code: FqdnListGlobalRulestack_List_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListGlobalRulestackListMinimumSetGen(
@@ -1461,11 +1338,11 @@ public final class FqdnListGlobalRulestackListSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListGlobalRulestack_List_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListGlobalRulestack_List_MaximumSet_Gen.json
      */
     /**
      * Sample code: FqdnListGlobalRulestack_List_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListGlobalRulestackListMaximumSetGen(
@@ -1480,20 +1357,21 @@ public final class FqdnListGlobalRulestackListSamples {
 ```java
 import java.util.Arrays;
 
-/** Samples for FqdnListLocalRulestack CreateOrUpdate. */
+/**
+ * Samples for FqdnListLocalRulestack CreateOrUpdate.
+ */
 public final class FqdnListLocalRulestackCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListLocalRulestack_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListLocalRulestack_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: FqdnListLocalRulestack_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListLocalRulestackCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .fqdnListLocalRulestacks()
+        manager.fqdnListLocalRulestacks()
             .define("armid1")
             .withExistingLocalRulestack("rgopenapi", "lrs1")
             .withFqdnList(Arrays.asList("string1", "string2"))
@@ -1504,17 +1382,16 @@ public final class FqdnListLocalRulestackCreateOrUpdateSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListLocalRulestack_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListLocalRulestack_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: FqdnListLocalRulestack_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListLocalRulestackCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .fqdnListLocalRulestacks()
+        manager.fqdnListLocalRulestacks()
             .define("armid1")
             .withExistingLocalRulestack("rgopenapi", "lrs1")
             .withFqdnList(Arrays.asList("string1", "string2"))
@@ -1526,14 +1403,16 @@ public final class FqdnListLocalRulestackCreateOrUpdateSamples {
 ### FqdnListLocalRulestack_Delete
 
 ```java
-/** Samples for FqdnListLocalRulestack Delete. */
+/**
+ * Samples for FqdnListLocalRulestack Delete.
+ */
 public final class FqdnListLocalRulestackDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListLocalRulestack_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListLocalRulestack_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: FqdnListLocalRulestack_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListLocalRulestackDeleteMinimumSetGen(
@@ -1542,11 +1421,11 @@ public final class FqdnListLocalRulestackDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListLocalRulestack_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListLocalRulestack_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: FqdnListLocalRulestack_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListLocalRulestackDeleteMaximumSetGen(
@@ -1559,35 +1438,35 @@ public final class FqdnListLocalRulestackDeleteSamples {
 ### FqdnListLocalRulestack_Get
 
 ```java
-/** Samples for FqdnListLocalRulestack Get. */
+/**
+ * Samples for FqdnListLocalRulestack Get.
+ */
 public final class FqdnListLocalRulestackGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListLocalRulestack_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListLocalRulestack_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: FqdnListLocalRulestack_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListLocalRulestackGetMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .fqdnListLocalRulestacks()
+        manager.fqdnListLocalRulestacks()
             .getWithResponse("rgopenapi", "lrs1", "armid1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListLocalRulestack_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListLocalRulestack_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: FqdnListLocalRulestack_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListLocalRulestackGetMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .fqdnListLocalRulestacks()
+        manager.fqdnListLocalRulestacks()
             .getWithResponse("rgopenapi", "lrs1", "armid1", com.azure.core.util.Context.NONE);
     }
 }
@@ -1596,14 +1475,16 @@ public final class FqdnListLocalRulestackGetSamples {
 ### FqdnListLocalRulestack_ListByLocalRulestacks
 
 ```java
-/** Samples for FqdnListLocalRulestack ListByLocalRulestacks. */
+/**
+ * Samples for FqdnListLocalRulestack ListByLocalRulestacks.
+ */
 public final class FqdnListLocalRulestackListByLocalRulestacksSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListLocalRulestack_ListByLocalRulestacks_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListLocalRulestack_ListByLocalRulestacks_MinimumSet_Gen.json
      */
     /**
      * Sample code: FqdnListLocalRulestack_ListByLocalRulestacks_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListLocalRulestackListByLocalRulestacksMinimumSetGen(
@@ -1612,11 +1493,11 @@ public final class FqdnListLocalRulestackListByLocalRulestacksSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/FqdnListLocalRulestack_ListByLocalRulestacks_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/FqdnListLocalRulestack_ListByLocalRulestacks_MaximumSet_Gen.json
      */
     /**
      * Sample code: FqdnListLocalRulestack_ListByLocalRulestacks_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void fqdnListLocalRulestackListByLocalRulestacksMaximumSetGen(
@@ -1629,14 +1510,16 @@ public final class FqdnListLocalRulestackListByLocalRulestacksSamples {
 ### GlobalRulestack_Commit
 
 ```java
-/** Samples for GlobalRulestack Commit. */
+/**
+ * Samples for GlobalRulestack Commit.
+ */
 public final class GlobalRulestackCommitSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_commit_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_commit_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_commit_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackCommitMaximumSetGen(
@@ -1645,11 +1528,11 @@ public final class GlobalRulestackCommitSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_commit_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_commit_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_commit_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackCommitMinimumSetGen(
@@ -1673,49 +1556,42 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for GlobalRulestack CreateOrUpdate. */
+/**
+ * Samples for GlobalRulestack CreateOrUpdate.
+ */
 public final class GlobalRulestackCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
-            .createOrUpdate(
-                "praval", new GlobalRulestackResourceInner().withLocation("eastus"), com.azure.core.util.Context.NONE);
+        manager.globalRulestacks()
+            .createOrUpdate("praval", new GlobalRulestackResourceInner().withLocation("eastus"),
+                com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
-            .createOrUpdate(
-                "praval",
-                new GlobalRulestackResourceInner()
-                    .withLocation("eastus")
-                    .withIdentity(
-                        new AzureResourceManagerManagedIdentityProperties()
-                            .withType(ManagedIdentityType.NONE)
-                            .withUserAssignedIdentities(
-                                mapOf(
-                                    "key16",
-                                    new AzureResourceManagerUserAssignedIdentity()
-                                        .withClientId("aaaa")
-                                        .withPrincipalId("aaaaaaaaaaaaaaa"))))
+        manager.globalRulestacks()
+            .createOrUpdate("praval",
+                new GlobalRulestackResourceInner().withLocation("eastus")
+                    .withIdentity(new AzureResourceManagerManagedIdentityProperties().withType(ManagedIdentityType.NONE)
+                        .withUserAssignedIdentities(mapOf("key16",
+                            new AzureResourceManagerUserAssignedIdentity().withClientId("aaaa")
+                                .withPrincipalId("aaaaaaaaaaaaaaa"))))
                     .withPanEtag("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
                     .withPanLocation("eastus")
                     .withScope(ScopeType.GLOBAL)
@@ -1723,19 +1599,18 @@ public final class GlobalRulestackCreateOrUpdateSamples {
                     .withDescription("global rulestacks")
                     .withDefaultMode(DefaultMode.IPS)
                     .withMinAppIdVersion("8.5.3")
-                    .withSecurityServices(
-                        new SecurityServices()
-                            .withVulnerabilityProfile("default")
-                            .withAntiSpywareProfile("default")
-                            .withAntiVirusProfile("default")
-                            .withUrlFilteringProfile("default")
-                            .withFileBlockingProfile("default")
-                            .withDnsSubscription("default")
-                            .withOutboundUnTrustCertificate("default")
-                            .withOutboundTrustCertificate("default")),
+                    .withSecurityServices(new SecurityServices().withVulnerabilityProfile("default")
+                        .withAntiSpywareProfile("default")
+                        .withAntiVirusProfile("default")
+                        .withUrlFilteringProfile("default")
+                        .withFileBlockingProfile("default")
+                        .withDnsSubscription("default")
+                        .withOutboundUnTrustCertificate("default")
+                        .withOutboundTrustCertificate("default")),
                 com.azure.core.util.Context.NONE);
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();
@@ -1752,14 +1627,16 @@ public final class GlobalRulestackCreateOrUpdateSamples {
 ### GlobalRulestack_Delete
 
 ```java
-/** Samples for GlobalRulestack Delete. */
+/**
+ * Samples for GlobalRulestack Delete.
+ */
 public final class GlobalRulestackDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackDeleteMaximumSetGen(
@@ -1768,11 +1645,11 @@ public final class GlobalRulestackDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackDeleteMinimumSetGen(
@@ -1785,14 +1662,16 @@ public final class GlobalRulestackDeleteSamples {
 ### GlobalRulestack_Get
 
 ```java
-/** Samples for GlobalRulestack Get. */
+/**
+ * Samples for GlobalRulestack Get.
+ */
 public final class GlobalRulestackGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackGetMinimumSetGen(
@@ -1801,11 +1680,11 @@ public final class GlobalRulestackGetSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackGetMaximumSetGen(
@@ -1818,14 +1697,16 @@ public final class GlobalRulestackGetSamples {
 ### GlobalRulestack_GetChangeLog
 
 ```java
-/** Samples for GlobalRulestack GetChangeLog. */
+/**
+ * Samples for GlobalRulestack GetChangeLog.
+ */
 public final class GlobalRulestackGetChangeLogSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_getChangeLog_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_getChangeLog_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_getChangeLog_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackGetChangeLogMinimumSetGen(
@@ -1834,11 +1715,11 @@ public final class GlobalRulestackGetChangeLogSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_getChangeLog_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_getChangeLog_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_getChangeLog_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackGetChangeLogMaximumSetGen(
@@ -1851,14 +1732,16 @@ public final class GlobalRulestackGetChangeLogSamples {
 ### GlobalRulestack_List
 
 ```java
-/** Samples for GlobalRulestack List. */
+/**
+ * Samples for GlobalRulestack List.
+ */
 public final class GlobalRulestackListSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_List_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_List_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_List_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListMinimumSetGen(
@@ -1867,11 +1750,11 @@ public final class GlobalRulestackListSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_List_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_List_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_List_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListMaximumSetGen(
@@ -1886,46 +1769,38 @@ public final class GlobalRulestackListSamples {
 ```java
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.AdvSecurityObjectTypeEnum;
 
-/** Samples for GlobalRulestack ListAdvancedSecurityObjects. */
+/**
+ * Samples for GlobalRulestack ListAdvancedSecurityObjects.
+ */
 public final class GlobalRulestackListAdvancedSecurityObjectsSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listAdvancedSecurityObjects_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listAdvancedSecurityObjects_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listAdvancedSecurityObjects_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListAdvancedSecurityObjectsMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
-            .listAdvancedSecurityObjectsWithResponse(
-                "praval",
-                AdvSecurityObjectTypeEnum.fromString("globalRulestacks"),
-                "a6a321",
-                20,
-                com.azure.core.util.Context.NONE);
+        manager.globalRulestacks()
+            .listAdvancedSecurityObjectsWithResponse("praval", AdvSecurityObjectTypeEnum.fromString("globalRulestacks"),
+                "a6a321", 20, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listAdvancedSecurityObjects_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listAdvancedSecurityObjects_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listAdvancedSecurityObjects_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListAdvancedSecurityObjectsMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
-            .listAdvancedSecurityObjectsWithResponse(
-                "praval",
-                AdvSecurityObjectTypeEnum.fromString("globalRulestacks"),
-                null,
-                null,
-                com.azure.core.util.Context.NONE);
+        manager.globalRulestacks()
+            .listAdvancedSecurityObjectsWithResponse("praval", AdvSecurityObjectTypeEnum.fromString("globalRulestacks"),
+                null, null, com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -1933,35 +1808,35 @@ public final class GlobalRulestackListAdvancedSecurityObjectsSamples {
 ### GlobalRulestack_ListAppIds
 
 ```java
-/** Samples for GlobalRulestack ListAppIds. */
+/**
+ * Samples for GlobalRulestack ListAppIds.
+ */
 public final class GlobalRulestackListAppIdsSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listAppIds_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listAppIds_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listAppIds_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListAppIdsMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
+        manager.globalRulestacks()
             .listAppIdsWithResponse("praval", "8543", "pref", "a6a321", 20, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listAppIds_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listAppIds_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listAppIds_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListAppIdsMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
+        manager.globalRulestacks()
             .listAppIdsWithResponse("praval", null, null, null, null, com.azure.core.util.Context.NONE);
     }
 }
@@ -1970,14 +1845,16 @@ public final class GlobalRulestackListAppIdsSamples {
 ### GlobalRulestack_ListCountries
 
 ```java
-/** Samples for GlobalRulestack ListCountries. */
+/**
+ * Samples for GlobalRulestack ListCountries.
+ */
 public final class GlobalRulestackListCountriesSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listCountries_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listCountries_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listCountries_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListCountriesMinimumSetGen(
@@ -1986,11 +1863,11 @@ public final class GlobalRulestackListCountriesSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listCountries_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listCountries_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listCountries_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListCountriesMaximumSetGen(
@@ -2003,14 +1880,16 @@ public final class GlobalRulestackListCountriesSamples {
 ### GlobalRulestack_ListFirewalls
 
 ```java
-/** Samples for GlobalRulestack ListFirewalls. */
+/**
+ * Samples for GlobalRulestack ListFirewalls.
+ */
 public final class GlobalRulestackListFirewallsSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listFirewalls_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listFirewalls_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listFirewalls_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListFirewallsMaximumSetGen(
@@ -2019,11 +1898,11 @@ public final class GlobalRulestackListFirewallsSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listFirewalls_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listFirewalls_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listFirewalls_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListFirewallsMinimumSetGen(
@@ -2036,35 +1915,35 @@ public final class GlobalRulestackListFirewallsSamples {
 ### GlobalRulestack_ListPredefinedUrlCategories
 
 ```java
-/** Samples for GlobalRulestack ListPredefinedUrlCategories. */
+/**
+ * Samples for GlobalRulestack ListPredefinedUrlCategories.
+ */
 public final class GlobalRulestackListPredefinedUrlCategoriesSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listPredefinedUrlCategories_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listPredefinedUrlCategories_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listPredefinedUrlCategories_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListPredefinedUrlCategoriesMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
+        manager.globalRulestacks()
             .listPredefinedUrlCategoriesWithResponse("praval", "a6a321", 20, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listPredefinedUrlCategories_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listPredefinedUrlCategories_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listPredefinedUrlCategories_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListPredefinedUrlCategoriesMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
+        manager.globalRulestacks()
             .listPredefinedUrlCategoriesWithResponse("praval", null, null, com.azure.core.util.Context.NONE);
     }
 }
@@ -2075,46 +1954,38 @@ public final class GlobalRulestackListPredefinedUrlCategoriesSamples {
 ```java
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.SecurityServicesTypeEnum;
 
-/** Samples for GlobalRulestack ListSecurityServices. */
+/**
+ * Samples for GlobalRulestack ListSecurityServices.
+ */
 public final class GlobalRulestackListSecurityServicesSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listSecurityServices_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listSecurityServices_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listSecurityServices_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListSecurityServicesMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
-            .listSecurityServicesWithResponse(
-                "praval",
-                SecurityServicesTypeEnum.fromString("globalRulestacks"),
-                null,
-                null,
-                com.azure.core.util.Context.NONE);
+        manager.globalRulestacks()
+            .listSecurityServicesWithResponse("praval", SecurityServicesTypeEnum.fromString("globalRulestacks"), null,
+                null, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_listSecurityServices_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_listSecurityServices_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_listSecurityServices_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackListSecurityServicesMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
-            .listSecurityServicesWithResponse(
-                "praval",
-                SecurityServicesTypeEnum.fromString("globalRulestacks"),
-                "a6a321",
-                20,
-                com.azure.core.util.Context.NONE);
+        manager.globalRulestacks()
+            .listSecurityServicesWithResponse("praval", SecurityServicesTypeEnum.fromString("globalRulestacks"),
+                "a6a321", 20, com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -2122,14 +1993,16 @@ public final class GlobalRulestackListSecurityServicesSamples {
 ### GlobalRulestack_Revert
 
 ```java
-/** Samples for GlobalRulestack Revert. */
+/**
+ * Samples for GlobalRulestack Revert.
+ */
 public final class GlobalRulestackRevertSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_revert_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_revert_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_revert_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackRevertMinimumSetGen(
@@ -2138,11 +2011,11 @@ public final class GlobalRulestackRevertSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_revert_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_revert_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_revert_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackRevertMaximumSetGen(
@@ -2167,70 +2040,60 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for GlobalRulestack Update. */
+/**
+ * Samples for GlobalRulestack Update.
+ */
 public final class GlobalRulestackUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_Update_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_Update_MaximumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_Update_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
-            .updateWithResponse(
-                "praval",
-                new GlobalRulestackResourceUpdate()
-                    .withLocation("eastus")
-                    .withIdentity(
-                        new AzureResourceManagerManagedIdentityProperties()
-                            .withType(ManagedIdentityType.NONE)
-                            .withUserAssignedIdentities(
-                                mapOf(
-                                    "key16",
-                                    new AzureResourceManagerUserAssignedIdentity()
-                                        .withClientId("aaaa")
-                                        .withPrincipalId("aaaaaaaaaaaaaaa"))))
-                    .withProperties(
-                        new GlobalRulestackResourceUpdateProperties()
-                            .withPanEtag("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
-                            .withPanLocation("eastus")
-                            .withScope(ScopeType.GLOBAL)
-                            .withAssociatedSubscriptions(Arrays.asList("2bf4a339-294d-4c25-b0b2-ef649e9f5c27"))
-                            .withDescription("global rulestacks")
-                            .withDefaultMode(DefaultMode.IPS)
-                            .withMinAppIdVersion("8.5.3")
-                            .withSecurityServices(
-                                new SecurityServices()
-                                    .withVulnerabilityProfile("default")
-                                    .withAntiSpywareProfile("default")
-                                    .withAntiVirusProfile("default")
-                                    .withUrlFilteringProfile("default")
-                                    .withFileBlockingProfile("default")
-                                    .withDnsSubscription("default")
-                                    .withOutboundUnTrustCertificate("default")
-                                    .withOutboundTrustCertificate("default"))),
+        manager.globalRulestacks()
+            .updateWithResponse("praval", new GlobalRulestackResourceUpdate().withLocation("eastus")
+                .withIdentity(new AzureResourceManagerManagedIdentityProperties().withType(ManagedIdentityType.NONE)
+                    .withUserAssignedIdentities(mapOf("key16",
+                        new AzureResourceManagerUserAssignedIdentity().withClientId("aaaa")
+                            .withPrincipalId("aaaaaaaaaaaaaaa"))))
+                .withProperties(
+                    new GlobalRulestackResourceUpdateProperties().withPanEtag("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
+                        .withPanLocation("eastus")
+                        .withScope(ScopeType.GLOBAL)
+                        .withAssociatedSubscriptions(Arrays.asList("2bf4a339-294d-4c25-b0b2-ef649e9f5c27"))
+                        .withDescription("global rulestacks")
+                        .withDefaultMode(DefaultMode.IPS)
+                        .withMinAppIdVersion("8.5.3")
+                        .withSecurityServices(new SecurityServices().withVulnerabilityProfile("default")
+                            .withAntiSpywareProfile("default")
+                            .withAntiVirusProfile("default")
+                            .withUrlFilteringProfile("default")
+                            .withFileBlockingProfile("default")
+                            .withDnsSubscription("default")
+                            .withOutboundUnTrustCertificate("default")
+                            .withOutboundTrustCertificate("default"))),
                 com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/GlobalRulestack_Update_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/GlobalRulestack_Update_MinimumSet_Gen.json
      */
     /**
      * Sample code: GlobalRulestack_Update_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void globalRulestackUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .globalRulestacks()
+        manager.globalRulestacks()
             .updateWithResponse("praval", new GlobalRulestackResourceUpdate(), com.azure.core.util.Context.NONE);
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();
@@ -2257,20 +2120,21 @@ import com.azure.resourcemanager.paloaltonetworks.ngfw.models.StateEnum;
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.TagInfo;
 import java.util.Arrays;
 
-/** Samples for LocalRules CreateOrUpdate. */
+/**
+ * Samples for LocalRules CreateOrUpdate.
+ */
 public final class LocalRulesCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRules()
+        manager.localRules()
             .define("1")
             .withExistingLocalRulestack("firewall-rg", "lrs1")
             .withRuleName("localRule1")
@@ -2278,17 +2142,16 @@ public final class LocalRulesCreateOrUpdateSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRules()
+        manager.localRules()
             .define("1")
             .withExistingLocalRulestack("firewall-rg", "lrs1")
             .withRuleName("localRule1")
@@ -2296,20 +2159,16 @@ public final class LocalRulesCreateOrUpdateSamples {
             .withEtag("c18e6eef-ba3e-49ee-8a85-2b36c863a9d0")
             .withDescription("description of local rule")
             .withRuleState(StateEnum.DISABLED)
-            .withSource(
-                new SourceAddr()
-                    .withCidrs(Arrays.asList("1.0.0.1/10"))
-                    .withCountries(Arrays.asList("India"))
-                    .withFeeds(Arrays.asList("feed"))
-                    .withPrefixLists(Arrays.asList("PL1")))
+            .withSource(new SourceAddr().withCidrs(Arrays.asList("1.0.0.1/10"))
+                .withCountries(Arrays.asList("India"))
+                .withFeeds(Arrays.asList("feed"))
+                .withPrefixLists(Arrays.asList("PL1")))
             .withNegateSource(BooleanEnum.TRUE)
-            .withDestination(
-                new DestinationAddr()
-                    .withCidrs(Arrays.asList("1.0.0.1/10"))
-                    .withCountries(Arrays.asList("India"))
-                    .withFeeds(Arrays.asList("feed"))
-                    .withPrefixLists(Arrays.asList("PL1"))
-                    .withFqdnLists(Arrays.asList("FQDN1")))
+            .withDestination(new DestinationAddr().withCidrs(Arrays.asList("1.0.0.1/10"))
+                .withCountries(Arrays.asList("India"))
+                .withFeeds(Arrays.asList("feed"))
+                .withPrefixLists(Arrays.asList("PL1"))
+                .withFqdnLists(Arrays.asList("FQDN1")))
             .withNegateDestination(BooleanEnum.TRUE)
             .withApplications(Arrays.asList("app1"))
             .withCategory(
@@ -2329,14 +2188,16 @@ public final class LocalRulesCreateOrUpdateSamples {
 ### LocalRules_Delete
 
 ```java
-/** Samples for LocalRules Delete. */
+/**
+ * Samples for LocalRules Delete.
+ */
 public final class LocalRulesDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesDeleteMaximumSetGen(
@@ -2345,11 +2206,11 @@ public final class LocalRulesDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesDeleteMinimumSetGen(
@@ -2362,14 +2223,16 @@ public final class LocalRulesDeleteSamples {
 ### LocalRules_Get
 
 ```java
-/** Samples for LocalRules Get. */
+/**
+ * Samples for LocalRules Get.
+ */
 public final class LocalRulesGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesGetMaximumSetGen(
@@ -2378,11 +2241,11 @@ public final class LocalRulesGetSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesGetMinimumSetGen(
@@ -2395,35 +2258,35 @@ public final class LocalRulesGetSamples {
 ### LocalRules_GetCounters
 
 ```java
-/** Samples for LocalRules GetCounters. */
+/**
+ * Samples for LocalRules GetCounters.
+ */
 public final class LocalRulesGetCountersSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_getCounters_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_getCounters_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_getCounters_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesGetCountersMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRules()
+        manager.localRules()
             .getCountersWithResponse("firewall-rg", "lrs1", "1", "firewall1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_getCounters_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_getCounters_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_getCounters_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesGetCountersMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRules()
+        manager.localRules()
             .getCountersWithResponse("firewall-rg", "lrs1", "1", null, com.azure.core.util.Context.NONE);
     }
 }
@@ -2432,14 +2295,16 @@ public final class LocalRulesGetCountersSamples {
 ### LocalRules_ListByLocalRulestacks
 
 ```java
-/** Samples for LocalRules ListByLocalRulestacks. */
+/**
+ * Samples for LocalRules ListByLocalRulestacks.
+ */
 public final class LocalRulesListByLocalRulestacksSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_ListByLocalRulestacks_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_ListByLocalRulestacks_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_ListByLocalRulestacks_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesListByLocalRulestacksMinimumSetGen(
@@ -2448,11 +2313,11 @@ public final class LocalRulesListByLocalRulestacksSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_ListByLocalRulestacks_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_ListByLocalRulestacks_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_ListByLocalRulestacks_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesListByLocalRulestacksMaximumSetGen(
@@ -2465,35 +2330,35 @@ public final class LocalRulesListByLocalRulestacksSamples {
 ### LocalRules_RefreshCounters
 
 ```java
-/** Samples for LocalRules RefreshCounters. */
+/**
+ * Samples for LocalRules RefreshCounters.
+ */
 public final class LocalRulesRefreshCountersSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_refreshCounters_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_refreshCounters_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_refreshCounters_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesRefreshCountersMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRules()
+        manager.localRules()
             .refreshCountersWithResponse("firewall-rg", "lrs1", "1", null, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_refreshCounters_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_refreshCounters_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_refreshCounters_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesRefreshCountersMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRules()
+        manager.localRules()
             .refreshCountersWithResponse("firewall-rg", "lrs1", "1", "firewall1", com.azure.core.util.Context.NONE);
     }
 }
@@ -2502,35 +2367,35 @@ public final class LocalRulesRefreshCountersSamples {
 ### LocalRules_ResetCounters
 
 ```java
-/** Samples for LocalRules ResetCounters. */
+/**
+ * Samples for LocalRules ResetCounters.
+ */
 public final class LocalRulesResetCountersSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_resetCounters_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_resetCounters_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_resetCounters_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesResetCountersMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRules()
+        manager.localRules()
             .resetCountersWithResponse("firewall-rg", "lrs1", "1", "firewall1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRules_resetCounters_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRules_resetCounters_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRules_resetCounters_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulesResetCountersMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRules()
+        manager.localRules()
             .resetCountersWithResponse("firewall-rg", "lrs1", "1", null, com.azure.core.util.Context.NONE);
     }
 }
@@ -2539,14 +2404,16 @@ public final class LocalRulesResetCountersSamples {
 ### LocalRulestacks_Commit
 
 ```java
-/** Samples for LocalRulestacks Commit. */
+/**
+ * Samples for LocalRulestacks Commit.
+ */
 public final class LocalRulestacksCommitSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_commit_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_commit_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_commit_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksCommitMinimumSetGen(
@@ -2555,11 +2422,11 @@ public final class LocalRulestacksCommitSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_commit_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_commit_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_commit_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksCommitMaximumSetGen(
@@ -2582,14 +2449,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for LocalRulestacks CreateOrUpdate. */
+/**
+ * Samples for LocalRulestacks CreateOrUpdate.
+ */
 public final class LocalRulestacksCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksCreateOrUpdateMinimumSetGen(
@@ -2598,30 +2467,24 @@ public final class LocalRulestacksCreateOrUpdateSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
+        manager.localRulestacks()
             .define("lrs1")
             .withRegion("eastus")
             .withExistingResourceGroup("rgopenapi")
             .withTags(mapOf("tagName", "value"))
-            .withIdentity(
-                new AzureResourceManagerManagedIdentityProperties()
-                    .withType(ManagedIdentityType.NONE)
-                    .withUserAssignedIdentities(
-                        mapOf(
-                            "key16",
-                            new AzureResourceManagerUserAssignedIdentity()
-                                .withClientId("aaaa")
-                                .withPrincipalId("aaaaaaaaaaaaaaa"))))
+            .withIdentity(new AzureResourceManagerManagedIdentityProperties().withType(ManagedIdentityType.NONE)
+                .withUserAssignedIdentities(mapOf("key16",
+                    new AzureResourceManagerUserAssignedIdentity().withClientId("aaaa")
+                        .withPrincipalId("aaaaaaaaaaaaaaa"))))
             .withPanEtag("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
             .withPanLocation("eastus")
             .withScope(ScopeType.LOCAL)
@@ -2629,19 +2492,18 @@ public final class LocalRulestacksCreateOrUpdateSamples {
             .withDescription("local rulestacks")
             .withDefaultMode(DefaultMode.IPS)
             .withMinAppIdVersion("8.5.3")
-            .withSecurityServices(
-                new SecurityServices()
-                    .withVulnerabilityProfile("default")
-                    .withAntiSpywareProfile("default")
-                    .withAntiVirusProfile("default")
-                    .withUrlFilteringProfile("default")
-                    .withFileBlockingProfile("default")
-                    .withDnsSubscription("default")
-                    .withOutboundUnTrustCertificate("default")
-                    .withOutboundTrustCertificate("default"))
+            .withSecurityServices(new SecurityServices().withVulnerabilityProfile("default")
+                .withAntiSpywareProfile("default")
+                .withAntiVirusProfile("default")
+                .withUrlFilteringProfile("default")
+                .withFileBlockingProfile("default")
+                .withDnsSubscription("default")
+                .withOutboundUnTrustCertificate("default")
+                .withOutboundTrustCertificate("default"))
             .create();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();
@@ -2658,14 +2520,16 @@ public final class LocalRulestacksCreateOrUpdateSamples {
 ### LocalRulestacks_Delete
 
 ```java
-/** Samples for LocalRulestacks Delete. */
+/**
+ * Samples for LocalRulestacks Delete.
+ */
 public final class LocalRulestacksDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksDeleteMaximumSetGen(
@@ -2674,11 +2538,11 @@ public final class LocalRulestacksDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksDeleteMinimumSetGen(
@@ -2691,14 +2555,16 @@ public final class LocalRulestacksDeleteSamples {
 ### LocalRulestacks_GetByResourceGroup
 
 ```java
-/** Samples for LocalRulestacks GetByResourceGroup. */
+/**
+ * Samples for LocalRulestacks GetByResourceGroup.
+ */
 public final class LocalRulestacksGetByResourceGroupSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksGetMaximumSetGen(
@@ -2707,11 +2573,11 @@ public final class LocalRulestacksGetByResourceGroupSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksGetMinimumSetGen(
@@ -2724,14 +2590,16 @@ public final class LocalRulestacksGetByResourceGroupSamples {
 ### LocalRulestacks_GetChangeLog
 
 ```java
-/** Samples for LocalRulestacks GetChangeLog. */
+/**
+ * Samples for LocalRulestacks GetChangeLog.
+ */
 public final class LocalRulestacksGetChangeLogSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_getChangeLog_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_getChangeLog_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_getChangeLog_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksGetChangeLogMinimumSetGen(
@@ -2740,11 +2608,11 @@ public final class LocalRulestacksGetChangeLogSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_getChangeLog_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_getChangeLog_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_getChangeLog_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksGetChangeLogMaximumSetGen(
@@ -2757,35 +2625,35 @@ public final class LocalRulestacksGetChangeLogSamples {
 ### LocalRulestacks_GetSupportInfo
 
 ```java
-/** Samples for LocalRulestacks GetSupportInfo. */
+/**
+ * Samples for LocalRulestacks GetSupportInfo.
+ */
 public final class LocalRulestacksGetSupportInfoSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_getSupportInfo_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_getSupportInfo_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_getSupportInfo_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksGetSupportInfoMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
+        manager.localRulestacks()
             .getSupportInfoWithResponse("rgopenapi", "lrs1", null, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_getSupportInfo_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_getSupportInfo_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_getSupportInfo_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksGetSupportInfoMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
+        manager.localRulestacks()
             .getSupportInfoWithResponse("rgopenapi", "lrs1", "user1@domain.com", com.azure.core.util.Context.NONE);
     }
 }
@@ -2794,14 +2662,16 @@ public final class LocalRulestacksGetSupportInfoSamples {
 ### LocalRulestacks_List
 
 ```java
-/** Samples for LocalRulestacks List. */
+/**
+ * Samples for LocalRulestacks List.
+ */
 public final class LocalRulestacksListSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_ListBySubscription_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_ListBySubscription_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_ListBySubscription_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListBySubscriptionMaximumSetGen(
@@ -2810,11 +2680,11 @@ public final class LocalRulestacksListSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_ListBySubscription_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_ListBySubscription_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_ListBySubscription_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListBySubscriptionMinimumSetGen(
@@ -2829,48 +2699,39 @@ public final class LocalRulestacksListSamples {
 ```java
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.AdvSecurityObjectTypeEnum;
 
-/** Samples for LocalRulestacks ListAdvancedSecurityObjects. */
+/**
+ * Samples for LocalRulestacks ListAdvancedSecurityObjects.
+ */
 public final class LocalRulestacksListAdvancedSecurityObjectsSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listAdvancedSecurityObjects_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listAdvancedSecurityObjects_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listAdvancedSecurityObjects_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListAdvancedSecurityObjectsMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
-            .listAdvancedSecurityObjectsWithResponse(
-                "rgopenapi",
-                "lrs1",
-                AdvSecurityObjectTypeEnum.fromString("localRulestacks"),
-                "a6a321",
-                20,
+        manager.localRulestacks()
+            .listAdvancedSecurityObjectsWithResponse("rgopenapi", "lrs1",
+                AdvSecurityObjectTypeEnum.fromString("localRulestacks"), "a6a321", 20,
                 com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listAdvancedSecurityObjects_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listAdvancedSecurityObjects_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listAdvancedSecurityObjects_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListAdvancedSecurityObjectsMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
-            .listAdvancedSecurityObjectsWithResponse(
-                "rgopenapi",
-                "lrs1",
-                AdvSecurityObjectTypeEnum.fromString("localRulestacks"),
-                null,
-                null,
-                com.azure.core.util.Context.NONE);
+        manager.localRulestacks()
+            .listAdvancedSecurityObjectsWithResponse("rgopenapi", "lrs1",
+                AdvSecurityObjectTypeEnum.fromString("localRulestacks"), null, null, com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -2878,37 +2739,36 @@ public final class LocalRulestacksListAdvancedSecurityObjectsSamples {
 ### LocalRulestacks_ListAppIds
 
 ```java
-/** Samples for LocalRulestacks ListAppIds. */
+/**
+ * Samples for LocalRulestacks ListAppIds.
+ */
 public final class LocalRulestacksListAppIdsSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listAppIds_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listAppIds_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listAppIds_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListAppIdsMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
-            .listAppIdsWithResponse(
-                "rgopenapi", "lrs1", "8543", "pref", "a6a321", 20, com.azure.core.util.Context.NONE);
+        manager.localRulestacks()
+            .listAppIds("rgopenapi", "lrs1", "8543", "pref", "a6a321", 20, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listAppIds_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listAppIds_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listAppIds_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListAppIdsMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
-            .listAppIdsWithResponse("rgopenapi", "lrs1", null, null, null, null, com.azure.core.util.Context.NONE);
+        manager.localRulestacks()
+            .listAppIds("rgopenapi", "lrs1", null, null, null, null, com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -2916,14 +2776,16 @@ public final class LocalRulestacksListAppIdsSamples {
 ### LocalRulestacks_ListByResourceGroup
 
 ```java
-/** Samples for LocalRulestacks ListByResourceGroup. */
+/**
+ * Samples for LocalRulestacks ListByResourceGroup.
+ */
 public final class LocalRulestacksListByResourceGroupSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_ListByResourceGroup_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_ListByResourceGroup_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_ListByResourceGroup_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListByResourceGroupMaximumSetGen(
@@ -2932,11 +2794,11 @@ public final class LocalRulestacksListByResourceGroupSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_ListByResourceGroup_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_ListByResourceGroup_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_ListByResourceGroup_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListByResourceGroupMinimumSetGen(
@@ -2949,36 +2811,34 @@ public final class LocalRulestacksListByResourceGroupSamples {
 ### LocalRulestacks_ListCountries
 
 ```java
-/** Samples for LocalRulestacks ListCountries. */
+/**
+ * Samples for LocalRulestacks ListCountries.
+ */
 public final class LocalRulestacksListCountriesSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listCountries_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listCountries_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listCountries_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListCountriesMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
-            .listCountriesWithResponse("rgopenapi", "lrs1", "a6a321", 20, com.azure.core.util.Context.NONE);
+        manager.localRulestacks().listCountries("rgopenapi", "lrs1", "a6a321", 20, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listCountries_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listCountries_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listCountries_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListCountriesMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
-            .listCountriesWithResponse("rgopenapi", "lrs1", null, null, com.azure.core.util.Context.NONE);
+        manager.localRulestacks().listCountries("rgopenapi", "lrs1", null, null, com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -2986,14 +2846,16 @@ public final class LocalRulestacksListCountriesSamples {
 ### LocalRulestacks_ListFirewalls
 
 ```java
-/** Samples for LocalRulestacks ListFirewalls. */
+/**
+ * Samples for LocalRulestacks ListFirewalls.
+ */
 public final class LocalRulestacksListFirewallsSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listFirewalls_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listFirewalls_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listFirewalls_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListFirewallsMinimumSetGen(
@@ -3002,11 +2864,11 @@ public final class LocalRulestacksListFirewallsSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listFirewalls_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listFirewalls_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listFirewalls_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListFirewallsMaximumSetGen(
@@ -3019,37 +2881,36 @@ public final class LocalRulestacksListFirewallsSamples {
 ### LocalRulestacks_ListPredefinedUrlCategories
 
 ```java
-/** Samples for LocalRulestacks ListPredefinedUrlCategories. */
+/**
+ * Samples for LocalRulestacks ListPredefinedUrlCategories.
+ */
 public final class LocalRulestacksListPredefinedUrlCategoriesSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listPredefinedUrlCategories_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listPredefinedUrlCategories_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listPredefinedUrlCategories_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListPredefinedUrlCategoriesMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
-            .listPredefinedUrlCategoriesWithResponse("rgopenapi", "lrs1", null, null, com.azure.core.util.Context.NONE);
+        manager.localRulestacks()
+            .listPredefinedUrlCategories("rgopenapi", "lrs1", null, null, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listPredefinedUrlCategories_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listPredefinedUrlCategories_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listPredefinedUrlCategories_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListPredefinedUrlCategoriesMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
-            .listPredefinedUrlCategoriesWithResponse(
-                "rgopenapi", "lrs1", "a6a321", 20, com.azure.core.util.Context.NONE);
+        manager.localRulestacks()
+            .listPredefinedUrlCategories("rgopenapi", "lrs1", "a6a321", 20, com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -3059,48 +2920,38 @@ public final class LocalRulestacksListPredefinedUrlCategoriesSamples {
 ```java
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.SecurityServicesTypeEnum;
 
-/** Samples for LocalRulestacks ListSecurityServices. */
+/**
+ * Samples for LocalRulestacks ListSecurityServices.
+ */
 public final class LocalRulestacksListSecurityServicesSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listSecurityServices_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listSecurityServices_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listSecurityServices_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListSecurityServicesMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
-            .listSecurityServicesWithResponse(
-                "rgopenapi",
-                "lrs1",
-                SecurityServicesTypeEnum.fromString("localRulestacks"),
-                null,
-                null,
-                com.azure.core.util.Context.NONE);
+        manager.localRulestacks()
+            .listSecurityServicesWithResponse("rgopenapi", "lrs1",
+                SecurityServicesTypeEnum.fromString("localRulestacks"), null, null, com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_listSecurityServices_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_listSecurityServices_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_listSecurityServices_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksListSecurityServicesMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .localRulestacks()
-            .listSecurityServicesWithResponse(
-                "rgopenapi",
-                "lrs1",
-                SecurityServicesTypeEnum.fromString("localRulestacks"),
-                "a6a321",
-                20,
-                com.azure.core.util.Context.NONE);
+        manager.localRulestacks()
+            .listSecurityServicesWithResponse("rgopenapi", "lrs1",
+                SecurityServicesTypeEnum.fromString("localRulestacks"), "a6a321", 20, com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -3108,14 +2959,16 @@ public final class LocalRulestacksListSecurityServicesSamples {
 ### LocalRulestacks_Revert
 
 ```java
-/** Samples for LocalRulestacks Revert. */
+/**
+ * Samples for LocalRulestacks Revert.
+ */
 public final class LocalRulestacksRevertSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_revert_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_revert_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_revert_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksRevertMaximumSetGen(
@@ -3124,11 +2977,11 @@ public final class LocalRulestacksRevertSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_revert_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_revert_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_revert_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksRevertMinimumSetGen(
@@ -3153,75 +3006,65 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for LocalRulestacks Update. */
+/**
+ * Samples for LocalRulestacks Update.
+ */
 public final class LocalRulestacksUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_Update_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_Update_MaximumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_Update_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        LocalRulestackResource resource =
-            manager
-                .localRulestacks()
-                .getByResourceGroupWithResponse("rgopenapi", "lrs1", com.azure.core.util.Context.NONE)
-                .getValue();
-        resource
-            .update()
+        LocalRulestackResource resource = manager.localRulestacks()
+            .getByResourceGroupWithResponse("rgopenapi", "lrs1", com.azure.core.util.Context.NONE)
+            .getValue();
+        resource.update()
             .withTags(mapOf("tagName", "value"))
-            .withIdentity(
-                new AzureResourceManagerManagedIdentityProperties()
-                    .withType(ManagedIdentityType.NONE)
-                    .withUserAssignedIdentities(
-                        mapOf(
-                            "key16",
-                            new AzureResourceManagerUserAssignedIdentity()
-                                .withClientId("aaaa")
-                                .withPrincipalId("aaaaaaaaaaaaaaa"))))
+            .withIdentity(new AzureResourceManagerManagedIdentityProperties().withType(ManagedIdentityType.NONE)
+                .withUserAssignedIdentities(mapOf("key16",
+                    new AzureResourceManagerUserAssignedIdentity().withClientId("aaaa")
+                        .withPrincipalId("aaaaaaaaaaaaaaa"))))
             .withProperties(
-                new LocalRulestackResourceUpdateProperties()
-                    .withPanEtag("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
+                new LocalRulestackResourceUpdateProperties().withPanEtag("2bf4a339-294d-4c25-b0b2-ef649e9f5c12")
                     .withPanLocation("eastus")
                     .withScope(ScopeType.LOCAL)
                     .withAssociatedSubscriptions(Arrays.asList("2bf4a339-294d-4c25-b0b2-ef649e9f5c27"))
                     .withDescription("local rulestacks")
                     .withDefaultMode(DefaultMode.IPS)
                     .withMinAppIdVersion("8.5.3")
-                    .withSecurityServices(
-                        new SecurityServices()
-                            .withVulnerabilityProfile("default")
-                            .withAntiSpywareProfile("default")
-                            .withAntiVirusProfile("default")
-                            .withUrlFilteringProfile("default")
-                            .withFileBlockingProfile("default")
-                            .withDnsSubscription("default")
-                            .withOutboundUnTrustCertificate("default")
-                            .withOutboundTrustCertificate("default")))
+                    .withSecurityServices(new SecurityServices().withVulnerabilityProfile("default")
+                        .withAntiSpywareProfile("default")
+                        .withAntiVirusProfile("default")
+                        .withUrlFilteringProfile("default")
+                        .withFileBlockingProfile("default")
+                        .withDnsSubscription("default")
+                        .withOutboundUnTrustCertificate("default")
+                        .withOutboundTrustCertificate("default")))
             .apply();
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/LocalRulestacks_Update_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/LocalRulestacks_Update_MinimumSet_Gen.json
      */
     /**
      * Sample code: LocalRulestacks_Update_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void localRulestacksUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        LocalRulestackResource resource =
-            manager
-                .localRulestacks()
-                .getByResourceGroupWithResponse("rgopenapi", "lrs1", com.azure.core.util.Context.NONE)
-                .getValue();
+        LocalRulestackResource resource = manager.localRulestacks()
+            .getByResourceGroupWithResponse("rgopenapi", "lrs1", com.azure.core.util.Context.NONE)
+            .getValue();
         resource.update().apply();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();
@@ -3235,17 +3078,174 @@ public final class LocalRulestacksUpdateSamples {
 }
 ```
 
+### MetricsObjectFirewall_CreateOrUpdate
+
+```java
+import com.azure.resourcemanager.paloaltonetworks.ngfw.fluent.models.MetricsObjectFirewallResourceInner;
+
+/**
+ * Samples for MetricsObjectFirewall CreateOrUpdate.
+ */
+public final class MetricsObjectFirewallCreateOrUpdateSamples {
+    /*
+     * x-ms-original-file: 2025-10-08/MetricsObjectFirewall_CreateOrUpdate_MinimumSet_Gen.json
+     */
+    /**
+     * Sample code: MetricsObjectFirewall_CreateOrUpdate_MinimumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void metricsObjectFirewallCreateOrUpdateMinimumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.metricsObjectFirewalls()
+            .createOrUpdate("rgopenapi", "aaaaaaaaaaaaaaaaaaaaaaaa",
+                new MetricsObjectFirewallResourceInner().withApplicationInsightsResourceId("aaaaaaaaaaaaaaa")
+                    .withApplicationInsightsConnectionString("aaa"),
+                com.azure.core.util.Context.NONE);
+    }
+
+    /*
+     * x-ms-original-file: 2025-10-08/MetricsObjectFirewall_CreateOrUpdate_MaximumSet_Gen.json
+     */
+    /**
+     * Sample code: MetricsObjectFirewall_CreateOrUpdate_MaximumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void metricsObjectFirewallCreateOrUpdateMaximumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.metricsObjectFirewalls()
+            .createOrUpdate("rgopenapi", "aaaaaaaaaaaaaaaaaaaaaaaa",
+                new MetricsObjectFirewallResourceInner().withApplicationInsightsResourceId("aaaaaaaaaaaaaaa")
+                    .withApplicationInsightsConnectionString("aaa")
+                    .withPanEtag("aaaaaaaaaa"),
+                com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### MetricsObjectFirewall_Delete
+
+```java
+/**
+ * Samples for MetricsObjectFirewall Delete.
+ */
+public final class MetricsObjectFirewallDeleteSamples {
+    /*
+     * x-ms-original-file: 2025-10-08/MetricsObjectFirewall_Delete_MaximumSet_Gen.json
+     */
+    /**
+     * Sample code: MetricsObjectFirewall_Delete_MaximumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void metricsObjectFirewallDeleteMaximumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.metricsObjectFirewalls()
+            .delete("rgopenapi", "aaaaaaaaaaaaaaaaaaaaaaaa", com.azure.core.util.Context.NONE);
+    }
+
+    /*
+     * x-ms-original-file: 2025-10-08/MetricsObjectFirewall_Delete_MinimumSet_Gen.json
+     */
+    /**
+     * Sample code: MetricsObjectFirewall_Delete_MinimumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void metricsObjectFirewallDeleteMinimumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.metricsObjectFirewalls()
+            .delete("rgopenapi", "aaaaaaaaaaaaaaaaaaaaaaaa", com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### MetricsObjectFirewall_Get
+
+```java
+/**
+ * Samples for MetricsObjectFirewall Get.
+ */
+public final class MetricsObjectFirewallGetSamples {
+    /*
+     * x-ms-original-file: 2025-10-08/MetricsObjectFirewall_Get_MinimumSet_Gen.json
+     */
+    /**
+     * Sample code: MetricsObjectFirewall_Get_MinimumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void metricsObjectFirewallGetMinimumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.metricsObjectFirewalls()
+            .getWithResponse("rgopenapi", "aaaaaaaaaaaaaaaaaaaaaaaa", com.azure.core.util.Context.NONE);
+    }
+
+    /*
+     * x-ms-original-file: 2025-10-08/MetricsObjectFirewall_Get_MaximumSet_Gen.json
+     */
+    /**
+     * Sample code: MetricsObjectFirewall_Get_MaximumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void metricsObjectFirewallGetMaximumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.metricsObjectFirewalls()
+            .getWithResponse("rgopenapi", "aaaaaaaaaaaaaaaaaaaaaaaa", com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### MetricsObjectFirewall_ListByFirewalls
+
+```java
+/**
+ * Samples for MetricsObjectFirewall ListByFirewalls.
+ */
+public final class MetricsObjectFirewallListByFirewallsSamples {
+    /*
+     * x-ms-original-file: 2025-10-08/MetricsObjectFirewall_ListByFirewalls_MinimumSet_Gen.json
+     */
+    /**
+     * Sample code: MetricsObjectFirewall_ListByFirewalls_MinimumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void metricsObjectFirewallListByFirewallsMinimumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.metricsObjectFirewalls().listByFirewalls("rgopenapi", "IFTDk", com.azure.core.util.Context.NONE);
+    }
+
+    /*
+     * x-ms-original-file: 2025-10-08/MetricsObjectFirewall_ListByFirewalls_MaximumSet_Gen.json
+     */
+    /**
+     * Sample code: MetricsObjectFirewall_ListByFirewalls_MaximumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void metricsObjectFirewallListByFirewallsMaximumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.metricsObjectFirewalls().listByFirewalls("rgopenapi", "IFTDk", com.azure.core.util.Context.NONE);
+    }
+}
+```
+
 ### Operations_List
 
 ```java
-/** Samples for Operations List. */
+/**
+ * Samples for Operations List.
+ */
 public final class OperationsListSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Operations_List_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Operations_List_MinimumSet_Gen.json
      */
     /**
      * Sample code: Operations_List_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void operationsListMinimumSetGen(
@@ -3254,16 +3254,164 @@ public final class OperationsListSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/Operations_List_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/Operations_List_MaximumSet_Gen.json
      */
     /**
      * Sample code: Operations_List_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void operationsListMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
         manager.operations().list(com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### PaloAltoNetworksCloudngfwOperations_CreateProductSerialNumber
+
+```java
+/**
+ * Samples for PaloAltoNetworksCloudngfwOperations CreateProductSerialNumber.
+ */
+public final class PaloAltoNetworksCloudngfwOperationsCreateProductSerialNumberSamples {
+    /*
+     * x-ms-original-file: 2025-10-08/PaloAltoNetworksCloudngfwOperations_createProductSerialNumber_MinimumSet_Gen.json
+     */
+    /**
+     * Sample code: PaloAltoNetworksCloudngfwOperations_createProductSerialNumber_MinimumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void paloAltoNetworksCloudngfwOperationsCreateProductSerialNumberMinimumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.paloAltoNetworksCloudngfwOperations()
+            .createProductSerialNumberWithResponse(com.azure.core.util.Context.NONE);
+    }
+
+    /*
+     * x-ms-original-file: 2025-10-08/PaloAltoNetworksCloudngfwOperations_createProductSerialNumber_MaximumSet_Gen.json
+     */
+    /**
+     * Sample code: PaloAltoNetworksCloudngfwOperations_createProductSerialNumber_MaximumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void paloAltoNetworksCloudngfwOperationsCreateProductSerialNumberMaximumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.paloAltoNetworksCloudngfwOperations()
+            .createProductSerialNumberWithResponse(com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### PaloAltoNetworksCloudngfwOperations_ListCloudManagerTenants
+
+```java
+/**
+ * Samples for PaloAltoNetworksCloudngfwOperations ListCloudManagerTenants.
+ */
+public final class PaloAltoNetworksCloudngfwOperationsListCloudManagerTenantsSamples {
+    /*
+     * x-ms-original-file: 2025-10-08/PaloAltoNetworksCloudngfwOperations_listCloudManagerTenants_MinimumSet_Gen.json
+     */
+    /**
+     * Sample code: PaloAltoNetworksCloudngfwOperations_listCloudManagerTenants_MinimumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void paloAltoNetworksCloudngfwOperationsListCloudManagerTenantsMinimumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.paloAltoNetworksCloudngfwOperations()
+            .listCloudManagerTenantsWithResponse(com.azure.core.util.Context.NONE);
+    }
+
+    /*
+     * x-ms-original-file: 2025-10-08/PaloAltoNetworksCloudngfwOperations_listCloudManagerTenants_MaximumSet_Gen.json
+     */
+    /**
+     * Sample code: PaloAltoNetworksCloudngfwOperations_listCloudManagerTenants_MaximumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void paloAltoNetworksCloudngfwOperationsListCloudManagerTenantsMaximumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.paloAltoNetworksCloudngfwOperations()
+            .listCloudManagerTenantsWithResponse(com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### PaloAltoNetworksCloudngfwOperations_ListProductSerialNumberStatus
+
+```java
+/**
+ * Samples for PaloAltoNetworksCloudngfwOperations ListProductSerialNumberStatus.
+ */
+public final class PaloAltoNetworksCloudngfwOperationsListProductSerialNumberStatusSamples {
+    /*
+     * x-ms-original-file:
+     * 2025-10-08/PaloAltoNetworksCloudngfwOperations_listProductSerialNumberStatus_MinimumSet_Gen.json
+     */
+    /**
+     * Sample code: PaloAltoNetworksCloudngfwOperations_listProductSerialNumberStatus_MinimumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void paloAltoNetworksCloudngfwOperationsListProductSerialNumberStatusMinimumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.paloAltoNetworksCloudngfwOperations()
+            .listProductSerialNumberStatusWithResponse(com.azure.core.util.Context.NONE);
+    }
+
+    /*
+     * x-ms-original-file:
+     * 2025-10-08/PaloAltoNetworksCloudngfwOperations_listProductSerialNumberStatus_MaximumSet_Gen.json
+     */
+    /**
+     * Sample code: PaloAltoNetworksCloudngfwOperations_listProductSerialNumberStatus_MaximumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void paloAltoNetworksCloudngfwOperationsListProductSerialNumberStatusMaximumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.paloAltoNetworksCloudngfwOperations()
+            .listProductSerialNumberStatusWithResponse(com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### PaloAltoNetworksCloudngfwOperations_ListSupportInfo
+
+```java
+/**
+ * Samples for PaloAltoNetworksCloudngfwOperations ListSupportInfo.
+ */
+public final class PaloAltoNetworksCloudngfwOperationsListSupportInfoSamples {
+    /*
+     * x-ms-original-file: 2025-10-08/PaloAltoNetworksCloudngfwOperations_listSupportInfo_MinimumSet_Gen.json
+     */
+    /**
+     * Sample code: PaloAltoNetworksCloudngfwOperations_listSupportInfo_MinimumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void paloAltoNetworksCloudngfwOperationsListSupportInfoMinimumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.paloAltoNetworksCloudngfwOperations().listSupportInfoWithResponse(com.azure.core.util.Context.NONE);
+    }
+
+    /*
+     * x-ms-original-file: 2025-10-08/PaloAltoNetworksCloudngfwOperations_listSupportInfo_MaximumSet_Gen.json
+     */
+    /**
+     * Sample code: PaloAltoNetworksCloudngfwOperations_listSupportInfo_MaximumSet_Gen.
+     * 
+     * @param manager Entry point to PaloAltoNetworksNgfwManager.
+     */
+    public static void paloAltoNetworksCloudngfwOperationsListSupportInfoMaximumSetGen(
+        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+        manager.paloAltoNetworksCloudngfwOperations().listSupportInfoWithResponse(com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -3282,48 +3430,40 @@ import com.azure.resourcemanager.paloaltonetworks.ngfw.models.StateEnum;
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.TagInfo;
 import java.util.Arrays;
 
-/** Samples for PostRules CreateOrUpdate. */
+/**
+ * Samples for PostRules CreateOrUpdate.
+ */
 public final class PostRulesCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: PostRules_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .postRules()
-            .createOrUpdate(
-                "lrs1",
-                "1",
-                new PostRulesResourceInner()
-                    .withEtag("c18e6eef-ba3e-49ee-8a85-2b36c863a9d0")
+        manager.postRules()
+            .createOrUpdate("lrs1", "1",
+                new PostRulesResourceInner().withEtag("c18e6eef-ba3e-49ee-8a85-2b36c863a9d0")
                     .withRuleName("postRule1")
                     .withDescription("description of post rule")
                     .withRuleState(StateEnum.DISABLED)
-                    .withSource(
-                        new SourceAddr()
-                            .withCidrs(Arrays.asList("1.0.0.1/10"))
-                            .withCountries(Arrays.asList("India"))
-                            .withFeeds(Arrays.asList("feed"))
-                            .withPrefixLists(Arrays.asList("PL1")))
+                    .withSource(new SourceAddr().withCidrs(Arrays.asList("1.0.0.1/10"))
+                        .withCountries(Arrays.asList("India"))
+                        .withFeeds(Arrays.asList("feed"))
+                        .withPrefixLists(Arrays.asList("PL1")))
                     .withNegateSource(BooleanEnum.TRUE)
-                    .withDestination(
-                        new DestinationAddr()
-                            .withCidrs(Arrays.asList("1.0.0.1/10"))
-                            .withCountries(Arrays.asList("India"))
-                            .withFeeds(Arrays.asList("feed"))
-                            .withPrefixLists(Arrays.asList("PL1"))
-                            .withFqdnLists(Arrays.asList("FQDN1")))
+                    .withDestination(new DestinationAddr().withCidrs(Arrays.asList("1.0.0.1/10"))
+                        .withCountries(Arrays.asList("India"))
+                        .withFeeds(Arrays.asList("feed"))
+                        .withPrefixLists(Arrays.asList("PL1"))
+                        .withFqdnLists(Arrays.asList("FQDN1")))
                     .withNegateDestination(BooleanEnum.TRUE)
                     .withApplications(Arrays.asList("app1"))
-                    .withCategory(
-                        new Category()
-                            .withUrlCustom(Arrays.asList("https://microsoft.com"))
-                            .withFeeds(Arrays.asList("feed")))
+                    .withCategory(new Category().withUrlCustom(Arrays.asList("https://microsoft.com"))
+                        .withFeeds(Arrays.asList("feed")))
                     .withProtocol("HTTP")
                     .withProtocolPortList(Arrays.asList("80"))
                     .withInboundInspectionCertificate("cert1")
@@ -3336,19 +3476,18 @@ public final class PostRulesCreateOrUpdateSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: PostRules_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .postRules()
-            .createOrUpdate(
-                "lrs1", "1", new PostRulesResourceInner().withRuleName("postRule1"), com.azure.core.util.Context.NONE);
+        manager.postRules()
+            .createOrUpdate("lrs1", "1", new PostRulesResourceInner().withRuleName("postRule1"),
+                com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -3356,14 +3495,16 @@ public final class PostRulesCreateOrUpdateSamples {
 ### PostRules_Delete
 
 ```java
-/** Samples for PostRules Delete. */
+/**
+ * Samples for PostRules Delete.
+ */
 public final class PostRulesDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: PostRules_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesDeleteMinimumSetGen(
@@ -3372,11 +3513,11 @@ public final class PostRulesDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: PostRules_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesDeleteMaximumSetGen(
@@ -3389,31 +3530,33 @@ public final class PostRulesDeleteSamples {
 ### PostRules_Get
 
 ```java
-/** Samples for PostRules Get. */
+/**
+ * Samples for PostRules Get.
+ */
 public final class PostRulesGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: PostRules_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
-    public static void postRulesGetMinimumSetGen(
-        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+    public static void
+        postRulesGetMinimumSetGen(com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
         manager.postRules().getWithResponse("lrs1", "1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: PostRules_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
-    public static void postRulesGetMaximumSetGen(
-        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+    public static void
+        postRulesGetMaximumSetGen(com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
         manager.postRules().getWithResponse("lrs1", "1", com.azure.core.util.Context.NONE);
     }
 }
@@ -3422,14 +3565,16 @@ public final class PostRulesGetSamples {
 ### PostRules_GetCounters
 
 ```java
-/** Samples for PostRules GetCounters. */
+/**
+ * Samples for PostRules GetCounters.
+ */
 public final class PostRulesGetCountersSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_getCounters_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_getCounters_MinimumSet_Gen.json
      */
     /**
      * Sample code: PostRules_getCounters_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesGetCountersMinimumSetGen(
@@ -3438,11 +3583,11 @@ public final class PostRulesGetCountersSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_getCounters_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_getCounters_MaximumSet_Gen.json
      */
     /**
      * Sample code: PostRules_getCounters_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesGetCountersMaximumSetGen(
@@ -3455,14 +3600,16 @@ public final class PostRulesGetCountersSamples {
 ### PostRules_List
 
 ```java
-/** Samples for PostRules List. */
+/**
+ * Samples for PostRules List.
+ */
 public final class PostRulesListSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_List_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_List_MinimumSet_Gen.json
      */
     /**
      * Sample code: PostRules_List_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesListMinimumSetGen(
@@ -3471,11 +3618,11 @@ public final class PostRulesListSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_List_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_List_MaximumSet_Gen.json
      */
     /**
      * Sample code: PostRules_List_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesListMaximumSetGen(
@@ -3488,14 +3635,16 @@ public final class PostRulesListSamples {
 ### PostRules_RefreshCounters
 
 ```java
-/** Samples for PostRules RefreshCounters. */
+/**
+ * Samples for PostRules RefreshCounters.
+ */
 public final class PostRulesRefreshCountersSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_refreshCounters_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_refreshCounters_MaximumSet_Gen.json
      */
     /**
      * Sample code: PostRules_refreshCounters_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesRefreshCountersMaximumSetGen(
@@ -3504,11 +3653,11 @@ public final class PostRulesRefreshCountersSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_refreshCounters_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_refreshCounters_MinimumSet_Gen.json
      */
     /**
      * Sample code: PostRules_refreshCounters_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesRefreshCountersMinimumSetGen(
@@ -3521,14 +3670,16 @@ public final class PostRulesRefreshCountersSamples {
 ### PostRules_ResetCounters
 
 ```java
-/** Samples for PostRules ResetCounters. */
+/**
+ * Samples for PostRules ResetCounters.
+ */
 public final class PostRulesResetCountersSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_resetCounters_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_resetCounters_MaximumSet_Gen.json
      */
     /**
      * Sample code: PostRules_resetCounters_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesResetCountersMaximumSetGen(
@@ -3537,11 +3688,11 @@ public final class PostRulesResetCountersSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PostRules_resetCounters_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PostRules_resetCounters_MinimumSet_Gen.json
      */
     /**
      * Sample code: PostRules_resetCounters_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void postRulesResetCountersMinimumSetGen(
@@ -3565,48 +3716,40 @@ import com.azure.resourcemanager.paloaltonetworks.ngfw.models.StateEnum;
 import com.azure.resourcemanager.paloaltonetworks.ngfw.models.TagInfo;
 import java.util.Arrays;
 
-/** Samples for PreRules CreateOrUpdate. */
+/**
+ * Samples for PreRules CreateOrUpdate.
+ */
 public final class PreRulesCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: PreRules_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void preRulesCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .preRules()
-            .createOrUpdate(
-                "lrs1",
-                "1",
-                new PreRulesResourceInner()
-                    .withEtag("c18e6eef-ba3e-49ee-8a85-2b36c863a9d0")
+        manager.preRules()
+            .createOrUpdate("lrs1", "1",
+                new PreRulesResourceInner().withEtag("c18e6eef-ba3e-49ee-8a85-2b36c863a9d0")
                     .withRuleName("preRule1")
                     .withDescription("description of pre rule")
                     .withRuleState(StateEnum.DISABLED)
-                    .withSource(
-                        new SourceAddr()
-                            .withCidrs(Arrays.asList("1.0.0.1/10"))
-                            .withCountries(Arrays.asList("India"))
-                            .withFeeds(Arrays.asList("feed"))
-                            .withPrefixLists(Arrays.asList("PL1")))
+                    .withSource(new SourceAddr().withCidrs(Arrays.asList("1.0.0.1/10"))
+                        .withCountries(Arrays.asList("India"))
+                        .withFeeds(Arrays.asList("feed"))
+                        .withPrefixLists(Arrays.asList("PL1")))
                     .withNegateSource(BooleanEnum.TRUE)
-                    .withDestination(
-                        new DestinationAddr()
-                            .withCidrs(Arrays.asList("1.0.0.1/10"))
-                            .withCountries(Arrays.asList("India"))
-                            .withFeeds(Arrays.asList("feed"))
-                            .withPrefixLists(Arrays.asList("PL1"))
-                            .withFqdnLists(Arrays.asList("FQDN1")))
+                    .withDestination(new DestinationAddr().withCidrs(Arrays.asList("1.0.0.1/10"))
+                        .withCountries(Arrays.asList("India"))
+                        .withFeeds(Arrays.asList("feed"))
+                        .withPrefixLists(Arrays.asList("PL1"))
+                        .withFqdnLists(Arrays.asList("FQDN1")))
                     .withNegateDestination(BooleanEnum.TRUE)
                     .withApplications(Arrays.asList("app1"))
-                    .withCategory(
-                        new Category()
-                            .withUrlCustom(Arrays.asList("https://microsoft.com"))
-                            .withFeeds(Arrays.asList("feed")))
+                    .withCategory(new Category().withUrlCustom(Arrays.asList("https://microsoft.com"))
+                        .withFeeds(Arrays.asList("feed")))
                     .withProtocol("HTTP")
                     .withProtocolPortList(Arrays.asList("80"))
                     .withInboundInspectionCertificate("cert1")
@@ -3619,19 +3762,18 @@ public final class PreRulesCreateOrUpdateSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: PreRules_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void preRulesCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .preRules()
-            .createOrUpdate(
-                "lrs1", "1", new PreRulesResourceInner().withRuleName("preRule1"), com.azure.core.util.Context.NONE);
+        manager.preRules()
+            .createOrUpdate("lrs1", "1", new PreRulesResourceInner().withRuleName("preRule1"),
+                com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -3639,14 +3781,16 @@ public final class PreRulesCreateOrUpdateSamples {
 ### PreRules_Delete
 
 ```java
-/** Samples for PreRules Delete. */
+/**
+ * Samples for PreRules Delete.
+ */
 public final class PreRulesDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: PreRules_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void preRulesDeleteMinimumSetGen(
@@ -3655,11 +3799,11 @@ public final class PreRulesDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: PreRules_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void preRulesDeleteMaximumSetGen(
@@ -3672,31 +3816,33 @@ public final class PreRulesDeleteSamples {
 ### PreRules_Get
 
 ```java
-/** Samples for PreRules Get. */
+/**
+ * Samples for PreRules Get.
+ */
 public final class PreRulesGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: PreRules_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
-    public static void preRulesGetMaximumSetGen(
-        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+    public static void
+        preRulesGetMaximumSetGen(com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
         manager.preRules().getWithResponse("lrs1", "1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: PreRules_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
-    public static void preRulesGetMinimumSetGen(
-        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+    public static void
+        preRulesGetMinimumSetGen(com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
         manager.preRules().getWithResponse("lrs1", "1", com.azure.core.util.Context.NONE);
     }
 }
@@ -3705,14 +3851,16 @@ public final class PreRulesGetSamples {
 ### PreRules_GetCounters
 
 ```java
-/** Samples for PreRules GetCounters. */
+/**
+ * Samples for PreRules GetCounters.
+ */
 public final class PreRulesGetCountersSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_getCounters_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_getCounters_MinimumSet_Gen.json
      */
     /**
      * Sample code: PreRules_getCounters_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void preRulesGetCountersMinimumSetGen(
@@ -3721,11 +3869,11 @@ public final class PreRulesGetCountersSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_getCounters_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_getCounters_MaximumSet_Gen.json
      */
     /**
      * Sample code: PreRules_getCounters_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void preRulesGetCountersMaximumSetGen(
@@ -3738,31 +3886,33 @@ public final class PreRulesGetCountersSamples {
 ### PreRules_List
 
 ```java
-/** Samples for PreRules List. */
+/**
+ * Samples for PreRules List.
+ */
 public final class PreRulesListSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_List_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_List_MinimumSet_Gen.json
      */
     /**
      * Sample code: PreRules_List_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
-    public static void preRulesListMinimumSetGen(
-        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+    public static void
+        preRulesListMinimumSetGen(com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
         manager.preRules().list("lrs1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_List_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_List_MaximumSet_Gen.json
      */
     /**
      * Sample code: PreRules_List_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
-    public static void preRulesListMaximumSetGen(
-        com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
+    public static void
+        preRulesListMaximumSetGen(com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
         manager.preRules().list("lrs1", com.azure.core.util.Context.NONE);
     }
 }
@@ -3771,14 +3921,16 @@ public final class PreRulesListSamples {
 ### PreRules_RefreshCounters
 
 ```java
-/** Samples for PreRules RefreshCounters. */
+/**
+ * Samples for PreRules RefreshCounters.
+ */
 public final class PreRulesRefreshCountersSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_refreshCounters_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_refreshCounters_MaximumSet_Gen.json
      */
     /**
      * Sample code: PreRules_refreshCounters_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void preRulesRefreshCountersMaximumSetGen(
@@ -3787,11 +3939,11 @@ public final class PreRulesRefreshCountersSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_refreshCounters_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_refreshCounters_MinimumSet_Gen.json
      */
     /**
      * Sample code: PreRules_refreshCounters_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void preRulesRefreshCountersMinimumSetGen(
@@ -3804,14 +3956,16 @@ public final class PreRulesRefreshCountersSamples {
 ### PreRules_ResetCounters
 
 ```java
-/** Samples for PreRules ResetCounters. */
+/**
+ * Samples for PreRules ResetCounters.
+ */
 public final class PreRulesResetCountersSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_resetCounters_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_resetCounters_MinimumSet_Gen.json
      */
     /**
      * Sample code: PreRules_resetCounters_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void preRulesResetCountersMinimumSetGen(
@@ -3820,11 +3974,11 @@ public final class PreRulesResetCountersSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PreRules_resetCounters_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PreRules_resetCounters_MaximumSet_Gen.json
      */
     /**
      * Sample code: PreRules_resetCounters_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void preRulesResetCountersMaximumSetGen(
@@ -3840,25 +3994,23 @@ public final class PreRulesResetCountersSamples {
 import com.azure.resourcemanager.paloaltonetworks.ngfw.fluent.models.PrefixListGlobalRulestackResourceInner;
 import java.util.Arrays;
 
-/** Samples for PrefixListGlobalRulestack CreateOrUpdate. */
+/**
+ * Samples for PrefixListGlobalRulestack CreateOrUpdate.
+ */
 public final class PrefixListGlobalRulestackCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListGlobalRulestack_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListGlobalRulestack_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: PrefixListGlobalRulestack_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListGlobalRulestackCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .prefixListGlobalRulestacks()
-            .createOrUpdate(
-                "praval",
-                "armid1",
-                new PrefixListGlobalRulestackResourceInner()
-                    .withDescription("string")
+        manager.prefixListGlobalRulestacks()
+            .createOrUpdate("praval", "armid1",
+                new PrefixListGlobalRulestackResourceInner().withDescription("string")
                     .withPrefixList(Arrays.asList("1.0.0.0/24"))
                     .withEtag("2bf4a339-294d-4c25-b0b2-ef649e9f5c27")
                     .withAuditComment("comment"),
@@ -3866,20 +4018,17 @@ public final class PrefixListGlobalRulestackCreateOrUpdateSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListGlobalRulestack_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListGlobalRulestack_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: PrefixListGlobalRulestack_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListGlobalRulestackCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .prefixListGlobalRulestacks()
-            .createOrUpdate(
-                "praval",
-                "armid1",
+        manager.prefixListGlobalRulestacks()
+            .createOrUpdate("praval", "armid1",
                 new PrefixListGlobalRulestackResourceInner().withPrefixList(Arrays.asList("1.0.0.0/24")),
                 com.azure.core.util.Context.NONE);
     }
@@ -3889,14 +4038,16 @@ public final class PrefixListGlobalRulestackCreateOrUpdateSamples {
 ### PrefixListGlobalRulestack_Delete
 
 ```java
-/** Samples for PrefixListGlobalRulestack Delete. */
+/**
+ * Samples for PrefixListGlobalRulestack Delete.
+ */
 public final class PrefixListGlobalRulestackDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListGlobalRulestack_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListGlobalRulestack_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: PrefixListGlobalRulestack_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListGlobalRulestackDeleteMaximumSetGen(
@@ -3905,11 +4056,11 @@ public final class PrefixListGlobalRulestackDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListGlobalRulestack_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListGlobalRulestack_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: PrefixListGlobalRulestack_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListGlobalRulestackDeleteMinimumSetGen(
@@ -3922,14 +4073,16 @@ public final class PrefixListGlobalRulestackDeleteSamples {
 ### PrefixListGlobalRulestack_Get
 
 ```java
-/** Samples for PrefixListGlobalRulestack Get. */
+/**
+ * Samples for PrefixListGlobalRulestack Get.
+ */
 public final class PrefixListGlobalRulestackGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListGlobalRulestack_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListGlobalRulestack_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: PrefixListGlobalRulestack_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListGlobalRulestackGetMinimumSetGen(
@@ -3938,11 +4091,11 @@ public final class PrefixListGlobalRulestackGetSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListGlobalRulestack_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListGlobalRulestack_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: PrefixListGlobalRulestack_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListGlobalRulestackGetMaximumSetGen(
@@ -3955,14 +4108,16 @@ public final class PrefixListGlobalRulestackGetSamples {
 ### PrefixListGlobalRulestack_List
 
 ```java
-/** Samples for PrefixListGlobalRulestack List. */
+/**
+ * Samples for PrefixListGlobalRulestack List.
+ */
 public final class PrefixListGlobalRulestackListSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListGlobalRulestack_List_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListGlobalRulestack_List_MaximumSet_Gen.json
      */
     /**
      * Sample code: PrefixListGlobalRulestack_List_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListGlobalRulestackListMaximumSetGen(
@@ -3971,11 +4126,11 @@ public final class PrefixListGlobalRulestackListSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListGlobalRulestack_List_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListGlobalRulestack_List_MinimumSet_Gen.json
      */
     /**
      * Sample code: PrefixListGlobalRulestack_List_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListGlobalRulestackListMinimumSetGen(
@@ -3990,20 +4145,21 @@ public final class PrefixListGlobalRulestackListSamples {
 ```java
 import java.util.Arrays;
 
-/** Samples for PrefixListLocalRulestack CreateOrUpdate. */
+/**
+ * Samples for PrefixListLocalRulestack CreateOrUpdate.
+ */
 public final class PrefixListLocalRulestackCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListLocalRulestack_CreateOrUpdate_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListLocalRulestack_CreateOrUpdate_MinimumSet_Gen.json
      */
     /**
      * Sample code: PrefixListLocalRulestack_CreateOrUpdate_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListLocalRulestackCreateOrUpdateMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .prefixListLocalRulestacks()
+        manager.prefixListLocalRulestacks()
             .define("armid1")
             .withExistingLocalRulestack("rgopenapi", "lrs1")
             .withPrefixList(Arrays.asList("1.0.0.0/24"))
@@ -4011,17 +4167,16 @@ public final class PrefixListLocalRulestackCreateOrUpdateSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListLocalRulestack_CreateOrUpdate_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListLocalRulestack_CreateOrUpdate_MaximumSet_Gen.json
      */
     /**
      * Sample code: PrefixListLocalRulestack_CreateOrUpdate_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListLocalRulestackCreateOrUpdateMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .prefixListLocalRulestacks()
+        manager.prefixListLocalRulestacks()
             .define("armid1")
             .withExistingLocalRulestack("rgopenapi", "lrs1")
             .withPrefixList(Arrays.asList("1.0.0.0/24"))
@@ -4036,14 +4191,16 @@ public final class PrefixListLocalRulestackCreateOrUpdateSamples {
 ### PrefixListLocalRulestack_Delete
 
 ```java
-/** Samples for PrefixListLocalRulestack Delete. */
+/**
+ * Samples for PrefixListLocalRulestack Delete.
+ */
 public final class PrefixListLocalRulestackDeleteSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListLocalRulestack_Delete_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListLocalRulestack_Delete_MinimumSet_Gen.json
      */
     /**
      * Sample code: PrefixListLocalRulestack_Delete_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListLocalRulestackDeleteMinimumSetGen(
@@ -4052,11 +4209,11 @@ public final class PrefixListLocalRulestackDeleteSamples {
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListLocalRulestack_Delete_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListLocalRulestack_Delete_MaximumSet_Gen.json
      */
     /**
      * Sample code: PrefixListLocalRulestack_Delete_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListLocalRulestackDeleteMaximumSetGen(
@@ -4069,35 +4226,35 @@ public final class PrefixListLocalRulestackDeleteSamples {
 ### PrefixListLocalRulestack_Get
 
 ```java
-/** Samples for PrefixListLocalRulestack Get. */
+/**
+ * Samples for PrefixListLocalRulestack Get.
+ */
 public final class PrefixListLocalRulestackGetSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListLocalRulestack_Get_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListLocalRulestack_Get_MinimumSet_Gen.json
      */
     /**
      * Sample code: PrefixListLocalRulestack_Get_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListLocalRulestackGetMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .prefixListLocalRulestacks()
+        manager.prefixListLocalRulestacks()
             .getWithResponse("rgopenapi", "lrs1", "armid1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListLocalRulestack_Get_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListLocalRulestack_Get_MaximumSet_Gen.json
      */
     /**
      * Sample code: PrefixListLocalRulestack_Get_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListLocalRulestackGetMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .prefixListLocalRulestacks()
+        manager.prefixListLocalRulestacks()
             .getWithResponse("rgopenapi", "lrs1", "armid1", com.azure.core.util.Context.NONE);
     }
 }
@@ -4106,35 +4263,35 @@ public final class PrefixListLocalRulestackGetSamples {
 ### PrefixListLocalRulestack_ListByLocalRulestacks
 
 ```java
-/** Samples for PrefixListLocalRulestack ListByLocalRulestacks. */
+/**
+ * Samples for PrefixListLocalRulestack ListByLocalRulestacks.
+ */
 public final class PrefixListLocalRulestackListByLocalRulestacksSamples {
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListLocalRulestack_ListByLocalRulestacks_MaximumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListLocalRulestack_ListByLocalRulestacks_MaximumSet_Gen.json
      */
     /**
      * Sample code: PrefixListLocalRulestack_ListByLocalRulestacks_MaximumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListLocalRulestackListByLocalRulestacksMaximumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .prefixListLocalRulestacks()
+        manager.prefixListLocalRulestacks()
             .listByLocalRulestacks("rgopenapi", "lrs1", com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/stable/2022-08-29/examples/PrefixListLocalRulestack_ListByLocalRulestacks_MinimumSet_Gen.json
+     * x-ms-original-file: 2025-10-08/PrefixListLocalRulestack_ListByLocalRulestacks_MinimumSet_Gen.json
      */
     /**
      * Sample code: PrefixListLocalRulestack_ListByLocalRulestacks_MinimumSet_Gen.
-     *
+     * 
      * @param manager Entry point to PaloAltoNetworksNgfwManager.
      */
     public static void prefixListLocalRulestackListByLocalRulestacksMinimumSetGen(
         com.azure.resourcemanager.paloaltonetworks.ngfw.PaloAltoNetworksNgfwManager manager) {
-        manager
-            .prefixListLocalRulestacks()
+        manager.prefixListLocalRulestacks()
             .listByLocalRulestacks("rgopenapi", "lrs1", com.azure.core.util.Context.NONE);
     }
 }

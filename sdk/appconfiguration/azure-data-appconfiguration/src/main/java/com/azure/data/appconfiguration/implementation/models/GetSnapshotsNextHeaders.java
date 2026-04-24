@@ -5,15 +5,19 @@
 package com.azure.data.appconfiguration.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 
-/** The GetSnapshotsNextHeaders model. */
+/**
+ * The GetSnapshotsNextHeaders model.
+ */
 @Fluent
 public final class GetSnapshotsNextHeaders {
     /*
      * The Sync-Token property.
      */
+    @Generated
     private String syncToken;
 
     private static final HttpHeaderName SYNC_TOKEN = HttpHeaderName.fromString("Sync-Token");
@@ -21,7 +25,7 @@ public final class GetSnapshotsNextHeaders {
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of GetSnapshotsNextHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public GetSnapshotsNextHeaders(HttpHeaders rawHeaders) {
@@ -30,19 +34,21 @@ public final class GetSnapshotsNextHeaders {
 
     /**
      * Get the syncToken property: The Sync-Token property.
-     *
+     * 
      * @return the syncToken value.
      */
+    @Generated
     public String getSyncToken() {
         return this.syncToken;
     }
 
     /**
      * Set the syncToken property: The Sync-Token property.
-     *
+     * 
      * @param syncToken the syncToken value to set.
      * @return the GetSnapshotsNextHeaders object itself.
      */
+    @Generated
     public GetSnapshotsNextHeaders setSyncToken(String syncToken) {
         this.syncToken = syncToken;
         return this;

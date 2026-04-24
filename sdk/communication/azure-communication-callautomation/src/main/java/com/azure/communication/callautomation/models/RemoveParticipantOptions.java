@@ -3,7 +3,6 @@
 
 package com.azure.communication.callautomation.models;
 
-
 import com.azure.communication.common.CommunicationIdentifier;
 import com.azure.core.annotation.Fluent;
 
@@ -23,9 +22,10 @@ public final class RemoveParticipantOptions {
     private String operationContext;
 
     /**
-     * Callback URI override
+     * Set a callback URI that overrides the default callback URI set by CreateCall/AnswerCall for this operation.
+     * This setup is per-action. If this is not set, the default callback URI set by CreateCall/AnswerCall will be used.
      */
-    private String callbackUrlOverride;
+    private String operationCallbackUrl;
 
     /**
      * Constructor
@@ -50,17 +50,17 @@ public final class RemoveParticipantOptions {
      *
      * @return the operationContext
      */
-    public String  getOperationContext() {
+    public String getOperationContext() {
         return operationContext;
     }
 
     /**
-     * Get the callback URI override.
+     * Get the overridden call back URL override for operation.
      *
-     * @return the callbackUriOverride
+     * @return the operationCallbackUrl
      */
-    public String getCallbackUrlOverride() {
-        return callbackUrlOverride;
+    public String getOperationCallbackUrl() {
+        return operationCallbackUrl;
     }
 
     /**
@@ -75,13 +75,14 @@ public final class RemoveParticipantOptions {
     }
 
     /**
-     * Set the callbackUriOverride.
+     * Set a callback URI that overrides the default callback URI set by CreateCall/AnswerCall for this operation.
+     * This setup is per-action. If this is not set, the default callback URI set by CreateCall/AnswerCall will be used.
      *
-     * @param callbackUrlOverride the callbackUriOverride to set
+     * @param operationCallbackUrl the operationCallbackUrl to set
      * @return the RemoveParticipantOptions object itself.
      */
-    public RemoveParticipantOptions setCallbackUrlOverride(String callbackUrlOverride) {
-        this.callbackUrlOverride = callbackUrlOverride;
+    public RemoveParticipantOptions setOperationCallbackUrl(String operationCallbackUrl) {
+        this.operationCallbackUrl = operationCallbackUrl;
         return this;
     }
 }

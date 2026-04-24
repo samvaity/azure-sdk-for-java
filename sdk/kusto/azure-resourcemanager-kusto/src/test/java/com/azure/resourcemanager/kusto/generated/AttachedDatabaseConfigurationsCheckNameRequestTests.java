@@ -11,18 +11,16 @@ import org.junit.jupiter.api.Assertions;
 public final class AttachedDatabaseConfigurationsCheckNameRequestTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        AttachedDatabaseConfigurationsCheckNameRequest model =
-            BinaryData
-                .fromString("{\"name\":\"liourqhak\"}")
-                .toObject(AttachedDatabaseConfigurationsCheckNameRequest.class);
-        Assertions.assertEquals("liourqhak", model.name());
+        AttachedDatabaseConfigurationsCheckNameRequest model = BinaryData.fromString("{\"name\":\"paxmodfvuefywsb\"}")
+            .toObject(AttachedDatabaseConfigurationsCheckNameRequest.class);
+        Assertions.assertEquals("paxmodfvuefywsb", model.name());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        AttachedDatabaseConfigurationsCheckNameRequest model =
-            new AttachedDatabaseConfigurationsCheckNameRequest().withName("liourqhak");
+        AttachedDatabaseConfigurationsCheckNameRequest model
+            = new AttachedDatabaseConfigurationsCheckNameRequest().withName("paxmodfvuefywsb");
         model = BinaryData.fromObject(model).toObject(AttachedDatabaseConfigurationsCheckNameRequest.class);
-        Assertions.assertEquals("liourqhak", model.name());
+        Assertions.assertEquals("paxmodfvuefywsb", model.name());
     }
 }

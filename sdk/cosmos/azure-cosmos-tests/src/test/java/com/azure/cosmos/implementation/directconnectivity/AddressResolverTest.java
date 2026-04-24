@@ -9,7 +9,6 @@ import com.azure.cosmos.implementation.DocumentCollection;
 import com.azure.cosmos.implementation.HttpConstants;
 import com.azure.cosmos.implementation.ICollectionRoutingMapCache;
 import com.azure.cosmos.implementation.InvalidPartitionException;
-import com.azure.cosmos.implementation.MetadataDiagnosticsContext;
 import com.azure.cosmos.implementation.NotFoundException;
 import com.azure.cosmos.implementation.OperationType;
 import com.azure.cosmos.implementation.PartitionKeyRange;
@@ -26,7 +25,6 @@ import com.azure.cosmos.implementation.routing.IServerIdentity;
 import com.azure.cosmos.implementation.routing.InMemoryCollectionRoutingMap;
 import com.azure.cosmos.implementation.routing.PartitionKeyInternalHelper;
 import com.azure.cosmos.implementation.routing.PartitionKeyRangeIdentity;
-import com.azure.cosmos.models.ModelBridgeInternal;
 import com.azure.cosmos.models.PartitionKey;
 import com.azure.cosmos.models.PartitionKeyDefinition;
 import org.apache.commons.lang3.NotImplementedException;
@@ -65,7 +63,6 @@ public class AddressResolverTest {
     private RxCollectionCache collectionCache;
     private ICollectionRoutingMapCache collectionRoutingMapCache;
     private IAddressCache fabricAddressCache;
-
     private int collectionCacheRefreshedCount;
     private Map<String, Integer> routingMapRefreshCount;
     private Map<ServiceIdentity, Integer> addressesRefreshCount;
@@ -80,14 +77,14 @@ public class AddressResolverTest {
 
         this.collection1 = new DocumentCollection();
         this.collection1.setId("coll");
-        ModelBridgeInternal.setResourceId(this.collection1, "rid1");
+        this.collection1.setResourceId("rid1");
         PartitionKeyDefinition partitionKeyDef = new PartitionKeyDefinition();
         partitionKeyDef.setPaths(ImmutableList.of("/field1"));
         this.collection1.setPartitionKey(partitionKeyDef);
 
         this.collection2 = new DocumentCollection();
         this.collection2.setId("coll");
-        ModelBridgeInternal.setResourceId(this.collection2, "rid2");
+        this.collection2.setResourceId("rid2");
         new PartitionKeyDefinition();
         partitionKeyDef.setPaths(ImmutableList.of("/field1"));
         this.collection2.setPartitionKey(partitionKeyDef);
@@ -111,7 +108,8 @@ public class AddressResolverTest {
         this.routingMapCollection1BeforeSplit =
             InMemoryCollectionRoutingMap.tryCreateCompleteRoutingMap(
                 rangesBeforeSplit1,
-                collection1.getResourceId());
+                collection1.getResourceId(),
+                "1");
 
         List<ImmutablePair<PartitionKeyRange, IServerIdentity>> rangesAfterSplit1 =
             new ArrayList<>();
@@ -130,7 +128,7 @@ public class AddressResolverTest {
 
         addPartitionKeyRangeFunc.apply(rangesAfterSplit1);
 
-        this.routingMapCollection1AfterSplit = InMemoryCollectionRoutingMap.tryCreateCompleteRoutingMap(rangesAfterSplit1, collection1.getResourceId());
+        this.routingMapCollection1AfterSplit = InMemoryCollectionRoutingMap.tryCreateCompleteRoutingMap(rangesAfterSplit1, collection1.getResourceId(), "2");
 
         List<ImmutablePair<PartitionKeyRange, IServerIdentity>> rangesBeforeSplit2 =
             new ArrayList<>();
@@ -144,7 +142,7 @@ public class AddressResolverTest {
         addPartitionKeyRangeFunc.apply(rangesBeforeSplit2);
 
 
-        this.routingMapCollection2BeforeSplit = InMemoryCollectionRoutingMap.tryCreateCompleteRoutingMap(rangesBeforeSplit2, collection2.getResourceId());
+        this.routingMapCollection2BeforeSplit = InMemoryCollectionRoutingMap.tryCreateCompleteRoutingMap(rangesBeforeSplit2, collection2.getResourceId(), "2");
 
         List<ImmutablePair<PartitionKeyRange, IServerIdentity>> rangesAfterSplit2 =
             new ArrayList<>();
@@ -165,7 +163,7 @@ public class AddressResolverTest {
         addPartitionKeyRangeFunc.apply(rangesAfterSplit2);
 
 
-        this.routingMapCollection2AfterSplit = InMemoryCollectionRoutingMap.tryCreateCompleteRoutingMap(rangesAfterSplit2, collection2.getResourceId());
+        this.routingMapCollection2AfterSplit = InMemoryCollectionRoutingMap.tryCreateCompleteRoutingMap(rangesAfterSplit2, collection2.getResourceId(), "2");
     }
 
     private void TestCacheRefreshWhileRouteByPartitionKey(

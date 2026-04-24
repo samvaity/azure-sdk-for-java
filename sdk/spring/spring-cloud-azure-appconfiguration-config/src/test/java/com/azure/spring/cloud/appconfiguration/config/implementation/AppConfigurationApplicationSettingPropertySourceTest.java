@@ -16,11 +16,15 @@ import static com.azure.spring.cloud.appconfiguration.config.implementation.Test
 import static com.azure.spring.cloud.appconfiguration.config.implementation.TestConstants.TEST_VALUE_2;
 import static com.azure.spring.cloud.appconfiguration.config.implementation.TestConstants.TEST_VALUE_3;
 import static com.azure.spring.cloud.appconfiguration.config.implementation.TestUtils.createItem;
+import static com.azure.spring.cloud.appconfiguration.config.implementation.TestUtils.createItemFeatureFlag;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,11 +32,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.MockitoSession;
+import org.mockito.quality.Strictness;
+import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 
+import com.azure.core.util.Context;
 import com.azure.data.appconfiguration.models.ConfigurationSetting;
+import com.azure.data.appconfiguration.models.FeatureFlagConfigurationSetting;
+import com.azure.data.appconfiguration.models.SettingSelector;
 import com.azure.spring.cloud.appconfiguration.config.implementation.properties.AppConfigurationProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -40,6 +51,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 public class AppConfigurationApplicationSettingPropertySourceTest {
 
     private static final String EMPTY_CONTENT_TYPE = "";
+
+    private static final String JSON_CONTENT_TYPE = "application/json";
 
     private static final AppConfigurationProperties TEST_PROPS = new AppConfigurationProperties();
 
@@ -57,6 +70,12 @@ public class AppConfigurationApplicationSettingPropertySourceTest {
     private static final ConfigurationSetting ITEM_NULL = createItem(KEY_FILTER, TEST_KEY_3, TEST_VALUE_3, TEST_LABEL_3,
         null);
 
+    private static final ConfigurationSetting ITEM_INVALID_JSON = createItem(KEY_FILTER, TEST_KEY_3, TEST_VALUE_3,
+        TEST_LABEL_3,
+        JSON_CONTENT_TYPE);
+    
+    private static final FeatureFlagConfigurationSetting FEATURE_FLAG = createItemFeatureFlag("Beta",  "/0");
+
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private List<ConfigurationSetting> testItems = new ArrayList<>();
@@ -71,6 +90,11 @@ public class AppConfigurationApplicationSettingPropertySourceTest {
 
     @Mock
     private List<ConfigurationSetting> configurationListMock;
+    
+    @Mock
+    private Context contextMock;
+    
+    private MockitoSession session;
 
     @BeforeAll
     public static void setup() {
@@ -79,6 +103,7 @@ public class AppConfigurationApplicationSettingPropertySourceTest {
 
     @BeforeEach
     public void init() {
+        session = Mockito.mockitoSession().initMocks(this).strictness(Strictness.STRICT_STUBS).startMocking();
         MAPPER.setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE);
 
         MockitoAnnotations.openMocks(this);
@@ -87,28 +112,30 @@ public class AppConfigurationApplicationSettingPropertySourceTest {
         testItems.add(ITEM_1);
         testItems.add(ITEM_2);
         testItems.add(ITEM_3);
+        testItems.add(FEATURE_FLAG);
 
         String[] labelFilter = { "\0" };
 
         propertySource = new AppConfigurationApplicationSettingPropertySource(TEST_STORE_NAME, clientMock,
-            keyVaultClientFactoryMock, KEY_FILTER, labelFilter, 60);
+            keyVaultClientFactoryMock, KEY_FILTER, labelFilter, null);
     }
 
     @AfterEach
     public void cleanup() throws Exception {
         MockitoAnnotations.openMocks(this).close();
+        session.finishMocking();
     }
 
     @Test
     public void testPropCanBeInitAndQueried() throws IOException {
         when(configurationListMock.iterator()).thenReturn(testItems.iterator());
-        when(clientMock.listSettings(Mockito.any())).thenReturn(configurationListMock)
+        when(clientMock.listSettings(Mockito.any(), Mockito.any(Context.class))).thenReturn(configurationListMock)
             .thenReturn(configurationListMock);
 
-        propertySource.initProperties();
+        propertySource.initProperties(null, contextMock);
 
         String[] keyNames = propertySource.getPropertyNames();
-        String[] expectedKeyNames = testItems.stream()
+        String[] expectedKeyNames = testItems.stream().filter(config -> !(config instanceof FeatureFlagConfigurationSetting))
             .map(t -> t.getKey().substring(KEY_FILTER.length())).toArray(String[]::new);
 
         assertThat(keyNames).containsExactlyInAnyOrder(expectedKeyNames);
@@ -126,10 +153,10 @@ public class AppConfigurationApplicationSettingPropertySourceTest {
         settings.add(slashedProp);
         when(configurationListMock.iterator()).thenReturn(settings.iterator())
             .thenReturn(Collections.emptyIterator());
-        when(clientMock.listSettings(Mockito.any())).thenReturn(configurationListMock)
+        when(clientMock.listSettings(Mockito.any(), Mockito.any(Context.class))).thenReturn(configurationListMock)
             .thenReturn(configurationListMock);
 
-        propertySource.initProperties();
+        propertySource.initProperties(null, contextMock);
 
         String expectedKeyName = TEST_SLASH_KEY.replace('/', '.');
         String[] actualKeyNames = propertySource.getPropertyNames();
@@ -146,14 +173,117 @@ public class AppConfigurationApplicationSettingPropertySourceTest {
         items.add(ITEM_NULL);
         when(configurationListMock.iterator()).thenReturn(items.iterator())
             .thenReturn(Collections.emptyIterator());
-        when(clientMock.listSettings(Mockito.any())).thenReturn(configurationListMock);
+        when(clientMock.listSettings(Mockito.any(), Mockito.any(Context.class))).thenReturn(configurationListMock);
 
-        propertySource.initProperties();
+        propertySource.initProperties(null, contextMock);
 
         String[] keyNames = propertySource.getPropertyNames();
         String[] expectedKeyNames = items.stream()
             .map(t -> t.getKey().substring(KEY_FILTER.length())).toArray(String[]::new);
 
         assertThat(keyNames).containsExactlyInAnyOrder(expectedKeyNames);
+    }
+
+    @Test
+    public void jsonContentTypeWithInvalidJsonValueTest() {
+        List<ConfigurationSetting> items = new ArrayList<>();
+        items.add(ITEM_INVALID_JSON);
+        when(configurationListMock.iterator()).thenReturn(items.iterator())
+            .thenReturn(Collections.emptyIterator());
+        when(clientMock.listSettings(Mockito.any(), Mockito.any(Context.class))).thenReturn(configurationListMock);
+
+        assertThatThrownBy(() -> propertySource.initProperties(null, contextMock))
+            .isInstanceOf(InvalidConfigurationPropertyValueException.class)
+            .hasMessageNotContaining(ITEM_INVALID_JSON.getValue());
+    }
+
+    @Test
+    public void initPropertiesWithTagsFilterTest() throws IOException {
+        // Create a property source with tags filter
+        String[] labelFilter = { "\0" };
+        List<String> tagsFilter = Arrays.asList("env=prod", "team=backend");
+        AppConfigurationApplicationSettingPropertySource taggedPropertySource
+            = new AppConfigurationApplicationSettingPropertySource(TEST_STORE_NAME, clientMock,
+                keyVaultClientFactoryMock, KEY_FILTER, labelFilter, tagsFilter);
+
+        when(clientMock.listSettings(Mockito.any(), Mockito.any(Context.class))).thenReturn(testItems);
+
+        taggedPropertySource.initProperties(null, contextMock);
+
+        // Capture the SettingSelector passed to listSettings
+        ArgumentCaptor<SettingSelector> selectorCaptor = ArgumentCaptor.forClass(SettingSelector.class);
+        verify(clientMock).listSettings(selectorCaptor.capture(), Mockito.any(Context.class));
+
+        SettingSelector capturedSelector = selectorCaptor.getValue();
+        assertThat(capturedSelector.getTagsFilter()).isNotNull();
+        assertThat(capturedSelector.getTagsFilter()).hasSize(2);
+        assertThat(capturedSelector.getTagsFilter()).containsExactly("env=prod", "team=backend");
+    }
+
+    @Test
+    public void initPropertiesWithNullTagsFilterTest() throws IOException {
+        // Create a property source with null tags filter (default behavior)
+        String[] labelFilter = { "\0" };
+        AppConfigurationApplicationSettingPropertySource untaggedPropertySource
+            = new AppConfigurationApplicationSettingPropertySource(TEST_STORE_NAME, clientMock,
+                keyVaultClientFactoryMock, KEY_FILTER, labelFilter, null);
+
+        when(clientMock.listSettings(Mockito.any(), Mockito.any(Context.class))).thenReturn(testItems);
+
+        untaggedPropertySource.initProperties(null, contextMock);
+
+        // Capture the SettingSelector passed to listSettings
+        ArgumentCaptor<SettingSelector> selectorCaptor = ArgumentCaptor.forClass(SettingSelector.class);
+        verify(clientMock).listSettings(selectorCaptor.capture(), Mockito.any(Context.class));
+
+        SettingSelector capturedSelector = selectorCaptor.getValue();
+        // Tags filter should not be set when null
+        assertThat(capturedSelector.getTagsFilter()).isNull();
+    }
+
+    @Test
+    public void initPropertiesWithEmptyTagsFilterTest() throws IOException {
+        // Create a property source with empty tags filter
+        String[] labelFilter = { "\0" };
+        List<String> tagsFilter = new ArrayList<>();
+        AppConfigurationApplicationSettingPropertySource emptyTagPropertySource
+            = new AppConfigurationApplicationSettingPropertySource(TEST_STORE_NAME, clientMock,
+                keyVaultClientFactoryMock, KEY_FILTER, labelFilter, tagsFilter);
+
+        when(clientMock.listSettings(Mockito.any(), Mockito.any(Context.class))).thenReturn(testItems);
+
+        emptyTagPropertySource.initProperties(null, contextMock);
+
+        // Capture the SettingSelector passed to listSettings
+        ArgumentCaptor<SettingSelector> selectorCaptor = ArgumentCaptor.forClass(SettingSelector.class);
+        verify(clientMock).listSettings(selectorCaptor.capture(), Mockito.any(Context.class));
+
+        SettingSelector capturedSelector = selectorCaptor.getValue();
+        // Tags filter should not be set when empty
+        assertThat(capturedSelector.getTagsFilter()).isNull();
+    }
+
+    @Test
+    public void initPropertiesWithTagsFilterMultipleLabelsTest() throws IOException {
+        // Create a property source with tags filter and multiple labels
+        String[] labelFilter = { "dev", "prod" };
+        List<String> tagsFilter = Arrays.asList("env=staging");
+        AppConfigurationApplicationSettingPropertySource multiLabelPropertySource
+            = new AppConfigurationApplicationSettingPropertySource(TEST_STORE_NAME, clientMock,
+                keyVaultClientFactoryMock, KEY_FILTER, labelFilter, tagsFilter);
+
+        when(clientMock.listSettings(Mockito.any(), Mockito.any(Context.class))).thenReturn(testItems);
+
+        multiLabelPropertySource.initProperties(null, contextMock);
+
+        // Capture all SettingSelector instances passed to listSettings (one per label)
+        ArgumentCaptor<SettingSelector> selectorCaptor = ArgumentCaptor.forClass(SettingSelector.class);
+        verify(clientMock, Mockito.times(2)).listSettings(selectorCaptor.capture(), Mockito.any(Context.class));
+
+        // Both calls should have the tags filter set
+        for (SettingSelector capturedSelector : selectorCaptor.getAllValues()) {
+            assertThat(capturedSelector.getTagsFilter()).isNotNull();
+            assertThat(capturedSelector.getTagsFilter()).containsExactly("env=staging");
+        }
     }
 }

@@ -8,6 +8,8 @@ import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.BearerTokenAuthenticationPolicy;
+import com.azure.core.util.AuthenticateChallenge;
+import com.azure.core.util.CoreUtils;
 import reactor.core.publisher.Mono;
 
 /**
@@ -29,10 +31,9 @@ import reactor.core.publisher.Mono;
  * <p>Step5: GET /api/v1/acr/repositories
  * Request Header: {Bearer acrTokenAccess}</p>
  */
-public final class ContainerRegistryCredentialsPolicy extends BearerTokenAuthenticationPolicy {
-    public static final String WWW_AUTHENTICATE = "WWW-Authenticate";
-    public static final String SCOPES_PARAMETER = "scope";
-    public static final String SERVICE_PARAMETER = "service";
+public class ContainerRegistryCredentialsPolicy extends BearerTokenAuthenticationPolicy {
+    private static final String SCOPES_PARAMETER = "scope";
+    private static final String SERVICE_PARAMETER = "service";
     private final ContainerRegistryTokenService acrCredential;
 
     /**
@@ -68,16 +69,14 @@ public final class ContainerRegistryCredentialsPolicy extends BearerTokenAuthent
      */
     @Override
     public Mono<Boolean> authorizeRequestOnChallenge(HttpPipelineCallContext context, HttpResponse response) {
-        String authHeader = response.getHeaderValue(WWW_AUTHENTICATE);
+        String authHeader = response.getHeaderValue(HttpHeaderName.WWW_AUTHENTICATE);
         if (!(response.getStatusCode() == 401 && authHeader != null)) {
             return Mono.just(false);
         } else {
-            String scope = extractValue(authHeader, SCOPES_PARAMETER);
-            String serviceName = extractValue(authHeader, SERVICE_PARAMETER);
+            ContainerRegistryTokenRequestContext tokenRequestContext = createTokenRequestContext(authHeader);
 
-            if (scope != null && serviceName != null) {
-                return setAuthorizationHeader(context, new ContainerRegistryTokenRequestContext(serviceName, scope))
-                    .thenReturn(true);
+            if (tokenRequestContext != null) {
+                return setAuthorizationHeader(context, tokenRequestContext).thenReturn(true);
             }
             return Mono.just(false);
         }
@@ -87,7 +86,6 @@ public final class ContainerRegistryCredentialsPolicy extends BearerTokenAuthent
      * Executed before sending the initial request and authenticates the request.
      *
      * @param context The request context.
-     * @return A {@link Mono} containing {@link Void}
      */
     @Override
     public void authorizeRequestSync(HttpPipelineCallContext context) {
@@ -108,15 +106,13 @@ public final class ContainerRegistryCredentialsPolicy extends BearerTokenAuthent
      */
     @Override
     public boolean authorizeRequestOnChallengeSync(HttpPipelineCallContext context, HttpResponse response) {
-        String authHeader = response.getHeaderValue(WWW_AUTHENTICATE);
+        String authHeader = response.getHeaderValue(HttpHeaderName.WWW_AUTHENTICATE);
         if (!(response.getStatusCode() == 401 && authHeader != null)) {
             return false;
         } else {
-            String scope =  extractValue(authHeader, SCOPES_PARAMETER);
-            String serviceName = extractValue(authHeader, SERVICE_PARAMETER);
-
-            if (scope != null && serviceName != null) {
-                setAuthorizationHeaderSync(context, new ContainerRegistryTokenRequestContext(serviceName, scope));
+            ContainerRegistryTokenRequestContext tokenRequestContext = createTokenRequestContext(authHeader);
+            if (tokenRequestContext != null) {
+                setAuthorizationHeaderSync(context, tokenRequestContext);
                 return true;
             }
         }
@@ -124,27 +120,18 @@ public final class ContainerRegistryCredentialsPolicy extends BearerTokenAuthent
         return false;
     }
 
-    /**
-     * Extracts value for given key in www-authenticate header.
-     * Expects key="value" format and return value without quotes.
-     *
-     * returns if value is not found
-     */
-    private String extractValue(String authHeader, String key) {
-        int start = authHeader.indexOf(key);
-        if (start < 0 || authHeader.length() - start < key.length() + 3) {
-            return null;
-        }
+    private static ContainerRegistryTokenRequestContext createTokenRequestContext(String authHeader) {
+        AuthenticateChallenge bearerChallenge = CoreUtils.parseAuthenticateHeader(authHeader)
+            .stream()
+            .filter(challenge -> "Bearer".equalsIgnoreCase(challenge.getScheme()))
+            .findFirst()
+            .orElse(null);
 
-        start += key.length();
-        if (authHeader.charAt(start) == '=' && authHeader.charAt(start + 1) == '"') {
-            start += 2;
-            int end = authHeader.indexOf('"', start);
-            if (end > start) {
-                return authHeader.substring(start, end);
-            }
-        }
+        String scope = bearerChallenge.getParameters().get(SCOPES_PARAMETER);
+        String serviceName = bearerChallenge.getParameters().get(SERVICE_PARAMETER);
 
-        return null;
+        return (scope != null && serviceName != null)
+            ? new ContainerRegistryTokenRequestContext(serviceName, scope)
+            : null;
     }
 }

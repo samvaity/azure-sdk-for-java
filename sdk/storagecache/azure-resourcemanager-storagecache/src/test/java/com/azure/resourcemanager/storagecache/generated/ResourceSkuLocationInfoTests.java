@@ -12,20 +12,19 @@ import org.junit.jupiter.api.Assertions;
 public final class ResourceSkuLocationInfoTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ResourceSkuLocationInfo model =
-            BinaryData
-                .fromString("{\"location\":\"wkuofoskghsauu\",\"zones\":[\"mvxi\",\"duugidyjr\"]}")
+        ResourceSkuLocationInfo model
+            = BinaryData.fromString("{\"location\":\"xisxyawjoyaqcsl\",\"zones\":[\"kiidzyex\"]}")
                 .toObject(ResourceSkuLocationInfo.class);
-        Assertions.assertEquals("wkuofoskghsauu", model.location());
-        Assertions.assertEquals("mvxi", model.zones().get(0));
+        Assertions.assertEquals("xisxyawjoyaqcsl", model.location());
+        Assertions.assertEquals("kiidzyex", model.zones().get(0));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ResourceSkuLocationInfo model =
-            new ResourceSkuLocationInfo().withLocation("wkuofoskghsauu").withZones(Arrays.asList("mvxi", "duugidyjr"));
+        ResourceSkuLocationInfo model
+            = new ResourceSkuLocationInfo().withLocation("xisxyawjoyaqcsl").withZones(Arrays.asList("kiidzyex"));
         model = BinaryData.fromObject(model).toObject(ResourceSkuLocationInfo.class);
-        Assertions.assertEquals("wkuofoskghsauu", model.location());
-        Assertions.assertEquals("mvxi", model.zones().get(0));
+        Assertions.assertEquals("xisxyawjoyaqcsl", model.location());
+        Assertions.assertEquals("kiidzyex", model.zones().get(0));
     }
 }

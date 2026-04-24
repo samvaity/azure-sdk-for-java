@@ -4,30 +4,53 @@
 
 package com.azure.communication.callautomation.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for RecordingStateInternal. */
+/**
+ * Defines values for RecordingStateInternal.
+ */
 public final class RecordingStateInternal extends ExpandableStringEnum<RecordingStateInternal> {
-    /** Static value active for RecordingStateInternal. */
+    /**
+     * Static value active for RecordingStateInternal.
+     */
+    @Generated
     public static final RecordingStateInternal ACTIVE = fromString("active");
 
-    /** Static value inactive for RecordingStateInternal. */
+    /**
+     * Static value inactive for RecordingStateInternal.
+     */
+    @Generated
     public static final RecordingStateInternal INACTIVE = fromString("inactive");
 
     /**
+     * Creates a new instance of RecordingStateInternal value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public RecordingStateInternal() {
+    }
+
+    /**
      * Creates or finds a RecordingStateInternal from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding RecordingStateInternal.
      */
-    @JsonCreator
+    @Generated
     public static RecordingStateInternal fromString(String name) {
         return fromString(name, RecordingStateInternal.class);
     }
 
-    /** @return known RecordingStateInternal values. */
+    /**
+     * Gets known RecordingStateInternal values.
+     * 
+     * @return known RecordingStateInternal values.
+     */
+    @Generated
     public static Collection<RecordingStateInternal> values() {
         return values(RecordingStateInternal.class);
     }

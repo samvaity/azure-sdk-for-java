@@ -8,131 +8,159 @@ import com.azure.core.management.Region;
 import com.azure.core.management.SystemData;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.networkcloud.fluent.models.StorageApplianceInner;
+import java.util.List;
 import java.util.Map;
 
-/** An immutable client-side representation of StorageAppliance. */
+/**
+ * An immutable client-side representation of StorageAppliance.
+ */
 public interface StorageAppliance {
     /**
      * Gets the id property: Fully qualified resource Id for the resource.
-     *
+     * 
      * @return the id value.
      */
     String id();
 
     /**
      * Gets the name property: The name of the resource.
-     *
+     * 
      * @return the name value.
      */
     String name();
 
     /**
      * Gets the type property: The type of the resource.
-     *
+     * 
      * @return the type value.
      */
     String type();
 
     /**
      * Gets the location property: The geo-location where the resource lives.
-     *
+     * 
      * @return the location value.
      */
     String location();
 
     /**
      * Gets the tags property: Resource tags.
-     *
+     * 
      * @return the tags value.
      */
     Map<String, String> tags();
 
     /**
-     * Gets the extendedLocation property: ExtendedLocation represents the Azure custom location where the resource will
-     * be created.
-     *
-     * <p>The extended location of the cluster associated with the resource.
-     *
+     * Gets the etag property: Resource ETag.
+     * 
+     * @return the etag value.
+     */
+    String etag();
+
+    /**
+     * Gets the extendedLocation property: The extended location of the cluster associated with the resource.
+     * 
      * @return the extendedLocation value.
      */
     ExtendedLocation extendedLocation();
 
     /**
      * Gets the systemData property: Azure Resource Manager metadata containing createdBy and modifiedBy information.
-     *
+     * 
      * @return the systemData value.
      */
     SystemData systemData();
 
     /**
-     * Gets the administratorCredentials property: AdministrativeCredentials represents the admin credentials for the
-     * device requiring password-based authentication.
-     *
-     * <p>The credentials of the administrative interface on this storage appliance.
-     *
+     * Gets the administratorCredentials property: The credentials of the administrative interface on this storage
+     * appliance.
+     * 
      * @return the administratorCredentials value.
      */
     AdministrativeCredentials administratorCredentials();
 
     /**
-     * Gets the capacity property: The total capacity of the storage appliance.
-     *
+     * Gets the caCertificate property: The CA certificate information issued by the platform for connecting to TLS
+     * interfaces for the storage appliance. Callers add this certificate to their trusted CA store to allow secure
+     * communication with the storage appliance.
+     * 
+     * @return the caCertificate value.
+     */
+    CertificateInfo caCertificate();
+
+    /**
+     * Gets the capacity property: The total capacity of the storage appliance. Measured in GiB.
+     * 
      * @return the capacity value.
      */
     Long capacity();
 
     /**
-     * Gets the capacityUsed property: The amount of storage consumed.
-     *
+     * Gets the capacityUsed property: The amount of storage consumed. Measured in GiB.
+     * 
      * @return the capacityUsed value.
      */
     Long capacityUsed();
 
     /**
      * Gets the clusterId property: The resource ID of the cluster this storage appliance is associated with.
-     *
+     * 
      * @return the clusterId value.
      */
     String clusterId();
 
     /**
      * Gets the detailedStatus property: The detailed status of the storage appliance.
-     *
+     * 
      * @return the detailedStatus value.
      */
     StorageApplianceDetailedStatus detailedStatus();
 
     /**
      * Gets the detailedStatusMessage property: The descriptive message about the current detailed status.
-     *
+     * 
      * @return the detailedStatusMessage value.
      */
     String detailedStatusMessage();
 
     /**
      * Gets the managementIpv4Address property: The endpoint for the management interface of the storage appliance.
-     *
+     * 
      * @return the managementIpv4Address value.
      */
     String managementIpv4Address();
 
     /**
+     * Gets the manufacturer property: The manufacturer of the storage appliance.
+     * 
+     * @return the manufacturer value.
+     */
+    String manufacturer();
+
+    /**
+     * Gets the model property: The model of the storage appliance.
+     * 
+     * @return the model value.
+     */
+    String model();
+
+    /**
      * Gets the provisioningState property: The provisioning state of the storage appliance.
-     *
+     * 
      * @return the provisioningState value.
      */
     StorageApplianceProvisioningState provisioningState();
 
     /**
      * Gets the rackId property: The resource ID of the rack where this storage appliance resides.
-     *
+     * 
      * @return the rackId value.
      */
     String rackId();
 
     /**
      * Gets the rackSlot property: The slot the storage appliance is in the rack based on the BOM configuration.
-     *
+     * 
      * @return the rackSlot value.
      */
     long rackSlot();
@@ -140,7 +168,7 @@ public interface StorageAppliance {
     /**
      * Gets the remoteVendorManagementFeature property: The indicator of whether the storage appliance supports remote
      * vendor management.
-     *
+     * 
      * @return the remoteVendorManagementFeature value.
      */
     RemoteVendorManagementFeature remoteVendorManagementFeature();
@@ -148,76 +176,93 @@ public interface StorageAppliance {
     /**
      * Gets the remoteVendorManagementStatus property: The indicator of whether the remote vendor management feature is
      * enabled or disabled, or unsupported if it is an unsupported feature.
-     *
+     * 
      * @return the remoteVendorManagementStatus value.
      */
     RemoteVendorManagementStatus remoteVendorManagementStatus();
 
     /**
+     * Gets the secretRotationStatus property: The list of statuses that represent secret rotation activity.
+     * 
+     * @return the secretRotationStatus value.
+     */
+    List<SecretRotationStatus> secretRotationStatus();
+
+    /**
      * Gets the serialNumber property: The serial number for the storage appliance.
-     *
+     * 
      * @return the serialNumber value.
      */
     String serialNumber();
 
     /**
      * Gets the storageApplianceSkuId property: The SKU for the storage appliance.
-     *
+     * 
      * @return the storageApplianceSkuId value.
      */
     String storageApplianceSkuId();
 
     /**
+     * Gets the version property: The version of the storage appliance.
+     * 
+     * @return the version value.
+     */
+    String version();
+
+    /**
      * Gets the region of the resource.
-     *
+     * 
      * @return the region of the resource.
      */
     Region region();
 
     /**
      * Gets the name of the resource region.
-     *
+     * 
      * @return the name of the resource region.
      */
     String regionName();
 
     /**
      * Gets the name of the resource group.
-     *
+     * 
      * @return the name of the resource group.
      */
     String resourceGroupName();
 
     /**
      * Gets the inner com.azure.resourcemanager.networkcloud.fluent.models.StorageApplianceInner object.
-     *
+     * 
      * @return the inner object.
      */
     StorageApplianceInner innerModel();
 
-    /** The entirety of the StorageAppliance definition. */
-    interface Definition
-        extends DefinitionStages.Blank,
-            DefinitionStages.WithLocation,
-            DefinitionStages.WithResourceGroup,
-            DefinitionStages.WithExtendedLocation,
-            DefinitionStages.WithAdministratorCredentials,
-            DefinitionStages.WithRackId,
-            DefinitionStages.WithRackSlot,
-            DefinitionStages.WithSerialNumber,
-            DefinitionStages.WithStorageApplianceSkuId,
-            DefinitionStages.WithCreate {
+    /**
+     * The entirety of the StorageAppliance definition.
+     */
+    interface Definition extends DefinitionStages.Blank, DefinitionStages.WithLocation,
+        DefinitionStages.WithResourceGroup, DefinitionStages.WithExtendedLocation,
+        DefinitionStages.WithAdministratorCredentials, DefinitionStages.WithRackId, DefinitionStages.WithRackSlot,
+        DefinitionStages.WithSerialNumber, DefinitionStages.WithStorageApplianceSkuId, DefinitionStages.WithCreate {
     }
-    /** The StorageAppliance definition stages. */
+
+    /**
+     * The StorageAppliance definition stages.
+     */
     interface DefinitionStages {
-        /** The first stage of the StorageAppliance definition. */
+        /**
+         * The first stage of the StorageAppliance definition.
+         */
         interface Blank extends WithLocation {
         }
-        /** The stage of the StorageAppliance definition allowing to specify location. */
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify location.
+         */
         interface WithLocation {
             /**
              * Specifies the region for the resource.
-             *
+             * 
              * @param location The geo-location where the resource lives.
              * @return the next definition stage.
              */
@@ -225,181 +270,275 @@ public interface StorageAppliance {
 
             /**
              * Specifies the region for the resource.
-             *
+             * 
              * @param location The geo-location where the resource lives.
              * @return the next definition stage.
              */
             WithResourceGroup withRegion(String location);
         }
-        /** The stage of the StorageAppliance definition allowing to specify parent resource. */
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify parent resource.
+         */
         interface WithResourceGroup {
             /**
              * Specifies resourceGroupName.
-             *
+             * 
              * @param resourceGroupName The name of the resource group. The name is case insensitive.
              * @return the next definition stage.
              */
             WithExtendedLocation withExistingResourceGroup(String resourceGroupName);
         }
-        /** The stage of the StorageAppliance definition allowing to specify extendedLocation. */
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify extendedLocation.
+         */
         interface WithExtendedLocation {
             /**
-             * Specifies the extendedLocation property: ExtendedLocation represents the Azure custom location where the
-             * resource will be created.
-             *
-             * <p>The extended location of the cluster associated with the resource..
-             *
-             * @param extendedLocation ExtendedLocation represents the Azure custom location where the resource will be
-             *     created.
-             *     <p>The extended location of the cluster associated with the resource.
+             * Specifies the extendedLocation property: The extended location of the cluster associated with the
+             * resource..
+             * 
+             * @param extendedLocation The extended location of the cluster associated with the resource.
              * @return the next definition stage.
              */
             WithAdministratorCredentials withExtendedLocation(ExtendedLocation extendedLocation);
         }
-        /** The stage of the StorageAppliance definition allowing to specify administratorCredentials. */
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify administratorCredentials.
+         */
         interface WithAdministratorCredentials {
             /**
-             * Specifies the administratorCredentials property: AdministrativeCredentials represents the admin
-             * credentials for the device requiring password-based authentication.
-             *
-             * <p>The credentials of the administrative interface on this storage appliance..
-             *
-             * @param administratorCredentials AdministrativeCredentials represents the admin credentials for the device
-             *     requiring password-based authentication.
-             *     <p>The credentials of the administrative interface on this storage appliance.
+             * Specifies the administratorCredentials property: The credentials of the administrative interface on this
+             * storage appliance..
+             * 
+             * @param administratorCredentials The credentials of the administrative interface on this storage
+             * appliance.
              * @return the next definition stage.
              */
             WithRackId withAdministratorCredentials(AdministrativeCredentials administratorCredentials);
         }
-        /** The stage of the StorageAppliance definition allowing to specify rackId. */
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify rackId.
+         */
         interface WithRackId {
             /**
              * Specifies the rackId property: The resource ID of the rack where this storage appliance resides..
-             *
+             * 
              * @param rackId The resource ID of the rack where this storage appliance resides.
              * @return the next definition stage.
              */
             WithRackSlot withRackId(String rackId);
         }
-        /** The stage of the StorageAppliance definition allowing to specify rackSlot. */
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify rackSlot.
+         */
         interface WithRackSlot {
             /**
              * Specifies the rackSlot property: The slot the storage appliance is in the rack based on the BOM
              * configuration..
-             *
+             * 
              * @param rackSlot The slot the storage appliance is in the rack based on the BOM configuration.
              * @return the next definition stage.
              */
             WithSerialNumber withRackSlot(long rackSlot);
         }
-        /** The stage of the StorageAppliance definition allowing to specify serialNumber. */
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify serialNumber.
+         */
         interface WithSerialNumber {
             /**
              * Specifies the serialNumber property: The serial number for the storage appliance..
-             *
+             * 
              * @param serialNumber The serial number for the storage appliance.
              * @return the next definition stage.
              */
             WithStorageApplianceSkuId withSerialNumber(String serialNumber);
         }
-        /** The stage of the StorageAppliance definition allowing to specify storageApplianceSkuId. */
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify storageApplianceSkuId.
+         */
         interface WithStorageApplianceSkuId {
             /**
              * Specifies the storageApplianceSkuId property: The SKU for the storage appliance..
-             *
+             * 
              * @param storageApplianceSkuId The SKU for the storage appliance.
              * @return the next definition stage.
              */
             WithCreate withStorageApplianceSkuId(String storageApplianceSkuId);
         }
+
         /**
          * The stage of the StorageAppliance definition which contains all the minimum required properties for the
          * resource to be created, but also allows for any other optional properties to be specified.
          */
-        interface WithCreate extends DefinitionStages.WithTags {
+        interface WithCreate
+            extends DefinitionStages.WithTags, DefinitionStages.WithIfMatch, DefinitionStages.WithIfNoneMatch {
             /**
              * Executes the create request.
-             *
+             * 
              * @return the created resource.
              */
             StorageAppliance create();
 
             /**
              * Executes the create request.
-             *
+             * 
              * @param context The context to associate with this operation.
              * @return the created resource.
              */
             StorageAppliance create(Context context);
         }
-        /** The stage of the StorageAppliance definition allowing to specify tags. */
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify tags.
+         */
         interface WithTags {
             /**
              * Specifies the tags property: Resource tags..
-             *
+             * 
              * @param tags Resource tags.
              * @return the next definition stage.
              */
             WithCreate withTags(Map<String, String> tags);
         }
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify ifMatch.
+         */
+        interface WithIfMatch {
+            /**
+             * Specifies the ifMatch property: The ETag of the transformation. Omit this value to always overwrite the
+             * current resource. Specify the last-seen ETag value to prevent accidentally overwriting concurrent
+             * changes..
+             * 
+             * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource.
+             * Specify the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+             * @return the next definition stage.
+             */
+            WithCreate withIfMatch(String ifMatch);
+        }
+
+        /**
+         * The stage of the StorageAppliance definition allowing to specify ifNoneMatch.
+         */
+        interface WithIfNoneMatch {
+            /**
+             * Specifies the ifNoneMatch property: Set to '*' to allow a new record set to be created, but to prevent
+             * updating an existing resource. Other values will result in error from server as they are not supported..
+             * 
+             * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an
+             * existing resource. Other values will result in error from server as they are not supported.
+             * @return the next definition stage.
+             */
+            WithCreate withIfNoneMatch(String ifNoneMatch);
+        }
     }
+
     /**
      * Begins update for the StorageAppliance resource.
-     *
+     * 
      * @return the stage of resource update.
      */
     StorageAppliance.Update update();
 
-    /** The template for StorageAppliance update. */
-    interface Update extends UpdateStages.WithTags, UpdateStages.WithSerialNumber {
+    /**
+     * The template for StorageAppliance update.
+     */
+    interface Update extends UpdateStages.WithTags, UpdateStages.WithSerialNumber, UpdateStages.WithIfMatch,
+        UpdateStages.WithIfNoneMatch {
         /**
          * Executes the update request.
-         *
+         * 
          * @return the updated resource.
          */
         StorageAppliance apply();
 
         /**
          * Executes the update request.
-         *
+         * 
          * @param context The context to associate with this operation.
          * @return the updated resource.
          */
         StorageAppliance apply(Context context);
     }
-    /** The StorageAppliance update stages. */
+
+    /**
+     * The StorageAppliance update stages.
+     */
     interface UpdateStages {
-        /** The stage of the StorageAppliance update allowing to specify tags. */
+        /**
+         * The stage of the StorageAppliance update allowing to specify tags.
+         */
         interface WithTags {
             /**
              * Specifies the tags property: The Azure resource tags that will replace the existing ones..
-             *
+             * 
              * @param tags The Azure resource tags that will replace the existing ones.
              * @return the next definition stage.
              */
             Update withTags(Map<String, String> tags);
         }
-        /** The stage of the StorageAppliance update allowing to specify serialNumber. */
+
+        /**
+         * The stage of the StorageAppliance update allowing to specify serialNumber.
+         */
         interface WithSerialNumber {
             /**
              * Specifies the serialNumber property: The serial number for the storage appliance..
-             *
+             * 
              * @param serialNumber The serial number for the storage appliance.
              * @return the next definition stage.
              */
             Update withSerialNumber(String serialNumber);
         }
+
+        /**
+         * The stage of the StorageAppliance update allowing to specify ifMatch.
+         */
+        interface WithIfMatch {
+            /**
+             * Specifies the ifMatch property: The ETag of the transformation. Omit this value to always overwrite the
+             * current resource. Specify the last-seen ETag value to prevent accidentally overwriting concurrent
+             * changes..
+             * 
+             * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource.
+             * Specify the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+             * @return the next definition stage.
+             */
+            Update withIfMatch(String ifMatch);
+        }
+
+        /**
+         * The stage of the StorageAppliance update allowing to specify ifNoneMatch.
+         */
+        interface WithIfNoneMatch {
+            /**
+             * Specifies the ifNoneMatch property: Set to '*' to allow a new record set to be created, but to prevent
+             * updating an existing resource. Other values will result in error from server as they are not supported..
+             * 
+             * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an
+             * existing resource. Other values will result in error from server as they are not supported.
+             * @return the next definition stage.
+             */
+            Update withIfNoneMatch(String ifNoneMatch);
+        }
     }
+
     /**
      * Refreshes the resource to sync with Azure.
-     *
+     * 
      * @return the refreshed resource.
      */
     StorageAppliance refresh();
 
     /**
      * Refreshes the resource to sync with Azure.
-     *
+     * 
      * @param context The context to associate with this operation.
      * @return the refreshed resource.
      */
@@ -407,74 +546,81 @@ public interface StorageAppliance {
 
     /**
      * Turn off remote vendor management for a storage appliance, if supported.
-     *
-     * <p>Disable remote vendor management of the provided storage appliance.
-     *
+     * 
+     * Disable remote vendor management of the provided storage appliance.
+     * 
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void disableRemoteVendorManagement();
+    OperationStatusResult disableRemoteVendorManagement();
 
     /**
      * Turn off remote vendor management for a storage appliance, if supported.
-     *
-     * <p>Disable remote vendor management of the provided storage appliance.
-     *
+     * 
+     * Disable remote vendor management of the provided storage appliance.
+     * 
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void disableRemoteVendorManagement(Context context);
+    OperationStatusResult disableRemoteVendorManagement(Context context);
 
     /**
      * Turn on remote vendor management for a storage appliance, if supported.
-     *
-     * <p>Enable remote vendor management of the provided storage appliance.
-     *
+     * 
+     * Enable remote vendor management of the provided storage appliance.
+     * 
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void enableRemoteVendorManagement();
+    OperationStatusResult enableRemoteVendorManagement();
 
     /**
      * Turn on remote vendor management for a storage appliance, if supported.
-     *
-     * <p>Enable remote vendor management of the provided storage appliance.
-     *
+     * 
+     * Enable remote vendor management of the provided storage appliance.
+     * 
      * @param storageApplianceEnableRemoteVendorManagementParameters The request body.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void enableRemoteVendorManagement(
+    OperationStatusResult enableRemoteVendorManagement(
         StorageApplianceEnableRemoteVendorManagementParameters storageApplianceEnableRemoteVendorManagementParameters,
         Context context);
 
     /**
-     * Retrieve output from read-only commands exercised against a storage appliance.
-     *
-     * <p>Run and retrieve output from read only commands on the provided storage appliance.
-     *
+     * Run read-only commands against a storage appliance.
+     * 
+     * Run one or more read-only commands on the provided storage appliance.
+     * 
      * @param storageApplianceRunReadCommandsParameters The request body.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void runReadCommands(StorageApplianceRunReadCommandsParameters storageApplianceRunReadCommandsParameters);
+    OperationStatusResult
+        runReadCommands(StorageApplianceRunReadCommandsParameters storageApplianceRunReadCommandsParameters);
 
     /**
-     * Retrieve output from read-only commands exercised against a storage appliance.
-     *
-     * <p>Run and retrieve output from read only commands on the provided storage appliance.
-     *
+     * Run read-only commands against a storage appliance.
+     * 
+     * Run one or more read-only commands on the provided storage appliance.
+     * 
      * @param storageApplianceRunReadCommandsParameters The request body.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void runReadCommands(
+    OperationStatusResult runReadCommands(
         StorageApplianceRunReadCommandsParameters storageApplianceRunReadCommandsParameters, Context context);
 }

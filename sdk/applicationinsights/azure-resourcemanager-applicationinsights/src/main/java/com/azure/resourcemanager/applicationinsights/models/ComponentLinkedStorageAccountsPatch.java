@@ -5,21 +5,33 @@
 package com.azure.resourcemanager.applicationinsights.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.applicationinsights.fluent.models.LinkedStorageAccountsProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 
-/** An Application Insights component linked storage accounts patch. */
+/**
+ * An Application Insights component linked storage accounts patch.
+ */
 @Fluent
-public final class ComponentLinkedStorageAccountsPatch {
+public final class ComponentLinkedStorageAccountsPatch
+    implements JsonSerializable<ComponentLinkedStorageAccountsPatch> {
     /*
      * The properties of the linked storage accounts.
      */
-    @JsonProperty(value = "properties")
     private LinkedStorageAccountsProperties innerProperties;
 
     /**
+     * Creates an instance of ComponentLinkedStorageAccountsPatch class.
+     */
+    public ComponentLinkedStorageAccountsPatch() {
+    }
+
+    /**
      * Get the innerProperties property: The properties of the linked storage accounts.
-     *
+     * 
      * @return the innerProperties value.
      */
     private LinkedStorageAccountsProperties innerProperties() {
@@ -28,7 +40,7 @@ public final class ComponentLinkedStorageAccountsPatch {
 
     /**
      * Get the linkedStorageAccount property: Linked storage account resource ID.
-     *
+     * 
      * @return the linkedStorageAccount value.
      */
     public String linkedStorageAccount() {
@@ -37,7 +49,7 @@ public final class ComponentLinkedStorageAccountsPatch {
 
     /**
      * Set the linkedStorageAccount property: Linked storage account resource ID.
-     *
+     * 
      * @param linkedStorageAccount the linkedStorageAccount value to set.
      * @return the ComponentLinkedStorageAccountsPatch object itself.
      */
@@ -51,12 +63,50 @@ public final class ComponentLinkedStorageAccountsPatch {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (innerProperties() != null) {
             innerProperties().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("properties", this.innerProperties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ComponentLinkedStorageAccountsPatch from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ComponentLinkedStorageAccountsPatch if the JsonReader was pointing to an instance of it,
+     * or null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ComponentLinkedStorageAccountsPatch.
+     */
+    public static ComponentLinkedStorageAccountsPatch fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ComponentLinkedStorageAccountsPatch deserializedComponentLinkedStorageAccountsPatch
+                = new ComponentLinkedStorageAccountsPatch();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("properties".equals(fieldName)) {
+                    deserializedComponentLinkedStorageAccountsPatch.innerProperties
+                        = LinkedStorageAccountsProperties.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedComponentLinkedStorageAccountsPatch;
+        });
     }
 }

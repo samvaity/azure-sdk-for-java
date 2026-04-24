@@ -5,44 +5,66 @@
 package com.azure.communication.callautomation.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The locator used for joining or taking action on a call. */
+/**
+ * The locator used for joining or taking action on a call.
+ */
 @Fluent
-public final class CallLocatorInternal {
+public final class CallLocatorInternal implements JsonSerializable<CallLocatorInternal> {
     /*
      * The group call id
      */
-    @JsonProperty(value = "groupCallId")
+    @Generated
     private String groupCallId;
 
     /*
      * The server call id.
      */
-    @JsonProperty(value = "serverCallId")
+    @Generated
     private String serverCallId;
+
+    /*
+     * The Acs room id. (Not supported for Start Recording)
+     */
+    @Generated
+    private String roomId;
 
     /*
      * The call locator kind.
      */
-    @JsonProperty(value = "kind")
+    @Generated
     private CallLocatorKindInternal kind;
 
     /**
+     * Creates an instance of CallLocatorInternal class.
+     */
+    @Generated
+    public CallLocatorInternal() {
+    }
+
+    /**
      * Get the groupCallId property: The group call id.
-     *
+     * 
      * @return the groupCallId value.
      */
+    @Generated
     public String getGroupCallId() {
         return this.groupCallId;
     }
 
     /**
      * Set the groupCallId property: The group call id.
-     *
+     * 
      * @param groupCallId the groupCallId value to set.
      * @return the CallLocatorInternal object itself.
      */
+    @Generated
     public CallLocatorInternal setGroupCallId(String groupCallId) {
         this.groupCallId = groupCallId;
         return this;
@@ -50,41 +72,114 @@ public final class CallLocatorInternal {
 
     /**
      * Get the serverCallId property: The server call id.
-     *
+     * 
      * @return the serverCallId value.
      */
+    @Generated
     public String getServerCallId() {
         return this.serverCallId;
     }
 
     /**
      * Set the serverCallId property: The server call id.
-     *
+     * 
      * @param serverCallId the serverCallId value to set.
      * @return the CallLocatorInternal object itself.
      */
+    @Generated
     public CallLocatorInternal setServerCallId(String serverCallId) {
         this.serverCallId = serverCallId;
         return this;
     }
 
     /**
+     * Get the roomId property: The Acs room id. (Not supported for Start Recording).
+     * 
+     * @return the roomId value.
+     */
+    @Generated
+    public String getRoomId() {
+        return this.roomId;
+    }
+
+    /**
+     * Set the roomId property: The Acs room id. (Not supported for Start Recording).
+     * 
+     * @param roomId the roomId value to set.
+     * @return the CallLocatorInternal object itself.
+     */
+    @Generated
+    public CallLocatorInternal setRoomId(String roomId) {
+        this.roomId = roomId;
+        return this;
+    }
+
+    /**
      * Get the kind property: The call locator kind.
-     *
+     * 
      * @return the kind value.
      */
+    @Generated
     public CallLocatorKindInternal getKind() {
         return this.kind;
     }
 
     /**
      * Set the kind property: The call locator kind.
-     *
+     * 
      * @param kind the kind value to set.
      * @return the CallLocatorInternal object itself.
      */
+    @Generated
     public CallLocatorInternal setKind(CallLocatorKindInternal kind) {
         this.kind = kind;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("groupCallId", this.groupCallId);
+        jsonWriter.writeStringField("serverCallId", this.serverCallId);
+        jsonWriter.writeStringField("roomId", this.roomId);
+        jsonWriter.writeStringField("kind", this.kind == null ? null : this.kind.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CallLocatorInternal from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CallLocatorInternal if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the CallLocatorInternal.
+     */
+    @Generated
+    public static CallLocatorInternal fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CallLocatorInternal deserializedCallLocatorInternal = new CallLocatorInternal();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("groupCallId".equals(fieldName)) {
+                    deserializedCallLocatorInternal.groupCallId = reader.getString();
+                } else if ("serverCallId".equals(fieldName)) {
+                    deserializedCallLocatorInternal.serverCallId = reader.getString();
+                } else if ("roomId".equals(fieldName)) {
+                    deserializedCallLocatorInternal.roomId = reader.getString();
+                } else if ("kind".equals(fieldName)) {
+                    deserializedCallLocatorInternal.kind = CallLocatorKindInternal.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedCallLocatorInternal;
+        });
     }
 }

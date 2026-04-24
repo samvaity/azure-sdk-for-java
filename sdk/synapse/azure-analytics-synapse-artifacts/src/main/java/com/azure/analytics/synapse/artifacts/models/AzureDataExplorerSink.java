@@ -5,42 +5,68 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity Azure Data Explorer sink. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("AzureDataExplorerSink")
+/**
+ * A copy activity Azure Data Explorer sink.
+ */
 @Fluent
 public final class AzureDataExplorerSink extends CopySink {
     /*
+     * Copy sink type.
+     */
+    @Generated
+    private String type = "AzureDataExplorerSink";
+
+    /*
      * A name of a pre-created csv mapping that was defined on the target Kusto table. Type: string.
      */
-    @JsonProperty(value = "ingestionMappingName")
+    @Generated
     private Object ingestionMappingName;
 
     /*
      * An explicit column mapping description provided in a json format. Type: string.
      */
-    @JsonProperty(value = "ingestionMappingAsJson")
+    @Generated
     private Object ingestionMappingAsJson;
 
     /*
      * If set to true, any aggregation will be skipped. Default is false. Type: boolean.
      */
-    @JsonProperty(value = "flushImmediately")
+    @Generated
     private Object flushImmediately;
 
-    /** Creates an instance of AzureDataExplorerSink class. */
-    public AzureDataExplorerSink() {}
+    /**
+     * Creates an instance of AzureDataExplorerSink class.
+     */
+    @Generated
+    public AzureDataExplorerSink() {
+    }
+
+    /**
+     * Get the type property: Copy sink type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the ingestionMappingName property: A name of a pre-created csv mapping that was defined on the target Kusto
      * table. Type: string.
-     *
+     * 
      * @return the ingestionMappingName value.
      */
+    @Generated
     public Object getIngestionMappingName() {
         return this.ingestionMappingName;
     }
@@ -48,10 +74,11 @@ public final class AzureDataExplorerSink extends CopySink {
     /**
      * Set the ingestionMappingName property: A name of a pre-created csv mapping that was defined on the target Kusto
      * table. Type: string.
-     *
+     * 
      * @param ingestionMappingName the ingestionMappingName value to set.
      * @return the AzureDataExplorerSink object itself.
      */
+    @Generated
     public AzureDataExplorerSink setIngestionMappingName(Object ingestionMappingName) {
         this.ingestionMappingName = ingestionMappingName;
         return this;
@@ -60,9 +87,10 @@ public final class AzureDataExplorerSink extends CopySink {
     /**
      * Get the ingestionMappingAsJson property: An explicit column mapping description provided in a json format. Type:
      * string.
-     *
+     * 
      * @return the ingestionMappingAsJson value.
      */
+    @Generated
     public Object getIngestionMappingAsJson() {
         return this.ingestionMappingAsJson;
     }
@@ -70,10 +98,11 @@ public final class AzureDataExplorerSink extends CopySink {
     /**
      * Set the ingestionMappingAsJson property: An explicit column mapping description provided in a json format. Type:
      * string.
-     *
+     * 
      * @param ingestionMappingAsJson the ingestionMappingAsJson value to set.
      * @return the AzureDataExplorerSink object itself.
      */
+    @Generated
     public AzureDataExplorerSink setIngestionMappingAsJson(Object ingestionMappingAsJson) {
         this.ingestionMappingAsJson = ingestionMappingAsJson;
         return this;
@@ -82,9 +111,10 @@ public final class AzureDataExplorerSink extends CopySink {
     /**
      * Get the flushImmediately property: If set to true, any aggregation will be skipped. Default is false. Type:
      * boolean.
-     *
+     * 
      * @return the flushImmediately value.
      */
+    @Generated
     public Object getFlushImmediately() {
         return this.flushImmediately;
     }
@@ -92,47 +122,152 @@ public final class AzureDataExplorerSink extends CopySink {
     /**
      * Set the flushImmediately property: If set to true, any aggregation will be skipped. Default is false. Type:
      * boolean.
-     *
+     * 
      * @param flushImmediately the flushImmediately value to set.
      * @return the AzureDataExplorerSink object itself.
      */
+    @Generated
     public AzureDataExplorerSink setFlushImmediately(Object flushImmediately) {
         this.flushImmediately = flushImmediately;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerSink setWriteBatchSize(Object writeBatchSize) {
         super.setWriteBatchSize(writeBatchSize);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerSink setWriteBatchTimeout(Object writeBatchTimeout) {
         super.setWriteBatchTimeout(writeBatchTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerSink setSinkRetryCount(Object sinkRetryCount) {
         super.setSinkRetryCount(sinkRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerSink setSinkRetryWait(Object sinkRetryWait) {
         super.setSinkRetryWait(sinkRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerSink setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getWriteBatchSize() != null) {
+            jsonWriter.writeUntypedField("writeBatchSize", getWriteBatchSize());
+        }
+        if (getWriteBatchTimeout() != null) {
+            jsonWriter.writeUntypedField("writeBatchTimeout", getWriteBatchTimeout());
+        }
+        if (getSinkRetryCount() != null) {
+            jsonWriter.writeUntypedField("sinkRetryCount", getSinkRetryCount());
+        }
+        if (getSinkRetryWait() != null) {
+            jsonWriter.writeUntypedField("sinkRetryWait", getSinkRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.ingestionMappingName != null) {
+            jsonWriter.writeUntypedField("ingestionMappingName", this.ingestionMappingName);
+        }
+        if (this.ingestionMappingAsJson != null) {
+            jsonWriter.writeUntypedField("ingestionMappingAsJson", this.ingestionMappingAsJson);
+        }
+        if (this.flushImmediately != null) {
+            jsonWriter.writeUntypedField("flushImmediately", this.flushImmediately);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureDataExplorerSink from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureDataExplorerSink if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the AzureDataExplorerSink.
+     */
+    @Generated
+    public static AzureDataExplorerSink fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureDataExplorerSink deserializedAzureDataExplorerSink = new AzureDataExplorerSink();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("writeBatchSize".equals(fieldName)) {
+                    deserializedAzureDataExplorerSink.setWriteBatchSize(reader.readUntyped());
+                } else if ("writeBatchTimeout".equals(fieldName)) {
+                    deserializedAzureDataExplorerSink.setWriteBatchTimeout(reader.readUntyped());
+                } else if ("sinkRetryCount".equals(fieldName)) {
+                    deserializedAzureDataExplorerSink.setSinkRetryCount(reader.readUntyped());
+                } else if ("sinkRetryWait".equals(fieldName)) {
+                    deserializedAzureDataExplorerSink.setSinkRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedAzureDataExplorerSink.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedAzureDataExplorerSink.type = reader.getString();
+                } else if ("ingestionMappingName".equals(fieldName)) {
+                    deserializedAzureDataExplorerSink.ingestionMappingName = reader.readUntyped();
+                } else if ("ingestionMappingAsJson".equals(fieldName)) {
+                    deserializedAzureDataExplorerSink.ingestionMappingAsJson = reader.readUntyped();
+                } else if ("flushImmediately".equals(fieldName)) {
+                    deserializedAzureDataExplorerSink.flushImmediately = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAzureDataExplorerSink.setAdditionalProperties(additionalProperties);
+
+            return deserializedAzureDataExplorerSink;
+        });
     }
 }

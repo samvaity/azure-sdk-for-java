@@ -26,6 +26,7 @@ import static com.azure.spring.data.cosmos.core.convert.MappingCosmosConverter.t
 /**
  * Base class for generating sql query
  */
+@SuppressWarnings("deprecation")
 public abstract class AbstractQueryGenerator {
 
     private static String tableName = "";
@@ -226,7 +227,10 @@ public abstract class AbstractQueryGenerator {
     @NonNull
     private Pair<String, List<Pair<String, Object>>> generateQueryBody(@NonNull CosmosQuery query, @NonNull final AtomicInteger counter) {
         final List<Pair<String, Object>> parameters = new ArrayList<>();
-        String queryString = this.generateQueryBody(query.getCriteria(), parameters, counter);
+        String queryString = "";
+        if (query.getCriteria() != null) {
+            queryString = this.generateQueryBody(query.getCriteria(), parameters, counter);
+        }
 
         if (StringUtils.hasText(queryString)) {
             queryString = String.join(" ", "WHERE", queryString);

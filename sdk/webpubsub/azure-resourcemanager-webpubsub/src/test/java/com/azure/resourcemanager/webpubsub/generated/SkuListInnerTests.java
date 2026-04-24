@@ -10,11 +10,9 @@ import com.azure.resourcemanager.webpubsub.fluent.models.SkuListInner;
 public final class SkuListInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        SkuListInner model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"resourceType\":\"mvmemfnczd\",\"sku\":{\"name\":\"vbalxlllc\",\"tier\":\"Standard\",\"size\":\"bzevwrd\",\"family\":\"fukuvsjcswsmystu\",\"capacity\":1485763904},\"capacity\":{\"minimum\":2048413099,\"maximum\":1783589840,\"default\":291266426,\"allowedValues\":[335634108,414461518,1201344098],\"scaleType\":\"Manual\"}},{\"resourceType\":\"pjbabwidfc\",\"sku\":{\"name\":\"spuunnoxyhkxgq\",\"tier\":\"Basic\",\"size\":\"hp\",\"family\":\"oqcaaewdaomdj\",\"capacity\":1847086770},\"capacity\":{\"minimum\":945284283,\"maximum\":392505640,\"default\":1445056578,\"allowedValues\":[1373073585,1001888045],\"scaleType\":\"Manual\"}},{\"resourceType\":\"iykzkdncjdx\",\"sku\":{\"name\":\"bzo\",\"tier\":\"Premium\",\"size\":\"lapzwyrp\",\"family\":\"gtqxep\",\"capacity\":991582121},\"capacity\":{\"minimum\":1449086974,\"maximum\":347721012,\"default\":781075850,\"allowedValues\":[2027275706,21548435],\"scaleType\":\"None\"}}],\"nextLink\":\"zhvfcibyfmowuxr\"}")
-                .toObject(SkuListInner.class);
+        SkuListInner model = BinaryData.fromString(
+            "{\"value\":[{\"resourceType\":\"yjt\",\"sku\":{\"name\":\"of\",\"tier\":\"Standard\",\"size\":\"fcibyfmowuxrkj\",\"family\":\"dwxf\",\"capacity\":2104951545},\"capacity\":{\"minimum\":1157352083,\"maximum\":1754263967,\"default\":779718035,\"allowedValues\":[1253939074,954639384,1858009162,1410890434],\"scaleType\":\"None\"}},{\"resourceType\":\"btrnegvm\",\"sku\":{\"name\":\"uqeqv\",\"tier\":\"Standard\",\"size\":\"astjbkkdmflvestm\",\"family\":\"xrrilozapee\",\"capacity\":1482669533},\"capacity\":{\"minimum\":1353258007,\"maximum\":55990997,\"default\":17628020,\"allowedValues\":[163860242,1984241161,1190990500,463707796],\"scaleType\":\"Manual\"}},{\"resourceType\":\"ufuztcktyhjtq\",\"sku\":{\"name\":\"cgzulwmmrqzzr\",\"tier\":\"Basic\",\"size\":\"gl\",\"family\":\"zgkrvqe\",\"capacity\":1665980983},\"capacity\":{\"minimum\":1014603209,\"maximum\":1266268287,\"default\":108809884,\"allowedValues\":[584463560,2045022432,989782858],\"scaleType\":\"None\"}}],\"nextLink\":\"o\"}")
+            .toObject(SkuListInner.class);
     }
 
     @org.junit.jupiter.api.Test

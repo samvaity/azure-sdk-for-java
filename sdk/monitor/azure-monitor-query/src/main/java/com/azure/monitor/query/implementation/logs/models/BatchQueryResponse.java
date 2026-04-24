@@ -5,56 +5,67 @@
 package com.azure.monitor.query.implementation.logs.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.Map;
 
-/** The BatchQueryResponse model. */
+/**
+ * Contains the batch query response and the headers, id, and status of the request.
+ */
 @Fluent
-public final class BatchQueryResponse {
+public final class BatchQueryResponse implements JsonSerializable<BatchQueryResponse> {
     /*
      * The id property.
      */
-    @JsonProperty(value = "id")
+    @Generated
     private String id;
 
     /*
      * The status property.
      */
-    @JsonProperty(value = "status")
+    @Generated
     private Integer status;
 
     /*
-     * A query response for a single query in a batch.
-     *
      * Contains the tables, columns & rows resulting from a query.
      */
-    @JsonProperty(value = "body")
+    @Generated
     private BatchQueryResults body;
 
     /*
      * Dictionary of <string>
      */
-    @JsonProperty(value = "headers")
+    @Generated
     private Map<String, String> headers;
 
-    /** Creates an instance of BatchQueryResponse class. */
-    public BatchQueryResponse() {}
+    /**
+     * Creates an instance of BatchQueryResponse class.
+     */
+    @Generated
+    public BatchQueryResponse() {
+    }
 
     /**
      * Get the id property: The id property.
-     *
+     * 
      * @return the id value.
      */
+    @Generated
     public String getId() {
         return this.id;
     }
 
     /**
      * Set the id property: The id property.
-     *
+     * 
      * @param id the id value to set.
      * @return the BatchQueryResponse object itself.
      */
+    @Generated
     public BatchQueryResponse setId(String id) {
         this.id = id;
         return this;
@@ -62,43 +73,43 @@ public final class BatchQueryResponse {
 
     /**
      * Get the status property: The status property.
-     *
+     * 
      * @return the status value.
      */
+    @Generated
     public Integer getStatus() {
         return this.status;
     }
 
     /**
      * Set the status property: The status property.
-     *
+     * 
      * @param status the status value to set.
      * @return the BatchQueryResponse object itself.
      */
+    @Generated
     public BatchQueryResponse setStatus(Integer status) {
         this.status = status;
         return this;
     }
 
     /**
-     * Get the body property: A query response for a single query in a batch.
-     *
-     * <p>Contains the tables, columns &amp; rows resulting from a query.
-     *
+     * Get the body property: Contains the tables, columns &amp; rows resulting from a query.
+     * 
      * @return the body value.
      */
+    @Generated
     public BatchQueryResults getBody() {
         return this.body;
     }
 
     /**
-     * Set the body property: A query response for a single query in a batch.
-     *
-     * <p>Contains the tables, columns &amp; rows resulting from a query.
-     *
+     * Set the body property: Contains the tables, columns &amp; rows resulting from a query.
+     * 
      * @param body the body value to set.
      * @return the BatchQueryResponse object itself.
      */
+    @Generated
     public BatchQueryResponse setBody(BatchQueryResults body) {
         this.body = body;
         return this;
@@ -106,32 +117,71 @@ public final class BatchQueryResponse {
 
     /**
      * Get the headers property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the headers value.
      */
+    @Generated
     public Map<String, String> getHeaders() {
         return this.headers;
     }
 
     /**
      * Set the headers property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param headers the headers value to set.
      * @return the BatchQueryResponse object itself.
      */
+    @Generated
     public BatchQueryResponse setHeaders(Map<String, String> headers) {
         this.headers = headers;
         return this;
     }
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * {@inheritDoc}
      */
-    public void validate() {
-        if (getBody() != null) {
-            getBody().validate();
-        }
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("id", this.id);
+        jsonWriter.writeNumberField("status", this.status);
+        jsonWriter.writeJsonField("body", this.body);
+        jsonWriter.writeMapField("headers", this.headers, (writer, element) -> writer.writeString(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of BatchQueryResponse from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of BatchQueryResponse if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the BatchQueryResponse.
+     */
+    @Generated
+    public static BatchQueryResponse fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            BatchQueryResponse deserializedBatchQueryResponse = new BatchQueryResponse();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedBatchQueryResponse.id = reader.getString();
+                } else if ("status".equals(fieldName)) {
+                    deserializedBatchQueryResponse.status = reader.getNullable(JsonReader::getInt);
+                } else if ("body".equals(fieldName)) {
+                    deserializedBatchQueryResponse.body = BatchQueryResults.fromJson(reader);
+                } else if ("headers".equals(fieldName)) {
+                    Map<String, String> headers = reader.readMap(reader1 -> reader1.getString());
+                    deserializedBatchQueryResponse.headers = headers;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedBatchQueryResponse;
+        });
     }
 }

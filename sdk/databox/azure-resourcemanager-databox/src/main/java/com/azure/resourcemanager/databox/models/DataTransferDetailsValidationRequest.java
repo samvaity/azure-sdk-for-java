@@ -6,47 +6,67 @@ package com.azure.resourcemanager.databox.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** Request to validate export and import data details. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "validationType")
-@JsonTypeName("ValidateDataTransferDetails")
+/**
+ * Request to validate export and import data details.
+ */
 @Fluent
 public final class DataTransferDetailsValidationRequest extends ValidationInputRequest {
     /*
+     * Identifies the type of validation request.
+     */
+    private ValidationInputDiscriminator validationType = ValidationInputDiscriminator.VALIDATE_DATA_TRANSFER_DETAILS;
+
+    /*
      * List of DataTransfer details to be used to export data from azure.
      */
-    @JsonProperty(value = "dataExportDetails")
     private List<DataExportDetails> dataExportDetails;
 
     /*
      * List of DataTransfer details to be used to import data to azure.
      */
-    @JsonProperty(value = "dataImportDetails")
     private List<DataImportDetails> dataImportDetails;
 
     /*
      * Device type.
      */
-    @JsonProperty(value = "deviceType", required = true)
     private SkuName deviceType;
 
     /*
      * Type of the transfer.
      */
-    @JsonProperty(value = "transferType", required = true)
     private TransferType transferType;
 
-    /** Creates an instance of DataTransferDetailsValidationRequest class. */
+    /*
+     * The customer friendly name of the combination of version and capacity of the device. This field is necessary only
+     * at the time of ordering the newer generation device i.e. AzureDataBox120 and AzureDataBox525 as of Feb/2025
+     */
+    private ModelName model;
+
+    /**
+     * Creates an instance of DataTransferDetailsValidationRequest class.
+     */
     public DataTransferDetailsValidationRequest() {
     }
 
     /**
+     * Get the validationType property: Identifies the type of validation request.
+     * 
+     * @return the validationType value.
+     */
+    @Override
+    public ValidationInputDiscriminator validationType() {
+        return this.validationType;
+    }
+
+    /**
      * Get the dataExportDetails property: List of DataTransfer details to be used to export data from azure.
-     *
+     * 
      * @return the dataExportDetails value.
      */
     public List<DataExportDetails> dataExportDetails() {
@@ -55,7 +75,7 @@ public final class DataTransferDetailsValidationRequest extends ValidationInputR
 
     /**
      * Set the dataExportDetails property: List of DataTransfer details to be used to export data from azure.
-     *
+     * 
      * @param dataExportDetails the dataExportDetails value to set.
      * @return the DataTransferDetailsValidationRequest object itself.
      */
@@ -66,7 +86,7 @@ public final class DataTransferDetailsValidationRequest extends ValidationInputR
 
     /**
      * Get the dataImportDetails property: List of DataTransfer details to be used to import data to azure.
-     *
+     * 
      * @return the dataImportDetails value.
      */
     public List<DataImportDetails> dataImportDetails() {
@@ -75,7 +95,7 @@ public final class DataTransferDetailsValidationRequest extends ValidationInputR
 
     /**
      * Set the dataImportDetails property: List of DataTransfer details to be used to import data to azure.
-     *
+     * 
      * @param dataImportDetails the dataImportDetails value to set.
      * @return the DataTransferDetailsValidationRequest object itself.
      */
@@ -86,7 +106,7 @@ public final class DataTransferDetailsValidationRequest extends ValidationInputR
 
     /**
      * Get the deviceType property: Device type.
-     *
+     * 
      * @return the deviceType value.
      */
     public SkuName deviceType() {
@@ -95,7 +115,7 @@ public final class DataTransferDetailsValidationRequest extends ValidationInputR
 
     /**
      * Set the deviceType property: Device type.
-     *
+     * 
      * @param deviceType the deviceType value to set.
      * @return the DataTransferDetailsValidationRequest object itself.
      */
@@ -106,7 +126,7 @@ public final class DataTransferDetailsValidationRequest extends ValidationInputR
 
     /**
      * Get the transferType property: Type of the transfer.
-     *
+     * 
      * @return the transferType value.
      */
     public TransferType transferType() {
@@ -115,7 +135,7 @@ public final class DataTransferDetailsValidationRequest extends ValidationInputR
 
     /**
      * Set the transferType property: Type of the transfer.
-     *
+     * 
      * @param transferType the transferType value to set.
      * @return the DataTransferDetailsValidationRequest object itself.
      */
@@ -125,13 +145,36 @@ public final class DataTransferDetailsValidationRequest extends ValidationInputR
     }
 
     /**
+     * Get the model property: The customer friendly name of the combination of version and capacity of the device. This
+     * field is necessary only at the time of ordering the newer generation device i.e. AzureDataBox120 and
+     * AzureDataBox525 as of Feb/2025.
+     * 
+     * @return the model value.
+     */
+    public ModelName model() {
+        return this.model;
+    }
+
+    /**
+     * Set the model property: The customer friendly name of the combination of version and capacity of the device. This
+     * field is necessary only at the time of ordering the newer generation device i.e. AzureDataBox120 and
+     * AzureDataBox525 as of Feb/2025.
+     * 
+     * @param model the model value to set.
+     * @return the DataTransferDetailsValidationRequest object itself.
+     */
+    public DataTransferDetailsValidationRequest withModel(ModelName model) {
+        this.model = model;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
     public void validate() {
-        super.validate();
         if (dataExportDetails() != null) {
             dataExportDetails().forEach(e -> e.validate());
         }
@@ -139,18 +182,79 @@ public final class DataTransferDetailsValidationRequest extends ValidationInputR
             dataImportDetails().forEach(e -> e.validate());
         }
         if (deviceType() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property deviceType in model DataTransferDetailsValidationRequest"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property deviceType in model DataTransferDetailsValidationRequest"));
         }
         if (transferType() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property transferType in model DataTransferDetailsValidationRequest"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property transferType in model DataTransferDetailsValidationRequest"));
         }
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(DataTransferDetailsValidationRequest.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("deviceType", this.deviceType == null ? null : this.deviceType.toString());
+        jsonWriter.writeStringField("transferType", this.transferType == null ? null : this.transferType.toString());
+        jsonWriter.writeStringField("validationType",
+            this.validationType == null ? null : this.validationType.toString());
+        jsonWriter.writeArrayField("dataExportDetails", this.dataExportDetails,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("dataImportDetails", this.dataImportDetails,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("model", this.model == null ? null : this.model.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DataTransferDetailsValidationRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DataTransferDetailsValidationRequest if the JsonReader was pointing to an instance of it,
+     * or null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DataTransferDetailsValidationRequest.
+     */
+    public static DataTransferDetailsValidationRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DataTransferDetailsValidationRequest deserializedDataTransferDetailsValidationRequest
+                = new DataTransferDetailsValidationRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("deviceType".equals(fieldName)) {
+                    deserializedDataTransferDetailsValidationRequest.deviceType
+                        = SkuName.fromString(reader.getString());
+                } else if ("transferType".equals(fieldName)) {
+                    deserializedDataTransferDetailsValidationRequest.transferType
+                        = TransferType.fromString(reader.getString());
+                } else if ("validationType".equals(fieldName)) {
+                    deserializedDataTransferDetailsValidationRequest.validationType
+                        = ValidationInputDiscriminator.fromString(reader.getString());
+                } else if ("dataExportDetails".equals(fieldName)) {
+                    List<DataExportDetails> dataExportDetails
+                        = reader.readArray(reader1 -> DataExportDetails.fromJson(reader1));
+                    deserializedDataTransferDetailsValidationRequest.dataExportDetails = dataExportDetails;
+                } else if ("dataImportDetails".equals(fieldName)) {
+                    List<DataImportDetails> dataImportDetails
+                        = reader.readArray(reader1 -> DataImportDetails.fromJson(reader1));
+                    deserializedDataTransferDetailsValidationRequest.dataImportDetails = dataImportDetails;
+                } else if ("model".equals(fieldName)) {
+                    deserializedDataTransferDetailsValidationRequest.model = ModelName.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedDataTransferDetailsValidationRequest;
+        });
+    }
 }

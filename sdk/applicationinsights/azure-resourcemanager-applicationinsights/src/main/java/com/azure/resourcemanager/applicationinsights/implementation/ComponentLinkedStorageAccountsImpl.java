@@ -10,10 +10,8 @@ import com.azure.resourcemanager.applicationinsights.models.ComponentLinkedStora
 import com.azure.resourcemanager.applicationinsights.models.ComponentLinkedStorageAccountsPatch;
 import com.azure.resourcemanager.applicationinsights.models.StorageType;
 
-public final class ComponentLinkedStorageAccountsImpl
-    implements ComponentLinkedStorageAccounts,
-        ComponentLinkedStorageAccounts.Definition,
-        ComponentLinkedStorageAccounts.Update {
+public final class ComponentLinkedStorageAccountsImpl implements ComponentLinkedStorageAccounts,
+    ComponentLinkedStorageAccounts.Definition, ComponentLinkedStorageAccounts.Update {
     private ComponentLinkedStorageAccountsInner innerObject;
 
     private final com.azure.resourcemanager.applicationinsights.ApplicationInsightsManager serviceManager;
@@ -61,28 +59,23 @@ public final class ComponentLinkedStorageAccountsImpl
     }
 
     public ComponentLinkedStorageAccounts create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getComponentLinkedStorageAccountsOperations()
-                .createAndUpdateWithResponse(
-                    resourceGroupName, resourceName, storageType, this.innerModel(), Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getComponentLinkedStorageAccountsOperations()
+            .createAndUpdateWithResponse(resourceGroupName, resourceName, storageType, this.innerModel(), Context.NONE)
+            .getValue();
         return this;
     }
 
     public ComponentLinkedStorageAccounts create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getComponentLinkedStorageAccountsOperations()
-                .createAndUpdateWithResponse(resourceGroupName, resourceName, storageType, this.innerModel(), context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getComponentLinkedStorageAccountsOperations()
+            .createAndUpdateWithResponse(resourceGroupName, resourceName, storageType, this.innerModel(), context)
+            .getValue();
         return this;
     }
 
-    ComponentLinkedStorageAccountsImpl(
-        StorageType name, com.azure.resourcemanager.applicationinsights.ApplicationInsightsManager serviceManager) {
+    ComponentLinkedStorageAccountsImpl(StorageType name,
+        com.azure.resourcemanager.applicationinsights.ApplicationInsightsManager serviceManager) {
         this.innerObject = new ComponentLinkedStorageAccountsInner();
         this.serviceManager = serviceManager;
         this.storageType = name;
@@ -94,55 +87,46 @@ public final class ComponentLinkedStorageAccountsImpl
     }
 
     public ComponentLinkedStorageAccounts apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getComponentLinkedStorageAccountsOperations()
-                .updateWithResponse(
-                    resourceGroupName, resourceName, storageType, updateLinkedStorageAccountsProperties, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getComponentLinkedStorageAccountsOperations()
+            .updateWithResponse(resourceGroupName, resourceName, storageType, updateLinkedStorageAccountsProperties,
+                Context.NONE)
+            .getValue();
         return this;
     }
 
     public ComponentLinkedStorageAccounts apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getComponentLinkedStorageAccountsOperations()
-                .updateWithResponse(
-                    resourceGroupName, resourceName, storageType, updateLinkedStorageAccountsProperties, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getComponentLinkedStorageAccountsOperations()
+            .updateWithResponse(resourceGroupName, resourceName, storageType, updateLinkedStorageAccountsProperties,
+                context)
+            .getValue();
         return this;
     }
 
-    ComponentLinkedStorageAccountsImpl(
-        ComponentLinkedStorageAccountsInner innerObject,
+    ComponentLinkedStorageAccountsImpl(ComponentLinkedStorageAccountsInner innerObject,
         com.azure.resourcemanager.applicationinsights.ApplicationInsightsManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.resourceName = Utils.getValueFromIdByName(innerObject.id(), "components");
-        this.storageType =
-            StorageType.fromString(Utils.getValueFromIdByName(innerObject.id(), "linkedStorageAccounts"));
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.resourceName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "components");
+        this.storageType = StorageType
+            .fromString(ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "linkedStorageAccounts"));
     }
 
     public ComponentLinkedStorageAccounts refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getComponentLinkedStorageAccountsOperations()
-                .getWithResponse(resourceGroupName, resourceName, storageType, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getComponentLinkedStorageAccountsOperations()
+            .getWithResponse(resourceGroupName, resourceName, storageType, Context.NONE)
+            .getValue();
         return this;
     }
 
     public ComponentLinkedStorageAccounts refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getComponentLinkedStorageAccountsOperations()
-                .getWithResponse(resourceGroupName, resourceName, storageType, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getComponentLinkedStorageAccountsOperations()
+            .getWithResponse(resourceGroupName, resourceName, storageType, context)
+            .getValue();
         return this;
     }
 

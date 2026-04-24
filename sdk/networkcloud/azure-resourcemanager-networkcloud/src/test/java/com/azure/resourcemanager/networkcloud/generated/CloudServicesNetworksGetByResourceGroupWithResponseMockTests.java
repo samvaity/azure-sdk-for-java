@@ -6,72 +6,46 @@ package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.networkcloud.NetworkCloudManager;
 import com.azure.resourcemanager.networkcloud.models.CloudServicesNetwork;
 import com.azure.resourcemanager.networkcloud.models.CloudServicesNetworkEnableDefaultEgressEndpoints;
-import java.nio.ByteBuffer;
+import com.azure.resourcemanager.networkcloud.models.CloudServicesNetworkStorageMode;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class CloudServicesNetworksGetByResourceGroupWithResponseMockTests {
     @Test
     public void testGetByResourceGroupWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"etag\":\"akeciqchx\",\"extendedLocation\":{\"name\":\"tuicds\",\"type\":\"wdfmmpzhzzwvywr\"},\"properties\":{\"additionalEgressEndpoints\":[{\"category\":\"ydg\",\"endpoints\":[{\"domainName\":\"x\"},{\"domainName\":\"cakiqao\"},{\"domainName\":\"djrkclamggl\"}]},{\"category\":\"lmf\",\"endpoints\":[{\"domainName\":\"doqey\"}]},{\"category\":\"gltygxhqfgq\",\"endpoints\":[{\"domainName\":\"yejsxtlg\"},{\"domainName\":\"lwfgziiu\"},{\"domainName\":\"ijjcea\"},{\"domainName\":\"lijjjrtvam\"}]},{\"category\":\"a\",\"endpoints\":[{\"domainName\":\"knxkvccxetyvkunm\"},{\"domainName\":\"gno\"}]}],\"associatedResourceIds\":[\"kgqogjw\"],\"clusterId\":\"nd\",\"detailedStatus\":\"Provisioning\",\"detailedStatusMessage\":\"bbxbhmed\",\"enableDefaultEgressEndpoints\":\"False\",\"enabledEgressEndpoints\":[{\"category\":\"ywfcfxzi\",\"endpoints\":[{\"domainName\":\"zi\"},{\"domainName\":\"vwypusuvjsl\"}]},{\"category\":\"zwci\",\"endpoints\":[{\"domainName\":\"jsllfryvd\"},{\"domainName\":\"vxadqacfrgnawbab\"}]},{\"category\":\"fbktyjmfczlf\",\"endpoints\":[{\"domainName\":\"qkfrbzgowoxqmj\"}]},{\"category\":\"ajcxnyqgxhl\",\"endpoints\":[{\"domainName\":\"rvxisimjceagbj\"}]}],\"hybridAksClustersAssociatedIds\":[\"sumywzashxgonoyj\",\"qipubyz\",\"clkfkee\"],\"interfaceName\":\"vop\",\"provisioningState\":\"Failed\",\"storageOptions\":{\"mode\":\"Standard\",\"sizeMiB\":2974364031880146374,\"storageApplianceId\":\"egqavnigflqqb\"},\"storageStatus\":{\"mode\":\"Standard\",\"sizeMiB\":3519392073349740781,\"status\":\"ExpansionFailed\",\"statusMessage\":\"fvabmvmsxba\",\"volumeId\":\"wjcnkottl\"},\"virtualMachinesAssociatedIds\":[\"vajmailfem\",\"jzakzwjiqull\",\"xbdmvrscmqernd\",\"rnyeofltfnnxrk\"]},\"location\":\"jfynnfmuiiirip\",\"tags\":{\"bcbrwjiutgnjizbe\":\"ykfkx\",\"juyrsrziuctixg\":\"woiymrvz\"},\"id\":\"d\",\"name\":\"uifr\",\"type\":\"vka\"}";
 
-        String responseStr =
-            "{\"extendedLocation\":{\"name\":\"attcju\",\"type\":\"plrvkmjcwmjvlg\"},\"properties\":{\"additionalEgressEndpoints\":[],\"associatedResourceIds\":[\"yylizrz\",\"jpsfxsfu\"],\"clusterId\":\"lvt\",\"detailedStatus\":\"Error\",\"detailedStatusMessage\":\"bwidql\",\"enableDefaultEgressEndpoints\":\"True\",\"enabledEgressEndpoints\":[],\"hybridAksClustersAssociatedIds\":[\"ofizrvjfnmjmvlwy\",\"giblkujrllf\"],\"interfaceName\":\"uidjpuuyjucej\",\"provisioningState\":\"Failed\",\"virtualMachinesAssociatedIds\":[\"ovvtzejetjkln\",\"ikyju\"]},\"location\":\"dbqzolxrzvhqjw\",\"tags\":{\"rrkolawjmjs\":\"tgvgzp\"},\"id\":\"wro\",\"name\":\"cdxfzzzwyjafitl\",\"type\":\"guyn\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        NetworkCloudManager manager = NetworkCloudManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        CloudServicesNetwork response = manager.cloudServicesNetworks()
+            .getByResourceGroupWithResponse("a", "dmkxwxdcvjwcy", com.azure.core.util.Context.NONE)
+            .getValue();
 
-        NetworkCloudManager manager =
-            NetworkCloudManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        CloudServicesNetwork response =
-            manager
-                .cloudServicesNetworks()
-                .getByResourceGroupWithResponse("nbatzvi", "sowsaael", com.azure.core.util.Context.NONE)
-                .getValue();
-
-        Assertions.assertEquals("dbqzolxrzvhqjw", response.location());
-        Assertions.assertEquals("tgvgzp", response.tags().get("rrkolawjmjs"));
-        Assertions.assertEquals("attcju", response.extendedLocation().name());
-        Assertions.assertEquals("plrvkmjcwmjvlg", response.extendedLocation().type());
-        Assertions
-            .assertEquals(
-                CloudServicesNetworkEnableDefaultEgressEndpoints.TRUE, response.enableDefaultEgressEndpoints());
+        Assertions.assertEquals("jfynnfmuiiirip", response.location());
+        Assertions.assertEquals("ykfkx", response.tags().get("bcbrwjiutgnjizbe"));
+        Assertions.assertEquals("tuicds", response.extendedLocation().name());
+        Assertions.assertEquals("wdfmmpzhzzwvywr", response.extendedLocation().type());
+        Assertions.assertEquals("ydg", response.additionalEgressEndpoints().get(0).category());
+        Assertions.assertEquals("x", response.additionalEgressEndpoints().get(0).endpoints().get(0).domainName());
+        Assertions.assertEquals(CloudServicesNetworkEnableDefaultEgressEndpoints.FALSE,
+            response.enableDefaultEgressEndpoints());
+        Assertions.assertEquals(CloudServicesNetworkStorageMode.STANDARD, response.storageOptions().mode());
+        Assertions.assertEquals(2974364031880146374L, response.storageOptions().sizeMiB());
+        Assertions.assertEquals("egqavnigflqqb", response.storageOptions().storageApplianceId());
     }
 }

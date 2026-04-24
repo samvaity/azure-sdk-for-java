@@ -4,43 +4,96 @@
 
 package com.azure.ai.metricsadvisor.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The DataFeedList model. */
+/**
+ * The DataFeedList model.
+ */
 @Immutable
-public final class DataFeedList {
+public final class DataFeedList implements JsonSerializable<DataFeedList> {
     /*
      * The @nextLink property.
      */
-    @JsonProperty(value = "@nextLink", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private String nextLink;
 
     /*
      * The value property.
      */
-    @JsonProperty(value = "value", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private List<DataFeedDetail> value;
 
-    /** Creates an instance of DataFeedList class. */
-    public DataFeedList() {}
+    /**
+     * Creates an instance of DataFeedList class.
+     */
+    @Generated
+    public DataFeedList() {
+    }
 
     /**
-     * Get the nextLink property: The @nextLink property.
-     *
+     * Get the nextLink property: The &#064;nextLink property.
+     * 
      * @return the nextLink value.
      */
+    @Generated
     public String getNextLink() {
         return this.nextLink;
     }
 
     /**
      * Get the value property: The value property.
-     *
+     * 
      * @return the value value.
      */
+    @Generated
     public List<DataFeedDetail> getValue() {
         return this.value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DataFeedList from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DataFeedList if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the DataFeedList.
+     */
+    @Generated
+    public static DataFeedList fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DataFeedList deserializedDataFeedList = new DataFeedList();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("@nextLink".equals(fieldName)) {
+                    deserializedDataFeedList.nextLink = reader.getString();
+                } else if ("value".equals(fieldName)) {
+                    List<DataFeedDetail> value = reader.readArray(reader1 -> DataFeedDetail.fromJson(reader1));
+                    deserializedDataFeedList.value = value;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedDataFeedList;
+        });
     }
 }

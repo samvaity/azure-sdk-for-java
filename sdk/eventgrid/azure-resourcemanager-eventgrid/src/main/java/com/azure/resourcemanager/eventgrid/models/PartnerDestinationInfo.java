@@ -5,62 +5,70 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** Properties of the corresponding partner destination of a Channel. */
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "endpointType",
-    defaultImpl = PartnerDestinationInfo.class)
-@JsonTypeName("PartnerDestinationInfo")
-@JsonSubTypes({@JsonSubTypes.Type(name = "WebHook", value = WebhookPartnerDestinationInfo.class)})
+/**
+ * Properties of the corresponding partner destination of a Channel.
+ */
 @Fluent
-public class PartnerDestinationInfo {
+public class PartnerDestinationInfo implements JsonSerializable<PartnerDestinationInfo> {
+    /*
+     * Type of the endpoint for the partner destination
+     */
+    private PartnerEndpointType endpointType = PartnerEndpointType.fromString("PartnerDestinationInfo");
+
     /*
      * Azure subscription ID of the subscriber. The partner destination associated with the channel will be
      * created under this Azure subscription.
      */
-    @JsonProperty(value = "azureSubscriptionId")
     private String azureSubscriptionId;
 
     /*
      * Azure Resource Group of the subscriber. The partner destination associated with the channel will be
      * created under this resource group.
      */
-    @JsonProperty(value = "resourceGroupName")
     private String resourceGroupName;
 
     /*
      * Name of the partner destination associated with the channel.
      */
-    @JsonProperty(value = "name")
     private String name;
 
     /*
      * Additional context of the partner destination endpoint.
      */
-    @JsonProperty(value = "endpointServiceContext")
     private String endpointServiceContext;
 
     /*
      * Change history of the resource move.
      */
-    @JsonProperty(value = "resourceMoveChangeHistory")
     private List<ResourceMoveChangeHistory> resourceMoveChangeHistory;
 
-    /** Creates an instance of PartnerDestinationInfo class. */
+    /**
+     * Creates an instance of PartnerDestinationInfo class.
+     */
     public PartnerDestinationInfo() {
     }
 
     /**
+     * Get the endpointType property: Type of the endpoint for the partner destination.
+     * 
+     * @return the endpointType value.
+     */
+    public PartnerEndpointType endpointType() {
+        return this.endpointType;
+    }
+
+    /**
      * Get the azureSubscriptionId property: Azure subscription ID of the subscriber. The partner destination associated
-     * with the channel will be created under this Azure subscription.
-     *
+     * with the channel will be
+     * created under this Azure subscription.
+     * 
      * @return the azureSubscriptionId value.
      */
     public String azureSubscriptionId() {
@@ -69,8 +77,9 @@ public class PartnerDestinationInfo {
 
     /**
      * Set the azureSubscriptionId property: Azure subscription ID of the subscriber. The partner destination associated
-     * with the channel will be created under this Azure subscription.
-     *
+     * with the channel will be
+     * created under this Azure subscription.
+     * 
      * @param azureSubscriptionId the azureSubscriptionId value to set.
      * @return the PartnerDestinationInfo object itself.
      */
@@ -81,8 +90,9 @@ public class PartnerDestinationInfo {
 
     /**
      * Get the resourceGroupName property: Azure Resource Group of the subscriber. The partner destination associated
-     * with the channel will be created under this resource group.
-     *
+     * with the channel will be
+     * created under this resource group.
+     * 
      * @return the resourceGroupName value.
      */
     public String resourceGroupName() {
@@ -91,8 +101,9 @@ public class PartnerDestinationInfo {
 
     /**
      * Set the resourceGroupName property: Azure Resource Group of the subscriber. The partner destination associated
-     * with the channel will be created under this resource group.
-     *
+     * with the channel will be
+     * created under this resource group.
+     * 
      * @param resourceGroupName the resourceGroupName value to set.
      * @return the PartnerDestinationInfo object itself.
      */
@@ -103,7 +114,7 @@ public class PartnerDestinationInfo {
 
     /**
      * Get the name property: Name of the partner destination associated with the channel.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -112,7 +123,7 @@ public class PartnerDestinationInfo {
 
     /**
      * Set the name property: Name of the partner destination associated with the channel.
-     *
+     * 
      * @param name the name value to set.
      * @return the PartnerDestinationInfo object itself.
      */
@@ -123,7 +134,7 @@ public class PartnerDestinationInfo {
 
     /**
      * Get the endpointServiceContext property: Additional context of the partner destination endpoint.
-     *
+     * 
      * @return the endpointServiceContext value.
      */
     public String endpointServiceContext() {
@@ -132,7 +143,7 @@ public class PartnerDestinationInfo {
 
     /**
      * Set the endpointServiceContext property: Additional context of the partner destination endpoint.
-     *
+     * 
      * @param endpointServiceContext the endpointServiceContext value to set.
      * @return the PartnerDestinationInfo object itself.
      */
@@ -143,7 +154,7 @@ public class PartnerDestinationInfo {
 
     /**
      * Get the resourceMoveChangeHistory property: Change history of the resource move.
-     *
+     * 
      * @return the resourceMoveChangeHistory value.
      */
     public List<ResourceMoveChangeHistory> resourceMoveChangeHistory() {
@@ -152,24 +163,104 @@ public class PartnerDestinationInfo {
 
     /**
      * Set the resourceMoveChangeHistory property: Change history of the resource move.
-     *
+     * 
      * @param resourceMoveChangeHistory the resourceMoveChangeHistory value to set.
      * @return the PartnerDestinationInfo object itself.
      */
-    public PartnerDestinationInfo withResourceMoveChangeHistory(
-        List<ResourceMoveChangeHistory> resourceMoveChangeHistory) {
+    public PartnerDestinationInfo
+        withResourceMoveChangeHistory(List<ResourceMoveChangeHistory> resourceMoveChangeHistory) {
         this.resourceMoveChangeHistory = resourceMoveChangeHistory;
         return this;
     }
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (resourceMoveChangeHistory() != null) {
             resourceMoveChangeHistory().forEach(e -> e.validate());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("endpointType", this.endpointType == null ? null : this.endpointType.toString());
+        jsonWriter.writeStringField("azureSubscriptionId", this.azureSubscriptionId);
+        jsonWriter.writeStringField("resourceGroupName", this.resourceGroupName);
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeStringField("endpointServiceContext", this.endpointServiceContext);
+        jsonWriter.writeArrayField("resourceMoveChangeHistory", this.resourceMoveChangeHistory,
+            (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PartnerDestinationInfo from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PartnerDestinationInfo if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the PartnerDestinationInfo.
+     */
+    public static PartnerDestinationInfo fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            String discriminatorValue = null;
+            try (JsonReader readerToUse = reader.bufferObject()) {
+                readerToUse.nextToken(); // Prepare for reading
+                while (readerToUse.nextToken() != JsonToken.END_OBJECT) {
+                    String fieldName = readerToUse.getFieldName();
+                    readerToUse.nextToken();
+                    if ("endpointType".equals(fieldName)) {
+                        discriminatorValue = readerToUse.getString();
+                        break;
+                    } else {
+                        readerToUse.skipChildren();
+                    }
+                }
+                // Use the discriminator value to determine which subtype should be deserialized.
+                if ("WebHook".equals(discriminatorValue)) {
+                    return WebhookPartnerDestinationInfo.fromJson(readerToUse.reset());
+                } else {
+                    return fromJsonKnownDiscriminator(readerToUse.reset());
+                }
+            }
+        });
+    }
+
+    static PartnerDestinationInfo fromJsonKnownDiscriminator(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PartnerDestinationInfo deserializedPartnerDestinationInfo = new PartnerDestinationInfo();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("endpointType".equals(fieldName)) {
+                    deserializedPartnerDestinationInfo.endpointType
+                        = PartnerEndpointType.fromString(reader.getString());
+                } else if ("azureSubscriptionId".equals(fieldName)) {
+                    deserializedPartnerDestinationInfo.azureSubscriptionId = reader.getString();
+                } else if ("resourceGroupName".equals(fieldName)) {
+                    deserializedPartnerDestinationInfo.resourceGroupName = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedPartnerDestinationInfo.name = reader.getString();
+                } else if ("endpointServiceContext".equals(fieldName)) {
+                    deserializedPartnerDestinationInfo.endpointServiceContext = reader.getString();
+                } else if ("resourceMoveChangeHistory".equals(fieldName)) {
+                    List<ResourceMoveChangeHistory> resourceMoveChangeHistory
+                        = reader.readArray(reader1 -> ResourceMoveChangeHistory.fromJson(reader1));
+                    deserializedPartnerDestinationInfo.resourceMoveChangeHistory = resourceMoveChangeHistory;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPartnerDestinationInfo;
+        });
     }
 }

@@ -5,34 +5,89 @@
 package com.azure.communication.callautomation.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The PlayOptionsInternal model. */
+/**
+ * The PlayOptionsInternal model.
+ */
 @Fluent
-public final class PlayOptionsInternal {
+public final class PlayOptionsInternal implements JsonSerializable<PlayOptionsInternal> {
     /*
      * The option to play the provided audio source in loop when set to true
      */
-    @JsonProperty(value = "loop", required = true)
+    @Generated
     private boolean loop;
 
     /**
+     * Creates an instance of PlayOptionsInternal class.
+     */
+    @Generated
+    public PlayOptionsInternal() {
+    }
+
+    /**
      * Get the loop property: The option to play the provided audio source in loop when set to true.
-     *
+     * 
      * @return the loop value.
      */
+    @Generated
     public boolean isLoop() {
         return this.loop;
     }
 
     /**
      * Set the loop property: The option to play the provided audio source in loop when set to true.
-     *
+     * 
      * @param loop the loop value to set.
      * @return the PlayOptionsInternal object itself.
      */
+    @Generated
     public PlayOptionsInternal setLoop(boolean loop) {
         this.loop = loop;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeBooleanField("loop", this.loop);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PlayOptionsInternal from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PlayOptionsInternal if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the PlayOptionsInternal.
+     */
+    @Generated
+    public static PlayOptionsInternal fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PlayOptionsInternal deserializedPlayOptionsInternal = new PlayOptionsInternal();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("loop".equals(fieldName)) {
+                    deserializedPlayOptionsInternal.loop = reader.getBoolean();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPlayOptionsInternal;
+        });
     }
 }

@@ -6,8 +6,11 @@ import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.http.ProxyOptions;
 import com.azure.cosmos.BridgeInternal;
 import com.azure.cosmos.ConsistencyLevel;
+import com.azure.cosmos.CosmosContainerProactiveInitConfig;
 import com.azure.cosmos.CosmosDiagnostics;
 import com.azure.cosmos.CosmosEndToEndOperationLatencyPolicyConfig;
+import com.azure.cosmos.CosmosItemSerializer;
+import com.azure.cosmos.Http2ConnectionConfig;
 import com.azure.cosmos.SessionRetryOptions;
 import com.azure.cosmos.implementation.apachecommons.lang.tuple.ImmutablePair;
 import com.azure.cosmos.implementation.caches.RxClientCollectionCache;
@@ -28,10 +31,11 @@ import com.azure.cosmos.models.CosmosAuthorizationTokenResolver;
 import com.azure.cosmos.models.CosmosClientTelemetryConfig;
 import com.azure.cosmos.models.CosmosItemIdentity;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
-import com.azure.cosmos.models.FeedResponse;
 import com.azure.cosmos.models.ModelBridgeInternal;
 import com.azure.cosmos.models.PartitionKey;
 import com.azure.cosmos.models.PartitionKeyDefinition;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -53,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,6 +84,8 @@ public class RxDocumentClientImplTest {
     private IRetryPolicyFactory resetSessionTokenRetryPolicyMock;
     private CosmosEndToEndOperationLatencyPolicyConfig endToEndOperationLatencyPolicyConfig;
     private SessionRetryOptions sessionRetryOptionsMock;
+    private CosmosContainerProactiveInitConfig containerProactiveInitConfigMock;
+    private CosmosItemSerializer defaultItemSerializer;
 
     @BeforeClass(groups = "unit")
     public void setUp() {
@@ -90,7 +97,7 @@ public class RxDocumentClientImplTest {
         this.consistencyLevelMock = Mockito.mock(ConsistencyLevel.class);
         this.configsMock = Mockito.mock(Configs.class);
         this.cosmosAuthorizationTokenResolverMock = Mockito.mock(CosmosAuthorizationTokenResolver.class);
-        this.azureKeyCredentialMock = Mockito.mock(AzureKeyCredential.class);
+        this.azureKeyCredentialMock = new AzureKeyCredential("fakeKey");
         this.metadataCachesSnapshotMock = Mockito.mock(CosmosClientMetadataCachesSnapshot.class);
         this.apiTypeMock = Mockito.mock(ApiType.class);
         this.cosmosClientTelemetryConfigMock = Mockito.mock(CosmosClientTelemetryConfig.class);
@@ -100,16 +107,24 @@ public class RxDocumentClientImplTest {
         this.resetSessionTokenRetryPolicyMock = Mockito.mock(IRetryPolicyFactory.class);
         this.endToEndOperationLatencyPolicyConfig = Mockito.mock(CosmosEndToEndOperationLatencyPolicyConfig.class);
         this.sessionRetryOptionsMock = Mockito.mock(SessionRetryOptions.class);
+        this.containerProactiveInitConfigMock = Mockito.mock(CosmosContainerProactiveInitConfig.class);
+        this.defaultItemSerializer = Mockito.mock(CosmosItemSerializer.class);
     }
 
-    @Test(groups = {"unit"})
+    // todo: fix and revert enabled = false when circuit breaker is enabled
+    @Test(groups = {"unit"}, enabled = true)
     public void readMany() {
 
         // setup static method mocks
         MockedStatic<HttpClient> httpClientMock = Mockito.mockStatic(HttpClient.class);
         MockedStatic<PartitionKeyInternalHelper> partitionKeyInternalHelperMock = Mockito.mockStatic(PartitionKeyInternalHelper.class);
         MockedStatic<DocumentQueryExecutionContextFactory> documentQueryExecutionFactoryMock = Mockito.mockStatic(DocumentQueryExecutionContextFactory.class);
-        MockedStatic<ObservableHelper> observableHelperMock = Mockito.mockStatic(ObservableHelper.class);
+//        MockedStatic<ObservableHelper> observableHelperMock = Mockito.mockStatic(ObservableHelper.class);
+
+        // setup mocks
+        DocumentClientRetryPolicy documentClientRetryPolicyMock = Mockito.mock(DocumentClientRetryPolicy.class);
+        RxGatewayStoreModel gatewayStoreModelMock = Mockito.mock(RxGatewayStoreModel.class);
+        RxStoreModel serverStoreModelMock = Mockito.mock(RxStoreModel.class);
 
         // dummy values
         PartitionKeyRange dummyPartitionKeyRange1 = new PartitionKeyRange()
@@ -165,6 +180,7 @@ public class RxDocumentClientImplTest {
         Mockito.when(this.connectionPolicyMock.getMaxConnectionPoolSize()).thenReturn(dummyInt);
         Mockito.when(this.connectionPolicyMock.getProxy()).thenReturn(dummyProxyOptions);
         Mockito.when(this.connectionPolicyMock.getHttpNetworkRequestTimeout()).thenReturn(dummyDuration);
+        Mockito.when(this.connectionPolicyMock.getHttp2ConnectionConfig()).thenReturn(new Http2ConnectionConfig());
 
         httpClientMock
             .when(() -> HttpClient.createFixed(Mockito.any(HttpClientConfig.class)))
@@ -187,20 +203,29 @@ public class RxDocumentClientImplTest {
                 Mockito.any(),
                 Mockito.any()
             ))
-            .thenReturn(Flux.just(dummyExecutionContextForQuery(queryResults, headersForQueries)));
-        observableHelperMock
-            .when(() -> ObservableHelper.inlineIfPossibleAsObs(Mockito.any(), Mockito.any()))
-            .thenReturn(Mono.just(dummyResourceResponse(pointReadResult, headersForPointReads)));
+            .thenReturn(Flux.just(dummyExecutionContextForQuery(queryResults, headersForQueries, InternalObjectNode.class)));
 
         Mockito
             .when(this.collectionCacheMock.resolveCollectionAsync(Mockito.isNull(), Mockito.any(RxDocumentServiceRequest.class)))
             .thenReturn(Mono.just(dummyCollectionObs()));
+
+        Mockito
+            .when(this.collectionCacheMock.resolveByNameAsync(Mockito.any(), Mockito.anyString(), Mockito.isNull()))
+            .thenReturn(Mono.just(dummyCollectionObs().v));
+
         Mockito
             .when(this.partitionKeyRangeCacheMock.tryLookupAsync(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
             .thenReturn(Mono.just(dummyCollectionRoutingMap(epksPartitionKeyRangeMap)));
 
-        Mockito.when(this.resetSessionTokenRetryPolicyMock.getRequestPolicy()).thenReturn(dummyDocumentClientRetryPolicy());
+        RetryContext retryContext = new RetryContext();
 
+        Mockito.when(this.resetSessionTokenRetryPolicyMock.getRequestPolicy(null)).thenReturn(dummyDocumentClientRetryPolicy());
+        Mockito.when(this.cosmosAuthorizationTokenResolverMock.getAuthorizationToken(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.any())).thenReturn("abcdefgh");
+        Mockito.when(this.resetSessionTokenRetryPolicyMock.getRequestPolicy(Mockito.any())).thenReturn(documentClientRetryPolicyMock);
+        Mockito.when(documentClientRetryPolicyMock.getRetryContext()).thenReturn(retryContext);
+        Mockito
+            .when(serverStoreModelMock.processMessage(Mockito.any(RxDocumentServiceRequest.class)))
+            .thenReturn(Mono.just(mockRxDocumentServiceResponse(pointReadResult, headersForPointReads)));
 
         // initialize object to be tested
         RxDocumentClientImpl rxDocumentClient = new RxDocumentClientImpl(
@@ -209,6 +234,7 @@ public class RxDocumentClientImplTest {
             this.permissionFeedMock,
             this.connectionPolicyMock,
             this.consistencyLevelMock,
+            null,
             this.configsMock,
             this.cosmosAuthorizationTokenResolverMock,
             this.azureKeyCredentialMock,
@@ -220,63 +246,75 @@ public class RxDocumentClientImplTest {
             this.cosmosClientTelemetryConfigMock,
             this.clientCorrelationIdMock,
             this.endToEndOperationLatencyPolicyConfig,
-            this.sessionRetryOptionsMock);
+            this.sessionRetryOptionsMock,
+            this.containerProactiveInitConfigMock,
+            this.defaultItemSerializer,
+            false
+        );
 
-        ReflectionUtils.setCollectionCache(rxDocumentClient, this.collectionCacheMock);
-        ReflectionUtils.setPartitionKeyRangeCache(rxDocumentClient, this.partitionKeyRangeCacheMock);
-        ReflectionUtils.setResetSessionTokenRetryPolicy(rxDocumentClient, this.resetSessionTokenRetryPolicyMock);
+        try {
+            ReflectionUtils.setCollectionCache(rxDocumentClient, this.collectionCacheMock);
+            ReflectionUtils.setPartitionKeyRangeCache(rxDocumentClient, this.partitionKeyRangeCacheMock);
+            ReflectionUtils.setResetSessionTokenRetryPolicy(rxDocumentClient, this.resetSessionTokenRetryPolicyMock);
+            ReflectionUtils.setGatewayProxy(rxDocumentClient, gatewayStoreModelMock);
+            ReflectionUtils.setServerStoreModel(rxDocumentClient, serverStoreModelMock);
 
-        ArrayList<CosmosItemIdentity> cosmosItemIdentities = new ArrayList<CosmosItemIdentity>();
+            ArrayList<CosmosItemIdentity> cosmosItemIdentities = new ArrayList<CosmosItemIdentity>();
 
-        cosmosItemIdentities.add(new CosmosItemIdentity(new PartitionKey("1"), "1"));
-        cosmosItemIdentities.add(new CosmosItemIdentity(new PartitionKey("2"), "2"));
-        cosmosItemIdentities.add(new CosmosItemIdentity(new PartitionKey("3"), "3"));
+            cosmosItemIdentities.add(new CosmosItemIdentity(new PartitionKey("1"), "1"));
+            cosmosItemIdentities.add(new CosmosItemIdentity(new PartitionKey("2"), "2"));
+            cosmosItemIdentities.add(new CosmosItemIdentity(new PartitionKey("3"), "3"));
 
-        String collectionLink = "";
-        CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
-        Class<InternalObjectNode> klass = InternalObjectNode.class;
+            String collectionLink = "";
+            CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
+            Class<InternalObjectNode> klass = InternalObjectNode.class;
+
+        QueryFeedOperationState stateMock = Mockito.mock(QueryFeedOperationState.class);
+        httpClientMock
+            .when(() -> stateMock.getQueryOptions())
+            .thenReturn(new CosmosQueryRequestOptions());
 
         StepVerifier.create(
                 rxDocumentClient.readMany(
                     cosmosItemIdentities,
                     collectionLink,
-                    options,
+                    stateMock,
                     klass
                 )
             )
             .consumeNextWith(feedResponse -> {
 
-                int expectedResultSize = 3;
-                int expectedClientSideRequestStatisticsSize = 1;
-                double expectedRequestCharge = 3.7;
+                            int expectedResultSize = 3;
+                            int expectedClientSideRequestStatisticsSize = 1;
+                            double expectedRequestCharge = 3.7;
 
-                assertThat(feedResponse.getResults()).isNotNull();
-                assertThat(feedResponse.getResults().size()).isEqualTo(expectedResultSize);
-                assertThat(feedResponse.getRequestCharge()).isEqualTo(expectedRequestCharge);
+                            assertThat(feedResponse.getResults()).isNotNull();
+                            assertThat(feedResponse.getResults().size()).isEqualTo(expectedResultSize);
+                            assertThat(feedResponse.getRequestCharge()).isEqualTo(expectedRequestCharge);
 
-                assertThat(diagnosticsAccessor.getClientSideRequestStatistics(feedResponse.getCosmosDiagnostics())).isNotNull();
-                assertThat(diagnosticsAccessor.getClientSideRequestStatistics(feedResponse.getCosmosDiagnostics()).size()).isEqualTo(expectedClientSideRequestStatisticsSize);
-                assertThat(BridgeInternal.queryMetricsFromFeedResponse(feedResponse)).isNotNull();
+                            assertThat(diagnosticsAccessor.getClientSideRequestStatistics(feedResponse.getCosmosDiagnostics())).isNotNull();
+                            assertThat(diagnosticsAccessor.getClientSideRequestStatistics(feedResponse.getCosmosDiagnostics()).size()).isEqualTo(expectedClientSideRequestStatisticsSize);
+                            assertThat(BridgeInternal.queryMetricsFromFeedResponse(feedResponse)).isNotNull();
 
-                List<InternalObjectNode> readManyResults = feedResponse.getResults();
-                Set<String> idSet = new HashSet<>(Arrays.asList("1", "2", "3"));
+                            List<InternalObjectNode> readManyResults = feedResponse.getResults();
+                            Set<String> idSet = new HashSet<>(Arrays.asList("1", "2", "3"));
 
-                for (InternalObjectNode result : readManyResults) {
-                    assertThat(idSet.contains(result.getId())).isTrue();
-                }
+                            for (InternalObjectNode result : readManyResults) {
+                                assertThat(idSet.contains(result.getId())).isTrue();
+                            }
 
-            })
-            .expectComplete()
-            .verify();
+                        })
+                        .expectComplete()
+                        .verify();
+        } finally {
+            // release static mocks
+            httpClientMock.close();
+            partitionKeyInternalHelperMock.close();
+            documentQueryExecutionFactoryMock.close();
 
-        // release static mocks
-        httpClientMock.close();
-        partitionKeyInternalHelperMock.close();
-        observableHelperMock.close();
-        documentQueryExecutionFactoryMock.close();
-
-        // de-register client
-        rxDocumentClient.close();
+            // de-register client
+            rxDocumentClient.close();
+        }
     }
 
     private static HttpClient dummyHttpClient() {
@@ -356,7 +394,15 @@ public class RxDocumentClientImplTest {
             }
 
             @Override
-            public CollectionRoutingMap tryCombine(List<ImmutablePair<PartitionKeyRange, IServerIdentity>> ranges) {
+            public CollectionRoutingMap tryCombine(
+                List<ImmutablePair<PartitionKeyRange, IServerIdentity>> ranges,
+                String changeFeedIfNoneMatch,
+                String collectionRid) {
+                return null;
+            }
+
+            @Override
+            public String getChangeFeedNextIfNoneMatch() {
                 return null;
             }
         };
@@ -364,9 +410,18 @@ public class RxDocumentClientImplTest {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> IDocumentQueryExecutionContext<T> dummyExecutionContextForQuery(List<String> results, Map<String, String> headers) {
-        List<Document> documentResults = results.stream().map(str -> new Document(str)).collect(Collectors.toList());
-        return () -> Flux.just((FeedResponse<T>) ModelBridgeInternal.createFeedResponse(documentResults, headers));
+    private static <T> IDocumentQueryExecutionContext<T> dummyExecutionContextForQuery(
+            List<String> results,
+            Map<String, String> headers,
+            Class<T> klass) {
+        List<T> documentResults =
+                results
+                        .stream()
+                        .map(str -> new Document(str))
+                        .map(document -> document.toObject(klass))
+                        .collect(Collectors.toList());
+
+        return () -> Flux.just(ModelBridgeInternal.createFeedResponse(documentResults, headers));
     }
 
     private static DocumentClientRetryPolicy dummyDocumentClientRetryPolicy() {
@@ -386,14 +441,18 @@ public class RxDocumentClientImplTest {
         };
     }
 
-    private static ResourceResponse<Document> dummyResourceResponse(String content, Map<String, String> headers) {
-
+    private static RxDocumentServiceResponse mockRxDocumentServiceResponse(String content, Map<String, String> headers) {
+        byte[] blob = content.getBytes(StandardCharsets.UTF_8);
         StoreResponse storeResponse = new StoreResponse(
+            null,
             HttpResponseStatus.OK.code(),
             headers,
-            content.getBytes(StandardCharsets.UTF_8));
+            new ByteBufInputStream(Unpooled.wrappedBuffer(blob), true),
+            blob.length);
 
         RxDocumentServiceResponse documentServiceResponse = new RxDocumentServiceResponse(new DiagnosticsClientContext() {
+
+            private final AtomicReference<CosmosDiagnostics> mostRecentlyCreatedDiagnostics = new AtomicReference<>(null);
 
             @Override
             public DiagnosticsClientConfig getConfig() {
@@ -402,22 +461,31 @@ public class RxDocumentClientImplTest {
 
             @Override
             public CosmosDiagnostics createDiagnostics() {
-                return diagnosticsAccessor.create(this, 1d) ;
+                CosmosDiagnostics diagnostics = diagnosticsAccessor.create(this, 1d) ;
+                mostRecentlyCreatedDiagnostics.set(diagnostics);
+                return diagnostics;
             }
 
             @Override
             public String getUserAgent() {
                 return Utils.getUserAgent();
             }
+
+            @Override
+            public CosmosDiagnostics getMostRecentlyCreatedDiagnostics() {
+                return mostRecentlyCreatedDiagnostics.get();
+            }
+
         }, storeResponse);
 
         documentServiceResponse.setCosmosDiagnostics(dummyCosmosDiagnostics());
 
-        return new ResourceResponse<>(documentServiceResponse, Document.class);
+        return documentServiceResponse;
     }
 
     private static CosmosDiagnostics dummyCosmosDiagnostics() {
         return diagnosticsAccessor.create(new DiagnosticsClientContext() {
+
             @Override
             public DiagnosticsClientConfig getConfig() {
                 return new DiagnosticsClientConfig();
@@ -431,6 +499,11 @@ public class RxDocumentClientImplTest {
             @Override
             public String getUserAgent() {
                 return Utils.getUserAgent();
+            }
+
+            @Override
+            public CosmosDiagnostics getMostRecentlyCreatedDiagnostics() {
+                return null;
             }
         }, 1d);
     }

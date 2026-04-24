@@ -6,36 +6,40 @@ package com.azure.resourcemanager.networkcloud.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
 /**
  * StorageApplianceRunReadCommandsParameters represents the body of request containing list of read-only commands to run
- * for a storage appliance.
+ * on the storage appliance.
  */
 @Fluent
-public final class StorageApplianceRunReadCommandsParameters {
+public final class StorageApplianceRunReadCommandsParameters
+    implements JsonSerializable<StorageApplianceRunReadCommandsParameters> {
     /*
-     * The list of read-only commands to run.
+     * The list of read-only commands to be executed directly against the target storage appliance.
      */
-    @JsonProperty(value = "commands", required = true)
     private List<StorageApplianceCommandSpecification> commands;
 
     /*
      * The maximum time the commands are allowed to run.
-     * If the execution time exceeds the maximum, the script will be stopped, any output produced until then will be
-     * captured, and the exit code matching a timeout will be returned (252).
      */
-    @JsonProperty(value = "limitTimeSeconds", required = true)
     private long limitTimeSeconds;
 
-    /** Creates an instance of StorageApplianceRunReadCommandsParameters class. */
+    /**
+     * Creates an instance of StorageApplianceRunReadCommandsParameters class.
+     */
     public StorageApplianceRunReadCommandsParameters() {
     }
 
     /**
-     * Get the commands property: The list of read-only commands to run.
-     *
+     * Get the commands property: The list of read-only commands to be executed directly against the target storage
+     * appliance.
+     * 
      * @return the commands value.
      */
     public List<StorageApplianceCommandSpecification> commands() {
@@ -43,8 +47,9 @@ public final class StorageApplianceRunReadCommandsParameters {
     }
 
     /**
-     * Set the commands property: The list of read-only commands to run.
-     *
+     * Set the commands property: The list of read-only commands to be executed directly against the target storage
+     * appliance.
+     * 
      * @param commands the commands value to set.
      * @return the StorageApplianceRunReadCommandsParameters object itself.
      */
@@ -54,10 +59,8 @@ public final class StorageApplianceRunReadCommandsParameters {
     }
 
     /**
-     * Get the limitTimeSeconds property: The maximum time the commands are allowed to run. If the execution time
-     * exceeds the maximum, the script will be stopped, any output produced until then will be captured, and the exit
-     * code matching a timeout will be returned (252).
-     *
+     * Get the limitTimeSeconds property: The maximum time the commands are allowed to run.
+     * 
      * @return the limitTimeSeconds value.
      */
     public long limitTimeSeconds() {
@@ -65,10 +68,8 @@ public final class StorageApplianceRunReadCommandsParameters {
     }
 
     /**
-     * Set the limitTimeSeconds property: The maximum time the commands are allowed to run. If the execution time
-     * exceeds the maximum, the script will be stopped, any output produced until then will be captured, and the exit
-     * code matching a timeout will be returned (252).
-     *
+     * Set the limitTimeSeconds property: The maximum time the commands are allowed to run.
+     * 
      * @param limitTimeSeconds the limitTimeSeconds value to set.
      * @return the StorageApplianceRunReadCommandsParameters object itself.
      */
@@ -79,19 +80,61 @@ public final class StorageApplianceRunReadCommandsParameters {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (commands() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property commands in model StorageApplianceRunReadCommandsParameters"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property commands in model StorageApplianceRunReadCommandsParameters"));
         } else {
             commands().forEach(e -> e.validate());
         }
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(StorageApplianceRunReadCommandsParameters.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("commands", this.commands, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeLongField("limitTimeSeconds", this.limitTimeSeconds);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of StorageApplianceRunReadCommandsParameters from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of StorageApplianceRunReadCommandsParameters if the JsonReader was pointing to an instance of
+     * it, or null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the StorageApplianceRunReadCommandsParameters.
+     */
+    public static StorageApplianceRunReadCommandsParameters fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            StorageApplianceRunReadCommandsParameters deserializedStorageApplianceRunReadCommandsParameters
+                = new StorageApplianceRunReadCommandsParameters();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("commands".equals(fieldName)) {
+                    List<StorageApplianceCommandSpecification> commands
+                        = reader.readArray(reader1 -> StorageApplianceCommandSpecification.fromJson(reader1));
+                    deserializedStorageApplianceRunReadCommandsParameters.commands = commands;
+                } else if ("limitTimeSeconds".equals(fieldName)) {
+                    deserializedStorageApplianceRunReadCommandsParameters.limitTimeSeconds = reader.getLong();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedStorageApplianceRunReadCommandsParameters;
+        });
+    }
 }

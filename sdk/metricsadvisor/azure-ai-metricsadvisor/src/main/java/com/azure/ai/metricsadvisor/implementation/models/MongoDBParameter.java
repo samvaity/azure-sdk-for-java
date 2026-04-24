@@ -5,47 +5,60 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The MongoDBParameter model. */
+/**
+ * The MongoDBParameter model.
+ */
 @Fluent
-public final class MongoDBParameter {
+public final class MongoDBParameter implements JsonSerializable<MongoDBParameter> {
     /*
      * The connection string of this MongoDB
      */
-    @JsonProperty(value = "connectionString")
+    @Generated
     private String connectionString;
 
     /*
      * A database name in this MongoDB
      */
-    @JsonProperty(value = "database")
+    @Generated
     private String database;
 
     /*
      * The script to query this database
      */
-    @JsonProperty(value = "command", required = true)
+    @Generated
     private String command;
 
-    /** Creates an instance of MongoDBParameter class. */
-    public MongoDBParameter() {}
+    /**
+     * Creates an instance of MongoDBParameter class.
+     */
+    @Generated
+    public MongoDBParameter() {
+    }
 
     /**
      * Get the connectionString property: The connection string of this MongoDB.
-     *
+     * 
      * @return the connectionString value.
      */
+    @Generated
     public String getConnectionString() {
         return this.connectionString;
     }
 
     /**
      * Set the connectionString property: The connection string of this MongoDB.
-     *
+     * 
      * @param connectionString the connectionString value to set.
      * @return the MongoDBParameter object itself.
      */
+    @Generated
     public MongoDBParameter setConnectionString(String connectionString) {
         this.connectionString = connectionString;
         return this;
@@ -53,19 +66,21 @@ public final class MongoDBParameter {
 
     /**
      * Get the database property: A database name in this MongoDB.
-     *
+     * 
      * @return the database value.
      */
+    @Generated
     public String getDatabase() {
         return this.database;
     }
 
     /**
      * Set the database property: A database name in this MongoDB.
-     *
+     * 
      * @param database the database value to set.
      * @return the MongoDBParameter object itself.
      */
+    @Generated
     public MongoDBParameter setDatabase(String database) {
         this.database = database;
         return this;
@@ -73,21 +88,68 @@ public final class MongoDBParameter {
 
     /**
      * Get the command property: The script to query this database.
-     *
+     * 
      * @return the command value.
      */
+    @Generated
     public String getCommand() {
         return this.command;
     }
 
     /**
      * Set the command property: The script to query this database.
-     *
+     * 
      * @param command the command value to set.
      * @return the MongoDBParameter object itself.
      */
+    @Generated
     public MongoDBParameter setCommand(String command) {
         this.command = command;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("command", this.command);
+        jsonWriter.writeStringField("connectionString", this.connectionString);
+        jsonWriter.writeStringField("database", this.database);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of MongoDBParameter from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of MongoDBParameter if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the MongoDBParameter.
+     */
+    @Generated
+    public static MongoDBParameter fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            MongoDBParameter deserializedMongoDBParameter = new MongoDBParameter();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("command".equals(fieldName)) {
+                    deserializedMongoDBParameter.command = reader.getString();
+                } else if ("connectionString".equals(fieldName)) {
+                    deserializedMongoDBParameter.connectionString = reader.getString();
+                } else if ("database".equals(fieldName)) {
+                    deserializedMongoDBParameter.database = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedMongoDBParameter;
+        });
     }
 }

@@ -4,26 +4,29 @@
 
 package com.azure.resourcemanager.apimanagement.generated;
 
-/** Samples for Cache CreateOrUpdate. */
+/**
+ * Samples for Cache CreateOrUpdate.
+ */
 public final class CacheCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/apimanagement/resource-manager/Microsoft.ApiManagement/stable/2021-08-01/examples/ApiManagementCreateCache.json
+     * x-ms-original-file:
+     * specification/apimanagement/resource-manager/Microsoft.ApiManagement/stable/2024-05-01/examples/
+     * ApiManagementCreateCache.json
      */
     /**
      * Sample code: ApiManagementCreateCache.
-     *
+     * 
      * @param manager Entry point to ApiManagementManager.
      */
     public static void apiManagementCreateCache(com.azure.resourcemanager.apimanagement.ApiManagementManager manager) {
-        manager
-            .caches()
+        manager.caches()
             .define("c1")
             .withExistingService("rg1", "apimService1")
             .withDescription("Redis cache instances in West India")
             .withConnectionString("apim.redis.cache.windows.net:6380,password=xc,ssl=True,abortConnect=False")
             .withUseFromLocation("default")
             .withResourceId(
-                "https://management.azure.com/subscriptions/subid/resourceGroups/rg1/providers/Microsoft.Cache/redis/apimservice1")
+                "https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Cache/redis/apimservice1")
             .create();
     }
 }

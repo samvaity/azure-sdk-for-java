@@ -7,6 +7,10 @@ package com.azure.resourcemanager.communication.generated;
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.communication.fluent.models.CommunicationServiceResourceInner;
 import com.azure.resourcemanager.communication.models.CommunicationServiceResourceList;
+import com.azure.resourcemanager.communication.models.ManagedServiceIdentity;
+import com.azure.resourcemanager.communication.models.ManagedServiceIdentityType;
+import com.azure.resourcemanager.communication.models.PublicNetworkAccess;
+import com.azure.resourcemanager.communication.models.UserAssignedIdentity;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,50 +19,61 @@ import org.junit.jupiter.api.Assertions;
 public final class CommunicationServiceResourceListTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CommunicationServiceResourceList model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"properties\":{\"provisioningState\":\"Running\",\"hostName\":\"mkkvnip\",\"dataLocation\":\"oxzjnchgejspod\",\"notificationHubId\":\"ilzyd\",\"version\":\"o\",\"immutableResourceId\":\"yahux\",\"linkedDomains\":[]},\"location\":\"mqnjaqw\",\"tags\":{\"gjvw\":\"sprozvcput\",\"dvpjhulsuuvmk\":\"fdatsc\",\"jdpvwryo\":\"ozkrwfndiodjpslw\"},\"id\":\"psoacctazakljl\",\"name\":\"hbcryffdfdosyge\",\"type\":\"paojakhmsbzjh\"},{\"properties\":{\"provisioningState\":\"Canceled\",\"hostName\":\"dphlxaolt\",\"dataLocation\":\"qtrgqjbpfzfsinzg\",\"notificationHubId\":\"cjrwzoxxjtfellu\",\"version\":\"zitonpeqfpjkjl\",\"immutableResourceId\":\"fpdvhpfxxypi\",\"linkedDomains\":[]},\"location\":\"mayhuybbkpodepoo\",\"tags\":{\"eotusivyevc\":\"uvamiheognarxzxt\",\"un\":\"iqihn\",\"fygxgispemvtzfk\":\"bwjzr\"},\"id\":\"fublj\",\"name\":\"fxqeof\",\"type\":\"aeqjhqjbasvms\"}],\"nextLink\":\"qulngsntnbybkzgc\"}")
-                .toObject(CommunicationServiceResourceList.class);
-        Assertions.assertEquals("mqnjaqw", model.value().get(0).location());
-        Assertions.assertEquals("sprozvcput", model.value().get(0).tags().get("gjvw"));
+        CommunicationServiceResourceList model = BinaryData.fromString(
+            "{\"value\":[{\"properties\":{\"provisioningState\":\"Running\",\"hostName\":\"mkkvnip\",\"dataLocation\":\"oxzjnchgejspod\",\"notificationHubId\":\"ilzyd\",\"version\":\"o\",\"immutableResourceId\":\"yahux\",\"linkedDomains\":[\"mqnjaqw\",\"xj\"],\"publicNetworkAccess\":\"SecuredByPerimeter\",\"disableLocalAuth\":true},\"identity\":{\"principalId\":\"60417efb-d681-4e7f-a382-9c7099cf8ba6\",\"tenantId\":\"3b0fdc1d-83f7-42d0-95a8-4dac330b188e\",\"type\":\"SystemAssigned,UserAssigned\",\"userAssignedIdentities\":{\"vwmf\":{\"principalId\":\"80f17e41-6c39-4e70-ac51-75cee4e6c45c\",\"clientId\":\"7fdaa729-5d28-4002-a8f5-a5395278c694\"}}},\"location\":\"t\",\"tags\":{\"ozkrwfndiodjpslw\":\"dvpjhulsuuvmk\",\"psoacctazakljl\":\"jdpvwryo\",\"paojakhmsbzjh\":\"hbcryffdfdosyge\"},\"id\":\"rzevdphlxaol\",\"name\":\"hqtrgqjbpf\",\"type\":\"fsinzgvfcjrwzoxx\"},{\"properties\":{\"provisioningState\":\"Unknown\",\"hostName\":\"luwfzitonpeqfpjk\",\"dataLocation\":\"lxofpdvhpfxxypin\",\"notificationHubId\":\"mayhuybbkpodepoo\",\"version\":\"nuvamiheogna\",\"immutableResourceId\":\"zxtheotusivyevcc\",\"linkedDomains\":[\"hn\",\"un\"],\"publicNetworkAccess\":\"Disabled\",\"disableLocalAuth\":false},\"identity\":{\"principalId\":\"b6867747-eb62-4dc5-bfc0-4618ad71bd98\",\"tenantId\":\"2962d48f-33b3-4e39-b3ee-bbd9e334d963\",\"type\":\"UserAssigned\",\"userAssignedIdentities\":{\"spemvtzfk\":{\"principalId\":\"2676193f-0c0c-4144-933e-7fa45403445b\",\"clientId\":\"e8cfbe56-fad1-4bf9-bdea-a3dbe981a1f1\"},\"bljofxqeof\":{\"principalId\":\"20a3eb5f-51e0-4fff-8b93-5a74e0480187\",\"clientId\":\"b7157e69-1497-4e9f-981c-ad173197fff6\"},\"qjhqjbas\":{\"principalId\":\"c386d647-9d41-40ba-8683-52124133686e\",\"clientId\":\"27514be4-34fb-4f56-a748-064c15f27c83\"},\"mjqulngsn\":{\"principalId\":\"962bb4ec-d061-46ef-958a-bb40a913fcc1\",\"clientId\":\"0cfbf62e-a986-447b-9076-5644382d54e8\"}}},\"location\":\"bybkzgcwrwclxx\",\"tags\":{\"cqvkocrcjdkwtn\":\"jdous\",\"gls\":\"xbnjbiksq\"},\"id\":\"ainqpjwnzlljfm\",\"name\":\"pee\",\"type\":\"vmgxsab\"}],\"nextLink\":\"qduujitcjczdz\"}")
+            .toObject(CommunicationServiceResourceList.class);
+        Assertions.assertEquals("t", model.value().get(0).location());
+        Assertions.assertEquals("dvpjhulsuuvmk", model.value().get(0).tags().get("ozkrwfndiodjpslw"));
+        Assertions.assertEquals(ManagedServiceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED,
+            model.value().get(0).identity().type());
         Assertions.assertEquals("oxzjnchgejspod", model.value().get(0).dataLocation());
-        Assertions.assertEquals("qulngsntnbybkzgc", model.nextLink());
+        Assertions.assertEquals("mqnjaqw", model.value().get(0).linkedDomains().get(0));
+        Assertions.assertEquals(PublicNetworkAccess.SECURED_BY_PERIMETER, model.value().get(0).publicNetworkAccess());
+        Assertions.assertTrue(model.value().get(0).disableLocalAuth());
+        Assertions.assertEquals("qduujitcjczdz", model.nextLink());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CommunicationServiceResourceList model =
-            new CommunicationServiceResourceList()
+        CommunicationServiceResourceList model
+            = new CommunicationServiceResourceList()
                 .withValue(
-                    Arrays
-                        .asList(
-                            new CommunicationServiceResourceInner()
-                                .withLocation("mqnjaqw")
-                                .withTags(
-                                    mapOf(
-                                        "gjvw",
-                                        "sprozvcput",
-                                        "dvpjhulsuuvmk",
-                                        "fdatsc",
-                                        "jdpvwryo",
-                                        "ozkrwfndiodjpslw"))
-                                .withDataLocation("oxzjnchgejspod")
-                                .withLinkedDomains(Arrays.asList()),
-                            new CommunicationServiceResourceInner()
-                                .withLocation("mayhuybbkpodepoo")
-                                .withTags(
-                                    mapOf("eotusivyevc", "uvamiheognarxzxt", "un", "iqihn", "fygxgispemvtzfk", "bwjzr"))
-                                .withDataLocation("qtrgqjbpfzfsinzg")
-                                .withLinkedDomains(Arrays.asList())))
-                .withNextLink("qulngsntnbybkzgc");
+                    Arrays.asList(
+                        new CommunicationServiceResourceInner().withLocation("t")
+                            .withTags(mapOf("ozkrwfndiodjpslw", "dvpjhulsuuvmk", "psoacctazakljl", "jdpvwryo",
+                                "paojakhmsbzjh", "hbcryffdfdosyge"))
+                            .withIdentity(new ManagedServiceIdentity()
+                                .withType(ManagedServiceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED)
+                                .withUserAssignedIdentities(mapOf("vwmf", new UserAssignedIdentity())))
+                            .withDataLocation("oxzjnchgejspod")
+                            .withLinkedDomains(Arrays.asList("mqnjaqw", "xj"))
+                            .withPublicNetworkAccess(PublicNetworkAccess.SECURED_BY_PERIMETER)
+                            .withDisableLocalAuth(true),
+                        new CommunicationServiceResourceInner().withLocation("bybkzgcwrwclxx")
+                            .withTags(mapOf("cqvkocrcjdkwtn", "jdous", "gls", "xbnjbiksq"))
+                            .withIdentity(
+                                new ManagedServiceIdentity().withType(ManagedServiceIdentityType.USER_ASSIGNED)
+                                    .withUserAssignedIdentities(mapOf("spemvtzfk", new UserAssignedIdentity(),
+                                        "bljofxqeof", new UserAssignedIdentity(), "qjhqjbas",
+                                        new UserAssignedIdentity(), "mjqulngsn", new UserAssignedIdentity())))
+                            .withDataLocation("lxofpdvhpfxxypin")
+                            .withLinkedDomains(Arrays.asList("hn", "un"))
+                            .withPublicNetworkAccess(PublicNetworkAccess.DISABLED)
+                            .withDisableLocalAuth(false)))
+                .withNextLink("qduujitcjczdz");
         model = BinaryData.fromObject(model).toObject(CommunicationServiceResourceList.class);
-        Assertions.assertEquals("mqnjaqw", model.value().get(0).location());
-        Assertions.assertEquals("sprozvcput", model.value().get(0).tags().get("gjvw"));
+        Assertions.assertEquals("t", model.value().get(0).location());
+        Assertions.assertEquals("dvpjhulsuuvmk", model.value().get(0).tags().get("ozkrwfndiodjpslw"));
+        Assertions.assertEquals(ManagedServiceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED,
+            model.value().get(0).identity().type());
         Assertions.assertEquals("oxzjnchgejspod", model.value().get(0).dataLocation());
-        Assertions.assertEquals("qulngsntnbybkzgc", model.nextLink());
+        Assertions.assertEquals("mqnjaqw", model.value().get(0).linkedDomains().get(0));
+        Assertions.assertEquals(PublicNetworkAccess.SECURED_BY_PERIMETER, model.value().get(0).publicNetworkAccess());
+        Assertions.assertTrue(model.value().get(0).disableLocalAuth());
+        Assertions.assertEquals("qduujitcjczdz", model.nextLink());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

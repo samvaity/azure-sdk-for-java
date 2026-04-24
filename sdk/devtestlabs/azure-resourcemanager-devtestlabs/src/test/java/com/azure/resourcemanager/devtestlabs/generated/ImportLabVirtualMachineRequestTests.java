@@ -11,23 +11,20 @@ import org.junit.jupiter.api.Assertions;
 public final class ImportLabVirtualMachineRequestTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ImportLabVirtualMachineRequest model =
-            BinaryData
-                .fromString(
-                    "{\"sourceVirtualMachineResourceId\":\"nq\",\"destinationVirtualMachineName\":\"qpswokmvkhlggdhb\"}")
-                .toObject(ImportLabVirtualMachineRequest.class);
-        Assertions.assertEquals("nq", model.sourceVirtualMachineResourceId());
-        Assertions.assertEquals("qpswokmvkhlggdhb", model.destinationVirtualMachineName());
+        ImportLabVirtualMachineRequest model = BinaryData.fromString(
+            "{\"sourceVirtualMachineResourceId\":\"cigeleohdbvqvw\",\"destinationVirtualMachineName\":\"jopwbeonrlkwz\"}")
+            .toObject(ImportLabVirtualMachineRequest.class);
+        Assertions.assertEquals("cigeleohdbvqvw", model.sourceVirtualMachineResourceId());
+        Assertions.assertEquals("jopwbeonrlkwz", model.destinationVirtualMachineName());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ImportLabVirtualMachineRequest model =
-            new ImportLabVirtualMachineRequest()
-                .withSourceVirtualMachineResourceId("nq")
-                .withDestinationVirtualMachineName("qpswokmvkhlggdhb");
+        ImportLabVirtualMachineRequest model
+            = new ImportLabVirtualMachineRequest().withSourceVirtualMachineResourceId("cigeleohdbvqvw")
+                .withDestinationVirtualMachineName("jopwbeonrlkwz");
         model = BinaryData.fromObject(model).toObject(ImportLabVirtualMachineRequest.class);
-        Assertions.assertEquals("nq", model.sourceVirtualMachineResourceId());
-        Assertions.assertEquals("qpswokmvkhlggdhb", model.destinationVirtualMachineName());
+        Assertions.assertEquals("cigeleohdbvqvw", model.sourceVirtualMachineResourceId());
+        Assertions.assertEquals("jopwbeonrlkwz", model.destinationVirtualMachineName());
     }
 }

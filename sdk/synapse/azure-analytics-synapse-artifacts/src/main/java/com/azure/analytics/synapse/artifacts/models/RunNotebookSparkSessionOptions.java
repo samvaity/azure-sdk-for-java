@@ -5,134 +5,147 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/** The RunNotebookSparkSessionOptions model. */
+/**
+ * The RunNotebookSparkSessionOptions model.
+ */
 @Fluent
-public final class RunNotebookSparkSessionOptions {
+public final class RunNotebookSparkSessionOptions implements JsonSerializable<RunNotebookSparkSessionOptions> {
     /*
      * Dictionary of <string>
      */
-    @JsonProperty(value = "tags")
+    @Generated
     private Map<String, String> tags;
 
     /*
      * The session kind
      */
-    @JsonProperty(value = "kind")
+    @Generated
     private String kind;
 
     /*
      * User to impersonate when starting the session
      */
-    @JsonProperty(value = "proxyUser")
+    @Generated
     private String proxyUser;
 
     /*
      * The name of this session
      */
-    @JsonProperty(value = "name")
+    @Generated
     private String name;
 
     /*
      * jars to be used in this session
      */
-    @JsonProperty(value = "jars")
+    @Generated
     private List<String> jars;
 
     /*
      * Python files to be used in this session
      */
-    @JsonProperty(value = "pyFiles")
+    @Generated
     private List<String> pythonFiles;
 
     /*
      * files to be used in this session
      */
-    @JsonProperty(value = "files")
+    @Generated
     private List<String> files;
 
     /*
      * Archives to be used in this session
      */
-    @JsonProperty(value = "archives")
+    @Generated
     private List<String> archives;
 
     /*
      * The name of the YARN queue to which submitted
      */
-    @JsonProperty(value = "queue")
+    @Generated
     private Object queue;
 
     /*
      * Spark configuration properties
      */
-    @JsonProperty(value = "conf")
+    @Generated
     private Map<String, String> configuration;
 
     /*
      * Amount of memory to use for the driver process
      */
-    @JsonProperty(value = "driverMemory")
+    @Generated
     private String driverMemory;
 
     /*
      * Number of cores to use for the driver process
      */
-    @JsonProperty(value = "driverCores")
+    @Generated
     private Integer driverCores;
 
     /*
      * Amount of memory to use per executor process
      */
-    @JsonProperty(value = "executorMemory")
+    @Generated
     private String executorMemory;
 
     /*
      * Number of cores to use for each executor
      */
-    @JsonProperty(value = "executorCores")
+    @Generated
     private Integer executorCores;
 
     /*
      * Number of executors to launch for this session
      */
-    @JsonProperty(value = "numExecutors")
+    @Generated
     private Integer executorCount;
 
     /*
      * Whether to queue session creation if Spark pool doesn't have enough capacity. Default value is true in notebook
      * runs API
      */
-    @JsonProperty(value = "isQueueable")
+    @Generated
     private Boolean isQueueable;
 
     /*
      * Timeout in second to which session be orphaned
      */
-    @JsonProperty(value = "heartbeatTimeoutInSecond")
+    @Generated
     private Integer heartbeatTimeoutInSecond;
 
-    /** Creates an instance of RunNotebookSparkSessionOptions class. */
-    public RunNotebookSparkSessionOptions() {}
+    /**
+     * Creates an instance of RunNotebookSparkSessionOptions class.
+     */
+    @Generated
+    public RunNotebookSparkSessionOptions() {
+    }
 
     /**
      * Get the tags property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the tags value.
      */
+    @Generated
     public Map<String, String> getTags() {
         return this.tags;
     }
 
     /**
      * Set the tags property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param tags the tags value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setTags(Map<String, String> tags) {
         this.tags = tags;
         return this;
@@ -140,19 +153,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the kind property: The session kind.
-     *
+     * 
      * @return the kind value.
      */
+    @Generated
     public String getKind() {
         return this.kind;
     }
 
     /**
      * Set the kind property: The session kind.
-     *
+     * 
      * @param kind the kind value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setKind(String kind) {
         this.kind = kind;
         return this;
@@ -160,19 +175,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the proxyUser property: User to impersonate when starting the session.
-     *
+     * 
      * @return the proxyUser value.
      */
+    @Generated
     public String getProxyUser() {
         return this.proxyUser;
     }
 
     /**
      * Set the proxyUser property: User to impersonate when starting the session.
-     *
+     * 
      * @param proxyUser the proxyUser value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setProxyUser(String proxyUser) {
         this.proxyUser = proxyUser;
         return this;
@@ -180,19 +197,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the name property: The name of this session.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The name of this session.
-     *
+     * 
      * @param name the name value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setName(String name) {
         this.name = name;
         return this;
@@ -200,19 +219,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the jars property: jars to be used in this session.
-     *
+     * 
      * @return the jars value.
      */
+    @Generated
     public List<String> getJars() {
         return this.jars;
     }
 
     /**
      * Set the jars property: jars to be used in this session.
-     *
+     * 
      * @param jars the jars value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setJars(List<String> jars) {
         this.jars = jars;
         return this;
@@ -220,19 +241,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the pythonFiles property: Python files to be used in this session.
-     *
+     * 
      * @return the pythonFiles value.
      */
+    @Generated
     public List<String> getPythonFiles() {
         return this.pythonFiles;
     }
 
     /**
      * Set the pythonFiles property: Python files to be used in this session.
-     *
+     * 
      * @param pythonFiles the pythonFiles value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setPythonFiles(List<String> pythonFiles) {
         this.pythonFiles = pythonFiles;
         return this;
@@ -240,19 +263,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the files property: files to be used in this session.
-     *
+     * 
      * @return the files value.
      */
+    @Generated
     public List<String> getFiles() {
         return this.files;
     }
 
     /**
      * Set the files property: files to be used in this session.
-     *
+     * 
      * @param files the files value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setFiles(List<String> files) {
         this.files = files;
         return this;
@@ -260,19 +285,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the archives property: Archives to be used in this session.
-     *
+     * 
      * @return the archives value.
      */
+    @Generated
     public List<String> getArchives() {
         return this.archives;
     }
 
     /**
      * Set the archives property: Archives to be used in this session.
-     *
+     * 
      * @param archives the archives value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setArchives(List<String> archives) {
         this.archives = archives;
         return this;
@@ -280,19 +307,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the queue property: The name of the YARN queue to which submitted.
-     *
+     * 
      * @return the queue value.
      */
+    @Generated
     public Object getQueue() {
         return this.queue;
     }
 
     /**
      * Set the queue property: The name of the YARN queue to which submitted.
-     *
+     * 
      * @param queue the queue value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setQueue(Object queue) {
         this.queue = queue;
         return this;
@@ -300,19 +329,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the configuration property: Spark configuration properties.
-     *
+     * 
      * @return the configuration value.
      */
+    @Generated
     public Map<String, String> getConfiguration() {
         return this.configuration;
     }
 
     /**
      * Set the configuration property: Spark configuration properties.
-     *
+     * 
      * @param configuration the configuration value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setConfiguration(Map<String, String> configuration) {
         this.configuration = configuration;
         return this;
@@ -320,19 +351,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the driverMemory property: Amount of memory to use for the driver process.
-     *
+     * 
      * @return the driverMemory value.
      */
+    @Generated
     public String getDriverMemory() {
         return this.driverMemory;
     }
 
     /**
      * Set the driverMemory property: Amount of memory to use for the driver process.
-     *
+     * 
      * @param driverMemory the driverMemory value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setDriverMemory(String driverMemory) {
         this.driverMemory = driverMemory;
         return this;
@@ -340,19 +373,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the driverCores property: Number of cores to use for the driver process.
-     *
+     * 
      * @return the driverCores value.
      */
+    @Generated
     public Integer getDriverCores() {
         return this.driverCores;
     }
 
     /**
      * Set the driverCores property: Number of cores to use for the driver process.
-     *
+     * 
      * @param driverCores the driverCores value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setDriverCores(Integer driverCores) {
         this.driverCores = driverCores;
         return this;
@@ -360,19 +395,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the executorMemory property: Amount of memory to use per executor process.
-     *
+     * 
      * @return the executorMemory value.
      */
+    @Generated
     public String getExecutorMemory() {
         return this.executorMemory;
     }
 
     /**
      * Set the executorMemory property: Amount of memory to use per executor process.
-     *
+     * 
      * @param executorMemory the executorMemory value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setExecutorMemory(String executorMemory) {
         this.executorMemory = executorMemory;
         return this;
@@ -380,19 +417,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the executorCores property: Number of cores to use for each executor.
-     *
+     * 
      * @return the executorCores value.
      */
+    @Generated
     public Integer getExecutorCores() {
         return this.executorCores;
     }
 
     /**
      * Set the executorCores property: Number of cores to use for each executor.
-     *
+     * 
      * @param executorCores the executorCores value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setExecutorCores(Integer executorCores) {
         this.executorCores = executorCores;
         return this;
@@ -400,19 +439,21 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the executorCount property: Number of executors to launch for this session.
-     *
+     * 
      * @return the executorCount value.
      */
+    @Generated
     public Integer getExecutorCount() {
         return this.executorCount;
     }
 
     /**
      * Set the executorCount property: Number of executors to launch for this session.
-     *
+     * 
      * @param executorCount the executorCount value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setExecutorCount(Integer executorCount) {
         this.executorCount = executorCount;
         return this;
@@ -421,9 +462,10 @@ public final class RunNotebookSparkSessionOptions {
     /**
      * Get the isQueueable property: Whether to queue session creation if Spark pool doesn't have enough capacity.
      * Default value is true in notebook runs API.
-     *
+     * 
      * @return the isQueueable value.
      */
+    @Generated
     public Boolean isQueueable() {
         return this.isQueueable;
     }
@@ -431,10 +473,11 @@ public final class RunNotebookSparkSessionOptions {
     /**
      * Set the isQueueable property: Whether to queue session creation if Spark pool doesn't have enough capacity.
      * Default value is true in notebook runs API.
-     *
+     * 
      * @param isQueueable the isQueueable value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setIsQueueable(Boolean isQueueable) {
         this.isQueueable = isQueueable;
         return this;
@@ -442,21 +485,119 @@ public final class RunNotebookSparkSessionOptions {
 
     /**
      * Get the heartbeatTimeoutInSecond property: Timeout in second to which session be orphaned.
-     *
+     * 
      * @return the heartbeatTimeoutInSecond value.
      */
+    @Generated
     public Integer getHeartbeatTimeoutInSecond() {
         return this.heartbeatTimeoutInSecond;
     }
 
     /**
      * Set the heartbeatTimeoutInSecond property: Timeout in second to which session be orphaned.
-     *
+     * 
      * @param heartbeatTimeoutInSecond the heartbeatTimeoutInSecond value to set.
      * @return the RunNotebookSparkSessionOptions object itself.
      */
+    @Generated
     public RunNotebookSparkSessionOptions setHeartbeatTimeoutInSecond(Integer heartbeatTimeoutInSecond) {
         this.heartbeatTimeoutInSecond = heartbeatTimeoutInSecond;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeMapField("tags", this.tags, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("kind", this.kind);
+        jsonWriter.writeStringField("proxyUser", this.proxyUser);
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeArrayField("jars", this.jars, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeArrayField("pyFiles", this.pythonFiles, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeArrayField("files", this.files, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeArrayField("archives", this.archives, (writer, element) -> writer.writeString(element));
+        if (this.queue != null) {
+            jsonWriter.writeUntypedField("queue", this.queue);
+        }
+        jsonWriter.writeMapField("conf", this.configuration, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("driverMemory", this.driverMemory);
+        jsonWriter.writeNumberField("driverCores", this.driverCores);
+        jsonWriter.writeStringField("executorMemory", this.executorMemory);
+        jsonWriter.writeNumberField("executorCores", this.executorCores);
+        jsonWriter.writeNumberField("numExecutors", this.executorCount);
+        jsonWriter.writeBooleanField("isQueueable", this.isQueueable);
+        jsonWriter.writeNumberField("heartbeatTimeoutInSecond", this.heartbeatTimeoutInSecond);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RunNotebookSparkSessionOptions from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RunNotebookSparkSessionOptions if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the RunNotebookSparkSessionOptions.
+     */
+    @Generated
+    public static RunNotebookSparkSessionOptions fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RunNotebookSparkSessionOptions deserializedRunNotebookSparkSessionOptions
+                = new RunNotebookSparkSessionOptions();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("tags".equals(fieldName)) {
+                    Map<String, String> tags = reader.readMap(reader1 -> reader1.getString());
+                    deserializedRunNotebookSparkSessionOptions.tags = tags;
+                } else if ("kind".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.kind = reader.getString();
+                } else if ("proxyUser".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.proxyUser = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.name = reader.getString();
+                } else if ("jars".equals(fieldName)) {
+                    List<String> jars = reader.readArray(reader1 -> reader1.getString());
+                    deserializedRunNotebookSparkSessionOptions.jars = jars;
+                } else if ("pyFiles".equals(fieldName)) {
+                    List<String> pythonFiles = reader.readArray(reader1 -> reader1.getString());
+                    deserializedRunNotebookSparkSessionOptions.pythonFiles = pythonFiles;
+                } else if ("files".equals(fieldName)) {
+                    List<String> files = reader.readArray(reader1 -> reader1.getString());
+                    deserializedRunNotebookSparkSessionOptions.files = files;
+                } else if ("archives".equals(fieldName)) {
+                    List<String> archives = reader.readArray(reader1 -> reader1.getString());
+                    deserializedRunNotebookSparkSessionOptions.archives = archives;
+                } else if ("queue".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.queue = reader.readUntyped();
+                } else if ("conf".equals(fieldName)) {
+                    Map<String, String> configuration = reader.readMap(reader1 -> reader1.getString());
+                    deserializedRunNotebookSparkSessionOptions.configuration = configuration;
+                } else if ("driverMemory".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.driverMemory = reader.getString();
+                } else if ("driverCores".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.driverCores = reader.getNullable(JsonReader::getInt);
+                } else if ("executorMemory".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.executorMemory = reader.getString();
+                } else if ("executorCores".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.executorCores = reader.getNullable(JsonReader::getInt);
+                } else if ("numExecutors".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.executorCount = reader.getNullable(JsonReader::getInt);
+                } else if ("isQueueable".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.isQueueable = reader.getNullable(JsonReader::getBoolean);
+                } else if ("heartbeatTimeoutInSecond".equals(fieldName)) {
+                    deserializedRunNotebookSparkSessionOptions.heartbeatTimeoutInSecond
+                        = reader.getNullable(JsonReader::getInt);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRunNotebookSparkSessionOptions;
+        });
     }
 }

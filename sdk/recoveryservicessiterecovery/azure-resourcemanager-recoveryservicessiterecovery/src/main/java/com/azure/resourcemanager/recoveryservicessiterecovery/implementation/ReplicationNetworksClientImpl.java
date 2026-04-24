@@ -30,22 +30,28 @@ import com.azure.resourcemanager.recoveryservicessiterecovery.fluent.models.Netw
 import com.azure.resourcemanager.recoveryservicessiterecovery.models.NetworkCollection;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ReplicationNetworksClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ReplicationNetworksClient.
+ */
 public final class ReplicationNetworksClientImpl implements ReplicationNetworksClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ReplicationNetworksService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final SiteRecoveryManagementClientImpl client;
 
     /**
      * Initializes an instance of ReplicationNetworksClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ReplicationNetworksClientImpl(SiteRecoveryManagementClientImpl client) {
-        this.service =
-            RestProxy.create(ReplicationNetworksService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service = RestProxy.create(ReplicationNetworksService.class, client.getHttpPipeline(),
+            client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -56,82 +62,57 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
     @Host("{$host}")
     @ServiceInterface(name = "SiteRecoveryManageme")
     public interface ReplicationNetworksService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationNetworks")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationNetworks")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<NetworkCollection>> listByReplicationFabrics(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("fabricName") String fabricName,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<NetworkCollection>> listByReplicationFabrics(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("fabricName") String fabricName, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationNetworks/{networkName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationNetworks/{networkName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<NetworkInner>> get(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("fabricName") String fabricName,
-            @PathParam("networkName") String networkName,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<NetworkInner>> get(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("fabricName") String fabricName, @PathParam("networkName") String networkName,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationNetworks")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationNetworks")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<NetworkCollection>> list(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<NetworkCollection>> list(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<NetworkCollection>> listByReplicationFabricsNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<NetworkCollection>> listNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<NetworkCollection>> listNext(@PathParam(value = "nextLink", encoded = true) String nextLink,
+            @HostParam("$host") String endpoint, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets the list of networks under a fabric.
-     *
-     * <p>Lists the networks available for a fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available for a fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -139,26 +120,22 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return list of networks along with {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<NetworkInner>> listByReplicationFabricsSinglePageAsync(
-        String resourceName, String resourceGroupName, String fabricName) {
+    private Mono<PagedResponse<NetworkInner>> listByReplicationFabricsSinglePageAsync(String resourceGroupName,
+        String resourceName, String fabricName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
@@ -166,36 +143,20 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .listByReplicationFabrics(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            accept,
-                            context))
-            .<PagedResponse<NetworkInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+                context -> service.listByReplicationFabrics(this.client.getEndpoint(), this.client.getApiVersion(),
+                    resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, accept, context))
+            .<PagedResponse<NetworkInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the list of networks under a fabric.
-     *
-     * <p>Lists the networks available for a fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available for a fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -204,26 +165,22 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return list of networks along with {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<NetworkInner>> listByReplicationFabricsSinglePageAsync(
-        String resourceName, String resourceGroupName, String fabricName, Context context) {
+    private Mono<PagedResponse<NetworkInner>> listByReplicationFabricsSinglePageAsync(String resourceGroupName,
+        String resourceName, String fabricName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
@@ -231,33 +188,19 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .listByReplicationFabrics(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+            .listByReplicationFabrics(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+                resourceName, this.client.getSubscriptionId(), fabricName, accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 
     /**
      * Gets the list of networks under a fabric.
-     *
-     * <p>Lists the networks available for a fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available for a fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -265,20 +208,20 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return list of networks as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<NetworkInner> listByReplicationFabricsAsync(
-        String resourceName, String resourceGroupName, String fabricName) {
+    private PagedFlux<NetworkInner> listByReplicationFabricsAsync(String resourceGroupName, String resourceName,
+        String fabricName) {
         return new PagedFlux<>(
-            () -> listByReplicationFabricsSinglePageAsync(resourceName, resourceGroupName, fabricName),
+            () -> listByReplicationFabricsSinglePageAsync(resourceGroupName, resourceName, fabricName),
             nextLink -> listByReplicationFabricsNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets the list of networks under a fabric.
-     *
-     * <p>Lists the networks available for a fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available for a fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -287,20 +230,20 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return list of networks as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<NetworkInner> listByReplicationFabricsAsync(
-        String resourceName, String resourceGroupName, String fabricName, Context context) {
+    private PagedFlux<NetworkInner> listByReplicationFabricsAsync(String resourceGroupName, String resourceName,
+        String fabricName, Context context) {
         return new PagedFlux<>(
-            () -> listByReplicationFabricsSinglePageAsync(resourceName, resourceGroupName, fabricName, context),
+            () -> listByReplicationFabricsSinglePageAsync(resourceGroupName, resourceName, fabricName, context),
             nextLink -> listByReplicationFabricsNextSinglePageAsync(nextLink, context));
     }
 
     /**
      * Gets the list of networks under a fabric.
-     *
-     * <p>Lists the networks available for a fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available for a fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -308,18 +251,18 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return list of networks as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<NetworkInner> listByReplicationFabrics(
-        String resourceName, String resourceGroupName, String fabricName) {
-        return new PagedIterable<>(listByReplicationFabricsAsync(resourceName, resourceGroupName, fabricName));
+    public PagedIterable<NetworkInner> listByReplicationFabrics(String resourceGroupName, String resourceName,
+        String fabricName) {
+        return new PagedIterable<>(listByReplicationFabricsAsync(resourceGroupName, resourceName, fabricName));
     }
 
     /**
      * Gets the list of networks under a fabric.
-     *
-     * <p>Lists the networks available for a fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available for a fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -328,18 +271,18 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return list of networks as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<NetworkInner> listByReplicationFabrics(
-        String resourceName, String resourceGroupName, String fabricName, Context context) {
-        return new PagedIterable<>(listByReplicationFabricsAsync(resourceName, resourceGroupName, fabricName, context));
+    public PagedIterable<NetworkInner> listByReplicationFabrics(String resourceGroupName, String resourceName,
+        String fabricName, Context context) {
+        return new PagedIterable<>(listByReplicationFabricsAsync(resourceGroupName, resourceName, fabricName, context));
     }
 
     /**
      * Gets a network with specified server id and network name.
-     *
-     * <p>Gets the details of a network.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of a network.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Server Id.
      * @param networkName Primary network name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -348,26 +291,22 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return the details of a network along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<NetworkInner>> getWithResponseAsync(
-        String resourceName, String resourceGroupName, String fabricName, String networkName) {
+    private Mono<Response<NetworkInner>> getWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String networkName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
@@ -378,28 +317,18 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            networkName,
-                            accept,
-                            context))
+                context -> service.get(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+                    resourceName, this.client.getSubscriptionId(), fabricName, networkName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a network with specified server id and network name.
-     *
-     * <p>Gets the details of a network.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of a network.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Server Id.
      * @param networkName Primary network name.
      * @param context The context to associate with this operation.
@@ -409,26 +338,22 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return the details of a network along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<NetworkInner>> getWithResponseAsync(
-        String resourceName, String resourceGroupName, String fabricName, String networkName, Context context) {
+    private Mono<Response<NetworkInner>> getWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String networkName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
@@ -438,26 +363,17 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                networkName,
-                accept,
-                context);
+        return service.get(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), fabricName, networkName, accept, context);
     }
 
     /**
      * Gets a network with specified server id and network name.
-     *
-     * <p>Gets the details of a network.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of a network.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Server Id.
      * @param networkName Primary network name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -466,19 +382,19 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return the details of a network on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<NetworkInner> getAsync(
-        String resourceName, String resourceGroupName, String fabricName, String networkName) {
-        return getWithResponseAsync(resourceName, resourceGroupName, fabricName, networkName)
+    private Mono<NetworkInner> getAsync(String resourceGroupName, String resourceName, String fabricName,
+        String networkName) {
+        return getWithResponseAsync(resourceGroupName, resourceName, fabricName, networkName)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets a network with specified server id and network name.
-     *
-     * <p>Gets the details of a network.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of a network.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Server Id.
      * @param networkName Primary network name.
      * @param context The context to associate with this operation.
@@ -488,18 +404,18 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return the details of a network along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<NetworkInner> getWithResponse(
-        String resourceName, String resourceGroupName, String fabricName, String networkName, Context context) {
-        return getWithResponseAsync(resourceName, resourceGroupName, fabricName, networkName, context).block();
+    public Response<NetworkInner> getWithResponse(String resourceGroupName, String resourceName, String fabricName,
+        String networkName, Context context) {
+        return getWithResponseAsync(resourceGroupName, resourceName, fabricName, networkName, context).block();
     }
 
     /**
      * Gets a network with specified server id and network name.
-     *
-     * <p>Gets the details of a network.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of a network.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Server Id.
      * @param networkName Primary network name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -508,75 +424,55 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return the details of a network.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public NetworkInner get(String resourceName, String resourceGroupName, String fabricName, String networkName) {
-        return getWithResponse(resourceName, resourceGroupName, fabricName, networkName, Context.NONE).getValue();
+    public NetworkInner get(String resourceGroupName, String resourceName, String fabricName, String networkName) {
+        return getWithResponse(resourceGroupName, resourceName, fabricName, networkName, Context.NONE).getValue();
     }
 
     /**
      * Gets the list of networks. View-only API.
-     *
-     * <p>Lists the networks available in a vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available in a vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return list of networks along with {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<NetworkInner>> listSinglePageAsync(String resourceName, String resourceGroupName) {
+    private Mono<PagedResponse<NetworkInner>> listSinglePageAsync(String resourceGroupName, String resourceName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            accept,
-                            context))
-            .<PagedResponse<NetworkInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.list(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), accept, context))
+            .<PagedResponse<NetworkInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the list of networks. View-only API.
-     *
-     * <p>Lists the networks available in a vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available in a vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -584,74 +480,57 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return list of networks along with {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<NetworkInner>> listSinglePageAsync(
-        String resourceName, String resourceGroupName, Context context) {
+    private Mono<PagedResponse<NetworkInner>> listSinglePageAsync(String resourceGroupName, String resourceName,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .list(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+            .list(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+                this.client.getSubscriptionId(), accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 
     /**
      * Gets the list of networks. View-only API.
-     *
-     * <p>Lists the networks available in a vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available in a vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return list of networks as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<NetworkInner> listAsync(String resourceName, String resourceGroupName) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(resourceName, resourceGroupName), nextLink -> listNextSinglePageAsync(nextLink));
+    private PagedFlux<NetworkInner> listAsync(String resourceGroupName, String resourceName) {
+        return new PagedFlux<>(() -> listSinglePageAsync(resourceGroupName, resourceName),
+            nextLink -> listNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets the list of networks. View-only API.
-     *
-     * <p>Lists the networks available in a vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available in a vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -659,36 +538,35 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return list of networks as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<NetworkInner> listAsync(String resourceName, String resourceGroupName, Context context) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(resourceName, resourceGroupName, context),
+    private PagedFlux<NetworkInner> listAsync(String resourceGroupName, String resourceName, Context context) {
+        return new PagedFlux<>(() -> listSinglePageAsync(resourceGroupName, resourceName, context),
             nextLink -> listNextSinglePageAsync(nextLink, context));
     }
 
     /**
      * Gets the list of networks. View-only API.
-     *
-     * <p>Lists the networks available in a vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available in a vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return list of networks as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<NetworkInner> list(String resourceName, String resourceGroupName) {
-        return new PagedIterable<>(listAsync(resourceName, resourceGroupName));
+    public PagedIterable<NetworkInner> list(String resourceGroupName, String resourceName) {
+        return new PagedIterable<>(listAsync(resourceGroupName, resourceName));
     }
 
     /**
      * Gets the list of networks. View-only API.
-     *
-     * <p>Lists the networks available in a vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the networks available in a vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -696,15 +574,14 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return list of networks as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<NetworkInner> list(String resourceName, String resourceGroupName, Context context) {
-        return new PagedIterable<>(listAsync(resourceName, resourceGroupName, context));
+    public PagedIterable<NetworkInner> list(String resourceGroupName, String resourceName, Context context) {
+        return new PagedIterable<>(listAsync(resourceGroupName, resourceName, context));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -716,32 +593,22 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listByReplicationFabricsNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<NetworkInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<NetworkInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -749,37 +616,26 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
      * @return list of networks along with {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<NetworkInner>> listByReplicationFabricsNextSinglePageAsync(
-        String nextLink, Context context) {
+    private Mono<PagedResponse<NetworkInner>> listByReplicationFabricsNextSinglePageAsync(String nextLink,
+        Context context) {
         if (nextLink == null) {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .listByReplicationFabricsNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        return service.listByReplicationFabricsNext(nextLink, this.client.getEndpoint(), accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -791,31 +647,20 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        return FluxUtil
-            .withContext(context -> service.listNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<NetworkInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+        return FluxUtil.withContext(context -> service.listNext(nextLink, this.client.getEndpoint(), accept, context))
+            .<PagedResponse<NetworkInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -828,23 +673,13 @@ public final class ReplicationNetworksClientImpl implements ReplicationNetworksC
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .listNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        return service.listNext(nextLink, this.client.getEndpoint(), accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 }

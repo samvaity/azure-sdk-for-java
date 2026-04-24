@@ -8,33 +8,35 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of ReplicationMigrationItems. */
+/**
+ * Resource collection API of ReplicationMigrationItems.
+ */
 public interface ReplicationMigrationItems {
     /**
      * Gets the list of migration items in the protection container.
-     *
-     * <p>Gets the list of ASR migration items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR migration items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR migration items in the protection container as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR migration items in the protection container as paginated response with
+     * {@link PagedIterable}.
      */
-    PagedIterable<MigrationItem> listByReplicationProtectionContainers(
-        String resourceName, String resourceGroupName, String fabricName, String protectionContainerName);
+    PagedIterable<MigrationItem> listByReplicationProtectionContainers(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName);
 
     /**
      * Gets the list of migration items in the protection container.
-     *
-     * <p>Gets the list of ASR migration items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR migration items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param skipToken The pagination token.
@@ -44,24 +46,18 @@ public interface ReplicationMigrationItems {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR migration items in the protection container as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR migration items in the protection container as paginated response with
+     * {@link PagedIterable}.
      */
-    PagedIterable<MigrationItem> listByReplicationProtectionContainers(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String skipToken,
-        String takeToken,
-        String filter,
+    PagedIterable<MigrationItem> listByReplicationProtectionContainers(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String skipToken, String takeToken, String filter,
         Context context);
 
     /**
      * Gets the details of a migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -71,19 +67,14 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the details of a migration item along with {@link Response}.
      */
-    Response<MigrationItem> getWithResponse(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        Context context);
+    Response<MigrationItem> getWithResponse(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, Context context);
 
     /**
      * Gets the details of a migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -92,20 +83,16 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the details of a migration item.
      */
-    MigrationItem get(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
+    MigrationItem get(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
         String migrationItemName);
 
     /**
      * Delete the migration item.
-     *
-     * <p>The operation to delete an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -113,20 +100,16 @@ public interface ReplicationMigrationItems {
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
+    void delete(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
         String migrationItemName);
 
     /**
      * Delete the migration item.
-     *
-     * <p>The operation to delete an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -136,22 +119,16 @@ public interface ReplicationMigrationItems {
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        String deleteOption,
-        Context context);
+    void delete(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String migrationItemName, String deleteOption, Context context);
 
     /**
      * Migrate item.
-     *
-     * <p>The operation to initiate migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -161,21 +138,16 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem migrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        MigrateInput migrateInput);
+    MigrationItem migrate(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, MigrateInput migrateInput);
 
     /**
      * Migrate item.
-     *
-     * <p>The operation to initiate migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -186,22 +158,16 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem migrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        MigrateInput migrateInput,
-        Context context);
+    MigrationItem migrate(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, MigrateInput migrateInput, Context context);
 
     /**
      * Pause replication.
-     *
-     * <p>The operation to initiate pause replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate pause replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -211,21 +177,16 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem pauseReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        PauseReplicationInput pauseReplicationInput);
+    MigrationItem pauseReplication(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, PauseReplicationInput pauseReplicationInput);
 
     /**
      * Pause replication.
-     *
-     * <p>The operation to initiate pause replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate pause replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -236,22 +197,17 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem pauseReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        PauseReplicationInput pauseReplicationInput,
+    MigrationItem pauseReplication(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, PauseReplicationInput pauseReplicationInput,
         Context context);
 
     /**
      * Resume replication.
-     *
-     * <p>The operation to initiate resume replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate resume replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -261,21 +217,16 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem resumeReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        ResumeReplicationInput resumeReplicationInput);
+    MigrationItem resumeReplication(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, ResumeReplicationInput resumeReplicationInput);
 
     /**
      * Resume replication.
-     *
-     * <p>The operation to initiate resume replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate resume replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -286,22 +237,17 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem resumeReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        ResumeReplicationInput resumeReplicationInput,
+    MigrationItem resumeReplication(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, ResumeReplicationInput resumeReplicationInput,
         Context context);
 
     /**
      * Resynchronizes replication.
-     *
-     * <p>The operation to resynchronize replication of an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resynchronize replication of an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -311,21 +257,16 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem resync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        ResyncInput input);
+    MigrationItem resync(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, ResyncInput input);
 
     /**
      * Resynchronizes replication.
-     *
-     * <p>The operation to resynchronize replication of an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resynchronize replication of an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -336,22 +277,16 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem resync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        ResyncInput input,
-        Context context);
+    MigrationItem resync(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, ResyncInput input, Context context);
 
     /**
      * Test migrate item.
-     *
-     * <p>The operation to initiate test migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -361,21 +296,16 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem testMigrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        TestMigrateInput testMigrateInput);
+    MigrationItem testMigrate(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, TestMigrateInput testMigrateInput);
 
     /**
      * Test migrate item.
-     *
-     * <p>The operation to initiate test migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -386,22 +316,16 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem testMigrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        TestMigrateInput testMigrateInput,
-        Context context);
+    MigrationItem testMigrate(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, TestMigrateInput testMigrateInput, Context context);
 
     /**
      * Test migrate cleanup.
-     *
-     * <p>The operation to initiate test migrate cleanup.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migrate cleanup.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -411,21 +335,16 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem testMigrateCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        TestMigrateCleanupInput testMigrateCleanupInput);
+    MigrationItem testMigrateCleanup(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, TestMigrateCleanupInput testMigrateCleanupInput);
 
     /**
      * Test migrate cleanup.
-     *
-     * <p>The operation to initiate test migrate cleanup.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migrate cleanup.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -436,32 +355,27 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return migration item.
      */
-    MigrationItem testMigrateCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        TestMigrateCleanupInput testMigrateCleanupInput,
+    MigrationItem testMigrateCleanup(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, TestMigrateCleanupInput testMigrateCleanupInput,
         Context context);
 
     /**
      * Gets the list of migration items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of migration items in the vault as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<MigrationItem> list(String resourceName, String resourceGroupName);
+    PagedIterable<MigrationItem> list(String resourceGroupName, String resourceName);
 
     /**
      * Gets the list of migration items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param skipToken The pagination token.
      * @param takeToken The page size.
      * @param filter OData filter options.
@@ -471,17 +385,12 @@ public interface ReplicationMigrationItems {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of migration items in the vault as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<MigrationItem> list(
-        String resourceName,
-        String resourceGroupName,
-        String skipToken,
-        String takeToken,
-        String filter,
-        Context context);
+    PagedIterable<MigrationItem> list(String resourceGroupName, String resourceName, String skipToken, String takeToken,
+        String filter, Context context);
 
     /**
      * Gets the details of a migration item.
-     *
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -492,7 +401,7 @@ public interface ReplicationMigrationItems {
 
     /**
      * Gets the details of a migration item.
-     *
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -504,9 +413,9 @@ public interface ReplicationMigrationItems {
 
     /**
      * Delete the migration item.
-     *
-     * <p>The operation to delete an ASR migration item.
-     *
+     * 
+     * The operation to delete an ASR migration item.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -516,9 +425,9 @@ public interface ReplicationMigrationItems {
 
     /**
      * Delete the migration item.
-     *
-     * <p>The operation to delete an ASR migration item.
-     *
+     * 
+     * The operation to delete an ASR migration item.
+     * 
      * @param id the resource ID.
      * @param deleteOption The delete option.
      * @param context The context to associate with this operation.
@@ -530,7 +439,7 @@ public interface ReplicationMigrationItems {
 
     /**
      * Begins definition for a new MigrationItem resource.
-     *
+     * 
      * @param name resource name.
      * @return the first stage of the new MigrationItem definition.
      */

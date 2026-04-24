@@ -4,37 +4,20 @@
 package com.azure.ai.metricsadvisor;
 
 import com.azure.ai.metricsadvisor.administration.MetricsAdvisorAdministrationAsyncClient;
-import com.azure.ai.metricsadvisor.administration.models.DataFeedIngestionStatus;
 import com.azure.ai.metricsadvisor.administration.models.DataFeedIngestionProgress;
+import com.azure.ai.metricsadvisor.administration.models.DataFeedIngestionStatus;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.rest.PagedFlux;
 import com.azure.core.http.rest.Response;
-import com.azure.core.test.TestBase;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Duration;
-
-import static com.azure.ai.metricsadvisor.TestUtils.DEFAULT_SUBSCRIBER_TIMEOUT_SECONDS;
 import static com.azure.ai.metricsadvisor.TestUtils.DISPLAY_NAME_WITH_ARGUMENTS;
 
 public final class DataFeedIngestionOperationAsyncTest extends DataFeedIngestionOperationTestBase {
-
-    @BeforeAll
-    static void beforeAll() {
-        TestBase.setupClass();
-        StepVerifier.setDefaultTimeout(Duration.ofSeconds(DEFAULT_SUBSCRIBER_TIMEOUT_SECONDS));
-    }
-
-    @AfterAll
-    static void afterAll() {
-        StepVerifier.resetDefaultTimeout();
-    }
 
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.ai.metricsadvisor.TestUtils#getTestParameters")
@@ -43,18 +26,15 @@ public final class DataFeedIngestionOperationAsyncTest extends DataFeedIngestion
         MetricsAdvisorAdministrationAsyncClient client
             = getMetricsAdvisorAdministrationBuilder(httpClient, serviceVersion, false).buildAsyncClient();
 
-        PagedFlux<DataFeedIngestionStatus> ingestionStatusFlux
-            = client.listDataFeedIngestionStatus(ListIngestionStatusInput.INSTANCE.dataFeedId,
-            ListIngestionStatusInput.INSTANCE.options);
+        PagedFlux<DataFeedIngestionStatus> ingestionStatusFlux = client.listDataFeedIngestionStatus(
+            ListIngestionStatusInput.INSTANCE.dataFeedId, ListIngestionStatusInput.INSTANCE.options);
 
         Assertions.assertNotNull(ingestionStatusFlux);
 
-        StepVerifier.create(ingestionStatusFlux)
-            .thenConsumeWhile(ingestionStatus -> {
-                assertListIngestionStatusOutput(ingestionStatus);
-                return true;
-            })
-            .verifyComplete();
+        StepVerifier.create(ingestionStatusFlux).thenConsumeWhile(ingestionStatus -> {
+            assertListIngestionStatusOutput(ingestionStatus);
+            return true;
+        }).expectComplete().verify(DEFAULT_TIMEOUT);
     }
 
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
@@ -70,8 +50,9 @@ public final class DataFeedIngestionOperationAsyncTest extends DataFeedIngestion
         Assertions.assertNotNull(ingestionProgressMono);
 
         StepVerifier.create(ingestionProgressMono)
-            .assertNext(ingestionProgress -> assertListIngestionProgressOutput(ingestionProgress))
-            .verifyComplete();
+            .assertNext(this::assertListIngestionProgressOutput)
+            .expectComplete()
+            .verify(DEFAULT_TIMEOUT);
     }
 
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
@@ -81,15 +62,15 @@ public final class DataFeedIngestionOperationAsyncTest extends DataFeedIngestion
         MetricsAdvisorAdministrationAsyncClient client
             = getMetricsAdvisorAdministrationBuilder(httpClient, serviceVersion, false).buildAsyncClient();
 
-        Mono<Response<Void>> refreshIngestionMono = client.refreshDataFeedIngestionWithResponse(
-            RefreshIngestionInput.INSTANCE.dataFeedId,
-            RefreshIngestionInput.INSTANCE.startTime,
-            RefreshIngestionInput.INSTANCE.endTime);
+        Mono<Response<Void>> refreshIngestionMono
+            = client.refreshDataFeedIngestionWithResponse(RefreshIngestionInput.INSTANCE.dataFeedId,
+                RefreshIngestionInput.INSTANCE.startTime, RefreshIngestionInput.INSTANCE.endTime);
 
         Assertions.assertNotNull(refreshIngestionMono);
 
         StepVerifier.create(refreshIngestionMono)
-            .assertNext(response -> assertRefreshIngestionInputOutput(response))
-            .verifyComplete();
+            .assertNext(this::assertRefreshIngestionInputOutput)
+            .expectComplete()
+            .verify(DEFAULT_TIMEOUT);
     }
 }

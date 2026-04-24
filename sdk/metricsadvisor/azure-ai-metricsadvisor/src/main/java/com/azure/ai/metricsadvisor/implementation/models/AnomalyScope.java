@@ -4,45 +4,59 @@
 
 package com.azure.ai.metricsadvisor.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Anomaly scope. */
+/**
+ * Anomaly scope.
+ */
 public final class AnomalyScope extends ExpandableStringEnum<AnomalyScope> {
-    /** Static value All for AnomalyScope. */
+    /**
+     * Static value All for AnomalyScope.
+     */
+    @Generated
     public static final AnomalyScope ALL = fromString("All");
 
-    /** Static value Dimension for AnomalyScope. */
+    /**
+     * Static value Dimension for AnomalyScope.
+     */
+    @Generated
     public static final AnomalyScope DIMENSION = fromString("Dimension");
 
-    /** Static value TopN for AnomalyScope. */
+    /**
+     * Static value TopN for AnomalyScope.
+     */
+    @Generated
     public static final AnomalyScope TOPN = fromString("TopN");
 
     /**
      * Creates a new instance of AnomalyScope value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public AnomalyScope() {}
+    public AnomalyScope() {
+    }
 
     /**
      * Creates or finds a AnomalyScope from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding AnomalyScope.
      */
-    @JsonCreator
+    @Generated
     public static AnomalyScope fromString(String name) {
         return fromString(name, AnomalyScope.class);
     }
 
     /**
      * Gets known AnomalyScope values.
-     *
+     * 
      * @return known AnomalyScope values.
      */
+    @Generated
     public static Collection<AnomalyScope> values() {
         return values(AnomalyScope.class);
     }

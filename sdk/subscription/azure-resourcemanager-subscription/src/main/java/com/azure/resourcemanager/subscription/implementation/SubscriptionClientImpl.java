@@ -5,6 +5,7 @@
 package com.azure.resourcemanager.subscription.implementation;
 
 import com.azure.core.annotation.ServiceClient;
+import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpResponse;
@@ -14,20 +15,24 @@ import com.azure.core.management.exception.ManagementError;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.management.polling.PollResult;
 import com.azure.core.management.polling.PollerFactory;
+import com.azure.core.management.polling.SyncPollerFactory;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.AsyncPollResponse;
 import com.azure.core.util.polling.LongRunningOperationStatus;
 import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.SyncPoller;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.core.util.serializer.SerializerEncoding;
 import com.azure.resourcemanager.subscription.fluent.AliasClient;
+import com.azure.resourcemanager.subscription.fluent.BillingAccountsClient;
 import com.azure.resourcemanager.subscription.fluent.OperationsClient;
 import com.azure.resourcemanager.subscription.fluent.SubscriptionClient;
 import com.azure.resourcemanager.subscription.fluent.SubscriptionOperationsClient;
+import com.azure.resourcemanager.subscription.fluent.SubscriptionPoliciesClient;
 import com.azure.resourcemanager.subscription.fluent.SubscriptionsClient;
-import com.azure.resourcemanager.subscription.fluent.TenantsClient;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
@@ -37,111 +42,131 @@ import java.time.Duration;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** Initializes a new instance of the SubscriptionClientImpl type. */
+/**
+ * Initializes a new instance of the SubscriptionClientImpl type.
+ */
 @ServiceClient(builder = SubscriptionClientBuilder.class)
 public final class SubscriptionClientImpl implements SubscriptionClient {
-    /** server parameter. */
+    /**
+     * server parameter.
+     */
     private final String endpoint;
 
     /**
      * Gets server parameter.
-     *
+     * 
      * @return the endpoint value.
      */
     public String getEndpoint() {
         return this.endpoint;
     }
 
-    /** The HTTP pipeline to send requests through. */
+    /**
+     * Api Version.
+     */
+    private final String apiVersion;
+
+    /**
+     * Gets Api Version.
+     * 
+     * @return the apiVersion value.
+     */
+    public String getApiVersion() {
+        return this.apiVersion;
+    }
+
+    /**
+     * The HTTP pipeline to send requests through.
+     */
     private final HttpPipeline httpPipeline;
 
     /**
      * Gets The HTTP pipeline to send requests through.
-     *
+     * 
      * @return the httpPipeline value.
      */
     public HttpPipeline getHttpPipeline() {
         return this.httpPipeline;
     }
 
-    /** The serializer to serialize an object into a string. */
+    /**
+     * The serializer to serialize an object into a string.
+     */
     private final SerializerAdapter serializerAdapter;
 
     /**
      * Gets The serializer to serialize an object into a string.
-     *
+     * 
      * @return the serializerAdapter value.
      */
     SerializerAdapter getSerializerAdapter() {
         return this.serializerAdapter;
     }
 
-    /** The default poll interval for long-running operation. */
+    /**
+     * The default poll interval for long-running operation.
+     */
     private final Duration defaultPollInterval;
 
     /**
      * Gets The default poll interval for long-running operation.
-     *
+     * 
      * @return the defaultPollInterval value.
      */
     public Duration getDefaultPollInterval() {
         return this.defaultPollInterval;
     }
 
-    /** The SubscriptionsClient object to access its operations. */
+    /**
+     * The SubscriptionsClient object to access its operations.
+     */
     private final SubscriptionsClient subscriptions;
 
     /**
      * Gets the SubscriptionsClient object to access its operations.
-     *
+     * 
      * @return the SubscriptionsClient object.
      */
     public SubscriptionsClient getSubscriptions() {
         return this.subscriptions;
     }
 
-    /** The TenantsClient object to access its operations. */
-    private final TenantsClient tenants;
-
     /**
-     * Gets the TenantsClient object to access its operations.
-     *
-     * @return the TenantsClient object.
+     * The SubscriptionOperationsClient object to access its operations.
      */
-    public TenantsClient getTenants() {
-        return this.tenants;
-    }
-
-    /** The SubscriptionOperationsClient object to access its operations. */
     private final SubscriptionOperationsClient subscriptionOperations;
 
     /**
      * Gets the SubscriptionOperationsClient object to access its operations.
-     *
+     * 
      * @return the SubscriptionOperationsClient object.
      */
     public SubscriptionOperationsClient getSubscriptionOperations() {
         return this.subscriptionOperations;
     }
 
-    /** The OperationsClient object to access its operations. */
+    /**
+     * The OperationsClient object to access its operations.
+     */
     private final OperationsClient operations;
 
     /**
      * Gets the OperationsClient object to access its operations.
-     *
+     * 
      * @return the OperationsClient object.
      */
     public OperationsClient getOperations() {
         return this.operations;
     }
 
-    /** The AliasClient object to access its operations. */
+    /**
+     * The AliasClient object to access its operations.
+     */
     private final AliasClient alias;
 
     /**
      * Gets the AliasClient object to access its operations.
-     *
+     * 
      * @return the AliasClient object.
      */
     public AliasClient getAlias() {
@@ -149,34 +174,60 @@ public final class SubscriptionClientImpl implements SubscriptionClient {
     }
 
     /**
+     * The SubscriptionPoliciesClient object to access its operations.
+     */
+    private final SubscriptionPoliciesClient subscriptionPolicies;
+
+    /**
+     * Gets the SubscriptionPoliciesClient object to access its operations.
+     * 
+     * @return the SubscriptionPoliciesClient object.
+     */
+    public SubscriptionPoliciesClient getSubscriptionPolicies() {
+        return this.subscriptionPolicies;
+    }
+
+    /**
+     * The BillingAccountsClient object to access its operations.
+     */
+    private final BillingAccountsClient billingAccounts;
+
+    /**
+     * Gets the BillingAccountsClient object to access its operations.
+     * 
+     * @return the BillingAccountsClient object.
+     */
+    public BillingAccountsClient getBillingAccounts() {
+        return this.billingAccounts;
+    }
+
+    /**
      * Initializes an instance of SubscriptionClient client.
-     *
+     * 
      * @param httpPipeline The HTTP pipeline to send requests through.
      * @param serializerAdapter The serializer to serialize an object into a string.
      * @param defaultPollInterval The default poll interval for long-running operation.
      * @param environment The Azure environment.
      * @param endpoint server parameter.
      */
-    SubscriptionClientImpl(
-        HttpPipeline httpPipeline,
-        SerializerAdapter serializerAdapter,
-        Duration defaultPollInterval,
-        AzureEnvironment environment,
-        String endpoint) {
+    SubscriptionClientImpl(HttpPipeline httpPipeline, SerializerAdapter serializerAdapter, Duration defaultPollInterval,
+        AzureEnvironment environment, String endpoint) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
         this.defaultPollInterval = defaultPollInterval;
         this.endpoint = endpoint;
+        this.apiVersion = "2021-10-01";
         this.subscriptions = new SubscriptionsClientImpl(this);
-        this.tenants = new TenantsClientImpl(this);
         this.subscriptionOperations = new SubscriptionOperationsClientImpl(this);
         this.operations = new OperationsClientImpl(this);
         this.alias = new AliasClientImpl(this);
+        this.subscriptionPolicies = new SubscriptionPoliciesClientImpl(this);
+        this.billingAccounts = new BillingAccountsClientImpl(this);
     }
 
     /**
      * Gets default client context.
-     *
+     * 
      * @return the default client context.
      */
     public Context getContext() {
@@ -185,7 +236,7 @@ public final class SubscriptionClientImpl implements SubscriptionClient {
 
     /**
      * Merges default client context with provided context.
-     *
+     * 
      * @param context the context to be merged with default client context.
      * @return the merged context.
      */
@@ -195,7 +246,7 @@ public final class SubscriptionClientImpl implements SubscriptionClient {
 
     /**
      * Gets long running operation result.
-     *
+     * 
      * @param activationResponse the response of activation operation.
      * @param httpPipeline the http pipeline.
      * @param pollResultType type of poll result.
@@ -205,26 +256,32 @@ public final class SubscriptionClientImpl implements SubscriptionClient {
      * @param <U> type of final result.
      * @return poller flux for poll result and final result.
      */
-    public <T, U> PollerFlux<PollResult<T>, U> getLroResult(
-        Mono<Response<Flux<ByteBuffer>>> activationResponse,
-        HttpPipeline httpPipeline,
-        Type pollResultType,
-        Type finalResultType,
-        Context context) {
-        return PollerFactory
-            .create(
-                serializerAdapter,
-                httpPipeline,
-                pollResultType,
-                finalResultType,
-                defaultPollInterval,
-                activationResponse,
-                context);
+    public <T, U> PollerFlux<PollResult<T>, U> getLroResult(Mono<Response<Flux<ByteBuffer>>> activationResponse,
+        HttpPipeline httpPipeline, Type pollResultType, Type finalResultType, Context context) {
+        return PollerFactory.create(serializerAdapter, httpPipeline, pollResultType, finalResultType,
+            defaultPollInterval, activationResponse, context);
+    }
+
+    /**
+     * Gets long running operation result.
+     * 
+     * @param activationResponse the response of activation operation.
+     * @param pollResultType type of poll result.
+     * @param finalResultType type of final result.
+     * @param context the context shared by all requests.
+     * @param <T> type of poll result.
+     * @param <U> type of final result.
+     * @return SyncPoller for poll result and final result.
+     */
+    public <T, U> SyncPoller<PollResult<T>, U> getLroResult(Response<BinaryData> activationResponse,
+        Type pollResultType, Type finalResultType, Context context) {
+        return SyncPollerFactory.create(serializerAdapter, httpPipeline, pollResultType, finalResultType,
+            defaultPollInterval, () -> activationResponse, context);
     }
 
     /**
      * Gets the final result, or an error, based on last async poll response.
-     *
+     * 
      * @param response the last async poll response.
      * @param <T> type of poll result.
      * @param <U> type of final result.
@@ -237,19 +294,16 @@ public final class SubscriptionClientImpl implements SubscriptionClient {
             HttpResponse errorResponse = null;
             PollResult.Error lroError = response.getValue().getError();
             if (lroError != null) {
-                errorResponse =
-                    new HttpResponseImpl(
-                        lroError.getResponseStatusCode(), lroError.getResponseHeaders(), lroError.getResponseBody());
+                errorResponse = new HttpResponseImpl(lroError.getResponseStatusCode(), lroError.getResponseHeaders(),
+                    lroError.getResponseBody());
 
                 errorMessage = response.getValue().getError().getMessage();
                 String errorBody = response.getValue().getError().getResponseBody();
                 if (errorBody != null) {
                     // try to deserialize error body to ManagementError
                     try {
-                        managementError =
-                            this
-                                .getSerializerAdapter()
-                                .deserialize(errorBody, ManagementError.class, SerializerEncoding.JSON);
+                        managementError = this.getSerializerAdapter()
+                            .deserialize(errorBody, ManagementError.class, SerializerEncoding.JSON);
                         if (managementError.getCode() == null || managementError.getMessage() == null) {
                             managementError = null;
                         }
@@ -290,7 +344,7 @@ public final class SubscriptionClientImpl implements SubscriptionClient {
         }
 
         public String getHeaderValue(String s) {
-            return httpHeaders.getValue(s);
+            return httpHeaders.getValue(HttpHeaderName.fromString(s));
         }
 
         public HttpHeaders getHeaders() {

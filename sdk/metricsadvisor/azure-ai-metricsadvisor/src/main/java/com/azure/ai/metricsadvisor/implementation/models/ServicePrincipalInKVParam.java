@@ -5,65 +5,78 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The ServicePrincipalInKVParam model. */
+/**
+ * The ServicePrincipalInKVParam model.
+ */
 @Fluent
-public final class ServicePrincipalInKVParam {
+public final class ServicePrincipalInKVParam implements JsonSerializable<ServicePrincipalInKVParam> {
     /*
      * The Key Vault endpoint that storing the service principal.
      */
-    @JsonProperty(value = "keyVaultEndpoint", required = true)
+    @Generated
     private String keyVaultEndpoint;
 
     /*
      * The Client Id to access the Key Vault.
      */
-    @JsonProperty(value = "keyVaultClientId", required = true)
+    @Generated
     private String keyVaultClientId;
 
     /*
      * The Client Secret to access the Key Vault.
      */
-    @JsonProperty(value = "keyVaultClientSecret")
+    @Generated
     private String keyVaultClientSecret;
 
     /*
      * The secret name of the service principal's client Id in the Key Vault.
      */
-    @JsonProperty(value = "servicePrincipalIdNameInKV", required = true)
+    @Generated
     private String servicePrincipalIdNameInKV;
 
     /*
      * The secret name of the service principal's client secret in the Key Vault.
      */
-    @JsonProperty(value = "servicePrincipalSecretNameInKV", required = true)
+    @Generated
     private String servicePrincipalSecretNameInKV;
 
     /*
      * The tenant id of your service principal.
      */
-    @JsonProperty(value = "tenantId", required = true)
+    @Generated
     private String tenantId;
 
-    /** Creates an instance of ServicePrincipalInKVParam class. */
-    public ServicePrincipalInKVParam() {}
+    /**
+     * Creates an instance of ServicePrincipalInKVParam class.
+     */
+    @Generated
+    public ServicePrincipalInKVParam() {
+    }
 
     /**
      * Get the keyVaultEndpoint property: The Key Vault endpoint that storing the service principal.
-     *
+     * 
      * @return the keyVaultEndpoint value.
      */
+    @Generated
     public String getKeyVaultEndpoint() {
         return this.keyVaultEndpoint;
     }
 
     /**
      * Set the keyVaultEndpoint property: The Key Vault endpoint that storing the service principal.
-     *
+     * 
      * @param keyVaultEndpoint the keyVaultEndpoint value to set.
      * @return the ServicePrincipalInKVParam object itself.
      */
+    @Generated
     public ServicePrincipalInKVParam setKeyVaultEndpoint(String keyVaultEndpoint) {
         this.keyVaultEndpoint = keyVaultEndpoint;
         return this;
@@ -71,19 +84,21 @@ public final class ServicePrincipalInKVParam {
 
     /**
      * Get the keyVaultClientId property: The Client Id to access the Key Vault.
-     *
+     * 
      * @return the keyVaultClientId value.
      */
+    @Generated
     public String getKeyVaultClientId() {
         return this.keyVaultClientId;
     }
 
     /**
      * Set the keyVaultClientId property: The Client Id to access the Key Vault.
-     *
+     * 
      * @param keyVaultClientId the keyVaultClientId value to set.
      * @return the ServicePrincipalInKVParam object itself.
      */
+    @Generated
     public ServicePrincipalInKVParam setKeyVaultClientId(String keyVaultClientId) {
         this.keyVaultClientId = keyVaultClientId;
         return this;
@@ -91,19 +106,21 @@ public final class ServicePrincipalInKVParam {
 
     /**
      * Get the keyVaultClientSecret property: The Client Secret to access the Key Vault.
-     *
+     * 
      * @return the keyVaultClientSecret value.
      */
+    @Generated
     public String getKeyVaultClientSecret() {
         return this.keyVaultClientSecret;
     }
 
     /**
      * Set the keyVaultClientSecret property: The Client Secret to access the Key Vault.
-     *
+     * 
      * @param keyVaultClientSecret the keyVaultClientSecret value to set.
      * @return the ServicePrincipalInKVParam object itself.
      */
+    @Generated
     public ServicePrincipalInKVParam setKeyVaultClientSecret(String keyVaultClientSecret) {
         this.keyVaultClientSecret = keyVaultClientSecret;
         return this;
@@ -112,9 +129,10 @@ public final class ServicePrincipalInKVParam {
     /**
      * Get the servicePrincipalIdNameInKV property: The secret name of the service principal's client Id in the Key
      * Vault.
-     *
+     * 
      * @return the servicePrincipalIdNameInKV value.
      */
+    @Generated
     public String getServicePrincipalIdNameInKV() {
         return this.servicePrincipalIdNameInKV;
     }
@@ -122,10 +140,11 @@ public final class ServicePrincipalInKVParam {
     /**
      * Set the servicePrincipalIdNameInKV property: The secret name of the service principal's client Id in the Key
      * Vault.
-     *
+     * 
      * @param servicePrincipalIdNameInKV the servicePrincipalIdNameInKV value to set.
      * @return the ServicePrincipalInKVParam object itself.
      */
+    @Generated
     public ServicePrincipalInKVParam setServicePrincipalIdNameInKV(String servicePrincipalIdNameInKV) {
         this.servicePrincipalIdNameInKV = servicePrincipalIdNameInKV;
         return this;
@@ -134,9 +153,10 @@ public final class ServicePrincipalInKVParam {
     /**
      * Get the servicePrincipalSecretNameInKV property: The secret name of the service principal's client secret in the
      * Key Vault.
-     *
+     * 
      * @return the servicePrincipalSecretNameInKV value.
      */
+    @Generated
     public String getServicePrincipalSecretNameInKV() {
         return this.servicePrincipalSecretNameInKV;
     }
@@ -144,10 +164,11 @@ public final class ServicePrincipalInKVParam {
     /**
      * Set the servicePrincipalSecretNameInKV property: The secret name of the service principal's client secret in the
      * Key Vault.
-     *
+     * 
      * @param servicePrincipalSecretNameInKV the servicePrincipalSecretNameInKV value to set.
      * @return the ServicePrincipalInKVParam object itself.
      */
+    @Generated
     public ServicePrincipalInKVParam setServicePrincipalSecretNameInKV(String servicePrincipalSecretNameInKV) {
         this.servicePrincipalSecretNameInKV = servicePrincipalSecretNameInKV;
         return this;
@@ -155,21 +176,77 @@ public final class ServicePrincipalInKVParam {
 
     /**
      * Get the tenantId property: The tenant id of your service principal.
-     *
+     * 
      * @return the tenantId value.
      */
+    @Generated
     public String getTenantId() {
         return this.tenantId;
     }
 
     /**
      * Set the tenantId property: The tenant id of your service principal.
-     *
+     * 
      * @param tenantId the tenantId value to set.
      * @return the ServicePrincipalInKVParam object itself.
      */
+    @Generated
     public ServicePrincipalInKVParam setTenantId(String tenantId) {
         this.tenantId = tenantId;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("keyVaultEndpoint", this.keyVaultEndpoint);
+        jsonWriter.writeStringField("keyVaultClientId", this.keyVaultClientId);
+        jsonWriter.writeStringField("servicePrincipalIdNameInKV", this.servicePrincipalIdNameInKV);
+        jsonWriter.writeStringField("servicePrincipalSecretNameInKV", this.servicePrincipalSecretNameInKV);
+        jsonWriter.writeStringField("tenantId", this.tenantId);
+        jsonWriter.writeStringField("keyVaultClientSecret", this.keyVaultClientSecret);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ServicePrincipalInKVParam from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ServicePrincipalInKVParam if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ServicePrincipalInKVParam.
+     */
+    @Generated
+    public static ServicePrincipalInKVParam fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ServicePrincipalInKVParam deserializedServicePrincipalInKVParam = new ServicePrincipalInKVParam();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("keyVaultEndpoint".equals(fieldName)) {
+                    deserializedServicePrincipalInKVParam.keyVaultEndpoint = reader.getString();
+                } else if ("keyVaultClientId".equals(fieldName)) {
+                    deserializedServicePrincipalInKVParam.keyVaultClientId = reader.getString();
+                } else if ("servicePrincipalIdNameInKV".equals(fieldName)) {
+                    deserializedServicePrincipalInKVParam.servicePrincipalIdNameInKV = reader.getString();
+                } else if ("servicePrincipalSecretNameInKV".equals(fieldName)) {
+                    deserializedServicePrincipalInKVParam.servicePrincipalSecretNameInKV = reader.getString();
+                } else if ("tenantId".equals(fieldName)) {
+                    deserializedServicePrincipalInKVParam.tenantId = reader.getString();
+                } else if ("keyVaultClientSecret".equals(fieldName)) {
+                    deserializedServicePrincipalInKVParam.keyVaultClientSecret = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedServicePrincipalInKVParam;
+        });
     }
 }

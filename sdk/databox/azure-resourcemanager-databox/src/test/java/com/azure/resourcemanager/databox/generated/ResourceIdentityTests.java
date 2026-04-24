@@ -14,24 +14,22 @@ import org.junit.jupiter.api.Assertions;
 public final class ResourceIdentityTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ResourceIdentity model =
-            BinaryData
-                .fromString(
-                    "{\"type\":\"m\",\"principalId\":\"yvshxmz\",\"tenantId\":\"bzoggigrx\",\"userAssignedIdentities\":{\"udwtiukbl\":{\"principalId\":\"vjxxjnsp\",\"clientId\":\"ptkoenkoukn\"}}}")
-                .toObject(ResourceIdentity.class);
-        Assertions.assertEquals("m", model.type());
+        ResourceIdentity model = BinaryData.fromString(
+            "{\"type\":\"mvxi\",\"principalId\":\"uugidyjrrfby\",\"tenantId\":\"svexcsonpclhoco\",\"userAssignedIdentities\":{\"fmvfaxkffeiit\":{\"principalId\":\"ev\",\"clientId\":\"ggzfbu\"},\"xwburvjxxjns\":{\"principalId\":\"vmezy\",\"clientId\":\"hxmzsbbzoggig\"}}}")
+            .toObject(ResourceIdentity.class);
+        Assertions.assertEquals("mvxi", model.type());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ResourceIdentity model =
-            new ResourceIdentity()
-                .withType("m")
-                .withUserAssignedIdentities(mapOf("udwtiukbl", new UserAssignedIdentity()));
+        ResourceIdentity model = new ResourceIdentity().withType("mvxi")
+            .withUserAssignedIdentities(
+                mapOf("fmvfaxkffeiit", new UserAssignedIdentity(), "xwburvjxxjns", new UserAssignedIdentity()));
         model = BinaryData.fromObject(model).toObject(ResourceIdentity.class);
-        Assertions.assertEquals("m", model.type());
+        Assertions.assertEquals("mvxi", model.type());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

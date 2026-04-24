@@ -5,6 +5,8 @@ package com.azure.communication.callautomation.models.events;
 
 import com.azure.core.util.ExpandableStringEnum;
 
+import java.util.Collection;
+
 /** Defines values for ReasonCode. */
 public final class ReasonCode extends ExpandableStringEnum<ReasonCode> {
     /** Reason code names for the Recognize operation */
@@ -33,16 +35,36 @@ public final class ReasonCode extends ExpandableStringEnum<ReasonCode> {
         public static final ReasonCode SPEECH_NOT_RECOGNIZED = fromReasonCode(8563);
         /** Recognize with choice cognitive service connection error. */
         public static final ReasonCode SPEECH_COGNITIVE_SERVICE_CONNECTION_ERROR = fromReasonCode(8564);
+
+        /**
+         * Creates an instance of {@link Recognize} with no string value.
+         *
+         * @deprecated Please use constants instead.
+         */
+        @Deprecated
+        public Recognize() {
+        }
     }
 
     /** Reason code names for the Play operation */
     public static class Play extends ExpandableStringEnum<ReasonCode> {
         /** Action failed, file could not be downloaded. */
         public static final ReasonCode DOWNLOAD_FAILED = fromReasonCode(8536);
-        /** Action failed, file could not be downloaded. */
+        /** Action failed, invalid file format. */
         public static final ReasonCode INVALID_FILE_FORMAT = fromReasonCode(8535);
-        /** Action failed, cognitive service play error. */
-        public static final ReasonCode COGNITEIVE_SERVICE_PLAY_ERROR = fromReasonCode(8565);
+        /** Action failed, text or ssml play source empty. */
+        public static final ReasonCode TEXT_OR_SSML_SOURCE_EMPTY = fromReasonCode(8582);
+        /** Action failed, cognitive services error. */
+        public static final ReasonCode COGNITIVE_SERVICES_ERROR = fromReasonCode(8565);
+
+        /**
+         * Creates an instance of {@link Play} with no string value.
+         *
+         * @deprecated Please use constants instead.
+         */
+        @Deprecated
+        public Play() {
+        }
     }
 
     /** Action completed successfully. */
@@ -51,12 +73,21 @@ public final class ReasonCode extends ExpandableStringEnum<ReasonCode> {
     public static final ReasonCode UNSPECIFIED_ERROR = fromReasonCode(9999);
 
     /**
+     * Creates an instance of {@link ReasonCode} with no string value.
+     *
+     * @deprecated Please use {@link #fromString(String)} to create an instance of ReasonCode.
+     */
+    @Deprecated
+    public ReasonCode() {
+    }
+
+    /**
      * Creates or finds a ReasonCode from its string representation.
      *
      * @param reasonCode a reasonCode to look for.
      * @return the corresponding ResourceCode.
      */
-    private static ReasonCode fromString(String reasonCode) {
+    public static ReasonCode fromString(String reasonCode) {
         return fromString(reasonCode, ReasonCode.class);
     }
 
@@ -68,5 +99,14 @@ public final class ReasonCode extends ExpandableStringEnum<ReasonCode> {
      */
     static ReasonCode fromReasonCode(int reasonCode) {
         return fromString(Integer.toString(reasonCode));
+    }
+
+    /**
+     * Gets known ReasonCode values.
+     *
+     * @return known ReasonCode values.
+     */
+    public static Collection<ReasonCode> values() {
+        return values(ReasonCode.class);
     }
 }

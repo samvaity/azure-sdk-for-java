@@ -6,14 +6,13 @@ package com.azure.resourcemanager.devtestlabs.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.devtestlabs.DevTestLabsManager;
+import com.azure.resourcemanager.devtestlabs.models.Event;
 import com.azure.resourcemanager.devtestlabs.models.NotificationChannel;
-import java.nio.ByteBuffer;
+import com.azure.resourcemanager.devtestlabs.models.NotificationChannelEventType;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -21,69 +20,44 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class NotificationChannelsCreateOrUpdateWithResponseMockTests {
     @Test
     public void testCreateOrUpdateWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"properties\":{\"webHookUrl\":\"nqjilaywk\",\"emailRecipient\":\"wm\",\"notificationLocale\":\"yrilmhxdqaolf\",\"description\":\"nkkbjpjvlywltmfw\",\"events\":[{\"eventName\":\"AutoShutdown\"},{\"eventName\":\"Cost\"},{\"eventName\":\"AutoShutdown\"},{\"eventName\":\"AutoShutdown\"}],\"createdDate\":\"2020-12-28T05:44:09Z\",\"provisioningState\":\"ocrdzgczeunt\",\"uniqueIdentifier\":\"dnc\"},\"location\":\"q\",\"tags\":{\"gyrihlgm\":\"ekoifuvnyttzgi\",\"lkndrndpgfjodh\":\"behlqtxnr\"},\"id\":\"aqotwfhipxwgsabv\",\"name\":\"ipowza\",\"type\":\"czuumljcir\"}";
 
-        String responseStr =
-            "{\"properties\":{\"webHookUrl\":\"p\",\"emailRecipient\":\"xqcsehch\",\"notificationLocale\":\"ufmpqumqyjgy\",\"description\":\"ulodsaeuzanhsfnh\",\"events\":[],\"createdDate\":\"2020-12-23T17:30:48Z\",\"provisioningState\":\"pzfngqjcli\",\"uniqueIdentifier\":\"tujwjju\"},\"location\":\"wbeqrkuor\",\"tags\":{\"c\":\"sruqnmdvha\",\"iqswbqer\":\"jy\",\"iytxt\":\"w\",\"dstyouam\":\"gukvlbpkt\"},\"id\":\"ewres\",\"name\":\"moweg\",\"type\":\"mut\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        DevTestLabsManager manager = DevTestLabsManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureEnvironment.AZURE));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        NotificationChannel response = manager.notificationChannels()
+            .define("eamc")
+            .withRegion("hbgxvel")
+            .withExistingLab("etfgcwvrrmdqntyc", "awthvmaxgnu")
+            .withTags(mapOf("mnitmujd", "lnx", "lyymffhmjpddny", "vm", "mzjqrbr", "fzuvrzmz"))
+            .withWebhookUrl("udf")
+            .withEmailRecipient("cehokw")
+            .withNotificationLocale("qtwloes")
+            .withDescription("ggvrbnyrukoilaci")
+            .withEvents(Arrays.asList(new Event().withEventName(NotificationChannelEventType.AUTO_SHUTDOWN),
+                new Event().withEventName(NotificationChannelEventType.COST)))
+            .create();
 
-        DevTestLabsManager manager =
-            DevTestLabsManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        NotificationChannel response =
-            manager
-                .notificationChannels()
-                .define("juvsmbmslzoyovw")
-                .withRegion("bbmnwagltb")
-                .withExistingLab("ltixldzyyfytpq", "ixymmpujivyql")
-                .withTags(mapOf("mvqdbpbhfckdvez", "eonqlnfwmy", "b", "rcssbzhddubbnq", "alehpav", "h"))
-                .withWebhookUrl("bpqvybefg")
-                .withEmailRecipient("x")
-                .withNotificationLocale("kcvtl")
-                .withDescription("seskvcuar")
-                .withEvents(Arrays.asList())
-                .create();
-
-        Assertions.assertEquals("wbeqrkuor", response.location());
-        Assertions.assertEquals("sruqnmdvha", response.tags().get("c"));
-        Assertions.assertEquals("p", response.webhookUrl());
-        Assertions.assertEquals("xqcsehch", response.emailRecipient());
-        Assertions.assertEquals("ufmpqumqyjgy", response.notificationLocale());
-        Assertions.assertEquals("ulodsaeuzanhsfnh", response.description());
+        Assertions.assertEquals("q", response.location());
+        Assertions.assertEquals("ekoifuvnyttzgi", response.tags().get("gyrihlgm"));
+        Assertions.assertEquals("nqjilaywk", response.webhookUrl());
+        Assertions.assertEquals("wm", response.emailRecipient());
+        Assertions.assertEquals("yrilmhxdqaolf", response.notificationLocale());
+        Assertions.assertEquals("nkkbjpjvlywltmfw", response.description());
+        Assertions.assertEquals(NotificationChannelEventType.AUTO_SHUTDOWN, response.events().get(0).eventName());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

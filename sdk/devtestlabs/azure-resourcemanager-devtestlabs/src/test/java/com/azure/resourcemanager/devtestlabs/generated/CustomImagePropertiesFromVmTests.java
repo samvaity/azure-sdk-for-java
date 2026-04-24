@@ -15,26 +15,22 @@ import org.junit.jupiter.api.Assertions;
 public final class CustomImagePropertiesFromVmTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CustomImagePropertiesFromVm model =
-            BinaryData
-                .fromString(
-                    "{\"sourceVmId\":\"xcyjmoadsuvarmy\",\"windowsOsInfo\":{\"windowsOsState\":\"SysprepRequested\"},\"linuxOsInfo\":{\"linuxOsState\":\"NonDeprovisioned\"}}")
-                .toObject(CustomImagePropertiesFromVm.class);
-        Assertions.assertEquals("xcyjmoadsuvarmy", model.sourceVmId());
-        Assertions.assertEquals(WindowsOsState.SYSPREP_REQUESTED, model.windowsOsInfo().windowsOsState());
-        Assertions.assertEquals(LinuxOsState.NON_DEPROVISIONED, model.linuxOsInfo().linuxOsState());
+        CustomImagePropertiesFromVm model = BinaryData.fromString(
+            "{\"sourceVmId\":\"nwzxltjcv\",\"windowsOsInfo\":{\"windowsOsState\":\"NonSysprepped\"},\"linuxOsInfo\":{\"linuxOsState\":\"DeprovisionApplied\"}}")
+            .toObject(CustomImagePropertiesFromVm.class);
+        Assertions.assertEquals("nwzxltjcv", model.sourceVmId());
+        Assertions.assertEquals(WindowsOsState.NON_SYSPREPPED, model.windowsOsInfo().windowsOsState());
+        Assertions.assertEquals(LinuxOsState.DEPROVISION_APPLIED, model.linuxOsInfo().linuxOsState());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CustomImagePropertiesFromVm model =
-            new CustomImagePropertiesFromVm()
-                .withSourceVmId("xcyjmoadsuvarmy")
-                .withWindowsOsInfo(new WindowsOsInfo().withWindowsOsState(WindowsOsState.SYSPREP_REQUESTED))
-                .withLinuxOsInfo(new LinuxOsInfo().withLinuxOsState(LinuxOsState.NON_DEPROVISIONED));
+        CustomImagePropertiesFromVm model = new CustomImagePropertiesFromVm().withSourceVmId("nwzxltjcv")
+            .withWindowsOsInfo(new WindowsOsInfo().withWindowsOsState(WindowsOsState.NON_SYSPREPPED))
+            .withLinuxOsInfo(new LinuxOsInfo().withLinuxOsState(LinuxOsState.DEPROVISION_APPLIED));
         model = BinaryData.fromObject(model).toObject(CustomImagePropertiesFromVm.class);
-        Assertions.assertEquals("xcyjmoadsuvarmy", model.sourceVmId());
-        Assertions.assertEquals(WindowsOsState.SYSPREP_REQUESTED, model.windowsOsInfo().windowsOsState());
-        Assertions.assertEquals(LinuxOsState.NON_DEPROVISIONED, model.linuxOsInfo().linuxOsState());
+        Assertions.assertEquals("nwzxltjcv", model.sourceVmId());
+        Assertions.assertEquals(WindowsOsState.NON_SYSPREPPED, model.windowsOsInfo().windowsOsState());
+        Assertions.assertEquals(LinuxOsState.DEPROVISION_APPLIED, model.linuxOsInfo().linuxOsState());
     }
 }

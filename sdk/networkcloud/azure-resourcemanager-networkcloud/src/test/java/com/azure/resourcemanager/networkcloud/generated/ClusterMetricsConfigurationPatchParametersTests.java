@@ -14,29 +14,28 @@ import org.junit.jupiter.api.Assertions;
 public final class ClusterMetricsConfigurationPatchParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ClusterMetricsConfigurationPatchParameters model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"collectionInterval\":7103604818912185763,\"enabledMetrics\":[\"kwr\",\"snkq\",\"hsyrqunj\"]},\"tags\":{\"ulkpakd\":\"enx\",\"wtqabpxuckp\":\"ifmjnn\"}}")
-                .toObject(ClusterMetricsConfigurationPatchParameters.class);
-        Assertions.assertEquals("enx", model.tags().get("ulkpakd"));
-        Assertions.assertEquals(7103604818912185763L, model.collectionInterval());
-        Assertions.assertEquals("kwr", model.enabledMetrics().get(0));
+        ClusterMetricsConfigurationPatchParameters model = BinaryData.fromString(
+            "{\"properties\":{\"collectionInterval\":9101534338635329443,\"enabledMetrics\":[\"wodiffjxc\",\"rmmuabwibvjo\",\"jonmc\"]},\"tags\":{\"akpoldtvevbo\":\"oyzbamwineofvf\",\"zjknyuxg\":\"lz\",\"mrdixtreki\":\"ttxpnrupza\",\"lukkutvlxhrpqhvm\":\"swyskbruffg\"}}")
+            .toObject(ClusterMetricsConfigurationPatchParameters.class);
+        Assertions.assertEquals("oyzbamwineofvf", model.tags().get("akpoldtvevbo"));
+        Assertions.assertEquals(9101534338635329443L, model.collectionInterval());
+        Assertions.assertEquals("wodiffjxc", model.enabledMetrics().get(0));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ClusterMetricsConfigurationPatchParameters model =
-            new ClusterMetricsConfigurationPatchParameters()
-                .withTags(mapOf("ulkpakd", "enx", "wtqabpxuckp", "ifmjnn"))
-                .withCollectionInterval(7103604818912185763L)
-                .withEnabledMetrics(Arrays.asList("kwr", "snkq", "hsyrqunj"));
+        ClusterMetricsConfigurationPatchParameters model = new ClusterMetricsConfigurationPatchParameters()
+            .withTags(mapOf("akpoldtvevbo", "oyzbamwineofvf", "zjknyuxg", "lz", "mrdixtreki", "ttxpnrupza",
+                "lukkutvlxhrpqhvm", "swyskbruffg"))
+            .withCollectionInterval(9101534338635329443L)
+            .withEnabledMetrics(Arrays.asList("wodiffjxc", "rmmuabwibvjo", "jonmc"));
         model = BinaryData.fromObject(model).toObject(ClusterMetricsConfigurationPatchParameters.class);
-        Assertions.assertEquals("enx", model.tags().get("ulkpakd"));
-        Assertions.assertEquals(7103604818912185763L, model.collectionInterval());
-        Assertions.assertEquals("kwr", model.enabledMetrics().get(0));
+        Assertions.assertEquals("oyzbamwineofvf", model.tags().get("akpoldtvevbo"));
+        Assertions.assertEquals(9101534338635329443L, model.collectionInterval());
+        Assertions.assertEquals("wodiffjxc", model.enabledMetrics().get(0));
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

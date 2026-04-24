@@ -4,71 +4,109 @@
 
 package com.azure.ai.textanalytics.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Enumeration of supported long-running Text Analysis tasks. */
+/**
+ * Enumeration of supported long-running Text Analysis tasks.
+ */
 public final class AnalyzeTextLROTaskKind extends ExpandableStringEnum<AnalyzeTextLROTaskKind> {
-    /** Static value SentimentAnalysis for AnalyzeTextLROTaskKind. */
+    /**
+     * Static value SentimentAnalysis for AnalyzeTextLROTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextLROTaskKind SENTIMENT_ANALYSIS = fromString("SentimentAnalysis");
 
-    /** Static value EntityRecognition for AnalyzeTextLROTaskKind. */
+    /**
+     * Static value EntityRecognition for AnalyzeTextLROTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextLROTaskKind ENTITY_RECOGNITION = fromString("EntityRecognition");
 
-    /** Static value PiiEntityRecognition for AnalyzeTextLROTaskKind. */
+    /**
+     * Static value PiiEntityRecognition for AnalyzeTextLROTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextLROTaskKind PII_ENTITY_RECOGNITION = fromString("PiiEntityRecognition");
 
-    /** Static value KeyPhraseExtraction for AnalyzeTextLROTaskKind. */
+    /**
+     * Static value KeyPhraseExtraction for AnalyzeTextLROTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextLROTaskKind KEY_PHRASE_EXTRACTION = fromString("KeyPhraseExtraction");
 
-    /** Static value EntityLinking for AnalyzeTextLROTaskKind. */
+    /**
+     * Static value EntityLinking for AnalyzeTextLROTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextLROTaskKind ENTITY_LINKING = fromString("EntityLinking");
 
-    /** Static value Healthcare for AnalyzeTextLROTaskKind. */
+    /**
+     * Static value Healthcare for AnalyzeTextLROTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextLROTaskKind HEALTHCARE = fromString("Healthcare");
 
-    /** Static value ExtractiveSummarization for AnalyzeTextLROTaskKind. */
+    /**
+     * Static value ExtractiveSummarization for AnalyzeTextLROTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextLROTaskKind EXTRACTIVE_SUMMARIZATION = fromString("ExtractiveSummarization");
 
-    /** Static value CustomEntityRecognition for AnalyzeTextLROTaskKind. */
+    /**
+     * Static value CustomEntityRecognition for AnalyzeTextLROTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextLROTaskKind CUSTOM_ENTITY_RECOGNITION = fromString("CustomEntityRecognition");
 
-    /** Static value CustomSingleLabelClassification for AnalyzeTextLROTaskKind. */
-    public static final AnalyzeTextLROTaskKind CUSTOM_SINGLE_LABEL_CLASSIFICATION =
-            fromString("CustomSingleLabelClassification");
+    /**
+     * Static value CustomSingleLabelClassification for AnalyzeTextLROTaskKind.
+     */
+    @Generated
+    public static final AnalyzeTextLROTaskKind CUSTOM_SINGLE_LABEL_CLASSIFICATION
+        = fromString("CustomSingleLabelClassification");
 
-    /** Static value CustomMultiLabelClassification for AnalyzeTextLROTaskKind. */
-    public static final AnalyzeTextLROTaskKind CUSTOM_MULTI_LABEL_CLASSIFICATION =
-            fromString("CustomMultiLabelClassification");
+    /**
+     * Static value CustomMultiLabelClassification for AnalyzeTextLROTaskKind.
+     */
+    @Generated
+    public static final AnalyzeTextLROTaskKind CUSTOM_MULTI_LABEL_CLASSIFICATION
+        = fromString("CustomMultiLabelClassification");
 
-    /** Static value AbstractiveSummarization for AnalyzeTextLROTaskKind. */
+    /**
+     * Static value AbstractiveSummarization for AnalyzeTextLROTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextLROTaskKind ABSTRACTIVE_SUMMARIZATION = fromString("AbstractiveSummarization");
 
     /**
      * Creates a new instance of AnalyzeTextLROTaskKind value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public AnalyzeTextLROTaskKind() {}
+    public AnalyzeTextLROTaskKind() {
+    }
 
     /**
      * Creates or finds a AnalyzeTextLROTaskKind from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding AnalyzeTextLROTaskKind.
      */
-    @JsonCreator
+    @Generated
     public static AnalyzeTextLROTaskKind fromString(String name) {
         return fromString(name, AnalyzeTextLROTaskKind.class);
     }
 
     /**
      * Gets known AnalyzeTextLROTaskKind values.
-     *
+     * 
      * @return known AnalyzeTextLROTaskKind values.
      */
+    @Generated
     public static Collection<AnalyzeTextLROTaskKind> values() {
         return values(AnalyzeTextLROTaskKind.class);
     }

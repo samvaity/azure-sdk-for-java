@@ -5,9 +5,8 @@ package com.azure.storage.blob.models;
 
 import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpResponse;
-import com.azure.storage.common.implementation.StorageImplUtils;
 
-import static com.azure.storage.common.implementation.Constants.HeaderConstants.ERROR_CODE;
+import static com.azure.storage.common.implementation.Constants.HeaderConstants.ERROR_CODE_HEADER_NAME;
 
 /**
  * A {@code BlobStorageException} is thrown whenever Azure Storage successfully returns an error code that is not
@@ -31,17 +30,21 @@ public final class BlobStorageException extends HttpResponseException {
      * @param value the error code of the exception.
      */
     public BlobStorageException(String message, HttpResponse response, Object value) {
-        super(StorageImplUtils.convertStorageExceptionMessage(message, response), response, value);
+        super(message, response, value);
     }
 
     /**
+     * Gets the error code returned by the service.
+     *
      * @return The error code returned by the service.
      */
     public BlobErrorCode getErrorCode() {
-        return BlobErrorCode.fromString(super.getResponse().getHeaders().getValue(ERROR_CODE));
+        return BlobErrorCode.fromString(super.getResponse().getHeaders().getValue(ERROR_CODE_HEADER_NAME));
     }
 
     /**
+     * Gets the message returned by the service.
+     *
      * @return The message returned by the service.
      */
     public String getServiceMessage() {
@@ -49,6 +52,8 @@ public final class BlobStorageException extends HttpResponseException {
     }
 
     /**
+     * Gets the status code on the response.
+     *
      * @return The status code on the response.
      */
     public int getStatusCode() {

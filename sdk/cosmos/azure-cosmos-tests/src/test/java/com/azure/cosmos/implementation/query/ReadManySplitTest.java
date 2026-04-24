@@ -5,6 +5,7 @@ package com.azure.cosmos.implementation.query;
 import com.azure.cosmos.implementation.DiagnosticsClientContext;
 import com.azure.cosmos.implementation.Document;
 import com.azure.cosmos.implementation.DocumentClientRetryPolicy;
+import com.azure.cosmos.implementation.DocumentCollection;
 import com.azure.cosmos.implementation.PartitionKeyRange;
 import com.azure.cosmos.implementation.Resource;
 import com.azure.cosmos.implementation.ResourceType;
@@ -26,6 +27,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -58,9 +60,13 @@ public class ReadManySplitTest {
         PartitionKeyRange partitionKey = new PartitionKeyRange("0", "00", "FF");
         Map<PartitionKeyRange, SqlQuerySpec> rangeQueryMap = new HashMap<>();
         rangeQueryMap.put(partitionKey, querySpec);
+
+        DocumentCollection documentCollection = new DocumentCollection();
+        documentCollection.setResourceId("testCollectionRid");
+
         parallelDocumentQueryExecutionContextBase.initializeReadMany(
             rangeQueryMap,
-            new CosmosQueryRequestOptions(), "testCollectionRid");
+            new CosmosQueryRequestOptions(), documentCollection);
         //Parent document producer created
         DocumentProducer<Document> documentProducer = parallelDocumentQueryExecutionContextBase.documentProducers.get(0);
 
@@ -114,8 +120,9 @@ public class ReadManySplitTest {
                                                              TriFunction<FeedRangeEpkImpl, String, Integer, RxDocumentServiceRequest> createRequestFunc,
                                                              Function<RxDocumentServiceRequest,
                                                              Mono<FeedResponse<T>>> executeFunc,
-                                                             Callable<DocumentClientRetryPolicy> createRetryPolicyFunc,
-                                                             FeedRangeEpkImpl feedRange) {
+                                                             Supplier<DocumentClientRetryPolicy> createRetryPolicyFunc,
+                                                             FeedRangeEpkImpl feedRange,
+                                                             String collectionLink) {
             return new DocumentProducer<T>(
                 client,
                 collectionRid,

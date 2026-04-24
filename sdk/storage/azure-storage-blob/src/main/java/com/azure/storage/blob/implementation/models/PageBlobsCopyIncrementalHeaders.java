@@ -5,65 +5,65 @@
 package com.azure.storage.blob.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.util.DateTimeRfc1123;
 import com.azure.storage.blob.models.CopyStatusType;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.time.OffsetDateTime;
 
-/** The PageBlobsCopyIncrementalHeaders model. */
-@JacksonXmlRootElement(localName = "null")
+/**
+ * The PageBlobsCopyIncrementalHeaders model.
+ */
 @Fluent
 public final class PageBlobsCopyIncrementalHeaders {
     /*
-     * The x-ms-version property.
-     */
-    @JsonProperty(value = "x-ms-version")
-    private String xMsVersion;
-
-    /*
-     * The x-ms-copy-id property.
-     */
-    @JsonProperty(value = "x-ms-copy-id")
-    private String xMsCopyId;
-
-    /*
      * The ETag property.
      */
-    @JsonProperty(value = "ETag")
+    @Generated
     private String eTag;
 
     /*
      * The Last-Modified property.
      */
-    @JsonProperty(value = "Last-Modified")
+    @Generated
     private DateTimeRfc1123 lastModified;
-
-    /*
-     * The x-ms-copy-status property.
-     */
-    @JsonProperty(value = "x-ms-copy-status")
-    private CopyStatusType xMsCopyStatus;
-
-    /*
-     * The x-ms-request-id property.
-     */
-    @JsonProperty(value = "x-ms-request-id")
-    private String xMsRequestId;
 
     /*
      * The x-ms-client-request-id property.
      */
-    @JsonProperty(value = "x-ms-client-request-id")
+    @Generated
     private String xMsClientRequestId;
+
+    /*
+     * The x-ms-request-id property.
+     */
+    @Generated
+    private String xMsRequestId;
+
+    /*
+     * The x-ms-version property.
+     */
+    @Generated
+    private String xMsVersion;
 
     /*
      * The Date property.
      */
-    @JsonProperty(value = "Date")
+    @Generated
     private DateTimeRfc1123 date;
+
+    /*
+     * The x-ms-copy-id property.
+     */
+    @Generated
+    private String xMsCopyId;
+
+    /*
+     * The x-ms-copy-status property.
+     */
+    @Generated
+    private CopyStatusType xMsCopyStatus;
 
     private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
 
@@ -71,89 +71,55 @@ public final class PageBlobsCopyIncrementalHeaders {
 
     private static final HttpHeaderName X_MS_COPY_STATUS = HttpHeaderName.fromString("x-ms-copy-status");
 
-    private static final HttpHeaderName X_MS_REQUEST_ID = HttpHeaderName.fromString("x-ms-request-id");
-
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of PageBlobsCopyIncrementalHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public PageBlobsCopyIncrementalHeaders(HttpHeaders rawHeaders) {
-        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
-        this.xMsCopyId = rawHeaders.getValue(X_MS_COPY_ID);
         this.eTag = rawHeaders.getValue(HttpHeaderName.ETAG);
         String lastModified = rawHeaders.getValue(HttpHeaderName.LAST_MODIFIED);
         if (lastModified != null) {
             this.lastModified = new DateTimeRfc1123(lastModified);
+        } else {
+            this.lastModified = null;
         }
-        String xMsCopyStatus = rawHeaders.getValue(X_MS_COPY_STATUS);
-        if (xMsCopyStatus != null) {
-            this.xMsCopyStatus = CopyStatusType.fromString(xMsCopyStatus);
-        }
-        this.xMsRequestId = rawHeaders.getValue(X_MS_REQUEST_ID);
         this.xMsClientRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_CLIENT_REQUEST_ID);
+        this.xMsRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_REQUEST_ID);
+        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
         String date = rawHeaders.getValue(HttpHeaderName.DATE);
         if (date != null) {
             this.date = new DateTimeRfc1123(date);
+        } else {
+            this.date = null;
         }
-    }
-
-    /**
-     * Get the xMsVersion property: The x-ms-version property.
-     *
-     * @return the xMsVersion value.
-     */
-    public String getXMsVersion() {
-        return this.xMsVersion;
-    }
-
-    /**
-     * Set the xMsVersion property: The x-ms-version property.
-     *
-     * @param xMsVersion the xMsVersion value to set.
-     * @return the PageBlobsCopyIncrementalHeaders object itself.
-     */
-    public PageBlobsCopyIncrementalHeaders setXMsVersion(String xMsVersion) {
-        this.xMsVersion = xMsVersion;
-        return this;
-    }
-
-    /**
-     * Get the xMsCopyId property: The x-ms-copy-id property.
-     *
-     * @return the xMsCopyId value.
-     */
-    public String getXMsCopyId() {
-        return this.xMsCopyId;
-    }
-
-    /**
-     * Set the xMsCopyId property: The x-ms-copy-id property.
-     *
-     * @param xMsCopyId the xMsCopyId value to set.
-     * @return the PageBlobsCopyIncrementalHeaders object itself.
-     */
-    public PageBlobsCopyIncrementalHeaders setXMsCopyId(String xMsCopyId) {
-        this.xMsCopyId = xMsCopyId;
-        return this;
+        this.xMsCopyId = rawHeaders.getValue(X_MS_COPY_ID);
+        String xMsCopyStatus = rawHeaders.getValue(X_MS_COPY_STATUS);
+        if (xMsCopyStatus != null) {
+            this.xMsCopyStatus = CopyStatusType.fromString(xMsCopyStatus);
+        } else {
+            this.xMsCopyStatus = null;
+        }
     }
 
     /**
      * Get the eTag property: The ETag property.
-     *
+     * 
      * @return the eTag value.
      */
+    @Generated
     public String getETag() {
         return this.eTag;
     }
 
     /**
      * Set the eTag property: The ETag property.
-     *
+     * 
      * @param eTag the eTag value to set.
      * @return the PageBlobsCopyIncrementalHeaders object itself.
      */
+    @Generated
     public PageBlobsCopyIncrementalHeaders setETag(String eTag) {
         this.eTag = eTag;
         return this;
@@ -161,9 +127,10 @@ public final class PageBlobsCopyIncrementalHeaders {
 
     /**
      * Get the lastModified property: The Last-Modified property.
-     *
+     * 
      * @return the lastModified value.
      */
+    @Generated
     public OffsetDateTime getLastModified() {
         if (this.lastModified == null) {
             return null;
@@ -173,10 +140,11 @@ public final class PageBlobsCopyIncrementalHeaders {
 
     /**
      * Set the lastModified property: The Last-Modified property.
-     *
+     * 
      * @param lastModified the lastModified value to set.
      * @return the PageBlobsCopyIncrementalHeaders object itself.
      */
+    @Generated
     public PageBlobsCopyIncrementalHeaders setLastModified(OffsetDateTime lastModified) {
         if (lastModified == null) {
             this.lastModified = null;
@@ -187,70 +155,77 @@ public final class PageBlobsCopyIncrementalHeaders {
     }
 
     /**
-     * Get the xMsCopyStatus property: The x-ms-copy-status property.
-     *
-     * @return the xMsCopyStatus value.
-     */
-    public CopyStatusType getXMsCopyStatus() {
-        return this.xMsCopyStatus;
-    }
-
-    /**
-     * Set the xMsCopyStatus property: The x-ms-copy-status property.
-     *
-     * @param xMsCopyStatus the xMsCopyStatus value to set.
-     * @return the PageBlobsCopyIncrementalHeaders object itself.
-     */
-    public PageBlobsCopyIncrementalHeaders setXMsCopyStatus(CopyStatusType xMsCopyStatus) {
-        this.xMsCopyStatus = xMsCopyStatus;
-        return this;
-    }
-
-    /**
-     * Get the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @return the xMsRequestId value.
-     */
-    public String getXMsRequestId() {
-        return this.xMsRequestId;
-    }
-
-    /**
-     * Set the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @param xMsRequestId the xMsRequestId value to set.
-     * @return the PageBlobsCopyIncrementalHeaders object itself.
-     */
-    public PageBlobsCopyIncrementalHeaders setXMsRequestId(String xMsRequestId) {
-        this.xMsRequestId = xMsRequestId;
-        return this;
-    }
-
-    /**
      * Get the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
+     * 
      * @return the xMsClientRequestId value.
      */
+    @Generated
     public String getXMsClientRequestId() {
         return this.xMsClientRequestId;
     }
 
     /**
      * Set the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
+     * 
      * @param xMsClientRequestId the xMsClientRequestId value to set.
      * @return the PageBlobsCopyIncrementalHeaders object itself.
      */
+    @Generated
     public PageBlobsCopyIncrementalHeaders setXMsClientRequestId(String xMsClientRequestId) {
         this.xMsClientRequestId = xMsClientRequestId;
         return this;
     }
 
     /**
+     * Get the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @return the xMsRequestId value.
+     */
+    @Generated
+    public String getXMsRequestId() {
+        return this.xMsRequestId;
+    }
+
+    /**
+     * Set the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @param xMsRequestId the xMsRequestId value to set.
+     * @return the PageBlobsCopyIncrementalHeaders object itself.
+     */
+    @Generated
+    public PageBlobsCopyIncrementalHeaders setXMsRequestId(String xMsRequestId) {
+        this.xMsRequestId = xMsRequestId;
+        return this;
+    }
+
+    /**
+     * Get the xMsVersion property: The x-ms-version property.
+     * 
+     * @return the xMsVersion value.
+     */
+    @Generated
+    public String getXMsVersion() {
+        return this.xMsVersion;
+    }
+
+    /**
+     * Set the xMsVersion property: The x-ms-version property.
+     * 
+     * @param xMsVersion the xMsVersion value to set.
+     * @return the PageBlobsCopyIncrementalHeaders object itself.
+     */
+    @Generated
+    public PageBlobsCopyIncrementalHeaders setXMsVersion(String xMsVersion) {
+        this.xMsVersion = xMsVersion;
+        return this;
+    }
+
+    /**
      * Get the date property: The Date property.
-     *
+     * 
      * @return the date value.
      */
+    @Generated
     public OffsetDateTime getDate() {
         if (this.date == null) {
             return null;
@@ -260,16 +235,61 @@ public final class PageBlobsCopyIncrementalHeaders {
 
     /**
      * Set the date property: The Date property.
-     *
+     * 
      * @param date the date value to set.
      * @return the PageBlobsCopyIncrementalHeaders object itself.
      */
+    @Generated
     public PageBlobsCopyIncrementalHeaders setDate(OffsetDateTime date) {
         if (date == null) {
             this.date = null;
         } else {
             this.date = new DateTimeRfc1123(date);
         }
+        return this;
+    }
+
+    /**
+     * Get the xMsCopyId property: The x-ms-copy-id property.
+     * 
+     * @return the xMsCopyId value.
+     */
+    @Generated
+    public String getXMsCopyId() {
+        return this.xMsCopyId;
+    }
+
+    /**
+     * Set the xMsCopyId property: The x-ms-copy-id property.
+     * 
+     * @param xMsCopyId the xMsCopyId value to set.
+     * @return the PageBlobsCopyIncrementalHeaders object itself.
+     */
+    @Generated
+    public PageBlobsCopyIncrementalHeaders setXMsCopyId(String xMsCopyId) {
+        this.xMsCopyId = xMsCopyId;
+        return this;
+    }
+
+    /**
+     * Get the xMsCopyStatus property: The x-ms-copy-status property.
+     * 
+     * @return the xMsCopyStatus value.
+     */
+    @Generated
+    public CopyStatusType getXMsCopyStatus() {
+        return this.xMsCopyStatus;
+    }
+
+    /**
+     * Set the xMsCopyStatus property: The x-ms-copy-status property.
+     * 
+     * @param xMsCopyStatus the xMsCopyStatus value to set.
+     * @return the PageBlobsCopyIncrementalHeaders object itself.
+     */
+    @Generated
+    public PageBlobsCopyIncrementalHeaders setXMsCopyStatus(CopyStatusType xMsCopyStatus) {
+        this.xMsCopyStatus = xMsCopyStatus;
         return this;
     }
 }

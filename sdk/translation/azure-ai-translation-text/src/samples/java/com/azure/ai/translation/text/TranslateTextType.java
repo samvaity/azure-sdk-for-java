@@ -3,15 +3,14 @@
 
 package com.azure.ai.translation.text;
 
-import java.util.List;
-import java.util.ArrayList;
-import com.azure.core.credential.AzureKeyCredential;
-import com.azure.ai.translation.text.models.InputTextItem;
-import com.azure.ai.translation.text.models.ProfanityAction;
-import com.azure.ai.translation.text.models.ProfanityMarker;
+import java.util.Arrays;
+
 import com.azure.ai.translation.text.models.TextType;
+import com.azure.ai.translation.text.models.TranslateInputItem;
 import com.azure.ai.translation.text.models.TranslatedTextItem;
-import com.azure.ai.translation.text.models.Translation;
+import com.azure.ai.translation.text.models.TranslationTarget;
+import com.azure.ai.translation.text.models.TranslationText;
+import com.azure.core.credential.AzureKeyCredential;
 
 /**
  * You can select whether the translated text is plain text or HTML text. Any HTML needs to be a well-formed,
@@ -33,20 +32,16 @@ public class TranslateTextType {
                 .region(region)
                 .endpoint("https://api.cognitive.microsofttranslator.com")
                 .buildClient();
+        
+        TranslateInputItem input = new TranslateInputItem(
+            "<html><body>This <b>is</b> a test.</body></html>", 
+            Arrays.asList(new TranslationTarget("en"))
+        ).setLanguage("cs").setTextType(TextType.HTML);
 
-        TextType textType = TextType.HTML;
-        String from = "en";
-        List<String> targetLanguages = new ArrayList<>();
-        targetLanguages.add("cs");
-        List<InputTextItem> content = new ArrayList<>();
-        content.add(new InputTextItem("<html><body>This <b>is</b> a test.</body></html>"));
+        TranslatedTextItem translation = client.translate(Arrays.asList(input)).get(0);
 
-        List<TranslatedTextItem> translations = client.translate(targetLanguages, content, null, from, textType, null, ProfanityAction.NO_ACTION, ProfanityMarker.ASTERISK, false, false, null, null, null, false);
-
-        for (TranslatedTextItem translation : translations) {
-            for (Translation textTranslation : translation.getTranslations()) {
-                System.out.println("Text was translated to: '" + textTranslation.getTo() + "' and the result is: '" + textTranslation.getText() + "'.");
-            }
+        for (TranslationText textTranslation : translation.getTranslations()) {
+            System.out.println("Text was translated to: '" + textTranslation.getLanguage() + "' and the result is: '" + textTranslation.getText() + "'.");
         }
     }
 }

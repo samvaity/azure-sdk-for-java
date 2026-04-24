@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.GetUserTablesSqlTaskOutput
 public final class GetUserTablesSqlTaskOutputTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        GetUserTablesSqlTaskOutput model =
-            BinaryData
-                .fromString(
-                    "{\"id\":\"szkkfoqre\",\"databasesToTables\":\"kzikfjawneaivxwc\",\"validationErrors\":[{\"message\":\"c\",\"actionableMessage\":\"elsfeaen\",\"filePath\":\"bfatklddxbjhwu\",\"lineNumber\":\"nozj\",\"hResult\":443965325,\"stackTrace\":\"youlp\"},{\"message\":\"v\",\"actionableMessage\":\"glrvimjwosytxi\",\"filePath\":\"skfc\",\"lineNumber\":\"qumiek\",\"hResult\":1035067368,\"stackTrace\":\"ikh\"},{\"message\":\"fjhdg\",\"actionableMessage\":\"gebdunygaeq\",\"filePath\":\"bqfatpxllrxcyjmo\",\"lineNumber\":\"su\",\"hResult\":239264688,\"stackTrace\":\"ywdmjsjqbjh\"}]}")
-                .toObject(GetUserTablesSqlTaskOutput.class);
+        GetUserTablesSqlTaskOutput model = BinaryData.fromString(
+            "{\"id\":\"oq\",\"databasesToTables\":\"uojrngiflr\",\"validationErrors\":[{\"message\":\"ccbiuimzdlyjdfq\",\"actionableMessage\":\"kyoqufdv\",\"filePath\":\"zslzojhp\",\"lineNumber\":\"fnmdxotn\",\"hResult\":923226003,\"stackTrace\":\"ugeyzihgrkyuiza\"},{\"message\":\"nmfpp\",\"actionableMessage\":\"jee\",\"filePath\":\"hyhsgzfczbg\",\"lineNumber\":\"fgbegl\",\"hResult\":1755759085,\"stackTrace\":\"o\"}]}")
+            .toObject(GetUserTablesSqlTaskOutput.class);
     }
 
     @org.junit.jupiter.api.Test

@@ -11,6 +11,7 @@ import com.azure.core.http.HttpPipelineBuilder;
 import com.azure.core.http.HttpPipelinePosition;
 import com.azure.core.http.policy.AddDatePolicy;
 import com.azure.core.http.policy.AddHeadersFromContextPolicy;
+import com.azure.core.http.policy.BearerTokenAuthenticationPolicy;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpLoggingPolicy;
 import com.azure.core.http.policy.HttpPipelinePolicy;
@@ -19,15 +20,18 @@ import com.azure.core.http.policy.RequestIdPolicy;
 import com.azure.core.http.policy.RetryOptions;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
-import com.azure.core.management.http.policy.ArmChallengeAuthenticationPolicy;
 import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.util.Configuration;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.resourcemanager.storagecache.fluent.StorageCacheManagementClient;
 import com.azure.resourcemanager.storagecache.implementation.AmlFilesystemsImpl;
 import com.azure.resourcemanager.storagecache.implementation.AscOperationsImpl;
 import com.azure.resourcemanager.storagecache.implementation.AscUsagesImpl;
+import com.azure.resourcemanager.storagecache.implementation.AutoExportJobsImpl;
+import com.azure.resourcemanager.storagecache.implementation.AutoImportJobsImpl;
 import com.azure.resourcemanager.storagecache.implementation.CachesImpl;
+import com.azure.resourcemanager.storagecache.implementation.ImportJobsImpl;
 import com.azure.resourcemanager.storagecache.implementation.OperationsImpl;
 import com.azure.resourcemanager.storagecache.implementation.ResourceProvidersImpl;
 import com.azure.resourcemanager.storagecache.implementation.SkusImpl;
@@ -38,7 +42,10 @@ import com.azure.resourcemanager.storagecache.implementation.UsageModelsImpl;
 import com.azure.resourcemanager.storagecache.models.AmlFilesystems;
 import com.azure.resourcemanager.storagecache.models.AscOperations;
 import com.azure.resourcemanager.storagecache.models.AscUsages;
+import com.azure.resourcemanager.storagecache.models.AutoExportJobs;
+import com.azure.resourcemanager.storagecache.models.AutoImportJobs;
 import com.azure.resourcemanager.storagecache.models.Caches;
+import com.azure.resourcemanager.storagecache.models.ImportJobs;
 import com.azure.resourcemanager.storagecache.models.Operations;
 import com.azure.resourcemanager.storagecache.models.ResourceProviders;
 import com.azure.resourcemanager.storagecache.models.Skus;
@@ -49,15 +56,23 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Entry point to StorageCacheManager. Azure Managed Lustre provides a fully managed Lustre® file system, integrated
- * with Blob storage, for use on demand. These operations create and manage Azure Managed Lustre file systems.
+ * Entry point to StorageCacheManager.
+ * Azure Managed Lustre provides a fully managed Lustre® file system, integrated with Blob storage, for use on demand.
+ * These operations create and manage Azure Managed Lustre file systems.
  */
 public final class StorageCacheManager {
     private AmlFilesystems amlFilesystems;
+
+    private AutoExportJobs autoExportJobs;
+
+    private ImportJobs importJobs;
+
+    private AutoImportJobs autoImportJobs;
 
     private ResourceProviders resourceProviders;
 
@@ -82,18 +97,16 @@ public final class StorageCacheManager {
     private StorageCacheManager(HttpPipeline httpPipeline, AzureProfile profile, Duration defaultPollInterval) {
         Objects.requireNonNull(httpPipeline, "'httpPipeline' cannot be null.");
         Objects.requireNonNull(profile, "'profile' cannot be null.");
-        this.clientObject =
-            new StorageCacheManagementClientBuilder()
-                .pipeline(httpPipeline)
-                .endpoint(profile.getEnvironment().getResourceManagerEndpoint())
-                .subscriptionId(profile.getSubscriptionId())
-                .defaultPollInterval(defaultPollInterval)
-                .buildClient();
+        this.clientObject = new StorageCacheManagementClientBuilder().pipeline(httpPipeline)
+            .endpoint(profile.getEnvironment().getResourceManagerEndpoint())
+            .subscriptionId(profile.getSubscriptionId())
+            .defaultPollInterval(defaultPollInterval)
+            .buildClient();
     }
 
     /**
      * Creates an instance of StorageCache service API entry point.
-     *
+     * 
      * @param credential the credential to use.
      * @param profile the Azure profile for client.
      * @return the StorageCache service API instance.
@@ -106,7 +119,7 @@ public final class StorageCacheManager {
 
     /**
      * Creates an instance of StorageCache service API entry point.
-     *
+     * 
      * @param httpPipeline the {@link HttpPipeline} configured with Azure authentication credential.
      * @param profile the Azure profile for client.
      * @return the StorageCache service API instance.
@@ -119,16 +132,21 @@ public final class StorageCacheManager {
 
     /**
      * Gets a Configurable instance that can be used to create StorageCacheManager with optional configuration.
-     *
+     * 
      * @return the Configurable instance allowing configurations.
      */
     public static Configurable configure() {
         return new StorageCacheManager.Configurable();
     }
 
-    /** The Configurable allowing configurations to be set. */
+    /**
+     * The Configurable allowing configurations to be set.
+     */
     public static final class Configurable {
         private static final ClientLogger LOGGER = new ClientLogger(Configurable.class);
+        private static final String SDK_VERSION = "version";
+        private static final Map<String, String> PROPERTIES
+            = CoreUtils.getProperties("azure-resourcemanager-storagecache.properties");
 
         private HttpClient httpClient;
         private HttpLogOptions httpLogOptions;
@@ -198,8 +216,8 @@ public final class StorageCacheManager {
 
         /**
          * Sets the retry options for the HTTP pipeline retry policy.
-         *
-         * <p>This setting has no effect, if retry policy is set via {@link #withRetryPolicy(RetryPolicy)}.
+         * <p>
+         * This setting has no effect, if retry policy is set via {@link #withRetryPolicy(RetryPolicy)}.
          *
          * @param retryOptions the retry options for the HTTP pipeline retry policy.
          * @return the configurable object itself.
@@ -216,8 +234,8 @@ public final class StorageCacheManager {
          * @return the configurable object itself.
          */
         public Configurable withDefaultPollInterval(Duration defaultPollInterval) {
-            this.defaultPollInterval =
-                Objects.requireNonNull(defaultPollInterval, "'defaultPollInterval' cannot be null.");
+            this.defaultPollInterval
+                = Objects.requireNonNull(defaultPollInterval, "'defaultPollInterval' cannot be null.");
             if (this.defaultPollInterval.isNegative()) {
                 throw LOGGER
                     .logExceptionAsError(new IllegalArgumentException("'defaultPollInterval' cannot be negative"));
@@ -236,16 +254,16 @@ public final class StorageCacheManager {
             Objects.requireNonNull(credential, "'credential' cannot be null.");
             Objects.requireNonNull(profile, "'profile' cannot be null.");
 
+            String clientVersion = PROPERTIES.getOrDefault(SDK_VERSION, "UnknownVersion");
+
             StringBuilder userAgentBuilder = new StringBuilder();
-            userAgentBuilder
-                .append("azsdk-java")
+            userAgentBuilder.append("azsdk-java")
                 .append("-")
                 .append("com.azure.resourcemanager.storagecache")
                 .append("/")
-                .append("1.0.0-beta.9");
+                .append(clientVersion);
             if (!Configuration.getGlobalConfiguration().get("AZURE_TELEMETRY_DISABLED", false)) {
-                userAgentBuilder
-                    .append(" (")
+                userAgentBuilder.append(" (")
                     .append(Configuration.getGlobalConfiguration().get("java.version"))
                     .append("; ")
                     .append(Configuration.getGlobalConfiguration().get("os.name"))
@@ -270,38 +288,28 @@ public final class StorageCacheManager {
             policies.add(new UserAgentPolicy(userAgentBuilder.toString()));
             policies.add(new AddHeadersFromContextPolicy());
             policies.add(new RequestIdPolicy());
-            policies
-                .addAll(
-                    this
-                        .policies
-                        .stream()
-                        .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_CALL)
-                        .collect(Collectors.toList()));
+            policies.addAll(this.policies.stream()
+                .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_CALL)
+                .collect(Collectors.toList()));
             HttpPolicyProviders.addBeforeRetryPolicies(policies);
             policies.add(retryPolicy);
             policies.add(new AddDatePolicy());
-            policies.add(new ArmChallengeAuthenticationPolicy(credential, scopes.toArray(new String[0])));
-            policies
-                .addAll(
-                    this
-                        .policies
-                        .stream()
-                        .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_RETRY)
-                        .collect(Collectors.toList()));
+            policies.add(new BearerTokenAuthenticationPolicy(credential, scopes.toArray(new String[0])));
+            policies.addAll(this.policies.stream()
+                .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_RETRY)
+                .collect(Collectors.toList()));
             HttpPolicyProviders.addAfterRetryPolicies(policies);
             policies.add(new HttpLoggingPolicy(httpLogOptions));
-            HttpPipeline httpPipeline =
-                new HttpPipelineBuilder()
-                    .httpClient(httpClient)
-                    .policies(policies.toArray(new HttpPipelinePolicy[0]))
-                    .build();
+            HttpPipeline httpPipeline = new HttpPipelineBuilder().httpClient(httpClient)
+                .policies(policies.toArray(new HttpPipelinePolicy[0]))
+                .build();
             return new StorageCacheManager(httpPipeline, profile, defaultPollInterval);
         }
     }
 
     /**
      * Gets the resource collection API of AmlFilesystems. It manages AmlFilesystem.
-     *
+     * 
      * @return Resource collection API of AmlFilesystems.
      */
     public AmlFilesystems amlFilesystems() {
@@ -312,8 +320,44 @@ public final class StorageCacheManager {
     }
 
     /**
+     * Gets the resource collection API of AutoExportJobs. It manages AutoExportJob.
+     * 
+     * @return Resource collection API of AutoExportJobs.
+     */
+    public AutoExportJobs autoExportJobs() {
+        if (this.autoExportJobs == null) {
+            this.autoExportJobs = new AutoExportJobsImpl(clientObject.getAutoExportJobs(), this);
+        }
+        return autoExportJobs;
+    }
+
+    /**
+     * Gets the resource collection API of ImportJobs. It manages ImportJob.
+     * 
+     * @return Resource collection API of ImportJobs.
+     */
+    public ImportJobs importJobs() {
+        if (this.importJobs == null) {
+            this.importJobs = new ImportJobsImpl(clientObject.getImportJobs(), this);
+        }
+        return importJobs;
+    }
+
+    /**
+     * Gets the resource collection API of AutoImportJobs. It manages AutoImportJob.
+     * 
+     * @return Resource collection API of AutoImportJobs.
+     */
+    public AutoImportJobs autoImportJobs() {
+        if (this.autoImportJobs == null) {
+            this.autoImportJobs = new AutoImportJobsImpl(clientObject.getAutoImportJobs(), this);
+        }
+        return autoImportJobs;
+    }
+
+    /**
      * Gets the resource collection API of ResourceProviders.
-     *
+     * 
      * @return Resource collection API of ResourceProviders.
      */
     public ResourceProviders resourceProviders() {
@@ -325,7 +369,7 @@ public final class StorageCacheManager {
 
     /**
      * Gets the resource collection API of Operations.
-     *
+     * 
      * @return Resource collection API of Operations.
      */
     public Operations operations() {
@@ -337,7 +381,7 @@ public final class StorageCacheManager {
 
     /**
      * Gets the resource collection API of Skus.
-     *
+     * 
      * @return Resource collection API of Skus.
      */
     public Skus skus() {
@@ -349,7 +393,7 @@ public final class StorageCacheManager {
 
     /**
      * Gets the resource collection API of UsageModels.
-     *
+     * 
      * @return Resource collection API of UsageModels.
      */
     public UsageModels usageModels() {
@@ -361,7 +405,7 @@ public final class StorageCacheManager {
 
     /**
      * Gets the resource collection API of AscOperations.
-     *
+     * 
      * @return Resource collection API of AscOperations.
      */
     public AscOperations ascOperations() {
@@ -373,7 +417,7 @@ public final class StorageCacheManager {
 
     /**
      * Gets the resource collection API of AscUsages.
-     *
+     * 
      * @return Resource collection API of AscUsages.
      */
     public AscUsages ascUsages() {
@@ -385,7 +429,7 @@ public final class StorageCacheManager {
 
     /**
      * Gets the resource collection API of Caches. It manages Cache.
-     *
+     * 
      * @return Resource collection API of Caches.
      */
     public Caches caches() {
@@ -397,7 +441,7 @@ public final class StorageCacheManager {
 
     /**
      * Gets the resource collection API of StorageTargets. It manages StorageTarget.
-     *
+     * 
      * @return Resource collection API of StorageTargets.
      */
     public StorageTargets storageTargets() {
@@ -409,20 +453,22 @@ public final class StorageCacheManager {
 
     /**
      * Gets the resource collection API of StorageTargetOperations.
-     *
+     * 
      * @return Resource collection API of StorageTargetOperations.
      */
     public StorageTargetOperations storageTargetOperations() {
         if (this.storageTargetOperations == null) {
-            this.storageTargetOperations =
-                new StorageTargetOperationsImpl(clientObject.getStorageTargetOperations(), this);
+            this.storageTargetOperations
+                = new StorageTargetOperationsImpl(clientObject.getStorageTargetOperations(), this);
         }
         return storageTargetOperations;
     }
 
     /**
-     * @return Wrapped service client StorageCacheManagementClient providing direct access to the underlying
-     *     auto-generated API implementation, based on Azure REST API.
+     * Gets wrapped service client StorageCacheManagementClient providing direct access to the underlying auto-generated
+     * API implementation, based on Azure REST API.
+     * 
+     * @return Wrapped service client StorageCacheManagementClient.
      */
     public StorageCacheManagementClient serviceClient() {
         return this.clientObject;

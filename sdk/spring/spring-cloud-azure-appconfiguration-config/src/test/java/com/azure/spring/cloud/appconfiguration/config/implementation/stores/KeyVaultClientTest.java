@@ -73,8 +73,8 @@ public class KeyVaultClientTest {
             .thenReturn(monoSecret);
         when(monoSecret.block(Mockito.any())).thenReturn(new KeyVaultSecret("", ""));
 
-        assertNotNull(test.getSecret(new URI(keyVaultUri), 10));
-        assertEquals(test.getSecret(new URI(keyVaultUri), 10).getName(), "");
+        assertNotNull(test.getSecret(new URI(keyVaultUri)));
+        assertEquals(test.getSecret(new URI(keyVaultUri)).getName(), "");
     }
 
     @Test
@@ -96,8 +96,8 @@ public class KeyVaultClientTest {
             .thenReturn(monoSecret);
         when(monoSecret.block(Mockito.any())).thenReturn(new KeyVaultSecret("", ""));
 
-        assertNotNull(test.getSecret(new URI(keyVaultUri), 10));
-        assertEquals(test.getSecret(new URI(keyVaultUri), 10).getName(), "");
+        assertNotNull(test.getSecret(new URI(keyVaultUri)));
+        assertEquals(test.getSecret(new URI(keyVaultUri)).getName(), "");
     }
 
     @Test
@@ -112,8 +112,8 @@ public class KeyVaultClientTest {
 
         when(builderMock.vaultUrl(Mockito.any())).thenReturn(builderMock);
 
-        assertEquals("Test-Value", test.getSecret(new URI(keyVaultUri + "/testSecret"), 10).getValue());
-        assertEquals("Default-Secret", test.getSecret(new URI(keyVaultUri + "/testSecret2"), 10).getValue());
+        assertEquals("Test-Value", test.getSecret(new URI(keyVaultUri + "/testSecret")).getValue());
+        assertEquals("Default-Secret", test.getSecret(new URI(keyVaultUri + "/testSecret2")).getValue());
     }
 
     class TestSecretResolver implements KeyVaultSecretProvider {

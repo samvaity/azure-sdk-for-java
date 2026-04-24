@@ -4,43 +4,54 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The write behavior for the operation. Default is 'Insert'. */
+/**
+ * The write behavior for the operation. Default is 'Insert'.
+ */
 public final class SapCloudForCustomerSinkWriteBehavior
-        extends ExpandableStringEnum<SapCloudForCustomerSinkWriteBehavior> {
-    /** Static value Insert for SapCloudForCustomerSinkWriteBehavior. */
+    extends ExpandableStringEnum<SapCloudForCustomerSinkWriteBehavior> {
+    /**
+     * Static value Insert for SapCloudForCustomerSinkWriteBehavior.
+     */
+    @Generated
     public static final SapCloudForCustomerSinkWriteBehavior INSERT = fromString("Insert");
 
-    /** Static value Update for SapCloudForCustomerSinkWriteBehavior. */
+    /**
+     * Static value Update for SapCloudForCustomerSinkWriteBehavior.
+     */
+    @Generated
     public static final SapCloudForCustomerSinkWriteBehavior UPDATE = fromString("Update");
 
     /**
      * Creates a new instance of SapCloudForCustomerSinkWriteBehavior value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public SapCloudForCustomerSinkWriteBehavior() {}
+    public SapCloudForCustomerSinkWriteBehavior() {
+    }
 
     /**
      * Creates or finds a SapCloudForCustomerSinkWriteBehavior from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding SapCloudForCustomerSinkWriteBehavior.
      */
-    @JsonCreator
+    @Generated
     public static SapCloudForCustomerSinkWriteBehavior fromString(String name) {
         return fromString(name, SapCloudForCustomerSinkWriteBehavior.class);
     }
 
     /**
      * Gets known SapCloudForCustomerSinkWriteBehavior values.
-     *
+     * 
      * @return known SapCloudForCustomerSinkWriteBehavior values.
      */
+    @Generated
     public static Collection<SapCloudForCustomerSinkWriteBehavior> values() {
         return values(SapCloudForCustomerSinkWriteBehavior.class);
     }

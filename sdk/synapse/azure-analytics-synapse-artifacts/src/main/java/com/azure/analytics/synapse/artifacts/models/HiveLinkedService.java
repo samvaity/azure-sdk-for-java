@@ -5,136 +5,166 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Hive Server linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("Hive")
-@JsonFlatten
+/**
+ * Hive Server linked service.
+ */
 @Fluent
 public class HiveLinkedService extends LinkedService {
+    /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "Hive";
+
     /*
      * IP address or host name of the Hive server, separated by ';' for multiple hosts (only when serviceDiscoveryMode
      * is enable).
      */
-    @JsonProperty(value = "typeProperties.host", required = true)
+    @Generated
     private Object host;
 
     /*
      * The TCP port that the Hive server uses to listen for client connections.
      */
-    @JsonProperty(value = "typeProperties.port")
+    @Generated
     private Object port;
 
     /*
      * The type of Hive server.
      */
-    @JsonProperty(value = "typeProperties.serverType")
+    @Generated
     private HiveServerType serverType;
 
     /*
      * The transport protocol to use in the Thrift layer.
      */
-    @JsonProperty(value = "typeProperties.thriftTransportProtocol")
+    @Generated
     private HiveThriftTransportProtocol thriftTransportProtocol;
 
     /*
      * The authentication method used to access the Hive server.
      */
-    @JsonProperty(value = "typeProperties.authenticationType", required = true)
+    @Generated
     private HiveAuthenticationType authenticationType;
 
     /*
      * true to indicate using the ZooKeeper service, false not.
      */
-    @JsonProperty(value = "typeProperties.serviceDiscoveryMode")
+    @Generated
     private Object serviceDiscoveryMode;
 
     /*
      * The namespace on ZooKeeper under which Hive Server 2 nodes are added.
      */
-    @JsonProperty(value = "typeProperties.zooKeeperNameSpace")
+    @Generated
     private Object zooKeeperNameSpace;
 
     /*
      * Specifies whether the driver uses native HiveQL queries,or converts them into an equivalent form in HiveQL.
      */
-    @JsonProperty(value = "typeProperties.useNativeQuery")
+    @Generated
     private Object useNativeQuery;
 
     /*
      * The user name that you use to access Hive Server.
      */
-    @JsonProperty(value = "typeProperties.username")
+    @Generated
     private Object username;
 
     /*
      * The password corresponding to the user name that you provided in the Username field
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private SecretBase password;
 
     /*
      * The partial URL corresponding to the Hive server.
      */
-    @JsonProperty(value = "typeProperties.httpPath")
+    @Generated
     private Object httpPath;
 
     /*
      * Specifies whether the connections to the server are encrypted using SSL. The default value is false.
      */
-    @JsonProperty(value = "typeProperties.enableSsl")
+    @Generated
     private Object enableSsl;
+
+    /*
+     * Specifies whether the connections to the server will validate server certificate, the default value is True. Only
+     * used for Version 2.0
+     */
+    @Generated
+    private Object enableServerCertificateValidation;
 
     /*
      * The full path of the .pem file containing trusted CA certificates for verifying the server when connecting over
      * SSL. This property can only be set when using SSL on self-hosted IR. The default value is the cacerts.pem file
      * installed with the IR.
      */
-    @JsonProperty(value = "typeProperties.trustedCertPath")
+    @Generated
     private Object trustedCertPath;
 
     /*
      * Specifies whether to use a CA certificate from the system trust store or from a specified PEM file. The default
      * value is false.
      */
-    @JsonProperty(value = "typeProperties.useSystemTrustStore")
+    @Generated
     private Object useSystemTrustStore;
 
     /*
      * Specifies whether to require a CA-issued SSL certificate name to match the host name of the server when
      * connecting over SSL. The default value is false.
      */
-    @JsonProperty(value = "typeProperties.allowHostNameCNMismatch")
+    @Generated
     private Object allowHostNameCNMismatch;
 
     /*
      * Specifies whether to allow self-signed certificates from the server. The default value is false.
      */
-    @JsonProperty(value = "typeProperties.allowSelfSignedServerCert")
+    @Generated
     private Object allowSelfSignedServerCert;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of HiveLinkedService class. */
-    public HiveLinkedService() {}
+    /**
+     * Creates an instance of HiveLinkedService class.
+     */
+    @Generated
+    public HiveLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the host property: IP address or host name of the Hive server, separated by ';' for multiple hosts (only when
      * serviceDiscoveryMode is enable).
-     *
+     * 
      * @return the host value.
      */
+    @Generated
     public Object getHost() {
         return this.host;
     }
@@ -142,10 +172,11 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Set the host property: IP address or host name of the Hive server, separated by ';' for multiple hosts (only when
      * serviceDiscoveryMode is enable).
-     *
+     * 
      * @param host the host value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setHost(Object host) {
         this.host = host;
         return this;
@@ -153,19 +184,21 @@ public class HiveLinkedService extends LinkedService {
 
     /**
      * Get the port property: The TCP port that the Hive server uses to listen for client connections.
-     *
+     * 
      * @return the port value.
      */
+    @Generated
     public Object getPort() {
         return this.port;
     }
 
     /**
      * Set the port property: The TCP port that the Hive server uses to listen for client connections.
-     *
+     * 
      * @param port the port value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setPort(Object port) {
         this.port = port;
         return this;
@@ -173,19 +206,21 @@ public class HiveLinkedService extends LinkedService {
 
     /**
      * Get the serverType property: The type of Hive server.
-     *
+     * 
      * @return the serverType value.
      */
+    @Generated
     public HiveServerType getServerType() {
         return this.serverType;
     }
 
     /**
      * Set the serverType property: The type of Hive server.
-     *
+     * 
      * @param serverType the serverType value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setServerType(HiveServerType serverType) {
         this.serverType = serverType;
         return this;
@@ -193,19 +228,21 @@ public class HiveLinkedService extends LinkedService {
 
     /**
      * Get the thriftTransportProtocol property: The transport protocol to use in the Thrift layer.
-     *
+     * 
      * @return the thriftTransportProtocol value.
      */
+    @Generated
     public HiveThriftTransportProtocol getThriftTransportProtocol() {
         return this.thriftTransportProtocol;
     }
 
     /**
      * Set the thriftTransportProtocol property: The transport protocol to use in the Thrift layer.
-     *
+     * 
      * @param thriftTransportProtocol the thriftTransportProtocol value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setThriftTransportProtocol(HiveThriftTransportProtocol thriftTransportProtocol) {
         this.thriftTransportProtocol = thriftTransportProtocol;
         return this;
@@ -213,19 +250,21 @@ public class HiveLinkedService extends LinkedService {
 
     /**
      * Get the authenticationType property: The authentication method used to access the Hive server.
-     *
+     * 
      * @return the authenticationType value.
      */
+    @Generated
     public HiveAuthenticationType getAuthenticationType() {
         return this.authenticationType;
     }
 
     /**
      * Set the authenticationType property: The authentication method used to access the Hive server.
-     *
+     * 
      * @param authenticationType the authenticationType value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setAuthenticationType(HiveAuthenticationType authenticationType) {
         this.authenticationType = authenticationType;
         return this;
@@ -233,19 +272,21 @@ public class HiveLinkedService extends LinkedService {
 
     /**
      * Get the serviceDiscoveryMode property: true to indicate using the ZooKeeper service, false not.
-     *
+     * 
      * @return the serviceDiscoveryMode value.
      */
+    @Generated
     public Object getServiceDiscoveryMode() {
         return this.serviceDiscoveryMode;
     }
 
     /**
      * Set the serviceDiscoveryMode property: true to indicate using the ZooKeeper service, false not.
-     *
+     * 
      * @param serviceDiscoveryMode the serviceDiscoveryMode value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setServiceDiscoveryMode(Object serviceDiscoveryMode) {
         this.serviceDiscoveryMode = serviceDiscoveryMode;
         return this;
@@ -253,19 +294,21 @@ public class HiveLinkedService extends LinkedService {
 
     /**
      * Get the zooKeeperNameSpace property: The namespace on ZooKeeper under which Hive Server 2 nodes are added.
-     *
+     * 
      * @return the zooKeeperNameSpace value.
      */
+    @Generated
     public Object getZooKeeperNameSpace() {
         return this.zooKeeperNameSpace;
     }
 
     /**
      * Set the zooKeeperNameSpace property: The namespace on ZooKeeper under which Hive Server 2 nodes are added.
-     *
+     * 
      * @param zooKeeperNameSpace the zooKeeperNameSpace value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setZooKeeperNameSpace(Object zooKeeperNameSpace) {
         this.zooKeeperNameSpace = zooKeeperNameSpace;
         return this;
@@ -274,9 +317,10 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Get the useNativeQuery property: Specifies whether the driver uses native HiveQL queries,or converts them into an
      * equivalent form in HiveQL.
-     *
+     * 
      * @return the useNativeQuery value.
      */
+    @Generated
     public Object getUseNativeQuery() {
         return this.useNativeQuery;
     }
@@ -284,10 +328,11 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Set the useNativeQuery property: Specifies whether the driver uses native HiveQL queries,or converts them into an
      * equivalent form in HiveQL.
-     *
+     * 
      * @param useNativeQuery the useNativeQuery value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setUseNativeQuery(Object useNativeQuery) {
         this.useNativeQuery = useNativeQuery;
         return this;
@@ -295,19 +340,21 @@ public class HiveLinkedService extends LinkedService {
 
     /**
      * Get the username property: The user name that you use to access Hive Server.
-     *
+     * 
      * @return the username value.
      */
+    @Generated
     public Object getUsername() {
         return this.username;
     }
 
     /**
      * Set the username property: The user name that you use to access Hive Server.
-     *
+     * 
      * @param username the username value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setUsername(Object username) {
         this.username = username;
         return this;
@@ -315,19 +362,21 @@ public class HiveLinkedService extends LinkedService {
 
     /**
      * Get the password property: The password corresponding to the user name that you provided in the Username field.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: The password corresponding to the user name that you provided in the Username field.
-     *
+     * 
      * @param password the password value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -335,19 +384,21 @@ public class HiveLinkedService extends LinkedService {
 
     /**
      * Get the httpPath property: The partial URL corresponding to the Hive server.
-     *
+     * 
      * @return the httpPath value.
      */
+    @Generated
     public Object getHttpPath() {
         return this.httpPath;
     }
 
     /**
      * Set the httpPath property: The partial URL corresponding to the Hive server.
-     *
+     * 
      * @param httpPath the httpPath value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setHttpPath(Object httpPath) {
         this.httpPath = httpPath;
         return this;
@@ -356,9 +407,10 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Get the enableSsl property: Specifies whether the connections to the server are encrypted using SSL. The default
      * value is false.
-     *
+     * 
      * @return the enableSsl value.
      */
+    @Generated
     public Object getEnableSsl() {
         return this.enableSsl;
     }
@@ -366,12 +418,37 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Set the enableSsl property: Specifies whether the connections to the server are encrypted using SSL. The default
      * value is false.
-     *
+     * 
      * @param enableSsl the enableSsl value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setEnableSsl(Object enableSsl) {
         this.enableSsl = enableSsl;
+        return this;
+    }
+
+    /**
+     * Get the enableServerCertificateValidation property: Specifies whether the connections to the server will validate
+     * server certificate, the default value is True. Only used for Version 2.0.
+     * 
+     * @return the enableServerCertificateValidation value.
+     */
+    @Generated
+    public Object getEnableServerCertificateValidation() {
+        return this.enableServerCertificateValidation;
+    }
+
+    /**
+     * Set the enableServerCertificateValidation property: Specifies whether the connections to the server will validate
+     * server certificate, the default value is True. Only used for Version 2.0.
+     * 
+     * @param enableServerCertificateValidation the enableServerCertificateValidation value to set.
+     * @return the HiveLinkedService object itself.
+     */
+    @Generated
+    public HiveLinkedService setEnableServerCertificateValidation(Object enableServerCertificateValidation) {
+        this.enableServerCertificateValidation = enableServerCertificateValidation;
         return this;
     }
 
@@ -379,9 +456,10 @@ public class HiveLinkedService extends LinkedService {
      * Get the trustedCertPath property: The full path of the .pem file containing trusted CA certificates for verifying
      * the server when connecting over SSL. This property can only be set when using SSL on self-hosted IR. The default
      * value is the cacerts.pem file installed with the IR.
-     *
+     * 
      * @return the trustedCertPath value.
      */
+    @Generated
     public Object getTrustedCertPath() {
         return this.trustedCertPath;
     }
@@ -390,10 +468,11 @@ public class HiveLinkedService extends LinkedService {
      * Set the trustedCertPath property: The full path of the .pem file containing trusted CA certificates for verifying
      * the server when connecting over SSL. This property can only be set when using SSL on self-hosted IR. The default
      * value is the cacerts.pem file installed with the IR.
-     *
+     * 
      * @param trustedCertPath the trustedCertPath value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setTrustedCertPath(Object trustedCertPath) {
         this.trustedCertPath = trustedCertPath;
         return this;
@@ -402,9 +481,10 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Get the useSystemTrustStore property: Specifies whether to use a CA certificate from the system trust store or
      * from a specified PEM file. The default value is false.
-     *
+     * 
      * @return the useSystemTrustStore value.
      */
+    @Generated
     public Object getUseSystemTrustStore() {
         return this.useSystemTrustStore;
     }
@@ -412,10 +492,11 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Set the useSystemTrustStore property: Specifies whether to use a CA certificate from the system trust store or
      * from a specified PEM file. The default value is false.
-     *
+     * 
      * @param useSystemTrustStore the useSystemTrustStore value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setUseSystemTrustStore(Object useSystemTrustStore) {
         this.useSystemTrustStore = useSystemTrustStore;
         return this;
@@ -424,9 +505,10 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Get the allowHostNameCNMismatch property: Specifies whether to require a CA-issued SSL certificate name to match
      * the host name of the server when connecting over SSL. The default value is false.
-     *
+     * 
      * @return the allowHostNameCNMismatch value.
      */
+    @Generated
     public Object getAllowHostNameCNMismatch() {
         return this.allowHostNameCNMismatch;
     }
@@ -434,10 +516,11 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Set the allowHostNameCNMismatch property: Specifies whether to require a CA-issued SSL certificate name to match
      * the host name of the server when connecting over SSL. The default value is false.
-     *
+     * 
      * @param allowHostNameCNMismatch the allowHostNameCNMismatch value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setAllowHostNameCNMismatch(Object allowHostNameCNMismatch) {
         this.allowHostNameCNMismatch = allowHostNameCNMismatch;
         return this;
@@ -446,9 +529,10 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Get the allowSelfSignedServerCert property: Specifies whether to allow self-signed certificates from the server.
      * The default value is false.
-     *
+     * 
      * @return the allowSelfSignedServerCert value.
      */
+    @Generated
     public Object getAllowSelfSignedServerCert() {
         return this.allowSelfSignedServerCert;
     }
@@ -456,10 +540,11 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Set the allowSelfSignedServerCert property: Specifies whether to allow self-signed certificates from the server.
      * The default value is false.
-     *
+     * 
      * @param allowSelfSignedServerCert the allowSelfSignedServerCert value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setAllowSelfSignedServerCert(Object allowSelfSignedServerCert) {
         this.allowSelfSignedServerCert = allowSelfSignedServerCert;
         return this;
@@ -468,9 +553,10 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -478,40 +564,246 @@ public class HiveLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the HiveLinkedService object itself.
      */
+    @Generated
     public HiveLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public HiveLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HiveLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HiveLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HiveLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public HiveLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (host != null
+            || port != null
+            || serverType != null
+            || thriftTransportProtocol != null
+            || authenticationType != null
+            || serviceDiscoveryMode != null
+            || zooKeeperNameSpace != null
+            || useNativeQuery != null
+            || username != null
+            || password != null
+            || httpPath != null
+            || enableSsl != null
+            || enableServerCertificateValidation != null
+            || trustedCertPath != null
+            || useSystemTrustStore != null
+            || allowHostNameCNMismatch != null
+            || allowSelfSignedServerCert != null
+            || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("host", this.host);
+            if (this.port != null) {
+                jsonWriter.writeUntypedField("port", this.port);
+            }
+            jsonWriter.writeStringField("serverType", this.serverType == null ? null : this.serverType.toString());
+            jsonWriter.writeStringField("thriftTransportProtocol",
+                this.thriftTransportProtocol == null ? null : this.thriftTransportProtocol.toString());
+            jsonWriter.writeStringField("authenticationType",
+                this.authenticationType == null ? null : this.authenticationType.toString());
+            if (this.serviceDiscoveryMode != null) {
+                jsonWriter.writeUntypedField("serviceDiscoveryMode", this.serviceDiscoveryMode);
+            }
+            if (this.zooKeeperNameSpace != null) {
+                jsonWriter.writeUntypedField("zooKeeperNameSpace", this.zooKeeperNameSpace);
+            }
+            if (this.useNativeQuery != null) {
+                jsonWriter.writeUntypedField("useNativeQuery", this.useNativeQuery);
+            }
+            if (this.username != null) {
+                jsonWriter.writeUntypedField("username", this.username);
+            }
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.httpPath != null) {
+                jsonWriter.writeUntypedField("httpPath", this.httpPath);
+            }
+            if (this.enableSsl != null) {
+                jsonWriter.writeUntypedField("enableSsl", this.enableSsl);
+            }
+            if (this.enableServerCertificateValidation != null) {
+                jsonWriter.writeUntypedField("enableServerCertificateValidation",
+                    this.enableServerCertificateValidation);
+            }
+            if (this.trustedCertPath != null) {
+                jsonWriter.writeUntypedField("trustedCertPath", this.trustedCertPath);
+            }
+            if (this.useSystemTrustStore != null) {
+                jsonWriter.writeUntypedField("useSystemTrustStore", this.useSystemTrustStore);
+            }
+            if (this.allowHostNameCNMismatch != null) {
+                jsonWriter.writeUntypedField("allowHostNameCNMismatch", this.allowHostNameCNMismatch);
+            }
+            if (this.allowSelfSignedServerCert != null) {
+                jsonWriter.writeUntypedField("allowSelfSignedServerCert", this.allowSelfSignedServerCert);
+            }
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of HiveLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of HiveLinkedService if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the HiveLinkedService.
+     */
+    @Generated
+    public static HiveLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            HiveLinkedService deserializedHiveLinkedService = new HiveLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedHiveLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedHiveLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedHiveLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedHiveLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedHiveLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedHiveLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("host".equals(fieldName)) {
+                            deserializedHiveLinkedService.host = reader.readUntyped();
+                        } else if ("port".equals(fieldName)) {
+                            deserializedHiveLinkedService.port = reader.readUntyped();
+                        } else if ("serverType".equals(fieldName)) {
+                            deserializedHiveLinkedService.serverType = HiveServerType.fromString(reader.getString());
+                        } else if ("thriftTransportProtocol".equals(fieldName)) {
+                            deserializedHiveLinkedService.thriftTransportProtocol
+                                = HiveThriftTransportProtocol.fromString(reader.getString());
+                        } else if ("authenticationType".equals(fieldName)) {
+                            deserializedHiveLinkedService.authenticationType
+                                = HiveAuthenticationType.fromString(reader.getString());
+                        } else if ("serviceDiscoveryMode".equals(fieldName)) {
+                            deserializedHiveLinkedService.serviceDiscoveryMode = reader.readUntyped();
+                        } else if ("zooKeeperNameSpace".equals(fieldName)) {
+                            deserializedHiveLinkedService.zooKeeperNameSpace = reader.readUntyped();
+                        } else if ("useNativeQuery".equals(fieldName)) {
+                            deserializedHiveLinkedService.useNativeQuery = reader.readUntyped();
+                        } else if ("username".equals(fieldName)) {
+                            deserializedHiveLinkedService.username = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedHiveLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("httpPath".equals(fieldName)) {
+                            deserializedHiveLinkedService.httpPath = reader.readUntyped();
+                        } else if ("enableSsl".equals(fieldName)) {
+                            deserializedHiveLinkedService.enableSsl = reader.readUntyped();
+                        } else if ("enableServerCertificateValidation".equals(fieldName)) {
+                            deserializedHiveLinkedService.enableServerCertificateValidation = reader.readUntyped();
+                        } else if ("trustedCertPath".equals(fieldName)) {
+                            deserializedHiveLinkedService.trustedCertPath = reader.readUntyped();
+                        } else if ("useSystemTrustStore".equals(fieldName)) {
+                            deserializedHiveLinkedService.useSystemTrustStore = reader.readUntyped();
+                        } else if ("allowHostNameCNMismatch".equals(fieldName)) {
+                            deserializedHiveLinkedService.allowHostNameCNMismatch = reader.readUntyped();
+                        } else if ("allowSelfSignedServerCert".equals(fieldName)) {
+                            deserializedHiveLinkedService.allowSelfSignedServerCert = reader.readUntyped();
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedHiveLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedHiveLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedHiveLinkedService;
+        });
     }
 }

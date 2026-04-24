@@ -5,32 +5,38 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.eventgrid.fluent.models.NamespaceTopicInner;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.util.List;
 
-/** Result of the List namespace topics operation. */
+/**
+ * Result of the List namespace topics operation.
+ */
 @Fluent
-public final class NamespaceTopicsListResult {
+public final class NamespaceTopicsListResult implements JsonSerializable<NamespaceTopicsListResult> {
     /*
      * A collection of namespace topics.
      */
-    @JsonProperty(value = "value")
     private List<NamespaceTopicInner> value;
 
     /*
      * A link for the next page of namespace topics.
      */
-    @JsonProperty(value = "nextLink")
     private String nextLink;
 
-    /** Creates an instance of NamespaceTopicsListResult class. */
+    /**
+     * Creates an instance of NamespaceTopicsListResult class.
+     */
     public NamespaceTopicsListResult() {
     }
 
     /**
      * Get the value property: A collection of namespace topics.
-     *
+     * 
      * @return the value value.
      */
     public List<NamespaceTopicInner> value() {
@@ -39,7 +45,7 @@ public final class NamespaceTopicsListResult {
 
     /**
      * Set the value property: A collection of namespace topics.
-     *
+     * 
      * @param value the value value to set.
      * @return the NamespaceTopicsListResult object itself.
      */
@@ -50,7 +56,7 @@ public final class NamespaceTopicsListResult {
 
     /**
      * Get the nextLink property: A link for the next page of namespace topics.
-     *
+     * 
      * @return the nextLink value.
      */
     public String nextLink() {
@@ -59,7 +65,7 @@ public final class NamespaceTopicsListResult {
 
     /**
      * Set the nextLink property: A link for the next page of namespace topics.
-     *
+     * 
      * @param nextLink the nextLink value to set.
      * @return the NamespaceTopicsListResult object itself.
      */
@@ -70,12 +76,53 @@ public final class NamespaceTopicsListResult {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (value() != null) {
             value().forEach(e -> e.validate());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("value", this.value, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("nextLink", this.nextLink);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of NamespaceTopicsListResult from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of NamespaceTopicsListResult if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the NamespaceTopicsListResult.
+     */
+    public static NamespaceTopicsListResult fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            NamespaceTopicsListResult deserializedNamespaceTopicsListResult = new NamespaceTopicsListResult();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("value".equals(fieldName)) {
+                    List<NamespaceTopicInner> value
+                        = reader.readArray(reader1 -> NamespaceTopicInner.fromJson(reader1));
+                    deserializedNamespaceTopicsListResult.value = value;
+                } else if ("nextLink".equals(fieldName)) {
+                    deserializedNamespaceTopicsListResult.nextLink = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedNamespaceTopicsListResult;
+        });
     }
 }

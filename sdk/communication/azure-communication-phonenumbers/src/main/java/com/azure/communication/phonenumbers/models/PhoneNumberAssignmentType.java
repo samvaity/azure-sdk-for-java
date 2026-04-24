@@ -4,34 +4,53 @@
 
 package com.azure.communication.phonenumbers.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for PhoneNumberAssignmentType. */
+/**
+ * Represents the assignment type of the offering.
+ */
 public final class PhoneNumberAssignmentType extends ExpandableStringEnum<PhoneNumberAssignmentType> {
-    /** Static value person for PhoneNumberAssignmentType. */
+    /**
+     * Static value person for PhoneNumberAssignmentType.
+     */
+    @Generated
     public static final PhoneNumberAssignmentType PERSON = fromString("person");
 
-    /** Static value application for PhoneNumberAssignmentType. */
+    /**
+     * Static value application for PhoneNumberAssignmentType.
+     */
+    @Generated
     public static final PhoneNumberAssignmentType APPLICATION = fromString("application");
 
     /**
+     * Creates a new instance of PhoneNumberAssignmentType value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public PhoneNumberAssignmentType() {
+    }
+
+    /**
      * Creates or finds a PhoneNumberAssignmentType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding PhoneNumberAssignmentType.
      */
-    @JsonCreator
+    @Generated
     public static PhoneNumberAssignmentType fromString(String name) {
         return fromString(name, PhoneNumberAssignmentType.class);
     }
 
-    /** 
-     * Gives a collestion ov PhoneNumberAssignmentType
+    /**
+     * Gets known PhoneNumberAssignmentType values.
      * 
      * @return known PhoneNumberAssignmentType values.
      */
+    @Generated
     public static Collection<PhoneNumberAssignmentType> values() {
         return values(PhoneNumberAssignmentType.class);
     }

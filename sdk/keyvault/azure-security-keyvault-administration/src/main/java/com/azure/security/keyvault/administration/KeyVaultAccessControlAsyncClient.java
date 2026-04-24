@@ -8,16 +8,18 @@ import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.PagedFlux;
-import com.azure.core.http.rest.PagedResponse;
+import com.azure.core.http.rest.RequestOptions;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
-import com.azure.security.keyvault.administration.implementation.KeyVaultAccessControlClientImpl;
+import com.azure.security.keyvault.administration.implementation.KeyVaultAdministrationClientImpl;
 import com.azure.security.keyvault.administration.implementation.KeyVaultAdministrationUtils;
-import com.azure.security.keyvault.administration.implementation.KeyVaultErrorCodeStrings;
+import com.azure.security.keyvault.administration.implementation.models.RoleAssignment;
 import com.azure.security.keyvault.administration.implementation.models.RoleAssignmentCreateParameters;
+import com.azure.security.keyvault.administration.implementation.models.RoleDefinition;
 import com.azure.security.keyvault.administration.implementation.models.RoleDefinitionCreateParameters;
 import com.azure.security.keyvault.administration.models.KeyVaultAdministrationException;
 import com.azure.security.keyvault.administration.models.KeyVaultRoleAssignment;
@@ -31,7 +33,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.azure.core.util.FluxUtil.monoError;
+import static com.azure.core.util.FluxUtil.pagedFluxError;
 import static com.azure.core.util.FluxUtil.withContext;
+import static com.azure.security.keyvault.administration.KeyVaultAdministrationUtil.mapPagedResponse;
 import static com.azure.security.keyvault.administration.KeyVaultAdministrationUtil.swallowExceptionForStatusCodeAsync;
 import static com.azure.security.keyvault.administration.KeyVaultAdministrationUtil.validateAndGetRoleAssignmentCreateParameters;
 import static com.azure.security.keyvault.administration.KeyVaultAdministrationUtil.validateAndGetRoleDefinitionCreateParameters;
@@ -40,22 +44,179 @@ import static com.azure.security.keyvault.administration.KeyVaultAdministrationU
 
 /**
  * The {@link KeyVaultAccessControlAsyncClient} provides asynchronous methods to view and manage Role Based Access
- * for the Azure Key Vault. The client supports creating, listing, updating, and deleting
+ * for a key vault. The client supports creating, listing, updating, and deleting
  * {@link KeyVaultRoleDefinition role definitions} and {@link KeyVaultRoleAssignment role assignments}.
  *
- * <p>Instances of this client are obtained by calling the {@link KeyVaultAccessControlClientBuilder#buildAsyncClient()}
- * method on a {@link KeyVaultAccessControlClientBuilder} object.</p>
+ * <h2>Getting Started</h2>
  *
- * <p><strong>Samples to construct an async client</strong></p>
- * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.instantiation -->
+ * <p>In order to interact with the Azure Key Vault service, you will need to create an instance of the
+ * {@link KeyVaultAccessControlAsyncClient} class, a vault url and a credential object.</p>
+ *
+ * <p>The examples shown in this document use a credential object named DefaultAzureCredential for authentication,
+ * which is appropriate for most scenarios, including local development and production environments. Additionally,
+ * we recommend using a
+ * <a href="https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/">
+ * managed identity</a> for authentication in production environments.
+ * You can find more information on different ways of authenticating and their corresponding credential types in the
+ * <a href="https://learn.microsoft.com/java/api/overview/azure/identity-readme?view=azure-java-stable">
+ * Azure Identity documentation"</a>.</p>
+ *
+ * <p><strong>Sample: Construct Asynchronous Access Control Client</strong></p>
+ *
+ * <p>The following code sample demonstrates the creation of a {@link KeyVaultAccessControlAsyncClient}, using the
+ * {@link KeyVaultAccessControlClientBuilder} to configure it.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.instantiation -->
  * <pre>
  * KeyVaultAccessControlAsyncClient keyVaultAccessControlAsyncClient = new KeyVaultAccessControlClientBuilder&#40;&#41;
  *     .vaultUrl&#40;&quot;&lt;your-managed-hsm-url&gt;&quot;&#41;
  *     .credential&#40;new DefaultAzureCredentialBuilder&#40;&#41;.build&#40;&#41;&#41;
  *     .buildAsyncClient&#40;&#41;;
  * </pre>
- * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.instantiation -->
+ * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.instantiation -->
  *
+ * <br/>
+ *
+ * <hr/>
+ *
+ * <h2>Set a Role Definition</h2>
+ * The {@link KeyVaultAccessControlAsyncClient} can be used to set a role definition in the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to asynchronously create a role definition in the key vault, using the
+ * {@link KeyVaultAccessControlAsyncClient#setRoleDefinition(KeyVaultRoleScope)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlClient.setRoleDefinition#KeyVaultRoleScope -->
+ * <pre>
+ * KeyVaultRoleDefinition roleDefinition = keyVaultAccessControlClient.setRoleDefinition&#40;KeyVaultRoleScope.GLOBAL&#41;;
+ *
+ * System.out.printf&#40;&quot;Created role definition with randomly generated name '%s' and role name '%s'.%n&quot;,
+ *     roleDefinition.getName&#40;&#41;, roleDefinition.getRoleName&#40;&#41;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlClient.setRoleDefinition#KeyVaultRoleScope -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link KeyVaultAccessControlClient}.</p>
+ *
+ * <br/>
+ *
+ * <hr/>
+ *
+ * <h2>Get a Role Definition</h2>
+ * The {@link KeyVaultAccessControlClient} can be used to retrieve a role definition from the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to asynchronously retrieve a role definition from the key vault, using
+ * the {@link KeyVaultAccessControlClient#getRoleDefinition(KeyVaultRoleScope, String)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlClient.getRoleDefinition#KeyVaultRoleScope-String -->
+ * <pre>
+ * String roleDefinitionName = &quot;de8df120-987e-4477-b9cc-570fd219a62c&quot;;
+ * KeyVaultRoleDefinition roleDefinition =
+ *     keyVaultAccessControlClient.getRoleDefinition&#40;KeyVaultRoleScope.GLOBAL, roleDefinitionName&#41;;
+ *
+ * System.out.printf&#40;&quot;Retrieved role definition with name '%s' and role name '%s'.%n&quot;, roleDefinition.getName&#40;&#41;,
+ *     roleDefinition.getRoleName&#40;&#41;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlClient.getRoleDefinition#KeyVaultRoleScope-String -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link KeyVaultAccessControlClient}.</p>
+ *
+ * <br/>
+ *
+ * <hr/>
+ *
+ * <h2>Delete a Role Definition</h2>
+ * The {@link KeyVaultAccessControlAsyncClient} can be used to delete a role definition from the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to asynchronously delete a role definition from the key vault, using
+ * the {@link KeyVaultAccessControlAsyncClient#deleteRoleDefinition(KeyVaultRoleScope, String)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlClient.deleteRoleDefinition#KeyVaultRoleScope-String -->
+ * <pre>
+ * String roleDefinitionName = &quot;6a709e6e-8964-4012-a99b-6b0131e8ce40&quot;;
+ *
+ * keyVaultAccessControlClient.deleteRoleDefinition&#40;KeyVaultRoleScope.GLOBAL, roleDefinitionName&#41;;
+ *
+ * System.out.printf&#40;&quot;Deleted role definition with name '%s'.%n&quot;, roleDefinitionName&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlClient.deleteRoleDefinition#KeyVaultRoleScope-String -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link KeyVaultAccessControlClient}.</p>
+ *
+ * <br/>
+ *
+ * <hr/>
+ *
+ * <h2>Create a Role Assignment</h2>
+ * The {@link KeyVaultAccessControlAsyncClient} can be used to set a role assignment in the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to asynchronously create a role assignment in the key vault, using the
+ * {@link KeyVaultAccessControlAsyncClient#createRoleAssignment(KeyVaultRoleScope, String, String)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlClient.createRoleAssignment#KeyVaultRoleScope-String-String -->
+ * <pre>
+ * String roleDefinitionId = &quot;b0b43a39-920c-475b-b34c-32ecc2bbb0ea&quot;;
+ * String servicePrincipalId = &quot;169d6a86-61b3-4615-ac7e-2da09edfeed4&quot;;
+ * KeyVaultRoleAssignment roleAssignment =
+ *     keyVaultAccessControlClient.createRoleAssignment&#40;KeyVaultRoleScope.GLOBAL, roleDefinitionId,
+ *         servicePrincipalId&#41;;
+ *
+ * System.out.printf&#40;&quot;Created role assignment with randomly generated name '%s' for principal with id '%s'.%n&quot;,
+ *     roleAssignment.getName&#40;&#41;, roleAssignment.getProperties&#40;&#41;.getPrincipalId&#40;&#41;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlClient.createRoleAssignment#KeyVaultRoleScope-String-String -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link KeyVaultAccessControlClient}.</p>
+ *
+ * <br/>
+ *
+ * <hr/>
+ *
+ * <h2>Get a Role Definition</h2>
+ * The {@link KeyVaultAccessControlClient} can be used to retrieve a role assignment from the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to asynchronously retrieve a role assignment from the key vault, using
+ * the {@link KeyVaultAccessControlClient#getRoleDefinition(KeyVaultRoleScope, String)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlClient.getRoleAssignment#KeyVaultRoleScope-String -->
+ * <pre>
+ * String roleAssignmentName = &quot;06d1ae8b-0791-4f02-b976-f631251f5a95&quot;;
+ * KeyVaultRoleAssignment roleAssignment =
+ *     keyVaultAccessControlClient.getRoleAssignment&#40;KeyVaultRoleScope.GLOBAL, roleAssignmentName&#41;;
+ *
+ * System.out.printf&#40;&quot;Retrieved role assignment with name '%s'.%n&quot;, roleAssignment.getName&#40;&#41;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlClient.getRoleAssignment#KeyVaultRoleScope-String -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link KeyVaultAccessControlClient}.</p>
+ *
+ * <br/>
+ *
+ * <hr/>
+ *
+ * <h2>Delete a Role Definition</h2>
+ * The {@link KeyVaultAccessControlAsyncClient} can be used to delete a role assignment from the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to asynchronously delete a role assignment from the key vault, using
+ * the {@link KeyVaultAccessControlAsyncClient#deleteRoleDefinition(KeyVaultRoleScope, String)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlClient.deleteRoleAssignment#KeyVaultRoleScope-String -->
+ * <pre>
+ * String roleAssignmentName = &quot;c3ed874a-64a9-4a87-8581-2a1ad84b9ddb&quot;;
+ *
+ * keyVaultAccessControlClient.deleteRoleAssignment&#40;KeyVaultRoleScope.GLOBAL, roleAssignmentName&#41;;
+ *
+ * System.out.printf&#40;&quot;Deleted role assignment with name '%s'.%n&quot;, roleAssignmentName&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlClient.deleteRoleAssignment#KeyVaultRoleScope-String -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link KeyVaultAccessControlClient}.</p>
+ *
+ * @see com.azure.security.keyvault.administration
  * @see KeyVaultAccessControlClientBuilder
  */
 @ServiceClient(builder = KeyVaultAccessControlClientBuilder.class, isAsync = true)
@@ -68,17 +229,12 @@ public final class KeyVaultAccessControlAsyncClient {
     /**
      * The underlying AutoRest client used to interact with the Key Vault service.
      */
-    private final KeyVaultAccessControlClientImpl clientImpl;
+    private final KeyVaultAdministrationClientImpl clientImpl;
 
     /**
      * The Key Vault URL this client is associated to.
      */
     private final String vaultUrl;
-
-    /**
-     * The Key Vault Administration Service version to use with this client.
-     */
-    private final String serviceVersion;
 
     /**
      * The {@link HttpPipeline} powering this client.
@@ -89,15 +245,14 @@ public final class KeyVaultAccessControlAsyncClient {
      * Package private constructor to be used by {@link KeyVaultAccessControlClientBuilder}.
      */
     KeyVaultAccessControlAsyncClient(URL vaultUrl, HttpPipeline httpPipeline,
-                                     KeyVaultAdministrationServiceVersion serviceVersion) {
-        Objects.requireNonNull(vaultUrl,
-            KeyVaultErrorCodeStrings.getErrorString(KeyVaultErrorCodeStrings.VAULT_END_POINT_REQUIRED));
+        KeyVaultAdministrationServiceVersion serviceVersion) {
+
+        Objects.requireNonNull(vaultUrl, KeyVaultAdministrationUtil.VAULT_END_POINT_REQUIRED);
 
         this.vaultUrl = vaultUrl.toString();
-        this.serviceVersion = serviceVersion.getVersion();
         this.pipeline = httpPipeline;
 
-        clientImpl = new KeyVaultAccessControlClientImpl(httpPipeline, this.serviceVersion);
+        clientImpl = new KeyVaultAdministrationClientImpl(httpPipeline, this.vaultUrl, serviceVersion);
     }
 
     /**
@@ -125,13 +280,13 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Lists all {@link KeyVaultRoleDefinition role definitions}. Prints out the details of the retrieved
      * {@link KeyVaultRoleDefinition role definitions}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.listRoleDefinitions#KeyVaultRoleScope -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.listRoleDefinitions#KeyVaultRoleScope -->
      * <pre>
      * keyVaultAccessControlAsyncClient.listRoleDefinitions&#40;KeyVaultRoleScope.GLOBAL&#41;
      *     .subscribe&#40;roleDefinition -&gt;
      *         System.out.printf&#40;&quot;Retrieved role definition with name '%s'.%n&quot;, roleDefinition.getName&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.listRoleDefinitions#KeyVaultRoleScope -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.listRoleDefinitions#KeyVaultRoleScope -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleDefinition role definitions}.
      *
@@ -143,94 +298,24 @@ public final class KeyVaultAccessControlAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<KeyVaultRoleDefinition> listRoleDefinitions(KeyVaultRoleScope roleScope) {
-        return new PagedFlux<>(
-            () -> withContext(context -> listRoleDefinitionsFirstPage(vaultUrl, roleScope, context)),
-            continuationToken -> withContext(context -> listRoleDefinitionsNextPage(continuationToken, context)));
-    }
-
-    /**
-     * Lists all {@link KeyVaultRoleDefinition role definitions} that are applicable at the given
-     * {@link KeyVaultRoleScope role scope} and above.
-     *
-     * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleDefinition role definitions}.
-     * @param context Additional {@link Context} that is passed through the HTTP pipeline during the service call.
-     *
-     * @return A {@link PagedFlux} containing the {@link KeyVaultRoleDefinition role definitions} for the given
-     * {@link KeyVaultRoleScope role scope}.
-     *
-     * @throws KeyVaultAdministrationException If the given {@code roleScope} is invalid.
-     * @throws NullPointerException If the {@link KeyVaultRoleScope role scope} is {@code null}.
-     */
-    PagedFlux<KeyVaultRoleDefinition> listRoleDefinitions(KeyVaultRoleScope roleScope, Context context) {
-        return new PagedFlux<>(
-            () -> listRoleDefinitionsFirstPage(vaultUrl, roleScope, context),
-            continuationToken -> listRoleDefinitionsNextPage(continuationToken, context));
-    }
-
-    /**
-     * Lists all {@link KeyVaultRoleDefinition role definitions} in the first page that are applicable at the given
-     * {@link KeyVaultRoleScope role scope} and above.
-     *
-     * @param vaultUrl The URL for the Key Vault this client is associated with.
-     * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleDefinition role definition}.
-     * @param context Additional context that is passed through the HTTP pipeline during the service call.
-     *
-     * @return A {@link Mono} containing a {@link PagedResponse} of {@link KeyVaultRoleDefinition role definitions}
-     * for the given {@link KeyVaultRoleScope role scope} from the first page of results.
-     *
-     * @throws KeyVaultAdministrationException If the given {@code vaultUrl} or {@code roleScope} are invalid.
-     * @throws NullPointerException If the {@link KeyVaultRoleScope role scope} is {@code null}.
-     */
-    Mono<PagedResponse<KeyVaultRoleDefinition>> listRoleDefinitionsFirstPage(String vaultUrl,
-                                                                             KeyVaultRoleScope roleScope,
-                                                                             Context context) {
         try {
             Objects.requireNonNull(roleScope,
-                String.format(KeyVaultErrorCodeStrings.getErrorString(KeyVaultErrorCodeStrings.PARAMETER_REQUIRED),
-                    "'roleScope'"));
+                String.format(KeyVaultAdministrationUtil.PARAMETER_REQUIRED, "'roleScope'"));
 
-            return clientImpl.getRoleDefinitions()
-                .listSinglePageAsync(vaultUrl, roleScope.toString(), null,
-                    context)
-                .doOnRequest(ignored -> LOGGER.verbose("Listing role definitions for roleScope - {}", roleScope))
-                .doOnSuccess(response -> LOGGER.verbose("Listed role definitions for roleScope - {}", roleScope))
-                .doOnError(error -> LOGGER.warning("Failed to list role definitions for roleScope - {}", roleScope,
-                    error))
-                .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
-                .map(KeyVaultAdministrationUtil::transformRoleDefinitionsPagedResponse);
+            return new PagedFlux<>(
+                () -> withContext(context -> clientImpl.getRoleDefinitions()
+                    .listSinglePageAsync(roleScope.toString(), new RequestOptions().setContext(context))
+                    .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
+                    .map(pagedResponse -> mapPagedResponse(pagedResponse,
+                        binaryData -> KeyVaultAdministrationUtil
+                            .roleDefinitionToKeyVaultRoleDefinition(binaryData.toObject(RoleDefinition.class))))),
+                nextLink -> withContext(context -> clientImpl.getRoleDefinitions()
+                    .listNextSinglePageAsync(nextLink, new RequestOptions().setContext(context))
+                    .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
+                    .map(pagedResponse -> mapPagedResponse(pagedResponse, binaryData -> KeyVaultAdministrationUtil
+                        .roleDefinitionToKeyVaultRoleDefinition(binaryData.toObject(RoleDefinition.class))))));
         } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
-    }
-
-    /**
-     * Lists all {@link KeyVaultRoleDefinition role definitions} given by the {@code nextPageLink} that was retrieved
-     * from a call to
-     * {@link KeyVaultAccessControlAsyncClient#listRoleDefinitionsFirstPage(String, KeyVaultRoleScope, Context)}.
-     *
-     * @param continuationToken The {@link PagedResponse#getContinuationToken() continuationToken} from a previous,
-     * successful call to one of the {@code listKeyVaultRoleDefinitions} operations.
-     * @param context Additional context that is passed through the HTTP pipeline during the service call.
-     *
-     * @return A {@link Mono} containing a {@link PagedResponse} of {@link KeyVaultRoleDefinition role definitions}
-     * for the given {@link KeyVaultRoleScope role scope} from the next page of results.
-     *
-     * @throws KeyVaultAdministrationException If the given {@code continuationToken} is invalid.
-     */
-    Mono<PagedResponse<KeyVaultRoleDefinition>> listRoleDefinitionsNextPage(String continuationToken, Context context) {
-        try {
-            return clientImpl.getRoleDefinitions()
-                .listNextSinglePageAsync(continuationToken, vaultUrl, context)
-                .doOnRequest(ignored ->
-                    LOGGER.verbose("Listing next role definitions page - Page {}", continuationToken))
-                .doOnSuccess(response ->
-                    LOGGER.verbose("Listed next role definitions page - Page {}", continuationToken))
-                .doOnError(error ->
-                    LOGGER.warning("Failed to list next role definitions page - Page {}", continuationToken, error))
-                .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
-                .map(KeyVaultAdministrationUtil::transformRoleDefinitionsPagedResponse);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
+            return pagedFluxError(LOGGER, e);
         }
     }
 
@@ -240,14 +325,14 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Creates a {@link KeyVaultRoleDefinition role definition} with a randomly generated name. Prints out the
      * details of the created {@link KeyVaultRoleDefinition role definition}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.setRoleDefinition#KeyVaultRoleScope -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.setRoleDefinition#KeyVaultRoleScope -->
      * <pre>
      * keyVaultAccessControlAsyncClient.setRoleDefinition&#40;KeyVaultRoleScope.GLOBAL&#41;
      *     .subscribe&#40;roleDefinition -&gt;
      *         System.out.printf&#40;&quot;Created role definition with randomly generated name '%s' and role name '%s'.%n&quot;,
      *             roleDefinition.getName&#40;&#41;, roleDefinition.getRoleName&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.setRoleDefinition#KeyVaultRoleScope -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.setRoleDefinition#KeyVaultRoleScope -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleDefinition role definition}.
      * Managed HSM only supports '/'.
@@ -269,7 +354,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Creates or updates a {@link KeyVaultRoleDefinition role definition} with a given generated name. Prints out
      * the details of the created {@link KeyVaultRoleDefinition role definition}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.setRoleDefinition#KeyVaultRoleScope-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.setRoleDefinition#KeyVaultRoleScope-String -->
      * <pre>
      * String myRoleDefinitionName = &quot;504a3d11-5a63-41a9-b603-41bdf88df03e&quot;;
      *
@@ -278,7 +363,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *         System.out.printf&#40;&quot;Set role definition with name '%s' and role name '%s'.%n&quot;, roleDefinition.getName&#40;&#41;,
      *             roleDefinition.getRoleName&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.setRoleDefinition#KeyVaultRoleScope-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.setRoleDefinition#KeyVaultRoleScope-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleDefinition role definition}.
      * Managed HSM only supports '/'.
@@ -303,7 +388,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Creates or updates a {@link KeyVaultRoleDefinition role definition}. Prints out the details of the
      * {@link Response HTTP response} and the created {@link KeyVaultRoleDefinition role definition}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.setRoleDefinitionWithResponse#SetRoleDefinitionOptions -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.setRoleDefinitionWithResponse#SetRoleDefinitionOptions -->
      * <pre>
      * String roleDefinitionName = &quot;9de303d3-6ea8-4b8f-a20b-18e67f77e42a&quot;;
      *
@@ -335,7 +420,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *             + &quot; name '%s' was set.%n&quot;, response.getStatusCode&#40;&#41;, response.getValue&#40;&#41;.getName&#40;&#41;,
      *             response.getValue&#40;&#41;.getRoleName&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.setRoleDefinitionWithResponse#SetRoleDefinitionOptions -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.setRoleDefinitionWithResponse#SetRoleDefinitionOptions -->
      *
      * @param options Object representing the configurable options to create or update a
      * {@link KeyVaultRoleDefinition role definition}.
@@ -367,21 +452,18 @@ public final class KeyVaultAccessControlAsyncClient {
      * in the {@link SetRoleDefinitionOptions options} object are {@code null}.
      */
     Mono<Response<KeyVaultRoleDefinition>> setRoleDefinitionWithResponse(SetRoleDefinitionOptions options,
-                                                                         Context context) {
+        Context context) {
+
         try {
             RoleDefinitionCreateParameters parameters = validateAndGetRoleDefinitionCreateParameters(options);
 
             return clientImpl.getRoleDefinitions()
-                .createOrUpdateWithResponseAsync(vaultUrl, options.getRoleScope().toString(),
-                    options.getRoleDefinitionName(), parameters,
-                    context)
-                .doOnRequest(ignored ->
-                    LOGGER.verbose("Creating role definition - {}", options.getRoleDefinitionName()))
-                .doOnSuccess(response -> LOGGER.verbose("Created role definition - {}", response.getValue().getName()))
-                .doOnError(error ->
-                    LOGGER.warning("Failed to create role definition - {}", options.getRoleDefinitionName(), error))
+                .createOrUpdateWithResponseAsync(options.getRoleScope().toString(), options.getRoleDefinitionName(),
+                    BinaryData.fromObject(parameters), new RequestOptions().setContext(context))
                 .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
-                .map(KeyVaultAdministrationUtil::transformRoleDefinitionResponse);
+                .map(response -> KeyVaultAdministrationUtil.transformBinaryDataResponse(response,
+                    binaryData -> KeyVaultAdministrationUtil
+                        .roleDefinitionToKeyVaultRoleDefinition(binaryData.toObject(RoleDefinition.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -393,7 +475,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Gets a {@link KeyVaultRoleDefinition role definition}. Prints out the details of the retrieved
      * {@link KeyVaultRoleDefinition role definition}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.getRoleDefinition#KeyVaultRoleScope-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.getRoleDefinition#KeyVaultRoleScope-String -->
      * <pre>
      * String roleDefinitionName = &quot;8f90b099-7361-4db6-8321-719adaf6e4ca&quot;;
      *
@@ -402,7 +484,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *         System.out.printf&#40;&quot;Retrieved role definition with name '%s' and role name '%s'.%n&quot;,
      *             roleDefinition.getName&#40;&#41;, roleDefinition.getRoleName&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.getRoleDefinition#KeyVaultRoleScope-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.getRoleDefinition#KeyVaultRoleScope-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleDefinition role definition}.
      * @param roleDefinitionName The name used of the {@link KeyVaultRoleDefinition role definition}.
@@ -425,7 +507,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Gets a {@link KeyVaultRoleDefinition role definition}. Prints out the details of the
      * {@link Response HTTP response} and the retrieved {@link KeyVaultRoleDefinition role definition}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.getRoleDefinitionWithResponse#KeyVaultRoleScope-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.getRoleDefinitionWithResponse#KeyVaultRoleScope-String -->
      * <pre>
      * String myRoleDefinitionName = &quot;0877b4ee-6275-4559-89f1-c289060ef398&quot;;
      *
@@ -435,7 +517,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *             + &quot; name '%s' was retrieved.%n&quot;, response.getStatusCode&#40;&#41;, response.getValue&#40;&#41;.getName&#40;&#41;,
      *             response.getValue&#40;&#41;.getRoleName&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.getRoleDefinitionWithResponse#KeyVaultRoleScope-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.getRoleDefinitionWithResponse#KeyVaultRoleScope-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleDefinition role definition}.
      * @param roleDefinitionName The name of the {@link KeyVaultRoleDefinition role definition}.
@@ -450,7 +532,7 @@ public final class KeyVaultAccessControlAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultRoleDefinition>> getRoleDefinitionWithResponse(KeyVaultRoleScope roleScope,
-                                                                                String roleDefinitionName) {
+        String roleDefinitionName) {
         return withContext(context -> getRoleDefinitionWithResponse(roleScope, roleDefinitionName, context));
     }
 
@@ -470,20 +552,18 @@ public final class KeyVaultAccessControlAsyncClient {
      * {@code null}.
      */
     Mono<Response<KeyVaultRoleDefinition>> getRoleDefinitionWithResponse(KeyVaultRoleScope roleScope,
-                                                                         String roleDefinitionName, Context context) {
+        String roleDefinitionName, Context context) {
+
         try {
             validateRoleDefinitionParameters(roleScope, roleDefinitionName);
 
             return clientImpl.getRoleDefinitions()
-                .getWithResponseAsync(vaultUrl, roleScope.toString(), roleDefinitionName,
-                    context)
-                .doOnRequest(ignored -> LOGGER.verbose("Retrieving role definition - {}", roleDefinitionName))
-                .doOnSuccess(response ->
-                    LOGGER.verbose("Retrieved role definition - {}", response.getValue().getName()))
-                .doOnError(error ->
-                    LOGGER.warning("Failed to retrieved role definition - {}", roleDefinitionName, error))
+                .getWithResponseAsync(roleScope.toString(), roleDefinitionName,
+                    new RequestOptions().setContext(context))
                 .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
-                .map(KeyVaultAdministrationUtil::transformRoleDefinitionResponse);
+                .map(response -> KeyVaultAdministrationUtil.transformBinaryDataResponse(response,
+                    binaryData -> KeyVaultAdministrationUtil
+                        .roleDefinitionToKeyVaultRoleDefinition(binaryData.toObject(RoleDefinition.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -494,14 +574,14 @@ public final class KeyVaultAccessControlAsyncClient {
      *
      * <p><strong>Code Samples</strong></p>
      * <p>Deletes a {@link KeyVaultRoleDefinition role definition}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.deleteRoleDefinition#KeyVaultRoleScope-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.deleteRoleDefinition#KeyVaultRoleScope-String -->
      * <pre>
      * String roleDefinitionName = &quot;e3c7c51a-8abd-4b1b-9201-48ded34d0358&quot;;
      *
      * keyVaultAccessControlAsyncClient.deleteRoleDefinition&#40;KeyVaultRoleScope.GLOBAL, roleDefinitionName&#41;
      *     .subscribe&#40;unused -&gt; System.out.printf&#40;&quot;Deleted role definition with name '%s'.%n&quot;, roleDefinitionName&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.deleteRoleDefinition#KeyVaultRoleScope-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.deleteRoleDefinition#KeyVaultRoleScope-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleDefinition role definition}.
      * Managed HSM only supports '/'.
@@ -524,7 +604,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Deletes a {@link KeyVaultRoleDefinition role definition}. Prints out the details of the
      * {@link Response HTTP response}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.deleteRoleDefinitionWithResponse#KeyVaultRoleScope-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.deleteRoleDefinitionWithResponse#KeyVaultRoleScope-String -->
      * <pre>
      * String myRoleDefinitionName = &quot;ccaafb00-31fb-40fe-9ccc-39a2ad2af082&quot;;
      *
@@ -533,7 +613,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *         System.out.printf&#40;&quot;Response successful with status code: %d. Role definition with name '%s' was&quot;
      *             + &quot; deleted.%n&quot;, response.getStatusCode&#40;&#41;, myRoleDefinitionName&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.deleteRoleDefinitionWithResponse#KeyVaultRoleScope-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.deleteRoleDefinitionWithResponse#KeyVaultRoleScope-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleDefinition role definition}.
      * @param roleDefinitionName The name of the {@link KeyVaultRoleDefinition role definition}.
@@ -546,7 +626,8 @@ public final class KeyVaultAccessControlAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Void>> deleteRoleDefinitionWithResponse(KeyVaultRoleScope roleScope,
-                                                                 String roleDefinitionName) {
+        String roleDefinitionName) {
+
         return withContext(context -> deleteRoleDefinitionWithResponse(roleScope, roleDefinitionName, context));
     }
 
@@ -563,22 +644,19 @@ public final class KeyVaultAccessControlAsyncClient {
      * @throws NullPointerException If the {@link KeyVaultRoleScope role scope} or {@link String roleDefinitionName} are
      * {@code null}.
      */
-    Mono<Response<Void>> deleteRoleDefinitionWithResponse(KeyVaultRoleScope roleScope,
-                                                                            String roleDefinitionName,
-                                                                            Context context) {
+    Mono<Response<Void>> deleteRoleDefinitionWithResponse(KeyVaultRoleScope roleScope, String roleDefinitionName,
+        Context context) {
+
         try {
             validateRoleDefinitionParameters(roleScope, roleDefinitionName);
 
             return clientImpl.getRoleDefinitions()
-                .deleteWithResponseAsync(vaultUrl, roleScope.toString(), roleDefinitionName,
-                    context)
-                .doOnRequest(ignored -> LOGGER.verbose("Deleting role definition - {}", roleDefinitionName))
-                .doOnSuccess(response -> LOGGER.verbose("Deleted role definition - {}", response.getValue().getName()))
-                .doOnError(error -> LOGGER.warning("Failed to delete role definition - {}", roleDefinitionName, error))
+                .deleteWithResponseAsync(roleScope.toString(), roleDefinitionName,
+                    new RequestOptions().setContext(context))
                 .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
                 .map(response -> (Response<Void>) new SimpleResponse<Void>(response, null))
-                .onErrorResume(KeyVaultAdministrationException.class, e ->
-                    swallowExceptionForStatusCodeAsync(404, e, LOGGER));
+                .onErrorResume(KeyVaultAdministrationException.class,
+                    e -> swallowExceptionForStatusCodeAsync(404, e, LOGGER));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -598,94 +676,24 @@ public final class KeyVaultAccessControlAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<KeyVaultRoleAssignment> listRoleAssignments(KeyVaultRoleScope roleScope) {
-        return new PagedFlux<>(
-            () -> withContext(context -> listRoleAssignmentsFirstPage(vaultUrl, roleScope, context)),
-            continuationToken -> withContext(context -> listRoleAssignmentsNextPage(continuationToken, context)));
-    }
-
-    /**
-     * Lists all {@link KeyVaultRoleAssignment role assignments} that are applicable at the given
-     * {@link KeyVaultRoleScope role scope} and above.
-     *
-     * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleAssignment role assignment}.
-     * @param context Additional context that is passed through the HTTP pipeline during the service call.
-     *
-     * @return A {@link PagedFlux} containing the {@link KeyVaultRoleAssignment role assignments} for the given
-     * {@link KeyVaultRoleScope role scope}.
-     *
-     * @throws KeyVaultAdministrationException If the given {@code roleScope} is invalid.
-     * @throws NullPointerException If the {@link KeyVaultRoleScope role scope} is {@code null}.
-     */
-    PagedFlux<KeyVaultRoleAssignment> listRoleAssignments(KeyVaultRoleScope roleScope, Context context) {
-        return new PagedFlux<>(
-            () -> listRoleAssignmentsFirstPage(vaultUrl, roleScope, context),
-            continuationToken -> listRoleAssignmentsNextPage(continuationToken, context));
-    }
-
-    /**
-     * Lists all {@link KeyVaultRoleAssignment role assignments} in the first page that are applicable at the given
-     * {@link KeyVaultRoleScope role scope} and above.
-     *
-     * @param vaultUrl The URL for the Key Vault this client is associated with.
-     * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleAssignment role assignment}.
-     * @param context Additional context that is passed through the HTTP pipeline during the service call.
-     *
-     * @return A {@link Mono} containing a {@link PagedResponse} of {@link KeyVaultRoleAssignment role assignments}
-     * in the given {@link KeyVaultRoleScope role scope} from the first page of results.
-     *
-     * @throws KeyVaultAdministrationException If the given {@code vaultUrl} or {@code roleScope} are invalid.
-     * @throws NullPointerException If the {@link KeyVaultRoleScope role scope} is {@code null}.
-     */
-    Mono<PagedResponse<KeyVaultRoleAssignment>> listRoleAssignmentsFirstPage(String vaultUrl,
-                                                                             KeyVaultRoleScope roleScope,
-                                                                             Context context) {
         try {
             Objects.requireNonNull(roleScope,
-                String.format(KeyVaultErrorCodeStrings.getErrorString(KeyVaultErrorCodeStrings.PARAMETER_REQUIRED),
-                    "'roleScope'"));
+                String.format(KeyVaultAdministrationUtil.PARAMETER_REQUIRED, "'roleScope'"));
 
-            return clientImpl.getRoleAssignments()
-                .listForScopeSinglePageAsync(vaultUrl, roleScope.toString(), null,
-                    context)
-                .doOnRequest(ignored -> LOGGER.verbose("Listing role assignments for roleScope - {}", roleScope))
-                .doOnSuccess(response -> LOGGER.verbose("Listed role assignments for roleScope - {}", roleScope))
-                .doOnError(error -> LOGGER.warning("Failed to list role assignments for roleScope - {}", roleScope,
-                    error))
-                .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
-                .map(KeyVaultAdministrationUtil::transformRoleAssignmentsPagedResponse);
+            return new PagedFlux<>(
+                () -> withContext(context -> clientImpl.getRoleAssignments()
+                    .listForScopeSinglePageAsync(roleScope.toString(), new RequestOptions().setContext(context))
+                    .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
+                    .map(pagedResponse -> mapPagedResponse(pagedResponse,
+                        binaryData -> KeyVaultAdministrationUtil
+                            .roleAssignmentToKeyVaultRoleAssignment(binaryData.toObject(RoleAssignment.class))))),
+                nextLink -> withContext(context -> clientImpl.getRoleAssignments()
+                    .listForScopeNextSinglePageAsync(nextLink, new RequestOptions().setContext(context))
+                    .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
+                    .map(pagedResponse -> mapPagedResponse(pagedResponse, binaryData -> KeyVaultAdministrationUtil
+                        .roleAssignmentToKeyVaultRoleAssignment(binaryData.toObject(RoleAssignment.class))))));
         } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
-    }
-
-    /**
-     * Lists all {@link KeyVaultRoleAssignment role assignments} given by the {@code nextPageLink} that was
-     * retrieved from a call to {@link KeyVaultAccessControlAsyncClient#listRoleAssignments(KeyVaultRoleScope)}.
-     *
-     * @param continuationToken The {@link PagedResponse#getContinuationToken() continuationToken} from a previous,
-     * successful call to one of the {@code listKeyVaultRoleAssignments} operations.
-     * @param context Additional context that is passed through the HTTP pipeline during the service call.
-     *
-     * @return A {@link Mono} containing a {@link PagedResponse} of {@link KeyVaultRoleAssignment role assignments}
-     * for the given {@link KeyVaultRoleScope role scope} from the first page of results.
-     *
-     * @throws KeyVaultAdministrationException If the given {@code continuationToken} is invalid.
-     */
-    Mono<PagedResponse<KeyVaultRoleAssignment>> listRoleAssignmentsNextPage(String continuationToken, Context context) {
-        try {
-            return clientImpl.getRoleAssignments()
-                .listForScopeNextSinglePageAsync(continuationToken, vaultUrl,
-                    context)
-                .doOnRequest(ignored ->
-                    LOGGER.verbose("Listing next role assignments page - Page {}", continuationToken))
-                .doOnSuccess(response ->
-                    LOGGER.verbose("Listed next role assignments page - Page {}", continuationToken))
-                .doOnError(error -> LOGGER.warning("Failed to list next role assignments page - Page {}",
-                    continuationToken, error))
-                .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
-                .map(KeyVaultAdministrationUtil::transformRoleAssignmentsPagedResponse);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
+            return pagedFluxError(LOGGER, e);
         }
     }
 
@@ -695,7 +703,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Creates a {@link KeyVaultRoleAssignment role assignment} with a randomly generated name. Prints out the
      * details of the created {@link KeyVaultRoleAssignment role assignment}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.createRoleAssignment#KeyVaultRoleScope-String-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.createRoleAssignment#KeyVaultRoleScope-String-String -->
      * <pre>
      * String roleDefinitionId = &quot;142e42c1-ab29-4dc7-9dfa-8fd7c0815128&quot;;
      * String servicePrincipalId = &quot;07dca82e-b625-4a60-977b-859d2a162ca7&quot;;
@@ -705,7 +713,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *         System.out.printf&#40;&quot;Created role assignment with randomly generated name '%s' for principal with id&quot;
      *             + &quot;'%s'.%n&quot;, roleAssignment.getName&#40;&#41;, roleAssignment.getProperties&#40;&#41;.getPrincipalId&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.createRoleAssignment#KeyVaultRoleScope-String-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.createRoleAssignment#KeyVaultRoleScope-String-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleAssignment role assignment}
      * to create.
@@ -721,7 +729,8 @@ public final class KeyVaultAccessControlAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultRoleAssignment> createRoleAssignment(KeyVaultRoleScope roleScope, String roleDefinitionId,
-                                                             String principalId) {
+        String principalId) {
+
         return createRoleAssignment(roleScope, roleDefinitionId, principalId, UUID.randomUUID().toString());
     }
 
@@ -731,7 +740,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Creates a {@link KeyVaultRoleAssignment role assignment}. Prints out the details of the created
      * {@link KeyVaultRoleAssignment role assignment}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.createRoleAssignment#KeyVaultRoleScope-String-String-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.createRoleAssignment#KeyVaultRoleScope-String-String-String -->
      * <pre>
      * String myRoleDefinitionId = &quot;e1ca67d0-4332-465c-b9cd-894b2834401b&quot;;
      * String myServicePrincipalId = &quot;31af81fe-6123-4838-92c0-7c2531ec13d7&quot;;
@@ -742,7 +751,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *         System.out.printf&#40;&quot;Created role assignment with name '%s' for principal with id '%s'.%n&quot;,
      *             roleAssignment.getName&#40;&#41;, roleAssignment.getProperties&#40;&#41;.getPrincipalId&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.createRoleAssignment#KeyVaultRoleScope-String-String-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.createRoleAssignment#KeyVaultRoleScope-String-String-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleAssignment role assignment}
      * to create.
@@ -760,7 +769,8 @@ public final class KeyVaultAccessControlAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultRoleAssignment> createRoleAssignment(KeyVaultRoleScope roleScope, String roleDefinitionId,
-                                                             String principalId, String roleAssignmentName) {
+        String principalId, String roleAssignmentName) {
+
         return createRoleAssignmentWithResponse(roleScope, roleDefinitionId, principalId, roleAssignmentName)
             .flatMap(FluxUtil::toMono);
     }
@@ -771,7 +781,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Creates a {@link KeyVaultRoleAssignment role assignment}. Prints out details of the
      * {@link Response HTTP response} and the created {@link KeyVaultRoleAssignment role assignment}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.createRoleAssignmentWithResponse#KeyVaultRoleScope-String-String-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.createRoleAssignmentWithResponse#KeyVaultRoleScope-String-String-String -->
      * <pre>
      * String someRoleDefinitionId = &quot;686b0f78-5012-4def-8a70-eba36aa54d3d&quot;;
      * String someServicePrincipalId = &quot;345ec980-904b-4238-aafc-1eaeed3e23cf&quot;;
@@ -786,7 +796,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *             createdRoleAssignment.getName&#40;&#41;, createdRoleAssignment.getProperties&#40;&#41;.getPrincipalId&#40;&#41;&#41;;
      *     &#125;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.createRoleAssignmentWithResponse#KeyVaultRoleScope-String-String-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.createRoleAssignmentWithResponse#KeyVaultRoleScope-String-String-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleAssignment role assignment}
      * to create.
@@ -805,11 +815,10 @@ public final class KeyVaultAccessControlAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultRoleAssignment>> createRoleAssignmentWithResponse(KeyVaultRoleScope roleScope,
-                                                                                   String roleDefinitionId,
-                                                                                   String principalId,
-                                                                                   String roleAssignmentName) {
-        return withContext(context ->
-            createRoleAssignmentWithResponse(roleScope, roleDefinitionId, principalId, roleAssignmentName, context));
+        String roleDefinitionId, String principalId, String roleAssignmentName) {
+
+        return withContext(context -> createRoleAssignmentWithResponse(roleScope, roleDefinitionId, principalId,
+            roleAssignmentName, context));
     }
 
     /**
@@ -832,20 +841,19 @@ public final class KeyVaultAccessControlAsyncClient {
      * {@link String roleDefinitionId} or {@link String principalId} are {@code null}.
      */
     Mono<Response<KeyVaultRoleAssignment>> createRoleAssignmentWithResponse(KeyVaultRoleScope roleScope,
-                                                                            String roleDefinitionId, String principalId,
-                                                                            String roleAssignmentName,
-                                                                            Context context) {
+        String roleDefinitionId, String principalId, String roleAssignmentName, Context context) {
+
         try {
-            RoleAssignmentCreateParameters parameters = validateAndGetRoleAssignmentCreateParameters(roleScope, roleDefinitionId, principalId, roleAssignmentName);
+            RoleAssignmentCreateParameters parameters = validateAndGetRoleAssignmentCreateParameters(roleScope,
+                roleDefinitionId, principalId, roleAssignmentName);
 
             return clientImpl.getRoleAssignments()
-                .createWithResponseAsync(vaultUrl, roleScope.toString(), roleAssignmentName, parameters,
-                    context)
-                .doOnRequest(ignored -> LOGGER.verbose("Creating role assignment - {}", roleAssignmentName))
-                .doOnSuccess(response -> LOGGER.verbose("Created role assignment - {}", response.getValue().getName()))
-                .doOnError(error -> LOGGER.warning("Failed to create role assignment - {}", roleAssignmentName, error))
+                .createWithResponseAsync(roleScope.toString(), roleAssignmentName, BinaryData.fromObject(parameters),
+                    new RequestOptions().setContext(context))
                 .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
-                .map(KeyVaultAdministrationUtil::transformRoleAssignmentResponse);
+                .map(response -> KeyVaultAdministrationUtil.transformBinaryDataResponse(response,
+                    binaryData -> KeyVaultAdministrationUtil
+                        .roleAssignmentToKeyVaultRoleAssignment(binaryData.toObject(RoleAssignment.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -857,7 +865,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Gets a {@link KeyVaultRoleAssignment role assignment}. Prints out details of the retrieved
      * {@link KeyVaultRoleAssignment role assignment}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.getRoleAssignment#KeyVaultRoleScope-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.getRoleAssignment#KeyVaultRoleScope-String -->
      * <pre>
      * String roleAssignmentName = &quot;c5a305c0-e17a-40f5-af79-73801bdd8867&quot;;
      *
@@ -865,7 +873,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *     .subscribe&#40;roleAssignment -&gt;
      *         System.out.printf&#40;&quot;Retrieved role assignment with name '%s'.%n&quot;, roleAssignment.getName&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.getRoleAssignment#KeyVaultRoleScope-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.getRoleAssignment#KeyVaultRoleScope-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleAssignment role assignment}.
      * @param roleAssignmentName The name used of the {@link KeyVaultRoleAssignment role assignment}.
@@ -888,7 +896,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Gets a {@link KeyVaultRoleAssignment role assignment}. Prints out details of the
      * {@link Response HTTP response} and the retrieved {@link KeyVaultRoleAssignment role assignment}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.getRoleAssignmentWithResponse#KeyVaultRoleScope-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.getRoleAssignmentWithResponse#KeyVaultRoleScope-String -->
      * <pre>
      * String myRoleAssignmentName = &quot;76ccbf52-4d49-4fcc-ad3f-044c254be114&quot;;
      *
@@ -897,7 +905,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *         System.out.printf&#40;&quot;Response successful with status code: %d. Role assignment with name '%s' was&quot;
      *             + &quot; retrieved.%n&quot;, response.getStatusCode&#40;&#41;, response.getValue&#40;&#41;.getName&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.getRoleAssignmentWithResponse#KeyVaultRoleScope-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.getRoleAssignmentWithResponse#KeyVaultRoleScope-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleAssignment role assignment}.
      * @param roleAssignmentName The name of the {@link KeyVaultRoleAssignment role assignment}.
@@ -912,7 +920,8 @@ public final class KeyVaultAccessControlAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultRoleAssignment>> getRoleAssignmentWithResponse(KeyVaultRoleScope roleScope,
-                                                                                String roleAssignmentName) {
+        String roleAssignmentName) {
+
         return withContext(context -> getRoleAssignmentWithResponse(roleScope, roleAssignmentName, context));
     }
 
@@ -932,19 +941,18 @@ public final class KeyVaultAccessControlAsyncClient {
      * {@code null}.
      */
     Mono<Response<KeyVaultRoleAssignment>> getRoleAssignmentWithResponse(KeyVaultRoleScope roleScope,
-                                                                         String roleAssignmentName, Context context) {
+        String roleAssignmentName, Context context) {
+
         try {
             validateRoleAssignmentParameters(roleScope, roleAssignmentName);
+
             return clientImpl.getRoleAssignments()
-                .getWithResponseAsync(vaultUrl, roleScope.toString(), roleAssignmentName,
-                    context)
-                .doOnRequest(ignored -> LOGGER.verbose("Retrieving role assignment - {}", roleAssignmentName))
-                .doOnSuccess(response ->
-                    LOGGER.verbose("Retrieved role assignment - {}", response.getValue().getName()))
-                .doOnError(error ->
-                    LOGGER.warning("Failed to retrieve role assignment - {}", roleAssignmentName, error))
+                .getWithResponseAsync(roleScope.toString(), roleAssignmentName,
+                    new RequestOptions().setContext(context))
                 .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
-                .map(KeyVaultAdministrationUtil::transformRoleAssignmentResponse);
+                .map(response -> KeyVaultAdministrationUtil.transformBinaryDataResponse(response,
+                    binaryData -> KeyVaultAdministrationUtil
+                        .roleAssignmentToKeyVaultRoleAssignment(binaryData.toObject(RoleAssignment.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -955,7 +963,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *
      * <p><strong>Code Samples</strong></p>
      * <p>Deletes a {@link KeyVaultRoleAssignment role assignment}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.deleteRoleAssignment#KeyVaultRoleScope-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.deleteRoleAssignment#KeyVaultRoleScope-String -->
      * <pre>
      * String roleAssignmentName = &quot;f05d11ce-578a-4524-950c-fb4c53e5fb96&quot;;
      *
@@ -963,7 +971,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *     .subscribe&#40;unused -&gt;
      *         System.out.printf&#40;&quot;Deleted role assignment with name '%s'.%n&quot;, roleAssignmentName&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.deleteRoleAssignment#KeyVaultRoleScope-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.deleteRoleAssignment#KeyVaultRoleScope-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleAssignment role assignment}.
      * @param roleAssignmentName The name of the {@link KeyVaultRoleAssignment role assignment}.
@@ -985,7 +993,7 @@ public final class KeyVaultAccessControlAsyncClient {
      * <p><strong>Code Samples</strong></p>
      * <p>Deletes a {@link KeyVaultRoleAssignment role assignment}. Prints out details of the
      * {@link Response HTTP response}.</p>
-     * <!-- src_embed com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.deleteRoleAssignmentWithResponse#KeyVaultRoleScope-String -->
+     * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.deleteRoleAssignmentWithResponse#KeyVaultRoleScope-String -->
      * <pre>
      * String myRoleAssignmentName = &quot;06aaea13-e4f3-4d3f-8a93-088dff6e90ed&quot;;
      *
@@ -994,7 +1002,7 @@ public final class KeyVaultAccessControlAsyncClient {
      *         System.out.printf&#40;&quot;Response successful with status code: %d. Role assignment with name '%s' was&quot;
      *             + &quot; deleted.%n&quot;, response.getStatusCode&#40;&#41;, myRoleAssignmentName&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.security.keyvault.administration.keyVaultAccessControlAsyncClient.deleteRoleAssignmentWithResponse#KeyVaultRoleScope-String -->
+     * <!-- end com.azure.security.keyvault.administration.KeyVaultAccessControlAsyncClient.deleteRoleAssignmentWithResponse#KeyVaultRoleScope-String -->
      *
      * @param roleScope The {@link KeyVaultRoleScope role scope} of the {@link KeyVaultRoleAssignment role assignment}.
      * @param roleAssignmentName The name of the {@link KeyVaultRoleAssignment role assignment}.
@@ -1007,7 +1015,8 @@ public final class KeyVaultAccessControlAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Void>> deleteRoleAssignmentWithResponse(KeyVaultRoleScope roleScope,
-                                                                 String roleAssignmentName) {
+        String roleAssignmentName) {
+
         return withContext(context -> deleteRoleAssignmentWithResponse(roleScope, roleAssignmentName, context));
     }
 
@@ -1025,20 +1034,18 @@ public final class KeyVaultAccessControlAsyncClient {
      * {@code null}.
      */
     Mono<Response<Void>> deleteRoleAssignmentWithResponse(KeyVaultRoleScope roleScope, String roleAssignmentName,
-                                                          Context context) {
+        Context context) {
+
         try {
             validateRoleAssignmentParameters(roleScope, roleAssignmentName);
 
             return clientImpl.getRoleAssignments()
-                .deleteWithResponseAsync(vaultUrl, roleScope.toString(), roleAssignmentName,
-                    context)
-                .doOnRequest(ignored -> LOGGER.verbose("Deleting role assignment - {}", roleAssignmentName))
-                .doOnSuccess(response -> LOGGER.verbose("Deleted role assignment - {}", response.getValue().getName()))
-                .doOnError(error -> LOGGER.warning("Failed to delete role assignment - {}", roleAssignmentName, error))
+                .deleteWithResponseAsync(roleScope.toString(), roleAssignmentName,
+                    new RequestOptions().setContext(context))
                 .onErrorMap(KeyVaultAdministrationUtils::mapThrowableToKeyVaultAdministrationException)
                 .map(response -> (Response<Void>) new SimpleResponse<Void>(response, null))
-                .onErrorResume(KeyVaultAdministrationException.class, e ->
-                    swallowExceptionForStatusCodeAsync(404, e, LOGGER));
+                .onErrorResume(KeyVaultAdministrationException.class,
+                    e -> swallowExceptionForStatusCodeAsync(404, e, LOGGER));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }

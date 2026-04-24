@@ -48,6 +48,10 @@ public final class ClusterMetricsConfigurationImpl
         }
     }
 
+    public String etag() {
+        return this.innerModel().etag();
+    }
+
     public ExtendedLocation extendedLocation() {
         return this.innerModel().extendedLocation();
     }
@@ -116,6 +120,14 @@ public final class ClusterMetricsConfigurationImpl
 
     private String metricsConfigurationName;
 
+    private String createIfMatch;
+
+    private String createIfNoneMatch;
+
+    private String updateIfMatch;
+
+    private String updateIfNoneMatch;
+
     private ClusterMetricsConfigurationPatchParameters updateMetricsConfigurationUpdateParameters;
 
     public ClusterMetricsConfigurationImpl withExistingCluster(String resourceGroupName, String clusterName) {
@@ -125,91 +137,76 @@ public final class ClusterMetricsConfigurationImpl
     }
 
     public ClusterMetricsConfiguration create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getMetricsConfigurations()
-                .createOrUpdate(
-                    resourceGroupName, clusterName, metricsConfigurationName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getMetricsConfigurations()
+            .createOrUpdate(resourceGroupName, clusterName, metricsConfigurationName, this.innerModel(), createIfMatch,
+                createIfNoneMatch, Context.NONE);
         return this;
     }
 
     public ClusterMetricsConfiguration create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getMetricsConfigurations()
-                .createOrUpdate(resourceGroupName, clusterName, metricsConfigurationName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getMetricsConfigurations()
+            .createOrUpdate(resourceGroupName, clusterName, metricsConfigurationName, this.innerModel(), createIfMatch,
+                createIfNoneMatch, context);
         return this;
     }
 
-    ClusterMetricsConfigurationImpl(
-        String name, com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
+    ClusterMetricsConfigurationImpl(String name,
+        com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerObject = new ClusterMetricsConfigurationInner();
         this.serviceManager = serviceManager;
         this.metricsConfigurationName = name;
+        this.createIfMatch = null;
+        this.createIfNoneMatch = null;
     }
 
     public ClusterMetricsConfigurationImpl update() {
+        this.updateIfMatch = null;
+        this.updateIfNoneMatch = null;
         this.updateMetricsConfigurationUpdateParameters = new ClusterMetricsConfigurationPatchParameters();
         return this;
     }
 
     public ClusterMetricsConfiguration apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getMetricsConfigurations()
-                .update(
-                    resourceGroupName,
-                    clusterName,
-                    metricsConfigurationName,
-                    updateMetricsConfigurationUpdateParameters,
-                    Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getMetricsConfigurations()
+            .update(resourceGroupName, clusterName, metricsConfigurationName, updateIfMatch, updateIfNoneMatch,
+                updateMetricsConfigurationUpdateParameters, Context.NONE);
         return this;
     }
 
     public ClusterMetricsConfiguration apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getMetricsConfigurations()
-                .update(
-                    resourceGroupName,
-                    clusterName,
-                    metricsConfigurationName,
-                    updateMetricsConfigurationUpdateParameters,
-                    context);
+        this.innerObject = serviceManager.serviceClient()
+            .getMetricsConfigurations()
+            .update(resourceGroupName, clusterName, metricsConfigurationName, updateIfMatch, updateIfNoneMatch,
+                updateMetricsConfigurationUpdateParameters, context);
         return this;
     }
 
-    ClusterMetricsConfigurationImpl(
-        ClusterMetricsConfigurationInner innerObject,
+    ClusterMetricsConfigurationImpl(ClusterMetricsConfigurationInner innerObject,
         com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.clusterName = Utils.getValueFromIdByName(innerObject.id(), "clusters");
-        this.metricsConfigurationName = Utils.getValueFromIdByName(innerObject.id(), "metricsConfigurations");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.clusterName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "clusters");
+        this.metricsConfigurationName
+            = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "metricsConfigurations");
     }
 
     public ClusterMetricsConfiguration refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getMetricsConfigurations()
-                .getWithResponse(resourceGroupName, clusterName, metricsConfigurationName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getMetricsConfigurations()
+            .getWithResponse(resourceGroupName, clusterName, metricsConfigurationName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public ClusterMetricsConfiguration refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getMetricsConfigurations()
-                .getWithResponse(resourceGroupName, clusterName, metricsConfigurationName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getMetricsConfigurations()
+            .getWithResponse(resourceGroupName, clusterName, metricsConfigurationName, context)
+            .getValue();
         return this;
     }
 
@@ -253,12 +250,32 @@ public final class ClusterMetricsConfigurationImpl
         }
     }
 
+    public ClusterMetricsConfigurationImpl withIfMatch(String ifMatch) {
+        if (isInCreateMode()) {
+            this.createIfMatch = ifMatch;
+            return this;
+        } else {
+            this.updateIfMatch = ifMatch;
+            return this;
+        }
+    }
+
+    public ClusterMetricsConfigurationImpl withIfNoneMatch(String ifNoneMatch) {
+        if (isInCreateMode()) {
+            this.createIfNoneMatch = ifNoneMatch;
+            return this;
+        } else {
+            this.updateIfNoneMatch = ifNoneMatch;
+            return this;
+        }
+    }
+
     public ClusterMetricsConfigurationImpl withCollectionInterval(Long collectionInterval) {
         this.updateMetricsConfigurationUpdateParameters.withCollectionInterval(collectionInterval);
         return this;
     }
 
     private boolean isInCreateMode() {
-        return this.innerModel().id() == null;
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

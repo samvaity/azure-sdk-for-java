@@ -46,23 +46,28 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ReplicationRecoveryPlansClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ReplicationRecoveryPlansClient.
+ */
 public final class ReplicationRecoveryPlansClientImpl implements ReplicationRecoveryPlansClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ReplicationRecoveryPlansService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final SiteRecoveryManagementClientImpl client;
 
     /**
      * Initializes an instance of ReplicationRecoveryPlansClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ReplicationRecoveryPlansClientImpl(SiteRecoveryManagementClientImpl client) {
-        this.service =
-            RestProxy
-                .create(ReplicationRecoveryPlansService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service = RestProxy.create(ReplicationRecoveryPlansService.class, client.getHttpPipeline(),
+            client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -73,355 +78,243 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
     @Host("{$host}")
     @ServiceInterface(name = "SiteRecoveryManageme")
     public interface ReplicationRecoveryPlansService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<RecoveryPlanCollection>> list(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<RecoveryPlanCollection>> list(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<RecoveryPlanInner>> get(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("recoveryPlanName") String recoveryPlanName, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<RecoveryPlanInner>> get(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> create(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("recoveryPlanName") String recoveryPlanName,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") CreateRecoveryPlanInput input, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}")
+        @ExpectedResponses({ 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> create(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> delete(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("recoveryPlanName") String recoveryPlanName, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> update(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("recoveryPlanName") String recoveryPlanName,
-            @BodyParam("application/json") CreateRecoveryPlanInput input,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") UpdateRecoveryPlanInput input, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}")
-        @ExpectedResponses({202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/failoverCancel")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> delete(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> failoverCancel(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("recoveryPlanName") String recoveryPlanName, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/failoverCommit")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> failoverCommit(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("recoveryPlanName") String recoveryPlanName, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/plannedFailover")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> plannedFailover(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("recoveryPlanName") String recoveryPlanName,
+            @BodyParam("application/json") RecoveryPlanPlannedFailoverInput input, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Patch(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/reProtect")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> update(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> reprotect(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("recoveryPlanName") String recoveryPlanName, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/testFailover")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> testFailover(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("recoveryPlanName") String recoveryPlanName,
-            @BodyParam("application/json") UpdateRecoveryPlanInput input,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") RecoveryPlanTestFailoverInput input, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/failoverCancel")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/testFailoverCleanup")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> failoverCancel(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("recoveryPlanName") String recoveryPlanName,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/failoverCommit")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> failoverCommit(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("recoveryPlanName") String recoveryPlanName,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/plannedFailover")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> plannedFailover(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("recoveryPlanName") String recoveryPlanName,
-            @BodyParam("application/json") RecoveryPlanPlannedFailoverInput input,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/reProtect")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> reprotect(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("recoveryPlanName") String recoveryPlanName,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/testFailover")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> testFailover(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("recoveryPlanName") String recoveryPlanName,
-            @BodyParam("application/json") RecoveryPlanTestFailoverInput input,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/testFailoverCleanup")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> testFailoverCleanup(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> testFailoverCleanup(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("recoveryPlanName") String recoveryPlanName,
             @BodyParam("application/json") RecoveryPlanTestFailoverCleanupInput input,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/unplannedFailover")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationRecoveryPlans/{recoveryPlanName}/unplannedFailover")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> unplannedFailover(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> unplannedFailover(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("recoveryPlanName") String recoveryPlanName,
             @BodyParam("application/json") RecoveryPlanUnplannedFailoverInput input,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<RecoveryPlanCollection>> listNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<RecoveryPlanCollection>> listNext(@PathParam(value = "nextLink", encoded = true) String nextLink,
+            @HostParam("$host") String endpoint, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets the list of recovery plans.
-     *
-     * <p>Lists the recovery plans in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the recovery plans in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan collection details along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return recovery plan collection details along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<RecoveryPlanInner>> listSinglePageAsync(String resourceName, String resourceGroupName) {
+    private Mono<PagedResponse<RecoveryPlanInner>> listSinglePageAsync(String resourceGroupName, String resourceName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            accept,
-                            context))
-            .<PagedResponse<RecoveryPlanInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.list(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), accept, context))
+            .<PagedResponse<RecoveryPlanInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the list of recovery plans.
-     *
-     * <p>Lists the recovery plans in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the recovery plans in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan collection details along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return recovery plan collection details along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<RecoveryPlanInner>> listSinglePageAsync(
-        String resourceName, String resourceGroupName, Context context) {
+    private Mono<PagedResponse<RecoveryPlanInner>> listSinglePageAsync(String resourceGroupName, String resourceName,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .list(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+            .list(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+                this.client.getSubscriptionId(), accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 
     /**
      * Gets the list of recovery plans.
-     *
-     * <p>Lists the recovery plans in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the recovery plans in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return recovery plan collection details as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<RecoveryPlanInner> listAsync(String resourceName, String resourceGroupName) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(resourceName, resourceGroupName), nextLink -> listNextSinglePageAsync(nextLink));
+    private PagedFlux<RecoveryPlanInner> listAsync(String resourceGroupName, String resourceName) {
+        return new PagedFlux<>(() -> listSinglePageAsync(resourceGroupName, resourceName),
+            nextLink -> listNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets the list of recovery plans.
-     *
-     * <p>Lists the recovery plans in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the recovery plans in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -429,36 +322,35 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan collection details as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<RecoveryPlanInner> listAsync(String resourceName, String resourceGroupName, Context context) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(resourceName, resourceGroupName, context),
+    private PagedFlux<RecoveryPlanInner> listAsync(String resourceGroupName, String resourceName, Context context) {
+        return new PagedFlux<>(() -> listSinglePageAsync(resourceGroupName, resourceName, context),
             nextLink -> listNextSinglePageAsync(nextLink, context));
     }
 
     /**
      * Gets the list of recovery plans.
-     *
-     * <p>Lists the recovery plans in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the recovery plans in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return recovery plan collection details as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<RecoveryPlanInner> list(String resourceName, String resourceGroupName) {
-        return new PagedIterable<>(listAsync(resourceName, resourceGroupName));
+    public PagedIterable<RecoveryPlanInner> list(String resourceGroupName, String resourceName) {
+        return new PagedIterable<>(listAsync(resourceGroupName, resourceName));
     }
 
     /**
      * Gets the list of recovery plans.
-     *
-     * <p>Lists the recovery plans in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the recovery plans in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -466,17 +358,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan collection details as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<RecoveryPlanInner> list(String resourceName, String resourceGroupName, Context context) {
-        return new PagedIterable<>(listAsync(resourceName, resourceGroupName, context));
+    public PagedIterable<RecoveryPlanInner> list(String resourceGroupName, String resourceName, Context context) {
+        return new PagedIterable<>(listAsync(resourceGroupName, resourceName, context));
     }
 
     /**
      * Gets the requested recovery plan.
-     *
-     * <p>Gets the details of the recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of the recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Name of the recovery plan.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -484,26 +376,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the details of the recovery plan along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<RecoveryPlanInner>> getWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
+    private Mono<Response<RecoveryPlanInner>> getWithResponseAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -511,28 +399,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), recoveryPlanName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the requested recovery plan.
-     *
-     * <p>Gets the details of the recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of the recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Name of the recovery plan.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -541,26 +419,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the details of the recovery plan along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<RecoveryPlanInner>> getWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
+    private Mono<Response<RecoveryPlanInner>> getWithResponseAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -568,25 +442,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                accept,
-                context);
+        return service.get(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), recoveryPlanName, accept, context);
     }
 
     /**
      * Gets the requested recovery plan.
-     *
-     * <p>Gets the details of the recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of the recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Name of the recovery plan.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -594,18 +460,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the details of the recovery plan on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> getAsync(String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return getWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName)
+    private Mono<RecoveryPlanInner> getAsync(String resourceGroupName, String resourceName, String recoveryPlanName) {
+        return getWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the requested recovery plan.
-     *
-     * <p>Gets the details of the recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of the recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Name of the recovery plan.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -614,18 +480,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the details of the recovery plan along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<RecoveryPlanInner> getWithResponse(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return getWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, context).block();
+    public Response<RecoveryPlanInner> getWithResponse(String resourceGroupName, String resourceName,
+        String recoveryPlanName, Context context) {
+        return getWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, context).block();
     }
 
     /**
      * Gets the requested recovery plan.
-     *
-     * <p>Gets the details of the recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of the recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Name of the recovery plan.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -633,17 +499,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the details of the recovery plan.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner get(String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return getWithResponse(resourceName, resourceGroupName, recoveryPlanName, Context.NONE).getValue();
+    public RecoveryPlanInner get(String resourceGroupName, String resourceName, String recoveryPlanName) {
+        return getWithResponse(resourceGroupName, resourceName, recoveryPlanName, Context.NONE).getValue();
     }
 
     /**
      * Creates a recovery plan with the given details.
-     *
-     * <p>The operation to create a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery Plan creation input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -652,26 +518,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, CreateRecoveryPlanInput input) {
+    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, CreateRecoveryPlanInput input) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -685,28 +547,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .create(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            input,
-                            accept,
-                            context))
+                context -> service.create(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+                    resourceName, this.client.getSubscriptionId(), recoveryPlanName, input, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Creates a recovery plan with the given details.
-     *
-     * <p>The operation to create a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery Plan creation input.
      * @param context The context to associate with this operation.
@@ -716,30 +568,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        CreateRecoveryPlanInput input,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, CreateRecoveryPlanInput input, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -752,26 +596,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .create(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                input,
-                accept,
-                context);
+        return service.create(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), recoveryPlanName, input, accept, context);
     }
 
     /**
      * Creates a recovery plan with the given details.
-     *
-     * <p>The operation to create a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery Plan creation input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -780,27 +615,21 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link PollerFlux} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginCreateAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, CreateRecoveryPlanInput input) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                RecoveryPlanInner.class,
-                RecoveryPlanInner.class,
-                this.client.getContext());
+    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginCreateAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, CreateRecoveryPlanInput input) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = createWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, this.client.getContext());
     }
 
     /**
      * Creates a recovery plan with the given details.
-     *
-     * <p>The operation to create a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery Plan creation input.
      * @param context The context to associate with this operation.
@@ -810,28 +639,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link PollerFlux} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginCreateAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        CreateRecoveryPlanInput input,
-        Context context) {
+    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginCreateAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, CreateRecoveryPlanInput input, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input, context);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono, this.client.getHttpPipeline(), RecoveryPlanInner.class, RecoveryPlanInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = createWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input, context);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, context);
     }
 
     /**
      * Creates a recovery plan with the given details.
-     *
-     * <p>The operation to create a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery Plan creation input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -840,18 +663,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginCreate(
-        String resourceName, String resourceGroupName, String recoveryPlanName, CreateRecoveryPlanInput input) {
-        return this.beginCreateAsync(resourceName, resourceGroupName, recoveryPlanName, input).getSyncPoller();
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginCreate(String resourceGroupName,
+        String resourceName, String recoveryPlanName, CreateRecoveryPlanInput input) {
+        return this.beginCreateAsync(resourceGroupName, resourceName, recoveryPlanName, input).getSyncPoller();
     }
 
     /**
      * Creates a recovery plan with the given details.
-     *
-     * <p>The operation to create a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery Plan creation input.
      * @param context The context to associate with this operation.
@@ -861,22 +684,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginCreate(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        CreateRecoveryPlanInput input,
-        Context context) {
-        return this.beginCreateAsync(resourceName, resourceGroupName, recoveryPlanName, input, context).getSyncPoller();
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginCreate(String resourceGroupName,
+        String resourceName, String recoveryPlanName, CreateRecoveryPlanInput input, Context context) {
+        return this.beginCreateAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).getSyncPoller();
     }
 
     /**
      * Creates a recovery plan with the given details.
-     *
-     * <p>The operation to create a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery Plan creation input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -885,20 +704,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> createAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, CreateRecoveryPlanInput input) {
-        return beginCreateAsync(resourceName, resourceGroupName, recoveryPlanName, input)
-            .last()
+    private Mono<RecoveryPlanInner> createAsync(String resourceGroupName, String resourceName, String recoveryPlanName,
+        CreateRecoveryPlanInput input) {
+        return beginCreateAsync(resourceGroupName, resourceName, recoveryPlanName, input).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Creates a recovery plan with the given details.
-     *
-     * <p>The operation to create a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery Plan creation input.
      * @param context The context to associate with this operation.
@@ -908,24 +726,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> createAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        CreateRecoveryPlanInput input,
-        Context context) {
-        return beginCreateAsync(resourceName, resourceGroupName, recoveryPlanName, input, context)
-            .last()
+    private Mono<RecoveryPlanInner> createAsync(String resourceGroupName, String resourceName, String recoveryPlanName,
+        CreateRecoveryPlanInput input, Context context) {
+        return beginCreateAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Creates a recovery plan with the given details.
-     *
-     * <p>The operation to create a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery Plan creation input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -934,18 +747,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner create(
-        String resourceName, String resourceGroupName, String recoveryPlanName, CreateRecoveryPlanInput input) {
-        return createAsync(resourceName, resourceGroupName, recoveryPlanName, input).block();
+    public RecoveryPlanInner create(String resourceGroupName, String resourceName, String recoveryPlanName,
+        CreateRecoveryPlanInput input) {
+        return createAsync(resourceGroupName, resourceName, recoveryPlanName, input).block();
     }
 
     /**
      * Creates a recovery plan with the given details.
-     *
-     * <p>The operation to create a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery Plan creation input.
      * @param context The context to associate with this operation.
@@ -955,22 +768,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner create(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        CreateRecoveryPlanInput input,
-        Context context) {
-        return createAsync(resourceName, resourceGroupName, recoveryPlanName, input, context).block();
+    public RecoveryPlanInner create(String resourceGroupName, String resourceName, String recoveryPlanName,
+        CreateRecoveryPlanInput input, Context context) {
+        return createAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).block();
     }
 
     /**
      * Deletes the specified recovery plan.
-     *
-     * <p>Delete a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Delete a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -978,53 +787,40 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
+    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter recoveryPlanName is required and cannot be null."));
         }
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), recoveryPlanName, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Deletes the specified recovery plan.
-     *
-     * <p>Delete a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Delete a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1033,50 +829,39 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter recoveryPlanName is required and cannot be null."));
         }
         context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                context);
+        return service.delete(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), recoveryPlanName, context);
     }
 
     /**
      * Deletes the specified recovery plan.
-     *
-     * <p>Delete a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Delete a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1084,23 +869,21 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = deleteWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Deletes the specified recovery plan.
-     *
-     * <p>Delete a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Delete a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1109,23 +892,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
+    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = deleteWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, context);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            context);
     }
 
     /**
      * Deletes the specified recovery plan.
-     *
-     * <p>Delete a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Delete a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1133,18 +915,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return this.beginDeleteAsync(resourceName, resourceGroupName, recoveryPlanName).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String resourceName,
+        String recoveryPlanName) {
+        return this.beginDeleteAsync(resourceGroupName, resourceName, recoveryPlanName).getSyncPoller();
     }
 
     /**
      * Deletes the specified recovery plan.
-     *
-     * <p>Delete a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Delete a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1153,18 +935,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return this.beginDeleteAsync(resourceName, resourceGroupName, recoveryPlanName, context).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String resourceName,
+        String recoveryPlanName, Context context) {
+        return this.beginDeleteAsync(resourceGroupName, resourceName, recoveryPlanName, context).getSyncPoller();
     }
 
     /**
      * Deletes the specified recovery plan.
-     *
-     * <p>Delete a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Delete a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1172,19 +954,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return beginDeleteAsync(resourceName, resourceGroupName, recoveryPlanName)
-            .last()
+    private Mono<Void> deleteAsync(String resourceGroupName, String resourceName, String recoveryPlanName) {
+        return beginDeleteAsync(resourceGroupName, resourceName, recoveryPlanName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Deletes the specified recovery plan.
-     *
-     * <p>Delete a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Delete a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1193,37 +974,36 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return beginDeleteAsync(resourceName, resourceGroupName, recoveryPlanName, context)
-            .last()
+    private Mono<Void> deleteAsync(String resourceGroupName, String resourceName, String recoveryPlanName,
+        Context context) {
+        return beginDeleteAsync(resourceGroupName, resourceName, recoveryPlanName, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Deletes the specified recovery plan.
-     *
-     * <p>Delete a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Delete a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void delete(String resourceName, String resourceGroupName, String recoveryPlanName) {
-        deleteAsync(resourceName, resourceGroupName, recoveryPlanName).block();
+    public void delete(String resourceGroupName, String resourceName, String recoveryPlanName) {
+        deleteAsync(resourceGroupName, resourceName, recoveryPlanName).block();
     }
 
     /**
      * Deletes the specified recovery plan.
-     *
-     * <p>Delete a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Delete a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1231,17 +1011,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void delete(String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        deleteAsync(resourceName, resourceGroupName, recoveryPlanName, context).block();
+    public void delete(String resourceGroupName, String resourceName, String recoveryPlanName, Context context) {
+        deleteAsync(resourceGroupName, resourceName, recoveryPlanName, context).block();
     }
 
     /**
      * Updates the given recovery plan.
-     *
-     * <p>The operation to update a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Update recovery plan input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1250,26 +1030,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, UpdateRecoveryPlanInput input) {
+    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, UpdateRecoveryPlanInput input) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -1283,28 +1059,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .update(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            input,
-                            accept,
-                            context))
+                context -> service.update(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+                    resourceName, this.client.getSubscriptionId(), recoveryPlanName, input, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Updates the given recovery plan.
-     *
-     * <p>The operation to update a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Update recovery plan input.
      * @param context The context to associate with this operation.
@@ -1314,30 +1080,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        UpdateRecoveryPlanInput input,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, UpdateRecoveryPlanInput input, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -1350,26 +1108,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .update(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                input,
-                accept,
-                context);
+        return service.update(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), recoveryPlanName, input, accept, context);
     }
 
     /**
      * Updates the given recovery plan.
-     *
-     * <p>The operation to update a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Update recovery plan input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1378,27 +1127,21 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link PollerFlux} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUpdateAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, UpdateRecoveryPlanInput input) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                RecoveryPlanInner.class,
-                RecoveryPlanInner.class,
-                this.client.getContext());
+    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUpdateAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, UpdateRecoveryPlanInput input) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = updateWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, this.client.getContext());
     }
 
     /**
      * Updates the given recovery plan.
-     *
-     * <p>The operation to update a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Update recovery plan input.
      * @param context The context to associate with this operation.
@@ -1408,28 +1151,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link PollerFlux} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUpdateAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        UpdateRecoveryPlanInput input,
-        Context context) {
+    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUpdateAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, UpdateRecoveryPlanInput input, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input, context);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono, this.client.getHttpPipeline(), RecoveryPlanInner.class, RecoveryPlanInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = updateWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input, context);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, context);
     }
 
     /**
      * Updates the given recovery plan.
-     *
-     * <p>The operation to update a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Update recovery plan input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1438,18 +1175,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUpdate(
-        String resourceName, String resourceGroupName, String recoveryPlanName, UpdateRecoveryPlanInput input) {
-        return this.beginUpdateAsync(resourceName, resourceGroupName, recoveryPlanName, input).getSyncPoller();
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUpdate(String resourceGroupName,
+        String resourceName, String recoveryPlanName, UpdateRecoveryPlanInput input) {
+        return this.beginUpdateAsync(resourceGroupName, resourceName, recoveryPlanName, input).getSyncPoller();
     }
 
     /**
      * Updates the given recovery plan.
-     *
-     * <p>The operation to update a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Update recovery plan input.
      * @param context The context to associate with this operation.
@@ -1459,22 +1196,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUpdate(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        UpdateRecoveryPlanInput input,
-        Context context) {
-        return this.beginUpdateAsync(resourceName, resourceGroupName, recoveryPlanName, input, context).getSyncPoller();
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUpdate(String resourceGroupName,
+        String resourceName, String recoveryPlanName, UpdateRecoveryPlanInput input, Context context) {
+        return this.beginUpdateAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).getSyncPoller();
     }
 
     /**
      * Updates the given recovery plan.
-     *
-     * <p>The operation to update a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Update recovery plan input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1483,20 +1216,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> updateAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, UpdateRecoveryPlanInput input) {
-        return beginUpdateAsync(resourceName, resourceGroupName, recoveryPlanName, input)
-            .last()
+    private Mono<RecoveryPlanInner> updateAsync(String resourceGroupName, String resourceName, String recoveryPlanName,
+        UpdateRecoveryPlanInput input) {
+        return beginUpdateAsync(resourceGroupName, resourceName, recoveryPlanName, input).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Updates the given recovery plan.
-     *
-     * <p>The operation to update a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Update recovery plan input.
      * @param context The context to associate with this operation.
@@ -1506,24 +1238,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> updateAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        UpdateRecoveryPlanInput input,
-        Context context) {
-        return beginUpdateAsync(resourceName, resourceGroupName, recoveryPlanName, input, context)
-            .last()
+    private Mono<RecoveryPlanInner> updateAsync(String resourceGroupName, String resourceName, String recoveryPlanName,
+        UpdateRecoveryPlanInput input, Context context) {
+        return beginUpdateAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Updates the given recovery plan.
-     *
-     * <p>The operation to update a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Update recovery plan input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1532,18 +1259,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner update(
-        String resourceName, String resourceGroupName, String recoveryPlanName, UpdateRecoveryPlanInput input) {
-        return updateAsync(resourceName, resourceGroupName, recoveryPlanName, input).block();
+    public RecoveryPlanInner update(String resourceGroupName, String resourceName, String recoveryPlanName,
+        UpdateRecoveryPlanInput input) {
+        return updateAsync(resourceGroupName, resourceName, recoveryPlanName, input).block();
     }
 
     /**
      * Updates the given recovery plan.
-     *
-     * <p>The operation to update a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Update recovery plan input.
      * @param context The context to associate with this operation.
@@ -1553,22 +1280,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner update(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        UpdateRecoveryPlanInput input,
-        Context context) {
-        return updateAsync(resourceName, resourceGroupName, recoveryPlanName, input, context).block();
+    public RecoveryPlanInner update(String resourceGroupName, String resourceName, String recoveryPlanName,
+        UpdateRecoveryPlanInput input, Context context) {
+        return updateAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).block();
     }
 
     /**
      * Execute cancel failover of the recovery plan.
-     *
-     * <p>The operation to cancel the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel the failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1576,26 +1299,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> failoverCancelWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
+    private Mono<Response<Flux<ByteBuffer>>> failoverCancelWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -1603,28 +1322,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .failoverCancel(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            accept,
-                            context))
+            .withContext(context -> service.failoverCancel(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), recoveryPlanName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute cancel failover of the recovery plan.
-     *
-     * <p>The operation to cancel the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel the failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1633,26 +1342,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> failoverCancelWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> failoverCancelWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -1660,25 +1365,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .failoverCancel(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                accept,
-                context);
+        return service.failoverCancel(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), recoveryPlanName, accept, context);
     }
 
     /**
      * Execute cancel failover of the recovery plan.
-     *
-     * <p>The operation to cancel the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel the failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1686,27 +1383,21 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link PollerFlux} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCancelAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            failoverCancelWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                RecoveryPlanInner.class,
-                RecoveryPlanInner.class,
-                this.client.getContext());
+    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner>
+        beginFailoverCancelAsync(String resourceGroupName, String resourceName, String recoveryPlanName) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = failoverCancelWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, this.client.getContext());
     }
 
     /**
      * Execute cancel failover of the recovery plan.
-     *
-     * <p>The operation to cancel the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel the failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1716,23 +1407,21 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCancelAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
+        String resourceGroupName, String resourceName, String recoveryPlanName, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            failoverCancelWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, context);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono, this.client.getHttpPipeline(), RecoveryPlanInner.class, RecoveryPlanInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = failoverCancelWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, context);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, context);
     }
 
     /**
      * Execute cancel failover of the recovery plan.
-     *
-     * <p>The operation to cancel the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel the failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1740,18 +1429,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCancel(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return this.beginFailoverCancelAsync(resourceName, resourceGroupName, recoveryPlanName).getSyncPoller();
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCancel(String resourceGroupName,
+        String resourceName, String recoveryPlanName) {
+        return this.beginFailoverCancelAsync(resourceGroupName, resourceName, recoveryPlanName).getSyncPoller();
     }
 
     /**
      * Execute cancel failover of the recovery plan.
-     *
-     * <p>The operation to cancel the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel the failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1760,20 +1449,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCancel(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return this
-            .beginFailoverCancelAsync(resourceName, resourceGroupName, recoveryPlanName, context)
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCancel(String resourceGroupName,
+        String resourceName, String recoveryPlanName, Context context) {
+        return this.beginFailoverCancelAsync(resourceGroupName, resourceName, recoveryPlanName, context)
             .getSyncPoller();
     }
 
     /**
      * Execute cancel failover of the recovery plan.
-     *
-     * <p>The operation to cancel the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel the failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1781,20 +1469,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> failoverCancelAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return beginFailoverCancelAsync(resourceName, resourceGroupName, recoveryPlanName)
-            .last()
+    private Mono<RecoveryPlanInner> failoverCancelAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName) {
+        return beginFailoverCancelAsync(resourceGroupName, resourceName, recoveryPlanName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute cancel failover of the recovery plan.
-     *
-     * <p>The operation to cancel the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel the failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1803,20 +1490,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> failoverCancelAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return beginFailoverCancelAsync(resourceName, resourceGroupName, recoveryPlanName, context)
-            .last()
+    private Mono<RecoveryPlanInner> failoverCancelAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, Context context) {
+        return beginFailoverCancelAsync(resourceGroupName, resourceName, recoveryPlanName, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute cancel failover of the recovery plan.
-     *
-     * <p>The operation to cancel the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel the failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1824,17 +1510,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner failoverCancel(String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return failoverCancelAsync(resourceName, resourceGroupName, recoveryPlanName).block();
+    public RecoveryPlanInner failoverCancel(String resourceGroupName, String resourceName, String recoveryPlanName) {
+        return failoverCancelAsync(resourceGroupName, resourceName, recoveryPlanName).block();
     }
 
     /**
      * Execute cancel failover of the recovery plan.
-     *
-     * <p>The operation to cancel the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel the failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1843,403 +1529,341 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner failoverCancel(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return failoverCancelAsync(resourceName, resourceGroupName, recoveryPlanName, context).block();
-    }
-
-    /**
-     * Execute commit failover of the recovery plan.
-     *
-     * <p>The operation to commit the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> failoverCommitWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (recoveryPlanName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter recoveryPlanName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .failoverCommit(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            accept,
-                            context))
-            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
-    }
-
-    /**
-     * Execute commit failover of the recovery plan.
-     *
-     * <p>The operation to commit the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> failoverCommitWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (recoveryPlanName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter recoveryPlanName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .failoverCommit(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                accept,
-                context);
-    }
-
-    /**
-     * Execute commit failover of the recovery plan.
-     *
-     * <p>The operation to commit the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of recovery plan details.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCommitAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            failoverCommitWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                RecoveryPlanInner.class,
-                RecoveryPlanInner.class,
-                this.client.getContext());
-    }
-
-    /**
-     * Execute commit failover of the recovery plan.
-     *
-     * <p>The operation to commit the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of recovery plan details.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCommitAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            failoverCommitWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, context);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono, this.client.getHttpPipeline(), RecoveryPlanInner.class, RecoveryPlanInner.class, context);
-    }
-
-    /**
-     * Execute commit failover of the recovery plan.
-     *
-     * <p>The operation to commit the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of recovery plan details.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCommit(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return this.beginFailoverCommitAsync(resourceName, resourceGroupName, recoveryPlanName).getSyncPoller();
-    }
-
-    /**
-     * Execute commit failover of the recovery plan.
-     *
-     * <p>The operation to commit the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link SyncPoller} for polling of recovery plan details.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCommit(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return this
-            .beginFailoverCommitAsync(resourceName, resourceGroupName, recoveryPlanName, context)
-            .getSyncPoller();
-    }
-
-    /**
-     * Execute commit failover of the recovery plan.
-     *
-     * <p>The operation to commit the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan details on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> failoverCommitAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return beginFailoverCommitAsync(resourceName, resourceGroupName, recoveryPlanName)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Execute commit failover of the recovery plan.
-     *
-     * <p>The operation to commit the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan details on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> failoverCommitAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return beginFailoverCommitAsync(resourceName, resourceGroupName, recoveryPlanName, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Execute commit failover of the recovery plan.
-     *
-     * <p>The operation to commit the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan details.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner failoverCommit(String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return failoverCommitAsync(resourceName, resourceGroupName, recoveryPlanName).block();
-    }
-
-    /**
-     * Execute commit failover of the recovery plan.
-     *
-     * <p>The operation to commit the failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan details.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner failoverCommit(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return failoverCommitAsync(resourceName, resourceGroupName, recoveryPlanName, context).block();
-    }
-
-    /**
-     * Execute planned failover of the recovery plan.
-     *
-     * <p>The operation to start the planned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @param input Failover input.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> plannedFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanPlannedFailoverInput input) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (recoveryPlanName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter recoveryPlanName is required and cannot be null."));
-        }
-        if (input == null) {
-            return Mono.error(new IllegalArgumentException("Parameter input is required and cannot be null."));
-        } else {
-            input.validate();
-        }
-        final String accept = "application/json";
-        return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .plannedFailover(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            input,
-                            accept,
-                            context))
-            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
-    }
-
-    /**
-     * Execute planned failover of the recovery plan.
-     *
-     * <p>The operation to start the planned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
-     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
-     * @param recoveryPlanName Recovery plan name.
-     * @param input Failover input.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> plannedFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanPlannedFailoverInput input,
+    public RecoveryPlanInner failoverCancel(String resourceGroupName, String resourceName, String recoveryPlanName,
         Context context) {
+        return failoverCancelAsync(resourceGroupName, resourceName, recoveryPlanName, context).block();
+    }
+
+    /**
+     * Execute commit failover of the recovery plan.
+     * 
+     * The operation to commit the failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<Flux<ByteBuffer>>> failoverCommitWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (recoveryPlanName == null) {
             return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+                .error(new IllegalArgumentException("Parameter recoveryPlanName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return FluxUtil
+            .withContext(context -> service.failoverCommit(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), recoveryPlanName, accept, context))
+            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+    }
+
+    /**
+     * Execute commit failover of the recovery plan.
+     * 
+     * The operation to commit the failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<Flux<ByteBuffer>>> failoverCommitWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            return Mono
+                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (recoveryPlanName == null) {
+            return Mono
+                .error(new IllegalArgumentException("Parameter recoveryPlanName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        context = this.client.mergeContext(context);
+        return service.failoverCommit(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), recoveryPlanName, accept, context);
+    }
+
+    /**
+     * Execute commit failover of the recovery plan.
+     * 
+     * The operation to commit the failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of recovery plan details.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner>
+        beginFailoverCommitAsync(String resourceGroupName, String resourceName, String recoveryPlanName) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = failoverCommitWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, this.client.getContext());
+    }
+
+    /**
+     * Execute commit failover of the recovery plan.
+     * 
+     * The operation to commit the failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link PollerFlux} for polling of recovery plan details.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCommitAsync(
+        String resourceGroupName, String resourceName, String recoveryPlanName, Context context) {
+        context = this.client.mergeContext(context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = failoverCommitWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, context);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, context);
+    }
+
+    /**
+     * Execute commit failover of the recovery plan.
+     * 
+     * The operation to commit the failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of recovery plan details.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCommit(String resourceGroupName,
+        String resourceName, String recoveryPlanName) {
+        return this.beginFailoverCommitAsync(resourceGroupName, resourceName, recoveryPlanName).getSyncPoller();
+    }
+
+    /**
+     * Execute commit failover of the recovery plan.
+     * 
+     * The operation to commit the failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of recovery plan details.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginFailoverCommit(String resourceGroupName,
+        String resourceName, String recoveryPlanName, Context context) {
+        return this.beginFailoverCommitAsync(resourceGroupName, resourceName, recoveryPlanName, context)
+            .getSyncPoller();
+    }
+
+    /**
+     * Execute commit failover of the recovery plan.
+     * 
+     * The operation to commit the failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return recovery plan details on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<RecoveryPlanInner> failoverCommitAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName) {
+        return beginFailoverCommitAsync(resourceGroupName, resourceName, recoveryPlanName).last()
+            .flatMap(this.client::getLroFinalResultOrError);
+    }
+
+    /**
+     * Execute commit failover of the recovery plan.
+     * 
+     * The operation to commit the failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return recovery plan details on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<RecoveryPlanInner> failoverCommitAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, Context context) {
+        return beginFailoverCommitAsync(resourceGroupName, resourceName, recoveryPlanName, context).last()
+            .flatMap(this.client::getLroFinalResultOrError);
+    }
+
+    /**
+     * Execute commit failover of the recovery plan.
+     * 
+     * The operation to commit the failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return recovery plan details.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public RecoveryPlanInner failoverCommit(String resourceGroupName, String resourceName, String recoveryPlanName) {
+        return failoverCommitAsync(resourceGroupName, resourceName, recoveryPlanName).block();
+    }
+
+    /**
+     * Execute commit failover of the recovery plan.
+     * 
+     * The operation to commit the failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return recovery plan details.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public RecoveryPlanInner failoverCommit(String resourceGroupName, String resourceName, String recoveryPlanName,
+        Context context) {
+        return failoverCommitAsync(resourceGroupName, resourceName, recoveryPlanName, context).block();
+    }
+
+    /**
+     * Execute planned failover of the recovery plan.
+     * 
+     * The operation to start the planned failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @param input Failover input.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<Flux<ByteBuffer>>> plannedFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanPlannedFailoverInput input) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            return Mono
+                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (recoveryPlanName == null) {
+            return Mono
+                .error(new IllegalArgumentException("Parameter recoveryPlanName is required and cannot be null."));
+        }
+        if (input == null) {
+            return Mono.error(new IllegalArgumentException("Parameter input is required and cannot be null."));
+        } else {
+            input.validate();
+        }
+        final String accept = "application/json";
+        return FluxUtil
+            .withContext(context -> service.plannedFailover(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), recoveryPlanName, input, accept,
+                context))
+            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+    }
+
+    /**
+     * Execute planned failover of the recovery plan.
+     * 
+     * The operation to start the planned failover of a recovery plan.
+     * 
+     * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
+     * @param recoveryPlanName Recovery plan name.
+     * @param input Failover input.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<Flux<ByteBuffer>>> plannedFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanPlannedFailoverInput input, Context context) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            return Mono
+                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -2252,26 +1876,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .plannedFailover(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                input,
-                accept,
-                context);
+        return service.plannedFailover(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), recoveryPlanName, input, accept, context);
     }
 
     /**
      * Execute planned failover of the recovery plan.
-     *
-     * <p>The operation to start the planned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the planned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2281,29 +1896,21 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginPlannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
+        String resourceGroupName, String resourceName, String recoveryPlanName,
         RecoveryPlanPlannedFailoverInput input) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            plannedFailoverWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                RecoveryPlanInner.class,
-                RecoveryPlanInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = plannedFailoverWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, this.client.getContext());
     }
 
     /**
      * Execute planned failover of the recovery plan.
-     *
-     * <p>The operation to start the planned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the planned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Failover input.
      * @param context The context to associate with this operation.
@@ -2314,27 +1921,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginPlannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanPlannedFailoverInput input,
+        String resourceGroupName, String resourceName, String recoveryPlanName, RecoveryPlanPlannedFailoverInput input,
         Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            plannedFailoverWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input, context);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono, this.client.getHttpPipeline(), RecoveryPlanInner.class, RecoveryPlanInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = plannedFailoverWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input, context);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, context);
     }
 
     /**
      * Execute planned failover of the recovery plan.
-     *
-     * <p>The operation to start the planned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the planned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2343,21 +1945,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginPlannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanPlannedFailoverInput input) {
-        return this.beginPlannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input).getSyncPoller();
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginPlannedFailover(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanPlannedFailoverInput input) {
+        return this.beginPlannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input).getSyncPoller();
     }
 
     /**
      * Execute planned failover of the recovery plan.
-     *
-     * <p>The operation to start the planned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the planned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Failover input.
      * @param context The context to associate with this operation.
@@ -2367,24 +1966,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginPlannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanPlannedFailoverInput input,
-        Context context) {
-        return this
-            .beginPlannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input, context)
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginPlannedFailover(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanPlannedFailoverInput input, Context context) {
+        return this.beginPlannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input, context)
             .getSyncPoller();
     }
 
     /**
      * Execute planned failover of the recovery plan.
-     *
-     * <p>The operation to start the planned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the planned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2393,23 +1987,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> plannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanPlannedFailoverInput input) {
-        return beginPlannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input)
-            .last()
+    private Mono<RecoveryPlanInner> plannedFailoverAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, RecoveryPlanPlannedFailoverInput input) {
+        return beginPlannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute planned failover of the recovery plan.
-     *
-     * <p>The operation to start the planned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the planned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Failover input.
      * @param context The context to associate with this operation.
@@ -2419,24 +2009,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> plannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanPlannedFailoverInput input,
-        Context context) {
-        return beginPlannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input, context)
-            .last()
+    private Mono<RecoveryPlanInner> plannedFailoverAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, RecoveryPlanPlannedFailoverInput input, Context context) {
+        return beginPlannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute planned failover of the recovery plan.
-     *
-     * <p>The operation to start the planned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the planned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2445,21 +2030,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner plannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
+    public RecoveryPlanInner plannedFailover(String resourceGroupName, String resourceName, String recoveryPlanName,
         RecoveryPlanPlannedFailoverInput input) {
-        return plannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input).block();
+        return plannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input).block();
     }
 
     /**
      * Execute planned failover of the recovery plan.
-     *
-     * <p>The operation to start the planned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the planned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Failover input.
      * @param context The context to associate with this operation.
@@ -2469,22 +2051,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner plannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanPlannedFailoverInput input,
-        Context context) {
-        return plannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input, context).block();
+    public RecoveryPlanInner plannedFailover(String resourceGroupName, String resourceName, String recoveryPlanName,
+        RecoveryPlanPlannedFailoverInput input, Context context) {
+        return plannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).block();
     }
 
     /**
      * Execute reprotect of the recovery plan.
-     *
-     * <p>The operation to reprotect(reverse replicate) a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to reprotect(reverse replicate) a recovery plan. This api is for deprecated scenarios and no longer
+     * works.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -2492,26 +2071,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> reprotectWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
+    private Mono<Response<Flux<ByteBuffer>>> reprotectWithResponseAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -2519,28 +2094,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .reprotect(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            accept,
-                            context))
+            .withContext(context -> service.reprotect(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), recoveryPlanName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute reprotect of the recovery plan.
-     *
-     * <p>The operation to reprotect(reverse replicate) a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to reprotect(reverse replicate) a recovery plan. This api is for deprecated scenarios and no longer
+     * works.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2549,26 +2115,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> reprotectWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> reprotectWithResponseAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -2576,25 +2138,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .reprotect(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                accept,
-                context);
+        return service.reprotect(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), recoveryPlanName, accept, context);
     }
 
     /**
      * Execute reprotect of the recovery plan.
-     *
-     * <p>The operation to reprotect(reverse replicate) a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to reprotect(reverse replicate) a recovery plan. This api is for deprecated scenarios and no longer
+     * works.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -2602,27 +2157,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link PollerFlux} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginReprotectAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            reprotectWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                RecoveryPlanInner.class,
-                RecoveryPlanInner.class,
-                this.client.getContext());
+    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginReprotectAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = reprotectWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, this.client.getContext());
     }
 
     /**
      * Execute reprotect of the recovery plan.
-     *
-     * <p>The operation to reprotect(reverse replicate) a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to reprotect(reverse replicate) a recovery plan. This api is for deprecated scenarios and no longer
+     * works.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2631,24 +2181,23 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link PollerFlux} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginReprotectAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
+    private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginReprotectAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            reprotectWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, context);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono, this.client.getHttpPipeline(), RecoveryPlanInner.class, RecoveryPlanInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = reprotectWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, context);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, context);
     }
 
     /**
      * Execute reprotect of the recovery plan.
-     *
-     * <p>The operation to reprotect(reverse replicate) a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to reprotect(reverse replicate) a recovery plan. This api is for deprecated scenarios and no longer
+     * works.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -2656,18 +2205,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginReprotect(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return this.beginReprotectAsync(resourceName, resourceGroupName, recoveryPlanName).getSyncPoller();
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginReprotect(String resourceGroupName,
+        String resourceName, String recoveryPlanName) {
+        return this.beginReprotectAsync(resourceGroupName, resourceName, recoveryPlanName).getSyncPoller();
     }
 
     /**
      * Execute reprotect of the recovery plan.
-     *
-     * <p>The operation to reprotect(reverse replicate) a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to reprotect(reverse replicate) a recovery plan. This api is for deprecated scenarios and no longer
+     * works.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2676,18 +2226,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginReprotect(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return this.beginReprotectAsync(resourceName, resourceGroupName, recoveryPlanName, context).getSyncPoller();
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginReprotect(String resourceGroupName,
+        String resourceName, String recoveryPlanName, Context context) {
+        return this.beginReprotectAsync(resourceGroupName, resourceName, recoveryPlanName, context).getSyncPoller();
     }
 
     /**
      * Execute reprotect of the recovery plan.
-     *
-     * <p>The operation to reprotect(reverse replicate) a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to reprotect(reverse replicate) a recovery plan. This api is for deprecated scenarios and no longer
+     * works.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -2695,20 +2246,20 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> reprotectAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return beginReprotectAsync(resourceName, resourceGroupName, recoveryPlanName)
-            .last()
+    private Mono<RecoveryPlanInner> reprotectAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName) {
+        return beginReprotectAsync(resourceGroupName, resourceName, recoveryPlanName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute reprotect of the recovery plan.
-     *
-     * <p>The operation to reprotect(reverse replicate) a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to reprotect(reverse replicate) a recovery plan. This api is for deprecated scenarios and no longer
+     * works.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2717,20 +2268,20 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> reprotectAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return beginReprotectAsync(resourceName, resourceGroupName, recoveryPlanName, context)
-            .last()
+    private Mono<RecoveryPlanInner> reprotectAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, Context context) {
+        return beginReprotectAsync(resourceGroupName, resourceName, recoveryPlanName, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute reprotect of the recovery plan.
-     *
-     * <p>The operation to reprotect(reverse replicate) a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to reprotect(reverse replicate) a recovery plan. This api is for deprecated scenarios and no longer
+     * works.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -2738,17 +2289,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner reprotect(String resourceName, String resourceGroupName, String recoveryPlanName) {
-        return reprotectAsync(resourceName, resourceGroupName, recoveryPlanName).block();
+    public RecoveryPlanInner reprotect(String resourceGroupName, String resourceName, String recoveryPlanName) {
+        return reprotectAsync(resourceGroupName, resourceName, recoveryPlanName).block();
     }
 
     /**
      * Execute reprotect of the recovery plan.
-     *
-     * <p>The operation to reprotect(reverse replicate) a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to reprotect(reverse replicate) a recovery plan. This api is for deprecated scenarios and no longer
+     * works.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2757,18 +2309,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner reprotect(
-        String resourceName, String resourceGroupName, String recoveryPlanName, Context context) {
-        return reprotectAsync(resourceName, resourceGroupName, recoveryPlanName, context).block();
+    public RecoveryPlanInner reprotect(String resourceGroupName, String resourceName, String recoveryPlanName,
+        Context context) {
+        return reprotectAsync(resourceGroupName, resourceName, recoveryPlanName, context).block();
     }
 
     /**
      * Execute test failover of the recovery plan.
-     *
-     * <p>The operation to start the test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2777,26 +2329,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> testFailoverWithResponseAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, RecoveryPlanTestFailoverInput input) {
+    private Mono<Response<Flux<ByteBuffer>>> testFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanTestFailoverInput input) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -2809,29 +2357,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .testFailover(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            input,
-                            accept,
-                            context))
+            .withContext(context -> service.testFailover(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), recoveryPlanName, input, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute test failover of the recovery plan.
-     *
-     * <p>The operation to start the test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover input.
      * @param context The context to associate with this operation.
@@ -2841,30 +2379,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> testFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverInput input,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> testFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanTestFailoverInput input, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -2877,26 +2407,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .testFailover(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                input,
-                accept,
-                context);
+        return service.testFailover(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), recoveryPlanName, input, accept, context);
     }
 
     /**
      * Execute test failover of the recovery plan.
-     *
-     * <p>The operation to start the test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2906,26 +2427,20 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginTestFailoverAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, RecoveryPlanTestFailoverInput input) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            testFailoverWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                RecoveryPlanInner.class,
-                RecoveryPlanInner.class,
-                this.client.getContext());
+        String resourceGroupName, String resourceName, String recoveryPlanName, RecoveryPlanTestFailoverInput input) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = testFailoverWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, this.client.getContext());
     }
 
     /**
      * Execute test failover of the recovery plan.
-     *
-     * <p>The operation to start the test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover input.
      * @param context The context to associate with this operation.
@@ -2936,27 +2451,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginTestFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverInput input,
+        String resourceGroupName, String resourceName, String recoveryPlanName, RecoveryPlanTestFailoverInput input,
         Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            testFailoverWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input, context);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono, this.client.getHttpPipeline(), RecoveryPlanInner.class, RecoveryPlanInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = testFailoverWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input, context);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, context);
     }
 
     /**
      * Execute test failover of the recovery plan.
-     *
-     * <p>The operation to start the test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2965,18 +2475,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginTestFailover(
-        String resourceName, String resourceGroupName, String recoveryPlanName, RecoveryPlanTestFailoverInput input) {
-        return this.beginTestFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input).getSyncPoller();
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginTestFailover(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanTestFailoverInput input) {
+        return this.beginTestFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input).getSyncPoller();
     }
 
     /**
      * Execute test failover of the recovery plan.
-     *
-     * <p>The operation to start the test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover input.
      * @param context The context to associate with this operation.
@@ -2986,24 +2496,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginTestFailover(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverInput input,
-        Context context) {
-        return this
-            .beginTestFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input, context)
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginTestFailover(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanTestFailoverInput input, Context context) {
+        return this.beginTestFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input, context)
             .getSyncPoller();
     }
 
     /**
      * Execute test failover of the recovery plan.
-     *
-     * <p>The operation to start the test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3012,20 +2517,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> testFailoverAsync(
-        String resourceName, String resourceGroupName, String recoveryPlanName, RecoveryPlanTestFailoverInput input) {
-        return beginTestFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input)
-            .last()
+    private Mono<RecoveryPlanInner> testFailoverAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, RecoveryPlanTestFailoverInput input) {
+        return beginTestFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute test failover of the recovery plan.
-     *
-     * <p>The operation to start the test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover input.
      * @param context The context to associate with this operation.
@@ -3035,24 +2539,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> testFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverInput input,
-        Context context) {
-        return beginTestFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input, context)
-            .last()
+    private Mono<RecoveryPlanInner> testFailoverAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, RecoveryPlanTestFailoverInput input, Context context) {
+        return beginTestFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute test failover of the recovery plan.
-     *
-     * <p>The operation to start the test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3061,18 +2560,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner testFailover(
-        String resourceName, String resourceGroupName, String recoveryPlanName, RecoveryPlanTestFailoverInput input) {
-        return testFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input).block();
+    public RecoveryPlanInner testFailover(String resourceGroupName, String resourceName, String recoveryPlanName,
+        RecoveryPlanTestFailoverInput input) {
+        return testFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input).block();
     }
 
     /**
      * Execute test failover of the recovery plan.
-     *
-     * <p>The operation to start the test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover input.
      * @param context The context to associate with this operation.
@@ -3082,22 +2581,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner testFailover(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverInput input,
-        Context context) {
-        return testFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input, context).block();
+    public RecoveryPlanInner testFailover(String resourceGroupName, String resourceName, String recoveryPlanName,
+        RecoveryPlanTestFailoverInput input, Context context) {
+        return testFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).block();
     }
 
     /**
      * Execute test failover cleanup of the recovery plan.
-     *
-     * <p>The operation to cleanup test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cleanup test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover cleanup input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3106,29 +2601,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> testFailoverCleanupWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverCleanupInput input) {
+    private Mono<Response<Flux<ByteBuffer>>> testFailoverCleanupWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanTestFailoverCleanupInput input) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -3141,29 +2629,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .testFailoverCleanup(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            input,
-                            accept,
-                            context))
+            .withContext(context -> service.testFailoverCleanup(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), recoveryPlanName, input, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute test failover cleanup of the recovery plan.
-     *
-     * <p>The operation to cleanup test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cleanup test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover cleanup input.
      * @param context The context to associate with this operation.
@@ -3173,30 +2651,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> testFailoverCleanupWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverCleanupInput input,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> testFailoverCleanupWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanTestFailoverCleanupInput input, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -3209,26 +2679,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .testFailoverCleanup(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                input,
-                accept,
-                context);
+        return service.testFailoverCleanup(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), recoveryPlanName, input, accept, context);
     }
 
     /**
      * Execute test failover cleanup of the recovery plan.
-     *
-     * <p>The operation to cleanup test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cleanup test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover cleanup input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3238,29 +2699,21 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginTestFailoverCleanupAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
+        String resourceGroupName, String resourceName, String recoveryPlanName,
         RecoveryPlanTestFailoverCleanupInput input) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            testFailoverCleanupWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                RecoveryPlanInner.class,
-                RecoveryPlanInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = testFailoverCleanupWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, this.client.getContext());
     }
 
     /**
      * Execute test failover cleanup of the recovery plan.
-     *
-     * <p>The operation to cleanup test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cleanup test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover cleanup input.
      * @param context The context to associate with this operation.
@@ -3271,27 +2724,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginTestFailoverCleanupAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverCleanupInput input,
-        Context context) {
+        String resourceGroupName, String resourceName, String recoveryPlanName,
+        RecoveryPlanTestFailoverCleanupInput input, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            testFailoverCleanupWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input, context);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono, this.client.getHttpPipeline(), RecoveryPlanInner.class, RecoveryPlanInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = testFailoverCleanupWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input, context);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, context);
     }
 
     /**
      * Execute test failover cleanup of the recovery plan.
-     *
-     * <p>The operation to cleanup test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cleanup test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover cleanup input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3301,22 +2749,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginTestFailoverCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
+        String resourceGroupName, String resourceName, String recoveryPlanName,
         RecoveryPlanTestFailoverCleanupInput input) {
-        return this
-            .beginTestFailoverCleanupAsync(resourceName, resourceGroupName, recoveryPlanName, input)
+        return this.beginTestFailoverCleanupAsync(resourceGroupName, resourceName, recoveryPlanName, input)
             .getSyncPoller();
     }
 
     /**
      * Execute test failover cleanup of the recovery plan.
-     *
-     * <p>The operation to cleanup test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cleanup test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover cleanup input.
      * @param context The context to associate with this operation.
@@ -3327,23 +2772,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginTestFailoverCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverCleanupInput input,
-        Context context) {
-        return this
-            .beginTestFailoverCleanupAsync(resourceName, resourceGroupName, recoveryPlanName, input, context)
+        String resourceGroupName, String resourceName, String recoveryPlanName,
+        RecoveryPlanTestFailoverCleanupInput input, Context context) {
+        return this.beginTestFailoverCleanupAsync(resourceGroupName, resourceName, recoveryPlanName, input, context)
             .getSyncPoller();
     }
 
     /**
      * Execute test failover cleanup of the recovery plan.
-     *
-     * <p>The operation to cleanup test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cleanup test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover cleanup input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3352,23 +2793,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> testFailoverCleanupAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverCleanupInput input) {
-        return beginTestFailoverCleanupAsync(resourceName, resourceGroupName, recoveryPlanName, input)
-            .last()
+    private Mono<RecoveryPlanInner> testFailoverCleanupAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, RecoveryPlanTestFailoverCleanupInput input) {
+        return beginTestFailoverCleanupAsync(resourceGroupName, resourceName, recoveryPlanName, input).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute test failover cleanup of the recovery plan.
-     *
-     * <p>The operation to cleanup test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cleanup test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover cleanup input.
      * @param context The context to associate with this operation.
@@ -3378,24 +2815,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> testFailoverCleanupAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverCleanupInput input,
-        Context context) {
-        return beginTestFailoverCleanupAsync(resourceName, resourceGroupName, recoveryPlanName, input, context)
-            .last()
+    private Mono<RecoveryPlanInner> testFailoverCleanupAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, RecoveryPlanTestFailoverCleanupInput input, Context context) {
+        return beginTestFailoverCleanupAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute test failover cleanup of the recovery plan.
-     *
-     * <p>The operation to cleanup test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cleanup test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover cleanup input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3404,21 +2836,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner testFailoverCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
+    public RecoveryPlanInner testFailoverCleanup(String resourceGroupName, String resourceName, String recoveryPlanName,
         RecoveryPlanTestFailoverCleanupInput input) {
-        return testFailoverCleanupAsync(resourceName, resourceGroupName, recoveryPlanName, input).block();
+        return testFailoverCleanupAsync(resourceGroupName, resourceName, recoveryPlanName, input).block();
     }
 
     /**
      * Execute test failover cleanup of the recovery plan.
-     *
-     * <p>The operation to cleanup test failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cleanup test failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan test failover cleanup input.
      * @param context The context to associate with this operation.
@@ -3428,22 +2857,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner testFailoverCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanTestFailoverCleanupInput input,
-        Context context) {
-        return testFailoverCleanupAsync(resourceName, resourceGroupName, recoveryPlanName, input, context).block();
+    public RecoveryPlanInner testFailoverCleanup(String resourceGroupName, String resourceName, String recoveryPlanName,
+        RecoveryPlanTestFailoverCleanupInput input, Context context) {
+        return testFailoverCleanupAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).block();
     }
 
     /**
      * Execute unplanned failover of the recovery plan.
-     *
-     * <p>The operation to start the unplanned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the unplanned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan unplanned failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3452,29 +2877,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> unplannedFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanUnplannedFailoverInput input) {
+    private Mono<Response<Flux<ByteBuffer>>> unplannedFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanUnplannedFailoverInput input) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -3487,29 +2905,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .unplannedFailover(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            recoveryPlanName,
-                            input,
-                            accept,
-                            context))
+            .withContext(context -> service.unplannedFailover(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), recoveryPlanName, input, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute unplanned failover of the recovery plan.
-     *
-     * <p>The operation to start the unplanned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the unplanned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan unplanned failover input.
      * @param context The context to associate with this operation.
@@ -3519,30 +2927,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> unplannedFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanUnplannedFailoverInput input,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> unplannedFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanUnplannedFailoverInput input, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (recoveryPlanName == null) {
             return Mono
@@ -3555,26 +2955,17 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .unplannedFailover(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                recoveryPlanName,
-                input,
-                accept,
-                context);
+        return service.unplannedFailover(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), recoveryPlanName, input, accept, context);
     }
 
     /**
      * Execute unplanned failover of the recovery plan.
-     *
-     * <p>The operation to start the unplanned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the unplanned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan unplanned failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3584,29 +2975,21 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUnplannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
+        String resourceGroupName, String resourceName, String recoveryPlanName,
         RecoveryPlanUnplannedFailoverInput input) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            unplannedFailoverWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                RecoveryPlanInner.class,
-                RecoveryPlanInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = unplannedFailoverWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, this.client.getContext());
     }
 
     /**
      * Execute unplanned failover of the recovery plan.
-     *
-     * <p>The operation to start the unplanned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the unplanned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan unplanned failover input.
      * @param context The context to associate with this operation.
@@ -3617,27 +3000,22 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUnplannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanUnplannedFailoverInput input,
-        Context context) {
+        String resourceGroupName, String resourceName, String recoveryPlanName,
+        RecoveryPlanUnplannedFailoverInput input, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            unplannedFailoverWithResponseAsync(resourceName, resourceGroupName, recoveryPlanName, input, context);
-        return this
-            .client
-            .<RecoveryPlanInner, RecoveryPlanInner>getLroResult(
-                mono, this.client.getHttpPipeline(), RecoveryPlanInner.class, RecoveryPlanInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = unplannedFailoverWithResponseAsync(resourceGroupName, resourceName, recoveryPlanName, input, context);
+        return this.client.<RecoveryPlanInner, RecoveryPlanInner>getLroResult(mono, this.client.getHttpPipeline(),
+            RecoveryPlanInner.class, RecoveryPlanInner.class, context);
     }
 
     /**
      * Execute unplanned failover of the recovery plan.
-     *
-     * <p>The operation to start the unplanned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the unplanned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan unplanned failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3646,23 +3024,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUnplannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanUnplannedFailoverInput input) {
-        return this
-            .beginUnplannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input)
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUnplannedFailover(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanUnplannedFailoverInput input) {
+        return this.beginUnplannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input)
             .getSyncPoller();
     }
 
     /**
      * Execute unplanned failover of the recovery plan.
-     *
-     * <p>The operation to start the unplanned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the unplanned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan unplanned failover input.
      * @param context The context to associate with this operation.
@@ -3672,24 +3046,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return the {@link SyncPoller} for polling of recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUnplannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanUnplannedFailoverInput input,
-        Context context) {
-        return this
-            .beginUnplannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input, context)
+    public SyncPoller<PollResult<RecoveryPlanInner>, RecoveryPlanInner> beginUnplannedFailover(String resourceGroupName,
+        String resourceName, String recoveryPlanName, RecoveryPlanUnplannedFailoverInput input, Context context) {
+        return this.beginUnplannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input, context)
             .getSyncPoller();
     }
 
     /**
      * Execute unplanned failover of the recovery plan.
-     *
-     * <p>The operation to start the unplanned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the unplanned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan unplanned failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3698,23 +3067,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> unplannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanUnplannedFailoverInput input) {
-        return beginUnplannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input)
-            .last()
+    private Mono<RecoveryPlanInner> unplannedFailoverAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, RecoveryPlanUnplannedFailoverInput input) {
+        return beginUnplannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute unplanned failover of the recovery plan.
-     *
-     * <p>The operation to start the unplanned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the unplanned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan unplanned failover input.
      * @param context The context to associate with this operation.
@@ -3724,24 +3089,19 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<RecoveryPlanInner> unplannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanUnplannedFailoverInput input,
-        Context context) {
-        return beginUnplannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input, context)
-            .last()
+    private Mono<RecoveryPlanInner> unplannedFailoverAsync(String resourceGroupName, String resourceName,
+        String recoveryPlanName, RecoveryPlanUnplannedFailoverInput input, Context context) {
+        return beginUnplannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute unplanned failover of the recovery plan.
-     *
-     * <p>The operation to start the unplanned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the unplanned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan unplanned failover input.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3750,21 +3110,18 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner unplannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
+    public RecoveryPlanInner unplannedFailover(String resourceGroupName, String resourceName, String recoveryPlanName,
         RecoveryPlanUnplannedFailoverInput input) {
-        return unplannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input).block();
+        return unplannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input).block();
     }
 
     /**
      * Execute unplanned failover of the recovery plan.
-     *
-     * <p>The operation to start the unplanned failover of a recovery plan.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to start the unplanned failover of a recovery plan.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param recoveryPlanName Recovery plan name.
      * @param input Recovery plan unplanned failover input.
      * @param context The context to associate with this operation.
@@ -3774,25 +3131,20 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
      * @return recovery plan details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public RecoveryPlanInner unplannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String recoveryPlanName,
-        RecoveryPlanUnplannedFailoverInput input,
-        Context context) {
-        return unplannedFailoverAsync(resourceName, resourceGroupName, recoveryPlanName, input, context).block();
+    public RecoveryPlanInner unplannedFailover(String resourceGroupName, String resourceName, String recoveryPlanName,
+        RecoveryPlanUnplannedFailoverInput input, Context context) {
+        return unplannedFailoverAsync(resourceGroupName, resourceName, recoveryPlanName, input, context).block();
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan collection details along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return recovery plan collection details along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<RecoveryPlanInner>> listNextSinglePageAsync(String nextLink) {
@@ -3800,37 +3152,26 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        return FluxUtil
-            .withContext(context -> service.listNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<RecoveryPlanInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+        return FluxUtil.withContext(context -> service.listNext(nextLink, this.client.getEndpoint(), accept, context))
+            .<PagedResponse<RecoveryPlanInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return recovery plan collection details along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return recovery plan collection details along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<RecoveryPlanInner>> listNextSinglePageAsync(String nextLink, Context context) {
@@ -3838,23 +3179,13 @@ public final class ReplicationRecoveryPlansClientImpl implements ReplicationReco
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .listNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        return service.listNext(nextLink, this.client.getEndpoint(), accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 }

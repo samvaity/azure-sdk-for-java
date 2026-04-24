@@ -14,6 +14,12 @@ import com.azure.spring.cloud.feature.management.models.FeatureFilterEvaluationC
  */
 public final class PercentageFilter implements FeatureFilter {
 
+    /**
+     * Creates an instance of {@link PercentageFilter}
+     */
+    public PercentageFilter() {
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PercentageFilter.class);
 
     /**

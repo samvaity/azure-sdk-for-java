@@ -5,65 +5,88 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** SAP HANA Linked Service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("SapHana")
-@JsonFlatten
+/**
+ * SAP HANA Linked Service.
+ */
 @Fluent
 public class SapHanaLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "SapHana";
+
+    /*
      * SAP HANA ODBC connection string. Type: string, SecureString or AzureKeyVaultSecretReference.
      */
-    @JsonProperty(value = "typeProperties.connectionString")
+    @Generated
     private Object connectionString;
 
     /*
      * Host name of the SAP HANA server. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.server", required = true)
+    @Generated
     private Object server;
 
     /*
      * The authentication type to be used to connect to the SAP HANA server.
      */
-    @JsonProperty(value = "typeProperties.authenticationType")
+    @Generated
     private SapHanaAuthenticationType authenticationType;
 
     /*
      * Username to access the SAP HANA server. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.userName")
+    @Generated
     private Object userName;
 
     /*
      * Password to access the SAP HANA server.
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private SecretBase password;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of SapHanaLinkedService class. */
-    public SapHanaLinkedService() {}
+    /**
+     * Creates an instance of SapHanaLinkedService class.
+     */
+    @Generated
+    public SapHanaLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the connectionString property: SAP HANA ODBC connection string. Type: string, SecureString or
      * AzureKeyVaultSecretReference.
-     *
+     * 
      * @return the connectionString value.
      */
+    @Generated
     public Object getConnectionString() {
         return this.connectionString;
     }
@@ -71,10 +94,11 @@ public class SapHanaLinkedService extends LinkedService {
     /**
      * Set the connectionString property: SAP HANA ODBC connection string. Type: string, SecureString or
      * AzureKeyVaultSecretReference.
-     *
+     * 
      * @param connectionString the connectionString value to set.
      * @return the SapHanaLinkedService object itself.
      */
+    @Generated
     public SapHanaLinkedService setConnectionString(Object connectionString) {
         this.connectionString = connectionString;
         return this;
@@ -82,19 +106,21 @@ public class SapHanaLinkedService extends LinkedService {
 
     /**
      * Get the server property: Host name of the SAP HANA server. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the server value.
      */
+    @Generated
     public Object getServer() {
         return this.server;
     }
 
     /**
      * Set the server property: Host name of the SAP HANA server. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param server the server value to set.
      * @return the SapHanaLinkedService object itself.
      */
+    @Generated
     public SapHanaLinkedService setServer(Object server) {
         this.server = server;
         return this;
@@ -102,19 +128,21 @@ public class SapHanaLinkedService extends LinkedService {
 
     /**
      * Get the authenticationType property: The authentication type to be used to connect to the SAP HANA server.
-     *
+     * 
      * @return the authenticationType value.
      */
+    @Generated
     public SapHanaAuthenticationType getAuthenticationType() {
         return this.authenticationType;
     }
 
     /**
      * Set the authenticationType property: The authentication type to be used to connect to the SAP HANA server.
-     *
+     * 
      * @param authenticationType the authenticationType value to set.
      * @return the SapHanaLinkedService object itself.
      */
+    @Generated
     public SapHanaLinkedService setAuthenticationType(SapHanaAuthenticationType authenticationType) {
         this.authenticationType = authenticationType;
         return this;
@@ -123,9 +151,10 @@ public class SapHanaLinkedService extends LinkedService {
     /**
      * Get the userName property: Username to access the SAP HANA server. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @return the userName value.
      */
+    @Generated
     public Object getUserName() {
         return this.userName;
     }
@@ -133,10 +162,11 @@ public class SapHanaLinkedService extends LinkedService {
     /**
      * Set the userName property: Username to access the SAP HANA server. Type: string (or Expression with resultType
      * string).
-     *
+     * 
      * @param userName the userName value to set.
      * @return the SapHanaLinkedService object itself.
      */
+    @Generated
     public SapHanaLinkedService setUserName(Object userName) {
         this.userName = userName;
         return this;
@@ -144,19 +174,21 @@ public class SapHanaLinkedService extends LinkedService {
 
     /**
      * Get the password property: Password to access the SAP HANA server.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: Password to access the SAP HANA server.
-     *
+     * 
      * @param password the password value to set.
      * @return the SapHanaLinkedService object itself.
      */
+    @Generated
     public SapHanaLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -165,9 +197,10 @@ public class SapHanaLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -175,40 +208,175 @@ public class SapHanaLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the SapHanaLinkedService object itself.
      */
+    @Generated
     public SapHanaLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public SapHanaLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapHanaLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapHanaLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapHanaLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapHanaLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (connectionString != null
+            || server != null
+            || authenticationType != null
+            || userName != null
+            || password != null
+            || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            if (this.connectionString != null) {
+                jsonWriter.writeUntypedField("connectionString", this.connectionString);
+            }
+            jsonWriter.writeUntypedField("server", this.server);
+            jsonWriter.writeStringField("authenticationType",
+                this.authenticationType == null ? null : this.authenticationType.toString());
+            if (this.userName != null) {
+                jsonWriter.writeUntypedField("userName", this.userName);
+            }
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SapHanaLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SapHanaLinkedService if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SapHanaLinkedService.
+     */
+    @Generated
+    public static SapHanaLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SapHanaLinkedService deserializedSapHanaLinkedService = new SapHanaLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedSapHanaLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedSapHanaLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedSapHanaLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedSapHanaLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedSapHanaLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedSapHanaLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("connectionString".equals(fieldName)) {
+                            deserializedSapHanaLinkedService.connectionString = reader.readUntyped();
+                        } else if ("server".equals(fieldName)) {
+                            deserializedSapHanaLinkedService.server = reader.readUntyped();
+                        } else if ("authenticationType".equals(fieldName)) {
+                            deserializedSapHanaLinkedService.authenticationType
+                                = SapHanaAuthenticationType.fromString(reader.getString());
+                        } else if ("userName".equals(fieldName)) {
+                            deserializedSapHanaLinkedService.userName = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedSapHanaLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedSapHanaLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedSapHanaLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedSapHanaLinkedService;
+        });
     }
 }

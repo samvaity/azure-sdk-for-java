@@ -4,39 +4,47 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** SQL pool reference type. */
+/**
+ * SQL pool reference type.
+ */
 public final class SqlPoolReferenceType extends ExpandableStringEnum<SqlPoolReferenceType> {
-    /** Static value SqlPoolReference for SqlPoolReferenceType. */
+    /**
+     * Static value SqlPoolReference for SqlPoolReferenceType.
+     */
+    @Generated
     public static final SqlPoolReferenceType SQL_POOL_REFERENCE = fromString("SqlPoolReference");
 
     /**
      * Creates a new instance of SqlPoolReferenceType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public SqlPoolReferenceType() {}
+    public SqlPoolReferenceType() {
+    }
 
     /**
      * Creates or finds a SqlPoolReferenceType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding SqlPoolReferenceType.
      */
-    @JsonCreator
+    @Generated
     public static SqlPoolReferenceType fromString(String name) {
         return fromString(name, SqlPoolReferenceType.class);
     }
 
     /**
      * Gets known SqlPoolReferenceType values.
-     *
+     * 
      * @return known SqlPoolReferenceType values.
      */
+    @Generated
     public static Collection<SqlPoolReferenceType> values() {
         return values(SqlPoolReferenceType.class);
     }

@@ -5,40 +5,43 @@
 package com.azure.resourcemanager.confidentialledger.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
 /**
  * MemberIdentityCertificate
- *
- * <p>Object representing MemberIdentityCertificate for Managed CCF.
+ * 
+ * Object representing MemberIdentityCertificate for Managed CCF.
  */
 @Fluent
-public final class MemberIdentityCertificate {
+public final class MemberIdentityCertificate implements JsonSerializable<MemberIdentityCertificate> {
     /*
      * Member Identity Certificate
      */
-    @JsonProperty(value = "certificate")
     private String certificate;
 
     /*
      * Member Identity Certificate Encryption Key
      */
-    @JsonProperty(value = "encryptionkey")
     private String encryptionkey;
 
     /*
      * Anything
      */
-    @JsonProperty(value = "tags")
     private Object tags;
 
-    /** Creates an instance of MemberIdentityCertificate class. */
+    /**
+     * Creates an instance of MemberIdentityCertificate class.
+     */
     public MemberIdentityCertificate() {
     }
 
     /**
      * Get the certificate property: Member Identity Certificate.
-     *
+     * 
      * @return the certificate value.
      */
     public String certificate() {
@@ -47,7 +50,7 @@ public final class MemberIdentityCertificate {
 
     /**
      * Set the certificate property: Member Identity Certificate.
-     *
+     * 
      * @param certificate the certificate value to set.
      * @return the MemberIdentityCertificate object itself.
      */
@@ -58,7 +61,7 @@ public final class MemberIdentityCertificate {
 
     /**
      * Get the encryptionkey property: Member Identity Certificate Encryption Key.
-     *
+     * 
      * @return the encryptionkey value.
      */
     public String encryptionkey() {
@@ -67,7 +70,7 @@ public final class MemberIdentityCertificate {
 
     /**
      * Set the encryptionkey property: Member Identity Certificate Encryption Key.
-     *
+     * 
      * @param encryptionkey the encryptionkey value to set.
      * @return the MemberIdentityCertificate object itself.
      */
@@ -78,7 +81,7 @@ public final class MemberIdentityCertificate {
 
     /**
      * Get the tags property: Anything.
-     *
+     * 
      * @return the tags value.
      */
     public Object tags() {
@@ -87,7 +90,7 @@ public final class MemberIdentityCertificate {
 
     /**
      * Set the tags property: Anything.
-     *
+     * 
      * @param tags the tags value to set.
      * @return the MemberIdentityCertificate object itself.
      */
@@ -98,9 +101,53 @@ public final class MemberIdentityCertificate {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("certificate", this.certificate);
+        jsonWriter.writeStringField("encryptionkey", this.encryptionkey);
+        if (this.tags != null) {
+            jsonWriter.writeUntypedField("tags", this.tags);
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of MemberIdentityCertificate from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of MemberIdentityCertificate if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the MemberIdentityCertificate.
+     */
+    public static MemberIdentityCertificate fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            MemberIdentityCertificate deserializedMemberIdentityCertificate = new MemberIdentityCertificate();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("certificate".equals(fieldName)) {
+                    deserializedMemberIdentityCertificate.certificate = reader.getString();
+                } else if ("encryptionkey".equals(fieldName)) {
+                    deserializedMemberIdentityCertificate.encryptionkey = reader.getString();
+                } else if ("tags".equals(fieldName)) {
+                    deserializedMemberIdentityCertificate.tags = reader.readUntyped();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedMemberIdentityCertificate;
+        });
     }
 }

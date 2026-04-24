@@ -46,7 +46,7 @@ public class ServiceItemLease implements Lease {
 
     public ServiceItemLease() {
         ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of("UTC"));
-        this.timestamp = currentTime.toString();
+        this.timestamp = currentTime.toInstant().toString();
         this._ts = String.valueOf(currentTime.getSecond());
         this.properties = new HashMap<>();
     }
@@ -234,12 +234,12 @@ public class ServiceItemLease implements Lease {
         ServiceItemLease lease = new ServiceItemLease()
             .withId(document.getId())
             .withETag(document.getETag())
-            .withTs(ModelBridgeInternal.getStringFromJsonSerializable(document, Constants.Properties.LAST_MODIFIED))
-            .withOwner(ModelBridgeInternal.getStringFromJsonSerializable(document,PROPERTY_NAME_OWNER))
-            .withLeaseToken(ModelBridgeInternal.getStringFromJsonSerializable(document,PROPERTY_NAME_LEASE_TOKEN))
-            .withContinuationToken(ModelBridgeInternal.getStringFromJsonSerializable(document,PROPERTY_NAME_CONTINUATION_TOKEN));
+            .withTs(document.getString(Constants.Properties.LAST_MODIFIED))
+            .withOwner(document.getString(PROPERTY_NAME_OWNER))
+            .withLeaseToken(document.getString(PROPERTY_NAME_LEASE_TOKEN))
+            .withContinuationToken(document.getString(PROPERTY_NAME_CONTINUATION_TOKEN));
 
-        String leaseTimestamp = ModelBridgeInternal.getStringFromJsonSerializable(document,PROPERTY_NAME_TIMESTAMP);
+        String leaseTimestamp = document.getString(PROPERTY_NAME_TIMESTAMP);
         if (leaseTimestamp != null) {
             return lease.withTimestamp(ZonedDateTime.parse(leaseTimestamp).toInstant());
         } else {

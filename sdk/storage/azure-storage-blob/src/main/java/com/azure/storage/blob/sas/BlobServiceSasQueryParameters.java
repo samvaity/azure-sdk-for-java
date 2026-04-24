@@ -78,18 +78,18 @@ public final class BlobServiceSasQueryParameters extends BaseSasQueryParameters 
             removeSasParametersFromMap);
         this.keyVersion = getQueryParameter(queryParamsMap, Constants.UrlConstants.SAS_SIGNED_KEY_VERSION,
             removeSasParametersFromMap);
-        this.resource = getQueryParameter(queryParamsMap, Constants.UrlConstants.SAS_SIGNED_RESOURCE,
-            removeSasParametersFromMap);
-        this.cacheControl = getQueryParameter(queryParamsMap, Constants.UrlConstants.SAS_CACHE_CONTROL,
-            removeSasParametersFromMap);
+        this.resource
+            = getQueryParameter(queryParamsMap, Constants.UrlConstants.SAS_SIGNED_RESOURCE, removeSasParametersFromMap);
+        this.cacheControl
+            = getQueryParameter(queryParamsMap, Constants.UrlConstants.SAS_CACHE_CONTROL, removeSasParametersFromMap);
         this.contentDisposition = getQueryParameter(queryParamsMap, Constants.UrlConstants.SAS_CONTENT_DISPOSITION,
             removeSasParametersFromMap);
         this.contentEncoding = getQueryParameter(queryParamsMap, Constants.UrlConstants.SAS_CONTENT_ENCODING,
             removeSasParametersFromMap);
         this.contentLanguage = getQueryParameter(queryParamsMap, Constants.UrlConstants.SAS_CONTENT_LANGUAGE,
             removeSasParametersFromMap);
-        this.contentType = getQueryParameter(queryParamsMap, Constants.UrlConstants.SAS_CONTENT_TYPE,
-            removeSasParametersFromMap);
+        this.contentType
+            = getQueryParameter(queryParamsMap, Constants.UrlConstants.SAS_CONTENT_TYPE, removeSasParametersFromMap);
     }
 
     /**
@@ -142,7 +142,7 @@ public final class BlobServiceSasQueryParameters extends BaseSasQueryParameters 
 
     /**
      * @return The signed identifier (only for {@link BlobServiceSasSignatureValues}) or {@code null}. Please see
-     * <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/establishing-a-stored-access-policy">here</a>
+     * <a href="https://docs.microsoft.com/rest/api/storageservices/establishing-a-stored-access-policy">here</a>
      * for more information.
      * @deprecated Please use {@link BlobServiceSasSignatureValues}
      */
@@ -261,8 +261,7 @@ public final class BlobServiceSasQueryParameters extends BaseSasQueryParameters 
 
     @Deprecated
     UserDelegationKey userDelegationKey() {
-        return new UserDelegationKey()
-            .setSignedExpiry(this.keyExpiry)
+        return new UserDelegationKey().setSignedExpiry(this.keyExpiry)
             .setSignedObjectId(this.keyObjectId)
             .setSignedService(this.keyService)
             .setSignedStart(this.keyStart)

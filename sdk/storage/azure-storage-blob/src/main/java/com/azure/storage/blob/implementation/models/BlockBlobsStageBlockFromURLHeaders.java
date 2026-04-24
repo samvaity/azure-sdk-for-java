@@ -5,242 +5,239 @@
 package com.azure.storage.blob.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.DateTimeRfc1123;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.time.OffsetDateTime;
 import java.util.Base64;
 
-/** The BlockBlobsStageBlockFromURLHeaders model. */
-@JacksonXmlRootElement(localName = "null")
+/**
+ * The BlockBlobsStageBlockFromURLHeaders model.
+ */
 @Fluent
 public final class BlockBlobsStageBlockFromURLHeaders {
     /*
-     * The x-ms-version property.
+     * The Content-MD5 property.
      */
-    @JsonProperty(value = "x-ms-version")
-    private String xMsVersion;
+    @Generated
+    private byte[] contentMD5;
 
     /*
      * The x-ms-content-crc64 property.
      */
-    @JsonProperty(value = "x-ms-content-crc64")
+    @Generated
     private byte[] xMsContentCrc64;
-
-    /*
-     * The x-ms-encryption-key-sha256 property.
-     */
-    @JsonProperty(value = "x-ms-encryption-key-sha256")
-    private String xMsEncryptionKeySha256;
-
-    /*
-     * The x-ms-request-id property.
-     */
-    @JsonProperty(value = "x-ms-request-id")
-    private String xMsRequestId;
-
-    /*
-     * The x-ms-request-server-encrypted property.
-     */
-    @JsonProperty(value = "x-ms-request-server-encrypted")
-    private Boolean xMsRequestServerEncrypted;
 
     /*
      * The x-ms-client-request-id property.
      */
-    @JsonProperty(value = "x-ms-client-request-id")
+    @Generated
     private String xMsClientRequestId;
+
+    /*
+     * The x-ms-request-id property.
+     */
+    @Generated
+    private String xMsRequestId;
+
+    /*
+     * The x-ms-version property.
+     */
+    @Generated
+    private String xMsVersion;
 
     /*
      * The Date property.
      */
-    @JsonProperty(value = "Date")
+    @Generated
     private DateTimeRfc1123 date;
 
     /*
-     * The Content-MD5 property.
+     * The x-ms-request-server-encrypted property.
      */
-    @JsonProperty(value = "Content-MD5")
-    private byte[] contentMD5;
+    @Generated
+    private Boolean xMsRequestServerEncrypted;
+
+    /*
+     * The x-ms-encryption-key-sha256 property.
+     */
+    @Generated
+    private String xMsEncryptionKeySha256;
 
     /*
      * The x-ms-encryption-scope property.
      */
-    @JsonProperty(value = "x-ms-encryption-scope")
+    @Generated
     private String xMsEncryptionScope;
-
-    private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
 
     private static final HttpHeaderName X_MS_CONTENT_CRC64 = HttpHeaderName.fromString("x-ms-content-crc64");
 
-    private static final HttpHeaderName X_MS_ENCRYPTION_KEY_SHA256 =
-            HttpHeaderName.fromString("x-ms-encryption-key-sha256");
+    private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
 
-    private static final HttpHeaderName X_MS_REQUEST_ID = HttpHeaderName.fromString("x-ms-request-id");
+    private static final HttpHeaderName X_MS_REQUEST_SERVER_ENCRYPTED
+        = HttpHeaderName.fromString("x-ms-request-server-encrypted");
 
-    private static final HttpHeaderName X_MS_REQUEST_SERVER_ENCRYPTED =
-            HttpHeaderName.fromString("x-ms-request-server-encrypted");
+    private static final HttpHeaderName X_MS_ENCRYPTION_KEY_SHA256
+        = HttpHeaderName.fromString("x-ms-encryption-key-sha256");
 
     private static final HttpHeaderName X_MS_ENCRYPTION_SCOPE = HttpHeaderName.fromString("x-ms-encryption-scope");
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of BlockBlobsStageBlockFromURLHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public BlockBlobsStageBlockFromURLHeaders(HttpHeaders rawHeaders) {
-        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
-        String xMsContentCrc64 = rawHeaders.getValue(X_MS_CONTENT_CRC64);
-        if (xMsContentCrc64 != null) {
-            this.xMsContentCrc64 = Base64.getDecoder().decode(xMsContentCrc64);
-        }
-        this.xMsEncryptionKeySha256 = rawHeaders.getValue(X_MS_ENCRYPTION_KEY_SHA256);
-        this.xMsRequestId = rawHeaders.getValue(X_MS_REQUEST_ID);
-        String xMsRequestServerEncrypted = rawHeaders.getValue(X_MS_REQUEST_SERVER_ENCRYPTED);
-        if (xMsRequestServerEncrypted != null) {
-            this.xMsRequestServerEncrypted = Boolean.parseBoolean(xMsRequestServerEncrypted);
-        }
-        this.xMsClientRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_CLIENT_REQUEST_ID);
-        String date = rawHeaders.getValue(HttpHeaderName.DATE);
-        if (date != null) {
-            this.date = new DateTimeRfc1123(date);
-        }
         String contentMD5 = rawHeaders.getValue(HttpHeaderName.CONTENT_MD5);
         if (contentMD5 != null) {
             this.contentMD5 = Base64.getDecoder().decode(contentMD5);
+        } else {
+            this.contentMD5 = null;
         }
+        String xMsContentCrc64 = rawHeaders.getValue(X_MS_CONTENT_CRC64);
+        if (xMsContentCrc64 != null) {
+            this.xMsContentCrc64 = Base64.getDecoder().decode(xMsContentCrc64);
+        } else {
+            this.xMsContentCrc64 = null;
+        }
+        this.xMsClientRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_CLIENT_REQUEST_ID);
+        this.xMsRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_REQUEST_ID);
+        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
+        String date = rawHeaders.getValue(HttpHeaderName.DATE);
+        if (date != null) {
+            this.date = new DateTimeRfc1123(date);
+        } else {
+            this.date = null;
+        }
+        String xMsRequestServerEncrypted = rawHeaders.getValue(X_MS_REQUEST_SERVER_ENCRYPTED);
+        if (xMsRequestServerEncrypted != null) {
+            this.xMsRequestServerEncrypted = Boolean.parseBoolean(xMsRequestServerEncrypted);
+        } else {
+            this.xMsRequestServerEncrypted = null;
+        }
+        this.xMsEncryptionKeySha256 = rawHeaders.getValue(X_MS_ENCRYPTION_KEY_SHA256);
         this.xMsEncryptionScope = rawHeaders.getValue(X_MS_ENCRYPTION_SCOPE);
     }
 
     /**
-     * Get the xMsVersion property: The x-ms-version property.
-     *
-     * @return the xMsVersion value.
+     * Get the contentMD5 property: The Content-MD5 property.
+     * 
+     * @return the contentMD5 value.
      */
-    public String getXMsVersion() {
-        return this.xMsVersion;
+    @Generated
+    public byte[] getContentMD5() {
+        return CoreUtils.clone(this.contentMD5);
     }
 
     /**
-     * Set the xMsVersion property: The x-ms-version property.
-     *
-     * @param xMsVersion the xMsVersion value to set.
+     * Set the contentMD5 property: The Content-MD5 property.
+     * 
+     * @param contentMD5 the contentMD5 value to set.
      * @return the BlockBlobsStageBlockFromURLHeaders object itself.
      */
-    public BlockBlobsStageBlockFromURLHeaders setXMsVersion(String xMsVersion) {
-        this.xMsVersion = xMsVersion;
+    @Generated
+    public BlockBlobsStageBlockFromURLHeaders setContentMD5(byte[] contentMD5) {
+        this.contentMD5 = CoreUtils.clone(contentMD5);
         return this;
     }
 
     /**
      * Get the xMsContentCrc64 property: The x-ms-content-crc64 property.
-     *
+     * 
      * @return the xMsContentCrc64 value.
      */
+    @Generated
     public byte[] getXMsContentCrc64() {
         return CoreUtils.clone(this.xMsContentCrc64);
     }
 
     /**
      * Set the xMsContentCrc64 property: The x-ms-content-crc64 property.
-     *
+     * 
      * @param xMsContentCrc64 the xMsContentCrc64 value to set.
      * @return the BlockBlobsStageBlockFromURLHeaders object itself.
      */
+    @Generated
     public BlockBlobsStageBlockFromURLHeaders setXMsContentCrc64(byte[] xMsContentCrc64) {
         this.xMsContentCrc64 = CoreUtils.clone(xMsContentCrc64);
         return this;
     }
 
     /**
-     * Get the xMsEncryptionKeySha256 property: The x-ms-encryption-key-sha256 property.
-     *
-     * @return the xMsEncryptionKeySha256 value.
-     */
-    public String getXMsEncryptionKeySha256() {
-        return this.xMsEncryptionKeySha256;
-    }
-
-    /**
-     * Set the xMsEncryptionKeySha256 property: The x-ms-encryption-key-sha256 property.
-     *
-     * @param xMsEncryptionKeySha256 the xMsEncryptionKeySha256 value to set.
-     * @return the BlockBlobsStageBlockFromURLHeaders object itself.
-     */
-    public BlockBlobsStageBlockFromURLHeaders setXMsEncryptionKeySha256(String xMsEncryptionKeySha256) {
-        this.xMsEncryptionKeySha256 = xMsEncryptionKeySha256;
-        return this;
-    }
-
-    /**
-     * Get the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @return the xMsRequestId value.
-     */
-    public String getXMsRequestId() {
-        return this.xMsRequestId;
-    }
-
-    /**
-     * Set the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @param xMsRequestId the xMsRequestId value to set.
-     * @return the BlockBlobsStageBlockFromURLHeaders object itself.
-     */
-    public BlockBlobsStageBlockFromURLHeaders setXMsRequestId(String xMsRequestId) {
-        this.xMsRequestId = xMsRequestId;
-        return this;
-    }
-
-    /**
-     * Get the xMsRequestServerEncrypted property: The x-ms-request-server-encrypted property.
-     *
-     * @return the xMsRequestServerEncrypted value.
-     */
-    public Boolean isXMsRequestServerEncrypted() {
-        return this.xMsRequestServerEncrypted;
-    }
-
-    /**
-     * Set the xMsRequestServerEncrypted property: The x-ms-request-server-encrypted property.
-     *
-     * @param xMsRequestServerEncrypted the xMsRequestServerEncrypted value to set.
-     * @return the BlockBlobsStageBlockFromURLHeaders object itself.
-     */
-    public BlockBlobsStageBlockFromURLHeaders setXMsRequestServerEncrypted(Boolean xMsRequestServerEncrypted) {
-        this.xMsRequestServerEncrypted = xMsRequestServerEncrypted;
-        return this;
-    }
-
-    /**
      * Get the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
+     * 
      * @return the xMsClientRequestId value.
      */
+    @Generated
     public String getXMsClientRequestId() {
         return this.xMsClientRequestId;
     }
 
     /**
      * Set the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
+     * 
      * @param xMsClientRequestId the xMsClientRequestId value to set.
      * @return the BlockBlobsStageBlockFromURLHeaders object itself.
      */
+    @Generated
     public BlockBlobsStageBlockFromURLHeaders setXMsClientRequestId(String xMsClientRequestId) {
         this.xMsClientRequestId = xMsClientRequestId;
         return this;
     }
 
     /**
+     * Get the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @return the xMsRequestId value.
+     */
+    @Generated
+    public String getXMsRequestId() {
+        return this.xMsRequestId;
+    }
+
+    /**
+     * Set the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @param xMsRequestId the xMsRequestId value to set.
+     * @return the BlockBlobsStageBlockFromURLHeaders object itself.
+     */
+    @Generated
+    public BlockBlobsStageBlockFromURLHeaders setXMsRequestId(String xMsRequestId) {
+        this.xMsRequestId = xMsRequestId;
+        return this;
+    }
+
+    /**
+     * Get the xMsVersion property: The x-ms-version property.
+     * 
+     * @return the xMsVersion value.
+     */
+    @Generated
+    public String getXMsVersion() {
+        return this.xMsVersion;
+    }
+
+    /**
+     * Set the xMsVersion property: The x-ms-version property.
+     * 
+     * @param xMsVersion the xMsVersion value to set.
+     * @return the BlockBlobsStageBlockFromURLHeaders object itself.
+     */
+    @Generated
+    public BlockBlobsStageBlockFromURLHeaders setXMsVersion(String xMsVersion) {
+        this.xMsVersion = xMsVersion;
+        return this;
+    }
+
+    /**
      * Get the date property: The Date property.
-     *
+     * 
      * @return the date value.
      */
+    @Generated
     public OffsetDateTime getDate() {
         if (this.date == null) {
             return null;
@@ -250,10 +247,11 @@ public final class BlockBlobsStageBlockFromURLHeaders {
 
     /**
      * Set the date property: The Date property.
-     *
+     * 
      * @param date the date value to set.
      * @return the BlockBlobsStageBlockFromURLHeaders object itself.
      */
+    @Generated
     public BlockBlobsStageBlockFromURLHeaders setDate(OffsetDateTime date) {
         if (date == null) {
             this.date = null;
@@ -264,40 +262,66 @@ public final class BlockBlobsStageBlockFromURLHeaders {
     }
 
     /**
-     * Get the contentMD5 property: The Content-MD5 property.
-     *
-     * @return the contentMD5 value.
+     * Get the xMsRequestServerEncrypted property: The x-ms-request-server-encrypted property.
+     * 
+     * @return the xMsRequestServerEncrypted value.
      */
-    public byte[] getContentMD5() {
-        return CoreUtils.clone(this.contentMD5);
+    @Generated
+    public Boolean isXMsRequestServerEncrypted() {
+        return this.xMsRequestServerEncrypted;
     }
 
     /**
-     * Set the contentMD5 property: The Content-MD5 property.
-     *
-     * @param contentMD5 the contentMD5 value to set.
+     * Set the xMsRequestServerEncrypted property: The x-ms-request-server-encrypted property.
+     * 
+     * @param xMsRequestServerEncrypted the xMsRequestServerEncrypted value to set.
      * @return the BlockBlobsStageBlockFromURLHeaders object itself.
      */
-    public BlockBlobsStageBlockFromURLHeaders setContentMD5(byte[] contentMD5) {
-        this.contentMD5 = CoreUtils.clone(contentMD5);
+    @Generated
+    public BlockBlobsStageBlockFromURLHeaders setXMsRequestServerEncrypted(Boolean xMsRequestServerEncrypted) {
+        this.xMsRequestServerEncrypted = xMsRequestServerEncrypted;
+        return this;
+    }
+
+    /**
+     * Get the xMsEncryptionKeySha256 property: The x-ms-encryption-key-sha256 property.
+     * 
+     * @return the xMsEncryptionKeySha256 value.
+     */
+    @Generated
+    public String getXMsEncryptionKeySha256() {
+        return this.xMsEncryptionKeySha256;
+    }
+
+    /**
+     * Set the xMsEncryptionKeySha256 property: The x-ms-encryption-key-sha256 property.
+     * 
+     * @param xMsEncryptionKeySha256 the xMsEncryptionKeySha256 value to set.
+     * @return the BlockBlobsStageBlockFromURLHeaders object itself.
+     */
+    @Generated
+    public BlockBlobsStageBlockFromURLHeaders setXMsEncryptionKeySha256(String xMsEncryptionKeySha256) {
+        this.xMsEncryptionKeySha256 = xMsEncryptionKeySha256;
         return this;
     }
 
     /**
      * Get the xMsEncryptionScope property: The x-ms-encryption-scope property.
-     *
+     * 
      * @return the xMsEncryptionScope value.
      */
+    @Generated
     public String getXMsEncryptionScope() {
         return this.xMsEncryptionScope;
     }
 
     /**
      * Set the xMsEncryptionScope property: The x-ms-encryption-scope property.
-     *
+     * 
      * @param xMsEncryptionScope the xMsEncryptionScope value to set.
      * @return the BlockBlobsStageBlockFromURLHeaders object itself.
      */
+    @Generated
     public BlockBlobsStageBlockFromURLHeaders setXMsEncryptionScope(String xMsEncryptionScope) {
         this.xMsEncryptionScope = xMsEncryptionScope;
         return this;

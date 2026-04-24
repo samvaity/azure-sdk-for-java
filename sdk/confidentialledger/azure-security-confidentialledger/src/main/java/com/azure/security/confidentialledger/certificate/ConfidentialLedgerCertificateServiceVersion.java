@@ -6,10 +6,18 @@ package com.azure.security.confidentialledger.certificate;
 
 import com.azure.core.util.ServiceVersion;
 
-/** Service version of ConfidentialLedgerCertificateClient. */
+/**
+ * Service version of ConfidentialLedgerCertificateClient.
+ */
 public enum ConfidentialLedgerCertificateServiceVersion implements ServiceVersion {
-    /** Enum value 2022-05-13. */
-    V2022_05_13("2022-05-13");
+    /**
+     * Enum value 2022-05-13.
+     */
+    V2022_05_13("2022-05-13"),
+    /**
+     * Enum value 2024-12-09-preview.
+     */
+    V2024_12_09_PREVIEW("2024-12-09-preview");
 
     private final String version;
 
@@ -17,6 +25,9 @@ public enum ConfidentialLedgerCertificateServiceVersion implements ServiceVersio
         this.version = version;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getVersion() {
         return this.version;
@@ -24,10 +35,10 @@ public enum ConfidentialLedgerCertificateServiceVersion implements ServiceVersio
 
     /**
      * Gets the latest service version supported by this client library.
-     *
+     * 
      * @return The latest {@link ConfidentialLedgerCertificateServiceVersion}.
      */
     public static ConfidentialLedgerCertificateServiceVersion getLatest() {
-        return V2022_05_13;
+        return V2024_12_09_PREVIEW;
     }
 }

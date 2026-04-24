@@ -23,19 +23,21 @@ import java.util.stream.Collectors;
 public final class CallConnectionProperties {
     private final String callConnectionId;
     private final String serverCallId;
-    private final CommunicationIdentifier sourceIdentity;
+    private final CommunicationIdentifier source;
     private final PhoneNumberIdentifier sourceCallerIdNumber;
     private final String sourceDisplayName;
     private final List<CommunicationIdentifier> targetParticipants;
     private final CallConnectionState callConnectionState;
     private final String callbackUrl;
-    private final String mediaSubscriptionId;
-    private final CommunicationUserIdentifier answeredByIdentifier;
+    private final MediaStreamingSubscription mediaStreamingSubscription;
+    private final TranscriptionSubscription transcriptionSubscription;
+    private final CommunicationUserIdentifier answeredBy;
     private final String correlationId;
+    private final PhoneNumberIdentifier answeredFor;
 
     static {
-        CallConnectionPropertiesConstructorProxy.setAccessor(
-            new CallConnectionPropertiesConstructorProxy.CallConnectionPropertiesConstructorAccessor() {
+        CallConnectionPropertiesConstructorProxy
+            .setAccessor(new CallConnectionPropertiesConstructorProxy.CallConnectionPropertiesConstructorAccessor() {
                 @Override
                 public CallConnectionProperties create(CallConnectionPropertiesInternal internalHeaders) {
                     return new CallConnectionProperties(internalHeaders);
@@ -49,16 +51,18 @@ public final class CallConnectionProperties {
      */
     public CallConnectionProperties() {
         this.callConnectionId = null;
-        this.sourceIdentity = null;
+        this.source = null;
         this.sourceCallerIdNumber = null;
         this.sourceDisplayName = null;
         this.serverCallId = null;
         this.targetParticipants = null;
         this.callConnectionState = null;
         this.callbackUrl = null;
-        this.mediaSubscriptionId = null;
-        this.answeredByIdentifier = null;
+        this.mediaStreamingSubscription = null;
+        this.transcriptionSubscription = null;
+        this.answeredBy = null;
         this.correlationId = null;
+        this.answeredFor = null;
     }
 
     /**
@@ -68,16 +72,28 @@ public final class CallConnectionProperties {
      */
     CallConnectionProperties(CallConnectionPropertiesInternal callConnectionPropertiesInternal) {
         this.callConnectionId = callConnectionPropertiesInternal.getCallConnectionId();
-        this.sourceIdentity = CommunicationIdentifierConverter.convert(callConnectionPropertiesInternal.getSourceIdentity());
-        this.sourceCallerIdNumber = PhoneNumberIdentifierConverter.convert(callConnectionPropertiesInternal.getSourceCallerIdNumber());
+        this.source = CommunicationIdentifierConverter.convert(callConnectionPropertiesInternal.getSource());
+        this.sourceCallerIdNumber
+            = PhoneNumberIdentifierConverter.convert(callConnectionPropertiesInternal.getSourceCallerIdNumber());
         this.sourceDisplayName = callConnectionPropertiesInternal.getSourceDisplayName();
         this.serverCallId = callConnectionPropertiesInternal.getServerCallId();
-        this.targetParticipants = callConnectionPropertiesInternal.getTargets().stream().map(CommunicationIdentifierConverter::convert).collect(Collectors.toList());
-        this.callConnectionState = CallConnectionState.fromString(callConnectionPropertiesInternal.getCallConnectionState().toString());
+        this.targetParticipants = callConnectionPropertiesInternal.getTargets()
+            .stream()
+            .map(CommunicationIdentifierConverter::convert)
+            .collect(Collectors.toList());
+        this.callConnectionState
+            = CallConnectionState.fromString(callConnectionPropertiesInternal.getCallConnectionState().toString());
         this.callbackUrl = callConnectionPropertiesInternal.getCallbackUri();
-        this.mediaSubscriptionId = callConnectionPropertiesInternal.getMediaSubscriptionId();
-        this.answeredByIdentifier = CommunicationUserIdentifierConverter.convert(callConnectionPropertiesInternal.getAnsweredByIdentifier());
+        this.mediaStreamingSubscription = callConnectionPropertiesInternal.getMediaStreamingSubscription() != null
+            ? new MediaStreamingSubscription(callConnectionPropertiesInternal.getMediaStreamingSubscription())
+            : null;
+        this.transcriptionSubscription = callConnectionPropertiesInternal.getTranscriptionSubscription() != null
+            ? new TranscriptionSubscription(callConnectionPropertiesInternal.getTranscriptionSubscription())
+            : null;
+        this.answeredBy
+            = CommunicationUserIdentifierConverter.convert(callConnectionPropertiesInternal.getAnsweredBy());
         this.correlationId = callConnectionPropertiesInternal.getCorrelationId();
+        this.answeredFor = PhoneNumberIdentifierConverter.convert(callConnectionPropertiesInternal.getAnsweredFor());
     }
 
     /**
@@ -92,19 +108,10 @@ public final class CallConnectionProperties {
     /**
      * Get the source identity.
      *
-     * @return sourceIdentity value.
+     * @return source value.
      */
     public CommunicationIdentifier getSource() {
-        return sourceIdentity;
-    }
-
-    /**
-     * Get the source identity.
-     *
-     * @return sourceIdentity value.
-     */
-    public CommunicationIdentifier getSourceIdentity() {
-        return sourceIdentity;
+        return source;
     }
 
     /**
@@ -162,20 +169,21 @@ public final class CallConnectionProperties {
     }
 
     /**
-     * Get the mediaSubscriptionId property: SubscriptionId for media streaming.
+     * Get the MediaStreamingSubscription property: SubscriptionId for media streaming.
      *
-     * @return the mediaSubscriptionId value.
+     * @return the MediaStreamingSubscription value.
      */
-    public String getMediaSubscriptionId() {
-        return mediaSubscriptionId;
+    public MediaStreamingSubscription getMediaStreamingSubscription() {
+        return mediaStreamingSubscription;
     }
 
     /**
-     *  Get identity that answered the call
-     * @return identity that answered the call
+     * Get the TranscriptionSubscription property: SubscriptionId for transcription.
+     *
+     * @return the TranscriptionSubscription value.
      */
-    public CommunicationUserIdentifier getAnsweredByIdentifier() {
-        return answeredByIdentifier;
+    public TranscriptionSubscription getTranscriptionSubscription() {
+        return transcriptionSubscription;
     }
 
     /**
@@ -183,7 +191,7 @@ public final class CallConnectionProperties {
      * @return identity that answered the call
      */
     public CommunicationUserIdentifier getAnsweredBy() {
-        return answeredByIdentifier;
+        return answeredBy;
     }
 
     /**
@@ -192,5 +200,15 @@ public final class CallConnectionProperties {
      */
     public String getCorrelationId() {
         return correlationId;
+    }
+
+    /**
+     * Get the answeredFor property: Identity of the original Pstn target of an incoming Call. Only populated when the
+     * original target is a Pstn number.
+     * 
+     * @return the answeredFor value.
+     */
+    public PhoneNumberIdentifier getAnsweredFor() {
+        return answeredFor;
     }
 }

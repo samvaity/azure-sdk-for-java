@@ -7,11 +7,10 @@ import com.azure.core.credential.AccessToken;
 import com.azure.core.credential.TokenRequestContext;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.identity.implementation.IdentityClient;
-
 import reactor.core.publisher.Mono;
 
 /**
- * Authenticates a service principal with AAD using a client assertion.
+ * Authenticates a service principal with Microsoft Entra ID using a client assertion.
  */
 class AksExchangeTokenCredential extends ManagedIdentityServiceCredential {
     private static final ClientLogger LOGGER = new ClientLogger(AksExchangeTokenCredential.class);
@@ -33,6 +32,6 @@ class AksExchangeTokenCredential extends ManagedIdentityServiceCredential {
                 + " 'AZURE_CLIENT_ID' environment variable or through the credential builder."
                 + " Please ensure client id is provided to authenticate via token exchange in AKS environment.")));
         }
-        return identityClient.authenticateWithManagedIdentityConfidentialClient(request);
+        return identityClient.authenticateWithAksConfidentialClient(request);
     }
 }

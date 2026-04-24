@@ -1,6 +1,6 @@
 # Release History
 
-## 1.19.0-beta.1 (Unreleased)
+## 1.27.0-beta.15 (Unreleased)
 
 ### Features Added
 
@@ -9,6 +9,290 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 1.27.0-beta.14 (2026-01-15)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.57.0` to `1.57.1`.
+- Upgraded Reactor from `3.7.11` to `3.7.14`. ([#47611](https://github.com/Azure/azure-sdk-for-java/pull/47611))
+
+## 1.27.0-beta.13 (2025-10-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.1` to `1.57.0`.
+- Upgraded Reactor from `3.7.9` to `3.7.11`. ([#46894](https://github.com/Azure/azure-sdk-for-java/pull/46894))
+
+## 1.27.0-beta.12 (2025-09-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.0` to `1.56.1`.
+
+## 1.27.0-beta.11 (2025-08-07)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.5` to `1.56.0`.
+- Upgraded Reactor from `3.4.41` to `3.7.8`. ([#46207](https://github.com/Azure/azure-sdk-for-java/pull/46207))
+
+## 1.27.0-beta.10 (2025-06-26)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.4` to `1.55.5`.
+- Upgraded JUnit 5 from `5.11.2` to `5.13.1`.
+
+## 1.27.0-beta.9 (2025-06-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.3` to `1.55.4`.
+
+## 1.27.0-beta.8 (2025-03-10)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.2` to `1.55.3`.
+
+## 1.27.0-beta.7 (2025-02-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.1` to `1.55.2`.
+
+## 1.27.0-beta.6 (2025-02-12)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.0` to `1.55.1`.
+
+## 1.27.0-beta.5 (2025-02-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.1` to `1.55.0`.
+
+## 1.27.0-beta.4 (2024-11-14)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.0` to `1.54.1`.
+
+## 1.27.0-beta.3 (2024-11-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.53.0` to `1.54.0`.
+
+## 1.27.0-beta.2 (2024-10-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.52.0` to `1.53.0`.
+
+## 1.27.0-beta.1 (2024-09-12)
+
+### Features Added
+
+- Added dependencies on HTTP client implementations. Packages using `azure-core-test` as a testing dependency no longer
+  need to add dependencies on HTTP client implementations to enable using different HTTP clients in testing.
+
+### Breaking Changes
+
+- Moved code related to testing HTTP client implementations to shared `azure-core` test code.
+- Replaced dependency `commons-compress` with `ant` to handle tar.gz files. `ant` has fewer transitive dependencies,
+  reducing the likelihood of dependency conflicts.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.51.0` to `1.52.0`.
+
+## 1.26.2 (2024-07-31)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.50.0` to `1.51.0`.
+
+## 1.26.1 (2024-07-12)
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.1` to `1.50.0`.
+
+## 1.26.0 (2024-06-06)
+
+### Features Added
+
+- Added `InterceptorManager.removeSanitizers` to remove sanitizers used by Test Proxy.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.0` to `1.49.1`.
+
+## 1.25.0 (2024-05-01)
+
+### Features Added
+
+- `TestContextManager` added `setTestIteration(Integer)` and `getTrackTestName`.
+- Added annotations `LiveOnly` and `PlaybackOnly` to skip tests from running in other testing modes.
+- Added `TestContextManagerParameterResolver` to manage resolving `TestContextManager` parameters.
+
+### Breaking Changes
+
+- `TestBase` no longer extends `BeforeEachCallback`.
+- `TestBase.setupTest` now takes `TestContextManager` rather than `TestInfo`, which is provided by `TestContextManagerParameterResolver`.
+- `TestBase.teardownTest` no longer takes a parameter.
+- `TestProxyTestBase.setupTestProxy` no longer takes a parameter.
+- `TestContextManager` no longer validates that a non-PLAYBACK test was ran in PLAYBACK mode, `TestBase` validates that now.
+- `DoNotRecord` deprecated `skipInPlayback`, if a test should be skipped in PLAYBACK and shouldn't be recorded it should
+  be annotated with both `DoNotRecord` and `LiveOnly`.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.48.0` to `1.49.0`.
+
+## 1.24.2 (2024-04-23)
+
+### Other Changes
+
+- Added more missing sanitizers.
+
+## 1.24.1 (2024-04-05)
+
+### Other Changes
+
+- Added missing sanitizers.
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.47.0` to `1.48.0`.
+
+## 1.24.0 (2024-03-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.46.0` to `1.47.0`.
+
+## 1.23.0 (2024-02-02)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.45.1` to `1.46.0`.
+
+## 1.22.0 (2023-11-03)
+
+### Features Added
+
+- Added request retry to Test Proxy. ([#36656](https://github.com/Azure/azure-sdk-for-java/pull/36656))
+
+### Breaking Changes
+
+- Made `TextProxyManager` `final`, removed constructor, made `startProxy` static, and hid `stopProxy`. ([#36656](https://github.com/Azure/azure-sdk-for-java/pull/36656))
+
+### Bugs Fixed
+
+- Fixed a bug where Test Proxy could deadlock during test runs as the error stream wasn't consumed. ([#37140](https://github.com/Azure/azure-sdk-for-java/pull/37140))
+- Fixed a bug where `aarch64` didn't match to `arm64`. ([#37137](https://github.com/Azure/azure-sdk-for-java/pull/37137))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.1` to `1.45.0`.
+
+## 1.21.1 (2023-10-17)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.0` to `1.44.1`.
+- Upgraded `reactor-test` from `3.4.31` to `3.4.32`.
+- Upgraded `reactor-netty-http` from `1.0.34` to `1.0.38`.
+- Upgraded `jetty-server` from `9.4.51.v20230217` to `9.4.53.v20231009`.
+- Upgraded `jetty-servlet` from `9.4.51.v20230217` to `9.4.53.v20231009`.
+- Upgraded `commons-compress` from `1.22` to `1.24.0`.
+
+## 1.21.0 (2023-10-06)
+
+### Features Added
+
+- Added support for bulk `AddSanitizers` in Test Proxy. ([#36694](https://github.com/Azure/azure-sdk-for-java/pull/36694))
+
+### Bugs Fixed
+
+- Aligned XML redactions for Test Proxy with previous recording framework. ([#37043](https://github.com/Azure/azure-sdk-for-java/pull/37043))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.43.0` to `1.44.0`.
+
+## 1.20.0 (2023-09-07)
+
+### Features Added
+
+- Added `TestProxyRecordingOptions` model representing the transport layer options to send to the test proxy when recording.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.42.0` to `1.43.0`.
+
+## 1.19.0 (2023-08-04)
+
+### Features Added
+- Add helper methods for adding sanitizers and matchers
+- Updated the list of headers to redact to include "subscription-key"
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.41.0` to `1.42.0`.
 
 ## 1.18.1 (2023-07-06)
 

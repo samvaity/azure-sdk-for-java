@@ -6,72 +6,41 @@ package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.networkcloud.NetworkCloudManager;
 import com.azure.resourcemanager.networkcloud.models.HybridAksPluginType;
 import com.azure.resourcemanager.networkcloud.models.L2Network;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class L2NetworksGetByResourceGroupWithResponseMockTests {
     @Test
     public void testGetByResourceGroupWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"etag\":\"egftcvb\",\"extendedLocation\":{\"name\":\"iftksdwgdnk\",\"type\":\"fgmwd\"},\"properties\":{\"associatedResourceIds\":[\"buvczldbglzoutb\"],\"clusterId\":\"qgz\",\"detailedStatus\":\"Error\",\"detailedStatusMessage\":\"clyzgs\",\"hybridAksClustersAssociatedIds\":[\"bjgmnzj\",\"t\"],\"hybridAksPluginType\":\"SRIOV\",\"interfaceName\":\"khlobvvjbhvhdi\",\"l2IsolationDomainId\":\"ayfluiyuosnu\",\"provisioningState\":\"Canceled\",\"virtualMachinesAssociatedIds\":[\"vhyibdrqrsw\",\"buubpyrowt\",\"oxztfwfqch\",\"czevjnn\"]},\"location\":\"agfyvrtpqpe\",\"tags\":{\"wqwemvxqabckmze\":\"cgkrepdqhqy\"},\"id\":\"xin\",\"name\":\"greohtwhlpuzjp\",\"type\":\"eezn\"}";
 
-        String responseStr =
-            "{\"extendedLocation\":{\"name\":\"urkphyjdxravju\",\"type\":\"dbrxmrgc\"},\"properties\":{\"associatedResourceIds\":[\"pxkiyf\"],\"clusterId\":\"kbajbu\",\"detailedStatus\":\"Available\",\"detailedStatusMessage\":\"uusioycblev\",\"hybridAksClustersAssociatedIds\":[\"lujyxkyxl\",\"gsjgkzzlta\"],\"hybridAksPluginType\":\"DPDK\",\"interfaceName\":\"ffovwmbjlzqsczp\",\"l2IsolationDomainId\":\"vdwnapfdqwowft\",\"provisioningState\":\"Canceled\",\"virtualMachinesAssociatedIds\":[\"jtks\",\"h\",\"cgqyhleseyq\",\"hvyeldotj\"]},\"location\":\"kwiswskukjtas\",\"tags\":{\"kndlqvtwknvg\":\"ispkxkdtx\",\"gtywatmqaqkue\":\"mb\"},\"id\":\"tgroesh\",\"name\":\"ygzc\",\"type\":\"yf\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        NetworkCloudManager manager = NetworkCloudManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        L2Network response = manager.l2Networks()
+            .getByResourceGroupWithResponse("rkjd", "vrg", com.azure.core.util.Context.NONE)
+            .getValue();
 
-        NetworkCloudManager manager =
-            NetworkCloudManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        L2Network response =
-            manager
-                .l2Networks()
-                .getByResourceGroupWithResponse("hychocokuleh", "rqlrqffawe", com.azure.core.util.Context.NONE)
-                .getValue();
-
-        Assertions.assertEquals("kwiswskukjtas", response.location());
-        Assertions.assertEquals("ispkxkdtx", response.tags().get("kndlqvtwknvg"));
-        Assertions.assertEquals("urkphyjdxravju", response.extendedLocation().name());
-        Assertions.assertEquals("dbrxmrgc", response.extendedLocation().type());
-        Assertions.assertEquals(HybridAksPluginType.DPDK, response.hybridAksPluginType());
-        Assertions.assertEquals("ffovwmbjlzqsczp", response.interfaceName());
-        Assertions.assertEquals("vdwnapfdqwowft", response.l2IsolationDomainId());
+        Assertions.assertEquals("agfyvrtpqpe", response.location());
+        Assertions.assertEquals("cgkrepdqhqy", response.tags().get("wqwemvxqabckmze"));
+        Assertions.assertEquals("iftksdwgdnk", response.extendedLocation().name());
+        Assertions.assertEquals("fgmwd", response.extendedLocation().type());
+        Assertions.assertEquals(HybridAksPluginType.SRIOV, response.hybridAksPluginType());
+        Assertions.assertEquals("khlobvvjbhvhdi", response.interfaceName());
+        Assertions.assertEquals("ayfluiyuosnu", response.l2IsolationDomainId());
     }
 }

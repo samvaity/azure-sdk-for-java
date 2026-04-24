@@ -5,41 +5,54 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The ErrorCode model. */
+/**
+ * The ErrorCode model.
+ */
 @Fluent
-public final class ErrorCode {
+public final class ErrorCode implements JsonSerializable<ErrorCode> {
     /*
      * The message property.
      */
-    @JsonProperty(value = "message")
+    @Generated
     private String message;
 
     /*
      * The code property.
      */
-    @JsonProperty(value = "code")
+    @Generated
     private String code;
 
-    /** Creates an instance of ErrorCode class. */
-    public ErrorCode() {}
+    /**
+     * Creates an instance of ErrorCode class.
+     */
+    @Generated
+    public ErrorCode() {
+    }
 
     /**
      * Get the message property: The message property.
-     *
+     * 
      * @return the message value.
      */
+    @Generated
     public String getMessage() {
         return this.message;
     }
 
     /**
      * Set the message property: The message property.
-     *
+     * 
      * @param message the message value to set.
      * @return the ErrorCode object itself.
      */
+    @Generated
     public ErrorCode setMessage(String message) {
         this.message = message;
         return this;
@@ -47,21 +60,64 @@ public final class ErrorCode {
 
     /**
      * Get the code property: The code property.
-     *
+     * 
      * @return the code value.
      */
+    @Generated
     public String getCode() {
         return this.code;
     }
 
     /**
      * Set the code property: The code property.
-     *
+     * 
      * @param code the code value to set.
      * @return the ErrorCode object itself.
      */
+    @Generated
     public ErrorCode setCode(String code) {
         this.code = code;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("message", this.message);
+        jsonWriter.writeStringField("code", this.code);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ErrorCode from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ErrorCode if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IOException If an error occurs while reading the ErrorCode.
+     */
+    @Generated
+    public static ErrorCode fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ErrorCode deserializedErrorCode = new ErrorCode();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("message".equals(fieldName)) {
+                    deserializedErrorCode.message = reader.getString();
+                } else if ("code".equals(fieldName)) {
+                    deserializedErrorCode.code = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedErrorCode;
+        });
     }
 }

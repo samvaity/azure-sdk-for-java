@@ -74,7 +74,11 @@ class LeaseStoreImpl implements LeaseStore {
         InternalObjectNode containerDocument = new InternalObjectNode();
         containerDocument.setId(markerDocId);
 
-        return this.client.createItem(this.leaseCollectionLink, containerDocument, new CosmosItemRequestOptions(), false)
+        return this.client.createItem(
+            this.leaseCollectionLink,
+                containerDocument,
+                this.requestOptionsFactory.createItemRequestOptions(ServiceItemLeaseV1.fromDocument(containerDocument)),
+                false)
             .map( item -> {
                 return true;
             })
@@ -96,9 +100,16 @@ class LeaseStoreImpl implements LeaseStore {
         String lockId = this.getStoreLockName();
         InternalObjectNode containerDocument = new InternalObjectNode();
         containerDocument.setId(lockId);
-        BridgeInternal.setProperty(containerDocument, Constants.Properties.TTL, Long.valueOf(lockExpirationTime.getSeconds()).intValue());
+        containerDocument.set(
+            Constants.Properties.TTL,
+            Long.valueOf(lockExpirationTime.getSeconds()).intValue()
+        );
 
-        return this.client.createItem(this.leaseCollectionLink, containerDocument, new CosmosItemRequestOptions(), false)
+        return this.client.createItem(
+            this.leaseCollectionLink,
+                containerDocument,
+                this.requestOptionsFactory.createItemRequestOptions(ServiceItemLeaseV1.fromDocument(containerDocument)),
+                false)
             .map(documentResourceResponse -> {
                 if (BridgeInternal.getProperties(documentResourceResponse) != null) {
                     this.lockETag = BridgeInternal.getProperties(documentResourceResponse).getETag();

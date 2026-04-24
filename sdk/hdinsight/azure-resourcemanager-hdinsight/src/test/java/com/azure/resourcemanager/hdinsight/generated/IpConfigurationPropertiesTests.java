@@ -13,12 +13,10 @@ import org.junit.jupiter.api.Assertions;
 public final class IpConfigurationPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        IpConfigurationProperties model =
-            BinaryData
-                .fromString(
-                    "{\"provisioningState\":\"Deleting\",\"primary\":false,\"privateIPAddress\":\"yq\",\"privateIPAllocationMethod\":\"dynamic\",\"subnet\":{\"id\":\"j\"}}")
-                .toObject(IpConfigurationProperties.class);
-        Assertions.assertEquals(false, model.primary());
+        IpConfigurationProperties model = BinaryData.fromString(
+            "{\"provisioningState\":\"Deleting\",\"primary\":false,\"privateIPAddress\":\"yq\",\"privateIPAllocationMethod\":\"dynamic\",\"subnet\":{\"id\":\"j\"}}")
+            .toObject(IpConfigurationProperties.class);
+        Assertions.assertFalse(model.primary());
         Assertions.assertEquals("yq", model.privateIpAddress());
         Assertions.assertEquals(PrivateIpAllocationMethod.DYNAMIC, model.privateIpAllocationMethod());
         Assertions.assertEquals("j", model.subnet().id());
@@ -26,14 +24,12 @@ public final class IpConfigurationPropertiesTests {
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        IpConfigurationProperties model =
-            new IpConfigurationProperties()
-                .withPrimary(false)
-                .withPrivateIpAddress("yq")
-                .withPrivateIpAllocationMethod(PrivateIpAllocationMethod.DYNAMIC)
-                .withSubnet(new ResourceId().withId("j"));
+        IpConfigurationProperties model = new IpConfigurationProperties().withPrimary(false)
+            .withPrivateIpAddress("yq")
+            .withPrivateIpAllocationMethod(PrivateIpAllocationMethod.DYNAMIC)
+            .withSubnet(new ResourceId().withId("j"));
         model = BinaryData.fromObject(model).toObject(IpConfigurationProperties.class);
-        Assertions.assertEquals(false, model.primary());
+        Assertions.assertFalse(model.primary());
         Assertions.assertEquals("yq", model.privateIpAddress());
         Assertions.assertEquals(PrivateIpAllocationMethod.DYNAMIC, model.privateIpAllocationMethod());
         Assertions.assertEquals("j", model.subnet().id());

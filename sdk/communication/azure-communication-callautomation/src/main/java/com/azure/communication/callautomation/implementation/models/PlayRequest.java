@@ -5,94 +5,151 @@
 package com.azure.communication.callautomation.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The PlayRequest model. */
+/**
+ * The PlayRequest model.
+ */
 @Fluent
-public final class PlayRequest {
+public final class PlayRequest implements JsonSerializable<PlayRequest> {
     /*
      * The source of the audio to be played.
      */
-    @JsonProperty(value = "playSourceInfo", required = true)
-    private PlaySourceInternal playSourceInfo;
+    @Generated
+    private List<PlaySourceInternal> playSources;
 
     /*
      * The list of call participants play provided audio to.
      * Plays to everyone in the call when not provided.
      */
-    @JsonProperty(value = "playTo")
+    @Generated
     private List<CommunicationIdentifierModel> playTo;
+
+    /*
+     * If set play can barge into other existing queued-up/currently-processing requests.
+     */
+    @Generated
+    private Boolean interruptCallMediaOperation;
 
     /*
      * Defines options for playing the audio.
      */
-    @JsonProperty(value = "playOptions")
+    @Generated
     private PlayOptionsInternal playOptions;
 
     /*
      * The value to identify context of the operation.
      */
-    @JsonProperty(value = "operationContext")
+    @Generated
     private String operationContext;
 
-    /**
-     * Get the playSourceInfo property: The source of the audio to be played.
-     *
-     * @return the playSourceInfo value.
+    /*
+     * Set a callback URI that overrides the default callback URI set by CreateCall/AnswerCall for this operation.
+     * This setup is per-action. If this is not set, the default callback URI set by CreateCall/AnswerCall will be used.
      */
-    public PlaySourceInternal getPlaySourceInfo() {
-        return this.playSourceInfo;
+    @Generated
+    private String operationCallbackUri;
+
+    /**
+     * Creates an instance of PlayRequest class.
+     */
+    @Generated
+    public PlayRequest() {
     }
 
     /**
-     * Set the playSourceInfo property: The source of the audio to be played.
-     *
-     * @param playSourceInfo the playSourceInfo value to set.
+     * Get the playSources property: The source of the audio to be played.
+     * 
+     * @return the playSources value.
+     */
+    @Generated
+    public List<PlaySourceInternal> getPlaySources() {
+        return this.playSources;
+    }
+
+    /**
+     * Set the playSources property: The source of the audio to be played.
+     * 
+     * @param playSources the playSources value to set.
      * @return the PlayRequest object itself.
      */
-    public PlayRequest setPlaySourceInfo(PlaySourceInternal playSourceInfo) {
-        this.playSourceInfo = playSourceInfo;
+    @Generated
+    public PlayRequest setPlaySources(List<PlaySourceInternal> playSources) {
+        this.playSources = playSources;
         return this;
     }
 
     /**
-     * Get the playTo property: The list of call participants play provided audio to. Plays to everyone in the call when
-     * not provided.
-     *
+     * Get the playTo property: The list of call participants play provided audio to.
+     * Plays to everyone in the call when not provided.
+     * 
      * @return the playTo value.
      */
+    @Generated
     public List<CommunicationIdentifierModel> getPlayTo() {
         return this.playTo;
     }
 
     /**
-     * Set the playTo property: The list of call participants play provided audio to. Plays to everyone in the call when
-     * not provided.
-     *
+     * Set the playTo property: The list of call participants play provided audio to.
+     * Plays to everyone in the call when not provided.
+     * 
      * @param playTo the playTo value to set.
      * @return the PlayRequest object itself.
      */
+    @Generated
     public PlayRequest setPlayTo(List<CommunicationIdentifierModel> playTo) {
         this.playTo = playTo;
         return this;
     }
 
     /**
+     * Get the interruptCallMediaOperation property: If set play can barge into other existing
+     * queued-up/currently-processing requests.
+     * 
+     * @return the interruptCallMediaOperation value.
+     */
+    @Generated
+    public Boolean isInterruptCallMediaOperation() {
+        return this.interruptCallMediaOperation;
+    }
+
+    /**
+     * Set the interruptCallMediaOperation property: If set play can barge into other existing
+     * queued-up/currently-processing requests.
+     * 
+     * @param interruptCallMediaOperation the interruptCallMediaOperation value to set.
+     * @return the PlayRequest object itself.
+     */
+    @Generated
+    public PlayRequest setInterruptCallMediaOperation(Boolean interruptCallMediaOperation) {
+        this.interruptCallMediaOperation = interruptCallMediaOperation;
+        return this;
+    }
+
+    /**
      * Get the playOptions property: Defines options for playing the audio.
-     *
+     * 
      * @return the playOptions value.
      */
+    @Generated
     public PlayOptionsInternal getPlayOptions() {
         return this.playOptions;
     }
 
     /**
      * Set the playOptions property: Defines options for playing the audio.
-     *
+     * 
      * @param playOptions the playOptions value to set.
      * @return the PlayRequest object itself.
      */
+    @Generated
     public PlayRequest setPlayOptions(PlayOptionsInternal playOptions) {
         this.playOptions = playOptions;
         return this;
@@ -100,21 +157,107 @@ public final class PlayRequest {
 
     /**
      * Get the operationContext property: The value to identify context of the operation.
-     *
+     * 
      * @return the operationContext value.
      */
+    @Generated
     public String getOperationContext() {
         return this.operationContext;
     }
 
     /**
      * Set the operationContext property: The value to identify context of the operation.
-     *
+     * 
      * @param operationContext the operationContext value to set.
      * @return the PlayRequest object itself.
      */
+    @Generated
     public PlayRequest setOperationContext(String operationContext) {
         this.operationContext = operationContext;
         return this;
+    }
+
+    /**
+     * Get the operationCallbackUri property: Set a callback URI that overrides the default callback URI set by
+     * CreateCall/AnswerCall for this operation.
+     * This setup is per-action. If this is not set, the default callback URI set by CreateCall/AnswerCall will be used.
+     * 
+     * @return the operationCallbackUri value.
+     */
+    @Generated
+    public String getOperationCallbackUri() {
+        return this.operationCallbackUri;
+    }
+
+    /**
+     * Set the operationCallbackUri property: Set a callback URI that overrides the default callback URI set by
+     * CreateCall/AnswerCall for this operation.
+     * This setup is per-action. If this is not set, the default callback URI set by CreateCall/AnswerCall will be used.
+     * 
+     * @param operationCallbackUri the operationCallbackUri value to set.
+     * @return the PlayRequest object itself.
+     */
+    @Generated
+    public PlayRequest setOperationCallbackUri(String operationCallbackUri) {
+        this.operationCallbackUri = operationCallbackUri;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("playSources", this.playSources, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("playTo", this.playTo, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeBooleanField("interruptCallMediaOperation", this.interruptCallMediaOperation);
+        jsonWriter.writeJsonField("playOptions", this.playOptions);
+        jsonWriter.writeStringField("operationContext", this.operationContext);
+        jsonWriter.writeStringField("operationCallbackUri", this.operationCallbackUri);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PlayRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PlayRequest if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the PlayRequest.
+     */
+    @Generated
+    public static PlayRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PlayRequest deserializedPlayRequest = new PlayRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("playSources".equals(fieldName)) {
+                    List<PlaySourceInternal> playSources
+                        = reader.readArray(reader1 -> PlaySourceInternal.fromJson(reader1));
+                    deserializedPlayRequest.playSources = playSources;
+                } else if ("playTo".equals(fieldName)) {
+                    List<CommunicationIdentifierModel> playTo
+                        = reader.readArray(reader1 -> CommunicationIdentifierModel.fromJson(reader1));
+                    deserializedPlayRequest.playTo = playTo;
+                } else if ("interruptCallMediaOperation".equals(fieldName)) {
+                    deserializedPlayRequest.interruptCallMediaOperation = reader.getNullable(JsonReader::getBoolean);
+                } else if ("playOptions".equals(fieldName)) {
+                    deserializedPlayRequest.playOptions = PlayOptionsInternal.fromJson(reader);
+                } else if ("operationContext".equals(fieldName)) {
+                    deserializedPlayRequest.operationContext = reader.getString();
+                } else if ("operationCallbackUri".equals(fieldName)) {
+                    deserializedPlayRequest.operationCallbackUri = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPlayRequest;
+        });
     }
 }

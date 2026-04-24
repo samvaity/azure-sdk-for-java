@@ -7,24 +7,22 @@ package com.azure.resourcemanager.policyinsights.generated;
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.policyinsights.models.AttestationEvidence;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public final class AttestationEvidenceTests {
-    @Test
-    public void testDeserialize() {
-        AttestationEvidence model =
-            BinaryData
-                .fromString("{\"description\":\"sjabibs\",\"sourceUri\":\"tawfsdjpvkvp\"}")
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        AttestationEvidence model
+            = BinaryData.fromString("{\"description\":\"rvv\",\"sourceUri\":\"ntymtpoiwenazero\"}")
                 .toObject(AttestationEvidence.class);
-        Assertions.assertEquals("sjabibs", model.description());
-        Assertions.assertEquals("tawfsdjpvkvp", model.sourceUri());
+        Assertions.assertEquals("rvv", model.description());
+        Assertions.assertEquals("ntymtpoiwenazero", model.sourceUri());
     }
 
-    @Test
-    public void testSerialize() {
-        AttestationEvidence model = new AttestationEvidence().withDescription("sjabibs").withSourceUri("tawfsdjpvkvp");
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
+        AttestationEvidence model = new AttestationEvidence().withDescription("rvv").withSourceUri("ntymtpoiwenazero");
         model = BinaryData.fromObject(model).toObject(AttestationEvidence.class);
-        Assertions.assertEquals("sjabibs", model.description());
-        Assertions.assertEquals("tawfsdjpvkvp", model.sourceUri());
+        Assertions.assertEquals("rvv", model.description());
+        Assertions.assertEquals("ntymtpoiwenazero", model.sourceUri());
     }
 }

@@ -3,6 +3,7 @@
 
 package com.azure.core.implementation.jackson;
 
+import com.azure.json.JsonOptions;
 import com.azure.json.JsonReader;
 import com.azure.json.contract.JsonReaderContractTests;
 import org.junit.jupiter.api.AfterEach;
@@ -16,8 +17,8 @@ public class JacksonJsonReaderContractTests extends JsonReaderContractTests {
     private JsonReader reader;
 
     @Override
-    public JsonReader getJsonReader(String json) throws IOException {
-        this.reader = AzureJsonUtils.createReader(json, null);
+    public JsonReader getJsonReader(String json, JsonOptions options) throws IOException {
+        this.reader = AzureJsonUtils.createReader(json, options);
         return reader;
     }
 

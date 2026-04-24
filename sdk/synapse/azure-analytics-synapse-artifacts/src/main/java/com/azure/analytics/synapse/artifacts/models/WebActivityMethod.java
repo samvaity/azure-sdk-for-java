@@ -4,48 +4,65 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The list of HTTP methods supported by a WebActivity. */
+/**
+ * The list of HTTP methods supported by a WebActivity.
+ */
 public final class WebActivityMethod extends ExpandableStringEnum<WebActivityMethod> {
-    /** Static value GET for WebActivityMethod. */
+    /**
+     * Static value GET for WebActivityMethod.
+     */
+    @Generated
     public static final WebActivityMethod GET = fromString("GET");
 
-    /** Static value POST for WebActivityMethod. */
+    /**
+     * Static value POST for WebActivityMethod.
+     */
+    @Generated
     public static final WebActivityMethod POST = fromString("POST");
 
-    /** Static value PUT for WebActivityMethod. */
+    /**
+     * Static value PUT for WebActivityMethod.
+     */
+    @Generated
     public static final WebActivityMethod PUT = fromString("PUT");
 
-    /** Static value DELETE for WebActivityMethod. */
+    /**
+     * Static value DELETE for WebActivityMethod.
+     */
+    @Generated
     public static final WebActivityMethod DELETE = fromString("DELETE");
 
     /**
      * Creates a new instance of WebActivityMethod value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public WebActivityMethod() {}
+    public WebActivityMethod() {
+    }
 
     /**
      * Creates or finds a WebActivityMethod from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding WebActivityMethod.
      */
-    @JsonCreator
+    @Generated
     public static WebActivityMethod fromString(String name) {
         return fromString(name, WebActivityMethod.class);
     }
 
     /**
      * Gets known WebActivityMethod values.
-     *
+     * 
      * @return known WebActivityMethod values.
      */
+    @Generated
     public static Collection<WebActivityMethod> values() {
         return values(WebActivityMethod.class);
     }

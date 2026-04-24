@@ -5,87 +5,95 @@
 package com.azure.monitor.query.implementation.logs.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A metadata category.
- *
- * <p>Categories are used to group other metadata entities.
+ * 
+ * Categories are used to group other metadata entities.
  */
 @Fluent
-public final class MetadataCategory {
+public final class MetadataCategory implements JsonSerializable<MetadataCategory> {
     /*
      * The ID of the category
      */
-    @JsonProperty(value = "id", required = true)
-    private String id;
+    @Generated
+    private final String id;
 
     /*
      * The display name of the category
      */
-    @JsonProperty(value = "displayName", required = true)
-    private String displayName;
+    @Generated
+    private final String displayName;
 
     /*
      * The description of the category
      */
-    @JsonProperty(value = "description")
+    @Generated
     private String description;
 
     /*
      * The related metadata items for the category
      */
-    @JsonProperty(value = "related")
+    @Generated
     private MetadataCategoryRelated related;
 
     /**
      * Creates an instance of MetadataCategory class.
-     *
+     * 
      * @param id the id value to set.
      * @param displayName the displayName value to set.
      */
-    @JsonCreator
-    public MetadataCategory(
-            @JsonProperty(value = "id", required = true) String id,
-            @JsonProperty(value = "displayName", required = true) String displayName) {
+    @Generated
+    public MetadataCategory(String id, String displayName) {
         this.id = id;
         this.displayName = displayName;
     }
 
     /**
      * Get the id property: The ID of the category.
-     *
+     * 
      * @return the id value.
      */
+    @Generated
     public String getId() {
         return this.id;
     }
 
     /**
      * Get the displayName property: The display name of the category.
-     *
+     * 
      * @return the displayName value.
      */
+    @Generated
     public String getDisplayName() {
         return this.displayName;
     }
 
     /**
      * Get the description property: The description of the category.
-     *
+     * 
      * @return the description value.
      */
+    @Generated
     public String getDescription() {
         return this.description;
     }
 
     /**
      * Set the description property: The description of the category.
-     *
+     * 
      * @param description the description value to set.
      * @return the MetadataCategory object itself.
      */
+    @Generated
     public MetadataCategory setDescription(String description) {
         this.description = description;
         return this;
@@ -93,38 +101,93 @@ public final class MetadataCategory {
 
     /**
      * Get the related property: The related metadata items for the category.
-     *
+     * 
      * @return the related value.
      */
+    @Generated
     public MetadataCategoryRelated getRelated() {
         return this.related;
     }
 
     /**
      * Set the related property: The related metadata items for the category.
-     *
+     * 
      * @param related the related value to set.
      * @return the MetadataCategory object itself.
      */
+    @Generated
     public MetadataCategory setRelated(MetadataCategoryRelated related) {
         this.related = related;
         return this;
     }
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * {@inheritDoc}
      */
-    public void validate() {
-        if (getId() == null) {
-            throw new IllegalArgumentException("Missing required property id in model MetadataCategory");
-        }
-        if (getDisplayName() == null) {
-            throw new IllegalArgumentException("Missing required property displayName in model MetadataCategory");
-        }
-        if (getRelated() != null) {
-            getRelated().validate();
-        }
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("id", this.id);
+        jsonWriter.writeStringField("displayName", this.displayName);
+        jsonWriter.writeStringField("description", this.description);
+        jsonWriter.writeJsonField("related", this.related);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of MetadataCategory from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of MetadataCategory if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the MetadataCategory.
+     */
+    @Generated
+    public static MetadataCategory fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            boolean idFound = false;
+            String id = null;
+            boolean displayNameFound = false;
+            String displayName = null;
+            String description = null;
+            MetadataCategoryRelated related = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    id = reader.getString();
+                    idFound = true;
+                } else if ("displayName".equals(fieldName)) {
+                    displayName = reader.getString();
+                    displayNameFound = true;
+                } else if ("description".equals(fieldName)) {
+                    description = reader.getString();
+                } else if ("related".equals(fieldName)) {
+                    related = MetadataCategoryRelated.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (idFound && displayNameFound) {
+                MetadataCategory deserializedMetadataCategory = new MetadataCategory(id, displayName);
+                deserializedMetadataCategory.description = description;
+                deserializedMetadataCategory.related = related;
+
+                return deserializedMetadataCategory;
+            }
+            List<String> missingProperties = new ArrayList<>();
+            if (!idFound) {
+                missingProperties.add("id");
+            }
+            if (!displayNameFound) {
+                missingProperties.add("displayName");
+            }
+
+            throw new IllegalStateException(
+                "Missing required property/properties: " + String.join(", ", missingProperties));
+        });
     }
 }

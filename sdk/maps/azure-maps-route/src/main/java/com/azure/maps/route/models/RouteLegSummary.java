@@ -4,101 +4,107 @@
 
 package com.azure.maps.route.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
 
-/** Summary object for route section. */
+/**
+ * Summary object for route section.
+ */
 @Immutable
-public final class RouteLegSummary {
+public final class RouteLegSummary implements JsonSerializable<RouteLegSummary> {
     /*
      * Length In Meters property
      */
-    @JsonProperty(value = "lengthInMeters", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Integer lengthInMeters;
 
     /*
-     * Estimated travel time in seconds property that includes the delay due to
-     * real-time traffic. Note that even when traffic=false travelTimeInSeconds
-     * still includes the delay due to traffic. If DepartAt is in the future,
-     * travel time is calculated using time-dependent historic traffic data.
+     * Estimated travel time in seconds property that includes the delay due to real-time traffic. Note that even when
+     * traffic=false travelTimeInSeconds still includes the delay due to traffic. If DepartAt is in the future, travel
+     * time is calculated using time-dependent historic traffic data.
      */
-    @JsonProperty(value = "travelTimeInSeconds", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Integer travelTimeInSeconds;
 
     /*
-     * Estimated delay in seconds caused by the real-time incident(s) according
-     * to traffic information. For routes planned with departure time in the
-     * future, delays is always 0. To return additional travel times using
-     * different types of traffic information, parameter
-     * computeTravelTimeFor=all needs to be added.
+     * Estimated delay in seconds caused by the real-time incident(s) according to traffic information. For routes
+     * planned with departure time in the future, delays is always 0. To return additional travel times using different
+     * types of traffic information, parameter computeTravelTimeFor=all needs to be added.
      */
-    @JsonProperty(value = "trafficDelayInSeconds", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Integer trafficDelayInSeconds;
 
     /*
-     * The estimated departure time for the route or leg.
+     * The estimated departure time for the route or leg. Time is in UTC.
      */
-    @JsonProperty(value = "departureTime", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private OffsetDateTime departureTime;
 
     /*
-     * The estimated arrival time for the route or leg.
+     * The estimated arrival time for the route or leg. Time is in UTC.
      */
-    @JsonProperty(value = "arrivalTime", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private OffsetDateTime arrivalTime;
 
     /*
-     * Estimated travel time calculated as if there are no delays on the route
-     * due to traffic conditions (e.g. congestion). Included only if
-     * computeTravelTimeFor = all is used in the query.
+     * Estimated travel time calculated as if there are no delays on the route due to traffic conditions (e.g.
+     * congestion). Included only if computeTravelTimeFor = all is used in the query.
      */
-    @JsonProperty(value = "noTrafficTravelTimeInSeconds", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Integer noTrafficTravelTimeInSeconds;
 
     /*
-     * Estimated travel time calculated using time-dependent historic traffic
-     * data. Included only if computeTravelTimeFor = all is used in the query.
+     * Estimated travel time calculated using time-dependent historic traffic data. Included only if
+     * computeTravelTimeFor = all is used in the query.
      */
-    @JsonProperty(value = "historicTrafficTravelTimeInSeconds", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Integer historicTrafficTravelTimeInSeconds;
 
     /*
-     * Estimated travel time calculated using real-time speed data. Included
-     * only if computeTravelTimeFor = all is used in the query.
+     * Estimated travel time calculated using real-time speed data. Included only if computeTravelTimeFor = all is used
+     * in the query.
      */
-    @JsonProperty(value = "liveTrafficIncidentsTravelTimeInSeconds", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Integer liveTrafficIncidentsTravelTimeInSeconds;
 
     /*
-     * Estimated fuel consumption in liters using the Combustion Consumption
-     * Model. Included if vehicleEngineType is set to _combustion_ and
-     * constantSpeedConsumptionInLitersPerHundredkm is specified. The value
-     * will be non-negative.
+     * Estimated fuel consumption in liters using the Combustion Consumption Model. Included if vehicleEngineType is set
+     * to _combustion_ and constantSpeedConsumptionInLitersPerHundredkm is specified. The value will be non-negative.
      */
-    @JsonProperty(value = "fuelConsumptionInLiters", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Double fuelConsumptionInLiters;
 
     /*
-     * Estimated electric energy consumption in kilowatt hours (kWh) using the
-     * Electric Consumption Model. Included if vehicleEngineType is set to
-     * electric and constantSpeedConsumptionInkWhPerHundredkm is specified. The
-     * value of batteryConsumptionInkWh includes the recuperated electric
-     * energy and can therefore be negative (which indicates gaining energy).
-     * If both maxChargeInkWh and currentChargeInkWh are specified,
-     * recuperation will be capped to ensure that the battery charge level
-     * never exceeds maxChargeInkWh. If neither maxChargeInkWh nor
-     * currentChargeInkWh are specified, unconstrained recuperation is assumed
-     * in the consumption calculation.
+     * Estimated electric energy consumption in kilowatt hours (kWh) using the Electric Consumption Model. Included if
+     * vehicleEngineType is set to electric and constantSpeedConsumptionInkWhPerHundredkm is specified. The value of
+     * batteryConsumptionInkWh includes the recuperated electric energy and can therefore be negative (which indicates
+     * gaining energy). If both maxChargeInkWh and currentChargeInkWh are specified, recuperation will be capped to
+     * ensure that the battery charge level never exceeds maxChargeInkWh. If neither maxChargeInkWh nor
+     * currentChargeInkWh are specified, unconstrained recuperation is assumed in the consumption calculation.
      */
-    @JsonProperty(value = "batteryConsumptionInkWh", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Double batteryConsumptionInKwH;
 
     /**
+     * Creates an instance of RouteLegSummary class.
+     */
+    @Generated
+    public RouteLegSummary() {
+    }
+
+    /**
      * Get the lengthInMeters property: Length In Meters property.
-     *
+     * 
      * @return the lengthInMeters value.
      */
+    @Generated
     public Integer getLengthInMeters() {
         return this.lengthInMeters;
     }
@@ -107,9 +113,10 @@ public final class RouteLegSummary {
      * Get the travelTimeInSeconds property: Estimated travel time in seconds property that includes the delay due to
      * real-time traffic. Note that even when traffic=false travelTimeInSeconds still includes the delay due to traffic.
      * If DepartAt is in the future, travel time is calculated using time-dependent historic traffic data.
-     *
+     * 
      * @return the travelTimeInSeconds value.
      */
+    @Generated
     public Integer getTravelTimeInSeconds() {
         return this.travelTimeInSeconds;
     }
@@ -119,27 +126,30 @@ public final class RouteLegSummary {
      * to traffic information. For routes planned with departure time in the future, delays is always 0. To return
      * additional travel times using different types of traffic information, parameter computeTravelTimeFor=all needs to
      * be added.
-     *
+     * 
      * @return the trafficDelayInSeconds value.
      */
+    @Generated
     public Integer getTrafficDelayInSeconds() {
         return this.trafficDelayInSeconds;
     }
 
     /**
-     * Get the departureTime property: The estimated departure time for the route or leg.
-     *
+     * Get the departureTime property: The estimated departure time for the route or leg. Time is in UTC.
+     * 
      * @return the departureTime value.
      */
+    @Generated
     public OffsetDateTime getDepartureTime() {
         return this.departureTime;
     }
 
     /**
-     * Get the arrivalTime property: The estimated arrival time for the route or leg.
-     *
+     * Get the arrivalTime property: The estimated arrival time for the route or leg. Time is in UTC.
+     * 
      * @return the arrivalTime value.
      */
+    @Generated
     public OffsetDateTime getArrivalTime() {
         return this.arrivalTime;
     }
@@ -148,9 +158,10 @@ public final class RouteLegSummary {
      * Get the noTrafficTravelTimeInSeconds property: Estimated travel time calculated as if there are no delays on the
      * route due to traffic conditions (e.g. congestion). Included only if computeTravelTimeFor = all is used in the
      * query.
-     *
+     * 
      * @return the noTrafficTravelTimeInSeconds value.
      */
+    @Generated
     public Integer getNoTrafficTravelTimeInSeconds() {
         return this.noTrafficTravelTimeInSeconds;
     }
@@ -158,9 +169,10 @@ public final class RouteLegSummary {
     /**
      * Get the historicTrafficTravelTimeInSeconds property: Estimated travel time calculated using time-dependent
      * historic traffic data. Included only if computeTravelTimeFor = all is used in the query.
-     *
+     * 
      * @return the historicTrafficTravelTimeInSeconds value.
      */
+    @Generated
     public Integer getHistoricTrafficTravelTimeInSeconds() {
         return this.historicTrafficTravelTimeInSeconds;
     }
@@ -168,9 +180,10 @@ public final class RouteLegSummary {
     /**
      * Get the liveTrafficIncidentsTravelTimeInSeconds property: Estimated travel time calculated using real-time speed
      * data. Included only if computeTravelTimeFor = all is used in the query.
-     *
+     * 
      * @return the liveTrafficIncidentsTravelTimeInSeconds value.
      */
+    @Generated
     public Integer getLiveTrafficIncidentsTravelTimeInSeconds() {
         return this.liveTrafficIncidentsTravelTimeInSeconds;
     }
@@ -179,9 +192,10 @@ public final class RouteLegSummary {
      * Get the fuelConsumptionInLiters property: Estimated fuel consumption in liters using the Combustion Consumption
      * Model. Included if vehicleEngineType is set to _combustion_ and constantSpeedConsumptionInLitersPerHundredkm is
      * specified. The value will be non-negative.
-     *
+     * 
      * @return the fuelConsumptionInLiters value.
      */
+    @Generated
     public Double getFuelConsumptionInLiters() {
         return this.fuelConsumptionInLiters;
     }
@@ -194,10 +208,70 @@ public final class RouteLegSummary {
      * maxChargeInkWh and currentChargeInkWh are specified, recuperation will be capped to ensure that the battery
      * charge level never exceeds maxChargeInkWh. If neither maxChargeInkWh nor currentChargeInkWh are specified,
      * unconstrained recuperation is assumed in the consumption calculation.
-     *
+     * 
      * @return the batteryConsumptionInKwH value.
      */
+    @Generated
     public Double getBatteryConsumptionInKwH() {
         return this.batteryConsumptionInKwH;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RouteLegSummary from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RouteLegSummary if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the RouteLegSummary.
+     */
+    @Generated
+    public static RouteLegSummary fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RouteLegSummary deserializedRouteLegSummary = new RouteLegSummary();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("lengthInMeters".equals(fieldName)) {
+                    deserializedRouteLegSummary.lengthInMeters = reader.getNullable(JsonReader::getInt);
+                } else if ("travelTimeInSeconds".equals(fieldName)) {
+                    deserializedRouteLegSummary.travelTimeInSeconds = reader.getNullable(JsonReader::getInt);
+                } else if ("trafficDelayInSeconds".equals(fieldName)) {
+                    deserializedRouteLegSummary.trafficDelayInSeconds = reader.getNullable(JsonReader::getInt);
+                } else if ("departureTime".equals(fieldName)) {
+                    deserializedRouteLegSummary.departureTime = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("arrivalTime".equals(fieldName)) {
+                    deserializedRouteLegSummary.arrivalTime = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("noTrafficTravelTimeInSeconds".equals(fieldName)) {
+                    deserializedRouteLegSummary.noTrafficTravelTimeInSeconds = reader.getNullable(JsonReader::getInt);
+                } else if ("historicTrafficTravelTimeInSeconds".equals(fieldName)) {
+                    deserializedRouteLegSummary.historicTrafficTravelTimeInSeconds
+                        = reader.getNullable(JsonReader::getInt);
+                } else if ("liveTrafficIncidentsTravelTimeInSeconds".equals(fieldName)) {
+                    deserializedRouteLegSummary.liveTrafficIncidentsTravelTimeInSeconds
+                        = reader.getNullable(JsonReader::getInt);
+                } else if ("fuelConsumptionInLiters".equals(fieldName)) {
+                    deserializedRouteLegSummary.fuelConsumptionInLiters = reader.getNullable(JsonReader::getDouble);
+                } else if ("batteryConsumptionInkWh".equals(fieldName)) {
+                    deserializedRouteLegSummary.batteryConsumptionInKwH = reader.getNullable(JsonReader::getDouble);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRouteLegSummary;
+        });
     }
 }

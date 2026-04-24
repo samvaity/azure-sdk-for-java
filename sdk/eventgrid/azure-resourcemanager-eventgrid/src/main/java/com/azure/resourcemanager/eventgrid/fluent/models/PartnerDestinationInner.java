@@ -7,35 +7,55 @@ package com.azure.resourcemanager.eventgrid.fluent.models;
 import com.azure.core.annotation.Fluent;
 import com.azure.core.management.Resource;
 import com.azure.core.management.SystemData;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.eventgrid.models.PartnerDestinationActivationState;
 import com.azure.resourcemanager.eventgrid.models.PartnerDestinationProvisioningState;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 
-/** Event Grid Partner Destination. */
+/**
+ * Event Grid Partner Destination.
+ */
 @Fluent
 public final class PartnerDestinationInner extends Resource {
     /*
      * Properties of the Partner Destination.
      */
-    @JsonProperty(value = "properties")
     private PartnerDestinationProperties innerProperties;
 
     /*
-     * The system metadata relating to Partner Destination resource.
+     * The system metadata relating to the Event Grid resource.
      */
-    @JsonProperty(value = "systemData", access = JsonProperty.Access.WRITE_ONLY)
     private SystemData systemData;
 
-    /** Creates an instance of PartnerDestinationInner class. */
+    /*
+     * The type of the resource.
+     */
+    private String type;
+
+    /*
+     * The name of the resource.
+     */
+    private String name;
+
+    /*
+     * Fully qualified resource Id for the resource.
+     */
+    private String id;
+
+    /**
+     * Creates an instance of PartnerDestinationInner class.
+     */
     public PartnerDestinationInner() {
     }
 
     /**
      * Get the innerProperties property: Properties of the Partner Destination.
-     *
+     * 
      * @return the innerProperties value.
      */
     private PartnerDestinationProperties innerProperties() {
@@ -43,22 +63,56 @@ public final class PartnerDestinationInner extends Resource {
     }
 
     /**
-     * Get the systemData property: The system metadata relating to Partner Destination resource.
-     *
+     * Get the systemData property: The system metadata relating to the Event Grid resource.
+     * 
      * @return the systemData value.
      */
     public SystemData systemData() {
         return this.systemData;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Get the type property: The type of the resource.
+     * 
+     * @return the type value.
+     */
+    @Override
+    public String type() {
+        return this.type;
+    }
+
+    /**
+     * Get the name property: The name of the resource.
+     * 
+     * @return the name value.
+     */
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    /**
+     * Get the id property: Fully qualified resource Id for the resource.
+     * 
+     * @return the id value.
+     */
+    @Override
+    public String id() {
+        return this.id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PartnerDestinationInner withLocation(String location) {
         super.withLocation(location);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PartnerDestinationInner withTags(Map<String, String> tags) {
         super.withTags(tags);
@@ -67,7 +121,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Get the partnerRegistrationImmutableId property: The immutable Id of the corresponding partner registration.
-     *
+     * 
      * @return the partnerRegistrationImmutableId value.
      */
     public UUID partnerRegistrationImmutableId() {
@@ -76,7 +130,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Set the partnerRegistrationImmutableId property: The immutable Id of the corresponding partner registration.
-     *
+     * 
      * @param partnerRegistrationImmutableId the partnerRegistrationImmutableId value to set.
      * @return the PartnerDestinationInner object itself.
      */
@@ -90,7 +144,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Get the endpointServiceContext property: Endpoint context associated with this partner destination.
-     *
+     * 
      * @return the endpointServiceContext value.
      */
     public String endpointServiceContext() {
@@ -99,7 +153,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Set the endpointServiceContext property: Endpoint context associated with this partner destination.
-     *
+     * 
      * @param endpointServiceContext the endpointServiceContext value to set.
      * @return the PartnerDestinationInner object itself.
      */
@@ -113,9 +167,9 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Get the expirationTimeIfNotActivatedUtc property: Expiration time of the partner destination. If this timer
-     * expires and the partner destination was never activated, the partner destination and corresponding channel are
-     * deleted.
-     *
+     * expires and the partner destination was never activated,
+     * the partner destination and corresponding channel are deleted.
+     * 
      * @return the expirationTimeIfNotActivatedUtc value.
      */
     public OffsetDateTime expirationTimeIfNotActivatedUtc() {
@@ -124,9 +178,9 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Set the expirationTimeIfNotActivatedUtc property: Expiration time of the partner destination. If this timer
-     * expires and the partner destination was never activated, the partner destination and corresponding channel are
-     * deleted.
-     *
+     * expires and the partner destination was never activated,
+     * the partner destination and corresponding channel are deleted.
+     * 
      * @param expirationTimeIfNotActivatedUtc the expirationTimeIfNotActivatedUtc value to set.
      * @return the PartnerDestinationInner object itself.
      */
@@ -140,7 +194,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Get the provisioningState property: Provisioning state of the partner destination.
-     *
+     * 
      * @return the provisioningState value.
      */
     public PartnerDestinationProvisioningState provisioningState() {
@@ -149,7 +203,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Get the activationState property: Activation state of the partner destination.
-     *
+     * 
      * @return the activationState value.
      */
     public PartnerDestinationActivationState activationState() {
@@ -158,7 +212,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Set the activationState property: Activation state of the partner destination.
-     *
+     * 
      * @param activationState the activationState value to set.
      * @return the PartnerDestinationInner object itself.
      */
@@ -172,7 +226,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Get the endpointBaseUrl property: Endpoint Base URL of the partner destination.
-     *
+     * 
      * @return the endpointBaseUrl value.
      */
     public String endpointBaseUrl() {
@@ -181,7 +235,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Set the endpointBaseUrl property: Endpoint Base URL of the partner destination.
-     *
+     * 
      * @param endpointBaseUrl the endpointBaseUrl value to set.
      * @return the PartnerDestinationInner object itself.
      */
@@ -195,7 +249,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Get the messageForActivation property: Context or helpful message that can be used during the approval process.
-     *
+     * 
      * @return the messageForActivation value.
      */
     public String messageForActivation() {
@@ -204,7 +258,7 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Set the messageForActivation property: Context or helpful message that can be used during the approval process.
-     *
+     * 
      * @param messageForActivation the messageForActivation value to set.
      * @return the PartnerDestinationInner object itself.
      */
@@ -218,12 +272,64 @@ public final class PartnerDestinationInner extends Resource {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (innerProperties() != null) {
             innerProperties().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("location", location());
+        jsonWriter.writeMapField("tags", tags(), (writer, element) -> writer.writeString(element));
+        jsonWriter.writeJsonField("properties", this.innerProperties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PartnerDestinationInner from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PartnerDestinationInner if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the PartnerDestinationInner.
+     */
+    public static PartnerDestinationInner fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PartnerDestinationInner deserializedPartnerDestinationInner = new PartnerDestinationInner();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedPartnerDestinationInner.id = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedPartnerDestinationInner.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedPartnerDestinationInner.type = reader.getString();
+                } else if ("location".equals(fieldName)) {
+                    deserializedPartnerDestinationInner.withLocation(reader.getString());
+                } else if ("tags".equals(fieldName)) {
+                    Map<String, String> tags = reader.readMap(reader1 -> reader1.getString());
+                    deserializedPartnerDestinationInner.withTags(tags);
+                } else if ("properties".equals(fieldName)) {
+                    deserializedPartnerDestinationInner.innerProperties = PartnerDestinationProperties.fromJson(reader);
+                } else if ("systemData".equals(fieldName)) {
+                    deserializedPartnerDestinationInner.systemData = SystemData.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPartnerDestinationInner;
+        });
     }
 }

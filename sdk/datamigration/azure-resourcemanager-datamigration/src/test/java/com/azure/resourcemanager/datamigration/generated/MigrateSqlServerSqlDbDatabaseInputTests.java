@@ -13,32 +13,33 @@ import org.junit.jupiter.api.Assertions;
 public final class MigrateSqlServerSqlDbDatabaseInputTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlDbDatabaseInput model =
-            BinaryData
-                .fromString(
-                    "{\"name\":\"vlmfwdgzxulucv\",\"targetDatabaseName\":\"mrsreuzvxurisjnh\",\"makeSourceDbReadOnly\":false,\"tableMap\":{\"zgxmr\":\"fq\",\"upauut\":\"ublwpcesutrg\"}}")
-                .toObject(MigrateSqlServerSqlDbDatabaseInput.class);
-        Assertions.assertEquals("vlmfwdgzxulucv", model.name());
-        Assertions.assertEquals("mrsreuzvxurisjnh", model.targetDatabaseName());
-        Assertions.assertEquals(false, model.makeSourceDbReadOnly());
-        Assertions.assertEquals("fq", model.tableMap().get("zgxmr"));
+        MigrateSqlServerSqlDbDatabaseInput model = BinaryData.fromString(
+            "{\"name\":\"jkxibda\",\"targetDatabaseName\":\"rkmdyom\",\"makeSourceDbReadOnly\":false,\"tableMap\":{\"rhpw\":\"fbhdy\"},\"schemaSetting\":\"dataddei\",\"id\":\"wzovgk\"}")
+            .toObject(MigrateSqlServerSqlDbDatabaseInput.class);
+        Assertions.assertEquals("jkxibda", model.name());
+        Assertions.assertEquals("rkmdyom", model.targetDatabaseName());
+        Assertions.assertFalse(model.makeSourceDbReadOnly());
+        Assertions.assertEquals("fbhdy", model.tableMap().get("rhpw"));
+        Assertions.assertEquals("wzovgk", model.id());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MigrateSqlServerSqlDbDatabaseInput model =
-            new MigrateSqlServerSqlDbDatabaseInput()
-                .withName("vlmfwdgzxulucv")
-                .withTargetDatabaseName("mrsreuzvxurisjnh")
-                .withMakeSourceDbReadOnly(false)
-                .withTableMap(mapOf("zgxmr", "fq", "upauut", "ublwpcesutrg"));
+        MigrateSqlServerSqlDbDatabaseInput model = new MigrateSqlServerSqlDbDatabaseInput().withName("jkxibda")
+            .withTargetDatabaseName("rkmdyom")
+            .withMakeSourceDbReadOnly(false)
+            .withTableMap(mapOf("rhpw", "fbhdy"))
+            .withSchemaSetting("dataddei")
+            .withId("wzovgk");
         model = BinaryData.fromObject(model).toObject(MigrateSqlServerSqlDbDatabaseInput.class);
-        Assertions.assertEquals("vlmfwdgzxulucv", model.name());
-        Assertions.assertEquals("mrsreuzvxurisjnh", model.targetDatabaseName());
-        Assertions.assertEquals(false, model.makeSourceDbReadOnly());
-        Assertions.assertEquals("fq", model.tableMap().get("zgxmr"));
+        Assertions.assertEquals("jkxibda", model.name());
+        Assertions.assertEquals("rkmdyom", model.targetDatabaseName());
+        Assertions.assertFalse(model.makeSourceDbReadOnly());
+        Assertions.assertEquals("fbhdy", model.tableMap().get("rhpw"));
+        Assertions.assertEquals("wzovgk", model.id());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

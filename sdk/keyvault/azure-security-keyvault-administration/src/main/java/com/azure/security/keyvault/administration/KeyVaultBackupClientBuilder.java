@@ -33,7 +33,6 @@ import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.tracing.Tracer;
 import com.azure.core.util.tracing.TracerProvider;
 import com.azure.security.keyvault.administration.implementation.KeyVaultCredentialPolicy;
-import com.azure.security.keyvault.administration.implementation.KeyVaultErrorCodeStrings;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,52 +42,73 @@ import java.util.Map;
 
 /**
  * This class provides a fluent builder API to help aid the configuration and instantiation of the
- * {@link KeyVaultBackupAsyncClient} and {@link KeyVaultBackupClient}, by calling
- * {@link KeyVaultBackupClientBuilder#buildAsyncClient()} and {@link KeyVaultBackupClientBuilder#buildClient()}
- * respectively. It constructs an instance of the desired client.
+ * {@link KeyVaultBackupAsyncClient backup async client} and {@link KeyVaultBackupClient backup client}, by calling
+ * {@link KeyVaultBackupClientBuilder#buildAsyncClient() buildAsyncClient} and
+ * {@link KeyVaultBackupClientBuilder#buildClient() buildClient} respectively. It constructs an instance of the desired
+ * client.
  *
- * <p> The minimal configuration options required by {@link KeyVaultBackupClientBuilder} to build an
- * an {@link KeyVaultBackupAsyncClient} are {@link String vaultUrl} and {@link TokenCredential credential}.</p>
+ * <p> The minimal configuration options required by {@link  KeyVaultBackupClientBuilder} to build a
+ * {@link  KeyVaultBackupAsyncClient} are {@link String vaultUrl} and {@link TokenCredential credential}.</p>
  *
- * <p><strong>Samples to construct a sync client</strong></p>
- * <!-- src_embed com.azure.security.keyvault.administration.keyVaultBackupClient.instantiation -->
- * <pre>
- * KeyVaultBackupClient keyVaultBackupClient = new KeyVaultBackupClientBuilder&#40;&#41;
- *     .vaultUrl&#40;&quot;&lt;your-managed-hsm-url&gt;&quot;&#41;
- *     .credential&#40;new DefaultAzureCredentialBuilder&#40;&#41;.build&#40;&#41;&#41;
- *     .buildClient&#40;&#41;;
- * </pre>
- * <!-- end com.azure.security.keyvault.administration.keyVaultBackupClient.instantiation -->
- * <p><strong>Samples to construct an async client</strong></p>
- * <!-- src_embed com.azure.security.keyvault.administration.keyVaultBackupAsyncClient.instantiation -->
+ * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultBackupAsyncClient.instantiation -->
  * <pre>
  * KeyVaultBackupAsyncClient keyVaultBackupAsyncClient = new KeyVaultBackupClientBuilder&#40;&#41;
  *     .vaultUrl&#40;&quot;&lt;your-managed-hsm-url&gt;&quot;&#41;
  *     .credential&#40;new DefaultAzureCredentialBuilder&#40;&#41;.build&#40;&#41;&#41;
  *     .buildAsyncClient&#40;&#41;;
  * </pre>
- * <!-- end com.azure.security.keyvault.administration.keyVaultBackupAsyncClient.instantiation -->
+ * <!-- end com.azure.security.keyvault.administration.KeyVaultBackupAsyncClient.instantiation -->
+ *
+ * <p>The {@link HttpLogDetailLevel log detail level}, multiple custom {@link HttpLoggingPolicy policies} and custom
+ * {@link HttpClient http client} can be optionally configured in the {@link  KeyVaultBackupClientBuilder}.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultBackupAsyncClient.instantiation.withHttpClient -->
+ * <pre>
+ * KeyVaultBackupAsyncClient keyVaultBackupAsyncClient = new KeyVaultBackupClientBuilder&#40;&#41;
+ *     .vaultUrl&#40;&quot;&lt;your-key-vault-url&gt;&quot;&#41;
+ *     .credential&#40;new DefaultAzureCredentialBuilder&#40;&#41;.build&#40;&#41;&#41;
+ *     .httpLogOptions&#40;new HttpLogOptions&#40;&#41;.setLogLevel&#40;HttpLogDetailLevel.BODY_AND_HEADERS&#41;&#41;
+ *     .httpClient&#40;HttpClient.createDefault&#40;&#41;&#41;
+ *     .buildAsyncClient&#40;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.administration.KeyVaultBackupAsyncClient.instantiation.withHttpClient -->
+ *
+ * <p> The minimal configuration options required by {@link  KeyVaultBackupClientBuilder} to build a
+ * {@link  KeyVaultBackupClient} are {@link String vaultUrl} and {@link TokenCredential credential}.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.administration.KeyVaultBackupClient.instantiation -->
+ * <pre>
+ * KeyVaultBackupClient keyVaultBackupClient = new KeyVaultBackupClientBuilder&#40;&#41;
+ *     .vaultUrl&#40;&quot;&lt;your-managed-hsm-url&gt;&quot;&#41;
+ *     .credential&#40;new DefaultAzureCredentialBuilder&#40;&#41;.build&#40;&#41;&#41;
+ *     .buildClient&#40;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.administration.KeyVaultBackupClient.instantiation -->
  *
  * @see KeyVaultBackupClient
  * @see KeyVaultBackupAsyncClient
  */
-@ServiceClientBuilder(serviceClients = {KeyVaultBackupClient.class, KeyVaultBackupAsyncClient.class})
-public final class KeyVaultBackupClientBuilder implements
-    TokenCredentialTrait<KeyVaultBackupClientBuilder>,
-    HttpTrait<KeyVaultBackupClientBuilder>,
-    ConfigurationTrait<KeyVaultBackupClientBuilder> {
+@ServiceClientBuilder(serviceClients = { KeyVaultBackupClient.class, KeyVaultBackupAsyncClient.class })
+public final class KeyVaultBackupClientBuilder implements TokenCredentialTrait<KeyVaultBackupClientBuilder>,
+    HttpTrait<KeyVaultBackupClientBuilder>, ConfigurationTrait<KeyVaultBackupClientBuilder> {
     // This is the properties file name.
     private static final ClientLogger LOGGER = new ClientLogger(KeyVaultBackupClientBuilder.class);
-    private static final String AZURE_KEY_VAULT_RBAC = "azure-key-vault-administration.properties";
-    private static final String SDK_NAME = "name";
-    private static final String SDK_VERSION = "version";
+    private static final String CLIENT_NAME;
+    private static final String CLIENT_VERSION;
+
+    static {
+        Map<String, String> properties = CoreUtils.getProperties("azure-security-keyvault-administration.properties");
+        CLIENT_NAME = properties.getOrDefault("name", "UnknownName");
+        CLIENT_VERSION = properties.getOrDefault("version", "UnknownVersion");
+    }
 
     // Please see <a href=https://docs.microsoft.com/azure/azure-resource-manager/management/azure-services-resource-providers>here</a>
     // for more information on Azure resource provider namespaces.
     private static final String KEYVAULT_TRACING_NAMESPACE_VALUE = "Microsoft.KeyVault";
+    private static final ClientOptions DEFAULT_CLIENT_OPTIONS = new ClientOptions();
+
     private final List<HttpPipelinePolicy> perCallPolicies;
     private final List<HttpPipelinePolicy> perRetryPolicies;
-    private final Map<String, String> properties;
 
     private TokenCredential credential;
     private HttpPipeline pipeline;
@@ -110,7 +130,6 @@ public final class KeyVaultBackupClientBuilder implements
         httpLogOptions = new HttpLogOptions();
         perCallPolicies = new ArrayList<>();
         perRetryPolicies = new ArrayList<>();
-        properties = CoreUtils.getProperties(AZURE_KEY_VAULT_RBAC);
     }
 
     /**
@@ -127,7 +146,7 @@ public final class KeyVaultBackupClientBuilder implements
      * @throws IllegalStateException If both {@link #retryOptions(RetryOptions)}
      * and {@link #retryPolicy(RetryPolicy)} have been set.
      */
-    public KeyVaultBackupClient  buildClient() {
+    public KeyVaultBackupClient buildClient() {
         Configuration buildConfiguration = validateEndpointAndGetBuildConfiguration();
         serviceVersion = getServiceVersion();
         if (pipeline != null) {
@@ -162,16 +181,14 @@ public final class KeyVaultBackupClientBuilder implements
     }
 
     private Configuration validateEndpointAndGetBuildConfiguration() {
-        Configuration buildConfiguration = (configuration == null)
-            ? Configuration.getGlobalConfiguration().clone()
-            : configuration;
+        Configuration buildConfiguration
+            = (configuration == null) ? Configuration.getGlobalConfiguration().clone() : configuration;
 
         URL buildEndpoint = getBuildEndpoint(buildConfiguration);
 
         if (buildEndpoint == null) {
-            throw LOGGER.logExceptionAsError(
-                new IllegalStateException(
-                    KeyVaultErrorCodeStrings.getErrorString(KeyVaultErrorCodeStrings.VAULT_END_POINT_REQUIRED)));
+            throw LOGGER
+                .logExceptionAsError(new IllegalStateException(KeyVaultAdministrationUtil.VAULT_END_POINT_REQUIRED));
         }
         return buildConfiguration;
     }
@@ -185,20 +202,17 @@ public final class KeyVaultBackupClientBuilder implements
         // Closest to API goes first, closest to wire goes last.
         final List<HttpPipelinePolicy> policies = new ArrayList<>();
 
-        String clientName = properties.getOrDefault(SDK_NAME, "UnknownName");
-        String clientVersion = properties.getOrDefault(SDK_VERSION, "UnknownVersion");
-
         httpLogOptions = (httpLogOptions == null) ? new HttpLogOptions() : httpLogOptions;
 
-        policies.add(new UserAgentPolicy(CoreUtils.getApplicationId(clientOptions, httpLogOptions), clientName,
-            clientVersion, buildConfiguration));
+        ClientOptions localClientOptions = clientOptions != null ? clientOptions : DEFAULT_CLIENT_OPTIONS;
 
-        if (clientOptions != null) {
-            List<HttpHeader> httpHeaderList = new ArrayList<>();
-            clientOptions.getHeaders().forEach(header ->
-                httpHeaderList.add(new HttpHeader(header.getName(), header.getValue())));
-            policies.add(new AddHeadersPolicy(new HttpHeaders(httpHeaderList)));
-        }
+        policies.add(new UserAgentPolicy(CoreUtils.getApplicationId(localClientOptions, httpLogOptions), CLIENT_NAME,
+            CLIENT_VERSION, buildConfiguration));
+
+        List<HttpHeader> httpHeaderList = new ArrayList<>();
+        localClientOptions.getHeaders()
+            .forEach(header -> httpHeaderList.add(new HttpHeader(header.getName(), header.getValue())));
+        policies.add(new AddHeadersPolicy(new HttpHeaders(httpHeaderList)));
 
         // Add per call additional policies.
         policies.addAll(perCallPolicies);
@@ -215,13 +229,13 @@ public final class KeyVaultBackupClientBuilder implements
         HttpPolicyProviders.addAfterRetryPolicies(policies);
         policies.add(new HttpLoggingPolicy(httpLogOptions));
 
-        TracingOptions tracingOptions = clientOptions == null ? null : clientOptions.getTracingOptions();
+        TracingOptions tracingOptions = localClientOptions.getTracingOptions();
         Tracer tracer = TracerProvider.getDefaultProvider()
-            .createTracer(clientName, clientVersion, KEYVAULT_TRACING_NAMESPACE_VALUE, tracingOptions);
+            .createTracer(CLIENT_NAME, CLIENT_VERSION, KEYVAULT_TRACING_NAMESPACE_VALUE, tracingOptions);
 
-        return new HttpPipelineBuilder()
-            .policies(policies.toArray(new HttpPipelinePolicy[0]))
+        return new HttpPipelineBuilder().policies(policies.toArray(new HttpPipelinePolicy[0]))
             .httpClient(httpClient)
+            .clientOptions(localClientOptions)
             .tracer(tracer)
             .build();
     }
@@ -246,8 +260,7 @@ public final class KeyVaultBackupClientBuilder implements
         try {
             this.vaultUrl = new URL(vaultUrl);
         } catch (MalformedURLException e) {
-            throw LOGGER.logExceptionAsError(
-                new IllegalArgumentException("The Azure Key Vault URL is malformed.", e));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException("The Azure Key Vault URL is malformed.", e));
         }
 
         return this;

@@ -8,44 +8,50 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of BmcKeySets. */
+/**
+ * Resource collection API of BmcKeySets.
+ */
 public interface BmcKeySets {
     /**
      * List baseboard management controller key sets of the cluster.
-     *
-     * <p>Get a list of baseboard management controller key sets for the provided cluster.
-     *
+     * 
+     * Get a list of baseboard management controller key sets for the provided cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of baseboard management controller key sets for the provided cluster as paginated response with
-     *     {@link PagedIterable}.
+     * {@link PagedIterable}.
      */
     PagedIterable<BmcKeySet> listByCluster(String resourceGroupName, String clusterName);
 
     /**
      * List baseboard management controller key sets of the cluster.
-     *
-     * <p>Get a list of baseboard management controller key sets for the provided cluster.
-     *
+     * 
+     * Get a list of baseboard management controller key sets for the provided cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param clusterName The name of the cluster.
+     * @param top The maximum number of resources to return from the operation. Example: '$top=10'.
+     * @param skipToken The opaque token that the server returns to indicate where to continue listing resources from.
+     * This is used for paging through large result sets.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of baseboard management controller key sets for the provided cluster as paginated response with
-     *     {@link PagedIterable}.
+     * {@link PagedIterable}.
      */
-    PagedIterable<BmcKeySet> listByCluster(String resourceGroupName, String clusterName, Context context);
+    PagedIterable<BmcKeySet> listByCluster(String resourceGroupName, String clusterName, Integer top, String skipToken,
+        Context context);
 
     /**
      * Retrieve the baseboard management controller key set of the cluster.
-     *
-     * <p>Get baseboard management controller key set of the provided cluster.
-     *
+     * 
+     * Get baseboard management controller key set of the provided cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param clusterName The name of the cluster.
      * @param bmcKeySetName The name of the baseboard management controller key set.
@@ -55,14 +61,14 @@ public interface BmcKeySets {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return baseboard management controller key set of the provided cluster along with {@link Response}.
      */
-    Response<BmcKeySet> getWithResponse(
-        String resourceGroupName, String clusterName, String bmcKeySetName, Context context);
+    Response<BmcKeySet> getWithResponse(String resourceGroupName, String clusterName, String bmcKeySetName,
+        Context context);
 
     /**
      * Retrieve the baseboard management controller key set of the cluster.
-     *
-     * <p>Get baseboard management controller key set of the provided cluster.
-     *
+     * 
+     * Get baseboard management controller key set of the provided cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param clusterName The name of the cluster.
      * @param bmcKeySetName The name of the baseboard management controller key set.
@@ -75,38 +81,45 @@ public interface BmcKeySets {
 
     /**
      * Delete the baseboard management controller key set of the cluster.
-     *
-     * <p>Delete the baseboard management controller key set of the provided cluster.
-     *
+     * 
+     * Delete the baseboard management controller key set of the provided cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param clusterName The name of the cluster.
      * @param bmcKeySetName The name of the baseboard management controller key set.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void delete(String resourceGroupName, String clusterName, String bmcKeySetName);
+    OperationStatusResult delete(String resourceGroupName, String clusterName, String bmcKeySetName);
 
     /**
      * Delete the baseboard management controller key set of the cluster.
-     *
-     * <p>Delete the baseboard management controller key set of the provided cluster.
-     *
+     * 
+     * Delete the baseboard management controller key set of the provided cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param clusterName The name of the cluster.
      * @param bmcKeySetName The name of the baseboard management controller key set.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void delete(String resourceGroupName, String clusterName, String bmcKeySetName, Context context);
+    OperationStatusResult delete(String resourceGroupName, String clusterName, String bmcKeySetName, String ifMatch,
+        String ifNoneMatch, Context context);
 
     /**
      * Retrieve the baseboard management controller key set of the cluster.
-     *
-     * <p>Get baseboard management controller key set of the provided cluster.
-     *
+     * 
+     * Get baseboard management controller key set of the provided cluster.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -117,9 +130,9 @@ public interface BmcKeySets {
 
     /**
      * Retrieve the baseboard management controller key set of the cluster.
-     *
-     * <p>Get baseboard management controller key set of the provided cluster.
-     *
+     * 
+     * Get baseboard management controller key set of the provided cluster.
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -131,32 +144,38 @@ public interface BmcKeySets {
 
     /**
      * Delete the baseboard management controller key set of the cluster.
-     *
-     * <p>Delete the baseboard management controller key set of the provided cluster.
-     *
+     * 
+     * Delete the baseboard management controller key set of the provided cluster.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void deleteById(String id);
+    OperationStatusResult deleteById(String id);
 
     /**
      * Delete the baseboard management controller key set of the cluster.
-     *
-     * <p>Delete the baseboard management controller key set of the provided cluster.
-     *
+     * 
+     * Delete the baseboard management controller key set of the provided cluster.
+     * 
      * @param id the resource ID.
+     * @param ifMatch The ETag of the transformation. Omit this value to always overwrite the current resource. Specify
+     * the last-seen ETag value to prevent accidentally overwriting concurrent changes.
+     * @param ifNoneMatch Set to '*' to allow a new record set to be created, but to prevent updating an existing
+     * resource. Other values will result in error from server as they are not supported.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the current status of an async operation.
      */
-    void deleteByIdWithResponse(String id, Context context);
+    OperationStatusResult deleteByIdWithResponse(String id, String ifMatch, String ifNoneMatch, Context context);
 
     /**
      * Begins definition for a new BmcKeySet resource.
-     *
+     * 
      * @param name resource name.
      * @return the first stage of the new BmcKeySet definition.
      */

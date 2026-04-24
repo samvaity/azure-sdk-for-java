@@ -4,6 +4,7 @@
 
 package com.azure.analytics.purview.sharing.implementation;
 
+import com.azure.analytics.purview.sharing.PurviewShareServiceVersion;
 import com.azure.core.annotation.BodyParam;
 import com.azure.core.annotation.Delete;
 import com.azure.core.annotation.ExpectedResponses;
@@ -23,6 +24,7 @@ import com.azure.core.exception.ClientAuthenticationException;
 import com.azure.core.exception.HttpResponseException;
 import com.azure.core.exception.ResourceModifiedException;
 import com.azure.core.exception.ResourceNotFoundException;
+import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.rest.PagedFlux;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.PagedResponse;
@@ -32,34 +34,54 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
+import com.azure.core.util.CoreUtils;
+import com.azure.core.util.DateTimeRfc1123;
 import com.azure.core.util.FluxUtil;
 import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.PollingStrategyOptions;
+import com.azure.core.util.polling.SyncDefaultPollingStrategy;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.core.util.serializer.TypeReference;
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ReceivedShares. */
+/**
+ * An instance of this class provides access to all the operations defined in ReceivedShares.
+ */
 public final class ReceivedSharesImpl {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ReceivedSharesService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final PurviewShareClientImpl client;
 
     /**
      * Initializes an instance of ReceivedSharesImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ReceivedSharesImpl(PurviewShareClientImpl client) {
-        this.service =
-                RestProxy.create(ReceivedSharesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(ReceivedSharesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
+    }
+
+    /**
+     * Gets Service version.
+     * 
+     * @return the serviceVersion value.
+     */
+    public PurviewShareServiceVersion getServiceVersion() {
+        return client.getServiceVersion();
     }
 
     /**
@@ -67,200 +89,209 @@ public final class ReceivedSharesImpl {
      * perform REST calls.
      */
     @Host("{endpoint}")
-    @ServiceInterface(name = "PurviewShareClientRe")
+    @ServiceInterface(name = "PurviewShareClientReceivedShares")
     public interface ReceivedSharesService {
         @Get("/receivedShares/{receivedShareId}")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(
-                value = ClientAuthenticationException.class,
-                code = {401})
-        @UnexpectedResponseExceptionType(
-                value = ResourceNotFoundException.class,
-                code = {404})
-        @UnexpectedResponseExceptionType(
-                value = ResourceModifiedException.class,
-                code = {409})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
         @UnexpectedResponseExceptionType(HttpResponseException.class)
-        Mono<Response<BinaryData>> getReceivedShare(
-                @HostParam("endpoint") String endpoint,
-                @PathParam("receivedShareId") String receivedShareId,
-                @QueryParam("api-version") String apiVersion,
-                @HeaderParam("Accept") String accept,
-                RequestOptions requestOptions,
-                Context context);
+        Mono<Response<BinaryData>> getReceivedShare(@HostParam("endpoint") String endpoint,
+            @PathParam("receivedShareId") String receivedShareId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, RequestOptions requestOptions, Context context);
+
+        @Get("/receivedShares/{receivedShareId}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> getReceivedShareSync(@HostParam("endpoint") String endpoint,
+            @PathParam("receivedShareId") String receivedShareId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, RequestOptions requestOptions, Context context);
 
         @Put("/receivedShares/{receivedShareId}")
-        @ExpectedResponses({200, 201})
-        @UnexpectedResponseExceptionType(
-                value = ClientAuthenticationException.class,
-                code = {401})
-        @UnexpectedResponseExceptionType(
-                value = ResourceNotFoundException.class,
-                code = {404})
-        @UnexpectedResponseExceptionType(
-                value = ResourceModifiedException.class,
-                code = {409})
+        @ExpectedResponses({ 200, 201 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
         @UnexpectedResponseExceptionType(HttpResponseException.class)
-        Mono<Response<BinaryData>> createOrReplaceReceivedShare(
-                @HostParam("endpoint") String endpoint,
-                @PathParam("receivedShareId") String receivedShareId,
-                @QueryParam("api-version") String apiVersion,
-                @BodyParam("application/json") BinaryData receivedShare,
-                @HeaderParam("Accept") String accept,
-                RequestOptions requestOptions,
-                Context context);
+        Mono<Response<BinaryData>> createOrReplaceReceivedShare(@HostParam("endpoint") String endpoint,
+            @PathParam("receivedShareId") String receivedShareId, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") BinaryData receivedShare, @HeaderParam("Accept") String accept,
+            RequestOptions requestOptions, Context context);
+
+        @Put("/receivedShares/{receivedShareId}")
+        @ExpectedResponses({ 200, 201 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> createOrReplaceReceivedShareSync(@HostParam("endpoint") String endpoint,
+            @PathParam("receivedShareId") String receivedShareId, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") BinaryData receivedShare, @HeaderParam("Accept") String accept,
+            RequestOptions requestOptions, Context context);
 
         @Delete("/receivedShares/{receivedShareId}")
-        @ExpectedResponses({202})
-        @UnexpectedResponseExceptionType(
-                value = ClientAuthenticationException.class,
-                code = {401})
-        @UnexpectedResponseExceptionType(
-                value = ResourceNotFoundException.class,
-                code = {404})
-        @UnexpectedResponseExceptionType(
-                value = ResourceModifiedException.class,
-                code = {409})
+        @ExpectedResponses({ 202 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
         @UnexpectedResponseExceptionType(HttpResponseException.class)
-        Mono<Response<BinaryData>> deleteReceivedShare(
-                @HostParam("endpoint") String endpoint,
-                @PathParam("receivedShareId") String receivedShareId,
-                @QueryParam("api-version") String apiVersion,
-                @HeaderParam("Accept") String accept,
-                RequestOptions requestOptions,
-                Context context);
+        Mono<Response<BinaryData>> deleteReceivedShare(@HostParam("endpoint") String endpoint,
+            @PathParam("receivedShareId") String receivedShareId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, RequestOptions requestOptions, Context context);
+
+        @Delete("/receivedShares/{receivedShareId}")
+        @ExpectedResponses({ 202 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> deleteReceivedShareSync(@HostParam("endpoint") String endpoint,
+            @PathParam("receivedShareId") String receivedShareId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, RequestOptions requestOptions, Context context);
 
         @Get("/receivedShares/attached")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(
-                value = ClientAuthenticationException.class,
-                code = {401})
-        @UnexpectedResponseExceptionType(
-                value = ResourceNotFoundException.class,
-                code = {404})
-        @UnexpectedResponseExceptionType(
-                value = ResourceModifiedException.class,
-                code = {409})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
         @UnexpectedResponseExceptionType(HttpResponseException.class)
-        Mono<Response<BinaryData>> listAttachedReceivedShares(
-                @HostParam("endpoint") String endpoint,
-                @QueryParam("referenceName") String referenceName,
-                @QueryParam("api-version") String apiVersion,
-                @HeaderParam("Accept") String accept,
-                RequestOptions requestOptions,
-                Context context);
+        Mono<Response<BinaryData>> listAttachedReceivedShares(@HostParam("endpoint") String endpoint,
+            @QueryParam("referenceName") String referenceName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, RequestOptions requestOptions, Context context);
+
+        @Get("/receivedShares/attached")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> listAttachedReceivedSharesSync(@HostParam("endpoint") String endpoint,
+            @QueryParam("referenceName") String referenceName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, RequestOptions requestOptions, Context context);
 
         @Get("/receivedShares/detached")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(
-                value = ClientAuthenticationException.class,
-                code = {401})
-        @UnexpectedResponseExceptionType(
-                value = ResourceNotFoundException.class,
-                code = {404})
-        @UnexpectedResponseExceptionType(
-                value = ResourceModifiedException.class,
-                code = {409})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
         @UnexpectedResponseExceptionType(HttpResponseException.class)
-        Mono<Response<BinaryData>> listDetachedReceivedShares(
-                @HostParam("endpoint") String endpoint,
-                @QueryParam("api-version") String apiVersion,
-                @HeaderParam("Accept") String accept,
-                RequestOptions requestOptions,
-                Context context);
+        Mono<Response<BinaryData>> listDetachedReceivedShares(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept,
+            RequestOptions requestOptions, Context context);
+
+        @Get("/receivedShares/detached")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> listDetachedReceivedSharesSync(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept,
+            RequestOptions requestOptions, Context context);
 
         @Post("/emails:activate")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(
-                value = ClientAuthenticationException.class,
-                code = {401})
-        @UnexpectedResponseExceptionType(
-                value = ResourceNotFoundException.class,
-                code = {404})
-        @UnexpectedResponseExceptionType(
-                value = ResourceModifiedException.class,
-                code = {409})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
         @UnexpectedResponseExceptionType(HttpResponseException.class)
-        Mono<Response<BinaryData>> activateTenantEmailRegistration(
-                @HostParam("endpoint") String endpoint,
-                @QueryParam("api-version") String apiVersion,
-                @BodyParam("application/json") BinaryData tenantEmailRegistration,
-                @HeaderParam("Accept") String accept,
-                RequestOptions requestOptions,
-                Context context);
+        Mono<Response<BinaryData>> activateTenantEmailRegistration(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") BinaryData tenantEmailRegistration, @HeaderParam("Accept") String accept,
+            RequestOptions requestOptions, Context context);
+
+        @Post("/emails:activate")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> activateTenantEmailRegistrationSync(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") BinaryData tenantEmailRegistration, @HeaderParam("Accept") String accept,
+            RequestOptions requestOptions, Context context);
 
         @Post("/emails:register")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(
-                value = ClientAuthenticationException.class,
-                code = {401})
-        @UnexpectedResponseExceptionType(
-                value = ResourceNotFoundException.class,
-                code = {404})
-        @UnexpectedResponseExceptionType(
-                value = ResourceModifiedException.class,
-                code = {409})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
         @UnexpectedResponseExceptionType(HttpResponseException.class)
-        Mono<Response<BinaryData>> registerTenantEmailRegistration(
-                @HostParam("endpoint") String endpoint,
-                @QueryParam("api-version") String apiVersion,
-                @HeaderParam("Accept") String accept,
-                RequestOptions requestOptions,
-                Context context);
+        Mono<Response<BinaryData>> registerTenantEmailRegistration(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept,
+            RequestOptions requestOptions, Context context);
+
+        @Post("/emails:register")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> registerTenantEmailRegistrationSync(@HostParam("endpoint") String endpoint,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept,
+            RequestOptions requestOptions, Context context);
 
         @Get("{nextLink}")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(
-                value = ClientAuthenticationException.class,
-                code = {401})
-        @UnexpectedResponseExceptionType(
-                value = ResourceNotFoundException.class,
-                code = {404})
-        @UnexpectedResponseExceptionType(
-                value = ResourceModifiedException.class,
-                code = {409})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
         @UnexpectedResponseExceptionType(HttpResponseException.class)
         Mono<Response<BinaryData>> listAttachedReceivedSharesNext(
-                @PathParam(value = "nextLink", encoded = true) String nextLink,
-                @HostParam("endpoint") String endpoint,
-                @HeaderParam("Accept") String accept,
-                RequestOptions requestOptions,
-                Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("endpoint") String endpoint,
+            @HeaderParam("Accept") String accept, RequestOptions requestOptions, Context context);
 
         @Get("{nextLink}")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(
-                value = ClientAuthenticationException.class,
-                code = {401})
-        @UnexpectedResponseExceptionType(
-                value = ResourceNotFoundException.class,
-                code = {404})
-        @UnexpectedResponseExceptionType(
-                value = ResourceModifiedException.class,
-                code = {409})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> listAttachedReceivedSharesNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("endpoint") String endpoint,
+            @HeaderParam("Accept") String accept, RequestOptions requestOptions, Context context);
+
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
         @UnexpectedResponseExceptionType(HttpResponseException.class)
         Mono<Response<BinaryData>> listDetachedReceivedSharesNext(
-                @PathParam(value = "nextLink", encoded = true) String nextLink,
-                @HostParam("endpoint") String endpoint,
-                @HeaderParam("Accept") String accept,
-                RequestOptions requestOptions,
-                Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("endpoint") String endpoint,
+            @HeaderParam("Accept") String accept, RequestOptions requestOptions, Context context);
+
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(value = ClientAuthenticationException.class, code = { 401 })
+        @UnexpectedResponseExceptionType(value = ResourceNotFoundException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(value = ResourceModifiedException.class, code = { 409 })
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> listDetachedReceivedSharesNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("endpoint") String endpoint,
+            @HeaderParam("Accept") String accept, RequestOptions requestOptions, Context context);
     }
 
     /**
      * Get a received share by unique id.
-     *
-     * <p>Get a received share.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Get a received share.
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -270,34 +301,29 @@ public final class ReceivedSharesImpl {
      * @return a received share along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<BinaryData>> getReceivedShareWithResponseAsync(
-            String receivedShareId, RequestOptions requestOptions) {
+    public Mono<Response<BinaryData>> getReceivedShareWithResponseAsync(String receivedShareId,
+        RequestOptions requestOptions) {
         final String accept = "application/json";
-        return FluxUtil.withContext(
-                context ->
-                        service.getReceivedShare(
-                                this.client.getEndpoint(),
-                                receivedShareId,
-                                this.client.getServiceVersion().getVersion(),
-                                accept,
-                                requestOptions,
-                                context));
+        return FluxUtil.withContext(context -> service.getReceivedShare(this.client.getEndpoint(), receivedShareId,
+            this.client.getServiceVersion().getVersion(), accept, requestOptions, context));
     }
 
     /**
      * Get a received share by unique id.
-     *
-     * <p>Get a received share.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Get a received share.
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -308,32 +334,39 @@ public final class ReceivedSharesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<BinaryData> getReceivedShareWithResponse(String receivedShareId, RequestOptions requestOptions) {
-        return getReceivedShareWithResponseAsync(receivedShareId, requestOptions).block();
+        final String accept = "application/json";
+        return service.getReceivedShareSync(this.client.getEndpoint(), receivedShareId,
+            this.client.getServiceVersion().getVersion(), accept, requestOptions, Context.NONE);
     }
 
     /**
      * Create or replace a received share.
-     *
-     * <p>Update changes to a received share.
-     *
-     * <p><strong>Request Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Update changes to a received share.
+     * <p><strong>Request Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * }
+     * </pre>
+     * 
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param receivedShare The received share to create or replace.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
@@ -341,48 +374,91 @@ public final class ReceivedSharesImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return a received share data transfer object along with {@link Response} on successful completion of {@link
-     *     Mono}.
+     * @return a received share data transfer object along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BinaryData>> createOrReplaceReceivedShareWithResponseAsync(
-            String receivedShareId, BinaryData receivedShare, RequestOptions requestOptions) {
+    private Mono<Response<BinaryData>> createOrReplaceReceivedShareWithResponseAsync(String receivedShareId,
+        BinaryData receivedShare, RequestOptions requestOptions) {
         final String accept = "application/json";
-        return FluxUtil.withContext(
-                context ->
-                        service.createOrReplaceReceivedShare(
-                                this.client.getEndpoint(),
-                                receivedShareId,
-                                this.client.getServiceVersion().getVersion(),
-                                receivedShare,
-                                accept,
-                                requestOptions,
-                                context));
+        return FluxUtil
+            .withContext(context -> service.createOrReplaceReceivedShare(this.client.getEndpoint(), receivedShareId,
+                this.client.getServiceVersion().getVersion(), receivedShare, accept, requestOptions, context));
     }
 
     /**
      * Create or replace a received share.
-     *
-     * <p>Update changes to a received share.
-     *
-     * <p><strong>Request Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Update changes to a received share.
+     * <p><strong>Request Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * }
+     * </pre>
+     * 
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
+     * @param receivedShareId Id of the received share.
+     * @param receivedShare The received share to create or replace.
+     * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
+     * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
+     * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
+     * @return a received share data transfer object along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createOrReplaceReceivedShareWithResponse(String receivedShareId,
+        BinaryData receivedShare, RequestOptions requestOptions) {
+        final String accept = "application/json";
+        return service.createOrReplaceReceivedShareSync(this.client.getEndpoint(), receivedShareId,
+            this.client.getServiceVersion().getVersion(), receivedShare, accept, requestOptions, Context.NONE);
+    }
+
+    /**
+     * Create or replace a received share.
+     * 
+     * Update changes to a received share.
+     * <p><strong>Request Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
+     * {
+     *     id: String (Optional)
+     *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
+     * }
+     * }
+     * </pre>
+     * 
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
+     * {
+     *     id: String (Optional)
+     *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
+     * }
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param receivedShare The received share to create or replace.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
@@ -393,47 +469,47 @@ public final class ReceivedSharesImpl {
      * @return the {@link PollerFlux} for polling of a received share data transfer object.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<BinaryData, BinaryData> beginCreateOrReplaceReceivedShareAsync(
-            String receivedShareId, BinaryData receivedShare, RequestOptions requestOptions) {
-        return PollerFlux.create(
-                Duration.ofSeconds(1),
-                () ->
-                        this.createOrReplaceReceivedShareWithResponseAsync(
-                                receivedShareId, receivedShare, requestOptions),
-                new DefaultPollingStrategy<>(
-                        this.client.getHttpPipeline(),
-                        "{endpoint}".replace("{endpoint}", this.client.getEndpoint()),
-                        null,
-                        requestOptions != null && requestOptions.getContext() != null
-                                ? requestOptions.getContext()
-                                : Context.NONE),
-                TypeReference.createInstance(BinaryData.class),
-                TypeReference.createInstance(BinaryData.class));
+    public PollerFlux<BinaryData, BinaryData> beginCreateOrReplaceReceivedShareAsync(String receivedShareId,
+        BinaryData receivedShare, RequestOptions requestOptions) {
+        return PollerFlux.create(Duration.ofSeconds(1),
+            () -> this.createOrReplaceReceivedShareWithResponseAsync(receivedShareId, receivedShare, requestOptions),
+            new DefaultPollingStrategy<>(new PollingStrategyOptions(this.client.getHttpPipeline())
+                .setEndpoint("{endpoint}".replace("{endpoint}", this.client.getEndpoint()))
+                .setContext(requestOptions != null && requestOptions.getContext() != null
+                    ? requestOptions.getContext()
+                    : Context.NONE)
+                .setServiceVersion(this.client.getServiceVersion().getVersion())),
+            TypeReference.createInstance(BinaryData.class), TypeReference.createInstance(BinaryData.class));
     }
 
     /**
      * Create or replace a received share.
-     *
-     * <p>Update changes to a received share.
-     *
-     * <p><strong>Request Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Update changes to a received share.
+     * <p><strong>Request Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * }
+     * </pre>
+     * 
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param receivedShare The received share to create or replace.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
@@ -444,20 +520,27 @@ public final class ReceivedSharesImpl {
      * @return the {@link SyncPoller} for polling of a received share data transfer object.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<BinaryData, BinaryData> beginCreateOrReplaceReceivedShare(
-            String receivedShareId, BinaryData receivedShare, RequestOptions requestOptions) {
-        return this.beginCreateOrReplaceReceivedShareAsync(receivedShareId, receivedShare, requestOptions)
-                .getSyncPoller();
+    public SyncPoller<BinaryData, BinaryData> beginCreateOrReplaceReceivedShare(String receivedShareId,
+        BinaryData receivedShare, RequestOptions requestOptions) {
+        return SyncPoller.createPoller(Duration.ofSeconds(1),
+            () -> this.createOrReplaceReceivedShareWithResponse(receivedShareId, receivedShare, requestOptions),
+            new SyncDefaultPollingStrategy<>(new PollingStrategyOptions(this.client.getHttpPipeline())
+                .setEndpoint("{endpoint}".replace("{endpoint}", this.client.getEndpoint()))
+                .setContext(requestOptions != null && requestOptions.getContext() != null
+                    ? requestOptions.getContext()
+                    : Context.NONE)
+                .setServiceVersion(this.client.getServiceVersion().getVersion())),
+            TypeReference.createInstance(BinaryData.class), TypeReference.createInstance(BinaryData.class));
     }
 
     /**
      * Deletes a received share
-     *
-     * <p>Delete a received share.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Delete a received share.
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     endTime: OffsetDateTime (Optional)
      *     error (Optional): {
@@ -472,8 +555,9 @@ public final class ReceivedSharesImpl {
      *     startTime: OffsetDateTime (Optional)
      *     status: String(Running/TransientFailure/Succeeded/Failed/NotStarted) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -483,28 +567,21 @@ public final class ReceivedSharesImpl {
      * @return response for long running operation along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BinaryData>> deleteReceivedShareWithResponseAsync(
-            String receivedShareId, RequestOptions requestOptions) {
+    private Mono<Response<BinaryData>> deleteReceivedShareWithResponseAsync(String receivedShareId,
+        RequestOptions requestOptions) {
         final String accept = "application/json";
-        return FluxUtil.withContext(
-                context ->
-                        service.deleteReceivedShare(
-                                this.client.getEndpoint(),
-                                receivedShareId,
-                                this.client.getServiceVersion().getVersion(),
-                                accept,
-                                requestOptions,
-                                context));
+        return FluxUtil.withContext(context -> service.deleteReceivedShare(this.client.getEndpoint(), receivedShareId,
+            this.client.getServiceVersion().getVersion(), accept, requestOptions, context));
     }
 
     /**
      * Deletes a received share
-     *
-     * <p>Delete a received share.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Delete a received share.
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     endTime: OffsetDateTime (Optional)
      *     error (Optional): {
@@ -519,8 +596,50 @@ public final class ReceivedSharesImpl {
      *     startTime: OffsetDateTime (Optional)
      *     status: String(Running/TransientFailure/Succeeded/Failed/NotStarted) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
+     * @param receivedShareId Id of the received share.
+     * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
+     * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
+     * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
+     * @return response for long running operation along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> deleteReceivedShareWithResponse(String receivedShareId,
+        RequestOptions requestOptions) {
+        final String accept = "application/json";
+        return service.deleteReceivedShareSync(this.client.getEndpoint(), receivedShareId,
+            this.client.getServiceVersion().getVersion(), accept, requestOptions, Context.NONE);
+    }
+
+    /**
+     * Deletes a received share
+     * 
+     * Delete a received share.
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
+     * {
+     *     endTime: OffsetDateTime (Optional)
+     *     error (Optional): {
+     *         code: String (Required)
+     *         details (Optional): [
+     *             (recursive schema, see above)
+     *         ]
+     *         message: String (Required)
+     *         target: String (Optional)
+     *     }
+     *     id: String (Optional)
+     *     startTime: OffsetDateTime (Optional)
+     *     status: String(Running/TransientFailure/Succeeded/Failed/NotStarted) (Required)
+     * }
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -530,30 +649,27 @@ public final class ReceivedSharesImpl {
      * @return the {@link PollerFlux} for polling of response for long running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<BinaryData, Void> beginDeleteReceivedShareAsync(
-            String receivedShareId, RequestOptions requestOptions) {
-        return PollerFlux.create(
-                Duration.ofSeconds(1),
-                () -> this.deleteReceivedShareWithResponseAsync(receivedShareId, requestOptions),
-                new DefaultPollingStrategy<>(
-                        this.client.getHttpPipeline(),
-                        "{endpoint}".replace("{endpoint}", this.client.getEndpoint()),
-                        null,
-                        requestOptions != null && requestOptions.getContext() != null
-                                ? requestOptions.getContext()
-                                : Context.NONE),
-                TypeReference.createInstance(BinaryData.class),
-                TypeReference.createInstance(Void.class));
+    public PollerFlux<BinaryData, Void> beginDeleteReceivedShareAsync(String receivedShareId,
+        RequestOptions requestOptions) {
+        return PollerFlux.create(Duration.ofSeconds(1),
+            () -> this.deleteReceivedShareWithResponseAsync(receivedShareId, requestOptions),
+            new DefaultPollingStrategy<>(new PollingStrategyOptions(this.client.getHttpPipeline())
+                .setEndpoint("{endpoint}".replace("{endpoint}", this.client.getEndpoint()))
+                .setContext(requestOptions != null && requestOptions.getContext() != null
+                    ? requestOptions.getContext()
+                    : Context.NONE)
+                .setServiceVersion(this.client.getServiceVersion().getVersion())),
+            TypeReference.createInstance(BinaryData.class), TypeReference.createInstance(Void.class));
     }
 
     /**
      * Deletes a received share
-     *
-     * <p>Delete a received share.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Delete a received share.
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     endTime: OffsetDateTime (Optional)
      *     error (Optional): {
@@ -568,8 +684,9 @@ public final class ReceivedSharesImpl {
      *     startTime: OffsetDateTime (Optional)
      *     status: String(Running/TransientFailure/Succeeded/Failed/NotStarted) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -579,36 +696,43 @@ public final class ReceivedSharesImpl {
      * @return the {@link SyncPoller} for polling of response for long running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<BinaryData, Void> beginDeleteReceivedShare(
-            String receivedShareId, RequestOptions requestOptions) {
-        return this.beginDeleteReceivedShareAsync(receivedShareId, requestOptions).getSyncPoller();
+    public SyncPoller<BinaryData, Void> beginDeleteReceivedShare(String receivedShareId,
+        RequestOptions requestOptions) {
+        return SyncPoller.createPoller(Duration.ofSeconds(1),
+            () -> this.deleteReceivedShareWithResponse(receivedShareId, requestOptions),
+            new SyncDefaultPollingStrategy<>(new PollingStrategyOptions(this.client.getHttpPipeline())
+                .setEndpoint("{endpoint}".replace("{endpoint}", this.client.getEndpoint()))
+                .setContext(requestOptions != null && requestOptions.getContext() != null
+                    ? requestOptions.getContext()
+                    : Context.NONE)
+                .setServiceVersion(this.client.getServiceVersion().getVersion())),
+            TypeReference.createInstance(BinaryData.class), TypeReference.createInstance(Void.class));
     }
 
     /**
      * Get a list of attached received shares.
-     *
-     * <p>List attached received shares.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
+     * 
+     * List attached received shares.
+     * <p><strong>Query Parameters</strong></p>
      * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
-     *     <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
+     * <caption>Query Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
+     * <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
      * </table>
-     *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param referenceName A name that references a data store.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -618,54 +742,40 @@ public final class ReceivedSharesImpl {
      * @return list of received shares along with {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<BinaryData>> listAttachedReceivedSharesSinglePageAsync(
-            String referenceName, RequestOptions requestOptions) {
+    private Mono<PagedResponse<BinaryData>> listAttachedReceivedSharesSinglePageAsync(String referenceName,
+        RequestOptions requestOptions) {
         final String accept = "application/json";
-        return FluxUtil.withContext(
-                        context ->
-                                service.listAttachedReceivedShares(
-                                        this.client.getEndpoint(),
-                                        referenceName,
-                                        this.client.getServiceVersion().getVersion(),
-                                        accept,
-                                        requestOptions,
-                                        context))
-                .map(
-                        res ->
-                                new PagedResponseBase<>(
-                                        res.getRequest(),
-                                        res.getStatusCode(),
-                                        res.getHeaders(),
-                                        getValues(res.getValue(), "value"),
-                                        getNextLink(res.getValue(), "nextLink"),
-                                        null));
+        return FluxUtil
+            .withContext(context -> service.listAttachedReceivedShares(this.client.getEndpoint(), referenceName,
+                this.client.getServiceVersion().getVersion(), accept, requestOptions, context))
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                getValues(res.getValue(), "value"), getNextLink(res.getValue(), "nextLink"), null));
     }
 
     /**
      * Get a list of attached received shares.
-     *
-     * <p>List attached received shares.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
+     * 
+     * List attached received shares.
+     * <p><strong>Query Parameters</strong></p>
      * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
-     *     <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
+     * <caption>Query Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
+     * <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
      * </table>
-     *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param referenceName A name that references a data store.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -678,39 +788,77 @@ public final class ReceivedSharesImpl {
     public PagedFlux<BinaryData> listAttachedReceivedSharesAsync(String referenceName, RequestOptions requestOptions) {
         RequestOptions requestOptionsForNextPage = new RequestOptions();
         requestOptionsForNextPage.setContext(
-                requestOptions != null && requestOptions.getContext() != null
-                        ? requestOptions.getContext()
-                        : Context.NONE);
-        return new PagedFlux<>(
-                () -> listAttachedReceivedSharesSinglePageAsync(referenceName, requestOptions),
-                nextLink -> listAttachedReceivedSharesNextSinglePageAsync(nextLink, requestOptionsForNextPage));
+            requestOptions != null && requestOptions.getContext() != null ? requestOptions.getContext() : Context.NONE);
+        return new PagedFlux<>(() -> listAttachedReceivedSharesSinglePageAsync(referenceName, requestOptions),
+            nextLink -> listAttachedReceivedSharesNextSinglePageAsync(nextLink, requestOptionsForNextPage));
     }
 
     /**
      * Get a list of attached received shares.
-     *
-     * <p>List attached received shares.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
+     * 
+     * List attached received shares.
+     * <p><strong>Query Parameters</strong></p>
      * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
-     *     <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
+     * <caption>Query Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
+     * <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
      * </table>
-     *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
+     * @param referenceName A name that references a data store.
+     * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
+     * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
+     * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
+     * @return list of received shares along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<BinaryData> listAttachedReceivedSharesSinglePage(String referenceName,
+        RequestOptions requestOptions) {
+        final String accept = "application/json";
+        Response<BinaryData> res = service.listAttachedReceivedSharesSync(this.client.getEndpoint(), referenceName,
+            this.client.getServiceVersion().getVersion(), accept, requestOptions, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+            getValues(res.getValue(), "value"), getNextLink(res.getValue(), "nextLink"), null);
+    }
+
+    /**
+     * Get a list of attached received shares.
+     * 
+     * List attached received shares.
+     * <p><strong>Query Parameters</strong></p>
+     * <table border="1">
+     * <caption>Query Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
+     * <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
+     * </table>
+     * You can add these to a request with {@link RequestOptions#addQueryParam}
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
+     * {
+     *     id: String (Optional)
+     *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
+     * }
+     * }
+     * </pre>
+     * 
      * @param referenceName A name that references a data store.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -721,34 +869,37 @@ public final class ReceivedSharesImpl {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<BinaryData> listAttachedReceivedShares(String referenceName, RequestOptions requestOptions) {
-        return new PagedIterable<>(listAttachedReceivedSharesAsync(referenceName, requestOptions));
+        RequestOptions requestOptionsForNextPage = new RequestOptions();
+        requestOptionsForNextPage.setContext(
+            requestOptions != null && requestOptions.getContext() != null ? requestOptions.getContext() : Context.NONE);
+        return new PagedIterable<>(() -> listAttachedReceivedSharesSinglePage(referenceName, requestOptions),
+            nextLink -> listAttachedReceivedSharesNextSinglePage(nextLink, requestOptionsForNextPage));
     }
 
     /**
      * Get a list of detached received shares.
-     *
-     * <p>List detached received shares.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
+     * 
+     * List detached received shares.
+     * <p><strong>Query Parameters</strong></p>
      * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
-     *     <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
+     * <caption>Query Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
+     * <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
      * </table>
-     *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -759,50 +910,37 @@ public final class ReceivedSharesImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<BinaryData>> listDetachedReceivedSharesSinglePageAsync(RequestOptions requestOptions) {
         final String accept = "application/json";
-        return FluxUtil.withContext(
-                        context ->
-                                service.listDetachedReceivedShares(
-                                        this.client.getEndpoint(),
-                                        this.client.getServiceVersion().getVersion(),
-                                        accept,
-                                        requestOptions,
-                                        context))
-                .map(
-                        res ->
-                                new PagedResponseBase<>(
-                                        res.getRequest(),
-                                        res.getStatusCode(),
-                                        res.getHeaders(),
-                                        getValues(res.getValue(), "value"),
-                                        getNextLink(res.getValue(), "nextLink"),
-                                        null));
+        return FluxUtil
+            .withContext(context -> service.listDetachedReceivedShares(this.client.getEndpoint(),
+                this.client.getServiceVersion().getVersion(), accept, requestOptions, context))
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                getValues(res.getValue(), "value"), getNextLink(res.getValue(), "nextLink"), null));
     }
 
     /**
      * Get a list of detached received shares.
-     *
-     * <p>List detached received shares.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
+     * 
+     * List detached received shares.
+     * <p><strong>Query Parameters</strong></p>
      * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
-     *     <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
+     * <caption>Query Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
+     * <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
      * </table>
-     *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -814,39 +952,75 @@ public final class ReceivedSharesImpl {
     public PagedFlux<BinaryData> listDetachedReceivedSharesAsync(RequestOptions requestOptions) {
         RequestOptions requestOptionsForNextPage = new RequestOptions();
         requestOptionsForNextPage.setContext(
-                requestOptions != null && requestOptions.getContext() != null
-                        ? requestOptions.getContext()
-                        : Context.NONE);
-        return new PagedFlux<>(
-                () -> listDetachedReceivedSharesSinglePageAsync(requestOptions),
-                nextLink -> listDetachedReceivedSharesNextSinglePageAsync(nextLink, requestOptionsForNextPage));
+            requestOptions != null && requestOptions.getContext() != null ? requestOptions.getContext() : Context.NONE);
+        return new PagedFlux<>(() -> listDetachedReceivedSharesSinglePageAsync(requestOptions),
+            nextLink -> listDetachedReceivedSharesNextSinglePageAsync(nextLink, requestOptionsForNextPage));
     }
 
     /**
      * Get a list of detached received shares.
-     *
-     * <p>List detached received shares.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
+     * 
+     * List detached received shares.
+     * <p><strong>Query Parameters</strong></p>
      * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
-     *     <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
+     * <caption>Query Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
+     * <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
      * </table>
-     *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
+     * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
+     * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
+     * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
+     * @return list of received shares along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<BinaryData> listDetachedReceivedSharesSinglePage(RequestOptions requestOptions) {
+        final String accept = "application/json";
+        Response<BinaryData> res = service.listDetachedReceivedSharesSync(this.client.getEndpoint(),
+            this.client.getServiceVersion().getVersion(), accept, requestOptions, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+            getValues(res.getValue(), "value"), getNextLink(res.getValue(), "nextLink"), null);
+    }
+
+    /**
+     * Get a list of detached received shares.
+     * 
+     * List detached received shares.
+     * <p><strong>Query Parameters</strong></p>
+     * <table border="1">
+     * <caption>Query Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
+     * <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
+     * </table>
+     * You can add these to a request with {@link RequestOptions#addQueryParam}
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
+     * {
+     *     id: String (Optional)
+     *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
+     * }
+     * }
+     * </pre>
+     * 
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -856,17 +1030,30 @@ public final class ReceivedSharesImpl {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<BinaryData> listDetachedReceivedShares(RequestOptions requestOptions) {
-        return new PagedIterable<>(listDetachedReceivedSharesAsync(requestOptions));
+        RequestOptions requestOptionsForNextPage = new RequestOptions();
+        requestOptionsForNextPage.setContext(
+            requestOptions != null && requestOptions.getContext() != null ? requestOptions.getContext() : Context.NONE);
+        return new PagedIterable<>(() -> listDetachedReceivedSharesSinglePage(requestOptions),
+            nextLink -> listDetachedReceivedSharesNextSinglePage(nextLink, requestOptionsForNextPage));
     }
 
     /**
      * Activates the tenant and email combination using the activation code received.
-     *
-     * <p>Activates the email registration for current tenant.
-     *
-     * <p><strong>Request Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Activates the email registration for current tenant.
+     * <p><strong>Header Parameters</strong></p>
+     * <table border="1">
+     * <caption>Header Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>repeatability-request-id</td><td>String</td><td>No</td><td>Repeatability request ID header</td></tr>
+     * <tr><td>repeatability-first-sent</td><td>String</td><td>No</td><td>Repeatability first sent header as
+     * HTTP-date</td></tr>
+     * </table>
+     * You can add these to a request with {@link RequestOptions#addHeader}
+     * <p><strong>Request Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
@@ -879,11 +1066,13 @@ public final class ReceivedSharesImpl {
      *         tenantId: String (Optional)
      *     }
      * }
-     * }</pre>
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * }
+     * </pre>
+     * 
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
@@ -896,8 +1085,9 @@ public final class ReceivedSharesImpl {
      *         tenantId: String (Optional)
      *     }
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param tenantEmailRegistration The tenant email registration payload.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -905,31 +1095,48 @@ public final class ReceivedSharesImpl {
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
      * @return a tenant email registration data transfer object along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<BinaryData>> activateTenantEmailRegistrationWithResponseAsync(
-            BinaryData tenantEmailRegistration, RequestOptions requestOptions) {
+        BinaryData tenantEmailRegistration, RequestOptions requestOptions) {
         final String accept = "application/json";
-        return FluxUtil.withContext(
-                context ->
-                        service.activateTenantEmailRegistration(
-                                this.client.getEndpoint(),
-                                this.client.getServiceVersion().getVersion(),
-                                tenantEmailRegistration,
-                                accept,
-                                requestOptions,
-                                context));
+        RequestOptions requestOptionsLocal = requestOptions == null ? new RequestOptions() : requestOptions;
+        requestOptionsLocal.addRequestCallback(requestLocal -> {
+            if (requestLocal.getHeaders().get(HttpHeaderName.fromString("repeatability-request-id")) == null) {
+                requestLocal.getHeaders()
+                    .set(HttpHeaderName.fromString("repeatability-request-id"), CoreUtils.randomUuid().toString());
+            }
+        });
+        requestOptionsLocal.addRequestCallback(requestLocal -> {
+            if (requestLocal.getHeaders().get(HttpHeaderName.fromString("repeatability-first-sent")) == null) {
+                requestLocal.getHeaders()
+                    .set(HttpHeaderName.fromString("repeatability-first-sent"),
+                        DateTimeRfc1123.toRfc1123String(OffsetDateTime.now()));
+            }
+        });
+        return FluxUtil.withContext(context -> service.activateTenantEmailRegistration(this.client.getEndpoint(),
+            this.client.getServiceVersion().getVersion(), tenantEmailRegistration, accept, requestOptionsLocal,
+            context));
     }
 
     /**
      * Activates the tenant and email combination using the activation code received.
-     *
-     * <p>Activates the email registration for current tenant.
-     *
-     * <p><strong>Request Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Activates the email registration for current tenant.
+     * <p><strong>Header Parameters</strong></p>
+     * <table border="1">
+     * <caption>Header Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>repeatability-request-id</td><td>String</td><td>No</td><td>Repeatability request ID header</td></tr>
+     * <tr><td>repeatability-first-sent</td><td>String</td><td>No</td><td>Repeatability first sent header as
+     * HTTP-date</td></tr>
+     * </table>
+     * You can add these to a request with {@link RequestOptions#addHeader}
+     * <p><strong>Request Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
@@ -942,11 +1149,13 @@ public final class ReceivedSharesImpl {
      *         tenantId: String (Optional)
      *     }
      * }
-     * }</pre>
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * }
+     * </pre>
+     * 
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
@@ -959,8 +1168,9 @@ public final class ReceivedSharesImpl {
      *         tenantId: String (Optional)
      *     }
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param tenantEmailRegistration The tenant email registration payload.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -970,19 +1180,45 @@ public final class ReceivedSharesImpl {
      * @return a tenant email registration data transfer object along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BinaryData> activateTenantEmailRegistrationWithResponse(
-            BinaryData tenantEmailRegistration, RequestOptions requestOptions) {
-        return activateTenantEmailRegistrationWithResponseAsync(tenantEmailRegistration, requestOptions).block();
+    public Response<BinaryData> activateTenantEmailRegistrationWithResponse(BinaryData tenantEmailRegistration,
+        RequestOptions requestOptions) {
+        final String accept = "application/json";
+        RequestOptions requestOptionsLocal = requestOptions == null ? new RequestOptions() : requestOptions;
+        requestOptionsLocal.addRequestCallback(requestLocal -> {
+            if (requestLocal.getHeaders().get(HttpHeaderName.fromString("repeatability-request-id")) == null) {
+                requestLocal.getHeaders()
+                    .set(HttpHeaderName.fromString("repeatability-request-id"), CoreUtils.randomUuid().toString());
+            }
+        });
+        requestOptionsLocal.addRequestCallback(requestLocal -> {
+            if (requestLocal.getHeaders().get(HttpHeaderName.fromString("repeatability-first-sent")) == null) {
+                requestLocal.getHeaders()
+                    .set(HttpHeaderName.fromString("repeatability-first-sent"),
+                        DateTimeRfc1123.toRfc1123String(OffsetDateTime.now()));
+            }
+        });
+        return service.activateTenantEmailRegistrationSync(this.client.getEndpoint(),
+            this.client.getServiceVersion().getVersion(), tenantEmailRegistration, accept, requestOptionsLocal,
+            Context.NONE);
     }
 
     /**
      * Registers the tenant and email combination for activation.
-     *
-     * <p>Register an email for the current tenant.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Register an email for the current tenant.
+     * <p><strong>Header Parameters</strong></p>
+     * <table border="1">
+     * <caption>Header Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>repeatability-request-id</td><td>String</td><td>No</td><td>Repeatability request ID header</td></tr>
+     * <tr><td>repeatability-first-sent</td><td>String</td><td>No</td><td>Repeatability first sent header as
+     * HTTP-date</td></tr>
+     * </table>
+     * You can add these to a request with {@link RequestOptions#addHeader}
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
@@ -995,37 +1231,55 @@ public final class ReceivedSharesImpl {
      *         tenantId: String (Optional)
      *     }
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
      * @return a tenant email registration data transfer object along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<BinaryData>> registerTenantEmailRegistrationWithResponseAsync(RequestOptions requestOptions) {
         final String accept = "application/json";
-        return FluxUtil.withContext(
-                context ->
-                        service.registerTenantEmailRegistration(
-                                this.client.getEndpoint(),
-                                this.client.getServiceVersion().getVersion(),
-                                accept,
-                                requestOptions,
-                                context));
+        RequestOptions requestOptionsLocal = requestOptions == null ? new RequestOptions() : requestOptions;
+        requestOptionsLocal.addRequestCallback(requestLocal -> {
+            if (requestLocal.getHeaders().get(HttpHeaderName.fromString("repeatability-request-id")) == null) {
+                requestLocal.getHeaders()
+                    .set(HttpHeaderName.fromString("repeatability-request-id"), CoreUtils.randomUuid().toString());
+            }
+        });
+        requestOptionsLocal.addRequestCallback(requestLocal -> {
+            if (requestLocal.getHeaders().get(HttpHeaderName.fromString("repeatability-first-sent")) == null) {
+                requestLocal.getHeaders()
+                    .set(HttpHeaderName.fromString("repeatability-first-sent"),
+                        DateTimeRfc1123.toRfc1123String(OffsetDateTime.now()));
+            }
+        });
+        return FluxUtil.withContext(context -> service.registerTenantEmailRegistration(this.client.getEndpoint(),
+            this.client.getServiceVersion().getVersion(), accept, requestOptionsLocal, context));
     }
 
     /**
      * Registers the tenant and email combination for activation.
-     *
-     * <p>Register an email for the current tenant.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Register an email for the current tenant.
+     * <p><strong>Header Parameters</strong></p>
+     * <table border="1">
+     * <caption>Header Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>repeatability-request-id</td><td>String</td><td>No</td><td>Repeatability request ID header</td></tr>
+     * <tr><td>repeatability-first-sent</td><td>String</td><td>No</td><td>Repeatability first sent header as
+     * HTTP-date</td></tr>
+     * </table>
+     * You can add these to a request with {@link RequestOptions#addHeader}
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
@@ -1038,8 +1292,9 @@ public final class ReceivedSharesImpl {
      *         tenantId: String (Optional)
      *     }
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -1049,23 +1304,40 @@ public final class ReceivedSharesImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<BinaryData> registerTenantEmailRegistrationWithResponse(RequestOptions requestOptions) {
-        return registerTenantEmailRegistrationWithResponseAsync(requestOptions).block();
+        final String accept = "application/json";
+        RequestOptions requestOptionsLocal = requestOptions == null ? new RequestOptions() : requestOptions;
+        requestOptionsLocal.addRequestCallback(requestLocal -> {
+            if (requestLocal.getHeaders().get(HttpHeaderName.fromString("repeatability-request-id")) == null) {
+                requestLocal.getHeaders()
+                    .set(HttpHeaderName.fromString("repeatability-request-id"), CoreUtils.randomUuid().toString());
+            }
+        });
+        requestOptionsLocal.addRequestCallback(requestLocal -> {
+            if (requestLocal.getHeaders().get(HttpHeaderName.fromString("repeatability-first-sent")) == null) {
+                requestLocal.getHeaders()
+                    .set(HttpHeaderName.fromString("repeatability-first-sent"),
+                        DateTimeRfc1123.toRfc1123String(OffsetDateTime.now()));
+            }
+        });
+        return service.registerTenantEmailRegistrationSync(this.client.getEndpoint(),
+            this.client.getServiceVersion().getVersion(), accept, requestOptionsLocal, Context.NONE);
     }
 
     /**
      * Get the next page of items.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * }
+     * </pre>
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -1074,38 +1346,63 @@ public final class ReceivedSharesImpl {
      * @return list of received shares along with {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<BinaryData>> listAttachedReceivedSharesNextSinglePageAsync(
-            String nextLink, RequestOptions requestOptions) {
+    private Mono<PagedResponse<BinaryData>> listAttachedReceivedSharesNextSinglePageAsync(String nextLink,
+        RequestOptions requestOptions) {
         final String accept = "application/json";
-        return FluxUtil.withContext(
-                        context ->
-                                service.listAttachedReceivedSharesNext(
-                                        nextLink, this.client.getEndpoint(), accept, requestOptions, context))
-                .map(
-                        res ->
-                                new PagedResponseBase<>(
-                                        res.getRequest(),
-                                        res.getStatusCode(),
-                                        res.getHeaders(),
-                                        getValues(res.getValue(), "value"),
-                                        getNextLink(res.getValue(), "nextLink"),
-                                        null));
+        return FluxUtil
+            .withContext(context -> service.listAttachedReceivedSharesNext(nextLink, this.client.getEndpoint(), accept,
+                requestOptions, context))
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                getValues(res.getValue(), "value"), getNextLink(res.getValue(), "nextLink"), null));
     }
 
     /**
      * Get the next page of items.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * }
+     * </pre>
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
+     * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
+     * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
+     * @return list of received shares along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<BinaryData> listAttachedReceivedSharesNextSinglePage(String nextLink,
+        RequestOptions requestOptions) {
+        final String accept = "application/json";
+        Response<BinaryData> res = service.listAttachedReceivedSharesNextSync(nextLink, this.client.getEndpoint(),
+            accept, requestOptions, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+            getValues(res.getValue(), "value"), getNextLink(res.getValue(), "nextLink"), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
+     * {
+     *     id: String (Optional)
+     *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
+     * }
+     * }
+     * </pre>
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -1114,22 +1411,46 @@ public final class ReceivedSharesImpl {
      * @return list of received shares along with {@link PagedResponse} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<BinaryData>> listDetachedReceivedSharesNextSinglePageAsync(
-            String nextLink, RequestOptions requestOptions) {
+    private Mono<PagedResponse<BinaryData>> listDetachedReceivedSharesNextSinglePageAsync(String nextLink,
+        RequestOptions requestOptions) {
         final String accept = "application/json";
-        return FluxUtil.withContext(
-                        context ->
-                                service.listDetachedReceivedSharesNext(
-                                        nextLink, this.client.getEndpoint(), accept, requestOptions, context))
-                .map(
-                        res ->
-                                new PagedResponseBase<>(
-                                        res.getRequest(),
-                                        res.getStatusCode(),
-                                        res.getHeaders(),
-                                        getValues(res.getValue(), "value"),
-                                        getNextLink(res.getValue(), "nextLink"),
-                                        null));
+        return FluxUtil
+            .withContext(context -> service.listDetachedReceivedSharesNext(nextLink, this.client.getEndpoint(), accept,
+                requestOptions, context))
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                getValues(res.getValue(), "value"), getNextLink(res.getValue(), "nextLink"), null));
+    }
+
+    /**
+     * Get the next page of items.
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
+     * {
+     *     id: String (Optional)
+     *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
+     * }
+     * }
+     * </pre>
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
+     * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
+     * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
+     * @return list of received shares along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<BinaryData> listDetachedReceivedSharesNextSinglePage(String nextLink,
+        RequestOptions requestOptions) {
+        final String accept = "application/json";
+        Response<BinaryData> res = service.listDetachedReceivedSharesNextSync(nextLink, this.client.getEndpoint(),
+            accept, requestOptions, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+            getValues(res.getValue(), "value"), getNextLink(res.getValue(), "nextLink"), null);
     }
 
     private List<BinaryData> getValues(BinaryData binaryData, String path) {

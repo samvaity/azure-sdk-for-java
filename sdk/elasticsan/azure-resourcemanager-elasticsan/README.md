@@ -2,7 +2,7 @@
 
 Azure Resource Manager ElasticSan client library for Java.
 
-This package contains Microsoft Azure SDK for ElasticSan Management SDK.  Package tag package-preview-2022-12. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+This package contains Microsoft Azure SDK for ElasticSan Management SDK. Elastic SAN is a fully integrated solution that simplifies deploying, scaling, managing, and configuring a storage area network (SAN). It also offers built-in cloud capabilities like high availability. Elastic SAN works with many types of compute resources, such as Azure Virtual Machines, Azure VMware Solution, and Azure Kubernetes Service. Package api-version 2025-09-01. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
 
 ## We'd love to hear your feedback
 
@@ -32,7 +32,7 @@ Various documentation is available to help you get started
 <dependency>
     <groupId>com.azure.resourcemanager</groupId>
     <artifactId>azure-resourcemanager-elasticsan</artifactId>
-    <version>1.0.0-beta.2</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 [//]: # ({x-version-update-end})
@@ -45,18 +45,14 @@ Azure Management Libraries require a `TokenCredential` implementation for authen
 
 ### Authentication
 
-By default, Azure Active Directory token authentication depends on correct configuration of the following environment variables.
+Microsoft Entra ID token authentication relies on the [credential class][azure_identity_credentials] from [Azure Identity][azure_identity] package.
 
-- `AZURE_CLIENT_ID` for Azure client ID.
-- `AZURE_TENANT_ID` for Azure tenant ID.
-- `AZURE_CLIENT_SECRET` or `AZURE_CLIENT_CERTIFICATE_PATH` for client secret or client certificate.
+Azure subscription ID can be configured via `AZURE_SUBSCRIPTION_ID` environment variable.
 
-In addition, Azure subscription ID can be configured via `AZURE_SUBSCRIPTION_ID` environment variable.
-
-With above configuration, `azure` client can be authenticated using the following code:
+Assuming the use of the `DefaultAzureCredential` credential class, the client can be authenticated using the following code:
 
 ```java
-AzureProfile profile = new AzureProfile(AzureEnvironment.AZURE);
+AzureProfile profile = new AzureProfile(AzureCloud.AZURE_PUBLIC_CLOUD);
 TokenCredential credential = new DefaultAzureCredentialBuilder()
     .authorityHost(profile.getEnvironment().getActiveDirectoryEndpoint())
     .build();
@@ -64,7 +60,7 @@ ElasticSanManager manager = ElasticSanManager
     .authenticate(credential, profile);
 ```
 
-The sample code assumes global Azure. Please change `AzureEnvironment.AZURE` variable if otherwise.
+The sample code assumes global Azure. Please change the `AzureCloud.AZURE_PUBLIC_CLOUD` variable if otherwise.
 
 See [Authentication][authenticate] for more options.
 
@@ -74,6 +70,16 @@ See [API design][design] for general introduction on design and key concepts on 
 
 ## Examples
 
+```java
+elasticSan = elasticSanManager.elasticSans()
+    .define(elasticSanName)
+    .withRegion(REGION)
+    .withExistingResourceGroup(resourceGroupName)
+    .withSku(new Sku().withName(SkuName.PREMIUM_LRS).withTier(SkuTier.PREMIUM))
+    .withBaseSizeTiB(1L)
+    .withExtendedCapacitySizeTiB(1L)
+    .create();
+```
 [Code snippets and samples](https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/elasticsan/azure-resourcemanager-elasticsan/SAMPLE.md)
 
 
@@ -94,14 +100,13 @@ This project has adopted the [Microsoft Open Source Code of Conduct][coc]. For m
 <!-- LINKS -->
 [survey]: https://microsoft.qualtrics.com/jfe/form/SV_ehN0lIk2FKEBkwd?Q_CHL=DOCS
 [docs]: https://azure.github.io/azure-sdk-for-java/
-[jdk]: https://docs.microsoft.com/java/azure/jdk/
+[jdk]: https://learn.microsoft.com/azure/developer/java/fundamentals/
 [azure_subscription]: https://azure.microsoft.com/free/
 [azure_identity]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/identity/azure-identity
+[azure_identity_credentials]: https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/identity/azure-identity#credentials
 [azure_core_http_netty]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/core/azure-core-http-netty
 [authenticate]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/resourcemanager/docs/AUTH.md
 [design]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/resourcemanager/docs/DESIGN.md
 [cg]: https://github.com/Azure/azure-sdk-for-java/blob/main/CONTRIBUTING.md
 [coc]: https://opensource.microsoft.com/codeofconduct/
 [coc_faq]: https://opensource.microsoft.com/codeofconduct/faq/
-
-![Impressions](https://azure-sdk-impressions.azurewebsites.net/api/impressions/azure-sdk-for-java%2Fsdk%2Felasticsan%2Fazure-resourcemanager-elasticsan%2FREADME.png)

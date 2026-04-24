@@ -8,19 +8,21 @@ import com.azure.resourcemanager.maps.fluent.models.CreatorProperties;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for Creators CreateOrUpdate. */
+/**
+ * Samples for Creators CreateOrUpdate.
+ */
 public final class CreatorsCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/maps/resource-manager/Microsoft.Maps/stable/2021-02-01/examples/CreateMapsCreator.json
+     * x-ms-original-file:
+     * specification/maps/resource-manager/Microsoft.Maps/stable/2023-06-01/examples/CreateMapsCreator.json
      */
     /**
      * Sample code: Create Creator Resource.
-     *
+     * 
      * @param manager Entry point to AzureMapsManager.
      */
     public static void createCreatorResource(com.azure.resourcemanager.maps.AzureMapsManager manager) {
-        manager
-            .creators()
+        manager.creators()
             .define("myCreator")
             .withRegion("eastus2")
             .withExistingAccount("myResourceGroup", "myMapsAccount")
@@ -29,6 +31,7 @@ public final class CreatorsCreateOrUpdateSamples {
             .create();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

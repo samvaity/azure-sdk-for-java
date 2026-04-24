@@ -3,13 +3,15 @@
 
 package com.azure.ai.translation.text;
 
-import java.util.List;
-import java.util.ArrayList;
-import com.azure.core.credential.AzureKeyCredential;
 import com.azure.ai.translation.text.models.DetectedLanguage;
-import com.azure.ai.translation.text.models.InputTextItem;
+import com.azure.ai.translation.text.models.TranslateInputItem;
 import com.azure.ai.translation.text.models.TranslatedTextItem;
-import com.azure.ai.translation.text.models.Translation;
+import com.azure.ai.translation.text.models.TranslationTarget;
+import com.azure.ai.translation.text.models.TranslationText;
+import com.azure.core.credential.AzureKeyCredential;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * You can translate multiple text elements with a various length. Each input element can be in different
@@ -34,14 +36,12 @@ public class TranslateMultipleSources {
                 .endpoint("https://api.cognitive.microsofttranslator.com")
                 .buildClient();
 
-        List<String> targetLanguages = new ArrayList<>();
-        targetLanguages.add("cs");
-        List<InputTextItem> content = new ArrayList<>();
-        content.add(new InputTextItem("This is a test."));
-        content.add(new InputTextItem("Esto es una prueba."));
-        content.add(new InputTextItem("Dies ist ein Test."));
+        List<TranslateInputItem> inputs = Arrays.asList(
+            new TranslateInputItem("This is a test.", Arrays.asList(new TranslationTarget("cs"))),
+            new TranslateInputItem("Esto es una prueba.", Arrays.asList(new TranslationTarget("cs"))),
+            new TranslateInputItem("Dies ist ein Test.", Arrays.asList(new TranslationTarget("cs"))));
 
-        List<TranslatedTextItem> translations = client.translate(targetLanguages, content);
+        List<TranslatedTextItem> translations = client.translate(inputs);
 
         for (TranslatedTextItem translation : translations) {
             if (translation.getDetectedLanguage() != null) {
@@ -49,8 +49,8 @@ public class TranslateMultipleSources {
                 System.out.println("Detected languages of the input text: " + detectedLanguage.getLanguage() + " with score: " + detectedLanguage.getScore() + ".");
             }
 
-            for (Translation textTranslation : translation.getTranslations()) {
-                System.out.println("Text was translated to: '" + textTranslation.getTo() + "' and the result is: '" + textTranslation.getText() + "'.");
+            for (TranslationText textTranslation : translation.getTranslations()) {
+                System.out.println("Text was translated to: '" + textTranslation.getLanguage() + "' and the result is: '" + textTranslation.getText() + "'.");
             }
         }
     }

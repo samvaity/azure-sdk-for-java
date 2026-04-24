@@ -6,73 +6,41 @@ package com.azure.resourcemanager.iothub.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.iothub.IotHubManager;
 import com.azure.resourcemanager.iothub.models.CertificateDescription;
 import com.azure.resourcemanager.iothub.models.CertificateProperties;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class CertificatesCreateOrUpdateWithResponseMockTests {
     @Test
     public void testCreateOrUpdateWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"properties\":{\"subject\":\"ojgcyzt\",\"expiry\":\"Sat, 12 Jun 2021 09:34:33 GMT\",\"thumbprint\":\"nbaeqphchqn\",\"isVerified\":false,\"created\":\"Sat, 24 Jul 2021 02:25:51 GMT\",\"updated\":\"Thu, 21 Jan 2021 00:49:26 GMT\",\"certificate\":\"wrykqgai\",\"policyResourceId\":\"viklb\"},\"etag\":\"vkhbejdznx\",\"id\":\"vdsrhnjiv\",\"name\":\"lvtno\",\"type\":\"qfzgemjdftul\"}";
 
-        String responseStr =
-            "{\"properties\":{\"subject\":\"rpdsof\",\"expiry\":\"Mon, 03 May 2021 16:15:22"
-                + " GMT\",\"thumbprint\":\"nsvbuswdv\",\"isVerified\":true,\"created\":\"Mon, 22 Feb 2021 05:56:13"
-                + " GMT\",\"updated\":\"Tue, 06 Apr 2021 20:50:40"
-                + " GMT\",\"certificate\":\"nvjsrtkfa\"},\"etag\":\"opqgikyzirtxdyux\",\"id\":\"ejnt\",\"name\":\"sewgioilqukr\",\"type\":\"dxtqmieoxo\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        IotHubManager manager = IotHubManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        CertificateDescription response = manager.certificates()
+            .define("risjnhnytxifqjz")
+            .withExistingIotHub("ucvpamrs", "euzvx")
+            .withProperties(
+                new CertificateProperties().withIsVerified(false).withCertificate("fqntcyp").withPolicyResourceId("jv"))
+            .withIfMatch("jslb")
+            .create();
 
-        IotHubManager manager =
-            IotHubManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        CertificateDescription response =
-            manager
-                .certificates()
-                .define("mqnrojlpijnkr")
-                .withExistingIotHub("knpirgnepttwq", "sniffc")
-                .withProperties(new CertificateProperties().withIsVerified(false).withCertificate("f"))
-                .withIfMatch("jbdhqxvc")
-                .create();
-
-        Assertions.assertEquals(true, response.properties().isVerified());
-        Assertions.assertEquals("nvjsrtkfa", response.properties().certificate());
+        Assertions.assertFalse(response.properties().isVerified());
+        Assertions.assertEquals("wrykqgai", response.properties().certificate());
+        Assertions.assertEquals("viklb", response.properties().policyResourceId());
     }
 }

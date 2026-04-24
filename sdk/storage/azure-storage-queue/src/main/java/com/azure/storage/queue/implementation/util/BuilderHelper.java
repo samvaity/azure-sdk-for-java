@@ -6,13 +6,13 @@ package com.azure.storage.queue.implementation.util;
 import com.azure.core.credential.AzureSasCredential;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpClient;
+import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
 import com.azure.core.http.policy.AddDatePolicy;
 import com.azure.core.http.policy.AddHeadersPolicy;
 import com.azure.core.http.policy.AzureSasCredentialPolicy;
-import com.azure.core.http.policy.BearerTokenAuthenticationPolicy;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpLoggingPolicy;
 import com.azure.core.http.policy.HttpPipelinePolicy;
@@ -31,13 +31,16 @@ import com.azure.storage.common.StorageSharedKeyCredential;
 import com.azure.storage.common.implementation.BuilderUtils;
 import com.azure.storage.common.implementation.Constants;
 import com.azure.storage.common.implementation.SasImplUtils;
+import com.azure.storage.common.implementation.StorageImplUtils;
 import com.azure.storage.common.implementation.credentials.CredentialValidator;
 import com.azure.storage.common.policy.MetadataValidationPolicy;
 import com.azure.storage.common.policy.RequestRetryOptions;
 import com.azure.storage.common.policy.ResponseValidationPolicyBuilder;
 import com.azure.storage.common.policy.ScrubEtagPolicy;
+import com.azure.storage.common.policy.StorageBearerTokenChallengeAuthorizationPolicy;
 import com.azure.storage.common.policy.StorageSharedKeyCredentialPolicy;
 import com.azure.storage.common.sas.CommonSasQueryParameters;
+import com.azure.storage.queue.models.QueueAudience;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -70,7 +73,7 @@ public final class BuilderHelper {
      * @return Whether the authority is IP style.
      */
     public static boolean determineAuthorityIsIpStyle(String authority) throws MalformedURLException {
-        return new URL("http://" +  authority).getPort() != -1;
+        return new URL("http://" + authority).getPort() != -1;
     }
 
     /**
@@ -105,16 +108,8 @@ public final class BuilderHelper {
             } else {
                 // URL is using a pattern of http://accountName.queue.core.windows.net/queueName
                 String host = url.getHost();
-
-                String accountName = null;
-                if (!CoreUtils.isNullOrEmpty(host)) {
-                    int accountNameIndex = host.indexOf('.');
-                    if (accountNameIndex == -1) {
-                        accountName = host;
-                    } else {
-                        accountName = host.substring(0, accountNameIndex);
-                    }
-                }
+                String accountName
+                    = StorageImplUtils.getAccountNameFromHost(host, Constants.UrlConstants.QUEUE_URI_SUBDOMAIN);
 
                 parts.setAccountName(accountName);
 
@@ -127,8 +122,8 @@ public final class BuilderHelper {
             }
 
             // Attempt to get the SAS token from the URL passed
-            String sasToken = new CommonSasQueryParameters(
-                SasImplUtils.parseQueryString(url.getQuery()), false).encode();
+            String sasToken
+                = new CommonSasQueryParameters(SasImplUtils.parseQueryString(url.getQuery()), false).encode();
             if (!CoreUtils.isNullOrEmpty(sasToken)) {
                 parts.setSasToken(sasToken);
             }
@@ -156,19 +151,19 @@ public final class BuilderHelper {
      * @param perCallPolicies Additional {@link HttpPipelinePolicy policies} to set in the pipeline per call.
      * @param perRetryPolicies Additional {@link HttpPipelinePolicy policies} to set in the pipeline per retry.
      * @param configuration Configuration store contain environment settings.
+     * @param audience {@link QueueAudience} used to determine the audience of the path.
      * @param logger {@link ClientLogger} used to log any exception.
      * @return A new {@link HttpPipeline} from the passed values.
      */
-    public static HttpPipeline buildPipeline(
-        StorageSharedKeyCredential storageSharedKeyCredential,
+    public static HttpPipeline buildPipeline(StorageSharedKeyCredential storageSharedKeyCredential,
         TokenCredential tokenCredential, AzureSasCredential azureSasCredential, String sasToken, String endpoint,
-        RequestRetryOptions retryOptions, RetryOptions coreRetryOptions,
-        HttpLogOptions logOptions, ClientOptions clientOptions, HttpClient httpClient,
-        List<HttpPipelinePolicy> perCallPolicies, List<HttpPipelinePolicy> perRetryPolicies,
-        Configuration configuration, ClientLogger logger) {
+        RequestRetryOptions retryOptions, RetryOptions coreRetryOptions, HttpLogOptions logOptions,
+        ClientOptions clientOptions, HttpClient httpClient, List<HttpPipelinePolicy> perCallPolicies,
+        List<HttpPipelinePolicy> perRetryPolicies, Configuration configuration, QueueAudience audience,
+        ClientLogger logger) {
 
-        CredentialValidator.validateSingleCredentialIsPresent(
-            storageSharedKeyCredential, tokenCredential, azureSasCredential, sasToken, logger);
+        CredentialValidator.validateCredentialsNotAmbiguous(storageSharedKeyCredential, tokenCredential,
+            azureSasCredential, sasToken, logger);
 
         // Closest to API goes first, closest to wire goes last.
         List<HttpPipelinePolicy> policies = new ArrayList<>();
@@ -190,22 +185,20 @@ public final class BuilderHelper {
         }
         policies.add(new MetadataValidationPolicy());
 
-        HttpPipelinePolicy credentialPolicy;
         if (storageSharedKeyCredential != null) {
-            credentialPolicy =  new StorageSharedKeyCredentialPolicy(storageSharedKeyCredential);
-        } else if (tokenCredential != null) {
-            httpsValidation(tokenCredential, "bearer token", endpoint, logger);
-            credentialPolicy =  new BearerTokenAuthenticationPolicy(tokenCredential, Constants.STORAGE_SCOPE);
-        } else if (azureSasCredential != null) {
-            credentialPolicy = new AzureSasCredentialPolicy(azureSasCredential, false);
-        } else if (sasToken != null) {
-            credentialPolicy = new AzureSasCredentialPolicy(new AzureSasCredential(sasToken), false);
-        } else {
-            credentialPolicy =  null;
+            policies.add(new StorageSharedKeyCredentialPolicy(storageSharedKeyCredential));
         }
-
-        if (credentialPolicy != null) {
-            policies.add(credentialPolicy);
+        if (tokenCredential != null) {
+            httpsValidation(tokenCredential, "bearer token", endpoint, logger);
+            String scope = audience != null
+                ? ((audience.toString().endsWith("/") ? audience + ".default" : audience + "/.default"))
+                : Constants.STORAGE_SCOPE;
+            policies.add(new StorageBearerTokenChallengeAuthorizationPolicy(tokenCredential, scope));
+        }
+        if (azureSasCredential != null) {
+            policies.add(new AzureSasCredentialPolicy(azureSasCredential, false));
+        } else if (sasToken != null) {
+            policies.add(new AzureSasCredentialPolicy(new AzureSasCredential(sasToken), false));
         }
 
         policies.addAll(perRetryPolicies);
@@ -218,8 +211,7 @@ public final class BuilderHelper {
 
         policies.add(new ScrubEtagPolicy());
 
-        return new HttpPipelineBuilder()
-            .policies(policies.toArray(new HttpPipelinePolicy[0]))
+        return new HttpPipelineBuilder().policies(policies.toArray(new HttpPipelinePolicy[0]))
             .httpClient(httpClient)
             .clientOptions(clientOptions)
             .tracer(createTracer(clientOptions))
@@ -260,9 +252,7 @@ public final class BuilderHelper {
      * @return The {@link ResponseValidationPolicyBuilder.ResponseValidationPolicy} for the module.
      */
     private static HttpPipelinePolicy getResponseValidationPolicy() {
-        return new ResponseValidationPolicyBuilder()
-            .addOptionalEcho(Constants.HeaderConstants.CLIENT_REQUEST_ID)
-            .build();
+        return new ResponseValidationPolicyBuilder().addOptionalEcho(HttpHeaderName.X_MS_CLIENT_REQUEST_ID).build();
     }
 
     /**
@@ -275,8 +265,8 @@ public final class BuilderHelper {
      */
     public static void httpsValidation(Object objectToCheck, String objectName, String endpoint, ClientLogger logger) {
         if (objectToCheck != null && !parseEndpoint(endpoint, logger).getScheme().equals(Constants.HTTPS)) {
-            throw logger.logExceptionAsError(new IllegalArgumentException(
-                "Using a(n) " + objectName + " requires https"));
+            throw logger
+                .logExceptionAsError(new IllegalArgumentException("Using a(n) " + objectName + " requires https"));
         }
     }
 
@@ -337,5 +327,15 @@ public final class BuilderHelper {
             this.sasToken = sasToken;
             return this;
         }
+    }
+
+    /**
+     * Logs information about credential changes in builders.
+     *
+     * @param logger The logger to use.
+     * @param newCredentialType The credential type being set.
+     */
+    public static void logCredentialChange(ClientLogger logger, String newCredentialType) {
+        logger.info("Credential set to '{}' when it was previously configured.", newCredentialType);
     }
 }

@@ -5,17 +5,25 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Delivery mode of the event subscription. */
+/**
+ * Delivery mode of the event subscription.
+ */
 public final class DeliveryMode extends ExpandableStringEnum<DeliveryMode> {
-    /** Static value Queue for DeliveryMode. */
+    /**
+     * Static value Queue for DeliveryMode.
+     */
     public static final DeliveryMode QUEUE = fromString("Queue");
 
     /**
+     * Static value Push for DeliveryMode.
+     */
+    public static final DeliveryMode PUSH = fromString("Push");
+
+    /**
      * Creates a new instance of DeliveryMode value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -24,18 +32,17 @@ public final class DeliveryMode extends ExpandableStringEnum<DeliveryMode> {
 
     /**
      * Creates or finds a DeliveryMode from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding DeliveryMode.
      */
-    @JsonCreator
     public static DeliveryMode fromString(String name) {
         return fromString(name, DeliveryMode.class);
     }
 
     /**
      * Gets known DeliveryMode values.
-     *
+     * 
      * @return known DeliveryMode values.
      */
     public static Collection<DeliveryMode> values() {

@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Assertions;
 public final class TrustedExternalTenantTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        TrustedExternalTenant model =
-            BinaryData.fromString("{\"value\":\"soacctazakl\"}").toObject(TrustedExternalTenant.class);
-        Assertions.assertEquals("soacctazakl", model.value());
+        TrustedExternalTenant model
+            = BinaryData.fromString("{\"value\":\"tazak\"}").toObject(TrustedExternalTenant.class);
+        Assertions.assertEquals("tazak", model.value());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        TrustedExternalTenant model = new TrustedExternalTenant().withValue("soacctazakl");
+        TrustedExternalTenant model = new TrustedExternalTenant().withValue("tazak");
         model = BinaryData.fromObject(model).toObject(TrustedExternalTenant.class);
-        Assertions.assertEquals("soacctazakl", model.value());
+        Assertions.assertEquals("tazak", model.value());
     }
 }

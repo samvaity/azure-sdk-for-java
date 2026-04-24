@@ -8,29 +8,26 @@ import com.azure.resourcemanager.devtestlabs.models.ScheduleFragment;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for ServiceFabricSchedules Update. */
+/**
+ * Samples for ServiceFabricSchedules Update.
+ */
 public final class ServiceFabricSchedulesUpdateSamples {
     /*
-     * x-ms-original-file: specification/devtestlabs/resource-manager/Microsoft.DevTestLab/stable/2018-09-15/examples/ServiceFabricSchedules_Update.json
+     * x-ms-original-file: specification/devtestlabs/resource-manager/Microsoft.DevTestLab/stable/2018-09-15/examples/
+     * ServiceFabricSchedules_Update.json
      */
     /**
      * Sample code: ServiceFabricSchedules_Update.
-     *
+     * 
      * @param manager Entry point to DevTestLabsManager.
      */
     public static void serviceFabricSchedulesUpdate(com.azure.resourcemanager.devtestlabs.DevTestLabsManager manager) {
-        manager
-            .serviceFabricSchedules()
-            .updateWithResponse(
-                "resourceGroupName",
-                "{labName}",
-                "@me",
-                "{serviceFrabicName}",
-                "{scheduleName}",
-                new ScheduleFragment().withTags(mapOf("tagName1", "tagValue1")),
-                com.azure.core.util.Context.NONE);
+        manager.serviceFabricSchedules()
+            .updateWithResponse("resourceGroupName", "{labName}", "@me", "{serviceFrabicName}", "{scheduleName}",
+                new ScheduleFragment().withTags(mapOf("tagName1", "tagValue1")), com.azure.core.util.Context.NONE);
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

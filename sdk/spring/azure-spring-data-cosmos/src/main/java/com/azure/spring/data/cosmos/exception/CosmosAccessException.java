@@ -17,6 +17,7 @@ import org.springframework.lang.Nullable;
  * rely on innerException for any retriable logic, or for more details on the failure of
  * the operation.
  */
+@SuppressWarnings("deprecation")
 public class CosmosAccessException extends DataAccessException {
 
     /**
@@ -40,7 +41,7 @@ public class CosmosAccessException extends DataAccessException {
      * @param cause the nested Throwable
      */
     public CosmosAccessException(@Nullable String msg, @Nullable Throwable cause) {
-        super(msg, cause);
+        super(cause != null ? msg + cause.getMessage() : msg, cause);
         if (cause instanceof CosmosException) {
             this.cosmosException = (CosmosException) cause;
         } else {
@@ -56,7 +57,7 @@ public class CosmosAccessException extends DataAccessException {
      * @param cause the nested exception
      */
     public CosmosAccessException(@Nullable String msg, @Nullable Exception cause) {
-        super(msg, cause);
+        super(cause != null ? msg + cause.getMessage() : msg, cause);
         this.cosmosException = cause instanceof CosmosException
             ? (CosmosException) cause
             : null;

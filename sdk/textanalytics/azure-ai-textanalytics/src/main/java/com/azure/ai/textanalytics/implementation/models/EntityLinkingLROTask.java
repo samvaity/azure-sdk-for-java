@@ -5,48 +5,120 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** An object representing the task definition for an Entity Linking task. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "kind")
-@JsonTypeName("EntityLinking")
+/**
+ * An object representing the task definition for an Entity Linking task.
+ */
 @Fluent
 public final class EntityLinkingLROTask extends AnalyzeTextLROTask {
     /*
+     * Enumeration of supported long-running Text Analysis tasks.
+     */
+    @Generated
+    private AnalyzeTextLROTaskKind kind = AnalyzeTextLROTaskKind.ENTITY_LINKING;
+
+    /*
      * Supported parameters for an Entity Linking task.
      */
-    @JsonProperty(value = "parameters")
+    @Generated
     private EntityLinkingTaskParameters parameters;
 
-    /** Creates an instance of EntityLinkingLROTask class. */
-    public EntityLinkingLROTask() {}
+    /**
+     * Creates an instance of EntityLinkingLROTask class.
+     */
+    @Generated
+    public EntityLinkingLROTask() {
+    }
+
+    /**
+     * Get the kind property: Enumeration of supported long-running Text Analysis tasks.
+     * 
+     * @return the kind value.
+     */
+    @Generated
+    @Override
+    public AnalyzeTextLROTaskKind getKind() {
+        return this.kind;
+    }
 
     /**
      * Get the parameters property: Supported parameters for an Entity Linking task.
-     *
+     * 
      * @return the parameters value.
      */
+    @Generated
     public EntityLinkingTaskParameters getParameters() {
         return this.parameters;
     }
 
     /**
      * Set the parameters property: Supported parameters for an Entity Linking task.
-     *
+     * 
      * @param parameters the parameters value to set.
      * @return the EntityLinkingLROTask object itself.
      */
+    @Generated
     public EntityLinkingLROTask setParameters(EntityLinkingTaskParameters parameters) {
         this.parameters = parameters;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public EntityLinkingLROTask setTaskName(String taskName) {
         super.setTaskName(taskName);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("taskName", getTaskName());
+        jsonWriter.writeStringField("kind", this.kind == null ? null : this.kind.toString());
+        jsonWriter.writeJsonField("parameters", this.parameters);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of EntityLinkingLROTask from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of EntityLinkingLROTask if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the EntityLinkingLROTask.
+     */
+    @Generated
+    public static EntityLinkingLROTask fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            EntityLinkingLROTask deserializedEntityLinkingLROTask = new EntityLinkingLROTask();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("taskName".equals(fieldName)) {
+                    deserializedEntityLinkingLROTask.setTaskName(reader.getString());
+                } else if ("kind".equals(fieldName)) {
+                    deserializedEntityLinkingLROTask.kind = AnalyzeTextLROTaskKind.fromString(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    deserializedEntityLinkingLROTask.parameters = EntityLinkingTaskParameters.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedEntityLinkingLROTask;
+        });
     }
 }

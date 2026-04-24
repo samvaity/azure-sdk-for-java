@@ -13,54 +13,44 @@ import org.junit.jupiter.api.Assertions;
 public final class MigrateSqlServerSqlDbSyncDatabaseInputTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlDbSyncDatabaseInput model =
-            BinaryData
-                .fromString(
-                    "{\"id\":\"k\",\"name\":\"lqwjygvjayvblm\",\"targetDatabaseName\":\"k\",\"schemaName\":\"hbxvvyhgsopbyrqu\",\"tableMap\":{\"fbn\":\"xuvw\"},\"migrationSetting\":{\"hrixkwmy\":\"ctlpdngitvgb\",\"hbpnaixexccbd\":\"jejveg\",\"htpwij\":\"eaxhcexdrrvqahqk\"},\"sourceSetting\":{\"vmtgjqppy\":\"jsvfycxzbfvoowv\",\"ronzmyhgfip\":\"s\"},\"targetSetting\":{\"sgumhjglikkxwsl\":\"kmcwaekrrjreafx\",\"tgp\":\"lbqpvuzlmvfelf\",\"xeznoi\":\"crpw\",\"pn\":\"brnjwmw\"}}")
-                .toObject(MigrateSqlServerSqlDbSyncDatabaseInput.class);
-        Assertions.assertEquals("k", model.id());
-        Assertions.assertEquals("lqwjygvjayvblm", model.name());
-        Assertions.assertEquals("k", model.targetDatabaseName());
-        Assertions.assertEquals("hbxvvyhgsopbyrqu", model.schemaName());
-        Assertions.assertEquals("xuvw", model.tableMap().get("fbn"));
-        Assertions.assertEquals("ctlpdngitvgb", model.migrationSetting().get("hrixkwmy"));
-        Assertions.assertEquals("jsvfycxzbfvoowv", model.sourceSetting().get("vmtgjqppy"));
-        Assertions.assertEquals("kmcwaekrrjreafx", model.targetSetting().get("sgumhjglikkxwsl"));
+        MigrateSqlServerSqlDbSyncDatabaseInput model = BinaryData.fromString(
+            "{\"id\":\"wgbdvibidmhmwffp\",\"name\":\"muvapc\",\"targetDatabaseName\":\"crrvweyo\",\"schemaName\":\"yyukphaimmo\",\"tableMap\":{\"apyyrmfsvbpavbo\":\"qboshbra\",\"gahxkumasjcaa\":\"fppdbwnu\",\"ehqepvufhbzehe\":\"fdmmcpug\",\"qnbldxe\":\"hoqhnl\"},\"migrationSetting\":{\"oucs\":\"gschorimkrsrr\"},\"sourceSetting\":{\"aabeolhbhlvbmxuq\":\"dpuviyf\",\"owlkjxnqpv\":\"bsxtkcudfbsfarfs\"},\"targetSetting\":{\"saoafcluqvox\":\"stmhqykizmd\",\"gwe\":\"ycjimryvwgcwwpbm\",\"efoh\":\"ydsx\",\"mtkhlowkxxpvbr\":\"cbvopwndyqleallk\"}}")
+            .toObject(MigrateSqlServerSqlDbSyncDatabaseInput.class);
+        Assertions.assertEquals("wgbdvibidmhmwffp", model.id());
+        Assertions.assertEquals("muvapc", model.name());
+        Assertions.assertEquals("crrvweyo", model.targetDatabaseName());
+        Assertions.assertEquals("yyukphaimmo", model.schemaName());
+        Assertions.assertEquals("qboshbra", model.tableMap().get("apyyrmfsvbpavbo"));
+        Assertions.assertEquals("gschorimkrsrr", model.migrationSetting().get("oucs"));
+        Assertions.assertEquals("dpuviyf", model.sourceSetting().get("aabeolhbhlvbmxuq"));
+        Assertions.assertEquals("stmhqykizmd", model.targetSetting().get("saoafcluqvox"));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MigrateSqlServerSqlDbSyncDatabaseInput model =
-            new MigrateSqlServerSqlDbSyncDatabaseInput()
-                .withId("k")
-                .withName("lqwjygvjayvblm")
-                .withTargetDatabaseName("k")
-                .withSchemaName("hbxvvyhgsopbyrqu")
-                .withTableMap(mapOf("fbn", "xuvw"))
-                .withMigrationSetting(
-                    mapOf("hrixkwmy", "ctlpdngitvgb", "hbpnaixexccbd", "jejveg", "htpwij", "eaxhcexdrrvqahqk"))
-                .withSourceSetting(mapOf("vmtgjqppy", "jsvfycxzbfvoowv", "ronzmyhgfip", "s"))
-                .withTargetSetting(
-                    mapOf(
-                        "sgumhjglikkxwsl",
-                        "kmcwaekrrjreafx",
-                        "tgp",
-                        "lbqpvuzlmvfelf",
-                        "xeznoi",
-                        "crpw",
-                        "pn",
-                        "brnjwmw"));
+        MigrateSqlServerSqlDbSyncDatabaseInput model
+            = new MigrateSqlServerSqlDbSyncDatabaseInput().withId("wgbdvibidmhmwffp")
+                .withName("muvapc")
+                .withTargetDatabaseName("crrvweyo")
+                .withSchemaName("yyukphaimmo")
+                .withTableMap(mapOf("apyyrmfsvbpavbo", "qboshbra", "gahxkumasjcaa", "fppdbwnu", "ehqepvufhbzehe",
+                    "fdmmcpug", "qnbldxe", "hoqhnl"))
+                .withMigrationSetting(mapOf("oucs", "gschorimkrsrr"))
+                .withSourceSetting(mapOf("aabeolhbhlvbmxuq", "dpuviyf", "owlkjxnqpv", "bsxtkcudfbsfarfs"))
+                .withTargetSetting(mapOf("saoafcluqvox", "stmhqykizmd", "gwe", "ycjimryvwgcwwpbm", "efoh", "ydsx",
+                    "mtkhlowkxxpvbr", "cbvopwndyqleallk"));
         model = BinaryData.fromObject(model).toObject(MigrateSqlServerSqlDbSyncDatabaseInput.class);
-        Assertions.assertEquals("k", model.id());
-        Assertions.assertEquals("lqwjygvjayvblm", model.name());
-        Assertions.assertEquals("k", model.targetDatabaseName());
-        Assertions.assertEquals("hbxvvyhgsopbyrqu", model.schemaName());
-        Assertions.assertEquals("xuvw", model.tableMap().get("fbn"));
-        Assertions.assertEquals("ctlpdngitvgb", model.migrationSetting().get("hrixkwmy"));
-        Assertions.assertEquals("jsvfycxzbfvoowv", model.sourceSetting().get("vmtgjqppy"));
-        Assertions.assertEquals("kmcwaekrrjreafx", model.targetSetting().get("sgumhjglikkxwsl"));
+        Assertions.assertEquals("wgbdvibidmhmwffp", model.id());
+        Assertions.assertEquals("muvapc", model.name());
+        Assertions.assertEquals("crrvweyo", model.targetDatabaseName());
+        Assertions.assertEquals("yyukphaimmo", model.schemaName());
+        Assertions.assertEquals("qboshbra", model.tableMap().get("apyyrmfsvbpavbo"));
+        Assertions.assertEquals("gschorimkrsrr", model.migrationSetting().get("oucs"));
+        Assertions.assertEquals("dpuviyf", model.sourceSetting().get("aabeolhbhlvbmxuq"));
+        Assertions.assertEquals("stmhqykizmd", model.targetSetting().get("saoafcluqvox"));
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

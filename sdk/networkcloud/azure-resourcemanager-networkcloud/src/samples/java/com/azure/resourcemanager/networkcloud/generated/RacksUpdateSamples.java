@@ -8,30 +8,31 @@ import com.azure.resourcemanager.networkcloud.models.Rack;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for Racks Update. */
+/**
+ * Samples for Racks Update.
+ */
 public final class RacksUpdateSamples {
     /*
-     * x-ms-original-file: specification/networkcloud/resource-manager/Microsoft.NetworkCloud/preview/2023-05-01-preview/examples/Racks_Patch.json
+     * x-ms-original-file:
+     * specification/networkcloud/resource-manager/Microsoft.NetworkCloud/stable/2025-09-01/examples/Racks_Patch.json
      */
     /**
      * Sample code: Patch rack.
-     *
+     * 
      * @param manager Entry point to NetworkCloudManager.
      */
     public static void patchRack(com.azure.resourcemanager.networkcloud.NetworkCloudManager manager) {
-        Rack resource =
-            manager
-                .racks()
-                .getByResourceGroupWithResponse("resourceGroupName", "rackName", com.azure.core.util.Context.NONE)
-                .getValue();
-        resource
-            .update()
-            .withTags(mapOf("key1", "myvalue1", "key2", "myvalue2"))
+        Rack resource = manager.racks()
+            .getByResourceGroupWithResponse("resourceGroupName", "rackName", com.azure.core.util.Context.NONE)
+            .getValue();
+        resource.update()
+            .withTags(mapOf("key1", "fakeTokenPlaceholder", "key2", "fakeTokenPlaceholder"))
             .withRackLocation("Rack 2B")
             .withRackSerialNumber("RACK_SERIAL_NUMBER")
             .apply();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

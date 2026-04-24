@@ -7,7 +7,7 @@ import com.azure.ai.textanalytics.implementation.ExtractiveSummarySentenceProper
 import com.azure.core.annotation.Immutable;
 
 /**
- * The {@link ExtractiveSummarySentence} model.
+ * The {@code ExtractiveSummarySentence} model.
  */
 @Immutable
 public final class ExtractiveSummarySentence {
@@ -17,8 +17,8 @@ public final class ExtractiveSummarySentence {
     private int offset;
 
     static {
-        ExtractiveSummarySentencePropertiesHelper.setAccessor(
-            new ExtractiveSummarySentencePropertiesHelper.ExtractiveSummarySentenceAccessor() {
+        ExtractiveSummarySentencePropertiesHelper
+            .setAccessor(new ExtractiveSummarySentencePropertiesHelper.ExtractiveSummarySentenceAccessor() {
                 @Override
                 public void setText(ExtractiveSummarySentence extractiveSummarySentence, String text) {
                     extractiveSummarySentence.setText(text);
@@ -38,8 +38,13 @@ public final class ExtractiveSummarySentence {
                 public void setLength(ExtractiveSummarySentence extractiveSummarySentence, int length) {
                     extractiveSummarySentence.setLength(length);
                 }
-            }
-        );
+            });
+    }
+
+    /**
+     * Constructs a {@code ExtractiveSummarySentence} model.
+     */
+    public ExtractiveSummarySentence() {
     }
 
     /**

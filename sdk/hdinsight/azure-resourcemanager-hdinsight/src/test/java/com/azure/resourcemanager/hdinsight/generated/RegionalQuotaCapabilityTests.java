@@ -11,26 +11,23 @@ import org.junit.jupiter.api.Assertions;
 public final class RegionalQuotaCapabilityTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        RegionalQuotaCapability model =
-            BinaryData
-                .fromString(
-                    "{\"regionName\":\"zlxwabmqoefkifr\",\"coresUsed\":6868317644582891875,\"coresAvailable\":6882751528428278733}")
-                .toObject(RegionalQuotaCapability.class);
-        Assertions.assertEquals("zlxwabmqoefkifr", model.regionName());
-        Assertions.assertEquals(6868317644582891875L, model.coresUsed());
-        Assertions.assertEquals(6882751528428278733L, model.coresAvailable());
+        RegionalQuotaCapability model = BinaryData
+            .fromString(
+                "{\"regionName\":\"tpp\",\"coresUsed\":344862766670091820,\"coresAvailable\":1768663983323478544}")
+            .toObject(RegionalQuotaCapability.class);
+        Assertions.assertEquals("tpp", model.regionName());
+        Assertions.assertEquals(344862766670091820L, model.coresUsed());
+        Assertions.assertEquals(1768663983323478544L, model.coresAvailable());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        RegionalQuotaCapability model =
-            new RegionalQuotaCapability()
-                .withRegionName("zlxwabmqoefkifr")
-                .withCoresUsed(6868317644582891875L)
-                .withCoresAvailable(6882751528428278733L);
+        RegionalQuotaCapability model = new RegionalQuotaCapability().withRegionName("tpp")
+            .withCoresUsed(344862766670091820L)
+            .withCoresAvailable(1768663983323478544L);
         model = BinaryData.fromObject(model).toObject(RegionalQuotaCapability.class);
-        Assertions.assertEquals("zlxwabmqoefkifr", model.regionName());
-        Assertions.assertEquals(6868317644582891875L, model.coresUsed());
-        Assertions.assertEquals(6882751528428278733L, model.coresAvailable());
+        Assertions.assertEquals("tpp", model.regionName());
+        Assertions.assertEquals(344862766670091820L, model.coresUsed());
+        Assertions.assertEquals(1768663983323478544L, model.coresAvailable());
     }
 }

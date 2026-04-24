@@ -49,6 +49,7 @@ import com.azure.cosmos.implementation.http.HttpClient;
 import com.azure.cosmos.implementation.http.HttpHeaders;
 import com.azure.cosmos.implementation.http.HttpRequest;
 import com.azure.cosmos.implementation.http.HttpResponse;
+import com.azure.cosmos.implementation.http.HttpTimeoutPolicy;
 import com.azure.cosmos.implementation.routing.PartitionKeyRangeIdentity;
 import io.netty.handler.codec.http.HttpMethod;
 import org.slf4j.Logger;
@@ -76,6 +77,10 @@ import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkAr
 import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNotNull;
 
 public class GatewayAddressCache implements IAddressCache {
+    private static ImplementationBridgeHelpers.CosmosDiagnosticsHelper.CosmosDiagnosticsAccessor diagAccessor() {
+        return ImplementationBridgeHelpers.CosmosDiagnosticsHelper.getCosmosDiagnosticsAccessor();
+    }
+
     private static Duration minDurationBeforeEnforcingCollectionRoutingMapRefresh = Duration.ofSeconds(30);
 
     private final static Logger logger = LoggerFactory.getLogger(GatewayAddressCache.class);
@@ -339,6 +344,7 @@ public class GatewayAddressCache implements IAddressCache {
         List<String> partitionKeyRangeIds,
         boolean forceRefresh) {
 
+        request.setAddressRefresh(true, forceRefresh);
         MetadataRequestRetryPolicy metadataRequestRetryPolicy = new MetadataRequestRetryPolicy(globalEndpointManager);
         metadataRequestRetryPolicy.onBeforeSendRequest(request);
 
@@ -358,7 +364,6 @@ public class GatewayAddressCache implements IAddressCache {
         // track address refresh has happened, this is only meant to be used for fault injection validation
         request.faultInjectionRequestContext.recordAddressForceRefreshed(forceRefresh);
 
-        request.setAddressRefresh(true, forceRefresh);
         String entryUrl = PathsHelper.generatePath(ResourceType.Document, collectionRid, true);
         HashMap<String, String> addressQuery = new HashMap<>();
 
@@ -422,28 +427,27 @@ public class GatewayAddressCache implements IAddressCache {
         Instant addressCallStartTime = Instant.now();
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, targetEndpoint, targetEndpoint.getPort(), httpHeaders);
 
-        Duration responseTimeout = Duration.ofSeconds(Configs.getAddressRefreshResponseTimeoutInSeconds());
-
         Mono<HttpResponse> httpResponseMono;
         if (tokenProvider.getAuthorizationTokenType() != AuthorizationTokenType.AadToken) {
-            httpResponseMono = this.httpClient.send(httpRequest, responseTimeout);
+            httpResponseMono = this.httpClient.send(httpRequest, request.getResponseTimeout());
         } else {
             httpResponseMono = tokenProvider
                 .populateAuthorizationHeader(httpHeaders)
-                .flatMap(valueHttpHeaders -> this.httpClient.send(httpRequest,responseTimeout));
+                .flatMap(valueHttpHeaders -> this.httpClient.send(httpRequest,request.getResponseTimeout()));
         }
 
         if (this.gatewayServerErrorInjector != null) {
             httpResponseMono =
                 this.gatewayServerErrorInjector.injectGatewayErrors(
-                    responseTimeout,
+                    request.getResponseTimeout(),
                     httpRequest,
                     request,
                     httpResponseMono,
                     partitionKeyRangeIds);
         }
 
-        Mono<RxDocumentServiceResponse> dsrObs = HttpClientUtils.parseResponseAsync(request, clientContext, httpResponseMono, httpRequest);
+        Mono<RxDocumentServiceResponse> dsrObs = HttpClientUtils
+            .parseResponseAsync(targetEndpoint.toString(), request, clientContext, httpResponseMono);
         return dsrObs.map(
             dsr -> {
                 MetadataDiagnosticsContext metadataDiagnosticsContext =
@@ -484,7 +488,7 @@ public class GatewayAddressCache implements IAddressCache {
             CosmosException dce;
             if (!(exception instanceof CosmosException)) {
                 // wrap in CosmosException
-                logger.error("Network failure", exception);
+                logger.warn("Network failure", exception);
                 int statusCode = 0;
                 if (WebExceptionUtility.isNetworkFailure(exception)) {
                     if (WebExceptionUtility.isReadTimeoutException(exception)) {
@@ -740,6 +744,22 @@ public class GatewayAddressCache implements IAddressCache {
     }
 
     public Mono<List<Address>> getMasterAddressesViaGatewayAsync(
+        RxDocumentServiceRequest request,
+        ResourceType resourceType,
+        String resourceAddress,
+        String entryUrl,
+        boolean forceRefresh,
+        boolean useMasterCollectionResolver,
+        Map<String, Object> properties) {
+        request.setAddressRefresh(true, forceRefresh);
+        MetadataRequestRetryPolicy metadataRequestRetryPolicy = new MetadataRequestRetryPolicy(globalEndpointManager);
+        metadataRequestRetryPolicy.onBeforeSendRequest(request);
+
+        return BackoffRetryUtility.executeRetry(() -> this.getMasterAddressesViaGatewayAsyncInternal(
+            request, resourceType, resourceAddress, entryUrl, forceRefresh, useMasterCollectionResolver, properties), metadataRequestRetryPolicy);
+    }
+
+    private Mono<List<Address>> getMasterAddressesViaGatewayAsyncInternal(
             RxDocumentServiceRequest request,
             ResourceType resourceType,
             String resourceAddress,
@@ -759,7 +779,6 @@ public class GatewayAddressCache implements IAddressCache {
             forceRefresh,
             useMasterCollectionResolver
         );
-        request.setAddressRefresh(true, forceRefresh);
         HashMap<String, String> queryParameters = new HashMap<>();
         queryParameters.put(HttpConstants.QueryStrings.URL, HttpUtils.urlEncode(entryUrl));
         HashMap<String, String> headers = new HashMap<>(defaultRequestHeaders);
@@ -803,15 +822,16 @@ public class GatewayAddressCache implements IAddressCache {
 
         if (tokenProvider.getAuthorizationTokenType() != AuthorizationTokenType.AadToken) {
             httpResponseMono = this.httpClient.send(httpRequest,
-                Duration.ofSeconds(Configs.getAddressRefreshResponseTimeoutInSeconds()));
+                request.getResponseTimeout());
         } else {
             httpResponseMono = tokenProvider
                 .populateAuthorizationHeader(defaultHttpHeaders)
                 .flatMap(valueHttpHeaders -> this.httpClient.send(httpRequest,
-                    Duration.ofSeconds(Configs.getAddressRefreshResponseTimeoutInSeconds())));
+                    request.getResponseTimeout()));
         }
 
-        Mono<RxDocumentServiceResponse> dsrObs = HttpClientUtils.parseResponseAsync(request, this.clientContext, httpResponseMono, httpRequest);
+        Mono<RxDocumentServiceResponse> dsrObs = HttpClientUtils
+            .parseResponseAsync(targetEndpoint.toString(), request, this.clientContext, httpResponseMono);
 
         return dsrObs.map(
             dsr -> {
@@ -850,7 +870,7 @@ public class GatewayAddressCache implements IAddressCache {
             CosmosException dce;
             if (!(exception instanceof CosmosException)) {
                 // wrap in CosmosException
-                logger.error("Network failure", exception);
+                logger.warn("Network failure", exception);
                 int statusCode = 0;
                 if (WebExceptionUtility.isNetworkFailure(exception)) {
                     if (WebExceptionUtility.isReadTimeoutException(exception)) {
@@ -979,16 +999,25 @@ public class GatewayAddressCache implements IAddressCache {
                                         .stream()
                                         .map(Uri::getURIAsString)
                                         .collect(Collectors.toList()));
+
+                minConnectionsRequiredForEndpoint = this.connectionPolicy.getMinConnectionPoolSizePerEndpoint();
             }
 
             for (Uri addressToBeValidated : addressesNeedToValidation) {
+
+                // replica validation should be triggered for an address with Unknown health status only when
+                // the address is used by a container / collection which was part of the warm up flow
+                if (addressToBeValidated.getHealthStatus() == Uri.HealthStatus.Unknown
+                    && !this.proactiveOpenConnectionsProcessor.isCollectionRidUnderOpenConnectionsFlow(collectionRid)) {
+                        continue;
+                }
 
                 Mono.fromFuture(this.proactiveOpenConnectionsProcessor
                         .submitOpenConnectionTaskOutsideLoop(
                                 collectionRid,
                                 this.serviceEndpoint,
                                 addressToBeValidated,
-                                this.connectionPolicy.getMinConnectionPoolSizePerEndpoint()))
+                                minConnectionsRequiredForEndpoint))
                     .subscribeOn(CosmosSchedulers.OPEN_CONNECTIONS_BOUNDED_ELASTIC)
                     .subscribe();
             }
@@ -1118,6 +1147,29 @@ public class GatewayAddressCache implements IAddressCache {
         return Mono.fromFuture(openConnectionTask);
     }
 
+    public Flux<OpenConnectionResponse> submitOpenConnectionTasks(
+        PartitionKeyRange partitionKeyRange,
+        String collectionRid) {
+
+        if (this.proactiveOpenConnectionsProcessor == null) {
+            return Flux.empty();
+        }
+
+        checkNotNull(partitionKeyRange, "Argument 'partitionKeyRange' cannot be null!");
+        checkNotNull(collectionRid, "Argument 'collectionRid' cannot be null!");
+
+        PartitionKeyRangeIdentity partitionKeyRangeIdentity = new PartitionKeyRangeIdentity(collectionRid, partitionKeyRange.getId());
+
+        return this.serverPartitionAddressCache.getAsync(partitionKeyRangeIdentity, cachedAddresses -> Mono.just(cachedAddresses), cachedAddresses -> true)
+            .flatMapMany(cachedAddresses -> Flux.fromArray(cachedAddresses))
+            .flatMap(addressInformation -> Mono.fromFuture(
+                this.proactiveOpenConnectionsProcessor.submitOpenConnectionTaskOutsideLoop(
+                    collectionRid,
+                    this.addressEndpoint,
+                    addressInformation.getPhysicalUri(),
+                    1)));
+    }
+
     private Mono<List<Address>> getServerAddressesViaGatewayWithRetry(
             RxDocumentServiceRequest request,
             String collectionRid,
@@ -1172,9 +1224,7 @@ public class GatewayAddressCache implements IAddressCache {
         String errorMessage,
         long transportRequestId) {
         if (request.requestContext.cosmosDiagnostics != null) {
-            ImplementationBridgeHelpers
-                .CosmosDiagnosticsHelper
-                .getCosmosDiagnosticsAccessor()
+            diagAccessor()
                 .recordAddressResolutionEnd(request, identifier, errorMessage, transportRequestId);
         }
     }

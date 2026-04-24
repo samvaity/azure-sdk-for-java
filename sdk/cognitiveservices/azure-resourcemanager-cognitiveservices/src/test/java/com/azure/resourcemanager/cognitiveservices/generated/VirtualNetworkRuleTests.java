@@ -11,25 +11,22 @@ import org.junit.jupiter.api.Assertions;
 public final class VirtualNetworkRuleTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        VirtualNetworkRule model =
-            BinaryData
-                .fromString("{\"id\":\"jakhmsbzjh\",\"state\":\"zevdphlx\",\"ignoreMissingVnetServiceEndpoint\":true}")
-                .toObject(VirtualNetworkRule.class);
-        Assertions.assertEquals("jakhmsbzjh", model.id());
-        Assertions.assertEquals("zevdphlx", model.state());
-        Assertions.assertEquals(true, model.ignoreMissingVnetServiceEndpoint());
+        VirtualNetworkRule model = BinaryData
+            .fromString("{\"id\":\"j\",\"state\":\"hbcryffdfdosyge\",\"ignoreMissingVnetServiceEndpoint\":true}")
+            .toObject(VirtualNetworkRule.class);
+        Assertions.assertEquals("j", model.id());
+        Assertions.assertEquals("hbcryffdfdosyge", model.state());
+        Assertions.assertTrue(model.ignoreMissingVnetServiceEndpoint());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        VirtualNetworkRule model =
-            new VirtualNetworkRule()
-                .withId("jakhmsbzjh")
-                .withState("zevdphlx")
-                .withIgnoreMissingVnetServiceEndpoint(true);
+        VirtualNetworkRule model = new VirtualNetworkRule().withId("j")
+            .withState("hbcryffdfdosyge")
+            .withIgnoreMissingVnetServiceEndpoint(true);
         model = BinaryData.fromObject(model).toObject(VirtualNetworkRule.class);
-        Assertions.assertEquals("jakhmsbzjh", model.id());
-        Assertions.assertEquals("zevdphlx", model.state());
-        Assertions.assertEquals(true, model.ignoreMissingVnetServiceEndpoint());
+        Assertions.assertEquals("j", model.id());
+        Assertions.assertEquals("hbcryffdfdosyge", model.state());
+        Assertions.assertTrue(model.ignoreMissingVnetServiceEndpoint());
     }
 }

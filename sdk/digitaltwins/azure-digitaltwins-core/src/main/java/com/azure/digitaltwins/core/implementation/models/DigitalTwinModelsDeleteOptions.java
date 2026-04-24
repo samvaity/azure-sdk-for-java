@@ -5,39 +5,49 @@
 package com.azure.digitaltwins.core.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
 
-/** Parameter group. */
+/**
+ * Parameter group.
+ */
 @Fluent
 public final class DigitalTwinModelsDeleteOptions {
     /*
      * Identifies the request in a distributed tracing system.
      */
-    @JsonProperty(value = "traceparent")
+    @Generated
     private String traceparent;
 
     /*
-     * Provides vendor-specific trace identification information and is a
-     * companion to traceparent.
+     * Provides vendor-specific trace identification information and is a companion to traceparent.
      */
-    @JsonProperty(value = "tracestate")
+    @Generated
     private String tracestate;
 
     /**
+     * Creates an instance of DigitalTwinModelsDeleteOptions class.
+     */
+    @Generated
+    public DigitalTwinModelsDeleteOptions() {
+    }
+
+    /**
      * Get the traceparent property: Identifies the request in a distributed tracing system.
-     *
+     * 
      * @return the traceparent value.
      */
+    @Generated
     public String getTraceparent() {
         return this.traceparent;
     }
 
     /**
      * Set the traceparent property: Identifies the request in a distributed tracing system.
-     *
+     * 
      * @param traceparent the traceparent value to set.
      * @return the DigitalTwinModelsDeleteOptions object itself.
      */
+    @Generated
     public DigitalTwinModelsDeleteOptions setTraceparent(String traceparent) {
         this.traceparent = traceparent;
         return this;
@@ -46,9 +56,10 @@ public final class DigitalTwinModelsDeleteOptions {
     /**
      * Get the tracestate property: Provides vendor-specific trace identification information and is a companion to
      * traceparent.
-     *
+     * 
      * @return the tracestate value.
      */
+    @Generated
     public String getTracestate() {
         return this.tracestate;
     }
@@ -56,19 +67,13 @@ public final class DigitalTwinModelsDeleteOptions {
     /**
      * Set the tracestate property: Provides vendor-specific trace identification information and is a companion to
      * traceparent.
-     *
+     * 
      * @param tracestate the tracestate value to set.
      * @return the DigitalTwinModelsDeleteOptions object itself.
      */
+    @Generated
     public DigitalTwinModelsDeleteOptions setTracestate(String tracestate) {
         this.tracestate = tracestate;
         return this;
     }
-
-    /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
-     */
-    public void validate() {}
 }

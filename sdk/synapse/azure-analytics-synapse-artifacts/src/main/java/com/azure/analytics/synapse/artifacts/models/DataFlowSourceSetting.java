@@ -5,51 +5,62 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.HashMap;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** Definition of data flow source setting for debug. */
+/**
+ * Definition of data flow source setting for debug.
+ */
 @Fluent
-public final class DataFlowSourceSetting {
+public final class DataFlowSourceSetting implements JsonSerializable<DataFlowSourceSetting> {
     /*
      * The data flow source name.
      */
-    @JsonProperty(value = "sourceName")
+    @Generated
     private String sourceName;
 
     /*
      * Defines the row limit of data flow source in debug.
      */
-    @JsonProperty(value = "rowLimit")
+    @Generated
     private Integer rowLimit;
 
     /*
      * Definition of data flow source setting for debug.
      */
-    @JsonIgnore private Map<String, Object> additionalProperties;
+    @Generated
+    private Map<String, Object> additionalProperties;
 
-    /** Creates an instance of DataFlowSourceSetting class. */
-    public DataFlowSourceSetting() {}
+    /**
+     * Creates an instance of DataFlowSourceSetting class.
+     */
+    @Generated
+    public DataFlowSourceSetting() {
+    }
 
     /**
      * Get the sourceName property: The data flow source name.
-     *
+     * 
      * @return the sourceName value.
      */
+    @Generated
     public String getSourceName() {
         return this.sourceName;
     }
 
     /**
      * Set the sourceName property: The data flow source name.
-     *
+     * 
      * @param sourceName the sourceName value to set.
      * @return the DataFlowSourceSetting object itself.
      */
+    @Generated
     public DataFlowSourceSetting setSourceName(String sourceName) {
         this.sourceName = sourceName;
         return this;
@@ -57,19 +68,21 @@ public final class DataFlowSourceSetting {
 
     /**
      * Get the rowLimit property: Defines the row limit of data flow source in debug.
-     *
+     * 
      * @return the rowLimit value.
      */
+    @Generated
     public Integer getRowLimit() {
         return this.rowLimit;
     }
 
     /**
      * Set the rowLimit property: Defines the row limit of data flow source in debug.
-     *
+     * 
      * @param rowLimit the rowLimit value to set.
      * @return the DataFlowSourceSetting object itself.
      */
+    @Generated
     public DataFlowSourceSetting setRowLimit(Integer rowLimit) {
         this.rowLimit = rowLimit;
         return this;
@@ -77,30 +90,75 @@ public final class DataFlowSourceSetting {
 
     /**
      * Get the additionalProperties property: Definition of data flow source setting for debug.
-     *
+     * 
      * @return the additionalProperties value.
      */
-    @JsonAnyGetter
+    @Generated
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     /**
      * Set the additionalProperties property: Definition of data flow source setting for debug.
-     *
+     * 
      * @param additionalProperties the additionalProperties value to set.
      * @return the DataFlowSourceSetting object itself.
      */
+    @Generated
     public DataFlowSourceSetting setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
         return this;
     }
 
-    @JsonAnySetter
-    void setAdditionalProperties(String key, Object value) {
-        if (additionalProperties == null) {
-            additionalProperties = new HashMap<>();
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("sourceName", this.sourceName);
+        jsonWriter.writeNumberField("rowLimit", this.rowLimit);
+        if (additionalProperties != null) {
+            for (Map.Entry<String, Object> additionalProperty : additionalProperties.entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
         }
-        additionalProperties.put(key, value);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DataFlowSourceSetting from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DataFlowSourceSetting if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the DataFlowSourceSetting.
+     */
+    @Generated
+    public static DataFlowSourceSetting fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DataFlowSourceSetting deserializedDataFlowSourceSetting = new DataFlowSourceSetting();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sourceName".equals(fieldName)) {
+                    deserializedDataFlowSourceSetting.sourceName = reader.getString();
+                } else if ("rowLimit".equals(fieldName)) {
+                    deserializedDataFlowSourceSetting.rowLimit = reader.getNullable(JsonReader::getInt);
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedDataFlowSourceSetting.additionalProperties = additionalProperties;
+
+            return deserializedDataFlowSourceSetting;
+        });
     }
 }

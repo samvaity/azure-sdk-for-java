@@ -5,31 +5,57 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity Azure CosmosDB (SQL API) Collection sink. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("CosmosDbSqlApiSink")
+/**
+ * A copy activity Azure CosmosDB (SQL API) Collection sink.
+ */
 @Fluent
 public final class CosmosDbSqlApiSink extends CopySink {
+    /*
+     * Copy sink type.
+     */
+    @Generated
+    private String type = "CosmosDbSqlApiSink";
+
     /*
      * Describes how to write data to Azure Cosmos DB. Type: string (or Expression with resultType string). Allowed
      * values: insert and upsert.
      */
-    @JsonProperty(value = "writeBehavior")
+    @Generated
     private Object writeBehavior;
 
-    /** Creates an instance of CosmosDbSqlApiSink class. */
-    public CosmosDbSqlApiSink() {}
+    /**
+     * Creates an instance of CosmosDbSqlApiSink class.
+     */
+    @Generated
+    public CosmosDbSqlApiSink() {
+    }
+
+    /**
+     * Get the type property: Copy sink type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the writeBehavior property: Describes how to write data to Azure Cosmos DB. Type: string (or Expression with
      * resultType string). Allowed values: insert and upsert.
-     *
+     * 
      * @return the writeBehavior value.
      */
+    @Generated
     public Object getWriteBehavior() {
         return this.writeBehavior;
     }
@@ -37,47 +63,142 @@ public final class CosmosDbSqlApiSink extends CopySink {
     /**
      * Set the writeBehavior property: Describes how to write data to Azure Cosmos DB. Type: string (or Expression with
      * resultType string). Allowed values: insert and upsert.
-     *
+     * 
      * @param writeBehavior the writeBehavior value to set.
      * @return the CosmosDbSqlApiSink object itself.
      */
+    @Generated
     public CosmosDbSqlApiSink setWriteBehavior(Object writeBehavior) {
         this.writeBehavior = writeBehavior;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CosmosDbSqlApiSink setWriteBatchSize(Object writeBatchSize) {
         super.setWriteBatchSize(writeBatchSize);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CosmosDbSqlApiSink setWriteBatchTimeout(Object writeBatchTimeout) {
         super.setWriteBatchTimeout(writeBatchTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CosmosDbSqlApiSink setSinkRetryCount(Object sinkRetryCount) {
         super.setSinkRetryCount(sinkRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CosmosDbSqlApiSink setSinkRetryWait(Object sinkRetryWait) {
         super.setSinkRetryWait(sinkRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CosmosDbSqlApiSink setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getWriteBatchSize() != null) {
+            jsonWriter.writeUntypedField("writeBatchSize", getWriteBatchSize());
+        }
+        if (getWriteBatchTimeout() != null) {
+            jsonWriter.writeUntypedField("writeBatchTimeout", getWriteBatchTimeout());
+        }
+        if (getSinkRetryCount() != null) {
+            jsonWriter.writeUntypedField("sinkRetryCount", getSinkRetryCount());
+        }
+        if (getSinkRetryWait() != null) {
+            jsonWriter.writeUntypedField("sinkRetryWait", getSinkRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.writeBehavior != null) {
+            jsonWriter.writeUntypedField("writeBehavior", this.writeBehavior);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CosmosDbSqlApiSink from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CosmosDbSqlApiSink if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the CosmosDbSqlApiSink.
+     */
+    @Generated
+    public static CosmosDbSqlApiSink fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CosmosDbSqlApiSink deserializedCosmosDbSqlApiSink = new CosmosDbSqlApiSink();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("writeBatchSize".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSink.setWriteBatchSize(reader.readUntyped());
+                } else if ("writeBatchTimeout".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSink.setWriteBatchTimeout(reader.readUntyped());
+                } else if ("sinkRetryCount".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSink.setSinkRetryCount(reader.readUntyped());
+                } else if ("sinkRetryWait".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSink.setSinkRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSink.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSink.type = reader.getString();
+                } else if ("writeBehavior".equals(fieldName)) {
+                    deserializedCosmosDbSqlApiSink.writeBehavior = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedCosmosDbSqlApiSink.setAdditionalProperties(additionalProperties);
+
+            return deserializedCosmosDbSqlApiSink;
+        });
     }
 }

@@ -5,62 +5,75 @@
 package com.azure.storage.blob.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** An Azure Storage container. */
-@JacksonXmlRootElement(localName = "Container")
+/**
+ * An Azure Storage container.
+ */
 @Fluent
-public final class BlobContainerItem {
+public final class BlobContainerItem implements XmlSerializable<BlobContainerItem> {
     /*
      * The Name property.
      */
-    @JsonProperty(value = "Name", required = true)
+    @Generated
     private String name;
 
     /*
      * The Deleted property.
      */
-    @JsonProperty(value = "Deleted")
+    @Generated
     private Boolean deleted;
 
     /*
      * The Version property.
      */
-    @JsonProperty(value = "Version")
+    @Generated
     private String version;
 
     /*
      * Properties of a container
      */
-    @JsonProperty(value = "Properties", required = true)
+    @Generated
     private BlobContainerItemProperties properties;
 
     /*
      * Dictionary of <string>
      */
-    @JsonProperty(value = "Metadata")
+    @Generated
     private Map<String, String> metadata;
 
-    /** Creates an instance of BlobContainerItem class. */
-    public BlobContainerItem() {}
+    /**
+     * Creates an instance of BlobContainerItem class.
+     */
+    @Generated
+    public BlobContainerItem() {
+    }
 
     /**
      * Get the name property: The Name property.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The Name property.
-     *
+     * 
      * @param name the name value to set.
      * @return the BlobContainerItem object itself.
      */
+    @Generated
     public BlobContainerItem setName(String name) {
         this.name = name;
         return this;
@@ -68,19 +81,21 @@ public final class BlobContainerItem {
 
     /**
      * Get the deleted property: The Deleted property.
-     *
+     * 
      * @return the deleted value.
      */
+    @Generated
     public Boolean isDeleted() {
         return this.deleted;
     }
 
     /**
      * Set the deleted property: The Deleted property.
-     *
+     * 
      * @param deleted the deleted value to set.
      * @return the BlobContainerItem object itself.
      */
+    @Generated
     public BlobContainerItem setDeleted(Boolean deleted) {
         this.deleted = deleted;
         return this;
@@ -88,19 +103,21 @@ public final class BlobContainerItem {
 
     /**
      * Get the version property: The Version property.
-     *
+     * 
      * @return the version value.
      */
+    @Generated
     public String getVersion() {
         return this.version;
     }
 
     /**
      * Set the version property: The Version property.
-     *
+     * 
      * @param version the version value to set.
      * @return the BlobContainerItem object itself.
      */
+    @Generated
     public BlobContainerItem setVersion(String version) {
         this.version = version;
         return this;
@@ -108,19 +125,21 @@ public final class BlobContainerItem {
 
     /**
      * Get the properties property: Properties of a container.
-     *
+     * 
      * @return the properties value.
      */
+    @Generated
     public BlobContainerItemProperties getProperties() {
         return this.properties;
     }
 
     /**
      * Set the properties property: Properties of a container.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the BlobContainerItem object itself.
      */
+    @Generated
     public BlobContainerItem setProperties(BlobContainerItemProperties properties) {
         this.properties = properties;
         return this;
@@ -128,21 +147,106 @@ public final class BlobContainerItem {
 
     /**
      * Get the metadata property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the metadata value.
      */
+    @Generated
     public Map<String, String> getMetadata() {
         return this.metadata;
     }
 
     /**
      * Set the metadata property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param metadata the metadata value to set.
      * @return the BlobContainerItem object itself.
      */
+    @Generated
     public BlobContainerItem setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "Container" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeStringElement("Name", this.name);
+        xmlWriter.writeBooleanElement("Deleted", this.deleted);
+        xmlWriter.writeStringElement("Version", this.version);
+        xmlWriter.writeXml(this.properties, "Properties");
+        if (this.metadata != null) {
+            xmlWriter.writeStartElement("Metadata");
+            for (Map.Entry<String, String> entry : this.metadata.entrySet()) {
+                xmlWriter.writeStringElement(entry.getKey(), entry.getValue());
+            }
+            xmlWriter.writeEndElement();
+        }
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of BlobContainerItem from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of BlobContainerItem if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the BlobContainerItem.
+     */
+    @Generated
+    public static BlobContainerItem fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of BlobContainerItem from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of BlobContainerItem if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the BlobContainerItem.
+     */
+    @Generated
+    public static BlobContainerItem fromXml(XmlReader xmlReader, String rootElementName) throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "Container" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            BlobContainerItem deserializedBlobContainerItem = new BlobContainerItem();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Name".equals(elementName.getLocalPart())) {
+                    deserializedBlobContainerItem.name = reader.getStringElement();
+                } else if ("Deleted".equals(elementName.getLocalPart())) {
+                    deserializedBlobContainerItem.deleted = reader.getNullableElement(Boolean::parseBoolean);
+                } else if ("Version".equals(elementName.getLocalPart())) {
+                    deserializedBlobContainerItem.version = reader.getStringElement();
+                } else if ("Properties".equals(elementName.getLocalPart())) {
+                    deserializedBlobContainerItem.properties
+                        = BlobContainerItemProperties.fromXml(reader, "Properties");
+                } else if ("Metadata".equals(elementName.getLocalPart())) {
+                    while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                        if (deserializedBlobContainerItem.metadata == null) {
+                            deserializedBlobContainerItem.metadata = new LinkedHashMap<>();
+                        }
+                        deserializedBlobContainerItem.metadata.put(reader.getElementName().getLocalPart(),
+                            reader.getStringElement());
+                    }
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedBlobContainerItem;
+        });
     }
 }

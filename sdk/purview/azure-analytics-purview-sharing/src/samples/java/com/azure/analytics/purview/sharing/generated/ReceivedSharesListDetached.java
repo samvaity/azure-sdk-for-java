@@ -13,14 +13,13 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 
 public class ReceivedSharesListDetached {
     public static void main(String[] args) {
-        ReceivedSharesClient receivedSharesClient =
-                new ReceivedSharesClientBuilder()
-                        .credential(new DefaultAzureCredentialBuilder().build())
-                        .endpoint("accountName.purview.azure.com/share")
-                        .buildClient();
-        // BEGIN:com.azure.analytics.purview.sharing.generated.receivedshareslistdetachedreceivedshares.receivedshareslistdetached
+        ReceivedSharesClient receivedSharesClient
+            = new ReceivedSharesClientBuilder().credential(new DefaultAzureCredentialBuilder().build())
+                .endpoint("accountName.purview.azure.com/share")
+                .buildClient();
+        // BEGIN:com.azure.analytics.purview.sharing.generated.received-shares-list-detached-received-shares.received-shares-list-detached
         RequestOptions requestOptions = new RequestOptions().addQueryParam("filter", "Name eq 'testName'");
         PagedIterable<BinaryData> response = receivedSharesClient.listDetachedReceivedShares(requestOptions);
-        // END:com.azure.analytics.purview.sharing.generated.receivedshareslistdetachedreceivedshares.receivedshareslistdetached
+        // END:com.azure.analytics.purview.sharing.generated.received-shares-list-detached-received-shares.received-shares-list-detached
     }
 }

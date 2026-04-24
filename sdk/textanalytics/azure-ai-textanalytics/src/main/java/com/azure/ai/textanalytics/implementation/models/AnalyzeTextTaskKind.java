@@ -4,54 +4,77 @@
 
 package com.azure.ai.textanalytics.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Enumeration of supported Text Analysis tasks. */
+/**
+ * Enumeration of supported Text Analysis tasks.
+ */
 public final class AnalyzeTextTaskKind extends ExpandableStringEnum<AnalyzeTextTaskKind> {
-    /** Static value SentimentAnalysis for AnalyzeTextTaskKind. */
+    /**
+     * Static value SentimentAnalysis for AnalyzeTextTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextTaskKind SENTIMENT_ANALYSIS = fromString("SentimentAnalysis");
 
-    /** Static value EntityRecognition for AnalyzeTextTaskKind. */
+    /**
+     * Static value EntityRecognition for AnalyzeTextTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextTaskKind ENTITY_RECOGNITION = fromString("EntityRecognition");
 
-    /** Static value PiiEntityRecognition for AnalyzeTextTaskKind. */
+    /**
+     * Static value PiiEntityRecognition for AnalyzeTextTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextTaskKind PII_ENTITY_RECOGNITION = fromString("PiiEntityRecognition");
 
-    /** Static value KeyPhraseExtraction for AnalyzeTextTaskKind. */
+    /**
+     * Static value KeyPhraseExtraction for AnalyzeTextTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextTaskKind KEY_PHRASE_EXTRACTION = fromString("KeyPhraseExtraction");
 
-    /** Static value LanguageDetection for AnalyzeTextTaskKind. */
+    /**
+     * Static value LanguageDetection for AnalyzeTextTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextTaskKind LANGUAGE_DETECTION = fromString("LanguageDetection");
 
-    /** Static value EntityLinking for AnalyzeTextTaskKind. */
+    /**
+     * Static value EntityLinking for AnalyzeTextTaskKind.
+     */
+    @Generated
     public static final AnalyzeTextTaskKind ENTITY_LINKING = fromString("EntityLinking");
 
     /**
      * Creates a new instance of AnalyzeTextTaskKind value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public AnalyzeTextTaskKind() {}
+    public AnalyzeTextTaskKind() {
+    }
 
     /**
      * Creates or finds a AnalyzeTextTaskKind from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding AnalyzeTextTaskKind.
      */
-    @JsonCreator
+    @Generated
     public static AnalyzeTextTaskKind fromString(String name) {
         return fromString(name, AnalyzeTextTaskKind.class);
     }
 
     /**
      * Gets known AnalyzeTextTaskKind values.
-     *
+     * 
      * @return known AnalyzeTextTaskKind values.
      */
+    @Generated
     public static Collection<AnalyzeTextTaskKind> values() {
         return values(AnalyzeTextTaskKind.class);
     }

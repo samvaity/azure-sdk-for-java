@@ -5,59 +5,72 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** A data flow transformation. */
+/**
+ * A data flow transformation.
+ */
 @Fluent
-public class Transformation {
+public class Transformation implements JsonSerializable<Transformation> {
     /*
      * Transformation name.
      */
-    @JsonProperty(value = "name", required = true)
+    @Generated
     private String name;
 
     /*
      * Transformation description.
      */
-    @JsonProperty(value = "description")
+    @Generated
     private String description;
 
     /*
      * Dataset reference.
      */
-    @JsonProperty(value = "dataset")
+    @Generated
     private DatasetReference dataset;
 
     /*
      * Linked service reference.
      */
-    @JsonProperty(value = "linkedService")
+    @Generated
     private LinkedServiceReference linkedService;
 
     /*
      * Flowlet Reference
      */
-    @JsonProperty(value = "flowlet")
+    @Generated
     private DataFlowReference flowlet;
 
-    /** Creates an instance of Transformation class. */
-    public Transformation() {}
+    /**
+     * Creates an instance of Transformation class.
+     */
+    @Generated
+    public Transformation() {
+    }
 
     /**
      * Get the name property: Transformation name.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: Transformation name.
-     *
+     * 
      * @param name the name value to set.
      * @return the Transformation object itself.
      */
+    @Generated
     public Transformation setName(String name) {
         this.name = name;
         return this;
@@ -65,19 +78,21 @@ public class Transformation {
 
     /**
      * Get the description property: Transformation description.
-     *
+     * 
      * @return the description value.
      */
+    @Generated
     public String getDescription() {
         return this.description;
     }
 
     /**
      * Set the description property: Transformation description.
-     *
+     * 
      * @param description the description value to set.
      * @return the Transformation object itself.
      */
+    @Generated
     public Transformation setDescription(String description) {
         this.description = description;
         return this;
@@ -85,19 +100,21 @@ public class Transformation {
 
     /**
      * Get the dataset property: Dataset reference.
-     *
+     * 
      * @return the dataset value.
      */
+    @Generated
     public DatasetReference getDataset() {
         return this.dataset;
     }
 
     /**
      * Set the dataset property: Dataset reference.
-     *
+     * 
      * @param dataset the dataset value to set.
      * @return the Transformation object itself.
      */
+    @Generated
     public Transformation setDataset(DatasetReference dataset) {
         this.dataset = dataset;
         return this;
@@ -105,19 +122,21 @@ public class Transformation {
 
     /**
      * Get the linkedService property: Linked service reference.
-     *
+     * 
      * @return the linkedService value.
      */
+    @Generated
     public LinkedServiceReference getLinkedService() {
         return this.linkedService;
     }
 
     /**
      * Set the linkedService property: Linked service reference.
-     *
+     * 
      * @param linkedService the linkedService value to set.
      * @return the Transformation object itself.
      */
+    @Generated
     public Transformation setLinkedService(LinkedServiceReference linkedService) {
         this.linkedService = linkedService;
         return this;
@@ -125,21 +144,74 @@ public class Transformation {
 
     /**
      * Get the flowlet property: Flowlet Reference.
-     *
+     * 
      * @return the flowlet value.
      */
+    @Generated
     public DataFlowReference getFlowlet() {
         return this.flowlet;
     }
 
     /**
      * Set the flowlet property: Flowlet Reference.
-     *
+     * 
      * @param flowlet the flowlet value to set.
      * @return the Transformation object itself.
      */
+    @Generated
     public Transformation setFlowlet(DataFlowReference flowlet) {
         this.flowlet = flowlet;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeStringField("description", this.description);
+        jsonWriter.writeJsonField("dataset", this.dataset);
+        jsonWriter.writeJsonField("linkedService", this.linkedService);
+        jsonWriter.writeJsonField("flowlet", this.flowlet);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of Transformation from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of Transformation if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the Transformation.
+     */
+    @Generated
+    public static Transformation fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            Transformation deserializedTransformation = new Transformation();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedTransformation.name = reader.getString();
+                } else if ("description".equals(fieldName)) {
+                    deserializedTransformation.description = reader.getString();
+                } else if ("dataset".equals(fieldName)) {
+                    deserializedTransformation.dataset = DatasetReference.fromJson(reader);
+                } else if ("linkedService".equals(fieldName)) {
+                    deserializedTransformation.linkedService = LinkedServiceReference.fromJson(reader);
+                } else if ("flowlet".equals(fieldName)) {
+                    deserializedTransformation.flowlet = DataFlowReference.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedTransformation;
+        });
     }
 }

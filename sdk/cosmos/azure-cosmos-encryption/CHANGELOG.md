@@ -1,6 +1,6 @@
 ## Release History
 
-### 2.4.0-beta.1 (Unreleased)
+### 2.29.0-beta.1 (Unreleased)
 
 #### Features Added
 
@@ -9,6 +9,135 @@
 #### Bugs Fixed
 
 #### Other Changes
+
+### 2.28.0 (2026-03-27)
+
+#### Features Added
+* Added user agent tracking for the encryption SDK. The user agent string now includes `azure-cosmos-encryption/{version}` to enable telemetry tracking of encryption SDK adoption and version distribution. - See [PR 48505](https://github.com/Azure/azure-sdk-for-java/pull/48505)
+* GA'd `deleteAllItemsByPartitionKey` and `queryChangeFeed` APIs in `CosmosEncryptionAsyncContainer` and `CosmosEncryptionContainer`. - See [PR 48505](https://github.com/Azure/azure-sdk-for-java/pull/48505)
+
+### 2.27.0 (2026-02-10)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.78.0`.
+
+### 2.26.0 (2026-01-26)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.77.0`.
+
+### 2.25.0 (2025-12-09)
+
+#### Other Changes
+* Enabled hostname validation for RNTBD connections to backend - [PR 47111](https://github.com/Azure/azure-sdk-for-java/pull/47111)
+* Updated `azure-cosmos` to version `4.76.0`.
+
+### 2.24.0 (2025-10-21)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.75.0`.
+
+### 2.23.0 (2025-09-05)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.74.0`.
+
+### 2.22.0 (2025-07-18)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.73.0`.
+
+### 2.21.0 (2025-06-24)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.72.0`.
+
+### 2.20.0 (2025-05-14)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.69.0`.
+
+### 2.19.0 (2025-03-20)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.68.0`.
+
+### 2.18.0 (2025-02-20)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.67.0`.
+
+### 2.17.1 (2025-02-08)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.66.1`.
+
+### 2.17.0 (2025-01-14)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.66.0`.
+
+### 2.16.0 (2024-11-19)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.65.0`.
+
+### 2.15.0 (2024-10-10)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.64.0`.
+
+### 2.14.1 (2024-09-10)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.63.3`.
+
+### 2.14.0 (2024-07-26)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.63.0`.
+
+### 2.13.0 (2024-07-02)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.62.0`.
+
+### 2.12.0 (2024-05-19)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.60.0`.
+
+### 2.11.0 (2024-04-27)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.59.0`.
+
+#### Features Added
+* Added public APIs `getCustomItemSerializer` and `setCustomItemSerializer` to allow customers to specify custom payload transformations or serialization settings. - See [PR 38997](https://github.com/Azure/azure-sdk-for-java/pull/38997)
+
+### 2.10.0 (2024-04-16)
+
+#### Other Changes
+* Updated `azure-cosmos` to version `4.58.0`.
+
+### 2.9.0 (2024-03-26)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.57.0`.
+
+### 2.8.0 (2024-02-08)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.55.0`.
+
+### 2.7.0 (2023-12-01)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.53.0`.
+
+### 2.6.0 (2023-10-24)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.52.0`.
+
+### 2.5.0 (2023-09-25)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.50.0`.
+
+### 2.4.0 (2023-08-21)
+#### Other Changes
+* Updated `azure-cosmos` to version `4.49.0`.
 
 ### 2.3.0 (2023-07-18)
 #### Other Changes

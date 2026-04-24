@@ -10,11 +10,9 @@ import com.azure.resourcemanager.storagecache.models.CacheUpgradeStatus;
 public final class CacheUpgradeStatusTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CacheUpgradeStatus model =
-            BinaryData
-                .fromString(
-                    "{\"currentFirmwareVersion\":\"ulppggdtpnapnyir\",\"firmwareUpdateStatus\":\"available\",\"firmwareUpdateDeadline\":\"2021-02-20T09:26:33Z\",\"lastFirmwareUpdate\":\"2020-12-20T18:46:56Z\",\"pendingFirmwareVersion\":\"pgylg\"}")
-                .toObject(CacheUpgradeStatus.class);
+        CacheUpgradeStatus model = BinaryData.fromString(
+            "{\"currentFirmwareVersion\":\"aeneqnzarrwl\",\"firmwareUpdateStatus\":\"available\",\"firmwareUpdateDeadline\":\"2021-04-01T07:49:28Z\",\"lastFirmwareUpdate\":\"2021-07-01T04:35:37Z\",\"pendingFirmwareVersion\":\"acewiipfpubjibw\"}")
+            .toObject(CacheUpgradeStatus.class);
     }
 
     @org.junit.jupiter.api.Test

@@ -5,60 +5,73 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.Map;
 
-/** Run notebook request. */
+/**
+ * Run notebook request.
+ */
 @Fluent
-public final class RunNotebookRequest {
+public final class RunNotebookRequest implements JsonSerializable<RunNotebookRequest> {
     /*
      * Notebook name.
      */
-    @JsonProperty(value = "notebook")
+    @Generated
     private String notebook;
 
     /*
      * SparkPool name.
      */
-    @JsonProperty(value = "sparkPool")
+    @Generated
     private String sparkPool;
 
     /*
      * Session properties.
      */
-    @JsonProperty(value = "sessionOptions")
+    @Generated
     private RunNotebookSparkSessionOptions sessionOptions;
 
     /*
      * Whether session should run till time to live after run completes.
      */
-    @JsonProperty(value = "honorSessionTimeToLive")
+    @Generated
     private Boolean honorSessionTimeToLive;
 
     /*
      * Run notebook parameters
      */
-    @JsonProperty(value = "parameters")
+    @Generated
     private Map<String, RunNotebookParameter> parameters;
 
-    /** Creates an instance of RunNotebookRequest class. */
-    public RunNotebookRequest() {}
+    /**
+     * Creates an instance of RunNotebookRequest class.
+     */
+    @Generated
+    public RunNotebookRequest() {
+    }
 
     /**
      * Get the notebook property: Notebook name.
-     *
+     * 
      * @return the notebook value.
      */
+    @Generated
     public String getNotebook() {
         return this.notebook;
     }
 
     /**
      * Set the notebook property: Notebook name.
-     *
+     * 
      * @param notebook the notebook value to set.
      * @return the RunNotebookRequest object itself.
      */
+    @Generated
     public RunNotebookRequest setNotebook(String notebook) {
         this.notebook = notebook;
         return this;
@@ -66,19 +79,21 @@ public final class RunNotebookRequest {
 
     /**
      * Get the sparkPool property: SparkPool name.
-     *
+     * 
      * @return the sparkPool value.
      */
+    @Generated
     public String getSparkPool() {
         return this.sparkPool;
     }
 
     /**
      * Set the sparkPool property: SparkPool name.
-     *
+     * 
      * @param sparkPool the sparkPool value to set.
      * @return the RunNotebookRequest object itself.
      */
+    @Generated
     public RunNotebookRequest setSparkPool(String sparkPool) {
         this.sparkPool = sparkPool;
         return this;
@@ -86,19 +101,21 @@ public final class RunNotebookRequest {
 
     /**
      * Get the sessionOptions property: Session properties.
-     *
+     * 
      * @return the sessionOptions value.
      */
+    @Generated
     public RunNotebookSparkSessionOptions getSessionOptions() {
         return this.sessionOptions;
     }
 
     /**
      * Set the sessionOptions property: Session properties.
-     *
+     * 
      * @param sessionOptions the sessionOptions value to set.
      * @return the RunNotebookRequest object itself.
      */
+    @Generated
     public RunNotebookRequest setSessionOptions(RunNotebookSparkSessionOptions sessionOptions) {
         this.sessionOptions = sessionOptions;
         return this;
@@ -106,19 +123,21 @@ public final class RunNotebookRequest {
 
     /**
      * Get the honorSessionTimeToLive property: Whether session should run till time to live after run completes.
-     *
+     * 
      * @return the honorSessionTimeToLive value.
      */
+    @Generated
     public Boolean isHonorSessionTimeToLive() {
         return this.honorSessionTimeToLive;
     }
 
     /**
      * Set the honorSessionTimeToLive property: Whether session should run till time to live after run completes.
-     *
+     * 
      * @param honorSessionTimeToLive the honorSessionTimeToLive value to set.
      * @return the RunNotebookRequest object itself.
      */
+    @Generated
     public RunNotebookRequest setHonorSessionTimeToLive(Boolean honorSessionTimeToLive) {
         this.honorSessionTimeToLive = honorSessionTimeToLive;
         return this;
@@ -126,21 +145,75 @@ public final class RunNotebookRequest {
 
     /**
      * Get the parameters property: Run notebook parameters.
-     *
+     * 
      * @return the parameters value.
      */
+    @Generated
     public Map<String, RunNotebookParameter> getParameters() {
         return this.parameters;
     }
 
     /**
      * Set the parameters property: Run notebook parameters.
-     *
+     * 
      * @param parameters the parameters value to set.
      * @return the RunNotebookRequest object itself.
      */
+    @Generated
     public RunNotebookRequest setParameters(Map<String, RunNotebookParameter> parameters) {
         this.parameters = parameters;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("notebook", this.notebook);
+        jsonWriter.writeStringField("sparkPool", this.sparkPool);
+        jsonWriter.writeJsonField("sessionOptions", this.sessionOptions);
+        jsonWriter.writeBooleanField("honorSessionTimeToLive", this.honorSessionTimeToLive);
+        jsonWriter.writeMapField("parameters", this.parameters, (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RunNotebookRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RunNotebookRequest if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the RunNotebookRequest.
+     */
+    @Generated
+    public static RunNotebookRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RunNotebookRequest deserializedRunNotebookRequest = new RunNotebookRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("notebook".equals(fieldName)) {
+                    deserializedRunNotebookRequest.notebook = reader.getString();
+                } else if ("sparkPool".equals(fieldName)) {
+                    deserializedRunNotebookRequest.sparkPool = reader.getString();
+                } else if ("sessionOptions".equals(fieldName)) {
+                    deserializedRunNotebookRequest.sessionOptions = RunNotebookSparkSessionOptions.fromJson(reader);
+                } else if ("honorSessionTimeToLive".equals(fieldName)) {
+                    deserializedRunNotebookRequest.honorSessionTimeToLive = reader.getNullable(JsonReader::getBoolean);
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, RunNotebookParameter> parameters
+                        = reader.readMap(reader1 -> RunNotebookParameter.fromJson(reader1));
+                    deserializedRunNotebookRequest.parameters = parameters;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRunNotebookRequest;
+        });
     }
 }

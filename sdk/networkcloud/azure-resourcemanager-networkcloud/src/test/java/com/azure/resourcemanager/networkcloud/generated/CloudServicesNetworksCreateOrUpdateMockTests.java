@@ -6,16 +6,17 @@ package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.networkcloud.NetworkCloudManager;
 import com.azure.resourcemanager.networkcloud.models.CloudServicesNetwork;
 import com.azure.resourcemanager.networkcloud.models.CloudServicesNetworkEnableDefaultEgressEndpoints;
+import com.azure.resourcemanager.networkcloud.models.CloudServicesNetworkStorageMode;
+import com.azure.resourcemanager.networkcloud.models.CloudServicesNetworkStorageOptions;
+import com.azure.resourcemanager.networkcloud.models.EgressEndpoint;
+import com.azure.resourcemanager.networkcloud.models.EndpointDependency;
 import com.azure.resourcemanager.networkcloud.models.ExtendedLocation;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -23,68 +24,66 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class CloudServicesNetworksCreateOrUpdateMockTests {
     @Test
     public void testCreateOrUpdate() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"etag\":\"krvfyifkdschl\",\"extendedLocation\":{\"name\":\"vfictnkjjwgcwn\",\"type\":\"hbkgfyrt\"},\"properties\":{\"additionalEgressEndpoints\":[{\"category\":\"mjpjscdfpdqwty\",\"endpoints\":[{\"domainName\":\"vgwmseharxifvqnr\"}]},{\"category\":\"tmbpjp\",\"endpoints\":[{\"domainName\":\"vwjhrsidqpxlbt\"},{\"domainName\":\"akftng\"},{\"domainName\":\"twmykyut\"},{\"domainName\":\"ym\"}]},{\"category\":\"wmfjhp\",\"endpoints\":[{\"domainName\":\"vjqdvdwkq\"},{\"domainName\":\"ldrlefgnaavua\"}]},{\"category\":\"n\",\"endpoints\":[{\"domainName\":\"taoutnpdct\"},{\"domainName\":\"hspfefyihd\"},{\"domainName\":\"yeuyldph\"}]}],\"associatedResourceIds\":[\"bkcgsuthhllnm\",\"y\",\"efxexlf\",\"i\"],\"clusterId\":\"xtjrrlk\",\"detailedStatus\":\"Available\",\"detailedStatusMessage\":\"jhhxdlajf\",\"enableDefaultEgressEndpoints\":\"False\",\"enabledEgressEndpoints\":[{\"category\":\"cvslxlhuavkrmukm\",\"endpoints\":[{\"domainName\":\"mkxettcsloj\"},{\"domainName\":\"kqidnqtoqx\"},{\"domainName\":\"hqxc\"},{\"domainName\":\"qhtkbt\"}]}],\"hybridAksClustersAssociatedIds\":[\"rngl\"],\"interfaceName\":\"biipsnawwlqkznx\",\"provisioningState\":\"Succeeded\",\"storageOptions\":{\"mode\":\"Standard\",\"sizeMiB\":6103361317261537773,\"storageApplianceId\":\"kwmuqqo\"},\"storageStatus\":{\"mode\":\"Standard\",\"sizeMiB\":255262120126755080,\"status\":\"ExpandingVolume\",\"statusMessage\":\"rwvaexhdc\",\"volumeId\":\"ceqnkbrupobehd\"},\"virtualMachinesAssociatedIds\":[\"zacvu\",\"epj\",\"bibnzpphepifex\",\"eqir\"]},\"location\":\"jclykcg\",\"tags\":{\"punettepdjxq\":\"pjlvczuoda\"},\"id\":\"skoynuiylpc\",\"name\":\"aewse\",\"type\":\"vesk\"}";
 
-        String responseStr =
-            "{\"extendedLocation\":{\"name\":\"sinuqtljqobbpih\",\"type\":\"hcecybmrqbr\"},\"properties\":{\"additionalEgressEndpoints\":[],\"associatedResourceIds\":[\"dlvykfrex\",\"rseqwjksghudgz\",\"xog\"],\"clusterId\":\"gsv\",\"detailedStatus\":\"Available\",\"detailedStatusMessage\":\"xibdafhrkmdyo\",\"enableDefaultEgressEndpoints\":\"True\",\"enabledEgressEndpoints\":[],\"hybridAksClustersAssociatedIds\":[\"bhdyir\",\"pwpgddei\"],\"interfaceName\":\"wzovgk\",\"provisioningState\":\"Succeeded\",\"virtualMachinesAssociatedIds\":[\"kjcjcaztbwsnsqow\",\"wcoml\",\"kytwvcz\"]},\"location\":\"wka\",\"tags\":{\"b\":\"jyfdvlv\",\"th\":\"rnfxtgddp\",\"naoyank\":\"hn\",\"swankltytmh\":\"oe\"},\"id\":\"roznnhdrlktgj\",\"name\":\"sggux\",\"type\":\"eml\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        NetworkCloudManager manager = NetworkCloudManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        CloudServicesNetwork response = manager.cloudServicesNetworks()
+            .define("cndhzxrrfcfs")
+            .withRegion("wbnfddepl")
+            .withExistingResourceGroup("qvldaswvppisqqzl")
+            .withExtendedLocation(new ExtendedLocation().withName("zxlb").withType("xomeikjclwzacn"))
+            .withTags(mapOf("hsbrcary", "jnsfzygleexahvmy"))
+            .withAdditionalEgressEndpoints(Arrays.asList(
+                new EgressEndpoint().withCategory("suqtaazyqbx")
+                    .withEndpoints(Arrays.asList(new EndpointDependency().withDomainName("oyfpuq"))),
+                new EgressEndpoint().withCategory("iqezxlhdj")
+                    .withEndpoints(Arrays.asList(new EndpointDependency().withDomainName("dcadwvpsozjiihjr"),
+                        new EndpointDependency().withDomainName("ybmrzoepnxwd"),
+                        new EndpointDependency().withDomainName("wnjkgvfn"))),
+                new EgressEndpoint().withCategory("xaurs")
+                    .withEndpoints(Arrays.asList(new EndpointDependency().withDomainName("tibtyi"),
+                        new EndpointDependency().withDomainName("uyvpirf"),
+                        new EndpointDependency().withDomainName("jpnqnoowsbeden"),
+                        new EndpointDependency().withDomainName("exkxbhx"))),
+                new EgressEndpoint().withCategory("ucnulgmnh")
+                    .withEndpoints(Arrays.asList(new EndpointDependency().withDomainName("vdyznf"),
+                        new EndpointDependency().withDomainName("jsvkskmqozzkivy")))))
+            .withEnableDefaultEgressEndpoints(CloudServicesNetworkEnableDefaultEgressEndpoints.FALSE)
+            .withStorageOptions(
+                new CloudServicesNetworkStorageOptions().withMode(CloudServicesNetworkStorageMode.STANDARD)
+                    .withSizeMiB(8485618719618232113L)
+                    .withStorageApplianceId("jqu"))
+            .withIfMatch("gybpmfb")
+            .withIfNoneMatch("ununm")
+            .create();
 
-        NetworkCloudManager manager =
-            NetworkCloudManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        CloudServicesNetwork response =
-            manager
-                .cloudServicesNetworks()
-                .define("fpafolpymwamxq")
-                .withRegion("dgycxnmskwhqjjy")
-                .withExistingResourceGroup("whmozusgzvlnsnnj")
-                .withExtendedLocation(new ExtendedLocation().withName("rag").withType("gdphtvdula"))
-                .withTags(mapOf("edwqslsrh", "rlpshhkv", "wwsko", "pq"))
-                .withAdditionalEgressEndpoints(Arrays.asList())
-                .withEnableDefaultEgressEndpoints(CloudServicesNetworkEnableDefaultEgressEndpoints.FALSE)
-                .create();
-
-        Assertions.assertEquals("wka", response.location());
-        Assertions.assertEquals("jyfdvlv", response.tags().get("b"));
-        Assertions.assertEquals("sinuqtljqobbpih", response.extendedLocation().name());
-        Assertions.assertEquals("hcecybmrqbr", response.extendedLocation().type());
-        Assertions
-            .assertEquals(
-                CloudServicesNetworkEnableDefaultEgressEndpoints.TRUE, response.enableDefaultEgressEndpoints());
+        Assertions.assertEquals("jclykcg", response.location());
+        Assertions.assertEquals("pjlvczuoda", response.tags().get("punettepdjxq"));
+        Assertions.assertEquals("vfictnkjjwgcwn", response.extendedLocation().name());
+        Assertions.assertEquals("hbkgfyrt", response.extendedLocation().type());
+        Assertions.assertEquals("mjpjscdfpdqwty", response.additionalEgressEndpoints().get(0).category());
+        Assertions.assertEquals("vgwmseharxifvqnr",
+            response.additionalEgressEndpoints().get(0).endpoints().get(0).domainName());
+        Assertions.assertEquals(CloudServicesNetworkEnableDefaultEgressEndpoints.FALSE,
+            response.enableDefaultEgressEndpoints());
+        Assertions.assertEquals(CloudServicesNetworkStorageMode.STANDARD, response.storageOptions().mode());
+        Assertions.assertEquals(6103361317261537773L, response.storageOptions().sizeMiB());
+        Assertions.assertEquals("kwmuqqo", response.storageOptions().storageApplianceId());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

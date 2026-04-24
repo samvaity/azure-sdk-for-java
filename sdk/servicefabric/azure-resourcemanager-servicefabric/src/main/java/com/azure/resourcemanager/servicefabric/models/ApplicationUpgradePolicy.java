@@ -5,55 +5,56 @@
 package com.azure.resourcemanager.servicefabric.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Describes the policy for a monitored application upgrade. */
+/**
+ * Describes the policy for a monitored application upgrade.
+ */
 @Fluent
-public final class ApplicationUpgradePolicy {
+public final class ApplicationUpgradePolicy implements JsonSerializable<ApplicationUpgradePolicy> {
     /*
      * The maximum amount of time to block processing of an upgrade domain and prevent loss of availability when there
      * are unexpected issues. When this timeout expires, processing of the upgrade domain will proceed regardless of
      * availability loss issues. The timeout is reset at the start of each upgrade domain. Valid values are between 0
      * and 42949672925 inclusive. (unsigned 32-bit integer).
      */
-    @JsonProperty(value = "upgradeReplicaSetCheckTimeout")
     private String upgradeReplicaSetCheckTimeout;
 
     /*
      * If true, then processes are forcefully restarted during upgrade even when the code version has not changed (the
      * upgrade only changes configuration or data).
      */
-    @JsonProperty(value = "forceRestart")
     private Boolean forceRestart;
 
     /*
      * The policy used for monitoring the application upgrade
      */
-    @JsonProperty(value = "rollingUpgradeMonitoringPolicy")
     private ArmRollingUpgradeMonitoringPolicy rollingUpgradeMonitoringPolicy;
 
     /*
      * Defines a health policy used to evaluate the health of an application or one of its children entities.
-     *
      */
-    @JsonProperty(value = "applicationHealthPolicy")
     private ArmApplicationHealthPolicy applicationHealthPolicy;
 
     /*
      * The mode used to monitor health during a rolling upgrade. The values are UnmonitoredAuto, UnmonitoredManual, and
      * Monitored.
      */
-    @JsonProperty(value = "upgradeMode")
     private RollingUpgradeMode upgradeMode;
 
     /*
      * Determines whether the application should be recreated on update. If value=true, the rest of the upgrade policy
      * parameters are not allowed and it will result in availability loss.
      */
-    @JsonProperty(value = "recreateApplication")
     private Boolean recreateApplication;
 
-    /** Creates an instance of ApplicationUpgradePolicy class. */
+    /**
+     * Creates an instance of ApplicationUpgradePolicy class.
+     */
     public ApplicationUpgradePolicy() {
     }
 
@@ -62,7 +63,7 @@ public final class ApplicationUpgradePolicy {
      * domain and prevent loss of availability when there are unexpected issues. When this timeout expires, processing
      * of the upgrade domain will proceed regardless of availability loss issues. The timeout is reset at the start of
      * each upgrade domain. Valid values are between 0 and 42949672925 inclusive. (unsigned 32-bit integer).
-     *
+     * 
      * @return the upgradeReplicaSetCheckTimeout value.
      */
     public String upgradeReplicaSetCheckTimeout() {
@@ -74,7 +75,7 @@ public final class ApplicationUpgradePolicy {
      * domain and prevent loss of availability when there are unexpected issues. When this timeout expires, processing
      * of the upgrade domain will proceed regardless of availability loss issues. The timeout is reset at the start of
      * each upgrade domain. Valid values are between 0 and 42949672925 inclusive. (unsigned 32-bit integer).
-     *
+     * 
      * @param upgradeReplicaSetCheckTimeout the upgradeReplicaSetCheckTimeout value to set.
      * @return the ApplicationUpgradePolicy object itself.
      */
@@ -86,7 +87,7 @@ public final class ApplicationUpgradePolicy {
     /**
      * Get the forceRestart property: If true, then processes are forcefully restarted during upgrade even when the code
      * version has not changed (the upgrade only changes configuration or data).
-     *
+     * 
      * @return the forceRestart value.
      */
     public Boolean forceRestart() {
@@ -96,7 +97,7 @@ public final class ApplicationUpgradePolicy {
     /**
      * Set the forceRestart property: If true, then processes are forcefully restarted during upgrade even when the code
      * version has not changed (the upgrade only changes configuration or data).
-     *
+     * 
      * @param forceRestart the forceRestart value to set.
      * @return the ApplicationUpgradePolicy object itself.
      */
@@ -107,7 +108,7 @@ public final class ApplicationUpgradePolicy {
 
     /**
      * Get the rollingUpgradeMonitoringPolicy property: The policy used for monitoring the application upgrade.
-     *
+     * 
      * @return the rollingUpgradeMonitoringPolicy value.
      */
     public ArmRollingUpgradeMonitoringPolicy rollingUpgradeMonitoringPolicy() {
@@ -116,12 +117,12 @@ public final class ApplicationUpgradePolicy {
 
     /**
      * Set the rollingUpgradeMonitoringPolicy property: The policy used for monitoring the application upgrade.
-     *
+     * 
      * @param rollingUpgradeMonitoringPolicy the rollingUpgradeMonitoringPolicy value to set.
      * @return the ApplicationUpgradePolicy object itself.
      */
-    public ApplicationUpgradePolicy withRollingUpgradeMonitoringPolicy(
-        ArmRollingUpgradeMonitoringPolicy rollingUpgradeMonitoringPolicy) {
+    public ApplicationUpgradePolicy
+        withRollingUpgradeMonitoringPolicy(ArmRollingUpgradeMonitoringPolicy rollingUpgradeMonitoringPolicy) {
         this.rollingUpgradeMonitoringPolicy = rollingUpgradeMonitoringPolicy;
         return this;
     }
@@ -129,7 +130,7 @@ public final class ApplicationUpgradePolicy {
     /**
      * Get the applicationHealthPolicy property: Defines a health policy used to evaluate the health of an application
      * or one of its children entities.
-     *
+     * 
      * @return the applicationHealthPolicy value.
      */
     public ArmApplicationHealthPolicy applicationHealthPolicy() {
@@ -139,7 +140,7 @@ public final class ApplicationUpgradePolicy {
     /**
      * Set the applicationHealthPolicy property: Defines a health policy used to evaluate the health of an application
      * or one of its children entities.
-     *
+     * 
      * @param applicationHealthPolicy the applicationHealthPolicy value to set.
      * @return the ApplicationUpgradePolicy object itself.
      */
@@ -151,7 +152,7 @@ public final class ApplicationUpgradePolicy {
     /**
      * Get the upgradeMode property: The mode used to monitor health during a rolling upgrade. The values are
      * UnmonitoredAuto, UnmonitoredManual, and Monitored.
-     *
+     * 
      * @return the upgradeMode value.
      */
     public RollingUpgradeMode upgradeMode() {
@@ -161,7 +162,7 @@ public final class ApplicationUpgradePolicy {
     /**
      * Set the upgradeMode property: The mode used to monitor health during a rolling upgrade. The values are
      * UnmonitoredAuto, UnmonitoredManual, and Monitored.
-     *
+     * 
      * @param upgradeMode the upgradeMode value to set.
      * @return the ApplicationUpgradePolicy object itself.
      */
@@ -173,7 +174,7 @@ public final class ApplicationUpgradePolicy {
     /**
      * Get the recreateApplication property: Determines whether the application should be recreated on update. If
      * value=true, the rest of the upgrade policy parameters are not allowed and it will result in availability loss.
-     *
+     * 
      * @return the recreateApplication value.
      */
     public Boolean recreateApplication() {
@@ -183,7 +184,7 @@ public final class ApplicationUpgradePolicy {
     /**
      * Set the recreateApplication property: Determines whether the application should be recreated on update. If
      * value=true, the rest of the upgrade policy parameters are not allowed and it will result in availability loss.
-     *
+     * 
      * @param recreateApplication the recreateApplication value to set.
      * @return the ApplicationUpgradePolicy object itself.
      */
@@ -194,7 +195,7 @@ public final class ApplicationUpgradePolicy {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -204,5 +205,60 @@ public final class ApplicationUpgradePolicy {
         if (applicationHealthPolicy() != null) {
             applicationHealthPolicy().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("upgradeReplicaSetCheckTimeout", this.upgradeReplicaSetCheckTimeout);
+        jsonWriter.writeBooleanField("forceRestart", this.forceRestart);
+        jsonWriter.writeJsonField("rollingUpgradeMonitoringPolicy", this.rollingUpgradeMonitoringPolicy);
+        jsonWriter.writeJsonField("applicationHealthPolicy", this.applicationHealthPolicy);
+        jsonWriter.writeStringField("upgradeMode", this.upgradeMode == null ? null : this.upgradeMode.toString());
+        jsonWriter.writeBooleanField("recreateApplication", this.recreateApplication);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ApplicationUpgradePolicy from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ApplicationUpgradePolicy if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ApplicationUpgradePolicy.
+     */
+    public static ApplicationUpgradePolicy fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ApplicationUpgradePolicy deserializedApplicationUpgradePolicy = new ApplicationUpgradePolicy();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("upgradeReplicaSetCheckTimeout".equals(fieldName)) {
+                    deserializedApplicationUpgradePolicy.upgradeReplicaSetCheckTimeout = reader.getString();
+                } else if ("forceRestart".equals(fieldName)) {
+                    deserializedApplicationUpgradePolicy.forceRestart = reader.getNullable(JsonReader::getBoolean);
+                } else if ("rollingUpgradeMonitoringPolicy".equals(fieldName)) {
+                    deserializedApplicationUpgradePolicy.rollingUpgradeMonitoringPolicy
+                        = ArmRollingUpgradeMonitoringPolicy.fromJson(reader);
+                } else if ("applicationHealthPolicy".equals(fieldName)) {
+                    deserializedApplicationUpgradePolicy.applicationHealthPolicy
+                        = ArmApplicationHealthPolicy.fromJson(reader);
+                } else if ("upgradeMode".equals(fieldName)) {
+                    deserializedApplicationUpgradePolicy.upgradeMode
+                        = RollingUpgradeMode.fromString(reader.getString());
+                } else if ("recreateApplication".equals(fieldName)) {
+                    deserializedApplicationUpgradePolicy.recreateApplication
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedApplicationUpgradePolicy;
+        });
     }
 }

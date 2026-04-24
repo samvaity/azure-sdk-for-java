@@ -8,6 +8,7 @@ import com.azure.core.management.Region;
 import com.azure.core.management.SystemData;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.networkcloud.fluent.models.BareMetalMachineInner;
+import com.azure.resourcemanager.networkcloud.models.ActionState;
 import com.azure.resourcemanager.networkcloud.models.AdministrativeCredentials;
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachine;
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachineCordonParameters;
@@ -22,10 +23,13 @@ import com.azure.resourcemanager.networkcloud.models.BareMetalMachineReplacePara
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachineRunCommandParameters;
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachineRunDataExtractsParameters;
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachineRunReadCommandsParameters;
-import com.azure.resourcemanager.networkcloud.models.BareMetalMachineValidateHardwareParameters;
+import com.azure.resourcemanager.networkcloud.models.CertificateInfo;
 import com.azure.resourcemanager.networkcloud.models.ExtendedLocation;
 import com.azure.resourcemanager.networkcloud.models.HardwareInventory;
 import com.azure.resourcemanager.networkcloud.models.HardwareValidationStatus;
+import com.azure.resourcemanager.networkcloud.models.OperationStatusResult;
+import com.azure.resourcemanager.networkcloud.models.RuntimeProtectionStatus;
+import com.azure.resourcemanager.networkcloud.models.SecretRotationStatus;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -61,12 +65,25 @@ public final class BareMetalMachineImpl
         }
     }
 
+    public String etag() {
+        return this.innerModel().etag();
+    }
+
     public ExtendedLocation extendedLocation() {
         return this.innerModel().extendedLocation();
     }
 
     public SystemData systemData() {
         return this.innerModel().systemData();
+    }
+
+    public List<ActionState> actionStates() {
+        List<ActionState> inner = this.innerModel().actionStates();
+        if (inner != null) {
+            return Collections.unmodifiableList(inner);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public List<String> associatedResourceIds() {
@@ -92,6 +109,10 @@ public final class BareMetalMachineImpl
 
     public String bootMacAddress() {
         return this.innerModel().bootMacAddress();
+    }
+
+    public CertificateInfo caCertificate() {
+        return this.innerModel().caCertificate();
     }
 
     public String clusterId() {
@@ -135,12 +156,25 @@ public final class BareMetalMachineImpl
         return this.innerModel().kubernetesVersion();
     }
 
+    public String machineClusterVersion() {
+        return this.innerModel().machineClusterVersion();
+    }
+
     public String machineDetails() {
         return this.innerModel().machineDetails();
     }
 
     public String machineName() {
         return this.innerModel().machineName();
+    }
+
+    public List<String> machineRoles() {
+        List<String> inner = this.innerModel().machineRoles();
+        if (inner != null) {
+            return Collections.unmodifiableList(inner);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public String machineSkuId() {
@@ -177,6 +211,19 @@ public final class BareMetalMachineImpl
 
     public BareMetalMachineReadyState readyState() {
         return this.innerModel().readyState();
+    }
+
+    public RuntimeProtectionStatus runtimeProtectionStatus() {
+        return this.innerModel().runtimeProtectionStatus();
+    }
+
+    public List<SecretRotationStatus> secretRotationStatus() {
+        List<SecretRotationStatus> inner = this.innerModel().secretRotationStatus();
+        if (inner != null) {
+            return Collections.unmodifiableList(inner);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public String serialNumber() {
@@ -220,6 +267,14 @@ public final class BareMetalMachineImpl
 
     private String bareMetalMachineName;
 
+    private String createIfMatch;
+
+    private String createIfNoneMatch;
+
+    private String updateIfMatch;
+
+    private String updateIfNoneMatch;
+
     private BareMetalMachinePatchParameters updateBareMetalMachineUpdateParameters;
 
     public BareMetalMachineImpl withExistingResourceGroup(String resourceGroupName) {
@@ -228,20 +283,18 @@ public final class BareMetalMachineImpl
     }
 
     public BareMetalMachine create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachines()
-                .createOrUpdate(resourceGroupName, bareMetalMachineName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachines()
+            .createOrUpdate(resourceGroupName, bareMetalMachineName, this.innerModel(), createIfMatch,
+                createIfNoneMatch, Context.NONE);
         return this;
     }
 
     public BareMetalMachine create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachines()
-                .createOrUpdate(resourceGroupName, bareMetalMachineName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachines()
+            .createOrUpdate(resourceGroupName, bareMetalMachineName, this.innerModel(), createIfMatch,
+                createIfNoneMatch, context);
         return this;
     }
 
@@ -249,174 +302,169 @@ public final class BareMetalMachineImpl
         this.innerObject = new BareMetalMachineInner();
         this.serviceManager = serviceManager;
         this.bareMetalMachineName = name;
+        this.createIfMatch = null;
+        this.createIfNoneMatch = null;
     }
 
     public BareMetalMachineImpl update() {
+        this.updateIfMatch = null;
+        this.updateIfNoneMatch = null;
         this.updateBareMetalMachineUpdateParameters = new BareMetalMachinePatchParameters();
         return this;
     }
 
     public BareMetalMachine apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachines()
-                .update(resourceGroupName, bareMetalMachineName, updateBareMetalMachineUpdateParameters, Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachines()
+            .update(resourceGroupName, bareMetalMachineName, updateIfMatch, updateIfNoneMatch,
+                updateBareMetalMachineUpdateParameters, Context.NONE);
         return this;
     }
 
     public BareMetalMachine apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachines()
-                .update(resourceGroupName, bareMetalMachineName, updateBareMetalMachineUpdateParameters, context);
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachines()
+            .update(resourceGroupName, bareMetalMachineName, updateIfMatch, updateIfNoneMatch,
+                updateBareMetalMachineUpdateParameters, context);
         return this;
     }
 
-    BareMetalMachineImpl(
-        BareMetalMachineInner innerObject, com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
+    BareMetalMachineImpl(BareMetalMachineInner innerObject,
+        com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.bareMetalMachineName = Utils.getValueFromIdByName(innerObject.id(), "bareMetalMachines");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.bareMetalMachineName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "bareMetalMachines");
     }
 
     public BareMetalMachine refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachines()
-                .getByResourceGroupWithResponse(resourceGroupName, bareMetalMachineName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachines()
+            .getByResourceGroupWithResponse(resourceGroupName, bareMetalMachineName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public BareMetalMachine refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachines()
-                .getByResourceGroupWithResponse(resourceGroupName, bareMetalMachineName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachines()
+            .getByResourceGroupWithResponse(resourceGroupName, bareMetalMachineName, context)
+            .getValue();
         return this;
     }
 
-    public void cordon() {
-        serviceManager.bareMetalMachines().cordon(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult cordon() {
+        return serviceManager.bareMetalMachines().cordon(resourceGroupName, bareMetalMachineName);
     }
 
-    public void cordon(BareMetalMachineCordonParameters bareMetalMachineCordonParameters, Context context) {
-        serviceManager
-            .bareMetalMachines()
+    public OperationStatusResult cordon(BareMetalMachineCordonParameters bareMetalMachineCordonParameters,
+        Context context) {
+        return serviceManager.bareMetalMachines()
             .cordon(resourceGroupName, bareMetalMachineName, bareMetalMachineCordonParameters, context);
     }
 
-    public void powerOff() {
-        serviceManager.bareMetalMachines().powerOff(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult powerOff() {
+        return serviceManager.bareMetalMachines().powerOff(resourceGroupName, bareMetalMachineName);
     }
 
-    public void powerOff(BareMetalMachinePowerOffParameters bareMetalMachinePowerOffParameters, Context context) {
-        serviceManager
-            .bareMetalMachines()
+    public OperationStatusResult powerOff(BareMetalMachinePowerOffParameters bareMetalMachinePowerOffParameters,
+        Context context) {
+        return serviceManager.bareMetalMachines()
             .powerOff(resourceGroupName, bareMetalMachineName, bareMetalMachinePowerOffParameters, context);
     }
 
-    public void reimage() {
-        serviceManager.bareMetalMachines().reimage(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult reimage() {
+        return serviceManager.bareMetalMachines().reimage(resourceGroupName, bareMetalMachineName);
     }
 
-    public void reimage(Context context) {
-        serviceManager.bareMetalMachines().reimage(resourceGroupName, bareMetalMachineName, context);
+    public OperationStatusResult reimage(Context context) {
+        return serviceManager.bareMetalMachines().reimage(resourceGroupName, bareMetalMachineName, context);
     }
 
-    public void replace() {
-        serviceManager.bareMetalMachines().replace(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult replace() {
+        return serviceManager.bareMetalMachines().replace(resourceGroupName, bareMetalMachineName);
     }
 
-    public void replace(BareMetalMachineReplaceParameters bareMetalMachineReplaceParameters, Context context) {
-        serviceManager
-            .bareMetalMachines()
+    public OperationStatusResult replace(BareMetalMachineReplaceParameters bareMetalMachineReplaceParameters,
+        Context context) {
+        return serviceManager.bareMetalMachines()
             .replace(resourceGroupName, bareMetalMachineName, bareMetalMachineReplaceParameters, context);
     }
 
-    public void restart() {
-        serviceManager.bareMetalMachines().restart(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult restart() {
+        return serviceManager.bareMetalMachines().restart(resourceGroupName, bareMetalMachineName);
     }
 
-    public void restart(Context context) {
-        serviceManager.bareMetalMachines().restart(resourceGroupName, bareMetalMachineName, context);
+    public OperationStatusResult restart(Context context) {
+        return serviceManager.bareMetalMachines().restart(resourceGroupName, bareMetalMachineName, context);
     }
 
-    public void runCommand(BareMetalMachineRunCommandParameters bareMetalMachineRunCommandParameters) {
-        serviceManager
-            .bareMetalMachines()
+    public OperationStatusResult runCommand(BareMetalMachineRunCommandParameters bareMetalMachineRunCommandParameters) {
+        return serviceManager.bareMetalMachines()
             .runCommand(resourceGroupName, bareMetalMachineName, bareMetalMachineRunCommandParameters);
     }
 
-    public void runCommand(BareMetalMachineRunCommandParameters bareMetalMachineRunCommandParameters, Context context) {
-        serviceManager
-            .bareMetalMachines()
+    public OperationStatusResult runCommand(BareMetalMachineRunCommandParameters bareMetalMachineRunCommandParameters,
+        Context context) {
+        return serviceManager.bareMetalMachines()
             .runCommand(resourceGroupName, bareMetalMachineName, bareMetalMachineRunCommandParameters, context);
     }
 
-    public void runDataExtracts(BareMetalMachineRunDataExtractsParameters bareMetalMachineRunDataExtractsParameters) {
-        serviceManager
-            .bareMetalMachines()
+    public OperationStatusResult
+        runDataExtracts(BareMetalMachineRunDataExtractsParameters bareMetalMachineRunDataExtractsParameters) {
+        return serviceManager.bareMetalMachines()
             .runDataExtracts(resourceGroupName, bareMetalMachineName, bareMetalMachineRunDataExtractsParameters);
     }
 
-    public void runDataExtracts(
+    public OperationStatusResult runDataExtracts(
         BareMetalMachineRunDataExtractsParameters bareMetalMachineRunDataExtractsParameters, Context context) {
-        serviceManager
-            .bareMetalMachines()
-            .runDataExtracts(
-                resourceGroupName, bareMetalMachineName, bareMetalMachineRunDataExtractsParameters, context);
+        return serviceManager.bareMetalMachines()
+            .runDataExtracts(resourceGroupName, bareMetalMachineName, bareMetalMachineRunDataExtractsParameters,
+                context);
     }
 
-    public void runReadCommands(BareMetalMachineRunReadCommandsParameters bareMetalMachineRunReadCommandsParameters) {
-        serviceManager
-            .bareMetalMachines()
+    public OperationStatusResult runDataExtractsRestricted(
+        BareMetalMachineRunDataExtractsParameters bareMetalMachineRunDataExtractsRestrictedParameters) {
+        return serviceManager.bareMetalMachines()
+            .runDataExtractsRestricted(resourceGroupName, bareMetalMachineName,
+                bareMetalMachineRunDataExtractsRestrictedParameters);
+    }
+
+    public OperationStatusResult runDataExtractsRestricted(
+        BareMetalMachineRunDataExtractsParameters bareMetalMachineRunDataExtractsRestrictedParameters,
+        Context context) {
+        return serviceManager.bareMetalMachines()
+            .runDataExtractsRestricted(resourceGroupName, bareMetalMachineName,
+                bareMetalMachineRunDataExtractsRestrictedParameters, context);
+    }
+
+    public OperationStatusResult
+        runReadCommands(BareMetalMachineRunReadCommandsParameters bareMetalMachineRunReadCommandsParameters) {
+        return serviceManager.bareMetalMachines()
             .runReadCommands(resourceGroupName, bareMetalMachineName, bareMetalMachineRunReadCommandsParameters);
     }
 
-    public void runReadCommands(
+    public OperationStatusResult runReadCommands(
         BareMetalMachineRunReadCommandsParameters bareMetalMachineRunReadCommandsParameters, Context context) {
-        serviceManager
-            .bareMetalMachines()
-            .runReadCommands(
-                resourceGroupName, bareMetalMachineName, bareMetalMachineRunReadCommandsParameters, context);
+        return serviceManager.bareMetalMachines()
+            .runReadCommands(resourceGroupName, bareMetalMachineName, bareMetalMachineRunReadCommandsParameters,
+                context);
     }
 
-    public void start() {
-        serviceManager.bareMetalMachines().start(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult start() {
+        return serviceManager.bareMetalMachines().start(resourceGroupName, bareMetalMachineName);
     }
 
-    public void start(Context context) {
-        serviceManager.bareMetalMachines().start(resourceGroupName, bareMetalMachineName, context);
+    public OperationStatusResult start(Context context) {
+        return serviceManager.bareMetalMachines().start(resourceGroupName, bareMetalMachineName, context);
     }
 
-    public void uncordon() {
-        serviceManager.bareMetalMachines().uncordon(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult uncordon() {
+        return serviceManager.bareMetalMachines().uncordon(resourceGroupName, bareMetalMachineName);
     }
 
-    public void uncordon(Context context) {
-        serviceManager.bareMetalMachines().uncordon(resourceGroupName, bareMetalMachineName, context);
-    }
-
-    public void validateHardware(
-        BareMetalMachineValidateHardwareParameters bareMetalMachineValidateHardwareParameters) {
-        serviceManager
-            .bareMetalMachines()
-            .validateHardware(resourceGroupName, bareMetalMachineName, bareMetalMachineValidateHardwareParameters);
-    }
-
-    public void validateHardware(
-        BareMetalMachineValidateHardwareParameters bareMetalMachineValidateHardwareParameters, Context context) {
-        serviceManager
-            .bareMetalMachines()
-            .validateHardware(
-                resourceGroupName, bareMetalMachineName, bareMetalMachineValidateHardwareParameters, context);
+    public OperationStatusResult uncordon(Context context) {
+        return serviceManager.bareMetalMachines().uncordon(resourceGroupName, bareMetalMachineName, context);
     }
 
     public BareMetalMachineImpl withRegion(Region location) {
@@ -499,7 +547,32 @@ public final class BareMetalMachineImpl
         }
     }
 
+    public BareMetalMachineImpl withMachineClusterVersion(String machineClusterVersion) {
+        this.innerModel().withMachineClusterVersion(machineClusterVersion);
+        return this;
+    }
+
+    public BareMetalMachineImpl withIfMatch(String ifMatch) {
+        if (isInCreateMode()) {
+            this.createIfMatch = ifMatch;
+            return this;
+        } else {
+            this.updateIfMatch = ifMatch;
+            return this;
+        }
+    }
+
+    public BareMetalMachineImpl withIfNoneMatch(String ifNoneMatch) {
+        if (isInCreateMode()) {
+            this.createIfNoneMatch = ifNoneMatch;
+            return this;
+        } else {
+            this.updateIfNoneMatch = ifNoneMatch;
+            return this;
+        }
+    }
+
     private boolean isInCreateMode() {
-        return this.innerModel().id() == null;
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

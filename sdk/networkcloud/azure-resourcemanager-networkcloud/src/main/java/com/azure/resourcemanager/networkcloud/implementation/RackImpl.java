@@ -46,6 +46,10 @@ public final class RackImpl implements Rack, Rack.Definition, Rack.Update {
         }
     }
 
+    public String etag() {
+        return this.innerModel().etag();
+    }
+
     public ExtendedLocation extendedLocation() {
         return this.innerModel().extendedLocation();
     }
@@ -110,6 +114,14 @@ public final class RackImpl implements Rack, Rack.Definition, Rack.Update {
 
     private String rackName;
 
+    private String createIfMatch;
+
+    private String createIfNoneMatch;
+
+    private String updateIfMatch;
+
+    private String updateIfNoneMatch;
+
     private RackPatchParameters updateRackUpdateParameters;
 
     public RackImpl withExistingResourceGroup(String resourceGroupName) {
@@ -118,20 +130,17 @@ public final class RackImpl implements Rack, Rack.Definition, Rack.Update {
     }
 
     public Rack create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getRacks()
-                .createOrUpdate(resourceGroupName, rackName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getRacks()
+            .createOrUpdate(resourceGroupName, rackName, this.innerModel(), createIfMatch, createIfNoneMatch,
+                Context.NONE);
         return this;
     }
 
     public Rack create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getRacks()
-                .createOrUpdate(resourceGroupName, rackName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getRacks()
+            .createOrUpdate(resourceGroupName, rackName, this.innerModel(), createIfMatch, createIfNoneMatch, context);
         return this;
     }
 
@@ -139,55 +148,52 @@ public final class RackImpl implements Rack, Rack.Definition, Rack.Update {
         this.innerObject = new RackInner();
         this.serviceManager = serviceManager;
         this.rackName = name;
+        this.createIfMatch = null;
+        this.createIfNoneMatch = null;
     }
 
     public RackImpl update() {
+        this.updateIfMatch = null;
+        this.updateIfNoneMatch = null;
         this.updateRackUpdateParameters = new RackPatchParameters();
         return this;
     }
 
     public Rack apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getRacks()
-                .update(resourceGroupName, rackName, updateRackUpdateParameters, Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getRacks()
+            .update(resourceGroupName, rackName, updateIfMatch, updateIfNoneMatch, updateRackUpdateParameters,
+                Context.NONE);
         return this;
     }
 
     public Rack apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getRacks()
-                .update(resourceGroupName, rackName, updateRackUpdateParameters, context);
+        this.innerObject = serviceManager.serviceClient()
+            .getRacks()
+            .update(resourceGroupName, rackName, updateIfMatch, updateIfNoneMatch, updateRackUpdateParameters, context);
         return this;
     }
 
     RackImpl(RackInner innerObject, com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.rackName = Utils.getValueFromIdByName(innerObject.id(), "racks");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.rackName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "racks");
     }
 
     public Rack refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getRacks()
-                .getByResourceGroupWithResponse(resourceGroupName, rackName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getRacks()
+            .getByResourceGroupWithResponse(resourceGroupName, rackName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public Rack refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getRacks()
-                .getByResourceGroupWithResponse(resourceGroupName, rackName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getRacks()
+            .getByResourceGroupWithResponse(resourceGroupName, rackName, context)
+            .getValue();
         return this;
     }
 
@@ -246,7 +252,27 @@ public final class RackImpl implements Rack, Rack.Definition, Rack.Update {
         }
     }
 
+    public RackImpl withIfMatch(String ifMatch) {
+        if (isInCreateMode()) {
+            this.createIfMatch = ifMatch;
+            return this;
+        } else {
+            this.updateIfMatch = ifMatch;
+            return this;
+        }
+    }
+
+    public RackImpl withIfNoneMatch(String ifNoneMatch) {
+        if (isInCreateMode()) {
+            this.createIfNoneMatch = ifNoneMatch;
+            return this;
+        } else {
+            this.updateIfNoneMatch = ifNoneMatch;
+            return this;
+        }
+    }
+
     private boolean isInCreateMode() {
-        return this.innerModel().id() == null;
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

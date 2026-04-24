@@ -5,61 +5,81 @@
 package com.azure.security.attestation.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.Base64Url;
 import com.azure.core.util.CoreUtils;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.Objects;
 
-/** Attestation request for Intel SGX enclaves. */
+/**
+ * Attestation request for Intel SGX enclaves.
+ */
 @Fluent
-public final class AttestOpenEnclaveRequest {
+public final class AttestOpenEnclaveRequest implements JsonSerializable<AttestOpenEnclaveRequest> {
     /*
      * OpenEnclave report from the enclave to be attested
      */
-    @JsonProperty(value = "report")
+    @Generated
     private Base64Url report;
 
     /*
-     * Runtime data provided by the enclave at the time of report generation.
-     * The MAA will verify that the first 32 bytes of the report_data field of
-     * the quote contains the SHA256 hash of the decoded "data" field of the
-     * runtime data.
+     * Runtime data provided by the enclave at the time of report generation. The MAA will verify that the first 32
+     * bytes of the report_data field of the quote contains the SHA256 hash of the decoded "data" field of the runtime
+     * data.
      */
-    @JsonProperty(value = "runtimeData")
+    @Generated
     private RuntimeData runtimeData;
 
     /*
-     * Base64Url encoded "InitTime data". The MAA will verify that the init
-     * data was known to the enclave. Note that InitTimeData is invalid for
-     * CoffeeLake processors.
+     * Base64Url encoded "InitTime data". The MAA will verify that the init data was known to the enclave. Note that
+     * InitTimeData is invalid for CoffeeLake processors.
      */
-    @JsonProperty(value = "initTimeData")
+    @Generated
     private InitTimeData initTimeData;
 
     /*
-     * Attest against the provided draft policy. Note that the resulting token
-     * cannot be validated.
+     * Attest against the provided draft policy. Note that the resulting token cannot be validated.
      */
-    @JsonProperty(value = "draftPolicyForAttestation")
+    @Generated
     private String draftPolicyForAttestation;
+
+    /*
+     * Nonce for incoming request - emitted in the generated attestation token
+     */
+    @Generated
+    private String nonce;
+
+    /**
+     * Creates an instance of AttestOpenEnclaveRequest class.
+     */
+    @Generated
+    public AttestOpenEnclaveRequest() {
+    }
 
     /**
      * Get the report property: OpenEnclave report from the enclave to be attested.
-     *
+     * 
      * @return the report value.
      */
+    @Generated
     public byte[] getReport() {
         if (this.report == null) {
-            return new byte[0];
+            return null;
         }
         return this.report.decodedBytes();
     }
 
     /**
      * Set the report property: OpenEnclave report from the enclave to be attested.
-     *
+     * 
      * @param report the report value to set.
      * @return the AttestOpenEnclaveRequest object itself.
      */
+    @Generated
     public AttestOpenEnclaveRequest setReport(byte[] report) {
         if (report == null) {
             this.report = null;
@@ -73,9 +93,10 @@ public final class AttestOpenEnclaveRequest {
      * Get the runtimeData property: Runtime data provided by the enclave at the time of report generation. The MAA will
      * verify that the first 32 bytes of the report_data field of the quote contains the SHA256 hash of the decoded
      * "data" field of the runtime data.
-     *
+     * 
      * @return the runtimeData value.
      */
+    @Generated
     public RuntimeData getRuntimeData() {
         return this.runtimeData;
     }
@@ -84,10 +105,11 @@ public final class AttestOpenEnclaveRequest {
      * Set the runtimeData property: Runtime data provided by the enclave at the time of report generation. The MAA will
      * verify that the first 32 bytes of the report_data field of the quote contains the SHA256 hash of the decoded
      * "data" field of the runtime data.
-     *
+     * 
      * @param runtimeData the runtimeData value to set.
      * @return the AttestOpenEnclaveRequest object itself.
      */
+    @Generated
     public AttestOpenEnclaveRequest setRuntimeData(RuntimeData runtimeData) {
         this.runtimeData = runtimeData;
         return this;
@@ -96,9 +118,10 @@ public final class AttestOpenEnclaveRequest {
     /**
      * Get the initTimeData property: Base64Url encoded "InitTime data". The MAA will verify that the init data was
      * known to the enclave. Note that InitTimeData is invalid for CoffeeLake processors.
-     *
+     * 
      * @return the initTimeData value.
      */
+    @Generated
     public InitTimeData getInitTimeData() {
         return this.initTimeData;
     }
@@ -106,10 +129,11 @@ public final class AttestOpenEnclaveRequest {
     /**
      * Set the initTimeData property: Base64Url encoded "InitTime data". The MAA will verify that the init data was
      * known to the enclave. Note that InitTimeData is invalid for CoffeeLake processors.
-     *
+     * 
      * @param initTimeData the initTimeData value to set.
      * @return the AttestOpenEnclaveRequest object itself.
      */
+    @Generated
     public AttestOpenEnclaveRequest setInitTimeData(InitTimeData initTimeData) {
         this.initTimeData = initTimeData;
         return this;
@@ -118,9 +142,10 @@ public final class AttestOpenEnclaveRequest {
     /**
      * Get the draftPolicyForAttestation property: Attest against the provided draft policy. Note that the resulting
      * token cannot be validated.
-     *
+     * 
      * @return the draftPolicyForAttestation value.
      */
+    @Generated
     public String getDraftPolicyForAttestation() {
         return this.draftPolicyForAttestation;
     }
@@ -128,18 +153,41 @@ public final class AttestOpenEnclaveRequest {
     /**
      * Set the draftPolicyForAttestation property: Attest against the provided draft policy. Note that the resulting
      * token cannot be validated.
-     *
+     * 
      * @param draftPolicyForAttestation the draftPolicyForAttestation value to set.
      * @return the AttestOpenEnclaveRequest object itself.
      */
+    @Generated
     public AttestOpenEnclaveRequest setDraftPolicyForAttestation(String draftPolicyForAttestation) {
         this.draftPolicyForAttestation = draftPolicyForAttestation;
         return this;
     }
 
     /**
+     * Get the nonce property: Nonce for incoming request - emitted in the generated attestation token.
+     * 
+     * @return the nonce value.
+     */
+    @Generated
+    public String getNonce() {
+        return this.nonce;
+    }
+
+    /**
+     * Set the nonce property: Nonce for incoming request - emitted in the generated attestation token.
+     * 
+     * @param nonce the nonce value to set.
+     * @return the AttestOpenEnclaveRequest object itself.
+     */
+    @Generated
+    public AttestOpenEnclaveRequest setNonce(String nonce) {
+        this.nonce = nonce;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -149,5 +197,56 @@ public final class AttestOpenEnclaveRequest {
         if (getInitTimeData() != null) {
             getInitTimeData().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("report", Objects.toString(this.report, null));
+        jsonWriter.writeJsonField("runtimeData", this.runtimeData);
+        jsonWriter.writeJsonField("initTimeData", this.initTimeData);
+        jsonWriter.writeStringField("draftPolicyForAttestation", this.draftPolicyForAttestation);
+        jsonWriter.writeStringField("nonce", this.nonce);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AttestOpenEnclaveRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AttestOpenEnclaveRequest if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the AttestOpenEnclaveRequest.
+     */
+    @Generated
+    public static AttestOpenEnclaveRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AttestOpenEnclaveRequest deserializedAttestOpenEnclaveRequest = new AttestOpenEnclaveRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("report".equals(fieldName)) {
+                    deserializedAttestOpenEnclaveRequest.report
+                        = reader.getNullable(nonNullReader -> new Base64Url(nonNullReader.getString()));
+                } else if ("runtimeData".equals(fieldName)) {
+                    deserializedAttestOpenEnclaveRequest.runtimeData = RuntimeData.fromJson(reader);
+                } else if ("initTimeData".equals(fieldName)) {
+                    deserializedAttestOpenEnclaveRequest.initTimeData = InitTimeData.fromJson(reader);
+                } else if ("draftPolicyForAttestation".equals(fieldName)) {
+                    deserializedAttestOpenEnclaveRequest.draftPolicyForAttestation = reader.getString();
+                } else if ("nonce".equals(fieldName)) {
+                    deserializedAttestOpenEnclaveRequest.nonce = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedAttestOpenEnclaveRequest;
+        });
     }
 }

@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Assertions;
 public final class ResizeLabVirtualMachinePropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ResizeLabVirtualMachineProperties model =
-            BinaryData.fromString("{\"size\":\"jfelisdjubggbqig\"}").toObject(ResizeLabVirtualMachineProperties.class);
-        Assertions.assertEquals("jfelisdjubggbqig", model.size());
+        ResizeLabVirtualMachineProperties model
+            = BinaryData.fromString("{\"size\":\"qofyuicdhzbdy\"}").toObject(ResizeLabVirtualMachineProperties.class);
+        Assertions.assertEquals("qofyuicdhzbdy", model.size());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ResizeLabVirtualMachineProperties model = new ResizeLabVirtualMachineProperties().withSize("jfelisdjubggbqig");
+        ResizeLabVirtualMachineProperties model = new ResizeLabVirtualMachineProperties().withSize("qofyuicdhzbdy");
         model = BinaryData.fromObject(model).toObject(ResizeLabVirtualMachineProperties.class);
-        Assertions.assertEquals("jfelisdjubggbqig", model.size());
+        Assertions.assertEquals("qofyuicdhzbdy", model.size());
     }
 }

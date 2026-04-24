@@ -5,37 +5,48 @@
 package com.azure.resourcemanager.hdinsight.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.List;
 
-/** The update gateway settings request parameters. */
+/**
+ * The update gateway settings request parameters. Note either basic or entra user should be provided at a time.
+ */
 @Fluent
-public final class UpdateGatewaySettingsParameters {
+public final class UpdateGatewaySettingsParameters implements JsonSerializable<UpdateGatewaySettingsParameters> {
     /*
      * Indicates whether or not the gateway settings based authorization is enabled.
      */
-    @JsonProperty(value = "restAuthCredential.isEnabled")
     private Boolean isCredentialEnabled;
 
     /*
      * The gateway settings user name.
      */
-    @JsonProperty(value = "restAuthCredential.username")
     private String username;
 
     /*
      * The gateway settings user password.
      */
-    @JsonProperty(value = "restAuthCredential.password")
     private String password;
 
-    /** Creates an instance of UpdateGatewaySettingsParameters class. */
+    /*
+     * List of Entra users for gateway access.
+     */
+    private List<EntraUserInfo> restAuthEntraUsers;
+
+    /**
+     * Creates an instance of UpdateGatewaySettingsParameters class.
+     */
     public UpdateGatewaySettingsParameters() {
     }
 
     /**
      * Get the isCredentialEnabled property: Indicates whether or not the gateway settings based authorization is
      * enabled.
-     *
+     * 
      * @return the isCredentialEnabled value.
      */
     public Boolean isCredentialEnabled() {
@@ -45,7 +56,7 @@ public final class UpdateGatewaySettingsParameters {
     /**
      * Set the isCredentialEnabled property: Indicates whether or not the gateway settings based authorization is
      * enabled.
-     *
+     * 
      * @param isCredentialEnabled the isCredentialEnabled value to set.
      * @return the UpdateGatewaySettingsParameters object itself.
      */
@@ -56,7 +67,7 @@ public final class UpdateGatewaySettingsParameters {
 
     /**
      * Get the username property: The gateway settings user name.
-     *
+     * 
      * @return the username value.
      */
     public String username() {
@@ -65,7 +76,7 @@ public final class UpdateGatewaySettingsParameters {
 
     /**
      * Set the username property: The gateway settings user name.
-     *
+     * 
      * @param username the username value to set.
      * @return the UpdateGatewaySettingsParameters object itself.
      */
@@ -76,7 +87,7 @@ public final class UpdateGatewaySettingsParameters {
 
     /**
      * Get the password property: The gateway settings user password.
-     *
+     * 
      * @return the password value.
      */
     public String password() {
@@ -85,7 +96,7 @@ public final class UpdateGatewaySettingsParameters {
 
     /**
      * Set the password property: The gateway settings user password.
-     *
+     * 
      * @param password the password value to set.
      * @return the UpdateGatewaySettingsParameters object itself.
      */
@@ -95,10 +106,83 @@ public final class UpdateGatewaySettingsParameters {
     }
 
     /**
+     * Get the restAuthEntraUsers property: List of Entra users for gateway access.
+     * 
+     * @return the restAuthEntraUsers value.
+     */
+    public List<EntraUserInfo> restAuthEntraUsers() {
+        return this.restAuthEntraUsers;
+    }
+
+    /**
+     * Set the restAuthEntraUsers property: List of Entra users for gateway access.
+     * 
+     * @param restAuthEntraUsers the restAuthEntraUsers value to set.
+     * @return the UpdateGatewaySettingsParameters object itself.
+     */
+    public UpdateGatewaySettingsParameters withRestAuthEntraUsers(List<EntraUserInfo> restAuthEntraUsers) {
+        this.restAuthEntraUsers = restAuthEntraUsers;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+        if (restAuthEntraUsers() != null) {
+            restAuthEntraUsers().forEach(e -> e.validate());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeBooleanField("restAuthCredential.isEnabled", this.isCredentialEnabled);
+        jsonWriter.writeStringField("restAuthCredential.username", this.username);
+        jsonWriter.writeStringField("restAuthCredential.password", this.password);
+        jsonWriter.writeArrayField("restAuthEntraUsers", this.restAuthEntraUsers,
+            (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of UpdateGatewaySettingsParameters from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of UpdateGatewaySettingsParameters if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the UpdateGatewaySettingsParameters.
+     */
+    public static UpdateGatewaySettingsParameters fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            UpdateGatewaySettingsParameters deserializedUpdateGatewaySettingsParameters
+                = new UpdateGatewaySettingsParameters();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("restAuthCredential.isEnabled".equals(fieldName)) {
+                    deserializedUpdateGatewaySettingsParameters.isCredentialEnabled
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("restAuthCredential.username".equals(fieldName)) {
+                    deserializedUpdateGatewaySettingsParameters.username = reader.getString();
+                } else if ("restAuthCredential.password".equals(fieldName)) {
+                    deserializedUpdateGatewaySettingsParameters.password = reader.getString();
+                } else if ("restAuthEntraUsers".equals(fieldName)) {
+                    List<EntraUserInfo> restAuthEntraUsers
+                        = reader.readArray(reader1 -> EntraUserInfo.fromJson(reader1));
+                    deserializedUpdateGatewaySettingsParameters.restAuthEntraUsers = restAuthEntraUsers;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedUpdateGatewaySettingsParameters;
+        });
     }
 }

@@ -4,13 +4,18 @@ pr: none
 
 stages:
   - stage: AnalyzeAndGeneratePatches
+    variables:
+    - template: /eng/pipelines/templates/variables/globals.yml
+    - template: /eng/pipelines/templates/variables/image.yml
 
     jobs:
       - job: PatchGeneration
         timeoutInMinutes: 180
 
         pool:
-          vmImage: 'windows-2022'
+          name: $(WINDOWSPOOL)
+          image: $(WINDOWSVMIMAGE)
+          os: windows
 
         steps:
         - pwsh: |
@@ -19,6 +24,8 @@ stages:
             Copy-Item eng/scripts/bompom.html $(Build.ArtifactStagingDirectory)/staging
           displayName: 'Analyze and generate patches'
 
-        - publish: $(Build.ArtifactStagingDirectory)
-          displayName: 'Publish Report Artifacts'
-          artifact: patchreport
+        - template: /eng/common/pipelines/templates/steps/publish-1es-artifact.yml
+          parameters:
+            DisplayName: 'Publish Report Artifacts'
+            ArtifactPath: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: 'patchreport'

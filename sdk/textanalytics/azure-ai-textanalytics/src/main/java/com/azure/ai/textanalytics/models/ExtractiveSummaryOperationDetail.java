@@ -9,7 +9,7 @@ import com.azure.core.annotation.Immutable;
 import java.time.OffsetDateTime;
 
 /**
- * The {@link ExtractiveSummaryOperationDetail} model.
+ * The {@code ExtractiveSummaryOperationDetail} model.
  */
 @Immutable
 public final class ExtractiveSummaryOperationDetail {
@@ -23,8 +23,7 @@ public final class ExtractiveSummaryOperationDetail {
         ExtractiveSummaryOperationDetailPropertiesHelper.setAccessor(
             new ExtractiveSummaryOperationDetailPropertiesHelper.ExtractiveSummaryOperationDetailAccessor() {
                 @Override
-                public void setOperationId(ExtractiveSummaryOperationDetail operationResult,
-                                           String operationId) {
+                public void setOperationId(ExtractiveSummaryOperationDetail operationResult, String operationId) {
                     operationResult.setOperationId(operationId);
                 }
 
@@ -34,39 +33,42 @@ public final class ExtractiveSummaryOperationDetail {
                 }
 
                 @Override
-                public void setExpiresAt(ExtractiveSummaryOperationDetail operationDetail,
-                                         OffsetDateTime expiresAt) {
+                public void setExpiresAt(ExtractiveSummaryOperationDetail operationDetail, OffsetDateTime expiresAt) {
                     operationDetail.setExpiresAt(expiresAt);
                 }
 
                 @Override
-                public void setCreatedAt(ExtractiveSummaryOperationDetail operationDetail,
-                                         OffsetDateTime createdAt) {
+                public void setCreatedAt(ExtractiveSummaryOperationDetail operationDetail, OffsetDateTime createdAt) {
                     operationDetail.setCreatedAt(createdAt);
                 }
 
                 @Override
                 public void setLastModifiedAt(ExtractiveSummaryOperationDetail operationDetail,
-                                              OffsetDateTime lastModifiedAt) {
+                    OffsetDateTime lastModifiedAt) {
                     operationDetail.setLastModifiedAt(lastModifiedAt);
                 }
-            }
-        );
+            });
     }
 
     /**
-     * Gets the operationId property of the {@link ExtractiveSummaryOperationDetail}.
+     * Constructs a {@code ExtractiveSummaryOperationDetail} model.
+     */
+    public ExtractiveSummaryOperationDetail() {
+    }
+
+    /**
+     * Gets the operationId property of the {@code ExtractiveSummaryOperationDetail}.
      *
-     * @return The operationId property of the {@link ExtractiveSummaryOperationDetail}.
+     * @return The operationId property of the {@code ExtractiveSummaryOperationDetail}.
      */
     public String getOperationId() {
         return operationId;
     }
 
     /**
-     * Gets the displayName property of the {@link ExtractiveSummaryOperationDetail}.
+     * Gets the displayName property of the {@code ExtractiveSummaryOperationDetail}.
      *
-     * @return The displayName property of the {@link ExtractiveSummaryOperationDetail}.
+     * @return The displayName property of the {@code ExtractiveSummaryOperationDetail}.
      */
     public String getDisplayName() {
         return displayName;

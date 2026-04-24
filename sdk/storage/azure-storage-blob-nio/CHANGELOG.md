@@ -1,13 +1,107 @@
 # Release History
 
-## 12.0.0-beta.20 (Unreleased)
+## 12.0.0-beta.38 (Unreleased)
 
 ### Features Added
-- Added support for 2021-12-02 service version.
 
 ### Breaking Changes
 
 ### Bugs Fixed
+
+### Other Changes
+
+## 12.0.0-beta.37 (2026-03-25)
+
+### Features Added
+- Added support for service version 2026-06-06.
+
+## 12.0.0-beta.36 (2026-02-19)
+
+### Features Added
+- Added support for service version 2026-04-06.
+
+## 12.0.0-beta.35 (2026-01-15)
+
+### Features Added
+- Added support for service version 2026-02-06.
+
+## 12.0.0-beta.34 (2025-12-03)
+
+### Features Added
+- Added support for service version 2026-02-06.
+
+### Bugs Fixed
+- Fixed an issue where the copy file operation would fail when using SAS token credentials.
+
+## 12.0.0-beta.33 (2025-10-21)
+
+### Features Added
+- Added support for service version 2025-11-05.
+
+## 12.0.0-beta.32 (2025-07-16)
+
+### Features Added
+- Added support for service version 2025-07-05.
+
+## 12.0.0-beta.31 (2025-05-06)
+
+### Features Added
+- Added support for service version 2025-07-05.
+
+## 12.0.0-beta.30 (2025-03-11)
+
+### Features Added
+- Added support for service version 2025-05-05.
+
+## 12.0.0-beta.29 (2025-02-11)
+
+### Features Added
+- Added support for service version 2025-05-05.
+
+## 12.0.0-beta.28 (2024-11-13)
+
+### Features Added
+- Added support for service version 2025-01-05.
+
+## 12.0.0-beta.27 (2024-10-17)
+
+### Features Added
+- Added support for service version 2025-01-05.
+
+## 12.0.0-beta.26 (2024-09-17)
+
+### Features Added
+- Added support for service version 2024-11-04.
+
+## 12.0.0-beta.25 (2024-08-06)
+
+### Features Added
+- Added support for service version 2024-11-04.
+
+## 12.0.0-beta.24 (2024-07-18)
+
+### Features Added
+- Added support for service version 2024-08-04.
+
+## 12.0.0-beta.23 (2024-06-11)
+
+### Features Added
+- Added support for service version 2024-08-04.
+
+## 12.0.0-beta.22 (2024-05-15)
+
+### Features Added
+- Added support for service versions 2024-02-04 and 2024-05-04.
+
+## 12.0.0-beta.21 (2024-04-15)
+
+### Features Added
+- Added support for service versions 2024-02-04 and 2024-05-04.
+
+## 12.0.0-beta.20 (2023-11-08)
+
+### Features Added
+- Added support for 2021-12-02 service version.
 
 ### Other Changes
 - Migrate test recordings to assets repo.

@@ -5,47 +5,195 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Azure PostgreSQL linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("AzurePostgreSql")
-@JsonFlatten
+/**
+ * Azure PostgreSQL linked service.
+ */
 @Fluent
 public class AzurePostgreSqlLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "AzurePostgreSql";
+
+    /*
      * An ODBC connection string. Type: string, SecureString or AzureKeyVaultSecretReference.
      */
-    @JsonProperty(value = "typeProperties.connectionString")
+    @Generated
     private Object connectionString;
+
+    /*
+     * Server name for connection. Type: string.
+     */
+    @Generated
+    private Object server;
+
+    /*
+     * The port for the connection. Type: integer.
+     */
+    @Generated
+    private Object port;
+
+    /*
+     * Username for authentication. Type: string.
+     */
+    @Generated
+    private Object username;
+
+    /*
+     * Database name for connection. Type: string.
+     */
+    @Generated
+    private Object database;
+
+    /*
+     * SSL mode for connection. Type: integer. 0: disable, 1:allow, 2: prefer, 3: require, 4: verify-ca, 5: verify-full.
+     * Type: integer.
+     */
+    @Generated
+    private Object sslMode;
+
+    /*
+     * The time to wait (in seconds) while trying to establish a connection before terminating the attempt and
+     * generating an error. Type: integer.
+     */
+    @Generated
+    private Object timeout;
+
+    /*
+     * The time to wait (in seconds) while trying to execute a command before terminating the attempt and generating an
+     * error. Set to zero for infinity. Type: integer.
+     */
+    @Generated
+    private Object commandTimeout;
+
+    /*
+     * Whether to trust the server certificate without validating it. Type: boolean.
+     */
+    @Generated
+    private Object trustServerCertificate;
+
+    /*
+     * Determines the size of the internal buffer uses when reading. Increasing may improve performance if transferring
+     * large values from the database. Type: integer.
+     */
+    @Generated
+    private Object readBufferSize;
+
+    /*
+     * Gets or sets the session timezone. Type: string.
+     */
+    @Generated
+    private Object timezone;
+
+    /*
+     * Gets or sets the .NET encoding that will be used to encode/decode PostgreSQL string data. Type: string
+     */
+    @Generated
+    private Object encoding;
 
     /*
      * The Azure key vault secret reference of password in connection string.
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private AzureKeyVaultSecretReference password;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of AzurePostgreSqlLinkedService class. */
-    public AzurePostgreSqlLinkedService() {}
+    /*
+     * The ID of the service principal used to authenticate against Azure Database for PostgreSQL Flexible server. Type:
+     * string (or Expression with resultType string).
+     */
+    @Generated
+    private Object servicePrincipalId;
+
+    /*
+     * The key of the service principal used to authenticate against Azure Database for PostgreSQL Flexible server.
+     */
+    @Generated
+    private SecretBase servicePrincipalKey;
+
+    /*
+     * The service principal credential type to use in Server-To-Server authentication. 'ServicePrincipalKey' for
+     * key/secret, 'ServicePrincipalCert' for certificate. Type: string (or Expression with resultType string).
+     */
+    @Generated
+    private Object servicePrincipalCredentialType;
+
+    /*
+     * Specify the base64 encoded certificate of your application registered in Azure Active Directory. Type: string (or
+     * Expression with resultType string).
+     */
+    @Generated
+    private SecretBase servicePrincipalEmbeddedCert;
+
+    /*
+     * Specify the password of your certificate if your certificate has a password and you are using AadServicePrincipal
+     * authentication. Type: string (or Expression with resultType string).
+     */
+    @Generated
+    private SecretBase servicePrincipalEmbeddedCertPassword;
+
+    /*
+     * The name or ID of the tenant to which the service principal belongs. Type: string (or Expression with resultType
+     * string).
+     */
+    @Generated
+    private Object tenant;
+
+    /*
+     * Indicates the azure cloud type of the service principle auth. Allowed values are AzurePublic, AzureChina,
+     * AzureUsGovernment, AzureGermany. Default value is the data factory regions’ cloud type. Type: string (or
+     * Expression with resultType string).
+     */
+    @Generated
+    private Object azureCloudType;
+
+    /*
+     * The credential reference containing authentication information.
+     */
+    @Generated
+    private CredentialReference credential;
+
+    /**
+     * Creates an instance of AzurePostgreSqlLinkedService class.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the connectionString property: An ODBC connection string. Type: string, SecureString or
      * AzureKeyVaultSecretReference.
-     *
+     * 
      * @return the connectionString value.
      */
+    @Generated
     public Object getConnectionString() {
         return this.connectionString;
     }
@@ -53,30 +201,287 @@ public class AzurePostgreSqlLinkedService extends LinkedService {
     /**
      * Set the connectionString property: An ODBC connection string. Type: string, SecureString or
      * AzureKeyVaultSecretReference.
-     *
+     * 
      * @param connectionString the connectionString value to set.
      * @return the AzurePostgreSqlLinkedService object itself.
      */
+    @Generated
     public AzurePostgreSqlLinkedService setConnectionString(Object connectionString) {
         this.connectionString = connectionString;
         return this;
     }
 
     /**
+     * Get the server property: Server name for connection. Type: string.
+     * 
+     * @return the server value.
+     */
+    @Generated
+    public Object getServer() {
+        return this.server;
+    }
+
+    /**
+     * Set the server property: Server name for connection. Type: string.
+     * 
+     * @param server the server value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setServer(Object server) {
+        this.server = server;
+        return this;
+    }
+
+    /**
+     * Get the port property: The port for the connection. Type: integer.
+     * 
+     * @return the port value.
+     */
+    @Generated
+    public Object getPort() {
+        return this.port;
+    }
+
+    /**
+     * Set the port property: The port for the connection. Type: integer.
+     * 
+     * @param port the port value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setPort(Object port) {
+        this.port = port;
+        return this;
+    }
+
+    /**
+     * Get the username property: Username for authentication. Type: string.
+     * 
+     * @return the username value.
+     */
+    @Generated
+    public Object getUsername() {
+        return this.username;
+    }
+
+    /**
+     * Set the username property: Username for authentication. Type: string.
+     * 
+     * @param username the username value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setUsername(Object username) {
+        this.username = username;
+        return this;
+    }
+
+    /**
+     * Get the database property: Database name for connection. Type: string.
+     * 
+     * @return the database value.
+     */
+    @Generated
+    public Object getDatabase() {
+        return this.database;
+    }
+
+    /**
+     * Set the database property: Database name for connection. Type: string.
+     * 
+     * @param database the database value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setDatabase(Object database) {
+        this.database = database;
+        return this;
+    }
+
+    /**
+     * Get the sslMode property: SSL mode for connection. Type: integer. 0: disable, 1:allow, 2: prefer, 3: require, 4:
+     * verify-ca, 5: verify-full. Type: integer.
+     * 
+     * @return the sslMode value.
+     */
+    @Generated
+    public Object getSslMode() {
+        return this.sslMode;
+    }
+
+    /**
+     * Set the sslMode property: SSL mode for connection. Type: integer. 0: disable, 1:allow, 2: prefer, 3: require, 4:
+     * verify-ca, 5: verify-full. Type: integer.
+     * 
+     * @param sslMode the sslMode value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setSslMode(Object sslMode) {
+        this.sslMode = sslMode;
+        return this;
+    }
+
+    /**
+     * Get the timeout property: The time to wait (in seconds) while trying to establish a connection before terminating
+     * the attempt and generating an error. Type: integer.
+     * 
+     * @return the timeout value.
+     */
+    @Generated
+    public Object getTimeout() {
+        return this.timeout;
+    }
+
+    /**
+     * Set the timeout property: The time to wait (in seconds) while trying to establish a connection before terminating
+     * the attempt and generating an error. Type: integer.
+     * 
+     * @param timeout the timeout value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setTimeout(Object timeout) {
+        this.timeout = timeout;
+        return this;
+    }
+
+    /**
+     * Get the commandTimeout property: The time to wait (in seconds) while trying to execute a command before
+     * terminating the attempt and generating an error. Set to zero for infinity. Type: integer.
+     * 
+     * @return the commandTimeout value.
+     */
+    @Generated
+    public Object getCommandTimeout() {
+        return this.commandTimeout;
+    }
+
+    /**
+     * Set the commandTimeout property: The time to wait (in seconds) while trying to execute a command before
+     * terminating the attempt and generating an error. Set to zero for infinity. Type: integer.
+     * 
+     * @param commandTimeout the commandTimeout value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setCommandTimeout(Object commandTimeout) {
+        this.commandTimeout = commandTimeout;
+        return this;
+    }
+
+    /**
+     * Get the trustServerCertificate property: Whether to trust the server certificate without validating it. Type:
+     * boolean.
+     * 
+     * @return the trustServerCertificate value.
+     */
+    @Generated
+    public Object getTrustServerCertificate() {
+        return this.trustServerCertificate;
+    }
+
+    /**
+     * Set the trustServerCertificate property: Whether to trust the server certificate without validating it. Type:
+     * boolean.
+     * 
+     * @param trustServerCertificate the trustServerCertificate value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setTrustServerCertificate(Object trustServerCertificate) {
+        this.trustServerCertificate = trustServerCertificate;
+        return this;
+    }
+
+    /**
+     * Get the readBufferSize property: Determines the size of the internal buffer uses when reading. Increasing may
+     * improve performance if transferring large values from the database. Type: integer.
+     * 
+     * @return the readBufferSize value.
+     */
+    @Generated
+    public Object getReadBufferSize() {
+        return this.readBufferSize;
+    }
+
+    /**
+     * Set the readBufferSize property: Determines the size of the internal buffer uses when reading. Increasing may
+     * improve performance if transferring large values from the database. Type: integer.
+     * 
+     * @param readBufferSize the readBufferSize value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setReadBufferSize(Object readBufferSize) {
+        this.readBufferSize = readBufferSize;
+        return this;
+    }
+
+    /**
+     * Get the timezone property: Gets or sets the session timezone. Type: string.
+     * 
+     * @return the timezone value.
+     */
+    @Generated
+    public Object getTimezone() {
+        return this.timezone;
+    }
+
+    /**
+     * Set the timezone property: Gets or sets the session timezone. Type: string.
+     * 
+     * @param timezone the timezone value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setTimezone(Object timezone) {
+        this.timezone = timezone;
+        return this;
+    }
+
+    /**
+     * Get the encoding property: Gets or sets the .NET encoding that will be used to encode/decode PostgreSQL string
+     * data. Type: string.
+     * 
+     * @return the encoding value.
+     */
+    @Generated
+    public Object getEncoding() {
+        return this.encoding;
+    }
+
+    /**
+     * Set the encoding property: Gets or sets the .NET encoding that will be used to encode/decode PostgreSQL string
+     * data. Type: string.
+     * 
+     * @param encoding the encoding value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setEncoding(Object encoding) {
+        this.encoding = encoding;
+        return this;
+    }
+
+    /**
      * Get the password property: The Azure key vault secret reference of password in connection string.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public AzureKeyVaultSecretReference getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: The Azure key vault secret reference of password in connection string.
-     *
+     * 
      * @param password the password value to set.
      * @return the AzurePostgreSqlLinkedService object itself.
      */
+    @Generated
     public AzurePostgreSqlLinkedService setPassword(AzureKeyVaultSecretReference password) {
         this.password = password;
         return this;
@@ -85,9 +490,10 @@ public class AzurePostgreSqlLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -95,40 +501,467 @@ public class AzurePostgreSqlLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the AzurePostgreSqlLinkedService object itself.
      */
+    @Generated
     public AzurePostgreSqlLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Get the servicePrincipalId property: The ID of the service principal used to authenticate against Azure Database
+     * for PostgreSQL Flexible server. Type: string (or Expression with resultType string).
+     * 
+     * @return the servicePrincipalId value.
+     */
+    @Generated
+    public Object getServicePrincipalId() {
+        return this.servicePrincipalId;
+    }
+
+    /**
+     * Set the servicePrincipalId property: The ID of the service principal used to authenticate against Azure Database
+     * for PostgreSQL Flexible server. Type: string (or Expression with resultType string).
+     * 
+     * @param servicePrincipalId the servicePrincipalId value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setServicePrincipalId(Object servicePrincipalId) {
+        this.servicePrincipalId = servicePrincipalId;
+        return this;
+    }
+
+    /**
+     * Get the servicePrincipalKey property: The key of the service principal used to authenticate against Azure
+     * Database for PostgreSQL Flexible server.
+     * 
+     * @return the servicePrincipalKey value.
+     */
+    @Generated
+    public SecretBase getServicePrincipalKey() {
+        return this.servicePrincipalKey;
+    }
+
+    /**
+     * Set the servicePrincipalKey property: The key of the service principal used to authenticate against Azure
+     * Database for PostgreSQL Flexible server.
+     * 
+     * @param servicePrincipalKey the servicePrincipalKey value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setServicePrincipalKey(SecretBase servicePrincipalKey) {
+        this.servicePrincipalKey = servicePrincipalKey;
+        return this;
+    }
+
+    /**
+     * Get the servicePrincipalCredentialType property: The service principal credential type to use in Server-To-Server
+     * authentication. 'ServicePrincipalKey' for key/secret, 'ServicePrincipalCert' for certificate. Type: string (or
+     * Expression with resultType string).
+     * 
+     * @return the servicePrincipalCredentialType value.
+     */
+    @Generated
+    public Object getServicePrincipalCredentialType() {
+        return this.servicePrincipalCredentialType;
+    }
+
+    /**
+     * Set the servicePrincipalCredentialType property: The service principal credential type to use in Server-To-Server
+     * authentication. 'ServicePrincipalKey' for key/secret, 'ServicePrincipalCert' for certificate. Type: string (or
+     * Expression with resultType string).
+     * 
+     * @param servicePrincipalCredentialType the servicePrincipalCredentialType value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setServicePrincipalCredentialType(Object servicePrincipalCredentialType) {
+        this.servicePrincipalCredentialType = servicePrincipalCredentialType;
+        return this;
+    }
+
+    /**
+     * Get the servicePrincipalEmbeddedCert property: Specify the base64 encoded certificate of your application
+     * registered in Azure Active Directory. Type: string (or Expression with resultType string).
+     * 
+     * @return the servicePrincipalEmbeddedCert value.
+     */
+    @Generated
+    public SecretBase getServicePrincipalEmbeddedCert() {
+        return this.servicePrincipalEmbeddedCert;
+    }
+
+    /**
+     * Set the servicePrincipalEmbeddedCert property: Specify the base64 encoded certificate of your application
+     * registered in Azure Active Directory. Type: string (or Expression with resultType string).
+     * 
+     * @param servicePrincipalEmbeddedCert the servicePrincipalEmbeddedCert value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setServicePrincipalEmbeddedCert(SecretBase servicePrincipalEmbeddedCert) {
+        this.servicePrincipalEmbeddedCert = servicePrincipalEmbeddedCert;
+        return this;
+    }
+
+    /**
+     * Get the servicePrincipalEmbeddedCertPassword property: Specify the password of your certificate if your
+     * certificate has a password and you are using AadServicePrincipal authentication. Type: string (or Expression with
+     * resultType string).
+     * 
+     * @return the servicePrincipalEmbeddedCertPassword value.
+     */
+    @Generated
+    public SecretBase getServicePrincipalEmbeddedCertPassword() {
+        return this.servicePrincipalEmbeddedCertPassword;
+    }
+
+    /**
+     * Set the servicePrincipalEmbeddedCertPassword property: Specify the password of your certificate if your
+     * certificate has a password and you are using AadServicePrincipal authentication. Type: string (or Expression with
+     * resultType string).
+     * 
+     * @param servicePrincipalEmbeddedCertPassword the servicePrincipalEmbeddedCertPassword value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService
+        setServicePrincipalEmbeddedCertPassword(SecretBase servicePrincipalEmbeddedCertPassword) {
+        this.servicePrincipalEmbeddedCertPassword = servicePrincipalEmbeddedCertPassword;
+        return this;
+    }
+
+    /**
+     * Get the tenant property: The name or ID of the tenant to which the service principal belongs. Type: string (or
+     * Expression with resultType string).
+     * 
+     * @return the tenant value.
+     */
+    @Generated
+    public Object getTenant() {
+        return this.tenant;
+    }
+
+    /**
+     * Set the tenant property: The name or ID of the tenant to which the service principal belongs. Type: string (or
+     * Expression with resultType string).
+     * 
+     * @param tenant the tenant value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setTenant(Object tenant) {
+        this.tenant = tenant;
+        return this;
+    }
+
+    /**
+     * Get the azureCloudType property: Indicates the azure cloud type of the service principle auth. Allowed values are
+     * AzurePublic, AzureChina, AzureUsGovernment, AzureGermany. Default value is the data factory regions’ cloud type.
+     * Type: string (or Expression with resultType string).
+     * 
+     * @return the azureCloudType value.
+     */
+    @Generated
+    public Object getAzureCloudType() {
+        return this.azureCloudType;
+    }
+
+    /**
+     * Set the azureCloudType property: Indicates the azure cloud type of the service principle auth. Allowed values are
+     * AzurePublic, AzureChina, AzureUsGovernment, AzureGermany. Default value is the data factory regions’ cloud type.
+     * Type: string (or Expression with resultType string).
+     * 
+     * @param azureCloudType the azureCloudType value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setAzureCloudType(Object azureCloudType) {
+        this.azureCloudType = azureCloudType;
+        return this;
+    }
+
+    /**
+     * Get the credential property: The credential reference containing authentication information.
+     * 
+     * @return the credential value.
+     */
+    @Generated
+    public CredentialReference getCredential() {
+        return this.credential;
+    }
+
+    /**
+     * Set the credential property: The credential reference containing authentication information.
+     * 
+     * @param credential the credential value to set.
+     * @return the AzurePostgreSqlLinkedService object itself.
+     */
+    @Generated
+    public AzurePostgreSqlLinkedService setCredential(CredentialReference credential) {
+        this.credential = credential;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public AzurePostgreSqlLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzurePostgreSqlLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzurePostgreSqlLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzurePostgreSqlLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzurePostgreSqlLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (connectionString != null
+            || server != null
+            || port != null
+            || username != null
+            || database != null
+            || sslMode != null
+            || timeout != null
+            || commandTimeout != null
+            || trustServerCertificate != null
+            || readBufferSize != null
+            || timezone != null
+            || encoding != null
+            || password != null
+            || encryptedCredential != null
+            || servicePrincipalId != null
+            || servicePrincipalKey != null
+            || servicePrincipalCredentialType != null
+            || servicePrincipalEmbeddedCert != null
+            || servicePrincipalEmbeddedCertPassword != null
+            || tenant != null
+            || azureCloudType != null
+            || credential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            if (this.connectionString != null) {
+                jsonWriter.writeUntypedField("connectionString", this.connectionString);
+            }
+            if (this.server != null) {
+                jsonWriter.writeUntypedField("server", this.server);
+            }
+            if (this.port != null) {
+                jsonWriter.writeUntypedField("port", this.port);
+            }
+            if (this.username != null) {
+                jsonWriter.writeUntypedField("username", this.username);
+            }
+            if (this.database != null) {
+                jsonWriter.writeUntypedField("database", this.database);
+            }
+            if (this.sslMode != null) {
+                jsonWriter.writeUntypedField("sslMode", this.sslMode);
+            }
+            if (this.timeout != null) {
+                jsonWriter.writeUntypedField("timeout", this.timeout);
+            }
+            if (this.commandTimeout != null) {
+                jsonWriter.writeUntypedField("commandTimeout", this.commandTimeout);
+            }
+            if (this.trustServerCertificate != null) {
+                jsonWriter.writeUntypedField("trustServerCertificate", this.trustServerCertificate);
+            }
+            if (this.readBufferSize != null) {
+                jsonWriter.writeUntypedField("readBufferSize", this.readBufferSize);
+            }
+            if (this.timezone != null) {
+                jsonWriter.writeUntypedField("timezone", this.timezone);
+            }
+            if (this.encoding != null) {
+                jsonWriter.writeUntypedField("encoding", this.encoding);
+            }
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            if (this.servicePrincipalId != null) {
+                jsonWriter.writeUntypedField("servicePrincipalId", this.servicePrincipalId);
+            }
+            jsonWriter.writeJsonField("servicePrincipalKey", this.servicePrincipalKey);
+            if (this.servicePrincipalCredentialType != null) {
+                jsonWriter.writeUntypedField("servicePrincipalCredentialType", this.servicePrincipalCredentialType);
+            }
+            jsonWriter.writeJsonField("servicePrincipalEmbeddedCert", this.servicePrincipalEmbeddedCert);
+            jsonWriter.writeJsonField("servicePrincipalEmbeddedCertPassword",
+                this.servicePrincipalEmbeddedCertPassword);
+            if (this.tenant != null) {
+                jsonWriter.writeUntypedField("tenant", this.tenant);
+            }
+            if (this.azureCloudType != null) {
+                jsonWriter.writeUntypedField("azureCloudType", this.azureCloudType);
+            }
+            jsonWriter.writeJsonField("credential", this.credential);
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzurePostgreSqlLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzurePostgreSqlLinkedService if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the AzurePostgreSqlLinkedService.
+     */
+    @Generated
+    public static AzurePostgreSqlLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzurePostgreSqlLinkedService deserializedAzurePostgreSqlLinkedService = new AzurePostgreSqlLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedAzurePostgreSqlLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedAzurePostgreSqlLinkedService
+                        .setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedAzurePostgreSqlLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedAzurePostgreSqlLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedAzurePostgreSqlLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedAzurePostgreSqlLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("connectionString".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.connectionString = reader.readUntyped();
+                        } else if ("server".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.server = reader.readUntyped();
+                        } else if ("port".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.port = reader.readUntyped();
+                        } else if ("username".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.username = reader.readUntyped();
+                        } else if ("database".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.database = reader.readUntyped();
+                        } else if ("sslMode".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.sslMode = reader.readUntyped();
+                        } else if ("timeout".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.timeout = reader.readUntyped();
+                        } else if ("commandTimeout".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.commandTimeout = reader.readUntyped();
+                        } else if ("trustServerCertificate".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.trustServerCertificate = reader.readUntyped();
+                        } else if ("readBufferSize".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.readBufferSize = reader.readUntyped();
+                        } else if ("timezone".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.timezone = reader.readUntyped();
+                        } else if ("encoding".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.encoding = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.password
+                                = AzureKeyVaultSecretReference.fromJson(reader);
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.encryptedCredential = reader.readUntyped();
+                        } else if ("servicePrincipalId".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.servicePrincipalId = reader.readUntyped();
+                        } else if ("servicePrincipalKey".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.servicePrincipalKey = SecretBase.fromJson(reader);
+                        } else if ("servicePrincipalCredentialType".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.servicePrincipalCredentialType
+                                = reader.readUntyped();
+                        } else if ("servicePrincipalEmbeddedCert".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.servicePrincipalEmbeddedCert
+                                = SecretBase.fromJson(reader);
+                        } else if ("servicePrincipalEmbeddedCertPassword".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.servicePrincipalEmbeddedCertPassword
+                                = SecretBase.fromJson(reader);
+                        } else if ("tenant".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.tenant = reader.readUntyped();
+                        } else if ("azureCloudType".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.azureCloudType = reader.readUntyped();
+                        } else if ("credential".equals(fieldName)) {
+                            deserializedAzurePostgreSqlLinkedService.credential = CredentialReference.fromJson(reader);
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAzurePostgreSqlLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedAzurePostgreSqlLinkedService;
+        });
     }
 }

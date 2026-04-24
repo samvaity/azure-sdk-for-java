@@ -11,18 +11,15 @@ import com.azure.resourcemanager.communication.models.DomainPropertiesVerificati
 public final class DomainPropertiesVerificationRecordsTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DomainPropertiesVerificationRecords model =
-            BinaryData
-                .fromString(
-                    "{\"Domain\":{\"type\":\"pteehzzv\",\"name\":\"yqrimzin\",\"value\":\"swjdkirso\",\"ttl\":1633669342},\"SPF\":{\"type\":\"crmnohjtckwhds\",\"name\":\"fiyipjxsqwpgrj\",\"value\":\"norcjxvsnbyxqab\",\"ttl\":1299140464},\"DKIM\":{\"type\":\"cyshurzafbljjgp\",\"name\":\"oq\",\"value\":\"mkljavb\",\"ttl\":1581174340},\"DKIM2\":{\"type\":\"ajzyul\",\"name\":\"u\",\"value\":\"krlkhbzhfepg\",\"ttl\":701234104},\"DMARC\":{\"type\":\"zloc\",\"name\":\"c\",\"value\":\"ierhhbcsglummaj\",\"ttl\":1273206758}}")
-                .toObject(DomainPropertiesVerificationRecords.class);
+        DomainPropertiesVerificationRecords model = BinaryData.fromString(
+            "{\"Domain\":{\"type\":\"bqidtqaj\",\"name\":\"ulpkudjkrl\",\"value\":\"bzhfepgzgqexz\",\"ttl\":208705149},\"SPF\":{\"type\":\"c\",\"name\":\"ierhhbcsglummaj\",\"value\":\"aodxo\",\"ttl\":547031215},\"DKIM\":{\"type\":\"k\",\"name\":\"xo\",\"value\":\"jionpimexgstxgc\",\"ttl\":524649765},\"DKIM2\":{\"type\":\"aajrm\",\"name\":\"jwzrl\",\"value\":\"mcl\",\"ttl\":186307619},\"DMARC\":{\"type\":\"oejctbzaqsqsy\",\"name\":\"kbfkg\",\"value\":\"dkexxppofm\",\"ttl\":159547648}}")
+            .toObject(DomainPropertiesVerificationRecords.class);
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        DomainPropertiesVerificationRecords model =
-            new DomainPropertiesVerificationRecords()
-                .withDomain(new DnsRecord())
+        DomainPropertiesVerificationRecords model
+            = new DomainPropertiesVerificationRecords().withDomain(new DnsRecord())
                 .withSpf(new DnsRecord())
                 .withDkim(new DnsRecord())
                 .withDkim2(new DnsRecord())

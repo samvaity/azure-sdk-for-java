@@ -1,6 +1,6 @@
 # Release History
 
-## 1.12.0-beta.1 (Unreleased)
+## 1.20.0-beta.1 (Unreleased)
 
 ### Features Added
 
@@ -9,6 +9,251 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 1.19.3 (2026-01-15)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.57.0` to `1.57.1`.
+- Upgraded Reactor from `3.7.11` to `3.7.14`. ([#47611](https://github.com/Azure/azure-sdk-for-java/pull/47611))
+
+## 1.19.2 (2025-10-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.1` to `1.57.0`.
+- Upgraded Reactor from `3.7.9` to `3.7.11`. ([#46894](https://github.com/Azure/azure-sdk-for-java/pull/46894))
+
+## 1.19.1 (2025-09-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.0` to `1.56.1`.
+
+## 1.19.0 (2025-08-07)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.5` to `1.56.0`.
+- Upgraded Reactor from `3.4.41` to `3.7.8`. ([#46207](https://github.com/Azure/azure-sdk-for-java/pull/46207))
+
+## 1.18.1 (2025-06-26)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.4` to `1.55.5`.
+
+## 1.18.0 (2025-06-05)
+
+### Features Added
+
+- Added new Azure regions:
+  - `Region.MEXICO_CENTRAL`
+  - `Region.SPAIN_CENTRAL`
+  - `Region.POLAND_CENTRAL`
+  - `Region.INDONESIA_CENTRAL`
+  - `Region.NEW_ZEALAND_NORTH`
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.3` to `1.55.4`.
+
+## 1.17.0 (2025-03-10)
+
+### Features Added
+
+- Added sync-stack support `SyncPollerFactory`, for Azure Resource Manager(ARM) long-running-operation(LRO).
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.2` to `1.55.3`.
+
+## 1.16.2 (2025-02-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.1` to `1.55.2`.
+
+## 1.16.1 (2025-02-12)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.0` to `1.55.1`.
+
+## 1.16.0 (2025-02-06)
+
+### Features Added
+
+- Added `AzureProfile(AzureCloud azureCloud)` constructor overload.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.1` to `1.55.0`.
+
+## 1.15.6 (2024-11-14)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.0` to `1.54.1`.
+
+## 1.15.5 (2024-11-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.53.0` to `1.54.0`.
+
+## 1.15.4 (2024-10-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.52.0` to `1.53.0`.
+
+## 1.15.3 (2024-09-12)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.51.0` to `1.52.0`.
+
+## 1.15.2 (2024-07-31)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.50.0` to `1.51.0`.
+
+## 1.15.1 (2024-07-12)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.1` to `1.50.0`.
+
+## 1.15.0 (2024-06-06)
+
+### Features Added
+
+- Added new Azure region `Region.ISRAEL_CENTRAL`.
+- `SubResource` now implements `JsonSerializable`.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.0` to `1.49.1`.
+
+## 1.14.0 (2024-05-01)
+
+### Features Added
+
+- Added `managedHsmDnsSuffix` getter and `storageEndpointSuffix` to `AzureEnvironment`. ([#39647](https://github.com/Azure/azure-sdk-for-java/pull/39647))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.48.0` to `1.49.0`.
+
+## 1.13.0 (2024-04-05)
+
+### Features Added
+
+- Added support for `azure-json` by having serializable models implement `JsonSerializable`.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.47.0` to `1.48.0`.
+
+## 1.12.0 (2024-03-01)
+
+### Features Added
+
+- Added new Azure region `Region.ITALY_NORTH`.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.46.0` to `1.47.0`.
+
+## 1.11.10 (2024-02-02)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.45.1` to `1.46.0`.
+
+## 1.11.8 (2023-11-03)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.1` to `1.45.0`.
+
+## 1.11.7 (2023-10-17)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.0` to `1.44.1`.
+
+## 1.11.6 (2023-10-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.43.0` to `1.44.0`.
+
+## 1.11.5 (2023-09-07)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.42.0` to `1.43.0`.
+
+## 1.11.4 (2023-08-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.41.0` to `1.42.0`.
 
 ## 1.11.3 (2023-07-06)
 

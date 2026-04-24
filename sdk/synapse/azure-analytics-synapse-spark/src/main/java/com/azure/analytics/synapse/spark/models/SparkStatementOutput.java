@@ -5,63 +5,79 @@
 package com.azure.analytics.synapse.spark.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The SparkStatementOutput model. */
+/**
+ * The SparkStatementOutput model.
+ */
 @Fluent
-public final class SparkStatementOutput {
+public final class SparkStatementOutput implements JsonSerializable<SparkStatementOutput> {
     /*
      * The status property.
      */
-    @JsonProperty(value = "status")
+    @Generated
     private String status;
 
     /*
      * The execution_count property.
      */
-    @JsonProperty(value = "execution_count", required = true)
+    @Generated
     private int executionCount;
 
     /*
      * Any object
      */
-    @JsonProperty(value = "data")
+    @Generated
     private Object data;
 
     /*
      * The ename property.
      */
-    @JsonProperty(value = "ename")
+    @Generated
     private String errorName;
 
     /*
      * The evalue property.
      */
-    @JsonProperty(value = "evalue")
+    @Generated
     private String errorValue;
 
     /*
      * The traceback property.
      */
-    @JsonProperty(value = "traceback")
+    @Generated
     private List<String> traceback;
 
     /**
+     * Creates an instance of SparkStatementOutput class.
+     */
+    @Generated
+    public SparkStatementOutput() {
+    }
+
+    /**
      * Get the status property: The status property.
-     *
+     * 
      * @return the status value.
      */
+    @Generated
     public String getStatus() {
         return this.status;
     }
 
     /**
      * Set the status property: The status property.
-     *
+     * 
      * @param status the status value to set.
      * @return the SparkStatementOutput object itself.
      */
+    @Generated
     public SparkStatementOutput setStatus(String status) {
         this.status = status;
         return this;
@@ -69,19 +85,21 @@ public final class SparkStatementOutput {
 
     /**
      * Get the executionCount property: The execution_count property.
-     *
+     * 
      * @return the executionCount value.
      */
+    @Generated
     public int getExecutionCount() {
         return this.executionCount;
     }
 
     /**
      * Set the executionCount property: The execution_count property.
-     *
+     * 
      * @param executionCount the executionCount value to set.
      * @return the SparkStatementOutput object itself.
      */
+    @Generated
     public SparkStatementOutput setExecutionCount(int executionCount) {
         this.executionCount = executionCount;
         return this;
@@ -89,19 +107,21 @@ public final class SparkStatementOutput {
 
     /**
      * Get the data property: Any object.
-     *
+     * 
      * @return the data value.
      */
+    @Generated
     public Object getData() {
         return this.data;
     }
 
     /**
      * Set the data property: Any object.
-     *
+     * 
      * @param data the data value to set.
      * @return the SparkStatementOutput object itself.
      */
+    @Generated
     public SparkStatementOutput setData(Object data) {
         this.data = data;
         return this;
@@ -109,19 +129,21 @@ public final class SparkStatementOutput {
 
     /**
      * Get the errorName property: The ename property.
-     *
+     * 
      * @return the errorName value.
      */
+    @Generated
     public String getErrorName() {
         return this.errorName;
     }
 
     /**
      * Set the errorName property: The ename property.
-     *
+     * 
      * @param errorName the errorName value to set.
      * @return the SparkStatementOutput object itself.
      */
+    @Generated
     public SparkStatementOutput setErrorName(String errorName) {
         this.errorName = errorName;
         return this;
@@ -129,19 +151,21 @@ public final class SparkStatementOutput {
 
     /**
      * Get the errorValue property: The evalue property.
-     *
+     * 
      * @return the errorValue value.
      */
+    @Generated
     public String getErrorValue() {
         return this.errorValue;
     }
 
     /**
      * Set the errorValue property: The evalue property.
-     *
+     * 
      * @param errorValue the errorValue value to set.
      * @return the SparkStatementOutput object itself.
      */
+    @Generated
     public SparkStatementOutput setErrorValue(String errorValue) {
         this.errorValue = errorValue;
         return this;
@@ -149,21 +173,80 @@ public final class SparkStatementOutput {
 
     /**
      * Get the traceback property: The traceback property.
-     *
+     * 
      * @return the traceback value.
      */
+    @Generated
     public List<String> getTraceback() {
         return this.traceback;
     }
 
     /**
      * Set the traceback property: The traceback property.
-     *
+     * 
      * @param traceback the traceback value to set.
      * @return the SparkStatementOutput object itself.
      */
+    @Generated
     public SparkStatementOutput setTraceback(List<String> traceback) {
         this.traceback = traceback;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeIntField("execution_count", this.executionCount);
+        jsonWriter.writeStringField("status", this.status);
+        if (this.data != null) {
+            jsonWriter.writeUntypedField("data", this.data);
+        }
+        jsonWriter.writeStringField("ename", this.errorName);
+        jsonWriter.writeStringField("evalue", this.errorValue);
+        jsonWriter.writeArrayField("traceback", this.traceback, (writer, element) -> writer.writeString(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SparkStatementOutput from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SparkStatementOutput if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SparkStatementOutput.
+     */
+    @Generated
+    public static SparkStatementOutput fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SparkStatementOutput deserializedSparkStatementOutput = new SparkStatementOutput();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("execution_count".equals(fieldName)) {
+                    deserializedSparkStatementOutput.executionCount = reader.getInt();
+                } else if ("status".equals(fieldName)) {
+                    deserializedSparkStatementOutput.status = reader.getString();
+                } else if ("data".equals(fieldName)) {
+                    deserializedSparkStatementOutput.data = reader.readUntyped();
+                } else if ("ename".equals(fieldName)) {
+                    deserializedSparkStatementOutput.errorName = reader.getString();
+                } else if ("evalue".equals(fieldName)) {
+                    deserializedSparkStatementOutput.errorValue = reader.getString();
+                } else if ("traceback".equals(fieldName)) {
+                    List<String> traceback = reader.readArray(reader1 -> reader1.getString());
+                    deserializedSparkStatementOutput.traceback = traceback;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSparkStatementOutput;
+        });
     }
 }

@@ -2,23 +2,27 @@
 // Licensed under the MIT License.
 package com.azure.cosmos.implementation;
 
+import com.azure.cosmos.BridgeInternal;
 import com.azure.cosmos.ConsistencyLevel;
+import com.azure.cosmos.CosmosException;
+import com.azure.cosmos.CosmosItemSerializer;
 import com.azure.cosmos.implementation.apachecommons.lang.StringUtils;
-import com.azure.cosmos.implementation.uuid.EthernetAddress;
-import com.azure.cosmos.implementation.uuid.Generators;
-import com.azure.cosmos.implementation.uuid.impl.TimeBasedGenerator;
 import com.azure.cosmos.models.CosmosChangeFeedRequestOptions;
-import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.DedicatedGatewayRequestOptions;
 import com.azure.cosmos.models.ModelBridgeInternal;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,19 +38,21 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
+import static com.azure.cosmos.implementation.guava25.base.MoreObjects.firstNonNull;
+import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkArgument;
 import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNotNull;
+import static com.azure.cosmos.implementation.guava25.base.Strings.emptyToNull;
 
 /**
  * While this class is public, but it is not part of our published public APIs.
@@ -55,6 +61,13 @@ import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNo
 public class Utils {
     private final static Logger logger = LoggerFactory.getLogger(Utils.class);
 
+    // Flag to indicate whether enable JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS
+    // Keep the config here not Configs to break the circular reference
+    private static final boolean DEFAULT_ALLOW_UNQUOTED_CONTROL_CHARS = true;
+    private static final String ALLOW_UNQUOTED_CONTROL_CHARS = "COSMOS.ALLOW_UNQUOTED_CONTROL_CHARS";
+
+    public static final Class<?> byteArrayClass = new byte[0].getClass();
+
     private static final int JAVA_VERSION = getJavaVersion();
     private static final int ONE_KB = 1024;
     private static final ZoneId GMT_ZONE_ID = ZoneId.of("GMT");
@@ -62,15 +75,42 @@ public class Utils {
     public static final Base64.Decoder Base64Decoder = Base64.getDecoder();
     public static final Base64.Encoder Base64UrlEncoder = Base64.getUrlEncoder();
 
+    public static final Duration ONE_SECOND = Duration.ofSeconds(1);
+    public static final Duration HALF_SECOND = Duration.ofMillis(500);
+    public static final Duration SIX_SECONDS = Duration.ofSeconds(6);
+
     private static final ObjectMapper simpleObjectMapperAllowingDuplicatedProperties =
         createAndInitializeObjectMapper(true);
     private static final ObjectMapper simpleObjectMapperDisallowingDuplicatedProperties =
         createAndInitializeObjectMapper(false);
 
+    private static final ObjectMapper durationEnabledObjectMapper = createAndInitializeDurationObjectMapper();
     private static ObjectMapper simpleObjectMapper = simpleObjectMapperDisallowingDuplicatedProperties;
-    private static final TimeBasedGenerator TIME_BASED_GENERATOR =
-            Generators.timeBasedGenerator(EthernetAddress.constructMulticastAddress());
+
     private static final Pattern SPACE_PATTERN = Pattern.compile("\\s");
+
+    private static AtomicReference<ImplementationBridgeHelpers.CosmosItemSerializerHelper.CosmosItemSerializerAccessor> itemSerializerAccessor =
+        new AtomicReference<>(null);
+
+    public static ObjectMapper getDocumentObjectMapper(String serializationInclusionMode) {
+        if (Strings.isNullOrEmpty(serializationInclusionMode)) {
+            return simpleObjectMapper;
+        } else if ("Always".equalsIgnoreCase(serializationInclusionMode)) {
+            return createAndInitializeObjectMapper(false)
+                .setSerializationInclusion(JsonInclude.Include.ALWAYS);
+        } else if ("NonNull".equalsIgnoreCase(serializationInclusionMode)) {
+            return createAndInitializeObjectMapper(false)
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        } else if ("NonEmpty".equalsIgnoreCase(serializationInclusionMode)) {
+        return createAndInitializeObjectMapper(false)
+            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        } else if ("NonDefault".equalsIgnoreCase(serializationInclusionMode)) {
+            return createAndInitializeObjectMapper(false)
+                .setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+        }
+
+        return simpleObjectMapper;
+    }
 
     // NOTE DateTimeFormatter.RFC_1123_DATE_TIME cannot be used.
     // because cosmos db rfc1123 validation requires two digits for day.
@@ -78,6 +118,21 @@ public class Utils {
     // but Thu, 4 Jan 2018 00:30:37 GMT is not.
     // Therefore, we need a custom date time formatter.
     private static final DateTimeFormatter RFC_1123_DATE_TIME = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+
+    private static ImplementationBridgeHelpers.CosmosItemSerializerHelper.CosmosItemSerializerAccessor ensureItemSerializerAccessor() {
+        ImplementationBridgeHelpers.CosmosItemSerializerHelper.CosmosItemSerializerAccessor snapshot = itemSerializerAccessor.get();
+        if (snapshot != null) {
+            return snapshot;
+        }
+
+        ImplementationBridgeHelpers.CosmosItemSerializerHelper.CosmosItemSerializerAccessor newInstance =
+            ImplementationBridgeHelpers.CosmosItemSerializerHelper.getCosmosItemSerializerAccessor();
+        if (itemSerializerAccessor.compareAndSet(null, newInstance)) {
+            return newInstance;
+        }
+
+        return itemSerializerAccessor.get();
+    }
 
     private static ObjectMapper createAndInitializeObjectMapper(boolean allowDuplicateProperties) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -89,15 +144,57 @@ public class Utils {
         }
         objectMapper.configure(DeserializationFeature.ACCEPT_FLOAT_AS_INT, false);
 
-
-        // We will not register after burner for java 16+, due to its breaking changes
-        // https://github.com/Azure/azure-sdk-for-java/issues/23005
-        if (JAVA_VERSION != -1 && JAVA_VERSION < 16) {
-            objectMapper.registerModule(new AfterburnerModule());
+        if (shouldAllowUnquotedControlChars()) {
+            objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         }
+
+        tryToLoadJacksonPerformanceLibrary(objectMapper);
 
         objectMapper.registerModule(new JavaTimeModule());
 
+        return objectMapper;
+    }
+
+    private static void tryToLoadJacksonPerformanceLibrary(ObjectMapper objectMapper) {
+        // Afterburner and Blackbird are libraries that increase the performance of marshaling json to objects
+        boolean loaded = false;
+        if (JAVA_VERSION != -1) {
+            if (JAVA_VERSION >= 11) {
+                // Blackbird is preferred and only works with java 11+
+                // https://github.com/FasterXML/jackson-modules-base/tree/2.18/blackbird
+                loaded = loadModuleIfFound("com.fasterxml.jackson.module.blackbird.BlackbirdModule", objectMapper);
+            }
+            if (!loaded && JAVA_VERSION < 16) {
+                // Afterburner no longer works with java 16
+                // https://github.com/Azure/azure-sdk-for-java/issues/23005
+                // https://github.com/FasterXML/jackson-modules-base/tree/2.18/afterburner
+                loaded = loadModuleIfFound("com.fasterxml.jackson.module.afterburner.AfterburnerModule", objectMapper);
+            }
+        }
+        if (!loaded) {
+            logger.warn("Neither Afterburner nor Blackbird Jackson module loaded.  Consider adding one to your classpath for maximum Jackson performance.");
+        }
+    }
+
+    private static boolean loadModuleIfFound(String className, ObjectMapper objectMapper) {
+        try {
+            Class<?> clazz = Class.forName(className);
+            Module module = (Module)clazz.getDeclaredConstructor().newInstance();
+            objectMapper.registerModule(module);
+            return true;
+        } catch (ClassNotFoundException e) {
+            //Not found, dont register
+        } catch (Exception e) {
+            logger.warn("Issues loading Jackson performance module " + className, e);
+        }
+        return false;
+    }
+
+    private static ObjectMapper createAndInitializeDurationObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new SimpleModule()
+                .addSerializer(Duration.class, ToStringSerializer.instance)
+                .addSerializer(Instant.class, ToStringSerializer.instance));
         return objectMapper;
     }
 
@@ -123,12 +220,12 @@ public class Utils {
         }
     }
 
-    public static byte[] getUTF8BytesOrNull(String str) {
+    public static ByteBuf getUTF8BytesOrNull(String str) {
         if (str == null) {
             return null;
         }
 
-        return str.getBytes(StandardCharsets.UTF_8);
+        return Unpooled.wrappedBuffer(str.getBytes(StandardCharsets.UTF_8));
     }
 
     public static byte[] getUTF8Bytes(String str) {
@@ -294,7 +391,7 @@ public class Utils {
 
     public static boolean isWriteOperation(OperationType operationType) {
         return operationType == OperationType.Create || operationType == OperationType.Upsert || operationType == OperationType.Delete || operationType == OperationType.Replace
-                || operationType == OperationType.ExecuteJavaScript || operationType == OperationType.Batch;
+                || operationType == OperationType.ExecuteJavaScript || operationType == OperationType.Batch || operationType == OperationType.Patch;
     }
 
     private static String addTrailingSlash(String path) {
@@ -368,6 +465,14 @@ public class Utils {
         return Utils.simpleObjectMapper;
     }
 
+    public static ObjectMapper getSimpleObjectMapperWithAllowDuplicates() {
+        return Utils.simpleObjectMapperAllowingDuplicatedProperties;
+    }
+
+    public static ObjectMapper getDurationEnabledObjectMapper() {
+        return durationEnabledObjectMapper;
+    }
+
     /**
      * Returns Current Time in RFC 1123 format, e.g,
      * Fri, 01 Dec 2017 19:22:30 GMT.
@@ -377,10 +482,6 @@ public class Utils {
     public static String nowAsRFC1123() {
         ZonedDateTime now = ZonedDateTime.now(GMT_ZONE_ID);
         return Utils.RFC_1123_DATE_TIME.format(now);
-    }
-
-    public static UUID randomUUID() {
-        return TIME_BASED_GENERATOR.generate();
     }
 
     public static String instantAsUTCRFC1123(Instant instant){
@@ -515,35 +616,108 @@ public class Utils {
         }
     }
 
-    public static <T> T parse(byte[] item, Class<T> itemClassType) {
-        if (Utils.isEmpty(item)) {
+    public static ObjectNode parseJson(String itemResponseBodyAsString) {
+        if (StringUtils.isEmpty(itemResponseBodyAsString)) {
             return null;
         }
-
         try {
-            return getSimpleObjectMapper().readValue(item, itemClassType);
+            return (ObjectNode)getSimpleObjectMapper().readTree(itemResponseBodyAsString);
         } catch (IOException e) {
             throw new IllegalStateException(
-                String.format("Failed to parse byte-array %s to POJO.", Arrays.toString(item)), e);
+                String.format("Failed to parse json string [%s] to ObjectNode.", itemResponseBodyAsString), e);
         }
     }
 
-    public static <T> T parse(byte[] item, Class<T> itemClassType, ItemDeserializer itemDeserializer) {
+    public static <T> T parse(byte[] item, Class<T> itemClassType, CosmosItemSerializer itemSerializer) {
         if (Utils.isEmpty(item)) {
             return null;
         }
 
-        if (itemDeserializer == null) {
-            return Utils.parse(item, itemClassType);
-        }
+        try {
+            JsonNode jsonNode = getSimpleObjectMapper().readValue(item, JsonNode.class);
+            if (jsonNode instanceof ObjectNode) {
+                ObjectNode jsonTree = (ObjectNode)jsonNode;
+                CosmosItemSerializer effectiveSerializer = itemSerializer != null
+                    ? itemSerializer
+                    : CosmosItemSerializer.DEFAULT_SERIALIZER;
 
-        return itemDeserializer.parseFrom(itemClassType, item);
+                T result = ensureItemSerializerAccessor().deserializeSafe(
+                    effectiveSerializer,
+                    getSimpleObjectMapper().convertValue(jsonTree, ObjectNodeMap.JACKSON_MAP_TYPE),
+                    itemClassType);
+                return result;
+            }
+
+            return getSimpleObjectMapper().convertValue(jsonNode, itemClassType);
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                String.format("Failed to parse byte-array %s to POJO.", new String(item, StandardCharsets.UTF_8)), e);
+        }
     }
 
-    public static ByteBuffer serializeJsonToByteBuffer(ObjectMapper objectMapper, Object object) {
+    public static <T> T parse(ObjectNode jsonNode, Class<T> itemClassType, CosmosItemSerializer itemSerializer) {
+        CosmosItemSerializer effectiveItemSerializer= itemSerializer == null ?
+                CosmosItemSerializer.DEFAULT_SERIALIZER : itemSerializer;
+
+        return ensureItemSerializerAccessor().deserializeSafe(effectiveItemSerializer, new ObjectNodeMap(jsonNode), itemClassType);
+    }
+
+    public static void validateIdValue(Object itemIdValue) {
+        if (!(itemIdValue instanceof String)) {
+            return;
+        }
+
+        String itemId = (String)itemIdValue;
+        if (itemId != null
+            && Configs.isIdValueValidationEnabled()
+            && itemId.contains("/")) {
+
+            BadRequestException exception = new BadRequestException(
+                "The id value '" + itemId + "' contains the invalid character '/'. To stop the client-side validation "
+                    + "set the environment variable '" + Configs.PREVENT_INVALID_ID_CHARS + "' or the system property '"
+                    + Configs.PREVENT_INVALID_ID_CHARS_VARIABLE + "' to 'true'.");
+
+            BridgeInternal.setSubStatusCode(exception, HttpConstants.SubStatusCodes.INVALID_ID_VALUE);
+
+            throw exception;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static ByteBuffer serializeJsonToByteBuffer(
+        CosmosItemSerializer serializer,
+        Object object,
+        Consumer<Map<String, Object>> onAfterSerialization,
+        boolean isIdValidationEnabled) {
+
+        checkArgument(serializer != null || object instanceof Map<?, ?>, "Argument 'serializer' must not be null.");
+
         try {
             ByteBufferOutputStream byteBufferOutputStream = new ByteBufferOutputStream(ONE_KB);
-            objectMapper.writeValue(byteBufferOutputStream, object);
+            Map<String, Object> jsonTreeMap = (object instanceof Map<?, ?> && serializer == null)
+                ? (Map<String, Object>) object
+                : ensureItemSerializerAccessor().serializeSafe(serializer, object);
+
+            if (isIdValidationEnabled) {
+                validateIdValue(jsonTreeMap.get(Constants.Properties.ID));
+            }
+
+            if (onAfterSerialization != null) {
+                onAfterSerialization.accept(jsonTreeMap);
+            }
+
+            ObjectMapper mapper = ensureItemSerializerAccessor().getItemObjectMapper(serializer);
+            JsonNode jsonNode;
+
+            if (jsonTreeMap instanceof PrimitiveJsonNodeMap) {
+                jsonNode = ((PrimitiveJsonNodeMap)jsonTreeMap).getPrimitiveJsonNode();
+            } else if (jsonTreeMap instanceof ObjectNodeMap && onAfterSerialization == null) {
+                jsonNode = ((ObjectNodeMap) jsonTreeMap).getObjectNode();
+            } else {
+                jsonNode = mapper.convertValue(jsonTreeMap, JsonNode.class);
+            }
+
+            mapper.writeValue(byteBufferOutputStream, jsonNode);
             return byteBufferOutputStream.asByteBuffer();
         } catch (IOException e) {
             // TODO moderakh: on serialization/deserialization failure we should throw CosmosException here and elsewhere
@@ -553,38 +727,6 @@ public class Utils {
 
     public static boolean isEmpty(byte[] bytes) {
         return bytes == null || bytes.length == 0;
-    }
-
-    public static String utf8StringFromOrNull(byte[] bytes) {
-        if (bytes == null) {
-            return null;
-        }
-
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
-
-    public static void setContinuationTokenAndMaxItemCount(CosmosPagedFluxOptions pagedFluxOptions, CosmosQueryRequestOptions cosmosQueryRequestOptions) {
-        if (pagedFluxOptions == null) {
-            return;
-        }
-        if (pagedFluxOptions.getRequestContinuation() != null) {
-            ModelBridgeInternal.setQueryRequestOptionsContinuationToken(cosmosQueryRequestOptions, pagedFluxOptions.getRequestContinuation());
-        }
-        if (pagedFluxOptions.getMaxItemCount() != null) {
-            ModelBridgeInternal.setQueryRequestOptionsMaxItemCount(cosmosQueryRequestOptions, pagedFluxOptions.getMaxItemCount());
-        } else {
-            ImplementationBridgeHelpers
-                .CosmosQueryRequestOptionsHelper
-                .getCosmosQueryRequestOptionsAccessor()
-                .applyMaxItemCount(cosmosQueryRequestOptions, pagedFluxOptions);
-
-            // if query request options also don't have maxItemCount set, apply defaults
-            if (pagedFluxOptions.getMaxItemCount() == null) {
-                ModelBridgeInternal.setQueryRequestOptionsMaxItemCount(
-                    cosmosQueryRequestOptions, Constants.Properties.DEFAULT_MAX_PAGE_SIZE);
-                pagedFluxOptions.setMaxItemCount(Constants.Properties.DEFAULT_MAX_PAGE_SIZE);
-            }
-        }
     }
 
     public static CosmosChangeFeedRequestOptions getEffectiveCosmosChangeFeedRequestOptions(
@@ -600,27 +742,31 @@ public class Utils {
                 cosmosChangeFeedRequestRequestOptions, pagedFluxOptions);
     }
 
-    static String escapeNonAscii(String partitionKeyJson) {
+    public static String escapeNonAscii(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return value;
+        }
+
         // if all are ascii original string will be returned, and avoids copying data.
         StringBuilder sb = null;
-        for (int i = 0; i < partitionKeyJson.length(); i++) {
-            int val = partitionKeyJson.charAt(i);
+        for (int i = 0; i < value.length(); i++) {
+            int val = value.charAt(i);
             if (val > 127) {
                 if (sb == null) {
-                    sb = new StringBuilder(partitionKeyJson.length());
-                    sb.append(partitionKeyJson, 0, i);
+                    sb = new StringBuilder(value.length());
+                    sb.append(value, 0, i);
                 }
                 sb.append("\\u").append(String.format("%04X", val));
             } else {
                 if (sb != null) {
-                    sb.append(partitionKeyJson.charAt(i));
+                    sb.append(value.charAt(i));
                 }
             }
         }
 
         if (sb == null) {
             // all are ascii character
-            return partitionKeyJson;
+            return value;
         } else {
             return sb.toString();
         }
@@ -649,5 +795,42 @@ public class Utils {
             throw new IllegalArgumentException("MaxIntegratedCacheStaleness duration cannot be negative");
         }
         return maxIntegratedCacheStaleness.toMillis();
+    }
+
+    public static boolean shouldAllowUnquotedControlChars() {
+
+        String shouldAllowUnquotedControlCharsConfig =
+            System.getProperty(
+                ALLOW_UNQUOTED_CONTROL_CHARS,
+                firstNonNull(
+                    emptyToNull(System.getenv().get(ALLOW_UNQUOTED_CONTROL_CHARS)),
+                    String.valueOf(DEFAULT_ALLOW_UNQUOTED_CONTROL_CHARS)));
+
+        return Boolean.parseBoolean(shouldAllowUnquotedControlCharsConfig);
+    }
+
+    public static Duration min(Duration duration1, Duration duration2) {
+        if (duration1 == null) {
+            return duration2;
+        } else if (duration2 == null) {
+            return duration1;
+        } else {
+            return duration1.compareTo(duration2) < 0 ? duration1 : duration2;
+        }
+    }
+
+    public static CosmosException createCosmosException(int statusCode, int substatusCode, Exception nestedException, Map<String, String> responseHeaders) {
+
+        // TODO: Review adding resource address
+        CosmosException exceptionToThrow = BridgeInternal.createCosmosException(
+            nestedException.getMessage(),
+            nestedException,
+            responseHeaders,
+            statusCode,
+            Strings.Emtpy);
+
+        BridgeInternal.setSubStatusCode(exceptionToThrow, substatusCode);
+
+        return exceptionToThrow;
     }
 }

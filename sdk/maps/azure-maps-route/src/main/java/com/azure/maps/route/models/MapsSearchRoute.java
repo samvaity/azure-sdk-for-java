@@ -4,61 +4,77 @@
 
 package com.azure.maps.route.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The Route model. */
+/**
+ * The MapsSearchRoute model.
+ */
 @Immutable
-public final class MapsSearchRoute {
+public final class MapsSearchRoute implements JsonSerializable<MapsSearchRoute> {
     /*
      * Summary object
      */
-    @JsonProperty(value = "summary", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private RouteSummary summary;
 
     /*
      * Legs array
      */
-    @JsonProperty(value = "legs", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private List<RouteLeg> legs;
 
     /*
      * Sections array
      */
-    @JsonProperty(value = "sections", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private List<RouteSection> sections;
 
     /*
-     * Contains guidance related elements. This field is present only when
-     * guidance was requested and is available.
+     * Contains guidance related elements. This field is present only when guidance was requested and is available.
      */
-    @JsonProperty(value = "guidance", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private RouteGuidance guidance;
 
     /**
+     * Creates an instance of MapsSearchRoute class.
+     */
+    @Generated
+    public MapsSearchRoute() {
+    }
+
+    /**
      * Get the summary property: Summary object.
-     *
+     * 
      * @return the summary value.
      */
+    @Generated
     public RouteSummary getSummary() {
         return this.summary;
     }
 
     /**
      * Get the legs property: Legs array.
-     *
+     * 
      * @return the legs value.
      */
+    @Generated
     public List<RouteLeg> getLegs() {
         return this.legs;
     }
 
     /**
      * Get the sections property: Sections array.
-     *
+     * 
      * @return the sections value.
      */
+    @Generated
     public List<RouteSection> getSections() {
         return this.sections;
     }
@@ -66,10 +82,56 @@ public final class MapsSearchRoute {
     /**
      * Get the guidance property: Contains guidance related elements. This field is present only when guidance was
      * requested and is available.
-     *
+     * 
      * @return the guidance value.
      */
+    @Generated
     public RouteGuidance getGuidance() {
         return this.guidance;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of MapsSearchRoute from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of MapsSearchRoute if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the MapsSearchRoute.
+     */
+    @Generated
+    public static MapsSearchRoute fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            MapsSearchRoute deserializedMapsSearchRoute = new MapsSearchRoute();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("summary".equals(fieldName)) {
+                    deserializedMapsSearchRoute.summary = RouteSummary.fromJson(reader);
+                } else if ("legs".equals(fieldName)) {
+                    List<RouteLeg> legs = reader.readArray(reader1 -> RouteLeg.fromJson(reader1));
+                    deserializedMapsSearchRoute.legs = legs;
+                } else if ("sections".equals(fieldName)) {
+                    List<RouteSection> sections = reader.readArray(reader1 -> RouteSection.fromJson(reader1));
+                    deserializedMapsSearchRoute.sections = sections;
+                } else if ("guidance".equals(fieldName)) {
+                    deserializedMapsSearchRoute.guidance = RouteGuidance.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedMapsSearchRoute;
+        });
     }
 }

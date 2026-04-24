@@ -6,29 +6,32 @@ package com.azure.resourcemanager.communication.generated;
 
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.communication.fluent.models.CommunicationServiceProperties;
+import com.azure.resourcemanager.communication.models.PublicNetworkAccess;
 import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 
 public final class CommunicationServicePropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CommunicationServiceProperties model =
-            BinaryData
-                .fromString(
-                    "{\"provisioningState\":\"Unknown\",\"hostName\":\"kjfkg\",\"dataLocation\":\"awxklr\",\"notificationHubId\":\"lwckbasyypnddhs\",\"version\":\"bacphejko\",\"immutableResourceId\":\"nqgoulzndli\",\"linkedDomains\":[\"qkgfgibma\",\"gakeqsr\"]}")
-                .toObject(CommunicationServiceProperties.class);
-        Assertions.assertEquals("awxklr", model.dataLocation());
-        Assertions.assertEquals("qkgfgibma", model.linkedDomains().get(0));
+        CommunicationServiceProperties model = BinaryData.fromString(
+            "{\"provisioningState\":\"Deleting\",\"hostName\":\"gcue\",\"dataLocation\":\"tumkdosvqwhbm\",\"notificationHubId\":\"bbjfddgmbmbexp\",\"version\":\"htqqrolfp\",\"immutableResourceId\":\"s\",\"linkedDomains\":[\"bquxigjy\",\"gzjaoyfhrtxilne\"],\"publicNetworkAccess\":\"Disabled\",\"disableLocalAuth\":true}")
+            .toObject(CommunicationServiceProperties.class);
+        Assertions.assertEquals("tumkdosvqwhbm", model.dataLocation());
+        Assertions.assertEquals("bquxigjy", model.linkedDomains().get(0));
+        Assertions.assertEquals(PublicNetworkAccess.DISABLED, model.publicNetworkAccess());
+        Assertions.assertTrue(model.disableLocalAuth());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CommunicationServiceProperties model =
-            new CommunicationServiceProperties()
-                .withDataLocation("awxklr")
-                .withLinkedDomains(Arrays.asList("qkgfgibma", "gakeqsr"));
+        CommunicationServiceProperties model = new CommunicationServiceProperties().withDataLocation("tumkdosvqwhbm")
+            .withLinkedDomains(Arrays.asList("bquxigjy", "gzjaoyfhrtxilne"))
+            .withPublicNetworkAccess(PublicNetworkAccess.DISABLED)
+            .withDisableLocalAuth(true);
         model = BinaryData.fromObject(model).toObject(CommunicationServiceProperties.class);
-        Assertions.assertEquals("awxklr", model.dataLocation());
-        Assertions.assertEquals("qkgfgibma", model.linkedDomains().get(0));
+        Assertions.assertEquals("tumkdosvqwhbm", model.dataLocation());
+        Assertions.assertEquals("bquxigjy", model.linkedDomains().get(0));
+        Assertions.assertEquals(PublicNetworkAccess.DISABLED, model.publicNetworkAccess());
+        Assertions.assertTrue(model.disableLocalAuth());
     }
 }

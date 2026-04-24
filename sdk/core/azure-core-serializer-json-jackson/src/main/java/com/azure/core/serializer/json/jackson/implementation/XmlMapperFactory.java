@@ -3,16 +3,17 @@
 
 package com.azure.core.serializer.json.jackson.implementation;
 
+import com.azure.core.implementation.ReflectionUtils;
+import com.azure.core.implementation.ReflectiveInvoker;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.logging.LogLevel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.cfg.MapperBuilder;
 import com.fasterxml.jackson.databind.cfg.PackageVersion;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Array;
-
+/**
+ * Constructs and configures {@link ObjectMapper} instances that handle XML.
+ */
 public final class XmlMapperFactory {
     private static final ClientLogger LOGGER = new ClientLogger(XmlMapperFactory.class);
 
@@ -20,11 +21,11 @@ public final class XmlMapperFactory {
     private static final String XML_MAPPER_BUILDER = "com.fasterxml.jackson.dataformat.xml.XmlMapper$Builder";
     private static final String FROM_XML_PARSER = "com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser$Feature";
     private static final String TO_XML_GENERATOR = "com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator$Feature";
-    private final MethodHandle createXmlMapperBuilder;
-    private final MethodHandle defaultUseWrapper;
-    private final MethodHandle enableWriteXmlDeclaration;
+    private final ReflectiveInvoker createXmlMapperBuilder;
+    private final ReflectiveInvoker defaultUseWrapper;
+    private final ReflectiveInvoker configureWriteXmlDeclaration;
     private final Object writeXmlDeclaration;
-    private final MethodHandle enableEmptyElementAsNull;
+    private final ReflectiveInvoker configureEmptyElementAsNull;
     private final Object emptyElementAsNull;
 
     private final boolean useJackson212;
@@ -33,13 +34,11 @@ public final class XmlMapperFactory {
     public static final XmlMapperFactory INSTANCE = new XmlMapperFactory();
 
     private XmlMapperFactory() {
-        MethodHandles.Lookup publicLookup = MethodHandles.publicLookup();
-
-        MethodHandle createXmlMapperBuilder;
-        MethodHandle defaultUseWrapper;
-        MethodHandle enableWriteXmlDeclaration;
+        ReflectiveInvoker createXmlMapperBuilder;
+        ReflectiveInvoker defaultUseWrapper;
+        ReflectiveInvoker configureWriteXmlDeclaration;
         Object writeXmlDeclaration;
-        MethodHandle enableEmptyElementAsNull;
+        ReflectiveInvoker configureEmptyElementAsNull;
         Object emptyElementAsNull;
         try {
             Class<?> xmlMapper = Class.forName(XML_MAPPER);
@@ -47,15 +46,16 @@ public final class XmlMapperFactory {
             Class<?> fromXmlParser = Class.forName(FROM_XML_PARSER);
             Class<?> toXmlGenerator = Class.forName(TO_XML_GENERATOR);
 
-            createXmlMapperBuilder = publicLookup.unreflect(xmlMapper.getDeclaredMethod("builder"));
-            defaultUseWrapper = publicLookup.unreflect(xmlMapperBuilder.getDeclaredMethod("defaultUseWrapper",
-                boolean.class));
+            createXmlMapperBuilder
+                = ReflectionUtils.getMethodInvoker(xmlMapper, xmlMapper.getDeclaredMethod("builder"), false);
+            defaultUseWrapper = ReflectionUtils.getMethodInvoker(xmlMapperBuilder,
+                xmlMapperBuilder.getDeclaredMethod("defaultUseWrapper", boolean.class), false);
 
-            enableWriteXmlDeclaration = publicLookup.unreflect(xmlMapperBuilder.getDeclaredMethod("enable",
-                Array.newInstance(toXmlGenerator, 0).getClass()));
+            configureWriteXmlDeclaration = ReflectionUtils.getMethodInvoker(xmlMapperBuilder,
+                xmlMapperBuilder.getDeclaredMethod("configure", toXmlGenerator, boolean.class), false);
             writeXmlDeclaration = toXmlGenerator.getDeclaredField("WRITE_XML_DECLARATION").get(null);
-            enableEmptyElementAsNull = publicLookup.unreflect(xmlMapperBuilder.getDeclaredMethod("enable",
-                Array.newInstance(fromXmlParser, 0).getClass()));
+            configureEmptyElementAsNull = ReflectionUtils.getMethodInvoker(xmlMapperBuilder,
+                xmlMapperBuilder.getDeclaredMethod("configure", fromXmlParser, boolean.class), false);
             emptyElementAsNull = fromXmlParser.getDeclaredField("EMPTY_ELEMENT_AS_NULL").get(null);
         } catch (Throwable ex) {
             // Throw the Error only if it isn't a LinkageError.
@@ -64,7 +64,7 @@ public final class XmlMapperFactory {
                 throw (Error) ex;
             }
 
-            throw LOGGER.logExceptionAsError(new IllegalStateException("Failed to retrieve MethodHandles used to "
+            throw LOGGER.logExceptionAsError(new IllegalStateException("Failed to retrieve invokers used to "
                 + "create XmlMapper. XML serialization won't be supported until "
                 + "'com.fasterxml.jackson.dataformat:jackson-dataformat-xml' is added to the classpath or updated to a "
                 + "supported version. " + JacksonVersion.getHelpInfo(), ex));
@@ -72,36 +72,38 @@ public final class XmlMapperFactory {
 
         this.createXmlMapperBuilder = createXmlMapperBuilder;
         this.defaultUseWrapper = defaultUseWrapper;
-        this.enableWriteXmlDeclaration = enableWriteXmlDeclaration;
+        this.configureWriteXmlDeclaration = configureWriteXmlDeclaration;
         this.writeXmlDeclaration = writeXmlDeclaration;
-        this.enableEmptyElementAsNull = enableEmptyElementAsNull;
+        this.configureEmptyElementAsNull = configureEmptyElementAsNull;
         this.emptyElementAsNull = emptyElementAsNull;
 
         this.useJackson212 = PackageVersion.VERSION.getMinorVersion() >= 12;
     }
 
+    /**
+     * Creates a new {@link ObjectMapper} instance that can handle XML.
+     *
+     * @return A new {@link ObjectMapper} instance that can handle XML.
+     * @throws IllegalStateException If the {@link ObjectMapper} cannot be created.
+     */
     public ObjectMapper createXmlMapper() {
         ObjectMapper xmlMapper;
         try {
             MapperBuilder<?, ?> xmlMapperBuilder = ObjectMapperFactory
-                .initializeMapperBuilder((MapperBuilder<?, ?>) createXmlMapperBuilder.invoke());
+                .initializeMapperBuilder((MapperBuilder<?, ?>) createXmlMapperBuilder.invokeStatic());
 
             defaultUseWrapper.invokeWithArguments(xmlMapperBuilder, false);
-            enableWriteXmlDeclaration.invokeWithArguments(xmlMapperBuilder, writeXmlDeclaration);
+            configureWriteXmlDeclaration.invokeWithArguments(xmlMapperBuilder, writeXmlDeclaration, true);
 
             /*
              * In Jackson 2.12 the default value of this feature changed from true to false.
              * https://github.com/FasterXML/jackson/wiki/Jackson-Release-2.12#xml-module
              */
-            enableEmptyElementAsNull.invokeWithArguments(xmlMapperBuilder, emptyElementAsNull);
+            configureEmptyElementAsNull.invokeWithArguments(xmlMapperBuilder, emptyElementAsNull, true);
 
             xmlMapper = xmlMapperBuilder.build();
-        }  catch (Throwable e) {
-            if (e instanceof Error) {
-                throw (Error) e;
-            }
-
-            throw LOGGER.logExceptionAsError(new IllegalStateException("Unable to create XmlMapper instance.", e));
+        } catch (Exception ex) {
+            throw LOGGER.logExceptionAsError(new IllegalStateException("Unable to create XmlMapper instance.", ex));
         }
 
         if (useJackson212 && jackson212IsSafe) {

@@ -3,11 +3,10 @@
 
 package com.azure.communication.callautomation.models;
 
+import java.util.List;
+
 import com.azure.communication.common.CommunicationIdentifier;
 import com.azure.core.annotation.Fluent;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * The options for creating a call.
@@ -19,6 +18,11 @@ public final class StartRecordingOptions {
      */
     private final CallLocator callLocator;
 
+    /**
+     * The call connection ID for locating the call.
+     */
+    private final String callConnectionId;
+
     private String recordingStateCallbackUrl;
 
     private RecordingChannel recordingChannel;
@@ -27,11 +31,13 @@ public final class StartRecordingOptions {
 
     private RecordingFormat recordingFormat;
 
+    private Boolean pauseOnStart;
+
     private List<CommunicationIdentifier> audioChannelParticipantOrdering;
 
     private List<ChannelAffinity> channelAffinity;
 
-    private ExternalStorage externalStorage;
+    private RecordingStorage recordingStorage;
 
     /**
      * Constructor
@@ -39,8 +45,18 @@ public final class StartRecordingOptions {
      * @param callLocator Either a {@link GroupCallLocator} or {@link ServerCallLocator} for locating the call.
      */
     public StartRecordingOptions(CallLocator callLocator) {
-        Objects.requireNonNull(callLocator, "'callLocator' cannot be null.");
         this.callLocator = callLocator;
+        this.callConnectionId = null;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param callConnectionId The call connection ID for locating the call.
+     */
+    public StartRecordingOptions(String callConnectionId) {
+        this.callConnectionId = callConnectionId;
+        this.callLocator = null;
     }
 
     /**
@@ -50,6 +66,15 @@ public final class StartRecordingOptions {
      */
     public CallLocator getCallLocator() {
         return this.callLocator;
+    }
+
+    /**
+     * Get the call connection ID.
+     *
+     * @return the call connection ID.
+     */
+    public String getCallConnectionId() {
+        return this.callConnectionId;
     }
 
     /**
@@ -133,6 +158,26 @@ public final class StartRecordingOptions {
     }
 
     /**
+     * Get pause on start.
+     *
+     * @return pause on start.
+     */
+    public Boolean isPauseOnStart() {
+        return pauseOnStart;
+    }
+
+    /**
+     * Set the pause on start property.
+     *
+     * @param pauseOnStart indicate if the recording should be paused on start.
+     * @return the {@link StartRecordingOptions}
+     */
+    public StartRecordingOptions setPauseOnStart(Boolean pauseOnStart) {
+        this.pauseOnStart = pauseOnStart;
+        return this;
+    }
+
+    /**
      * Get the audioChannelParticipantOrdering property: The sequential order in which audio channels are assigned to
      * participants in the unmixed recording. When 'recordingChannelType' is set to 'unmixed' and
      * `audioChannelParticipantOrdering is not specified, the audio channel to participant mapping will be automatically
@@ -155,7 +200,8 @@ public final class StartRecordingOptions {
      * @param audioChannelParticipantOrdering the list of {@link CommunicationIdentifier}.
      * @return the {@link StartRecordingOptions}
      */
-    public StartRecordingOptions setAudioChannelParticipantOrdering(List<CommunicationIdentifier> audioChannelParticipantOrdering) {
+    public StartRecordingOptions
+        setAudioChannelParticipantOrdering(List<CommunicationIdentifier> audioChannelParticipantOrdering) {
         this.audioChannelParticipantOrdering = audioChannelParticipantOrdering;
         return this;
     }
@@ -165,18 +211,18 @@ public final class StartRecordingOptions {
      *
      * @return the externalStorage value.
      */
-    public ExternalStorage getExternalStorage() {
-        return this.externalStorage;
+    public RecordingStorage getRecordingStorage() {
+        return this.recordingStorage;
     }
 
     /**
      * Set the externalStorage property: Used to specify external storage for call recording
      *
-     * @param externalStorage the external storage for call recording
+     * @param recordingStorage the external storage for call recording
      * @return the StartRecordingOptions object itself.
      */
-    public StartRecordingOptions setExternalStorage(ExternalStorage externalStorage) {
-        this.externalStorage = externalStorage;
+    public StartRecordingOptions setRecordingStorage(RecordingStorage recordingStorage) {
+        this.recordingStorage = recordingStorage;
         return this;
     }
 

@@ -122,13 +122,12 @@ public final class BlobBatchClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Void> submitBatchWithResponse(BlobBatch batch, boolean throwOnAnyFailure, Duration timeout,
         Context context) {
-        return StorageImplUtils.blockWithOptionalTimeout(client.submitBatchWithResponse(batch,
-            throwOnAnyFailure, context), timeout);
+        return StorageImplUtils
+            .blockWithOptionalTimeout(client.submitBatchWithResponse(batch, throwOnAnyFailure, context), timeout);
     }
 
     /**
-     * Delete multiple blobs in a single request to the service.
-     *
+     * Delete multiple blobs in a single request to the service. Returns a lazy loaded {@link PagedIterable} of responses and results are retrieved as the iterable is consumed.
      * <p><strong>Code samples</strong></p>
      *
      * <!-- src_embed com.azure.storage.blob.batch.BlobBatchClient.deleteBlobs#List-DeleteSnapshotsOptionType -->
@@ -160,7 +159,7 @@ public final class BlobBatchClient {
     }
 
     /**
-     * Delete multiple blobs in a single request to the service.
+     * Delete multiple blobs in a single request to the service. Returns a lazy loaded {@link PagedIterable} of responses and results are retrieved as the iterable is consumed.
      *
      * <p><strong>Code samples</strong></p>
      *

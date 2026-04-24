@@ -7,6 +7,8 @@ import com.azure.cosmos.implementation.ConnectionPolicy;
 import com.azure.cosmos.implementation.OperationType;
 import com.azure.cosmos.implementation.ResourceType;
 import com.azure.cosmos.implementation.RxDocumentServiceRequest;
+import com.azure.cosmos.implementation.clienttelemetry.ClientTelemetry;
+import com.azure.cosmos.implementation.clienttelemetry.ClientTelemetryInfo;
 import com.azure.cosmos.implementation.directconnectivity.RntbdTransportClient;
 import com.azure.cosmos.implementation.directconnectivity.Uri;
 import io.netty.channel.Channel;
@@ -19,6 +21,8 @@ import io.netty.channel.DefaultEventLoop;
 import io.netty.channel.SingleThreadEventLoop;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslHandshakeCompletionEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -26,6 +30,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 import static com.azure.cosmos.implementation.TestUtils.mockDiagnosticsClientContext;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -40,17 +45,22 @@ public class RntbdRequestManagerTests {
                 new RntbdTransportClient.Options.Builder(ConnectionPolicy.getDefaultPolicy()).build(),
                 sslContextMock,
                 LogLevel.INFO);
-        RntbdClientChannelHealthChecker healthChecker = new RntbdClientChannelHealthChecker(config);
+
+        ClientTelemetry clientTelemetryMock = Mockito.mock(ClientTelemetry.class);
+        ClientTelemetryInfo clientTelemetryInfoMock = Mockito.mock(ClientTelemetryInfo.class);
+        Mockito.when(clientTelemetryMock.getClientTelemetryInfo()).thenReturn(clientTelemetryInfoMock);
+        Mockito.when(clientTelemetryInfoMock.getMachineId()).thenReturn("testClientVmId");
+
+        RntbdClientChannelHealthChecker healthChecker = new RntbdClientChannelHealthChecker(config, clientTelemetryMock);
 
         RntbdConnectionStateListener connectionStateListener = Mockito.mock(RntbdConnectionStateListener.class);
 
         RntbdRequestManager rntbdRequestManager = new RntbdRequestManager(
                 healthChecker,
-                30,
+                config,
                 connectionStateListener,
-                Duration.ofSeconds(1).toNanos(),
-                null,
-                config.tcpNetworkRequestTimeoutInNanos());
+            null);
+
         RntbdClientChannelHealthChecker.Timestamps timestamps = rntbdRequestManager.getTimestamps();
 
         ChannelHandlerContext channelHandlerContext = Mockito.mock(ChannelHandlerContext.class);
@@ -120,17 +130,21 @@ public class RntbdRequestManagerTests {
             new RntbdTransportClient.Options.Builder(ConnectionPolicy.getDefaultPolicy()).build(),
             sslContextMock,
             LogLevel.INFO);
-        RntbdClientChannelHealthChecker healthChecker = new RntbdClientChannelHealthChecker(config);
+
+        ClientTelemetry clientTelemetryMock = Mockito.mock(ClientTelemetry.class);
+        ClientTelemetryInfo clientTelemetryInfoMock = Mockito.mock(ClientTelemetryInfo.class);
+        Mockito.when(clientTelemetryMock.getClientTelemetryInfo()).thenReturn(clientTelemetryInfoMock);
+        Mockito.when(clientTelemetryInfoMock.getMachineId()).thenReturn("testClientVmId");
+
+        RntbdClientChannelHealthChecker healthChecker = new RntbdClientChannelHealthChecker(config, clientTelemetryMock);
 
         RntbdConnectionStateListener connectionStateListener = Mockito.mock(RntbdConnectionStateListener.class);
 
         RntbdRequestManager rntbdRequestManager = new RntbdRequestManager(
             healthChecker,
-            30,
+            config,
             connectionStateListener,
-            Duration.ofSeconds(1).toNanos(),
-            null,
-            config.tcpNetworkRequestTimeoutInNanos());
+            null);
 
         RntbdClientChannelHealthChecker.Timestamps timestamps = rntbdRequestManager.getTimestamps();
 
@@ -151,5 +165,57 @@ public class RntbdRequestManagerTests {
         RntbdContext rntbdContextMock = Mockito.mock(RntbdContext.class);
         rntbdRequestManager.userEventTriggered(channelHandlerContextMock, rntbdContextMock);
         assertThat(timestamps.lastChannelReadTime()).isAfterOrEqualTo(lastReadTimestamp);
+    }
+
+    @Test(groups = { "unit" })
+    public void multipleSslHandshakeCompletionEventTest() {
+        // Test for receiving multiple SslHandshakeCompletionEvent, the IdleStateHandler should be added only once
+        int LONG_TIMEOUT_NANOS = 100000000;
+        SslContext sslContextMock = Mockito.mock(SslContext.class);
+        RntbdEndpoint.Config config = new RntbdEndpoint.Config(
+            new RntbdTransportClient.Options.Builder(ConnectionPolicy.getDefaultPolicy()).build(),
+            sslContextMock,
+            LogLevel.INFO);
+
+        ClientTelemetry clientTelemetryMock = Mockito.mock(ClientTelemetry.class);
+
+        RntbdClientChannelHealthChecker healthChecker = new RntbdClientChannelHealthChecker(config, clientTelemetryMock);
+
+        RntbdConnectionStateListener connectionStateListener = Mockito.mock(RntbdConnectionStateListener.class);
+
+        RntbdRequestManager rntbdRequestManager = new RntbdRequestManager(
+            healthChecker,
+            config,
+            connectionStateListener,
+            null);
+
+
+        ChannelHandlerContext channelHandlerContextMock = Mockito.mock(ChannelHandlerContext.class);
+        ChannelPipeline channelPipelineMock = Mockito.mock(ChannelPipeline.class);
+        Mockito.when(channelHandlerContextMock.channel()).thenReturn(Mockito.mock(Channel.class));
+
+
+        Mockito.when(channelHandlerContextMock.pipeline()).thenReturn(channelPipelineMock);
+        Mockito.when(channelHandlerContextMock.pipeline().get(IdleStateHandler.class.toString())).thenReturn(null);
+
+        rntbdRequestManager.channelRegistered(channelHandlerContextMock);
+
+        SslHandshakeCompletionEvent completionEvent = Mockito.mock(SslHandshakeCompletionEvent.class);
+        Mockito.when(completionEvent.isSuccess()).thenReturn(true);
+        rntbdRequestManager.userEventTriggered(channelHandlerContextMock, completionEvent);
+        Mockito.when(channelHandlerContextMock.pipeline().get(IdleStateHandler.class.toString())).thenReturn(new IdleStateHandler(
+            LONG_TIMEOUT_NANOS,
+            LONG_TIMEOUT_NANOS,
+            0,
+            TimeUnit.NANOSECONDS));
+        rntbdRequestManager.userEventTriggered(channelHandlerContextMock, completionEvent);
+
+        // addAfter should be called only once even the SslHandshakeCompletionEvent is received twice
+        Mockito.verify(channelHandlerContextMock.pipeline(), Mockito.times(1)
+        ).addAfter(
+            Mockito.any(String.class),
+            Mockito.any(String.class),
+            Mockito.any(IdleStateHandler.class)
+        );
     }
 }

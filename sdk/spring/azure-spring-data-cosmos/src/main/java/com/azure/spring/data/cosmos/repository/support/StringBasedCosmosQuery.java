@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,8 @@ import static com.azure.spring.data.cosmos.core.convert.MappingCosmosConverter.t
  * Cosmos query class to handle the annotated queries. This overrides the execution and runs the query directly
  */
 public class StringBasedCosmosQuery extends AbstractCosmosQuery {
-    private static final Pattern COUNT_QUERY_PATTERN = Pattern.compile("^\\s*select\\s+value\\s+count.*", Pattern.CASE_INSENSITIVE);
+    private static final Pattern COUNT_QUERY_PATTERN = Pattern.compile("^\\s*select\\s+value\\s+count.*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    private static final Pattern SUM_QUERY_PATTERN = Pattern.compile("^\\s*select\\s+value\\s+sum.*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
     private final String query;
 
@@ -70,8 +72,7 @@ public class StringBasedCosmosQuery extends AbstractCosmosQuery {
             if (!("").equals(paramName)) {
                 String inParamCheck = "array_contains(@" + paramName.toLowerCase(Locale.US);
                 if (parameters[paramIndex] instanceof Collection && !modifiedExpandedQuery.contains(inParamCheck)) {
-                    List<String> expandParam = ((Collection<?>) parameters[paramIndex]).stream()
-                        .map(Object::toString).collect(Collectors.toList());
+                    List<Object> expandParam = ((Collection<?>) parameters[paramIndex]).stream().collect(Collectors.toList());
                     List<String> expandedParamKeys = new ArrayList<>();
                     for (int arrayIndex = 0; arrayIndex < expandParam.size(); arrayIndex++) {
                         expandedParamKeys.add("@" + paramName + arrayIndex);
@@ -81,13 +82,17 @@ public class StringBasedCosmosQuery extends AbstractCosmosQuery {
                 } else {
                     if (!Pageable.class.isAssignableFrom(queryParam.getType())
                         && !Sort.class.isAssignableFrom(queryParam.getType())) {
-                        sqlParameters.add(new SqlParameter("@" + queryParam.getName().orElse(""), toCosmosDbValue(parameters[paramIndex])));
+                        if (!(parameters[paramIndex] instanceof Optional<?>)
+                            || (parameters[paramIndex] instanceof Optional<?>
+                            && ((Optional<?>) parameters[paramIndex]).isPresent())) {
+                            sqlParameters.add(new SqlParameter("@" + queryParam.getName().orElse(""), toCosmosDbValue(parameters[paramIndex])));
+                        }
                     }
                 }
             }
         }
 
-        SqlQuerySpec querySpec = new SqlQuerySpec(expandedQuery, sqlParameters);
+        SqlQuerySpec querySpec = new SqlQuerySpec(stripExtraWhitespaceFromString(expandedQuery), sqlParameters);
         if (isPageQuery()) {
             return this.operations.runPaginationQuery(querySpec, accessor.getPageable(), processor.getReturnedType().getDomainType(),
                                                       processor.getReturnedType().getReturnedType());
@@ -100,10 +105,17 @@ public class StringBasedCosmosQuery extends AbstractCosmosQuery {
         } else if (isCountQuery()) {
             final String container = ((CosmosEntityMetadata<?>) getQueryMethod().getEntityInformation()).getContainerName();
             return this.operations.count(querySpec, container);
+        } else if (isSumQuery()) {
+            final String container = ((CosmosEntityMetadata<?>) getQueryMethod().getEntityInformation()).getContainerName();
+            return this.operations.sum(querySpec, container);
         } else {
             return this.operations.runQuery(querySpec, accessor.getSort(), processor.getReturnedType().getDomainType(),
-                                            processor.getReturnedType().getReturnedType());
+                processor.getReturnedType().getReturnedType());
         }
+    }
+
+    private String stripExtraWhitespaceFromString(String input) {
+        return input.replaceAll("\\s+{1,}", " ").trim();
     }
 
     @Override
@@ -121,15 +133,31 @@ public class StringBasedCosmosQuery extends AbstractCosmosQuery {
         return isCountQuery(query, getQueryMethod().getReturnedObjectType());
     }
 
+    /**
+     * This method is used to determine if the query is a sum query.
+     * @return boolean if the query is a sum query
+     */
+    boolean isSumQuery() {
+        return isSumQuery(query, getQueryMethod().getReturnedObjectType());
+    }
+
     static boolean isCountQuery(String query, Class<?> returnedType) {
-        if (isCountQueryReturnType(returnedType)) {
+        if (isNumericQueryReturnType(returnedType)) {
             return COUNT_QUERY_PATTERN.matcher(query).matches();
         } else {
             return false;
         }
     }
 
-    private static boolean isCountQueryReturnType(Class<?> returnedType) {
+    static boolean isSumQuery(String query, Class<?> returnedType) {
+        if (isNumericQueryReturnType(returnedType)) {
+            return SUM_QUERY_PATTERN.matcher(query).matches();
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean isNumericQueryReturnType(Class<?> returnedType) {
         return returnedType == Long.class
             || returnedType == long.class
             || returnedType == Integer.class

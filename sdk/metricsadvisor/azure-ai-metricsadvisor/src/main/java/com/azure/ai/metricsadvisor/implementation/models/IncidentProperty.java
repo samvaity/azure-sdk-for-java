@@ -5,55 +5,68 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The IncidentProperty model. */
+/**
+ * The IncidentProperty model.
+ */
 @Fluent
-public final class IncidentProperty {
+public final class IncidentProperty implements JsonSerializable<IncidentProperty> {
     /*
      * max severity of latest anomalies in the incident
      */
-    @JsonProperty(value = "maxSeverity", required = true)
+    @Generated
     private Severity maxSeverity;
 
     /*
      * incident status
-     *
+     * 
      * only return for alerting incident result
      */
-    @JsonProperty(value = "incidentStatus", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private IncidentStatus incidentStatus;
 
     /*
      * value of the root node
      */
-    @JsonProperty(value = "valueOfRootNode", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Double valueOfRootNode;
 
     /*
      * expected value of the root node given by smart detector
      */
-    @JsonProperty(value = "expectedValueOfRootNode", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Double expectedValueOfRootNode;
 
-    /** Creates an instance of IncidentProperty class. */
-    public IncidentProperty() {}
+    /**
+     * Creates an instance of IncidentProperty class.
+     */
+    @Generated
+    public IncidentProperty() {
+    }
 
     /**
      * Get the maxSeverity property: max severity of latest anomalies in the incident.
-     *
+     * 
      * @return the maxSeverity value.
      */
+    @Generated
     public Severity getMaxSeverity() {
         return this.maxSeverity;
     }
 
     /**
      * Set the maxSeverity property: max severity of latest anomalies in the incident.
-     *
+     * 
      * @param maxSeverity the maxSeverity value to set.
      * @return the IncidentProperty object itself.
      */
+    @Generated
     public IncidentProperty setMaxSeverity(Severity maxSeverity) {
         this.maxSeverity = maxSeverity;
         return this;
@@ -61,30 +74,78 @@ public final class IncidentProperty {
 
     /**
      * Get the incidentStatus property: incident status
-     *
-     * <p>only return for alerting incident result.
-     *
+     * 
+     * only return for alerting incident result.
+     * 
      * @return the incidentStatus value.
      */
+    @Generated
     public IncidentStatus getIncidentStatus() {
         return this.incidentStatus;
     }
 
     /**
      * Get the valueOfRootNode property: value of the root node.
-     *
+     * 
      * @return the valueOfRootNode value.
      */
+    @Generated
     public Double getValueOfRootNode() {
         return this.valueOfRootNode;
     }
 
     /**
      * Get the expectedValueOfRootNode property: expected value of the root node given by smart detector.
-     *
+     * 
      * @return the expectedValueOfRootNode value.
      */
+    @Generated
     public Double getExpectedValueOfRootNode() {
         return this.expectedValueOfRootNode;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("maxSeverity", this.maxSeverity == null ? null : this.maxSeverity.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of IncidentProperty from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of IncidentProperty if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the IncidentProperty.
+     */
+    @Generated
+    public static IncidentProperty fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            IncidentProperty deserializedIncidentProperty = new IncidentProperty();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("maxSeverity".equals(fieldName)) {
+                    deserializedIncidentProperty.maxSeverity = Severity.fromString(reader.getString());
+                } else if ("incidentStatus".equals(fieldName)) {
+                    deserializedIncidentProperty.incidentStatus = IncidentStatus.fromString(reader.getString());
+                } else if ("valueOfRootNode".equals(fieldName)) {
+                    deserializedIncidentProperty.valueOfRootNode = reader.getNullable(JsonReader::getDouble);
+                } else if ("expectedValueOfRootNode".equals(fieldName)) {
+                    deserializedIncidentProperty.expectedValueOfRootNode = reader.getNullable(JsonReader::getDouble);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedIncidentProperty;
+        });
     }
 }

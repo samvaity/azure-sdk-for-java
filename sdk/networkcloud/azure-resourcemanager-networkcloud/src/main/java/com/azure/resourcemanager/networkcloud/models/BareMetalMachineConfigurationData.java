@@ -6,71 +6,70 @@ package com.azure.resourcemanager.networkcloud.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** BareMetalMachineConfigurationData represents configuration for the bare metal machine. */
+/**
+ * BareMetalMachineConfigurationData represents configuration for the bare metal machine.
+ */
 @Fluent
-public final class BareMetalMachineConfigurationData {
+public final class BareMetalMachineConfigurationData implements JsonSerializable<BareMetalMachineConfigurationData> {
     /*
      * The connection string for the baseboard management controller including IP address and protocol.
      */
-    @JsonProperty(value = "bmcConnectionString", access = JsonProperty.Access.WRITE_ONLY)
     private String bmcConnectionString;
 
     /*
-     * AdministrativeCredentials represents the admin credentials for the device requiring password-based
-     * authentication.
-     *
-     * The credentials of the baseboard management controller on this bare metal machine.
+     * The credentials of the baseboard management controller on this bare metal machine. The password field is expected
+     * to be an Azure Key Vault key URL. Until the cluster is converted to utilize managed identity by setting the
+     * secret archive settings, the actual password value should be provided instead.
      */
-    @JsonProperty(value = "bmcCredentials", required = true)
     private AdministrativeCredentials bmcCredentials;
 
     /*
      * The MAC address of the BMC for this machine.
      */
-    @JsonProperty(value = "bmcMacAddress", required = true)
     private String bmcMacAddress;
 
     /*
      * The MAC address associated with the PXE NIC card.
      */
-    @JsonProperty(value = "bootMacAddress", required = true)
     private String bootMacAddress;
 
     /*
      * The free-form additional information about the machine, e.g. an asset tag.
      */
-    @JsonProperty(value = "machineDetails")
     private String machineDetails;
 
     /*
-     * The user-provided name for the bare metal machine created from this specification.
-     * If not provided, the machine name will be generated programmatically.
+     * The user-provided name for the bare metal machine created from this specification. If not provided, the machine
+     * name will be generated programmatically.
      */
-    @JsonProperty(value = "machineName")
     private String machineName;
 
     /*
      * The slot the physical machine is in the rack based on the BOM configuration.
      */
-    @JsonProperty(value = "rackSlot", required = true)
     private long rackSlot;
 
     /*
      * The serial number of the machine. Hardware suppliers may use an alternate value. For example, service tag.
      */
-    @JsonProperty(value = "serialNumber", required = true)
     private String serialNumber;
 
-    /** Creates an instance of BareMetalMachineConfigurationData class. */
+    /**
+     * Creates an instance of BareMetalMachineConfigurationData class.
+     */
     public BareMetalMachineConfigurationData() {
     }
 
     /**
      * Get the bmcConnectionString property: The connection string for the baseboard management controller including IP
      * address and protocol.
-     *
+     * 
      * @return the bmcConnectionString value.
      */
     public String bmcConnectionString() {
@@ -78,11 +77,11 @@ public final class BareMetalMachineConfigurationData {
     }
 
     /**
-     * Get the bmcCredentials property: AdministrativeCredentials represents the admin credentials for the device
-     * requiring password-based authentication.
-     *
-     * <p>The credentials of the baseboard management controller on this bare metal machine.
-     *
+     * Get the bmcCredentials property: The credentials of the baseboard management controller on this bare metal
+     * machine. The password field is expected to be an Azure Key Vault key URL. Until the cluster is converted to
+     * utilize managed identity by setting the secret archive settings, the actual password value should be provided
+     * instead.
+     * 
      * @return the bmcCredentials value.
      */
     public AdministrativeCredentials bmcCredentials() {
@@ -90,11 +89,11 @@ public final class BareMetalMachineConfigurationData {
     }
 
     /**
-     * Set the bmcCredentials property: AdministrativeCredentials represents the admin credentials for the device
-     * requiring password-based authentication.
-     *
-     * <p>The credentials of the baseboard management controller on this bare metal machine.
-     *
+     * Set the bmcCredentials property: The credentials of the baseboard management controller on this bare metal
+     * machine. The password field is expected to be an Azure Key Vault key URL. Until the cluster is converted to
+     * utilize managed identity by setting the secret archive settings, the actual password value should be provided
+     * instead.
+     * 
      * @param bmcCredentials the bmcCredentials value to set.
      * @return the BareMetalMachineConfigurationData object itself.
      */
@@ -105,7 +104,7 @@ public final class BareMetalMachineConfigurationData {
 
     /**
      * Get the bmcMacAddress property: The MAC address of the BMC for this machine.
-     *
+     * 
      * @return the bmcMacAddress value.
      */
     public String bmcMacAddress() {
@@ -114,7 +113,7 @@ public final class BareMetalMachineConfigurationData {
 
     /**
      * Set the bmcMacAddress property: The MAC address of the BMC for this machine.
-     *
+     * 
      * @param bmcMacAddress the bmcMacAddress value to set.
      * @return the BareMetalMachineConfigurationData object itself.
      */
@@ -125,7 +124,7 @@ public final class BareMetalMachineConfigurationData {
 
     /**
      * Get the bootMacAddress property: The MAC address associated with the PXE NIC card.
-     *
+     * 
      * @return the bootMacAddress value.
      */
     public String bootMacAddress() {
@@ -134,7 +133,7 @@ public final class BareMetalMachineConfigurationData {
 
     /**
      * Set the bootMacAddress property: The MAC address associated with the PXE NIC card.
-     *
+     * 
      * @param bootMacAddress the bootMacAddress value to set.
      * @return the BareMetalMachineConfigurationData object itself.
      */
@@ -145,7 +144,7 @@ public final class BareMetalMachineConfigurationData {
 
     /**
      * Get the machineDetails property: The free-form additional information about the machine, e.g. an asset tag.
-     *
+     * 
      * @return the machineDetails value.
      */
     public String machineDetails() {
@@ -154,7 +153,7 @@ public final class BareMetalMachineConfigurationData {
 
     /**
      * Set the machineDetails property: The free-form additional information about the machine, e.g. an asset tag.
-     *
+     * 
      * @param machineDetails the machineDetails value to set.
      * @return the BareMetalMachineConfigurationData object itself.
      */
@@ -166,7 +165,7 @@ public final class BareMetalMachineConfigurationData {
     /**
      * Get the machineName property: The user-provided name for the bare metal machine created from this specification.
      * If not provided, the machine name will be generated programmatically.
-     *
+     * 
      * @return the machineName value.
      */
     public String machineName() {
@@ -176,7 +175,7 @@ public final class BareMetalMachineConfigurationData {
     /**
      * Set the machineName property: The user-provided name for the bare metal machine created from this specification.
      * If not provided, the machine name will be generated programmatically.
-     *
+     * 
      * @param machineName the machineName value to set.
      * @return the BareMetalMachineConfigurationData object itself.
      */
@@ -187,7 +186,7 @@ public final class BareMetalMachineConfigurationData {
 
     /**
      * Get the rackSlot property: The slot the physical machine is in the rack based on the BOM configuration.
-     *
+     * 
      * @return the rackSlot value.
      */
     public long rackSlot() {
@@ -196,7 +195,7 @@ public final class BareMetalMachineConfigurationData {
 
     /**
      * Set the rackSlot property: The slot the physical machine is in the rack based on the BOM configuration.
-     *
+     * 
      * @param rackSlot the rackSlot value to set.
      * @return the BareMetalMachineConfigurationData object itself.
      */
@@ -208,7 +207,7 @@ public final class BareMetalMachineConfigurationData {
     /**
      * Get the serialNumber property: The serial number of the machine. Hardware suppliers may use an alternate value.
      * For example, service tag.
-     *
+     * 
      * @return the serialNumber value.
      */
     public String serialNumber() {
@@ -218,7 +217,7 @@ public final class BareMetalMachineConfigurationData {
     /**
      * Set the serialNumber property: The serial number of the machine. Hardware suppliers may use an alternate value.
      * For example, service tag.
-     *
+     * 
      * @param serialNumber the serialNumber value to set.
      * @return the BareMetalMachineConfigurationData object itself.
      */
@@ -229,37 +228,92 @@ public final class BareMetalMachineConfigurationData {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (bmcCredentials() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property bmcCredentials in model BareMetalMachineConfigurationData"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property bmcCredentials in model BareMetalMachineConfigurationData"));
         } else {
             bmcCredentials().validate();
         }
         if (bmcMacAddress() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property bmcMacAddress in model BareMetalMachineConfigurationData"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property bmcMacAddress in model BareMetalMachineConfigurationData"));
         }
         if (bootMacAddress() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property bootMacAddress in model BareMetalMachineConfigurationData"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property bootMacAddress in model BareMetalMachineConfigurationData"));
         }
         if (serialNumber() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property serialNumber in model BareMetalMachineConfigurationData"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property serialNumber in model BareMetalMachineConfigurationData"));
         }
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(BareMetalMachineConfigurationData.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("bmcCredentials", this.bmcCredentials);
+        jsonWriter.writeStringField("bmcMacAddress", this.bmcMacAddress);
+        jsonWriter.writeStringField("bootMacAddress", this.bootMacAddress);
+        jsonWriter.writeLongField("rackSlot", this.rackSlot);
+        jsonWriter.writeStringField("serialNumber", this.serialNumber);
+        jsonWriter.writeStringField("machineDetails", this.machineDetails);
+        jsonWriter.writeStringField("machineName", this.machineName);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of BareMetalMachineConfigurationData from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of BareMetalMachineConfigurationData if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the BareMetalMachineConfigurationData.
+     */
+    public static BareMetalMachineConfigurationData fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            BareMetalMachineConfigurationData deserializedBareMetalMachineConfigurationData
+                = new BareMetalMachineConfigurationData();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("bmcCredentials".equals(fieldName)) {
+                    deserializedBareMetalMachineConfigurationData.bmcCredentials
+                        = AdministrativeCredentials.fromJson(reader);
+                } else if ("bmcMacAddress".equals(fieldName)) {
+                    deserializedBareMetalMachineConfigurationData.bmcMacAddress = reader.getString();
+                } else if ("bootMacAddress".equals(fieldName)) {
+                    deserializedBareMetalMachineConfigurationData.bootMacAddress = reader.getString();
+                } else if ("rackSlot".equals(fieldName)) {
+                    deserializedBareMetalMachineConfigurationData.rackSlot = reader.getLong();
+                } else if ("serialNumber".equals(fieldName)) {
+                    deserializedBareMetalMachineConfigurationData.serialNumber = reader.getString();
+                } else if ("bmcConnectionString".equals(fieldName)) {
+                    deserializedBareMetalMachineConfigurationData.bmcConnectionString = reader.getString();
+                } else if ("machineDetails".equals(fieldName)) {
+                    deserializedBareMetalMachineConfigurationData.machineDetails = reader.getString();
+                } else if ("machineName".equals(fieldName)) {
+                    deserializedBareMetalMachineConfigurationData.machineName = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedBareMetalMachineConfigurationData;
+        });
+    }
 }

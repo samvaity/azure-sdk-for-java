@@ -5,7 +5,6 @@ package com.azure.messaging.servicebus.administration.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
-import com.azure.messaging.servicebus.administration.implementation.models.AuthorizationRuleImpl;
 
 import java.security.SecureRandom;
 import java.time.OffsetDateTime;
@@ -84,8 +83,7 @@ public final class SharedAccessAuthorizationRule implements AuthorizationRule {
         this.keyName = Objects.requireNonNull(keyName, "'keyName' cannot be null.");
         this.primaryKey = Objects.requireNonNull(primaryKey, "'primaryKey' cannot be null.");
         this.secondaryKey = Objects.requireNonNull(secondaryKey, "'secondaryKey' cannot be null.");
-        this.accessRights = new ArrayList<>(Objects.requireNonNull(accessRights,
-            "'accessRights' cannot be null."));
+        this.accessRights = new ArrayList<>(Objects.requireNonNull(accessRights, "'accessRights' cannot be null."));
         this.createdAt = null;
         this.modifiedAt = null;
 
@@ -94,8 +92,7 @@ public final class SharedAccessAuthorizationRule implements AuthorizationRule {
         } else if (primaryKey.isEmpty()) {
             throw LOGGER.logExceptionAsError(new IllegalArgumentException("'primaryKey' cannot be an empty string."));
         } else if (secondaryKey.isEmpty()) {
-            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
-                "'secondaryKey' cannot be an empty string."));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException("'secondaryKey' cannot be an empty string."));
         }
     }
 
@@ -104,7 +101,8 @@ public final class SharedAccessAuthorizationRule implements AuthorizationRule {
      *
      * @param implementation Implementation model.
      */
-    SharedAccessAuthorizationRule(AuthorizationRuleImpl implementation) {
+    SharedAccessAuthorizationRule(
+        com.azure.messaging.servicebus.administration.implementation.models.AuthorizationRule implementation) {
         this.keyName = implementation.getKeyName();
         this.primaryKey = implementation.getPrimaryKey();
         this.secondaryKey = implementation.getSecondaryKey();

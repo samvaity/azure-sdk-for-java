@@ -5,15 +5,20 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Represents available Sku pricing tiers. */
+/**
+ * Represents available Sku pricing tiers.
+ */
 @Fluent
-public final class NamespaceSku {
+public final class NamespaceSku implements JsonSerializable<NamespaceSku> {
     /*
      * The name of the SKU.
      */
-    @JsonProperty(value = "name")
     private SkuName name;
 
     /*
@@ -22,16 +27,17 @@ public final class NamespaceSku {
      * 1 which signifies 1 Throughput Unit = 1MB/s ingress and 2MB/s egress per namespace. Min capacity is 1 and
      * max allowed capacity is 20.
      */
-    @JsonProperty(value = "capacity")
     private Integer capacity;
 
-    /** Creates an instance of NamespaceSku class. */
+    /**
+     * Creates an instance of NamespaceSku class.
+     */
     public NamespaceSku() {
     }
 
     /**
      * Get the name property: The name of the SKU.
-     *
+     * 
      * @return the name value.
      */
     public SkuName name() {
@@ -40,7 +46,7 @@ public final class NamespaceSku {
 
     /**
      * Set the name property: The name of the SKU.
-     *
+     * 
      * @param name the name value to set.
      * @return the NamespaceSku object itself.
      */
@@ -51,9 +57,10 @@ public final class NamespaceSku {
 
     /**
      * Get the capacity property: Specifies the number of Throughput Units that defines the capacity for the namespace.
-     * The property default value is 1 which signifies 1 Throughput Unit = 1MB/s ingress and 2MB/s egress per namespace.
-     * Min capacity is 1 and max allowed capacity is 20.
-     *
+     * The property default value is
+     * 1 which signifies 1 Throughput Unit = 1MB/s ingress and 2MB/s egress per namespace. Min capacity is 1 and
+     * max allowed capacity is 20.
+     * 
      * @return the capacity value.
      */
     public Integer capacity() {
@@ -62,9 +69,10 @@ public final class NamespaceSku {
 
     /**
      * Set the capacity property: Specifies the number of Throughput Units that defines the capacity for the namespace.
-     * The property default value is 1 which signifies 1 Throughput Unit = 1MB/s ingress and 2MB/s egress per namespace.
-     * Min capacity is 1 and max allowed capacity is 20.
-     *
+     * The property default value is
+     * 1 which signifies 1 Throughput Unit = 1MB/s ingress and 2MB/s egress per namespace. Min capacity is 1 and
+     * max allowed capacity is 20.
+     * 
      * @param capacity the capacity value to set.
      * @return the NamespaceSku object itself.
      */
@@ -75,9 +83,48 @@ public final class NamespaceSku {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", this.name == null ? null : this.name.toString());
+        jsonWriter.writeNumberField("capacity", this.capacity);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of NamespaceSku from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of NamespaceSku if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the NamespaceSku.
+     */
+    public static NamespaceSku fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            NamespaceSku deserializedNamespaceSku = new NamespaceSku();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedNamespaceSku.name = SkuName.fromString(reader.getString());
+                } else if ("capacity".equals(fieldName)) {
+                    deserializedNamespaceSku.capacity = reader.getNullable(JsonReader::getInt);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedNamespaceSku;
+        });
     }
 }

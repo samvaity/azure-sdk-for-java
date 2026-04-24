@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.ConnectToSourceSqlServerTa
 public final class ConnectToSourceSqlServerTaskOutputAgentJobLevelTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ConnectToSourceSqlServerTaskOutputAgentJobLevel model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"AgentJobLevelOutput\",\"name\":\"pvjymjhxxjyng\",\"jobCategory\":\"ivkrtsw\",\"isEnabled\":false,\"jobOwner\":\"vszjfauvjfdxxi\",\"lastExecutedOn\":\"2021-01-09T05:59Z\",\"migrationEligibility\":{\"isEligibleForMigration\":true,\"validationMessages\":[\"qtdo\",\"mcbxvwvxysl\",\"bhsfxob\"]},\"id\":\"tkblmpewww\"}")
-                .toObject(ConnectToSourceSqlServerTaskOutputAgentJobLevel.class);
+        ConnectToSourceSqlServerTaskOutputAgentJobLevel model = BinaryData.fromString(
+            "{\"resultType\":\"AgentJobLevelOutput\",\"name\":\"qfby\",\"jobCategory\":\"rfgi\",\"isEnabled\":true,\"jobOwner\":\"ojocqwogf\",\"lastExecutedOn\":\"2021-01-10T04:16:53Z\",\"validationErrors\":[{\"message\":\"fzldmozu\",\"actionableMessage\":\"lfsbtkadpysow\",\"filePath\":\"tgkbugrjqctojc\",\"lineNumber\":\"sofieypefojyqd\",\"hResult\":219137261,\"stackTrace\":\"lcplc\"},{\"message\":\"hihihlhzdsqtzbsr\",\"actionableMessage\":\"o\",\"filePath\":\"jhf\",\"lineNumber\":\"vecactx\",\"hResult\":1768165976,\"stackTrace\":\"e\"}],\"migrationEligibility\":{\"isEligibleForMigration\":true,\"validationMessages\":[\"qovekqvgqou\",\"ifzmpjwyivqi\",\"f\",\"cvhrfsp\"]},\"id\":\"agr\"}")
+            .toObject(ConnectToSourceSqlServerTaskOutputAgentJobLevel.class);
     }
 
     @org.junit.jupiter.api.Test

@@ -4,10 +4,14 @@
 package com.azure.identity.util;
 
 import com.azure.core.credential.AccessToken;
+import com.azure.core.http.HttpClient;
+import com.azure.core.http.HttpRequest;
+import com.azure.core.http.HttpResponse;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.ConfigurationBuilder;
 import com.azure.core.util.ConfigurationSource;
 import com.azure.identity.implementation.MsalToken;
+import com.microsoft.aad.msal4j.AuthenticationResultMetadata;
 import com.microsoft.aad.msal4j.IAccount;
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import com.microsoft.aad.msal4j.ITenantProfile;
@@ -33,7 +37,8 @@ public final class TestUtils {
      * @param expiresOn the expiration time
      * @return a completable future of the result
      */
-    public static CompletableFuture<IAuthenticationResult> getMockAuthenticationResult(String accessToken, OffsetDateTime expiresOn) {
+    public static CompletableFuture<IAuthenticationResult> getMockAuthenticationResult(String accessToken,
+        OffsetDateTime expiresOn) {
         return CompletableFuture.completedFuture(getMockIAuthenticationResult(accessToken, expiresOn));
     }
 
@@ -74,6 +79,11 @@ public final class TestUtils {
                 // Access token dials back 2 minutes
                 return Date.from(expiresOn.plusMinutes(2).toInstant());
             }
+
+            @Override
+            public AuthenticationResultMetadata metadata() {
+                return null;
+            }
         };
     }
 
@@ -84,8 +94,7 @@ public final class TestUtils {
      * @return a Mono publisher of the result
      */
     public static Mono<MsalToken> getMockMsalToken(String accessToken, OffsetDateTime expiresOn) {
-        return Mono.fromFuture(getMockAuthenticationResult(accessToken, expiresOn))
-            .map(MsalToken::new);
+        return Mono.fromFuture(getMockAuthenticationResult(accessToken, expiresOn)).map(MsalToken::new);
     }
 
     /**
@@ -106,8 +115,7 @@ public final class TestUtils {
      * @return a Mono publisher of the result
      */
     public static Mono<IAccount> getMockMsalAccount(String accessToken, OffsetDateTime expiresOn) {
-        return Mono.fromFuture(getMockAuthenticationResult(accessToken, expiresOn))
-            .map(IAuthenticationResult::account);
+        return Mono.fromFuture(getMockAuthenticationResult(accessToken, expiresOn)).map(IAuthenticationResult::account);
     }
 
     /**
@@ -137,8 +145,29 @@ public final class TestUtils {
      * @param tokenRefreshOffset how long before the actual expiry to refresh the token
      * @return a Mono publisher of the result
      */
-    public static Mono<AccessToken> getMockAccessToken(String accessToken, OffsetDateTime expiresOn, Duration tokenRefreshOffset) {
+    public static Mono<AccessToken> getMockAccessToken(String accessToken, OffsetDateTime expiresOn,
+        Duration tokenRefreshOffset) {
         return Mono.just(new AccessToken(accessToken, expiresOn.plusMinutes(2).minus(tokenRefreshOffset)));
+    }
+
+    /**
+     * Creates a mock {@link HttpClient} which simply returns the provided responses in order.
+     * @param responses The responses to return.
+     * @param delay If specified, throw a {@code RuntimeException} after the specified delay.
+     * @return A mock HttpClient that returns the provided responses.
+     */
+    public static HttpClient getMockHttpClient(HttpResponse... responses) {
+        return new HttpClient() {
+            int index = 0;
+
+            @Override
+            public Mono<HttpResponse> send(HttpRequest request) {
+                if (index >= responses.length) {
+                    throw new IllegalStateException("No more responses available");
+                }
+                return Mono.just(responses[index++]);
+            }
+        };
     }
 
     /**
@@ -157,6 +186,7 @@ public final class TestUtils {
 
     static class Account implements IAccount {
         static final long serialVersionUID = 1L;
+
         @Override
         public String homeAccountId() {
             return UUID.randomUUID().toString();

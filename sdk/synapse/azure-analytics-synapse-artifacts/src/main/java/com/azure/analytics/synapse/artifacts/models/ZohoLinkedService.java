@@ -5,73 +5,96 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Zoho server linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("Zoho")
-@JsonFlatten
+/**
+ * Zoho server linked service.
+ */
 @Fluent
 public class ZohoLinkedService extends LinkedService {
+    /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "Zoho";
+
     /*
      * Properties used to connect to Zoho. It is mutually exclusive with any other properties in the linked service.
      * Type: object.
      */
-    @JsonProperty(value = "typeProperties.connectionProperties")
+    @Generated
     private Object connectionProperties;
 
     /*
      * The endpoint of the Zoho server. (i.e. crm.zoho.com/crm/private)
      */
-    @JsonProperty(value = "typeProperties.endpoint", required = true)
+    @Generated
     private Object endpoint;
 
     /*
      * The access token for Zoho authentication.
      */
-    @JsonProperty(value = "typeProperties.accessToken")
+    @Generated
     private SecretBase accessToken;
 
     /*
      * Specifies whether the data source endpoints are encrypted using HTTPS. The default value is true.
      */
-    @JsonProperty(value = "typeProperties.useEncryptedEndpoints")
+    @Generated
     private Object useEncryptedEndpoints;
 
     /*
      * Specifies whether to require the host name in the server's certificate to match the host name of the server when
      * connecting over SSL. The default value is true.
      */
-    @JsonProperty(value = "typeProperties.useHostVerification")
+    @Generated
     private Object useHostVerification;
 
     /*
      * Specifies whether to verify the identity of the server when connecting over SSL. The default value is true.
      */
-    @JsonProperty(value = "typeProperties.usePeerVerification")
+    @Generated
     private Object usePeerVerification;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of ZohoLinkedService class. */
-    public ZohoLinkedService() {}
+    /**
+     * Creates an instance of ZohoLinkedService class.
+     */
+    @Generated
+    public ZohoLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the connectionProperties property: Properties used to connect to Zoho. It is mutually exclusive with any
      * other properties in the linked service. Type: object.
-     *
+     * 
      * @return the connectionProperties value.
      */
+    @Generated
     public Object getConnectionProperties() {
         return this.connectionProperties;
     }
@@ -79,10 +102,11 @@ public class ZohoLinkedService extends LinkedService {
     /**
      * Set the connectionProperties property: Properties used to connect to Zoho. It is mutually exclusive with any
      * other properties in the linked service. Type: object.
-     *
+     * 
      * @param connectionProperties the connectionProperties value to set.
      * @return the ZohoLinkedService object itself.
      */
+    @Generated
     public ZohoLinkedService setConnectionProperties(Object connectionProperties) {
         this.connectionProperties = connectionProperties;
         return this;
@@ -90,19 +114,21 @@ public class ZohoLinkedService extends LinkedService {
 
     /**
      * Get the endpoint property: The endpoint of the Zoho server. (i.e. crm.zoho.com/crm/private).
-     *
+     * 
      * @return the endpoint value.
      */
+    @Generated
     public Object getEndpoint() {
         return this.endpoint;
     }
 
     /**
      * Set the endpoint property: The endpoint of the Zoho server. (i.e. crm.zoho.com/crm/private).
-     *
+     * 
      * @param endpoint the endpoint value to set.
      * @return the ZohoLinkedService object itself.
      */
+    @Generated
     public ZohoLinkedService setEndpoint(Object endpoint) {
         this.endpoint = endpoint;
         return this;
@@ -110,19 +136,21 @@ public class ZohoLinkedService extends LinkedService {
 
     /**
      * Get the accessToken property: The access token for Zoho authentication.
-     *
+     * 
      * @return the accessToken value.
      */
+    @Generated
     public SecretBase getAccessToken() {
         return this.accessToken;
     }
 
     /**
      * Set the accessToken property: The access token for Zoho authentication.
-     *
+     * 
      * @param accessToken the accessToken value to set.
      * @return the ZohoLinkedService object itself.
      */
+    @Generated
     public ZohoLinkedService setAccessToken(SecretBase accessToken) {
         this.accessToken = accessToken;
         return this;
@@ -131,9 +159,10 @@ public class ZohoLinkedService extends LinkedService {
     /**
      * Get the useEncryptedEndpoints property: Specifies whether the data source endpoints are encrypted using HTTPS.
      * The default value is true.
-     *
+     * 
      * @return the useEncryptedEndpoints value.
      */
+    @Generated
     public Object getUseEncryptedEndpoints() {
         return this.useEncryptedEndpoints;
     }
@@ -141,10 +170,11 @@ public class ZohoLinkedService extends LinkedService {
     /**
      * Set the useEncryptedEndpoints property: Specifies whether the data source endpoints are encrypted using HTTPS.
      * The default value is true.
-     *
+     * 
      * @param useEncryptedEndpoints the useEncryptedEndpoints value to set.
      * @return the ZohoLinkedService object itself.
      */
+    @Generated
     public ZohoLinkedService setUseEncryptedEndpoints(Object useEncryptedEndpoints) {
         this.useEncryptedEndpoints = useEncryptedEndpoints;
         return this;
@@ -153,9 +183,10 @@ public class ZohoLinkedService extends LinkedService {
     /**
      * Get the useHostVerification property: Specifies whether to require the host name in the server's certificate to
      * match the host name of the server when connecting over SSL. The default value is true.
-     *
+     * 
      * @return the useHostVerification value.
      */
+    @Generated
     public Object getUseHostVerification() {
         return this.useHostVerification;
     }
@@ -163,10 +194,11 @@ public class ZohoLinkedService extends LinkedService {
     /**
      * Set the useHostVerification property: Specifies whether to require the host name in the server's certificate to
      * match the host name of the server when connecting over SSL. The default value is true.
-     *
+     * 
      * @param useHostVerification the useHostVerification value to set.
      * @return the ZohoLinkedService object itself.
      */
+    @Generated
     public ZohoLinkedService setUseHostVerification(Object useHostVerification) {
         this.useHostVerification = useHostVerification;
         return this;
@@ -175,9 +207,10 @@ public class ZohoLinkedService extends LinkedService {
     /**
      * Get the usePeerVerification property: Specifies whether to verify the identity of the server when connecting over
      * SSL. The default value is true.
-     *
+     * 
      * @return the usePeerVerification value.
      */
+    @Generated
     public Object getUsePeerVerification() {
         return this.usePeerVerification;
     }
@@ -185,10 +218,11 @@ public class ZohoLinkedService extends LinkedService {
     /**
      * Set the usePeerVerification property: Specifies whether to verify the identity of the server when connecting over
      * SSL. The default value is true.
-     *
+     * 
      * @param usePeerVerification the usePeerVerification value to set.
      * @return the ZohoLinkedService object itself.
      */
+    @Generated
     public ZohoLinkedService setUsePeerVerification(Object usePeerVerification) {
         this.usePeerVerification = usePeerVerification;
         return this;
@@ -197,9 +231,10 @@ public class ZohoLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -207,40 +242,181 @@ public class ZohoLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the ZohoLinkedService object itself.
      */
+    @Generated
     public ZohoLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public ZohoLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ZohoLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ZohoLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ZohoLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ZohoLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (connectionProperties != null
+            || endpoint != null
+            || accessToken != null
+            || useEncryptedEndpoints != null
+            || useHostVerification != null
+            || usePeerVerification != null
+            || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            if (this.connectionProperties != null) {
+                jsonWriter.writeUntypedField("connectionProperties", this.connectionProperties);
+            }
+            jsonWriter.writeUntypedField("endpoint", this.endpoint);
+            jsonWriter.writeJsonField("accessToken", this.accessToken);
+            if (this.useEncryptedEndpoints != null) {
+                jsonWriter.writeUntypedField("useEncryptedEndpoints", this.useEncryptedEndpoints);
+            }
+            if (this.useHostVerification != null) {
+                jsonWriter.writeUntypedField("useHostVerification", this.useHostVerification);
+            }
+            if (this.usePeerVerification != null) {
+                jsonWriter.writeUntypedField("usePeerVerification", this.usePeerVerification);
+            }
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ZohoLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ZohoLinkedService if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ZohoLinkedService.
+     */
+    @Generated
+    public static ZohoLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ZohoLinkedService deserializedZohoLinkedService = new ZohoLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedZohoLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedZohoLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedZohoLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedZohoLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedZohoLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedZohoLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("connectionProperties".equals(fieldName)) {
+                            deserializedZohoLinkedService.connectionProperties = reader.readUntyped();
+                        } else if ("endpoint".equals(fieldName)) {
+                            deserializedZohoLinkedService.endpoint = reader.readUntyped();
+                        } else if ("accessToken".equals(fieldName)) {
+                            deserializedZohoLinkedService.accessToken = SecretBase.fromJson(reader);
+                        } else if ("useEncryptedEndpoints".equals(fieldName)) {
+                            deserializedZohoLinkedService.useEncryptedEndpoints = reader.readUntyped();
+                        } else if ("useHostVerification".equals(fieldName)) {
+                            deserializedZohoLinkedService.useHostVerification = reader.readUntyped();
+                        } else if ("usePeerVerification".equals(fieldName)) {
+                            deserializedZohoLinkedService.usePeerVerification = reader.readUntyped();
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedZohoLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedZohoLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedZohoLinkedService;
+        });
     }
 }

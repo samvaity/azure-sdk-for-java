@@ -13,38 +13,27 @@ import org.junit.jupiter.api.Assertions;
 public final class DesktopPatchTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DesktopPatch model =
-            BinaryData
-                .fromString(
-                    "{\"tags\":{\"erscdntne\":\"dzu\",\"tmweriofzpyq\":\"fiwjmygtdssls\",\"hhszh\":\"emwabnet\",\"lvwiwubmwmbesl\":\"d\"},\"properties\":{\"description\":\"wwtppj\",\"friendlyName\":\"cxogaokonzm\"}}")
-                .toObject(DesktopPatch.class);
-        Assertions.assertEquals("dzu", model.tags().get("erscdntne"));
-        Assertions.assertEquals("wwtppj", model.description());
-        Assertions.assertEquals("cxogaokonzm", model.friendlyName());
+        DesktopPatch model = BinaryData.fromString(
+            "{\"tags\":{\"dcpzfoqo\":\"zkoj\",\"ybxarzgszu\":\"i\",\"hkh\":\"oxciqopidoamcio\"},\"properties\":{\"description\":\"khnzbonlw\",\"friendlyName\":\"oegokdwbwh\"}}")
+            .toObject(DesktopPatch.class);
+        Assertions.assertEquals("zkoj", model.tags().get("dcpzfoqo"));
+        Assertions.assertEquals("khnzbonlw", model.description());
+        Assertions.assertEquals("oegokdwbwh", model.friendlyName());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        DesktopPatch model =
-            new DesktopPatch()
-                .withTags(
-                    mapOf(
-                        "erscdntne",
-                        "dzu",
-                        "tmweriofzpyq",
-                        "fiwjmygtdssls",
-                        "hhszh",
-                        "emwabnet",
-                        "lvwiwubmwmbesl",
-                        "d"))
-                .withDescription("wwtppj")
-                .withFriendlyName("cxogaokonzm");
+        DesktopPatch model
+            = new DesktopPatch().withTags(mapOf("dcpzfoqo", "zkoj", "ybxarzgszu", "i", "hkh", "oxciqopidoamcio"))
+                .withDescription("khnzbonlw")
+                .withFriendlyName("oegokdwbwh");
         model = BinaryData.fromObject(model).toObject(DesktopPatch.class);
-        Assertions.assertEquals("dzu", model.tags().get("erscdntne"));
-        Assertions.assertEquals("wwtppj", model.description());
-        Assertions.assertEquals("cxogaokonzm", model.friendlyName());
+        Assertions.assertEquals("zkoj", model.tags().get("dcpzfoqo"));
+        Assertions.assertEquals("khnzbonlw", model.description());
+        Assertions.assertEquals("oegokdwbwh", model.friendlyName());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

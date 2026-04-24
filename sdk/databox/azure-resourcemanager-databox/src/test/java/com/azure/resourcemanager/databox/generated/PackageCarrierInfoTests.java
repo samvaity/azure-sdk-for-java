@@ -11,19 +11,17 @@ import org.junit.jupiter.api.Assertions;
 public final class PackageCarrierInfoTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        PackageCarrierInfo model =
-            BinaryData
-                .fromString("{\"carrierName\":\"pyd\",\"trackingId\":\"yhxdeoejzicwi\"}")
-                .toObject(PackageCarrierInfo.class);
-        Assertions.assertEquals("pyd", model.carrierName());
-        Assertions.assertEquals("yhxdeoejzicwi", model.trackingId());
+        PackageCarrierInfo model = BinaryData.fromString("{\"carrierName\":\"qzntypm\",\"trackingId\":\"p\"}")
+            .toObject(PackageCarrierInfo.class);
+        Assertions.assertEquals("qzntypm", model.carrierName());
+        Assertions.assertEquals("p", model.trackingId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        PackageCarrierInfo model = new PackageCarrierInfo().withCarrierName("pyd").withTrackingId("yhxdeoejzicwi");
+        PackageCarrierInfo model = new PackageCarrierInfo().withCarrierName("qzntypm").withTrackingId("p");
         model = BinaryData.fromObject(model).toObject(PackageCarrierInfo.class);
-        Assertions.assertEquals("pyd", model.carrierName());
-        Assertions.assertEquals("yhxdeoejzicwi", model.trackingId());
+        Assertions.assertEquals("qzntypm", model.carrierName());
+        Assertions.assertEquals("p", model.trackingId());
     }
 }

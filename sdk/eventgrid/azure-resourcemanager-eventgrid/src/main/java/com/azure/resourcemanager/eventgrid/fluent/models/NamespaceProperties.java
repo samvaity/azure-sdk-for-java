@@ -5,48 +5,52 @@
 package com.azure.resourcemanager.eventgrid.fluent.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.eventgrid.models.InboundIpRule;
 import com.azure.resourcemanager.eventgrid.models.NamespaceProvisioningState;
 import com.azure.resourcemanager.eventgrid.models.PublicNetworkAccess;
 import com.azure.resourcemanager.eventgrid.models.TlsVersion;
 import com.azure.resourcemanager.eventgrid.models.TopicSpacesConfiguration;
 import com.azure.resourcemanager.eventgrid.models.TopicsConfiguration;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.util.List;
 
-/** Properties of the namespace resource. */
+/**
+ * Properties of the namespace resource.
+ */
 @Fluent
-public final class NamespaceProperties {
+public final class NamespaceProperties implements JsonSerializable<NamespaceProperties> {
     /*
-     * The privateEndpointConnections property.
+     * List of private endpoint connections.
      */
-    @JsonProperty(value = "privateEndpointConnections")
     private List<PrivateEndpointConnectionInner> privateEndpointConnections;
 
     /*
      * Provisioning state of the namespace resource.
      */
-    @JsonProperty(value = "provisioningState", access = JsonProperty.Access.WRITE_ONLY)
     private NamespaceProvisioningState provisioningState;
 
     /*
      * Topics configuration information for the namespace resource
      */
-    @JsonProperty(value = "topicsConfiguration")
     private TopicsConfiguration topicsConfiguration;
 
     /*
      * Topic spaces configuration information for the namespace resource
      */
-    @JsonProperty(value = "topicSpacesConfiguration")
     private TopicSpacesConfiguration topicSpacesConfiguration;
 
     /*
-     * Allows the user to specify if the service is zone-redundant. This is a required property and user needs to
-     * specify this value explicitly.
+     * This is an optional property and it allows the user to specify if the namespace resource supports zone-redundancy
+     * capability or not. If this
+     * property is not specified explicitly by the user, its default value depends on the following conditions:
+     * a. For Availability Zones enabled regions - The default property value would be true.
+     * b. For non-Availability Zones enabled regions - The default property value would be false.
      * Once specified, this property cannot be updated.
      */
-    @JsonProperty(value = "isZoneRedundant")
     private Boolean isZoneRedundant;
 
     /*
@@ -54,29 +58,28 @@ public final class NamespaceProperties {
      * You can further restrict to specific IPs by configuring <seealso
      * cref="P:Microsoft.Azure.Events.ResourceProvider.Common.Contracts.PubSub.NamespaceProperties.InboundIpRules" />
      */
-    @JsonProperty(value = "publicNetworkAccess")
     private PublicNetworkAccess publicNetworkAccess;
 
     /*
      * This can be used to restrict traffic from specific IPs instead of all IPs. Note: These are considered only if
      * PublicNetworkAccess is enabled.
      */
-    @JsonProperty(value = "inboundIpRules")
     private List<InboundIpRule> inboundIpRules;
 
     /*
      * Minimum TLS version of the publisher allowed to publish to this namespace. Only TLS version 1.2 is supported.
      */
-    @JsonProperty(value = "minimumTlsVersionAllowed")
     private TlsVersion minimumTlsVersionAllowed;
 
-    /** Creates an instance of NamespaceProperties class. */
+    /**
+     * Creates an instance of NamespaceProperties class.
+     */
     public NamespaceProperties() {
     }
 
     /**
-     * Get the privateEndpointConnections property: The privateEndpointConnections property.
-     *
+     * Get the privateEndpointConnections property: List of private endpoint connections.
+     * 
      * @return the privateEndpointConnections value.
      */
     public List<PrivateEndpointConnectionInner> privateEndpointConnections() {
@@ -84,20 +87,20 @@ public final class NamespaceProperties {
     }
 
     /**
-     * Set the privateEndpointConnections property: The privateEndpointConnections property.
-     *
+     * Set the privateEndpointConnections property: List of private endpoint connections.
+     * 
      * @param privateEndpointConnections the privateEndpointConnections value to set.
      * @return the NamespaceProperties object itself.
      */
-    public NamespaceProperties withPrivateEndpointConnections(
-        List<PrivateEndpointConnectionInner> privateEndpointConnections) {
+    public NamespaceProperties
+        withPrivateEndpointConnections(List<PrivateEndpointConnectionInner> privateEndpointConnections) {
         this.privateEndpointConnections = privateEndpointConnections;
         return this;
     }
 
     /**
      * Get the provisioningState property: Provisioning state of the namespace resource.
-     *
+     * 
      * @return the provisioningState value.
      */
     public NamespaceProvisioningState provisioningState() {
@@ -106,7 +109,7 @@ public final class NamespaceProperties {
 
     /**
      * Get the topicsConfiguration property: Topics configuration information for the namespace resource.
-     *
+     * 
      * @return the topicsConfiguration value.
      */
     public TopicsConfiguration topicsConfiguration() {
@@ -115,7 +118,7 @@ public final class NamespaceProperties {
 
     /**
      * Set the topicsConfiguration property: Topics configuration information for the namespace resource.
-     *
+     * 
      * @param topicsConfiguration the topicsConfiguration value to set.
      * @return the NamespaceProperties object itself.
      */
@@ -126,7 +129,7 @@ public final class NamespaceProperties {
 
     /**
      * Get the topicSpacesConfiguration property: Topic spaces configuration information for the namespace resource.
-     *
+     * 
      * @return the topicSpacesConfiguration value.
      */
     public TopicSpacesConfiguration topicSpacesConfiguration() {
@@ -135,7 +138,7 @@ public final class NamespaceProperties {
 
     /**
      * Set the topicSpacesConfiguration property: Topic spaces configuration information for the namespace resource.
-     *
+     * 
      * @param topicSpacesConfiguration the topicSpacesConfiguration value to set.
      * @return the NamespaceProperties object itself.
      */
@@ -145,9 +148,13 @@ public final class NamespaceProperties {
     }
 
     /**
-     * Get the isZoneRedundant property: Allows the user to specify if the service is zone-redundant. This is a required
-     * property and user needs to specify this value explicitly. Once specified, this property cannot be updated.
-     *
+     * Get the isZoneRedundant property: This is an optional property and it allows the user to specify if the namespace
+     * resource supports zone-redundancy capability or not. If this
+     * property is not specified explicitly by the user, its default value depends on the following conditions:
+     * a. For Availability Zones enabled regions - The default property value would be true.
+     * b. For non-Availability Zones enabled regions - The default property value would be false.
+     * Once specified, this property cannot be updated.
+     * 
      * @return the isZoneRedundant value.
      */
     public Boolean isZoneRedundant() {
@@ -155,9 +162,13 @@ public final class NamespaceProperties {
     }
 
     /**
-     * Set the isZoneRedundant property: Allows the user to specify if the service is zone-redundant. This is a required
-     * property and user needs to specify this value explicitly. Once specified, this property cannot be updated.
-     *
+     * Set the isZoneRedundant property: This is an optional property and it allows the user to specify if the namespace
+     * resource supports zone-redundancy capability or not. If this
+     * property is not specified explicitly by the user, its default value depends on the following conditions:
+     * a. For Availability Zones enabled regions - The default property value would be true.
+     * b. For non-Availability Zones enabled regions - The default property value would be false.
+     * Once specified, this property cannot be updated.
+     * 
      * @param isZoneRedundant the isZoneRedundant value to set.
      * @return the NamespaceProperties object itself.
      */
@@ -168,10 +179,11 @@ public final class NamespaceProperties {
 
     /**
      * Get the publicNetworkAccess property: This determines if traffic is allowed over public network. By default it is
-     * enabled. You can further restrict to specific IPs by configuring &lt;seealso
+     * enabled.
+     * You can further restrict to specific IPs by configuring &lt;seealso
      * cref="P:Microsoft.Azure.Events.ResourceProvider.Common.Contracts.PubSub.NamespaceProperties.InboundIpRules"
      * /&gt;.
-     *
+     * 
      * @return the publicNetworkAccess value.
      */
     public PublicNetworkAccess publicNetworkAccess() {
@@ -180,10 +192,11 @@ public final class NamespaceProperties {
 
     /**
      * Set the publicNetworkAccess property: This determines if traffic is allowed over public network. By default it is
-     * enabled. You can further restrict to specific IPs by configuring &lt;seealso
+     * enabled.
+     * You can further restrict to specific IPs by configuring &lt;seealso
      * cref="P:Microsoft.Azure.Events.ResourceProvider.Common.Contracts.PubSub.NamespaceProperties.InboundIpRules"
      * /&gt;.
-     *
+     * 
      * @param publicNetworkAccess the publicNetworkAccess value to set.
      * @return the NamespaceProperties object itself.
      */
@@ -195,7 +208,7 @@ public final class NamespaceProperties {
     /**
      * Get the inboundIpRules property: This can be used to restrict traffic from specific IPs instead of all IPs. Note:
      * These are considered only if PublicNetworkAccess is enabled.
-     *
+     * 
      * @return the inboundIpRules value.
      */
     public List<InboundIpRule> inboundIpRules() {
@@ -205,7 +218,7 @@ public final class NamespaceProperties {
     /**
      * Set the inboundIpRules property: This can be used to restrict traffic from specific IPs instead of all IPs. Note:
      * These are considered only if PublicNetworkAccess is enabled.
-     *
+     * 
      * @param inboundIpRules the inboundIpRules value to set.
      * @return the NamespaceProperties object itself.
      */
@@ -217,7 +230,7 @@ public final class NamespaceProperties {
     /**
      * Get the minimumTlsVersionAllowed property: Minimum TLS version of the publisher allowed to publish to this
      * namespace. Only TLS version 1.2 is supported.
-     *
+     * 
      * @return the minimumTlsVersionAllowed value.
      */
     public TlsVersion minimumTlsVersionAllowed() {
@@ -227,7 +240,7 @@ public final class NamespaceProperties {
     /**
      * Set the minimumTlsVersionAllowed property: Minimum TLS version of the publisher allowed to publish to this
      * namespace. Only TLS version 1.2 is supported.
-     *
+     * 
      * @param minimumTlsVersionAllowed the minimumTlsVersionAllowed value to set.
      * @return the NamespaceProperties object itself.
      */
@@ -238,7 +251,7 @@ public final class NamespaceProperties {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -254,5 +267,72 @@ public final class NamespaceProperties {
         if (inboundIpRules() != null) {
             inboundIpRules().forEach(e -> e.validate());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("privateEndpointConnections", this.privateEndpointConnections,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("topicsConfiguration", this.topicsConfiguration);
+        jsonWriter.writeJsonField("topicSpacesConfiguration", this.topicSpacesConfiguration);
+        jsonWriter.writeBooleanField("isZoneRedundant", this.isZoneRedundant);
+        jsonWriter.writeStringField("publicNetworkAccess",
+            this.publicNetworkAccess == null ? null : this.publicNetworkAccess.toString());
+        jsonWriter.writeArrayField("inboundIpRules", this.inboundIpRules,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("minimumTlsVersionAllowed",
+            this.minimumTlsVersionAllowed == null ? null : this.minimumTlsVersionAllowed.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of NamespaceProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of NamespaceProperties if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the NamespaceProperties.
+     */
+    public static NamespaceProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            NamespaceProperties deserializedNamespaceProperties = new NamespaceProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("privateEndpointConnections".equals(fieldName)) {
+                    List<PrivateEndpointConnectionInner> privateEndpointConnections
+                        = reader.readArray(reader1 -> PrivateEndpointConnectionInner.fromJson(reader1));
+                    deserializedNamespaceProperties.privateEndpointConnections = privateEndpointConnections;
+                } else if ("provisioningState".equals(fieldName)) {
+                    deserializedNamespaceProperties.provisioningState
+                        = NamespaceProvisioningState.fromString(reader.getString());
+                } else if ("topicsConfiguration".equals(fieldName)) {
+                    deserializedNamespaceProperties.topicsConfiguration = TopicsConfiguration.fromJson(reader);
+                } else if ("topicSpacesConfiguration".equals(fieldName)) {
+                    deserializedNamespaceProperties.topicSpacesConfiguration
+                        = TopicSpacesConfiguration.fromJson(reader);
+                } else if ("isZoneRedundant".equals(fieldName)) {
+                    deserializedNamespaceProperties.isZoneRedundant = reader.getNullable(JsonReader::getBoolean);
+                } else if ("publicNetworkAccess".equals(fieldName)) {
+                    deserializedNamespaceProperties.publicNetworkAccess
+                        = PublicNetworkAccess.fromString(reader.getString());
+                } else if ("inboundIpRules".equals(fieldName)) {
+                    List<InboundIpRule> inboundIpRules = reader.readArray(reader1 -> InboundIpRule.fromJson(reader1));
+                    deserializedNamespaceProperties.inboundIpRules = inboundIpRules;
+                } else if ("minimumTlsVersionAllowed".equals(fieldName)) {
+                    deserializedNamespaceProperties.minimumTlsVersionAllowed
+                        = TlsVersion.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedNamespaceProperties;
+        });
     }
 }

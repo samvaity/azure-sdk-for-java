@@ -20,30 +20,26 @@ public final class SupportedOperatingSystemsOperationsImpl implements SupportedO
 
     private final com.azure.resourcemanager.recoveryservicessiterecovery.SiteRecoveryManager serviceManager;
 
-    public SupportedOperatingSystemsOperationsImpl(
-        SupportedOperatingSystemsOperationsClient innerClient,
+    public SupportedOperatingSystemsOperationsImpl(SupportedOperatingSystemsOperationsClient innerClient,
         com.azure.resourcemanager.recoveryservicessiterecovery.SiteRecoveryManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
     }
 
-    public Response<SupportedOperatingSystems> getWithResponse(
-        String resourceName, String resourceGroupName, String instanceType, Context context) {
-        Response<SupportedOperatingSystemsInner> inner =
-            this.serviceClient().getWithResponse(resourceName, resourceGroupName, instanceType, context);
+    public Response<SupportedOperatingSystems> getWithResponse(String resourceGroupName, String resourceName,
+        String instanceType, Context context) {
+        Response<SupportedOperatingSystemsInner> inner
+            = this.serviceClient().getWithResponse(resourceGroupName, resourceName, instanceType, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new SupportedOperatingSystemsImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public SupportedOperatingSystems get(String resourceName, String resourceGroupName) {
-        SupportedOperatingSystemsInner inner = this.serviceClient().get(resourceName, resourceGroupName);
+    public SupportedOperatingSystems get(String resourceGroupName, String resourceName) {
+        SupportedOperatingSystemsInner inner = this.serviceClient().get(resourceGroupName, resourceName);
         if (inner != null) {
             return new SupportedOperatingSystemsImpl(inner, this.manager());
         } else {

@@ -11,6 +11,7 @@ import com.azure.storage.common.ParallelTransferOptions;
 import com.azure.storage.common.Utility;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,8 +49,7 @@ public class UploadUtils {
 
         PayloadSizeGate gate = new PayloadSizeGate(parallelTransferOptions.getMaxSingleUploadSizeLong());
 
-        return data
-            .filter(ByteBuffer::hasRemaining)
+        return data.filter(ByteBuffer::hasRemaining)
             // The gate buffers data until threshold is breached.
             .concatMap(gate::write, 0)
             // First buffer is emitted after threshold is breached or there's no more data.
@@ -92,25 +92,22 @@ public class UploadUtils {
     public static Flux<ByteBuffer> chunkSource(Flux<ByteBuffer> data, ParallelTransferOptions parallelTransferOptions) {
         if (parallelTransferOptions.getBlockSizeLong() <= Integer.MAX_VALUE) {
             int chunkSize = parallelTransferOptions.getBlockSizeLong().intValue();
-            return data
-                .flatMapSequential(buffer -> {
-                    if (buffer.remaining() <= chunkSize) {
-                        return Flux.just(buffer);
-                    }
-                    int numSplits = (int) Math.ceil(buffer.remaining() / (double) chunkSize);
-                    return Flux.range(0, numSplits)
-                        .map(i -> {
-                            ByteBuffer duplicate = buffer.duplicate().asReadOnlyBuffer();
-                            duplicate.position(i * chunkSize);
-                            duplicate.limit(Math.min(duplicate.limit(), (i + 1) * chunkSize));
-                            return duplicate;
-                        });
-                }, 1, 1);
+            return data.flatMapSequential(buffer -> {
+                if (buffer.remaining() <= chunkSize) {
+                    return Flux.just(buffer);
+                }
+                int numSplits = (int) Math.ceil(buffer.remaining() / (double) chunkSize);
+                return Flux.range(0, numSplits).map(i -> {
+                    ByteBuffer duplicate = buffer.duplicate().asReadOnlyBuffer();
+                    duplicate.position(i * chunkSize);
+                    duplicate.limit(Math.min(duplicate.limit(), (i + 1) * chunkSize));
+                    return duplicate;
+                });
+            }, 1, 1);
         } else {
             return data;
         }
     }
-
 
     public static boolean shouldUploadInChunks(String filePath, Long maxSingleUploadSize, ClientLogger logger) {
         AsynchronousFileChannel channel = uploadFileResourceSupplier(filePath, logger);
@@ -148,6 +145,25 @@ public class UploadUtils {
             channel.close();
         } catch (IOException e) {
             throw logger.logExceptionAsError(new UncheckedIOException(e));
+        }
+    }
+
+    /**
+     * It computes the MD5 of the provided buffer
+     * @param data The data.
+     * @param logger Logger to log errors.
+     * @return The md5 of the data.
+     */
+    public static byte[] computeMd5(ByteBuffer data, ClientLogger logger) {
+        if (data == null) {
+            return null;
+        }
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            digest.update(data.duplicate().asReadOnlyBuffer());
+            return digest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            throw logger.logExceptionAsError(new RuntimeException(e));
         }
     }
 
@@ -210,7 +226,7 @@ public class UploadUtils {
         if (data == null && optionalLength == null) {
             // We can only buffer up to max int due to restrictions in ByteBuffer.
             int chunkSize = (int) Math.min(Constants.MAX_INPUT_STREAM_CONVERTER_BUFFER_LENGTH, blockSize);
-            data = FluxUtil.toFluxByteBuffer(dataStream, chunkSize);
+            data = FluxUtil.toFluxByteBuffer(dataStream, chunkSize).subscribeOn(Schedulers.boundedElastic());
             // specified length (legacy requirement): use custom converter. no marking because we buffer anyway.
         } else if (data == null) {
             // We can only buffer up to max int due to restrictions in ByteBuffer.

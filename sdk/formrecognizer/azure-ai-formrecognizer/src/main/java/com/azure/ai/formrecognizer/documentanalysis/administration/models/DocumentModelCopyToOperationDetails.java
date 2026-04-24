@@ -9,6 +9,14 @@ import com.azure.core.annotation.Immutable;
 /** Copy document model operation details. */
 @Immutable
 public final class DocumentModelCopyToOperationDetails extends OperationDetails {
+
+    /**
+     * Creates a DocumentModelCopyToOperationDetails object.
+     */
+    public DocumentModelCopyToOperationDetails() {
+        super();
+    }
+
     /*
      * Operation result upon success.
      */
@@ -28,16 +36,15 @@ public final class DocumentModelCopyToOperationDetails extends OperationDetails 
      *
      * @param result the result value to set.
      */
-    private void setResult(
-        DocumentModelDetails result) {
+    private void setResult(DocumentModelDetails result) {
         this.result = result;
     }
 
     static {
-        DocumentModelCopyToOperationDetailsHelper.setAccessor(
-            new DocumentModelCopyToOperationDetailsHelper.DocumentModelCopyToOperationDetailsAccessor() {
+        DocumentModelCopyToOperationDetailsHelper
+            .setAccessor(new DocumentModelCopyToOperationDetailsHelper.DocumentModelCopyToOperationDetailsAccessor() {
                 public void setResult(DocumentModelCopyToOperationDetails operationDetails,
-                                      DocumentModelDetails result) {
+                    DocumentModelDetails result) {
                     operationDetails.setResult(result);
                 }
             });

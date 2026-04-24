@@ -6,20 +6,23 @@ package com.azure.resourcemanager.applicationinsights.generated;
 
 import com.azure.resourcemanager.applicationinsights.models.StorageType;
 
-/** Samples for ComponentLinkedStorageAccountsOperation CreateAndUpdate. */
+/**
+ * Samples for ComponentLinkedStorageAccountsOperation CreateAndUpdate.
+ */
 public final class ComponentLinkedStorageAccountsOperationCreateAndUpdateSamples {
     /*
-     * x-ms-original-file: specification/applicationinsights/resource-manager/Microsoft.Insights/preview/2020-03-01-preview/examples/ComponentLinkedStorageAccountsCreateAndUpdate.json
+     * x-ms-original-file:
+     * specification/applicationinsights/resource-manager/Microsoft.Insights/preview/2020-03-01-preview/examples/
+     * ComponentLinkedStorageAccountsCreateAndUpdate.json
      */
     /**
      * Sample code: ComponentLinkedStorageAccountsCreateAndUpdate.
-     *
+     * 
      * @param manager Entry point to ApplicationInsightsManager.
      */
     public static void componentLinkedStorageAccountsCreateAndUpdate(
         com.azure.resourcemanager.applicationinsights.ApplicationInsightsManager manager) {
-        manager
-            .componentLinkedStorageAccountsOperations()
+        manager.componentLinkedStorageAccountsOperations()
             .define(StorageType.SERVICE_PROFILER)
             .withExistingComponent("someResourceGroupName", "myComponent")
             .withLinkedStorageAccount(

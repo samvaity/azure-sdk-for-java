@@ -8,72 +8,74 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of AzureBareMetalInstances. */
+/**
+ * Resource collection API of AzureBareMetalInstances.
+ */
 public interface AzureBareMetalInstances {
     /**
      * Gets a list of Azure BareMetal instances in the specified subscription.
-     *
-     * <p>Gets a list of AzureBareMetal instances in the specified subscription. The operations returns various
-     * properties of each Azure BareMetal instance.
-     *
+     * 
+     * Gets a list of AzureBareMetal instances in the specified subscription. The operations returns various properties
+     * of each Azure BareMetal instance.
+     * 
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of AzureBareMetal instances in the specified subscription as paginated response with {@link
-     *     PagedIterable}.
+     * @return a list of AzureBareMetal instances in the specified subscription as paginated response with
+     * {@link PagedIterable}.
      */
     PagedIterable<AzureBareMetalInstance> list();
 
     /**
      * Gets a list of Azure BareMetal instances in the specified subscription.
-     *
-     * <p>Gets a list of AzureBareMetal instances in the specified subscription. The operations returns various
-     * properties of each Azure BareMetal instance.
-     *
+     * 
+     * Gets a list of AzureBareMetal instances in the specified subscription. The operations returns various properties
+     * of each Azure BareMetal instance.
+     * 
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of AzureBareMetal instances in the specified subscription as paginated response with {@link
-     *     PagedIterable}.
+     * @return a list of AzureBareMetal instances in the specified subscription as paginated response with
+     * {@link PagedIterable}.
      */
     PagedIterable<AzureBareMetalInstance> list(Context context);
 
     /**
      * Gets a list of Azure BareMetal instances in the specified subscription and resource group.
-     *
-     * <p>Gets a list of AzureBareMetal instances in the specified subscription and resource group. The operations
-     * returns various properties of each Azure BareMetal instance.
-     *
+     * 
+     * Gets a list of AzureBareMetal instances in the specified subscription and resource group. The operations returns
+     * various properties of each Azure BareMetal instance.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of AzureBareMetal instances in the specified subscription and resource group as paginated response
-     *     with {@link PagedIterable}.
+     * with {@link PagedIterable}.
      */
     PagedIterable<AzureBareMetalInstance> listByResourceGroup(String resourceGroupName);
 
     /**
      * Gets a list of Azure BareMetal instances in the specified subscription and resource group.
-     *
-     * <p>Gets a list of AzureBareMetal instances in the specified subscription and resource group. The operations
-     * returns various properties of each Azure BareMetal instance.
-     *
+     * 
+     * Gets a list of AzureBareMetal instances in the specified subscription and resource group. The operations returns
+     * various properties of each Azure BareMetal instance.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of AzureBareMetal instances in the specified subscription and resource group as paginated response
-     *     with {@link PagedIterable}.
+     * with {@link PagedIterable}.
      */
     PagedIterable<AzureBareMetalInstance> listByResourceGroup(String resourceGroupName, Context context);
 
     /**
      * Gets an Azure BareMetal instance.
-     *
-     * <p>Gets an Azure BareMetal instance for the specified subscription, resource group, and instance name.
-     *
+     * 
+     * Gets an Azure BareMetal instance for the specified subscription, resource group, and instance name.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param azureBareMetalInstanceName Name of the Azure BareMetal on Azure instance.
      * @param context The context to associate with this operation.
@@ -81,16 +83,16 @@ public interface AzureBareMetalInstances {
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return an Azure BareMetal instance for the specified subscription, resource group, and instance name along with
-     *     {@link Response}.
+     * {@link Response}.
      */
-    Response<AzureBareMetalInstance> getByResourceGroupWithResponse(
-        String resourceGroupName, String azureBareMetalInstanceName, Context context);
+    Response<AzureBareMetalInstance> getByResourceGroupWithResponse(String resourceGroupName,
+        String azureBareMetalInstanceName, Context context);
 
     /**
      * Gets an Azure BareMetal instance.
-     *
-     * <p>Gets an Azure BareMetal instance for the specified subscription, resource group, and instance name.
-     *
+     * 
+     * Gets an Azure BareMetal instance for the specified subscription, resource group, and instance name.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param azureBareMetalInstanceName Name of the Azure BareMetal on Azure instance.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -102,10 +104,10 @@ public interface AzureBareMetalInstances {
 
     /**
      * Patches the Tags field of a Azure BareMetal instance.
-     *
-     * <p>Patches the Tags field of a Azure BareMetal instance for the specified subscription, resource group, and
-     * instance name.
-     *
+     * 
+     * Patches the Tags field of a Azure BareMetal instance for the specified subscription, resource group, and instance
+     * name.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param azureBareMetalInstanceName Name of the Azure BareMetal on Azure instance.
      * @param tagsParameter Request body that only contains the new Tags field.
@@ -113,18 +115,18 @@ public interface AzureBareMetalInstances {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return azureBareMetal instance info on Azure (ARM properties and AzureBareMetal properties) along with {@link
-     *     Response}.
+     * @return azureBareMetal instance info on Azure (ARM properties and AzureBareMetal properties) along with
+     * {@link Response}.
      */
-    Response<AzureBareMetalInstance> updateWithResponse(
-        String resourceGroupName, String azureBareMetalInstanceName, Tags tagsParameter, Context context);
+    Response<AzureBareMetalInstance> updateWithResponse(String resourceGroupName, String azureBareMetalInstanceName,
+        Tags tagsParameter, Context context);
 
     /**
      * Patches the Tags field of a Azure BareMetal instance.
-     *
-     * <p>Patches the Tags field of a Azure BareMetal instance for the specified subscription, resource group, and
-     * instance name.
-     *
+     * 
+     * Patches the Tags field of a Azure BareMetal instance for the specified subscription, resource group, and instance
+     * name.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param azureBareMetalInstanceName Name of the Azure BareMetal on Azure instance.
      * @param tagsParameter Request body that only contains the new Tags field.

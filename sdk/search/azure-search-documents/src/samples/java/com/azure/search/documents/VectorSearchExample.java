@@ -5,35 +5,49 @@ package com.azure.search.documents;
 
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.util.Configuration;
-import com.azure.core.util.Context;
 import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonProviders;
 import com.azure.json.JsonReader;
 import com.azure.json.JsonSerializable;
 import com.azure.json.JsonToken;
 import com.azure.json.JsonWriter;
 import com.azure.search.documents.indexes.SearchIndexClient;
 import com.azure.search.documents.indexes.SearchIndexClientBuilder;
-import com.azure.search.documents.indexes.models.HnswVectorSearchAlgorithmConfiguration;
+import com.azure.search.documents.indexes.models.HnswAlgorithmConfiguration;
 import com.azure.search.documents.indexes.models.SearchField;
 import com.azure.search.documents.indexes.models.SearchFieldDataType;
 import com.azure.search.documents.indexes.models.SearchIndex;
+import com.azure.search.documents.indexes.models.SemanticConfiguration;
+import com.azure.search.documents.indexes.models.SemanticField;
+import com.azure.search.documents.indexes.models.SemanticPrioritizedFields;
+import com.azure.search.documents.indexes.models.SemanticSearch;
 import com.azure.search.documents.indexes.models.VectorSearch;
-import com.azure.search.documents.models.AnswerResult;
-import com.azure.search.documents.models.CaptionResult;
+import com.azure.search.documents.indexes.models.VectorSearchProfile;
+import com.azure.search.documents.models.IndexAction;
+import com.azure.search.documents.models.IndexActionType;
+import com.azure.search.documents.models.IndexDocumentsBatch;
+import com.azure.search.documents.models.QueryAnswerResult;
 import com.azure.search.documents.models.QueryAnswerType;
+import com.azure.search.documents.models.QueryCaptionResult;
 import com.azure.search.documents.models.QueryCaptionType;
-import com.azure.search.documents.models.QueryLanguage;
 import com.azure.search.documents.models.QueryType;
 import com.azure.search.documents.models.SearchOptions;
-import com.azure.search.documents.models.SearchQueryVector;
+import com.azure.search.documents.models.SearchPagedIterable;
 import com.azure.search.documents.models.SearchResult;
-import com.azure.search.documents.util.SearchPagedIterable;
+import com.azure.search.documents.models.VectorFilterMode;
+import com.azure.search.documents.models.VectorQuery;
+import com.azure.search.documents.models.VectorizedQuery;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.azure.search.documents.TestHelpers.waitForIndexing;
 
@@ -42,12 +56,12 @@ import static com.azure.search.documents.TestHelpers.waitForIndexing;
  * <p>
  * This sample is based on the hotels-sample index available to install from the portal with an additional field for
  * vector description.
- * <p>
- * See https://docs.microsoft.com/azure/search/search-get-started-portal
+ *
+ * @see <a href="https://docs.microsoft.com/azure/search/search-get-started-portal">Search get started</a>
  */
 public class VectorSearchExample {
     /**
-     * From the Azure portal, get your Azure Cognitive Search service URL and API key,
+     * From the Azure portal, get your Azure AI Search service URL and API key,
      * and set the values of these environment variables:
      */
     private static final String ENDPOINT = Configuration.getGlobalConfiguration().get("AZURE_COGNITIVE_SEARCH_ENDPOINT");
@@ -67,11 +81,8 @@ public class VectorSearchExample {
             singleVectorSearch(searchClient);
             singleVectorSearchWithFilter(searchClient);
             simpleHybridSearch(searchClient);
-
-            //The availability of Semantic Search is limited to specific regions, as indicated in the list provided here:
-            // https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?products=search.
-            // Due to this limitation, this sample is disabled by default.
-            // semanticHybridSearch(searchClient);
+            multiVectorSearch(searchClient);
+            semanticHybridSearch(searchClient);
         } finally {
             // Cleanup the example index.
             searchIndexClient.deleteIndex(INDEX_NAME);
@@ -89,50 +100,47 @@ public class VectorSearchExample {
      */
     public static SearchClient createSearchIndex(SearchIndexClient searchIndexClient) {
         // Create the search index, including the new SearchFieldDataType.Single field for vector description.
-        SearchIndex searchIndex = new SearchIndex(INDEX_NAME)
-            .setFields(
-                new SearchField("HotelId", SearchFieldDataType.STRING)
-                    .setKey(true)
-                    .setFilterable(true)
-                    .setSortable(true)
-                    .setFacetable(true),
-                new SearchField("HotelName", SearchFieldDataType.STRING)
-                    .setSearchable(true)
-                    .setFilterable(true)
-                    .setSortable(true),
-                new SearchField("Description", SearchFieldDataType.STRING)
-                    .setSearchable(true)
-                    .setFilterable(true),
-                new SearchField("DescriptionVector", SearchFieldDataType.collection(SearchFieldDataType.SINGLE))
-                    .setSearchable(true)
-                    .setVectorSearchDimensions(1536)
-                    // This must match a vector search configuration name.
-                    .setVectorSearchConfiguration("my-vector-config"),
-                new SearchField("Category", SearchFieldDataType.STRING)
-                    .setSearchable(true)
-                    .setFilterable(true)
-                    .setSortable(true)
-                    .setFacetable(true))
+        SearchIndex searchIndex = new SearchIndex(INDEX_NAME,
+            new SearchField("HotelId", SearchFieldDataType.STRING)
+                .setKey(true)
+                .setFilterable(true)
+                .setSortable(true)
+                .setFacetable(true),
+            new SearchField("HotelName", SearchFieldDataType.STRING)
+                .setSearchable(true)
+                .setFilterable(true)
+                .setSortable(true),
+            new SearchField("Description", SearchFieldDataType.STRING)
+                .setSearchable(true)
+                .setFilterable(true),
+            new SearchField("DescriptionVector", SearchFieldDataType.collection(SearchFieldDataType.SINGLE))
+                .setSearchable(true)
+                .setVectorSearchDimensions(1536)
+                // This must match a vector search configuration name.
+                .setVectorSearchProfileName("my-vector-profile"),
+            new SearchField("Category", SearchFieldDataType.STRING)
+                .setSearchable(true)
+                .setFilterable(true)
+                .setSortable(true)
+                .setFacetable(true))
             // VectorSearch configuration is required for a vector field.
             // The name used for the vector search algorithm configuration must match the configuration used by the
             // search field used for vector search.
             .setVectorSearch(new VectorSearch()
-                .setAlgorithmConfigurations(Collections.singletonList(
-                    new HnswVectorSearchAlgorithmConfiguration("my-vector-config"))));
-
-        // Semantic search configuration is disabled due to limited availability.
-        // If you know you have access to this feature, you can uncomment the following lines and uncomment the line
-        // calling 'semanticHybridSearch' in the 'main' method.
-//            .setSemanticSettings(new SemanticSettings()
-//                .setConfigurations(Arrays.asList(new SemanticConfiguration("my-semantic-config", new PrioritizedFields()
-//                    .setTitleField(new SemanticField().setFieldName("HotelName"))
-//                    .setPrioritizedContentFields(Arrays.asList(new SemanticField().setFieldName("Description")))
-//                    .setPrioritizedKeywordsFields(Arrays.asList(new SemanticField().setFieldName("Category")))))));
+                .setProfiles(new VectorSearchProfile("my-vector-profile", "my-vector-config"))
+                .setAlgorithms(new HnswAlgorithmConfiguration("my-vector-config")))
+            .setSemanticSearch(new SemanticSearch().setConfigurations(new SemanticConfiguration("my-semantic-config",
+                new SemanticPrioritizedFields()
+                    .setTitleField(new SemanticField("HotelName"))
+                    .setContentFields(new SemanticField("Description"))
+                    .setKeywordsFields(new SemanticField("Category")))));
 
         searchIndexClient.createOrUpdateIndex(searchIndex);
 
         SearchClient searchClient = searchIndexClient.getSearchClient(INDEX_NAME);
-        searchClient.uploadDocuments(getIndexDocuments());
+        searchClient.indexDocuments(new IndexDocumentsBatch(getIndexDocuments().stream()
+            .map(doc -> new IndexAction().setActionType(IndexActionType.UPLOAD).setAdditionalProperties(doc))
+            .collect(Collectors.toList())));
 
         waitForIndexing();
 
@@ -147,49 +155,48 @@ public class VectorSearchExample {
     public static void singleVectorSearch(SearchClient searchClient) {
         // Example of using vector search without using a search query or any filters.
         List<Float> vectorizedResult = VectorSearchEmbeddings.SEARCH_VECTORIZE_DESCRIPTION; // "Top hotels in town"
-        SearchQueryVector searchQueryVector = new SearchQueryVector()
-            .setValue(vectorizedResult)
-            .setKNearestNeighborsCount(3)
+        VectorQuery vectorizableQuery = new VectorizedQuery(vectorizedResult)
+            .setKNearestNeighbors(3)
             // Set the fields to compare the vector against. This is a comma-delimited list of field names.
             .setFields("DescriptionVector");
 
-        SearchPagedIterable searchResults = searchClient.search(null,
-                new SearchOptions().setVector(searchQueryVector), Context.NONE);
+        SearchPagedIterable searchResults = searchClient.search(new SearchOptions()
+                .setVectorQueries(vectorizableQuery));
 
         int count = 0;
         System.out.println("Single Vector Search Results:");
         for (SearchResult searchResult : searchResults) {
             count++;
-            VectorHotel doc = searchResult.getDocument(VectorHotel.class);
-            System.out.printf("%s: %s%n", doc.getHotelId(), doc.getHotelName());
+            Map<String, Object> doc = searchResult.getAdditionalProperties();
+            System.out.printf("%s: %s%n", doc.get("HotelId"), doc.get("HotelName"));
         }
         System.out.println("Total number of search results: " + count);
     }
 
     /**
-     * Example of using vector search with a filter.
+     * Example of using vector search with a post-search filter.
      *
      * @param searchClient The {@link SearchClient} to use for querying the index.
      */
     public static void singleVectorSearchWithFilter(SearchClient searchClient) {
         // Example of using vector search with a filter.
         List<Float> vectorizedResult = VectorSearchEmbeddings.SEARCH_VECTORIZE_DESCRIPTION; // "Top hotels in town"
-        SearchQueryVector searchQueryVector = new SearchQueryVector()
-            .setValue(vectorizedResult)
-            .setKNearestNeighborsCount(3)
+        VectorQuery vectorizableQuery = new VectorizedQuery(vectorizedResult)
+            .setKNearestNeighbors(3)
             // Set the fields to compare the vector against. This is a comma-delimited list of field names.
             .setFields("DescriptionVector");
 
-        SearchPagedIterable searchResults = searchClient.search(null, new SearchOptions()
-            .setVector(searchQueryVector)
-            .setFilter("Category eq 'Luxury'"), Context.NONE);
+        SearchPagedIterable searchResults = searchClient.search(new SearchOptions()
+            .setVectorQueries(vectorizableQuery)
+            .setVectorFilterMode(VectorFilterMode.POST_FILTER)
+            .setFilter("Category eq 'Luxury'"));
 
         int count = 0;
         System.out.println("Single Vector Search With Filter Results:");
         for (SearchResult searchResult : searchResults) {
             count++;
-            VectorHotel doc = searchResult.getDocument(VectorHotel.class);
-            System.out.printf("%s: %s%n", doc.getHotelId(), doc.getHotelName());
+            Map<String, Object> doc = searchResult.getAdditionalProperties();
+            System.out.printf("%s: %s%n", doc.get("HotelId"), doc.get("HotelName"));
         }
         System.out.println("Total number of search results: " + count);
     }
@@ -202,21 +209,21 @@ public class VectorSearchExample {
     public static void simpleHybridSearch(SearchClient searchClient) {
         // Example of using vector search with a query in addition to vectorization.
         List<Float> vectorizedResult = VectorSearchEmbeddings.SEARCH_VECTORIZE_DESCRIPTION; // "Top hotels in town"
-        SearchQueryVector searchQueryVector = new SearchQueryVector()
-            .setValue(vectorizedResult)
-            .setKNearestNeighborsCount(3)
+        VectorQuery vectorizableQuery = new VectorizedQuery(vectorizedResult)
+            .setKNearestNeighbors(3)
             // Set the fields to compare the vector against. This is a comma-delimited list of field names.
             .setFields("DescriptionVector");
 
-        SearchPagedIterable searchResults = searchClient.search("Top hotels in town", new SearchOptions()
-            .setVector(searchQueryVector), Context.NONE);
+        SearchPagedIterable searchResults = searchClient.search(new SearchOptions()
+            .setSearchText("Top hotels in town")
+            .setVectorQueries(vectorizableQuery));
 
         int count = 0;
         System.out.println("Simple Hybrid Search Results:");
         for (SearchResult searchResult : searchResults) {
             count++;
-            VectorHotel doc = searchResult.getDocument(VectorHotel.class);
-            System.out.printf("%s: %s%n", doc.getHotelId(), doc.getHotelName());
+            Map<String, Object> doc = searchResult.getAdditionalProperties();
+            System.out.printf("%s: %s%n", doc.get("HotelId"), doc.get("HotelName"));
         }
         System.out.println("Total number of search results: " + count);
     }
@@ -232,48 +239,78 @@ public class VectorSearchExample {
     public static void semanticHybridSearch(SearchClient searchClient) {
         // Example of using vector search with a semantic query in addition to vectorization.
         List<Float> vectorizedResult = VectorSearchEmbeddings.SEARCH_VECTORIZE_DESCRIPTION; // "Top hotels in town"
-        SearchQueryVector searchQueryVector = new SearchQueryVector()
-            .setValue(vectorizedResult)
-            .setKNearestNeighborsCount(3)
+        VectorQuery vectorizableQuery = new VectorizedQuery(vectorizedResult)
+            .setKNearestNeighbors(3)
             // Set the fields to compare the vector against. This is a comma-delimited list of field names.
             .setFields("DescriptionVector");
 
-        SearchOptions searchOptions = new SearchOptions()
-            .setVector(searchQueryVector)
+        SearchOptions searchOptions = new SearchOptions().setSearchText(
+            "Is there any hotel located on the main commercial artery of the city in the heart of New York?")
             .setQueryType(QueryType.SEMANTIC)
-            .setQueryLanguage(QueryLanguage.EN_US)
+            .setVectorQueries(vectorizableQuery)
             .setSemanticConfigurationName("my-semantic-config")
-            .setQueryCaption(QueryCaptionType.EXTRACTIVE)
-            .setQueryAnswer(QueryAnswerType.EXTRACTIVE);
+            .setAnswers(QueryAnswerType.EXTRACTIVE)
+            .setCaptions(QueryCaptionType.EXTRACTIVE);
 
-        SearchPagedIterable results = searchClient.search(
-            "Is there any hotel located on the main commercial artery of the city in the heart of New York?",
-            searchOptions, Context.NONE);
+        AtomicInteger count = new AtomicInteger();
+        searchClient.search(searchOptions).streamByPage().forEach(page -> {
+            System.out.println("Semantic Hybrid Search Results:");
 
-        int count = 0;
-        System.out.println("Semantic Hybrid Search Results:");
+            System.out.println("Query Answer:");
+            for (QueryAnswerResult result : page.getAnswers()) {
+                System.out.println("Answer Highlights: " + result.getHighlights());
+                System.out.println("Answer Text: " + result.getText());
+            }
 
-        System.out.println("Query Answer:");
-        for (AnswerResult result : results.getAnswers()) {
-            System.out.println("Answer Highlights: " + result.getHighlights());
-            System.out.println("Answer Text: " + result.getText());
-        }
+            for (SearchResult result : page.getElements()) {
+                count.incrementAndGet();
+                Map<String, Object> doc = result.getAdditionalProperties();
+                System.out.printf("%s: %s%n", doc.get("HotelId"), doc.get("HotelName"));
 
-        for (SearchResult result : results) {
-            count++;
-            VectorHotel doc = result.getDocument(VectorHotel.class);
-            System.out.printf("%s: %s%n", doc.getHotelId(), doc.getHotelName());
-
-            if (result.getCaptions() != null) {
-                CaptionResult caption = result.getCaptions().get(0);
-                if (!CoreUtils.isNullOrEmpty(caption.getHighlights())) {
-                    System.out.println("Caption Highlights: " + caption.getHighlights());
-                } else {
-                    System.out.println("Caption Text: " + caption.getText());
+                if (result.getCaptions() != null) {
+                    QueryCaptionResult caption = result.getCaptions().get(0);
+                    if (!CoreUtils.isNullOrEmpty(caption.getHighlights())) {
+                        System.out.println("Caption Highlights: " + caption.getHighlights());
+                    } else {
+                        System.out.println("Caption Text: " + caption.getText());
+                    }
                 }
             }
-        }
+        });
 
+        System.out.println("Total number of search results: " + count.get());
+    }
+
+    public static void multiVectorSearch(SearchClient searchClient) {
+        // Example of using multiple vectors in search without using a search query or any filters.
+        List<Float> vectorizedResult = VectorSearchEmbeddings.HOTEL1_VECTORIZE_DESCRIPTION;
+        VectorQuery firstVectorizableQuery = new VectorizedQuery(vectorizedResult)
+            .setKNearestNeighbors(3)
+            // Set the fields to compare the vector against. This is a comma-delimited list of field names.
+            .setFields("DescriptionVector");
+
+        List<Float> secondVectorizedResult = VectorSearchEmbeddings.HOTEL2_VECTORIZE_DESCRIPTION;
+        VectorQuery secondVectorizableQuery = new VectorizedQuery(secondVectorizedResult)
+            .setKNearestNeighbors(3)
+            // Set the fields to compare the vector against. This is a comma-delimited list of field names.
+            .setFields("DescriptionVector");
+
+        List<Float> thirdVectorizedResult = VectorSearchEmbeddings.HOTEL3_VECTORIZE_DESCRIPTION;
+        VectorQuery thirdVectorizableQuery = new VectorizedQuery(thirdVectorizedResult)
+            .setKNearestNeighbors(3)
+            // Set the fields to compare the vector against. This is a comma-delimited list of field names.
+            .setFields("DescriptionVector");
+
+        SearchPagedIterable searchResults = searchClient.search(new SearchOptions()
+            .setVectorQueries(firstVectorizableQuery, secondVectorizableQuery, thirdVectorizableQuery));
+
+        int count = 0;
+        System.out.println("Multi Vector Search Results:");
+        for (SearchResult searchResult : searchResults) {
+            count++;
+            Map<String, Object> doc = searchResult.getAdditionalProperties();
+            System.out.printf("%s: %s%n", doc.get("HotelId"), doc.get("HotelName"));
+        }
         System.out.println("Total number of search results: " + count);
     }
 
@@ -379,8 +416,8 @@ public class VectorSearchExample {
      *
      * @return A list of hotels.
      */
-    public static List<VectorHotel> getIndexDocuments() {
-        return Arrays.asList(
+    public static List<Map<String, Object>> getIndexDocuments() {
+        List<VectorHotel> hotels = Arrays.asList(
             new VectorHotel()
                 .setHotelId("1")
                 .setHotelName("Fancy Stay")
@@ -417,6 +454,19 @@ public class VectorSearchExample {
                     + "cosmopolitan cities.")
                 .setDescriptionVector(VectorSearchEmbeddings.HOTEL9_VECTORIZE_DESCRIPTION)
                 .setCategory("Boutique"));
+
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            try (JsonWriter jsonWriter = JsonProviders.createWriter(outputStream)) {
+                jsonWriter.writeArray(hotels, JsonWriter::writeJson);
+            }
+
+            try (JsonReader jsonReader = JsonProviders.createReader(outputStream.toByteArray())) {
+                return jsonReader.readArray(elem -> elem.readMap(JsonReader::readUntyped));
+            }
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
         // Add more hotel documents here...
     }

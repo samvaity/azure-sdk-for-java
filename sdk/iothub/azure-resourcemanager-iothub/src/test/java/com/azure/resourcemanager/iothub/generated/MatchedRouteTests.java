@@ -14,34 +14,28 @@ import org.junit.jupiter.api.Assertions;
 public final class MatchedRouteTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MatchedRoute model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"name\":\"gynduha\",\"source\":\"DigitalTwinChangeEvents\",\"condition\":\"lkthu\",\"endpointNames\":[\"qolbgyc\",\"uie\",\"tgccymvaolpss\",\"qlfmmdnbb\"],\"isEnabled\":true}}")
-                .toObject(MatchedRoute.class);
-        Assertions.assertEquals("gynduha", model.properties().name());
-        Assertions.assertEquals(RoutingSource.DIGITAL_TWIN_CHANGE_EVENTS, model.properties().source());
-        Assertions.assertEquals("lkthu", model.properties().condition());
-        Assertions.assertEquals("qolbgyc", model.properties().endpointNames().get(0));
-        Assertions.assertEquals(true, model.properties().isEnabled());
+        MatchedRoute model = BinaryData.fromString(
+            "{\"properties\":{\"name\":\"mubyynt\",\"source\":\"DeviceMessages\",\"condition\":\"bqtkoievseotgqr\",\"endpointNames\":[\"tmuwlauwzi\",\"xbmp\",\"cjefuzmu\",\"pbttdum\"],\"isEnabled\":false}}")
+            .toObject(MatchedRoute.class);
+        Assertions.assertEquals("mubyynt", model.properties().name());
+        Assertions.assertEquals(RoutingSource.DEVICE_MESSAGES, model.properties().source());
+        Assertions.assertEquals("bqtkoievseotgqr", model.properties().condition());
+        Assertions.assertEquals("tmuwlauwzi", model.properties().endpointNames().get(0));
+        Assertions.assertFalse(model.properties().isEnabled());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MatchedRoute model =
-            new MatchedRoute()
-                .withProperties(
-                    new RouteProperties()
-                        .withName("gynduha")
-                        .withSource(RoutingSource.DIGITAL_TWIN_CHANGE_EVENTS)
-                        .withCondition("lkthu")
-                        .withEndpointNames(Arrays.asList("qolbgyc", "uie", "tgccymvaolpss", "qlfmmdnbb"))
-                        .withIsEnabled(true));
+        MatchedRoute model = new MatchedRoute().withProperties(new RouteProperties().withName("mubyynt")
+            .withSource(RoutingSource.DEVICE_MESSAGES)
+            .withCondition("bqtkoievseotgqr")
+            .withEndpointNames(Arrays.asList("tmuwlauwzi", "xbmp", "cjefuzmu", "pbttdum"))
+            .withIsEnabled(false));
         model = BinaryData.fromObject(model).toObject(MatchedRoute.class);
-        Assertions.assertEquals("gynduha", model.properties().name());
-        Assertions.assertEquals(RoutingSource.DIGITAL_TWIN_CHANGE_EVENTS, model.properties().source());
-        Assertions.assertEquals("lkthu", model.properties().condition());
-        Assertions.assertEquals("qolbgyc", model.properties().endpointNames().get(0));
-        Assertions.assertEquals(true, model.properties().isEnabled());
+        Assertions.assertEquals("mubyynt", model.properties().name());
+        Assertions.assertEquals(RoutingSource.DEVICE_MESSAGES, model.properties().source());
+        Assertions.assertEquals("bqtkoievseotgqr", model.properties().condition());
+        Assertions.assertEquals("tmuwlauwzi", model.properties().endpointNames().get(0));
+        Assertions.assertFalse(model.properties().isEnabled());
     }
 }

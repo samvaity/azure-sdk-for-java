@@ -21,8 +21,8 @@ public final class AbstractiveSummary {
     private IterableStream<AbstractiveSummaryContext> contexts;
 
     static {
-        AbstractiveSummaryPropertiesHelper.setAccessor(
-            new AbstractiveSummaryPropertiesHelper.AbstractiveSummaryAccessor() {
+        AbstractiveSummaryPropertiesHelper
+            .setAccessor(new AbstractiveSummaryPropertiesHelper.AbstractiveSummaryAccessor() {
                 @Override
                 public void setText(AbstractiveSummary abstractiveSummary, String text) {
                     abstractiveSummary.setText(text);
@@ -34,6 +34,12 @@ public final class AbstractiveSummary {
                     abstractiveSummary.setContexts(summaryContexts);
                 }
             });
+    }
+
+    /**
+     * Constructs a {@code AbstractiveSummary} model.
+     */
+    public AbstractiveSummary() {
     }
 
     /**

@@ -4,6 +4,7 @@
 
 package com.azure.resourcemanager.webpubsub.implementation;
 
+import com.azure.core.management.SystemData;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.webpubsub.fluent.models.SharedPrivateLinkResourceInner;
 import com.azure.resourcemanager.webpubsub.models.ProvisioningState;
@@ -26,6 +27,10 @@ public final class SharedPrivateLinkResourceImpl
 
     public String type() {
         return this.innerModel().type();
+    }
+
+    public SystemData systemData() {
+        return this.innerModel().systemData();
     }
 
     public String groupId() {
@@ -73,22 +78,17 @@ public final class SharedPrivateLinkResourceImpl
     }
 
     public SharedPrivateLinkResource create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubSharedPrivateLinkResources()
-                .createOrUpdate(
-                    sharedPrivateLinkResourceName, resourceGroupName, resourceName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubSharedPrivateLinkResources()
+            .createOrUpdate(sharedPrivateLinkResourceName, resourceGroupName, resourceName, this.innerModel(),
+                Context.NONE);
         return this;
     }
 
     public SharedPrivateLinkResource create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubSharedPrivateLinkResources()
-                .createOrUpdate(
-                    sharedPrivateLinkResourceName, resourceGroupName, resourceName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubSharedPrivateLinkResources()
+            .createOrUpdate(sharedPrivateLinkResourceName, resourceGroupName, resourceName, this.innerModel(), context);
         return this;
     }
 
@@ -103,52 +103,43 @@ public final class SharedPrivateLinkResourceImpl
     }
 
     public SharedPrivateLinkResource apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubSharedPrivateLinkResources()
-                .createOrUpdate(
-                    sharedPrivateLinkResourceName, resourceGroupName, resourceName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubSharedPrivateLinkResources()
+            .createOrUpdate(sharedPrivateLinkResourceName, resourceGroupName, resourceName, this.innerModel(),
+                Context.NONE);
         return this;
     }
 
     public SharedPrivateLinkResource apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubSharedPrivateLinkResources()
-                .createOrUpdate(
-                    sharedPrivateLinkResourceName, resourceGroupName, resourceName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubSharedPrivateLinkResources()
+            .createOrUpdate(sharedPrivateLinkResourceName, resourceGroupName, resourceName, this.innerModel(), context);
         return this;
     }
 
-    SharedPrivateLinkResourceImpl(
-        SharedPrivateLinkResourceInner innerObject,
+    SharedPrivateLinkResourceImpl(SharedPrivateLinkResourceInner innerObject,
         com.azure.resourcemanager.webpubsub.WebPubSubManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.sharedPrivateLinkResourceName = Utils.getValueFromIdByName(innerObject.id(), "sharedPrivateLinkResources");
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.resourceName = Utils.getValueFromIdByName(innerObject.id(), "webPubSub");
+        this.sharedPrivateLinkResourceName
+            = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "sharedPrivateLinkResources");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.resourceName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "webPubSub");
     }
 
     public SharedPrivateLinkResource refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubSharedPrivateLinkResources()
-                .getWithResponse(sharedPrivateLinkResourceName, resourceGroupName, resourceName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubSharedPrivateLinkResources()
+            .getWithResponse(sharedPrivateLinkResourceName, resourceGroupName, resourceName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public SharedPrivateLinkResource refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getWebPubSubSharedPrivateLinkResources()
-                .getWithResponse(sharedPrivateLinkResourceName, resourceGroupName, resourceName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getWebPubSubSharedPrivateLinkResources()
+            .getWithResponse(sharedPrivateLinkResourceName, resourceGroupName, resourceName, context)
+            .getValue();
         return this;
     }
 

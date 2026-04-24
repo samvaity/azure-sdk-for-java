@@ -5,91 +5,104 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import java.util.HashMap;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** A pipeline activity. */
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type",
-        defaultImpl = Activity.class)
-@JsonTypeName("Activity")
-@JsonSubTypes({
-    @JsonSubTypes.Type(name = "Container", value = ControlActivity.class),
-    @JsonSubTypes.Type(name = "Execution", value = ExecutionActivity.class),
-    @JsonSubTypes.Type(name = "SqlPoolStoredProcedure", value = SqlPoolStoredProcedureActivity.class)
-})
+/**
+ * A pipeline activity.
+ */
 @Fluent
-public class Activity {
+public class Activity implements JsonSerializable<Activity> {
+    /*
+     * Type of activity.
+     */
+    @Generated
+    private String type = "Activity";
+
     /*
      * Activity name.
      */
-    @JsonProperty(value = "name", required = true)
+    @Generated
     private String name;
 
     /*
      * Activity description.
      */
-    @JsonProperty(value = "description")
+    @Generated
     private String description;
 
     /*
      * Activity state. This is an optional property and if not provided, the state will be Active by default.
      */
-    @JsonProperty(value = "state")
+    @Generated
     private ActivityState state;
 
     /*
-     * Status result of the activity when the state is set to Inactive. This is an optional property and if not
-     * provided when the activity is inactive, the status will be Succeeded by default.
+     * Status result of the activity when the state is set to Inactive. This is an optional property and if not provided
+     * when the activity is inactive, the status will be Succeeded by default.
      */
-    @JsonProperty(value = "onInactiveMarkAs")
+    @Generated
     private ActivityOnInactiveMarkAs onInactiveMarkAs;
 
     /*
      * Activity depends on condition.
      */
-    @JsonProperty(value = "dependsOn")
+    @Generated
     private List<ActivityDependency> dependsOn;
 
     /*
      * Activity user properties.
      */
-    @JsonProperty(value = "userProperties")
+    @Generated
     private List<UserProperty> userProperties;
 
     /*
      * A pipeline activity.
      */
-    @JsonIgnore private Map<String, Object> additionalProperties;
+    @Generated
+    private Map<String, Object> additionalProperties;
 
-    /** Creates an instance of Activity class. */
-    public Activity() {}
+    /**
+     * Creates an instance of Activity class.
+     */
+    @Generated
+    public Activity() {
+    }
+
+    /**
+     * Get the type property: Type of activity.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the name property: Activity name.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: Activity name.
-     *
+     * 
      * @param name the name value to set.
      * @return the Activity object itself.
      */
+    @Generated
     public Activity setName(String name) {
         this.name = name;
         return this;
@@ -97,19 +110,21 @@ public class Activity {
 
     /**
      * Get the description property: Activity description.
-     *
+     * 
      * @return the description value.
      */
+    @Generated
     public String getDescription() {
         return this.description;
     }
 
     /**
      * Set the description property: Activity description.
-     *
+     * 
      * @param description the description value to set.
      * @return the Activity object itself.
      */
+    @Generated
     public Activity setDescription(String description) {
         this.description = description;
         return this;
@@ -118,9 +133,10 @@ public class Activity {
     /**
      * Get the state property: Activity state. This is an optional property and if not provided, the state will be
      * Active by default.
-     *
+     * 
      * @return the state value.
      */
+    @Generated
     public ActivityState getState() {
         return this.state;
     }
@@ -128,10 +144,11 @@ public class Activity {
     /**
      * Set the state property: Activity state. This is an optional property and if not provided, the state will be
      * Active by default.
-     *
+     * 
      * @param state the state value to set.
      * @return the Activity object itself.
      */
+    @Generated
     public Activity setState(ActivityState state) {
         this.state = state;
         return this;
@@ -140,9 +157,10 @@ public class Activity {
     /**
      * Get the onInactiveMarkAs property: Status result of the activity when the state is set to Inactive. This is an
      * optional property and if not provided when the activity is inactive, the status will be Succeeded by default.
-     *
+     * 
      * @return the onInactiveMarkAs value.
      */
+    @Generated
     public ActivityOnInactiveMarkAs getOnInactiveMarkAs() {
         return this.onInactiveMarkAs;
     }
@@ -150,10 +168,11 @@ public class Activity {
     /**
      * Set the onInactiveMarkAs property: Status result of the activity when the state is set to Inactive. This is an
      * optional property and if not provided when the activity is inactive, the status will be Succeeded by default.
-     *
+     * 
      * @param onInactiveMarkAs the onInactiveMarkAs value to set.
      * @return the Activity object itself.
      */
+    @Generated
     public Activity setOnInactiveMarkAs(ActivityOnInactiveMarkAs onInactiveMarkAs) {
         this.onInactiveMarkAs = onInactiveMarkAs;
         return this;
@@ -161,19 +180,21 @@ public class Activity {
 
     /**
      * Get the dependsOn property: Activity depends on condition.
-     *
+     * 
      * @return the dependsOn value.
      */
+    @Generated
     public List<ActivityDependency> getDependsOn() {
         return this.dependsOn;
     }
 
     /**
      * Set the dependsOn property: Activity depends on condition.
-     *
+     * 
      * @param dependsOn the dependsOn value to set.
      * @return the Activity object itself.
      */
+    @Generated
     public Activity setDependsOn(List<ActivityDependency> dependsOn) {
         this.dependsOn = dependsOn;
         return this;
@@ -181,19 +202,21 @@ public class Activity {
 
     /**
      * Get the userProperties property: Activity user properties.
-     *
+     * 
      * @return the userProperties value.
      */
+    @Generated
     public List<UserProperty> getUserProperties() {
         return this.userProperties;
     }
 
     /**
      * Set the userProperties property: Activity user properties.
-     *
+     * 
      * @param userProperties the userProperties value to set.
      * @return the Activity object itself.
      */
+    @Generated
     public Activity setUserProperties(List<UserProperty> userProperties) {
         this.userProperties = userProperties;
         return this;
@@ -201,30 +224,202 @@ public class Activity {
 
     /**
      * Get the additionalProperties property: A pipeline activity.
-     *
+     * 
      * @return the additionalProperties value.
      */
-    @JsonAnyGetter
+    @Generated
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     /**
      * Set the additionalProperties property: A pipeline activity.
-     *
+     * 
      * @param additionalProperties the additionalProperties value to set.
      * @return the Activity object itself.
      */
+    @Generated
     public Activity setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
         return this;
     }
 
-    @JsonAnySetter
-    void setAdditionalProperties(String key, Object value) {
-        if (additionalProperties == null) {
-            additionalProperties = new HashMap<>();
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeStringField("type", this.type);
+        jsonWriter.writeStringField("description", this.description);
+        jsonWriter.writeStringField("state", this.state == null ? null : this.state.toString());
+        jsonWriter.writeStringField("onInactiveMarkAs",
+            this.onInactiveMarkAs == null ? null : this.onInactiveMarkAs.toString());
+        jsonWriter.writeArrayField("dependsOn", this.dependsOn, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("userProperties", this.userProperties,
+            (writer, element) -> writer.writeJson(element));
+        if (additionalProperties != null) {
+            for (Map.Entry<String, Object> additionalProperty : additionalProperties.entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
         }
-        additionalProperties.put(key, value);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of Activity from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of Activity if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the Activity.
+     */
+    @Generated
+    public static Activity fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            String discriminatorValue = null;
+            try (JsonReader readerToUse = reader.bufferObject()) {
+                readerToUse.nextToken(); // Prepare for reading
+                while (readerToUse.nextToken() != JsonToken.END_OBJECT) {
+                    String fieldName = readerToUse.getFieldName();
+                    readerToUse.nextToken();
+                    if ("type".equals(fieldName)) {
+                        discriminatorValue = readerToUse.getString();
+                        break;
+                    } else {
+                        readerToUse.skipChildren();
+                    }
+                }
+                // Use the discriminator value to determine which subtype should be deserialized.
+                if ("Container".equals(discriminatorValue)) {
+                    return ControlActivity.fromJsonKnownDiscriminator(readerToUse.reset());
+                } else if ("ExecutePipeline".equals(discriminatorValue)) {
+                    return ExecutePipelineActivity.fromJson(readerToUse.reset());
+                } else if ("IfCondition".equals(discriminatorValue)) {
+                    return IfConditionActivity.fromJson(readerToUse.reset());
+                } else if ("Switch".equals(discriminatorValue)) {
+                    return SwitchActivity.fromJson(readerToUse.reset());
+                } else if ("ForEach".equals(discriminatorValue)) {
+                    return ForEachActivity.fromJson(readerToUse.reset());
+                } else if ("Wait".equals(discriminatorValue)) {
+                    return WaitActivity.fromJson(readerToUse.reset());
+                } else if ("Fail".equals(discriminatorValue)) {
+                    return FailActivity.fromJson(readerToUse.reset());
+                } else if ("Until".equals(discriminatorValue)) {
+                    return UntilActivity.fromJson(readerToUse.reset());
+                } else if ("Validation".equals(discriminatorValue)) {
+                    return ValidationActivity.fromJson(readerToUse.reset());
+                } else if ("Filter".equals(discriminatorValue)) {
+                    return FilterActivity.fromJson(readerToUse.reset());
+                } else if ("SetVariable".equals(discriminatorValue)) {
+                    return SetVariableActivity.fromJson(readerToUse.reset());
+                } else if ("AppendVariable".equals(discriminatorValue)) {
+                    return AppendVariableActivity.fromJson(readerToUse.reset());
+                } else if ("WebHook".equals(discriminatorValue)) {
+                    return WebHookActivity.fromJson(readerToUse.reset());
+                } else if ("Execution".equals(discriminatorValue)) {
+                    return ExecutionActivity.fromJsonKnownDiscriminator(readerToUse.reset());
+                } else if ("Copy".equals(discriminatorValue)) {
+                    return CopyActivity.fromJson(readerToUse.reset());
+                } else if ("HDInsightHive".equals(discriminatorValue)) {
+                    return HDInsightHiveActivity.fromJson(readerToUse.reset());
+                } else if ("HDInsightPig".equals(discriminatorValue)) {
+                    return HDInsightPigActivity.fromJson(readerToUse.reset());
+                } else if ("HDInsightMapReduce".equals(discriminatorValue)) {
+                    return HDInsightMapReduceActivity.fromJson(readerToUse.reset());
+                } else if ("HDInsightStreaming".equals(discriminatorValue)) {
+                    return HDInsightStreamingActivity.fromJson(readerToUse.reset());
+                } else if ("HDInsightSpark".equals(discriminatorValue)) {
+                    return HDInsightSparkActivity.fromJson(readerToUse.reset());
+                } else if ("ExecuteSSISPackage".equals(discriminatorValue)) {
+                    return ExecuteSsisPackageActivity.fromJson(readerToUse.reset());
+                } else if ("Custom".equals(discriminatorValue)) {
+                    return CustomActivity.fromJson(readerToUse.reset());
+                } else if ("SqlServerStoredProcedure".equals(discriminatorValue)) {
+                    return SqlServerStoredProcedureActivity.fromJson(readerToUse.reset());
+                } else if ("Delete".equals(discriminatorValue)) {
+                    return DeleteActivity.fromJson(readerToUse.reset());
+                } else if ("AzureDataExplorerCommand".equals(discriminatorValue)) {
+                    return AzureDataExplorerCommandActivity.fromJson(readerToUse.reset());
+                } else if ("Lookup".equals(discriminatorValue)) {
+                    return LookupActivity.fromJson(readerToUse.reset());
+                } else if ("WebActivity".equals(discriminatorValue)) {
+                    return WebActivity.fromJson(readerToUse.reset());
+                } else if ("GetMetadata".equals(discriminatorValue)) {
+                    return GetMetadataActivity.fromJson(readerToUse.reset());
+                } else if ("AzureMLBatchExecution".equals(discriminatorValue)) {
+                    return AzureMLBatchExecutionActivity.fromJson(readerToUse.reset());
+                } else if ("AzureMLUpdateResource".equals(discriminatorValue)) {
+                    return AzureMLUpdateResourceActivity.fromJson(readerToUse.reset());
+                } else if ("AzureMLExecutePipeline".equals(discriminatorValue)) {
+                    return AzureMLExecutePipelineActivity.fromJson(readerToUse.reset());
+                } else if ("DataLakeAnalyticsU-SQL".equals(discriminatorValue)) {
+                    return DataLakeAnalyticsUsqlActivity.fromJson(readerToUse.reset());
+                } else if ("DatabricksNotebook".equals(discriminatorValue)) {
+                    return DatabricksNotebookActivity.fromJson(readerToUse.reset());
+                } else if ("DatabricksSparkJar".equals(discriminatorValue)) {
+                    return DatabricksSparkJarActivity.fromJson(readerToUse.reset());
+                } else if ("DatabricksSparkPython".equals(discriminatorValue)) {
+                    return DatabricksSparkPythonActivity.fromJson(readerToUse.reset());
+                } else if ("AzureFunctionActivity".equals(discriminatorValue)) {
+                    return AzureFunctionActivity.fromJson(readerToUse.reset());
+                } else if ("ExecuteDataFlow".equals(discriminatorValue)) {
+                    return ExecuteDataFlowActivity.fromJson(readerToUse.reset());
+                } else if ("Script".equals(discriminatorValue)) {
+                    return ScriptActivity.fromJson(readerToUse.reset());
+                } else if ("SynapseNotebook".equals(discriminatorValue)) {
+                    return SynapseNotebookActivity.fromJson(readerToUse.reset());
+                } else if ("SparkJob".equals(discriminatorValue)) {
+                    return SynapseSparkJobDefinitionActivity.fromJson(readerToUse.reset());
+                } else if ("SqlPoolStoredProcedure".equals(discriminatorValue)) {
+                    return SqlPoolStoredProcedureActivity.fromJson(readerToUse.reset());
+                } else {
+                    return fromJsonKnownDiscriminator(readerToUse.reset());
+                }
+            }
+        });
+    }
+
+    @Generated
+    static Activity fromJsonKnownDiscriminator(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            Activity deserializedActivity = new Activity();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedActivity.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedActivity.type = reader.getString();
+                } else if ("description".equals(fieldName)) {
+                    deserializedActivity.description = reader.getString();
+                } else if ("state".equals(fieldName)) {
+                    deserializedActivity.state = ActivityState.fromString(reader.getString());
+                } else if ("onInactiveMarkAs".equals(fieldName)) {
+                    deserializedActivity.onInactiveMarkAs = ActivityOnInactiveMarkAs.fromString(reader.getString());
+                } else if ("dependsOn".equals(fieldName)) {
+                    List<ActivityDependency> dependsOn
+                        = reader.readArray(reader1 -> ActivityDependency.fromJson(reader1));
+                    deserializedActivity.dependsOn = dependsOn;
+                } else if ("userProperties".equals(fieldName)) {
+                    List<UserProperty> userProperties = reader.readArray(reader1 -> UserProperty.fromJson(reader1));
+                    deserializedActivity.userProperties = userProperties;
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedActivity.additionalProperties = additionalProperties;
+
+            return deserializedActivity;
+        });
     }
 }

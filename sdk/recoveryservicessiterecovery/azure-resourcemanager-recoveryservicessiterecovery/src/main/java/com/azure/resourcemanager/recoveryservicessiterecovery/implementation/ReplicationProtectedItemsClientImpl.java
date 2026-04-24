@@ -55,24 +55,28 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ReplicationProtectedItemsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ReplicationProtectedItemsClient.
+ */
 public final class ReplicationProtectedItemsClientImpl implements ReplicationProtectedItemsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ReplicationProtectedItemsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final SiteRecoveryManagementClientImpl client;
 
     /**
      * Initializes an instance of ReplicationProtectedItemsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ReplicationProtectedItemsClientImpl(SiteRecoveryManagementClientImpl client) {
-        this.service =
-            RestProxy
-                .create(
-                    ReplicationProtectedItemsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service = RestProxy.create(ReplicationProtectedItemsService.class, client.getHttpPipeline(),
+            client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -83,540 +87,354 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
     @Host("{$host}")
     @ServiceInterface(name = "SiteRecoveryManageme")
     public interface ReplicationProtectedItemsService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<ReplicationProtectedItemCollection>> listByReplicationProtectionContainers(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("fabricName") String fabricName,
-            @PathParam("protectionContainerName") String protectionContainerName,
-            @HeaderParam("Accept") String accept,
+            @HostParam("$host") String endpoint, @QueryParam("api-version") String apiVersion,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("resourceName") String resourceName,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("fabricName") String fabricName,
+            @PathParam("protectionContainerName") String protectionContainerName, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ReplicationProtectedItemInner>> get(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<ReplicationProtectedItemInner>> get(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> create(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> create(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @BodyParam("application/json") EnableProtectionInput input,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") EnableProtectionInput input, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}")
-        @ExpectedResponses({202, 204})
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}")
+        @ExpectedResponses({ 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> purge(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> purge(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
-            @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            Context context);
+            @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Patch(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> update(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> update(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
             @BodyParam("application/json") UpdateReplicationProtectedItemInput updateProtectionInput,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/addDisks")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/addDisks")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> addDisks(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> addDisks(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @BodyParam("application/json") AddDisksInput addDisksInput,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") AddDisksInput addDisksInput, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}"
-                + "/applyRecoveryPoint")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/applyRecoveryPoint")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> applyRecoveryPoint(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> applyRecoveryPoint(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
             @BodyParam("application/json") ApplyRecoveryPointInput applyRecoveryPointInput,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/failoverCancel")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/failoverCancel")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> failoverCancel(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> failoverCancel(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/failoverCommit")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/failoverCommit")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> failoverCommit(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> failoverCommit(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/plannedFailover")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/plannedFailover")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> plannedFailover(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> plannedFailover(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @BodyParam("application/json") PlannedFailoverInput failoverInput,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") PlannedFailoverInput failoverInput, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/remove")
-        @ExpectedResponses({202, 204})
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/remove")
+        @ExpectedResponses({ 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> delete(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> delete(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @BodyParam("application/json") DisableProtectionInput disableProtectionInput,
-            Context context);
+            @BodyParam("application/json") DisableProtectionInput disableProtectionInput, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/removeDisks")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/removeDisks")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> removeDisks(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> removeDisks(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @BodyParam("application/json") RemoveDisksInput removeDisksInput,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") RemoveDisksInput removeDisksInput, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}"
-                + "/repairReplication")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/repairReplication")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> repairReplication(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> repairReplication(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/reProtect")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/reProtect")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> reprotect(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> reprotect(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @BodyParam("application/json") ReverseReplicationInput reprotectInput,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") ReverseReplicationInput reprotectInput, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}"
-                + "/resolveHealthErrors")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/resolveHealthErrors")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> resolveHealthErrors(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> resolveHealthErrors(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @BodyParam("application/json") ResolveHealthInput resolveHealthInput,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") ResolveHealthInput resolveHealthInput, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/switchProvider")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/switchProvider")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> switchProvider(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> switchProvider(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
             @BodyParam("application/json") SwitchProviderInput switchProviderInput,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/testFailover")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/testFailover")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> testFailover(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> testFailover(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @BodyParam("application/json") TestFailoverInput testfailoverInput,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") TestFailoverInput testfailoverInput, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}"
-                + "/testFailoverCleanup")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/testFailoverCleanup")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> testFailoverCleanup(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> testFailoverCleanup(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @BodyParam("application/json") TestFailoverCleanupInput cleanupInput,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") TestFailoverCleanupInput cleanupInput, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}"
-                + "/unplannedFailover")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/unplannedFailover")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> unplannedFailover(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> unplannedFailover(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
-            @BodyParam("application/json") UnplannedFailoverInput failoverInput,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") UnplannedFailoverInput failoverInput, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/updateAppliance")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/updateAppliance")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> updateAppliance(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> updateAppliance(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
             @BodyParam("application/json") UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers"
-                + "/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}"
-                + "/updateMobilityService")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationFabrics/{fabricName}/replicationProtectionContainers/{protectionContainerName}/replicationProtectedItems/{replicatedProtectedItemName}/updateMobilityService")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> updateMobilityService(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
+        Mono<Response<Flux<ByteBuffer>>> updateMobilityService(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
             @PathParam("fabricName") String fabricName,
             @PathParam("protectionContainerName") String protectionContainerName,
             @PathParam("replicatedProtectedItemName") String replicatedProtectedItemName,
             @BodyParam("application/json") UpdateMobilityServiceRequest updateMobilityServiceRequest,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationProtectedItems")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationProtectedItems")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ReplicationProtectedItemCollection>> list(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @QueryParam("skipToken") String skipToken,
-            @QueryParam("$filter") String filter,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<ReplicationProtectedItemCollection>> list(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @QueryParam("skipToken") String skipToken, @QueryParam("$filter") String filter,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<ReplicationProtectedItemCollection>> listByReplicationProtectionContainersNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<ReplicationProtectedItemCollection>> listNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets the list of Replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of ASR replication protected items in the protection container along with {@link PagedResponse}
-     *     on successful completion of {@link Mono}.
+     * on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ReplicationProtectedItemInner>> listByReplicationProtectionContainersSinglePageAsync(
-        String resourceName, String resourceGroupName, String fabricName, String protectionContainerName) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listByReplicationProtectionContainers(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            accept,
-                            context))
-            .<PagedResponse<ReplicationProtectedItemInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.listByReplicationProtectionContainers(this.client.getEndpoint(),
+                this.client.getApiVersion(), resourceGroupName, resourceName, this.client.getSubscriptionId(),
+                fabricName, protectionContainerName, accept, context))
+            .<PagedResponse<ReplicationProtectedItemInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the list of Replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param context The context to associate with this operation.
@@ -624,179 +442,146 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of ASR replication protected items in the protection container along with {@link PagedResponse}
-     *     on successful completion of {@link Mono}.
+     * on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ReplicationProtectedItemInner>> listByReplicationProtectionContainersSinglePageAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
         Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .listByReplicationProtectionContainers(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+            .listByReplicationProtectionContainers(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 
     /**
      * Gets the list of Replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR replication protected items in the protection container as paginated response with {@link
-     *     PagedFlux}.
+     * @return the list of ASR replication protected items in the protection container as paginated response with
+     * {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<ReplicationProtectedItemInner> listByReplicationProtectionContainersAsync(
-        String resourceName, String resourceGroupName, String fabricName, String protectionContainerName) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName) {
         return new PagedFlux<>(
-            () ->
-                listByReplicationProtectionContainersSinglePageAsync(
-                    resourceName, resourceGroupName, fabricName, protectionContainerName),
+            () -> listByReplicationProtectionContainersSinglePageAsync(resourceGroupName, resourceName, fabricName,
+                protectionContainerName),
             nextLink -> listByReplicationProtectionContainersNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets the list of Replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR replication protected items in the protection container as paginated response with {@link
-     *     PagedFlux}.
+     * @return the list of ASR replication protected items in the protection container as paginated response with
+     * {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<ReplicationProtectedItemInner> listByReplicationProtectionContainersAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
         Context context) {
         return new PagedFlux<>(
-            () ->
-                listByReplicationProtectionContainersSinglePageAsync(
-                    resourceName, resourceGroupName, fabricName, protectionContainerName, context),
+            () -> listByReplicationProtectionContainersSinglePageAsync(resourceGroupName, resourceName, fabricName,
+                protectionContainerName, context),
             nextLink -> listByReplicationProtectionContainersNextSinglePageAsync(nextLink, context));
     }
 
     /**
      * Gets the list of Replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR replication protected items in the protection container as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR replication protected items in the protection container as paginated response with
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<ReplicationProtectedItemInner> listByReplicationProtectionContainers(
-        String resourceName, String resourceGroupName, String fabricName, String protectionContainerName) {
-        return new PagedIterable<>(
-            listByReplicationProtectionContainersAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName));
+    public PagedIterable<ReplicationProtectedItemInner> listByReplicationProtectionContainers(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName) {
+        return new PagedIterable<>(listByReplicationProtectionContainersAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName));
     }
 
     /**
      * Gets the list of Replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR replication protected items in the protection container as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR replication protected items in the protection container as paginated response with
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<ReplicationProtectedItemInner> listByReplicationProtectionContainers(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        Context context) {
-        return new PagedIterable<>(
-            listByReplicationProtectionContainersAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, context));
+    public PagedIterable<ReplicationProtectedItemInner> listByReplicationProtectionContainers(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, Context context) {
+        return new PagedIterable<>(listByReplicationProtectionContainersAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, context));
     }
 
     /**
      * Gets the details of a Replication protected item.
-     *
-     * <p>Gets the details of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -804,74 +589,52 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the details of an ASR replication protected item along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ReplicationProtectedItemInner>> getWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
+    private Mono<Response<ReplicationProtectedItemInner>> getWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the details of a Replication protected item.
-     *
-     * <p>Gets the details of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -880,72 +643,52 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the details of an ASR replication protected item along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ReplicationProtectedItemInner>> getWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<ReplicationProtectedItemInner>> getWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                accept,
-                context);
+        return service.get(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), fabricName, protectionContainerName, replicatedProtectedItemName, accept,
+            context);
     }
 
     /**
      * Gets the details of a Replication protected item.
-     *
-     * <p>Gets the details of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -955,24 +698,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the details of an ASR replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> getAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
-        return getWithResponseAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
-            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    private Mono<ReplicationProtectedItemInner> getAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
+        return getWithResponseAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the details of a Replication protected item.
-     *
-     * <p>Gets the details of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -983,30 +721,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the details of an ASR replication protected item along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ReplicationProtectedItemInner> getWithResponse(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
-        return getWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
-            .block();
+    public Response<ReplicationProtectedItemInner> getWithResponse(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context) {
+        return getWithResponseAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, context).block();
     }
 
     /**
      * Gets the details of a Replication protected item.
-     *
-     * <p>Gets the details of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1016,29 +743,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the details of an ASR replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner get(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
-        return getWithResponse(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                Context.NONE)
-            .getValue();
+    public ReplicationProtectedItemInner get(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName) {
+        return getWithResponse(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, Context.NONE).getValue();
     }
 
     /**
      * Enables protection.
-     *
-     * <p>The operation to create an ASR replication protected item (Enable replication).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR replication protected item (Enable replication).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the fabric.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName A name for the replication protected item.
@@ -1049,45 +766,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         EnableProtectionInput input) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (input == null) {
             return Mono.error(new IllegalArgumentException("Parameter input is required and cannot be null."));
@@ -1096,31 +802,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .create(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            input,
-                            accept,
-                            context))
+            .withContext(context -> service.create(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, input, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Enables protection.
-     *
-     * <p>The operation to create an ASR replication protected item (Enable replication).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR replication protected item (Enable replication).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the fabric.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName A name for the replication protected item.
@@ -1132,46 +826,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        EnableProtectionInput input,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        EnableProtectionInput input, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (input == null) {
             return Mono.error(new IllegalArgumentException("Parameter input is required and cannot be null."));
@@ -1180,28 +862,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .create(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                input,
-                accept,
-                context);
+        return service.create(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), fabricName, protectionContainerName, replicatedProtectedItemName, input,
+            accept, context);
     }
 
     /**
      * Enables protection.
-     *
-     * <p>The operation to create an ASR replication protected item (Enable replication).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR replication protected item (Enable replication).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the fabric.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName A name for the replication protected item.
@@ -1213,37 +885,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginCreateAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        EnableProtectionInput input) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                input);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, EnableProtectionInput input) {
+        Mono<Response<Flux<ByteBuffer>>> mono = createWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, input);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Enables protection.
-     *
-     * <p>The operation to create an ASR replication protected item (Enable replication).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR replication protected item (Enable replication).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the fabric.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName A name for the replication protected item.
@@ -1256,40 +913,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginCreateAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        EnableProtectionInput input,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, EnableProtectionInput input, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                input,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = createWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, input, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Enables protection.
-     *
-     * <p>The operation to create an ASR replication protected item (Enable replication).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR replication protected item (Enable replication).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the fabric.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName A name for the replication protected item.
@@ -1301,30 +941,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginCreate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        EnableProtectionInput input) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, EnableProtectionInput input) {
         return this
-            .beginCreateAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                input)
+            .beginCreateAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, input)
             .getSyncPoller();
     }
 
     /**
      * Enables protection.
-     *
-     * <p>The operation to create an ASR replication protected item (Enable replication).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR replication protected item (Enable replication).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the fabric.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName A name for the replication protected item.
@@ -1337,32 +968,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginCreate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        EnableProtectionInput input,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, EnableProtectionInput input, Context context) {
         return this
-            .beginCreateAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                input,
-                context)
+            .beginCreateAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, input, context)
             .getSyncPoller();
     }
 
     /**
      * Enables protection.
-     *
-     * <p>The operation to create an ASR replication protected item (Enable replication).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR replication protected item (Enable replication).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the fabric.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName A name for the replication protected item.
@@ -1373,31 +993,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> createAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> createAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         EnableProtectionInput input) {
-        return beginCreateAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                input)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginCreateAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, input).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Enables protection.
-     *
-     * <p>The operation to create an ASR replication protected item (Enable replication).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR replication protected item (Enable replication).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the fabric.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName A name for the replication protected item.
@@ -1409,33 +1018,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> createAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        EnableProtectionInput input,
-        Context context) {
-        return beginCreateAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                input,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> createAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        EnableProtectionInput input, Context context) {
+        return beginCreateAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, input, context).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Enables protection.
-     *
-     * <p>The operation to create an ASR replication protected item (Enable replication).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR replication protected item (Enable replication).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the fabric.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName A name for the replication protected item.
@@ -1446,30 +1042,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner create(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        EnableProtectionInput input) {
-        return createAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                input)
-            .block();
+    public ReplicationProtectedItemInner create(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, EnableProtectionInput input) {
+        return createAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, input).block();
     }
 
     /**
      * Enables protection.
-     *
-     * <p>The operation to create an ASR replication protected item (Enable replication).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR replication protected item (Enable replication).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Name of the fabric.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName A name for the replication protected item.
@@ -1481,34 +1066,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner create(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        EnableProtectionInput input,
+    public ReplicationProtectedItemInner create(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, EnableProtectionInput input,
         Context context) {
-        return createAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                input,
-                context)
-            .block();
+        return createAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, input, context).block();
     }
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1518,71 +1091,50 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> purgeWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
+    private Mono<Response<Flux<ByteBuffer>>> purgeWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .purge(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            context))
+            .withContext(context -> service.purge(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1593,69 +1145,48 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> purgeWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> purgeWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         context = this.client.mergeContext(context);
-        return service
-            .purge(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context);
+        return service.purge(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), fabricName, protectionContainerName, replicatedProtectedItemName, context);
     }
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1665,30 +1196,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginPurgeAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            purgeWithResponseAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginPurgeAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
+        Mono<Response<Flux<ByteBuffer>>> mono = purgeWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1699,36 +1223,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginPurgeAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
+    private PollerFlux<PollResult<Void>, Void> beginPurgeAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            purgeWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono = purgeWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, context);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            context);
     }
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1738,27 +1250,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginPurge(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
+    public SyncPoller<PollResult<Void>, Void> beginPurge(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
         return this
-            .beginPurgeAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
+            .beginPurgeAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName)
             .getSyncPoller();
     }
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1769,33 +1277,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginPurge(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
+    public SyncPoller<PollResult<Void>, Void> beginPurge(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context) {
         return this
-            .beginPurgeAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
+            .beginPurgeAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, context)
             .getSyncPoller();
     }
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1805,27 +1303,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> purgeAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
-        return beginPurgeAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<Void> purgeAsync(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName) {
+        return beginPurgeAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1836,33 +1328,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> purgeAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
-        return beginPurgeAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<Void> purgeAsync(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, Context context) {
+        return beginPurgeAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, context).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1871,25 +1351,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void purge(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
+    public void purge(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
         String replicatedProtectedItemName) {
-        purgeAsync(resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
+        purgeAsync(resourceGroupName, resourceName, fabricName, protectionContainerName, replicatedProtectedItemName)
             .block();
     }
 
     /**
      * Purges protection.
-     *
-     * <p>The operation to delete or purge a replication protected item. This operation will force delete the
-     * replication protected item. Use the remove operation on replication protected item to perform a clean disable
-     * replication for the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete or purge a replication protected item. This operation will force delete the replication
+     * protected item. Use the remove operation on replication protected item to perform a clean disable replication for
+     * the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1899,30 +1375,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void purge(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
-        purgeAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
-            .block();
+    public void purge(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, Context context) {
+        purgeAsync(resourceGroupName, resourceName, fabricName, protectionContainerName, replicatedProtectedItemName,
+            context).block();
     }
 
     /**
      * Updates the replication protected item settings.
-     *
-     * <p>The operation to update the recovery settings of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -1933,45 +1398,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UpdateReplicationProtectedItemInput updateProtectionInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (updateProtectionInput == null) {
             return Mono
@@ -1981,31 +1435,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .update(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            updateProtectionInput,
-                            accept,
-                            context))
+            .withContext(context -> service.update(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, updateProtectionInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Updates the replication protected item settings.
-     *
-     * <p>The operation to update the recovery settings of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2017,46 +1459,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateReplicationProtectedItemInput updateProtectionInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UpdateReplicationProtectedItemInput updateProtectionInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (updateProtectionInput == null) {
             return Mono
@@ -2066,28 +1496,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .update(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateProtectionInput,
-                accept,
-                context);
+        return service.update(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), fabricName, protectionContainerName, replicatedProtectedItemName,
+            updateProtectionInput, accept, context);
     }
 
     /**
      * Updates the replication protected item settings.
-     *
-     * <p>The operation to update the recovery settings of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2099,37 +1519,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginUpdateAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateReplicationProtectedItemInput updateProtectionInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateProtectionInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, UpdateReplicationProtectedItemInput updateProtectionInput) {
+        Mono<Response<Flux<ByteBuffer>>> mono = updateWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, updateProtectionInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Updates the replication protected item settings.
-     *
-     * <p>The operation to update the recovery settings of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2142,40 +1547,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginUpdateAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateReplicationProtectedItemInput updateProtectionInput,
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, UpdateReplicationProtectedItemInput updateProtectionInput,
         Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateProtectionInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = updateWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, updateProtectionInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Updates the replication protected item settings.
-     *
-     * <p>The operation to update the recovery settings of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2187,30 +1576,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginUpdate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateReplicationProtectedItemInput updateProtectionInput) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, UpdateReplicationProtectedItemInput updateProtectionInput) {
         return this
-            .beginUpdateAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateProtectionInput)
+            .beginUpdateAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, updateProtectionInput)
             .getSyncPoller();
     }
 
     /**
      * Updates the replication protected item settings.
-     *
-     * <p>The operation to update the recovery settings of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2223,32 +1603,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginUpdate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateReplicationProtectedItemInput updateProtectionInput,
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, UpdateReplicationProtectedItemInput updateProtectionInput,
         Context context) {
         return this
-            .beginUpdateAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateProtectionInput,
-                context)
+            .beginUpdateAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, updateProtectionInput, context)
             .getSyncPoller();
     }
 
     /**
      * Updates the replication protected item settings.
-     *
-     * <p>The operation to update the recovery settings of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2259,31 +1629,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> updateAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> updateAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UpdateReplicationProtectedItemInput updateProtectionInput) {
-        return beginUpdateAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateProtectionInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginUpdateAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, updateProtectionInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Updates the replication protected item settings.
-     *
-     * <p>The operation to update the recovery settings of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2295,33 +1654,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> updateAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateReplicationProtectedItemInput updateProtectionInput,
-        Context context) {
-        return beginUpdateAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateProtectionInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> updateAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UpdateReplicationProtectedItemInput updateProtectionInput, Context context) {
+        return beginUpdateAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, updateProtectionInput, context).last()
+                .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Updates the replication protected item settings.
-     *
-     * <p>The operation to update the recovery settings of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2332,30 +1679,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner update(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    public ReplicationProtectedItemInner update(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName,
         UpdateReplicationProtectedItemInput updateProtectionInput) {
-        return updateAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateProtectionInput)
-            .block();
+        return updateAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, updateProtectionInput).block();
     }
 
     /**
      * Updates the replication protected item settings.
-     *
-     * <p>The operation to update the recovery settings of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2367,32 +1704,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner update(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateReplicationProtectedItemInput updateProtectionInput,
-        Context context) {
-        return updateAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateProtectionInput,
-                context)
-            .block();
+    public ReplicationProtectedItemInner update(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName,
+        UpdateReplicationProtectedItemInput updateProtectionInput, Context context) {
+        return updateAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, updateProtectionInput, context).block();
     }
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2403,45 +1728,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> addDisksWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> addDisksWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         AddDisksInput addDisksInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (addDisksInput == null) {
             return Mono.error(new IllegalArgumentException("Parameter addDisksInput is required and cannot be null."));
@@ -2450,31 +1764,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .addDisks(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            addDisksInput,
-                            accept,
-                            context))
+            .withContext(context -> service.addDisks(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, addDisksInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2486,46 +1788,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> addDisksWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        AddDisksInput addDisksInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> addDisksWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        AddDisksInput addDisksInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (addDisksInput == null) {
             return Mono.error(new IllegalArgumentException("Parameter addDisksInput is required and cannot be null."));
@@ -2534,28 +1824,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .addDisks(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                addDisksInput,
-                accept,
-                context);
+        return service.addDisks(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), fabricName, protectionContainerName, replicatedProtectedItemName,
+            addDisksInput, accept, context);
     }
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2567,37 +1847,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginAddDisksAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        AddDisksInput addDisksInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            addDisksWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                addDisksInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, AddDisksInput addDisksInput) {
+        Mono<Response<Flux<ByteBuffer>>> mono = addDisksWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, addDisksInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2610,40 +1875,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginAddDisksAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        AddDisksInput addDisksInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, AddDisksInput addDisksInput, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            addDisksWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                addDisksInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = addDisksWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, addDisksInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2655,30 +1903,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginAddDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        AddDisksInput addDisksInput) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, AddDisksInput addDisksInput) {
         return this
-            .beginAddDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                addDisksInput)
+            .beginAddDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, addDisksInput)
             .getSyncPoller();
     }
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2691,32 +1930,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginAddDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        AddDisksInput addDisksInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, AddDisksInput addDisksInput, Context context) {
         return this
-            .beginAddDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                addDisksInput,
-                context)
+            .beginAddDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, addDisksInput, context)
             .getSyncPoller();
     }
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2727,31 +1955,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> addDisksAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> addDisksAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         AddDisksInput addDisksInput) {
-        return beginAddDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                addDisksInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginAddDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, addDisksInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2763,33 +1980,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> addDisksAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        AddDisksInput addDisksInput,
-        Context context) {
-        return beginAddDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                addDisksInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> addDisksAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        AddDisksInput addDisksInput, Context context) {
+        return beginAddDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, addDisksInput, context).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2800,30 +2004,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner addDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        AddDisksInput addDisksInput) {
-        return addDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                addDisksInput)
-            .block();
+    public ReplicationProtectedItemInner addDisks(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, AddDisksInput addDisksInput) {
+        return addDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, addDisksInput).block();
     }
 
     /**
      * Add disk(s) for protection.
-     *
-     * <p>Operation to add disks(s) to the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to add disks(s) to the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -2835,32 +2028,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner addDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        AddDisksInput addDisksInput,
+    public ReplicationProtectedItemInner addDisks(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, AddDisksInput addDisksInput,
         Context context) {
-        return addDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                addDisksInput,
-                context)
-            .block();
+        return addDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, addDisksInput, context).block();
     }
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -2871,80 +2052,56 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> applyRecoveryPointWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> applyRecoveryPointWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         ApplyRecoveryPointInput applyRecoveryPointInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (applyRecoveryPointInput == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter applyRecoveryPointInput is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter applyRecoveryPointInput is required and cannot be null."));
         } else {
             applyRecoveryPointInput.validate();
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .applyRecoveryPoint(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            applyRecoveryPointInput,
-                            accept,
-                            context))
+            .withContext(context -> service.applyRecoveryPoint(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, applyRecoveryPointInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -2956,78 +2113,55 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> applyRecoveryPointWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ApplyRecoveryPointInput applyRecoveryPointInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> applyRecoveryPointWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        ApplyRecoveryPointInput applyRecoveryPointInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (applyRecoveryPointInput == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter applyRecoveryPointInput is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter applyRecoveryPointInput is required and cannot be null."));
         } else {
             applyRecoveryPointInput.validate();
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .applyRecoveryPoint(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applyRecoveryPointInput,
-                accept,
-                context);
+        return service.applyRecoveryPoint(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, applyRecoveryPointInput, accept, context);
     }
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -3039,38 +2173,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginApplyRecoveryPointAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
+        beginApplyRecoveryPointAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName,
             ApplyRecoveryPointInput applyRecoveryPointInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            applyRecoveryPointWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applyRecoveryPointInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono = applyRecoveryPointWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, applyRecoveryPointInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -3083,41 +2202,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginApplyRecoveryPointAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            ApplyRecoveryPointInput applyRecoveryPointInput,
-            Context context) {
+        beginApplyRecoveryPointAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName,
+            ApplyRecoveryPointInput applyRecoveryPointInput, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            applyRecoveryPointWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applyRecoveryPointInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = applyRecoveryPointWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, applyRecoveryPointInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -3129,30 +2231,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginApplyRecoveryPoint(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ApplyRecoveryPointInput applyRecoveryPointInput) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, ApplyRecoveryPointInput applyRecoveryPointInput) {
         return this
-            .beginApplyRecoveryPointAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applyRecoveryPointInput)
+            .beginApplyRecoveryPointAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, applyRecoveryPointInput)
             .getSyncPoller();
     }
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -3165,32 +2258,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginApplyRecoveryPoint(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ApplyRecoveryPointInput applyRecoveryPointInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, ApplyRecoveryPointInput applyRecoveryPointInput, Context context) {
         return this
-            .beginApplyRecoveryPointAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applyRecoveryPointInput,
-                context)
+            .beginApplyRecoveryPointAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, applyRecoveryPointInput, context)
             .getSyncPoller();
     }
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -3201,31 +2283,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> applyRecoveryPointAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> applyRecoveryPointAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         ApplyRecoveryPointInput applyRecoveryPointInput) {
-        return beginApplyRecoveryPointAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applyRecoveryPointInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginApplyRecoveryPointAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, applyRecoveryPointInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -3237,33 +2308,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> applyRecoveryPointAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ApplyRecoveryPointInput applyRecoveryPointInput,
-        Context context) {
-        return beginApplyRecoveryPointAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applyRecoveryPointInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> applyRecoveryPointAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        ApplyRecoveryPointInput applyRecoveryPointInput, Context context) {
+        return beginApplyRecoveryPointAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, applyRecoveryPointInput, context).last()
+                .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -3274,30 +2333,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner applyRecoveryPoint(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    public ReplicationProtectedItemInner applyRecoveryPoint(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         ApplyRecoveryPointInput applyRecoveryPointInput) {
-        return applyRecoveryPointAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applyRecoveryPointInput)
-            .block();
+        return applyRecoveryPointAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, applyRecoveryPointInput).block();
     }
 
     /**
      * Change or apply recovery point.
-     *
-     * <p>The operation to change the recovery point of a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to change the recovery point of a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The ARM fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replicated protected item name.
@@ -3309,32 +2358,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner applyRecoveryPoint(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ApplyRecoveryPointInput applyRecoveryPointInput,
-        Context context) {
-        return applyRecoveryPointAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applyRecoveryPointInput,
-                context)
-            .block();
+    public ReplicationProtectedItemInner applyRecoveryPoint(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        ApplyRecoveryPointInput applyRecoveryPointInput, Context context) {
+        return applyRecoveryPointAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, applyRecoveryPointInput, context).block();
     }
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3344,71 +2381,49 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> failoverCancelWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
+    private Mono<Response<Flux<ByteBuffer>>> failoverCancelWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .failoverCancel(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            accept,
-                            context))
+            .withContext(context -> service.failoverCancel(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3419,69 +2434,49 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> failoverCancelWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> failoverCancelWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .failoverCancel(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                accept,
-                context);
+        return service.failoverCancel(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, accept, context);
     }
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3492,32 +2487,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginFailoverCancelAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            failoverCancelWithResponseAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        beginFailoverCancelAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName) {
+        Mono<Response<Flux<ByteBuffer>>> mono = failoverCancelWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3529,39 +2514,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginFailoverCancelAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            Context context) {
+        beginFailoverCancelAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            failoverCancelWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = failoverCancelWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3572,24 +2541,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginFailoverCancel(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
         String replicatedProtectedItemName) {
         return this
-            .beginFailoverCancelAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
+            .beginFailoverCancelAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName)
             .getSyncPoller();
     }
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3601,30 +2567,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginFailoverCancel(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, Context context) {
         return this
-            .beginFailoverCancelAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
+            .beginFailoverCancelAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, context)
             .getSyncPoller();
     }
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3634,25 +2591,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> failoverCancelAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
-        return beginFailoverCancelAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> failoverCancelAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
+        return beginFailoverCancelAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3663,31 +2614,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> failoverCancelAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
-        return beginFailoverCancelAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> failoverCancelAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context) {
+        return beginFailoverCancelAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, context).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3697,24 +2636,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner failoverCancel(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
-        return failoverCancelAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
-            .block();
+    public ReplicationProtectedItemInner failoverCancel(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
+        return failoverCancelAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName).block();
     }
 
     /**
      * Execute cancel failover.
-     *
-     * <p>Operation to cancel the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to cancel the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3725,30 +2659,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner failoverCancel(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
-        return failoverCancelAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
-            .block();
+    public ReplicationProtectedItemInner failoverCancel(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context) {
+        return failoverCancelAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, context).block();
     }
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3758,71 +2681,49 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> failoverCommitWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
+    private Mono<Response<Flux<ByteBuffer>>> failoverCommitWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .failoverCommit(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            accept,
-                            context))
+            .withContext(context -> service.failoverCommit(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3833,69 +2734,49 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> failoverCommitWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> failoverCommitWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .failoverCommit(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                accept,
-                context);
+        return service.failoverCommit(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, accept, context);
     }
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3906,32 +2787,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginFailoverCommitAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            failoverCommitWithResponseAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        beginFailoverCommitAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName) {
+        Mono<Response<Flux<ByteBuffer>>> mono = failoverCommitWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3943,39 +2814,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginFailoverCommitAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            Context context) {
+        beginFailoverCommitAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            failoverCommitWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = failoverCommitWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -3986,24 +2841,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginFailoverCommit(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
         String replicatedProtectedItemName) {
         return this
-            .beginFailoverCommitAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
+            .beginFailoverCommitAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName)
             .getSyncPoller();
     }
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4015,30 +2867,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginFailoverCommit(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, Context context) {
         return this
-            .beginFailoverCommitAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
+            .beginFailoverCommitAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, context)
             .getSyncPoller();
     }
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4048,25 +2891,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> failoverCommitAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
-        return beginFailoverCommitAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> failoverCommitAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
+        return beginFailoverCommitAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4077,31 +2914,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> failoverCommitAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
-        return beginFailoverCommitAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> failoverCommitAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context) {
+        return beginFailoverCommitAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, context).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4111,24 +2936,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner failoverCommit(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
-        return failoverCommitAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
-            .block();
+    public ReplicationProtectedItemInner failoverCommit(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
+        return failoverCommitAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName).block();
     }
 
     /**
      * Execute commit failover.
-     *
-     * <p>Operation to commit the failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to commit the failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4139,30 +2959,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner failoverCommit(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
-        return failoverCommitAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
-            .block();
+    public ReplicationProtectedItemInner failoverCommit(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context) {
+        return failoverCommitAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, context).block();
     }
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4173,45 +2982,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> plannedFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> plannedFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         PlannedFailoverInput failoverInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (failoverInput == null) {
             return Mono.error(new IllegalArgumentException("Parameter failoverInput is required and cannot be null."));
@@ -4220,31 +3018,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .plannedFailover(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            failoverInput,
-                            accept,
-                            context))
+            .withContext(context -> service.plannedFailover(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, failoverInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4256,46 +3042,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> plannedFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        PlannedFailoverInput failoverInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> plannedFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        PlannedFailoverInput failoverInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (failoverInput == null) {
             return Mono.error(new IllegalArgumentException("Parameter failoverInput is required and cannot be null."));
@@ -4304,28 +3078,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .plannedFailover(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput,
-                accept,
-                context);
+        return service.plannedFailover(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, failoverInput, accept, context);
     }
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4337,38 +3101,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginPlannedFailoverAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            PlannedFailoverInput failoverInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            plannedFailoverWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        beginPlannedFailoverAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, PlannedFailoverInput failoverInput) {
+        Mono<Response<Flux<ByteBuffer>>> mono = plannedFailoverWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, failoverInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4381,41 +3129,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginPlannedFailoverAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            PlannedFailoverInput failoverInput,
+        beginPlannedFailoverAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, PlannedFailoverInput failoverInput,
             Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            plannedFailoverWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = plannedFailoverWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, failoverInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4427,30 +3158,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginPlannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        PlannedFailoverInput failoverInput) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, PlannedFailoverInput failoverInput) {
         return this
-            .beginPlannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput)
+            .beginPlannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, failoverInput)
             .getSyncPoller();
     }
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4463,32 +3185,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginPlannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        PlannedFailoverInput failoverInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, PlannedFailoverInput failoverInput, Context context) {
         return this
-            .beginPlannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput,
-                context)
+            .beginPlannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, failoverInput, context)
             .getSyncPoller();
     }
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4499,31 +3210,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> plannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> plannedFailoverAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         PlannedFailoverInput failoverInput) {
-        return beginPlannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginPlannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, failoverInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4535,33 +3235,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> plannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        PlannedFailoverInput failoverInput,
-        Context context) {
-        return beginPlannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> plannedFailoverAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        PlannedFailoverInput failoverInput, Context context) {
+        return beginPlannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, failoverInput, context).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4572,30 +3259,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner plannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    public ReplicationProtectedItemInner plannedFailover(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         PlannedFailoverInput failoverInput) {
-        return plannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput)
-            .block();
+        return plannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, failoverInput).block();
     }
 
     /**
      * Execute planned failover.
-     *
-     * <p>Operation to initiate a planned failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a planned failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4607,32 +3284,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner plannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        PlannedFailoverInput failoverInput,
-        Context context) {
-        return plannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput,
-                context)
-            .block();
+    public ReplicationProtectedItemInner plannedFailover(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        PlannedFailoverInput failoverInput, Context context) {
+        return plannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, failoverInput, context).block();
     }
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4643,78 +3308,55 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         DisableProtectionInput disableProtectionInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (disableProtectionInput == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter disableProtectionInput is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter disableProtectionInput is required and cannot be null."));
         } else {
             disableProtectionInput.validate();
         }
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            disableProtectionInput,
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, disableProtectionInput, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4726,76 +3368,54 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        DisableProtectionInput disableProtectionInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        DisableProtectionInput disableProtectionInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (disableProtectionInput == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter disableProtectionInput is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter disableProtectionInput is required and cannot be null."));
         } else {
             disableProtectionInput.validate();
         }
         context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                disableProtectionInput,
-                context);
+        return service.delete(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), fabricName, protectionContainerName, replicatedProtectedItemName,
+            disableProtectionInput, context);
     }
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4806,34 +3426,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         DisableProtectionInput disableProtectionInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                disableProtectionInput);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono = deleteWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, disableProtectionInput);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4845,36 +3453,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        DisableProtectionInput disableProtectionInput,
-        Context context) {
+    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        DisableProtectionInput disableProtectionInput, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                disableProtectionInput,
-                context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono = deleteWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, disableProtectionInput, context);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            context);
     }
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4885,31 +3480,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         DisableProtectionInput disableProtectionInput) {
         return this
-            .beginDeleteAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                disableProtectionInput)
+            .beginDeleteAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, disableProtectionInput)
             .getSyncPoller();
     }
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4921,33 +3507,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        DisableProtectionInput disableProtectionInput,
-        Context context) {
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        DisableProtectionInput disableProtectionInput, Context context) {
         return this
-            .beginDeleteAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                disableProtectionInput,
-                context)
+            .beginDeleteAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, disableProtectionInput, context)
             .getSyncPoller();
     }
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4958,31 +3533,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Void> deleteAsync(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName,
         DisableProtectionInput disableProtectionInput) {
-        return beginDeleteAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                disableProtectionInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginDeleteAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, disableProtectionInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -4994,33 +3558,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        DisableProtectionInput disableProtectionInput,
-        Context context) {
-        return beginDeleteAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                disableProtectionInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<Void> deleteAsync(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName,
+        DisableProtectionInput disableProtectionInput, Context context) {
+        return beginDeleteAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, disableProtectionInput, context).last()
+                .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5030,30 +3582,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        DisableProtectionInput disableProtectionInput) {
-        deleteAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                disableProtectionInput)
-            .block();
+    public void delete(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, DisableProtectionInput disableProtectionInput) {
+        deleteAsync(resourceGroupName, resourceName, fabricName, protectionContainerName, replicatedProtectedItemName,
+            disableProtectionInput).block();
     }
 
     /**
      * Disables protection.
-     *
-     * <p>The operation to disable replication on a replication protected item. This will also remove the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to disable replication on a replication protected item. This will also remove the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5064,32 +3605,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        DisableProtectionInput disableProtectionInput,
-        Context context) {
-        deleteAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                disableProtectionInput,
-                context)
-            .block();
+    public void delete(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, DisableProtectionInput disableProtectionInput, Context context) {
+        deleteAsync(resourceGroupName, resourceName, fabricName, protectionContainerName, replicatedProtectedItemName,
+            disableProtectionInput, context).block();
     }
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5100,45 +3628,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> removeDisksWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> removeDisksWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         RemoveDisksInput removeDisksInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (removeDisksInput == null) {
             return Mono
@@ -5148,31 +3665,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .removeDisks(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            removeDisksInput,
-                            accept,
-                            context))
+            .withContext(context -> service.removeDisks(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, removeDisksInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5184,46 +3689,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> removeDisksWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        RemoveDisksInput removeDisksInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> removeDisksWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        RemoveDisksInput removeDisksInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (removeDisksInput == null) {
             return Mono
@@ -5233,28 +3726,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .removeDisks(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                removeDisksInput,
-                accept,
-                context);
+        return service.removeDisks(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, removeDisksInput, accept, context);
     }
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5266,37 +3749,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginRemoveDisksAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        RemoveDisksInput removeDisksInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            removeDisksWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                removeDisksInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, RemoveDisksInput removeDisksInput) {
+        Mono<Response<Flux<ByteBuffer>>> mono = removeDisksWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, removeDisksInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5309,40 +3777,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginRemoveDisksAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        RemoveDisksInput removeDisksInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, RemoveDisksInput removeDisksInput, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            removeDisksWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                removeDisksInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = removeDisksWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, removeDisksInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5354,30 +3805,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginRemoveDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        RemoveDisksInput removeDisksInput) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, RemoveDisksInput removeDisksInput) {
         return this
-            .beginRemoveDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                removeDisksInput)
+            .beginRemoveDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, removeDisksInput)
             .getSyncPoller();
     }
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5390,32 +3832,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginRemoveDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        RemoveDisksInput removeDisksInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, RemoveDisksInput removeDisksInput, Context context) {
         return this
-            .beginRemoveDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                removeDisksInput,
-                context)
+            .beginRemoveDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, removeDisksInput, context)
             .getSyncPoller();
     }
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5426,31 +3857,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> removeDisksAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> removeDisksAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         RemoveDisksInput removeDisksInput) {
-        return beginRemoveDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                removeDisksInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginRemoveDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, removeDisksInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5462,33 +3882,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> removeDisksAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        RemoveDisksInput removeDisksInput,
-        Context context) {
-        return beginRemoveDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                removeDisksInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> removeDisksAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        RemoveDisksInput removeDisksInput, Context context) {
+        return beginRemoveDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, removeDisksInput, context).last()
+                .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5499,30 +3907,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner removeDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        RemoveDisksInput removeDisksInput) {
-        return removeDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                removeDisksInput)
-            .block();
+    public ReplicationProtectedItemInner removeDisks(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, RemoveDisksInput removeDisksInput) {
+        return removeDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, removeDisksInput).block();
     }
 
     /**
      * Removes disk(s).
-     *
-     * <p>Operation to remove disk(s) from the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to remove disk(s) from the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5534,33 +3931,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner removeDisks(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        RemoveDisksInput removeDisksInput,
+    public ReplicationProtectedItemInner removeDisks(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, RemoveDisksInput removeDisksInput,
         Context context) {
-        return removeDisksAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                removeDisksInput,
-                context)
-            .block();
+        return removeDisksAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, removeDisksInput, context).block();
     }
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -5570,72 +3955,50 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> repairReplicationWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
+    private Mono<Response<Flux<ByteBuffer>>> repairReplicationWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .repairReplication(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            accept,
-                            context))
+            .withContext(context -> service.repairReplication(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -5646,70 +4009,50 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> repairReplicationWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> repairReplicationWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .repairReplication(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                accept,
-                context);
+        return service.repairReplication(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, accept, context);
     }
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -5720,33 +4063,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginRepairReplicationAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            repairReplicationWithResponseAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        beginRepairReplicationAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName) {
+        Mono<Response<Flux<ByteBuffer>>> mono = repairReplicationWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -5758,40 +4091,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginRepairReplicationAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            Context context) {
+        beginRepairReplicationAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            repairReplicationWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = repairReplicationWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -5802,25 +4119,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginRepairReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
         String replicatedProtectedItemName) {
         return this
-            .beginRepairReplicationAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
+            .beginRepairReplicationAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName)
             .getSyncPoller();
     }
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -5832,31 +4146,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginRepairReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, Context context) {
         return this
-            .beginRepairReplicationAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
+            .beginRepairReplicationAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, context)
             .getSyncPoller();
     }
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -5866,26 +4171,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> repairReplicationAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
-        return beginRepairReplicationAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> repairReplicationAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
+        return beginRepairReplicationAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -5896,32 +4195,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> repairReplicationAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
-        return beginRepairReplicationAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> repairReplicationAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context) {
+        return beginRepairReplicationAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, context).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -5931,25 +4218,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner repairReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName) {
-        return repairReplicationAsync(
-                resourceName, resourceGroupName, fabricName, protectionContainerName, replicatedProtectedItemName)
-            .block();
+    public ReplicationProtectedItemInner repairReplication(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName) {
+        return repairReplicationAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName).block();
     }
 
     /**
      * Resynchronize or repair replication.
-     *
-     * <p>The operation to start resynchronize/repair replication for a replication protected item requiring
+     * 
+     * The operation to start resynchronize/repair replication for a replication protected item requiring
      * resynchronization.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric.
      * @param protectionContainerName The name of the container.
      * @param replicatedProtectedItemName The name of the replication protected item.
@@ -5960,30 +4242,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner repairReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context) {
-        return repairReplicationAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                context)
-            .block();
+    public ReplicationProtectedItemInner repairReplication(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context) {
+        return repairReplicationAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, context).block();
     }
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -5994,45 +4265,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> reprotectWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> reprotectWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         ReverseReplicationInput reprotectInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (reprotectInput == null) {
             return Mono.error(new IllegalArgumentException("Parameter reprotectInput is required and cannot be null."));
@@ -6041,31 +4301,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .reprotect(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            reprotectInput,
-                            accept,
-                            context))
+            .withContext(context -> service.reprotect(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, reprotectInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6077,46 +4325,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> reprotectWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ReverseReplicationInput reprotectInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> reprotectWithResponseAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        ReverseReplicationInput reprotectInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (reprotectInput == null) {
             return Mono.error(new IllegalArgumentException("Parameter reprotectInput is required and cannot be null."));
@@ -6125,28 +4361,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .reprotect(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                reprotectInput,
-                accept,
-                context);
+        return service.reprotect(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, reprotectInput, accept, context);
     }
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6158,37 +4384,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginReprotectAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ReverseReplicationInput reprotectInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            reprotectWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                reprotectInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, ReverseReplicationInput reprotectInput) {
+        Mono<Response<Flux<ByteBuffer>>> mono = reprotectWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, reprotectInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6201,40 +4412,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginReprotectAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ReverseReplicationInput reprotectInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, ReverseReplicationInput reprotectInput, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            reprotectWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                reprotectInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = reprotectWithResponseAsync(resourceGroupName, resourceName, fabricName,
+            protectionContainerName, replicatedProtectedItemName, reprotectInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6246,30 +4440,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginReprotect(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ReverseReplicationInput reprotectInput) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, ReverseReplicationInput reprotectInput) {
         return this
-            .beginReprotectAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                reprotectInput)
+            .beginReprotectAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, reprotectInput)
             .getSyncPoller();
     }
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6282,32 +4467,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginReprotect(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ReverseReplicationInput reprotectInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, ReverseReplicationInput reprotectInput, Context context) {
         return this
-            .beginReprotectAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                reprotectInput,
-                context)
+            .beginReprotectAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, reprotectInput, context)
             .getSyncPoller();
     }
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6318,31 +4492,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> reprotectAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> reprotectAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         ReverseReplicationInput reprotectInput) {
-        return beginReprotectAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                reprotectInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginReprotectAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, reprotectInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6354,33 +4517,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> reprotectAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ReverseReplicationInput reprotectInput,
-        Context context) {
-        return beginReprotectAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                reprotectInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> reprotectAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        ReverseReplicationInput reprotectInput, Context context) {
+        return beginReprotectAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, reprotectInput, context).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6391,30 +4541,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner reprotect(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ReverseReplicationInput reprotectInput) {
-        return reprotectAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                reprotectInput)
-            .block();
+    public ReplicationProtectedItemInner reprotect(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, ReverseReplicationInput reprotectInput) {
+        return reprotectAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, reprotectInput).block();
     }
 
     /**
      * Execute Reverse Replication\Reprotect.
-     *
-     * <p>Operation to reprotect or reverse replicate a failed over replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to reprotect or reverse replicate a failed over replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6426,32 +4565,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner reprotect(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ReverseReplicationInput reprotectInput,
+    public ReplicationProtectedItemInner reprotect(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, ReverseReplicationInput reprotectInput,
         Context context) {
-        return reprotectAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                reprotectInput,
-                context)
-            .block();
+        return reprotectAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, reprotectInput, context).block();
     }
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6462,45 +4589,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> resolveHealthErrorsWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> resolveHealthErrorsWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         ResolveHealthInput resolveHealthInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (resolveHealthInput == null) {
             return Mono
@@ -6510,31 +4626,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .resolveHealthErrors(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            resolveHealthInput,
-                            accept,
-                            context))
+            .withContext(context -> service.resolveHealthErrors(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, resolveHealthInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6546,46 +4650,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> resolveHealthErrorsWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ResolveHealthInput resolveHealthInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> resolveHealthErrorsWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        ResolveHealthInput resolveHealthInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (resolveHealthInput == null) {
             return Mono
@@ -6595,28 +4687,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .resolveHealthErrors(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                resolveHealthInput,
-                accept,
-                context);
+        return service.resolveHealthErrors(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, resolveHealthInput, accept, context);
     }
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6628,38 +4710,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginResolveHealthErrorsAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            ResolveHealthInput resolveHealthInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            resolveHealthErrorsWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                resolveHealthInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        beginResolveHealthErrorsAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, ResolveHealthInput resolveHealthInput) {
+        Mono<Response<Flux<ByteBuffer>>> mono = resolveHealthErrorsWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, resolveHealthInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6672,41 +4738,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginResolveHealthErrorsAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            ResolveHealthInput resolveHealthInput,
+        beginResolveHealthErrorsAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, ResolveHealthInput resolveHealthInput,
             Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            resolveHealthErrorsWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                resolveHealthInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = resolveHealthErrorsWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, resolveHealthInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6718,31 +4767,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginResolveHealthErrors(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            ResolveHealthInput resolveHealthInput) {
+        beginResolveHealthErrors(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, ResolveHealthInput resolveHealthInput) {
         return this
-            .beginResolveHealthErrorsAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                resolveHealthInput)
+            .beginResolveHealthErrorsAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, resolveHealthInput)
             .getSyncPoller();
     }
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6755,33 +4794,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginResolveHealthErrors(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            ResolveHealthInput resolveHealthInput,
+        beginResolveHealthErrors(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, ResolveHealthInput resolveHealthInput,
             Context context) {
         return this
-            .beginResolveHealthErrorsAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                resolveHealthInput,
-                context)
+            .beginResolveHealthErrorsAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, resolveHealthInput, context)
             .getSyncPoller();
     }
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6792,31 +4820,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> resolveHealthErrorsAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> resolveHealthErrorsAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         ResolveHealthInput resolveHealthInput) {
-        return beginResolveHealthErrorsAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                resolveHealthInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginResolveHealthErrorsAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, resolveHealthInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6828,33 +4845,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> resolveHealthErrorsAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ResolveHealthInput resolveHealthInput,
-        Context context) {
-        return beginResolveHealthErrorsAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                resolveHealthInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> resolveHealthErrorsAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        ResolveHealthInput resolveHealthInput, Context context) {
+        return beginResolveHealthErrorsAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, resolveHealthInput, context).last()
+                .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6865,30 +4870,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner resolveHealthErrors(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    public ReplicationProtectedItemInner resolveHealthErrors(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         ResolveHealthInput resolveHealthInput) {
-        return resolveHealthErrorsAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                resolveHealthInput)
-            .block();
+        return resolveHealthErrorsAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, resolveHealthInput).block();
     }
 
     /**
      * Resolve health errors.
-     *
-     * <p>Operation to resolve health issues of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to resolve health issues of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6900,32 +4895,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner resolveHealthErrors(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        ResolveHealthInput resolveHealthInput,
-        Context context) {
-        return resolveHealthErrorsAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                resolveHealthInput,
-                context)
-            .block();
+    public ReplicationProtectedItemInner resolveHealthErrors(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        ResolveHealthInput resolveHealthInput, Context context) {
+        return resolveHealthErrorsAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, resolveHealthInput, context).block();
     }
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -6936,45 +4919,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> switchProviderWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> switchProviderWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         SwitchProviderInput switchProviderInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (switchProviderInput == null) {
             return Mono
@@ -6984,31 +4956,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .switchProvider(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            switchProviderInput,
-                            accept,
-                            context))
+            .withContext(context -> service.switchProvider(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, switchProviderInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7020,46 +4980,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> switchProviderWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        SwitchProviderInput switchProviderInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> switchProviderWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        SwitchProviderInput switchProviderInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (switchProviderInput == null) {
             return Mono
@@ -7069,28 +5017,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .switchProvider(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                switchProviderInput,
-                accept,
-                context);
+        return service.switchProvider(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, switchProviderInput, accept, context);
     }
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7102,38 +5040,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginSwitchProviderAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
+        beginSwitchProviderAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName,
             SwitchProviderInput switchProviderInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            switchProviderWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                switchProviderInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono = switchProviderWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, switchProviderInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7146,41 +5069,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginSwitchProviderAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            SwitchProviderInput switchProviderInput,
+        beginSwitchProviderAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, SwitchProviderInput switchProviderInput,
             Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            switchProviderWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                switchProviderInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = switchProviderWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, switchProviderInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7192,30 +5098,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginSwitchProvider(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        SwitchProviderInput switchProviderInput) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, SwitchProviderInput switchProviderInput) {
         return this
-            .beginSwitchProviderAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                switchProviderInput)
+            .beginSwitchProviderAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, switchProviderInput)
             .getSyncPoller();
     }
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7228,32 +5125,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginSwitchProvider(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        SwitchProviderInput switchProviderInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, SwitchProviderInput switchProviderInput, Context context) {
         return this
-            .beginSwitchProviderAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                switchProviderInput,
-                context)
+            .beginSwitchProviderAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, switchProviderInput, context)
             .getSyncPoller();
     }
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7264,31 +5150,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> switchProviderAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> switchProviderAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         SwitchProviderInput switchProviderInput) {
-        return beginSwitchProviderAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                switchProviderInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginSwitchProviderAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, switchProviderInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7300,33 +5175,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> switchProviderAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        SwitchProviderInput switchProviderInput,
-        Context context) {
-        return beginSwitchProviderAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                switchProviderInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> switchProviderAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        SwitchProviderInput switchProviderInput, Context context) {
+        return beginSwitchProviderAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, switchProviderInput, context).last()
+                .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7337,30 +5200,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner switchProvider(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    public ReplicationProtectedItemInner switchProvider(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         SwitchProviderInput switchProviderInput) {
-        return switchProviderAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                switchProviderInput)
-            .block();
+        return switchProviderAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, switchProviderInput).block();
     }
 
     /**
      * Execute switch provider.
-     *
-     * <p>Operation to initiate a switch provider of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a switch provider of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7372,32 +5225,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner switchProvider(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        SwitchProviderInput switchProviderInput,
-        Context context) {
-        return switchProviderAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                switchProviderInput,
-                context)
-            .block();
+    public ReplicationProtectedItemInner switchProvider(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        SwitchProviderInput switchProviderInput, Context context) {
+        return switchProviderAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, switchProviderInput, context).block();
     }
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7408,45 +5249,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> testFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> testFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         TestFailoverInput testfailoverInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (testfailoverInput == null) {
             return Mono
@@ -7456,31 +5286,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .testFailover(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            testfailoverInput,
-                            accept,
-                            context))
+            .withContext(context -> service.testFailover(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, testfailoverInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7492,46 +5310,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> testFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverInput testfailoverInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> testFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        TestFailoverInput testfailoverInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (testfailoverInput == null) {
             return Mono
@@ -7541,28 +5347,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .testFailover(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                testfailoverInput,
-                accept,
-                context);
+        return service.testFailover(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, testfailoverInput, accept, context);
     }
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7574,37 +5370,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginTestFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverInput testfailoverInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            testFailoverWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                testfailoverInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, TestFailoverInput testfailoverInput) {
+        Mono<Response<Flux<ByteBuffer>>> mono = testFailoverWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, testfailoverInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7617,40 +5398,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginTestFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverInput testfailoverInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, TestFailoverInput testfailoverInput, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            testFailoverWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                testfailoverInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = testFailoverWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, testfailoverInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7662,30 +5426,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginTestFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverInput testfailoverInput) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, TestFailoverInput testfailoverInput) {
         return this
-            .beginTestFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                testfailoverInput)
+            .beginTestFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, testfailoverInput)
             .getSyncPoller();
     }
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7698,32 +5453,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginTestFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverInput testfailoverInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, TestFailoverInput testfailoverInput, Context context) {
         return this
-            .beginTestFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                testfailoverInput,
-                context)
+            .beginTestFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, testfailoverInput, context)
             .getSyncPoller();
     }
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7734,31 +5478,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> testFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> testFailoverAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         TestFailoverInput testfailoverInput) {
-        return beginTestFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                testfailoverInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginTestFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, testfailoverInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7770,33 +5503,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> testFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverInput testfailoverInput,
-        Context context) {
-        return beginTestFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                testfailoverInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> testFailoverAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        TestFailoverInput testfailoverInput, Context context) {
+        return beginTestFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, testfailoverInput, context).last()
+                .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7807,30 +5528,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner testFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverInput testfailoverInput) {
-        return testFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                testfailoverInput)
-            .block();
+    public ReplicationProtectedItemInner testFailover(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, TestFailoverInput testfailoverInput) {
+        return testFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, testfailoverInput).block();
     }
 
     /**
      * Execute test failover.
-     *
-     * <p>Operation to perform a test failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to perform a test failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7842,32 +5552,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner testFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverInput testfailoverInput,
+    public ReplicationProtectedItemInner testFailover(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, TestFailoverInput testfailoverInput,
         Context context) {
-        return testFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                testfailoverInput,
-                context)
-            .block();
+        return testFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, testfailoverInput, context).block();
     }
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7878,45 +5576,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> testFailoverCleanupWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> testFailoverCleanupWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         TestFailoverCleanupInput cleanupInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (cleanupInput == null) {
             return Mono.error(new IllegalArgumentException("Parameter cleanupInput is required and cannot be null."));
@@ -7925,31 +5612,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .testFailoverCleanup(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            cleanupInput,
-                            accept,
-                            context))
+            .withContext(context -> service.testFailoverCleanup(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, cleanupInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -7961,46 +5636,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> testFailoverCleanupWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverCleanupInput cleanupInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> testFailoverCleanupWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        TestFailoverCleanupInput cleanupInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (cleanupInput == null) {
             return Mono.error(new IllegalArgumentException("Parameter cleanupInput is required and cannot be null."));
@@ -8009,28 +5672,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .testFailoverCleanup(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                cleanupInput,
-                accept,
-                context);
+        return service.testFailoverCleanup(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, cleanupInput, accept, context);
     }
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8042,38 +5695,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginTestFailoverCleanupAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            TestFailoverCleanupInput cleanupInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            testFailoverCleanupWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                cleanupInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        beginTestFailoverCleanupAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, TestFailoverCleanupInput cleanupInput) {
+        Mono<Response<Flux<ByteBuffer>>> mono = testFailoverCleanupWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, cleanupInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8086,41 +5723,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginTestFailoverCleanupAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            TestFailoverCleanupInput cleanupInput,
+        beginTestFailoverCleanupAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, TestFailoverCleanupInput cleanupInput,
             Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            testFailoverCleanupWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                cleanupInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = testFailoverCleanupWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, cleanupInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8132,31 +5752,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginTestFailoverCleanup(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            TestFailoverCleanupInput cleanupInput) {
+        beginTestFailoverCleanup(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, TestFailoverCleanupInput cleanupInput) {
         return this
-            .beginTestFailoverCleanupAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                cleanupInput)
+            .beginTestFailoverCleanupAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, cleanupInput)
             .getSyncPoller();
     }
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8169,33 +5779,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginTestFailoverCleanup(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            TestFailoverCleanupInput cleanupInput,
+        beginTestFailoverCleanup(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, TestFailoverCleanupInput cleanupInput,
             Context context) {
         return this
-            .beginTestFailoverCleanupAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                cleanupInput,
-                context)
+            .beginTestFailoverCleanupAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, cleanupInput, context)
             .getSyncPoller();
     }
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8206,31 +5805,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> testFailoverCleanupAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> testFailoverCleanupAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         TestFailoverCleanupInput cleanupInput) {
-        return beginTestFailoverCleanupAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                cleanupInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginTestFailoverCleanupAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, cleanupInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8242,33 +5830,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> testFailoverCleanupAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverCleanupInput cleanupInput,
-        Context context) {
-        return beginTestFailoverCleanupAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                cleanupInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> testFailoverCleanupAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        TestFailoverCleanupInput cleanupInput, Context context) {
+        return beginTestFailoverCleanupAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, cleanupInput, context).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8279,30 +5854,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner testFailoverCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    public ReplicationProtectedItemInner testFailoverCleanup(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         TestFailoverCleanupInput cleanupInput) {
-        return testFailoverCleanupAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                cleanupInput)
-            .block();
+        return testFailoverCleanupAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, cleanupInput).block();
     }
 
     /**
      * Execute test failover cleanup.
-     *
-     * <p>Operation to clean up the test failover of a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to clean up the test failover of a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8314,32 +5879,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner testFailoverCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        TestFailoverCleanupInput cleanupInput,
-        Context context) {
-        return testFailoverCleanupAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                cleanupInput,
-                context)
-            .block();
+    public ReplicationProtectedItemInner testFailoverCleanup(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        TestFailoverCleanupInput cleanupInput, Context context) {
+        return testFailoverCleanupAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, cleanupInput, context).block();
     }
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8350,45 +5903,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> unplannedFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> unplannedFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UnplannedFailoverInput failoverInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (failoverInput == null) {
             return Mono.error(new IllegalArgumentException("Parameter failoverInput is required and cannot be null."));
@@ -8397,31 +5939,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .unplannedFailover(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            failoverInput,
-                            accept,
-                            context))
+            .withContext(context -> service.unplannedFailover(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, failoverInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8433,46 +5963,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> unplannedFailoverWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UnplannedFailoverInput failoverInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> unplannedFailoverWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UnplannedFailoverInput failoverInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (failoverInput == null) {
             return Mono.error(new IllegalArgumentException("Parameter failoverInput is required and cannot be null."));
@@ -8481,28 +5999,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .unplannedFailover(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput,
-                accept,
-                context);
+        return service.unplannedFailover(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, failoverInput, accept, context);
     }
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8514,38 +6022,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginUnplannedFailoverAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            UnplannedFailoverInput failoverInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            unplannedFailoverWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        beginUnplannedFailoverAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, UnplannedFailoverInput failoverInput) {
+        Mono<Response<Flux<ByteBuffer>>> mono = unplannedFailoverWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, failoverInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8558,41 +6050,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginUnplannedFailoverAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            UnplannedFailoverInput failoverInput,
+        beginUnplannedFailoverAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName, UnplannedFailoverInput failoverInput,
             Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            unplannedFailoverWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = unplannedFailoverWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, failoverInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8604,30 +6079,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginUnplannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UnplannedFailoverInput failoverInput) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, UnplannedFailoverInput failoverInput) {
         return this
-            .beginUnplannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput)
+            .beginUnplannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, failoverInput)
             .getSyncPoller();
     }
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8640,32 +6106,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginUnplannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UnplannedFailoverInput failoverInput,
-        Context context) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, UnplannedFailoverInput failoverInput, Context context) {
         return this
-            .beginUnplannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput,
-                context)
+            .beginUnplannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, failoverInput, context)
             .getSyncPoller();
     }
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8676,31 +6131,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> unplannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> unplannedFailoverAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UnplannedFailoverInput failoverInput) {
-        return beginUnplannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginUnplannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, failoverInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8712,33 +6156,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> unplannedFailoverAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UnplannedFailoverInput failoverInput,
-        Context context) {
-        return beginUnplannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> unplannedFailoverAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UnplannedFailoverInput failoverInput, Context context) {
+        return beginUnplannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, failoverInput, context).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8749,30 +6180,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner unplannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    public ReplicationProtectedItemInner unplannedFailover(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UnplannedFailoverInput failoverInput) {
-        return unplannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput)
-            .block();
+        return unplannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, failoverInput).block();
     }
 
     /**
      * Execute unplanned failover.
-     *
-     * <p>Operation to initiate a failover of the replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Operation to initiate a failover of the replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Unique fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8784,32 +6205,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner unplannedFailover(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UnplannedFailoverInput failoverInput,
-        Context context) {
-        return unplannedFailoverAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                failoverInput,
-                context)
-            .block();
+    public ReplicationProtectedItemInner unplannedFailover(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UnplannedFailoverInput failoverInput, Context context) {
+        return unplannedFailoverAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, failoverInput, context).block();
     }
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8820,45 +6229,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateApplianceWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> updateApplianceWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (applianceUpdateInput == null) {
             return Mono
@@ -8868,31 +6266,19 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .updateAppliance(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            applianceUpdateInput,
-                            accept,
-                            context))
+            .withContext(context -> service.updateAppliance(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+                replicatedProtectedItemName, applianceUpdateInput, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8904,46 +6290,34 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateApplianceWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> updateApplianceWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (applianceUpdateInput == null) {
             return Mono
@@ -8953,28 +6327,18 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .updateAppliance(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applianceUpdateInput,
-                accept,
-                context);
+        return service.updateAppliance(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, applianceUpdateInput, accept, context);
     }
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -8986,38 +6350,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginUpdateApplianceAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
+        beginUpdateApplianceAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName,
             UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateApplianceWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applianceUpdateInput);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono = updateApplianceWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, applianceUpdateInput);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -9030,41 +6379,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginUpdateApplianceAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput,
-            Context context) {
+        beginUpdateApplianceAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName,
+            UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateApplianceWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applianceUpdateInput,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = updateApplianceWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, applianceUpdateInput, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -9076,30 +6408,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginUpdateAppliance(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput) {
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput) {
         return this
-            .beginUpdateApplianceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applianceUpdateInput)
+            .beginUpdateApplianceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, applianceUpdateInput)
             .getSyncPoller();
     }
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -9112,32 +6435,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner> beginUpdateAppliance(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput,
+        String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String replicatedProtectedItemName, UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput,
         Context context) {
         return this
-            .beginUpdateApplianceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applianceUpdateInput,
-                context)
+            .beginUpdateApplianceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, applianceUpdateInput, context)
             .getSyncPoller();
     }
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -9148,31 +6461,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> updateApplianceAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> updateApplianceAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput) {
-        return beginUpdateApplianceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applianceUpdateInput)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginUpdateApplianceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, applianceUpdateInput).last().flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -9184,33 +6486,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> updateApplianceAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput,
-        Context context) {
-        return beginUpdateApplianceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applianceUpdateInput,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> updateApplianceAsync(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput, Context context) {
+        return beginUpdateApplianceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, applianceUpdateInput, context).last()
+                .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -9221,30 +6511,20 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner updateAppliance(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    public ReplicationProtectedItemInner updateAppliance(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput) {
-        return updateApplianceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applianceUpdateInput)
-            .block();
+        return updateApplianceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, applianceUpdateInput).block();
     }
 
     /**
      * Updates appliance for replication protected Item.
-     *
-     * <p>The operation to update appliance of an ASR replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update appliance of an ASR replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -9256,33 +6536,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner updateAppliance(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput,
-        Context context) {
-        return updateApplianceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                applianceUpdateInput,
-                context)
-            .block();
+    public ReplicationProtectedItemInner updateAppliance(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UpdateApplianceForReplicationProtectedItemInput applianceUpdateInput, Context context) {
+        return updateApplianceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, applianceUpdateInput, context).block();
     }
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -9293,82 +6561,56 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateMobilityServiceWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<Response<Flux<ByteBuffer>>> updateMobilityServiceWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UpdateMobilityServiceRequest updateMobilityServiceRequest) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (updateMobilityServiceRequest == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter updateMobilityServiceRequest is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter updateMobilityServiceRequest is required and cannot be null."));
         } else {
             updateMobilityServiceRequest.validate();
         }
         final String accept = "application/json";
-        return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .updateMobilityService(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            fabricName,
-                            protectionContainerName,
-                            replicatedProtectedItemName,
-                            updateMobilityServiceRequest,
-                            accept,
-                            context))
+        return FluxUtil.withContext(context -> service.updateMobilityService(this.client.getEndpoint(),
+            this.client.getApiVersion(), resourceGroupName, resourceName, this.client.getSubscriptionId(), fabricName,
+            protectionContainerName, replicatedProtectedItemName, updateMobilityServiceRequest, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -9380,80 +6622,56 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateMobilityServiceWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateMobilityServiceRequest updateMobilityServiceRequest,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> updateMobilityServiceWithResponseAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UpdateMobilityServiceRequest updateMobilityServiceRequest, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (fabricName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fabricName is required and cannot be null."));
         }
         if (protectionContainerName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter protectionContainerName is required and cannot be null."));
         }
         if (replicatedProtectedItemName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter replicatedProtectedItemName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter replicatedProtectedItemName is required and cannot be null."));
         }
         if (updateMobilityServiceRequest == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter updateMobilityServiceRequest is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter updateMobilityServiceRequest is required and cannot be null."));
         } else {
             updateMobilityServiceRequest.validate();
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .updateMobilityService(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateMobilityServiceRequest,
-                accept,
-                context);
+        return service.updateMobilityService(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+            resourceName, this.client.getSubscriptionId(), fabricName, protectionContainerName,
+            replicatedProtectedItemName, updateMobilityServiceRequest, accept, context);
     }
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -9465,39 +6683,24 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginUpdateMobilityServiceAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
+        beginUpdateMobilityServiceAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName,
             UpdateMobilityServiceRequest updateMobilityServiceRequest) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateMobilityServiceWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateMobilityServiceRequest);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono = updateMobilityServiceWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, updateMobilityServiceRequest);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            this.client.getContext());
     }
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -9510,42 +6713,25 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginUpdateMobilityServiceAsync(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            UpdateMobilityServiceRequest updateMobilityServiceRequest,
-            Context context) {
+        beginUpdateMobilityServiceAsync(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName,
+            UpdateMobilityServiceRequest updateMobilityServiceRequest, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateMobilityServiceWithResponseAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateMobilityServiceRequest,
-                context);
-        return this
-            .client
-            .<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                ReplicationProtectedItemInner.class,
-                ReplicationProtectedItemInner.class,
-                context);
+        Mono<Response<Flux<ByteBuffer>>> mono = updateMobilityServiceWithResponseAsync(resourceGroupName, resourceName,
+            fabricName, protectionContainerName, replicatedProtectedItemName, updateMobilityServiceRequest, context);
+        return this.client.<ReplicationProtectedItemInner, ReplicationProtectedItemInner>getLroResult(mono,
+            this.client.getHttpPipeline(), ReplicationProtectedItemInner.class, ReplicationProtectedItemInner.class,
+            context);
     }
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -9557,32 +6743,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginUpdateMobilityService(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
+        beginUpdateMobilityService(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName,
             UpdateMobilityServiceRequest updateMobilityServiceRequest) {
         return this
-            .beginUpdateMobilityServiceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateMobilityServiceRequest)
+            .beginUpdateMobilityServiceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, updateMobilityServiceRequest)
             .getSyncPoller();
     }
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -9595,34 +6772,23 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<ReplicationProtectedItemInner>, ReplicationProtectedItemInner>
-        beginUpdateMobilityService(
-            String resourceName,
-            String resourceGroupName,
-            String fabricName,
-            String protectionContainerName,
-            String replicatedProtectedItemName,
-            UpdateMobilityServiceRequest updateMobilityServiceRequest,
-            Context context) {
+        beginUpdateMobilityService(String resourceGroupName, String resourceName, String fabricName,
+            String protectionContainerName, String replicatedProtectedItemName,
+            UpdateMobilityServiceRequest updateMobilityServiceRequest, Context context) {
         return this
-            .beginUpdateMobilityServiceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateMobilityServiceRequest,
-                context)
+            .beginUpdateMobilityServiceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+                replicatedProtectedItemName, updateMobilityServiceRequest, context)
             .getSyncPoller();
     }
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -9633,32 +6799,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> updateMobilityServiceAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    private Mono<ReplicationProtectedItemInner> updateMobilityServiceAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UpdateMobilityServiceRequest updateMobilityServiceRequest) {
-        return beginUpdateMobilityServiceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateMobilityServiceRequest)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+        return beginUpdateMobilityServiceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, updateMobilityServiceRequest).last()
+                .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -9670,34 +6826,22 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ReplicationProtectedItemInner> updateMobilityServiceAsync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateMobilityServiceRequest updateMobilityServiceRequest,
-        Context context) {
-        return beginUpdateMobilityServiceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateMobilityServiceRequest,
-                context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
+    private Mono<ReplicationProtectedItemInner> updateMobilityServiceAsync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UpdateMobilityServiceRequest updateMobilityServiceRequest, Context context) {
+        return beginUpdateMobilityServiceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, updateMobilityServiceRequest, context).last()
+                .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -9708,31 +6852,21 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner updateMobilityService(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
+    public ReplicationProtectedItemInner updateMobilityService(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
         UpdateMobilityServiceRequest updateMobilityServiceRequest) {
-        return updateMobilityServiceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateMobilityServiceRequest)
-            .block();
+        return updateMobilityServiceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, updateMobilityServiceRequest).block();
     }
 
     /**
      * Update the mobility service on a protected item.
-     *
-     * <p>The operation to update(push update) the installed mobility service software on a replication protected item
-     * to the latest available version.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update(push update) the installed mobility service software on a replication protected item to
+     * the latest available version.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The name of the fabric containing the protected item.
      * @param protectionContainerName The name of the container containing the protected item.
      * @param replicatedProtectedItemName The name of the protected item on which the agent is to be updated.
@@ -9744,96 +6878,62 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return replication protected item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ReplicationProtectedItemInner updateMobilityService(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        UpdateMobilityServiceRequest updateMobilityServiceRequest,
-        Context context) {
-        return updateMobilityServiceAsync(
-                resourceName,
-                resourceGroupName,
-                fabricName,
-                protectionContainerName,
-                replicatedProtectedItemName,
-                updateMobilityServiceRequest,
-                context)
-            .block();
+    public ReplicationProtectedItemInner updateMobilityService(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName,
+        UpdateMobilityServiceRequest updateMobilityServiceRequest, Context context) {
+        return updateMobilityServiceAsync(resourceGroupName, resourceName, fabricName, protectionContainerName,
+            replicatedProtectedItemName, updateMobilityServiceRequest, context).block();
     }
 
     /**
      * Gets the list of replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param skipToken The pagination token. Possible values: "FabricId" or "FabricId_CloudId" or null.
      * @param filter OData filter options.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of ASR replication protected items in the vault along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ReplicationProtectedItemInner>> listSinglePageAsync(
-        String resourceName, String resourceGroupName, String skipToken, String filter) {
+    private Mono<PagedResponse<ReplicationProtectedItemInner>> listSinglePageAsync(String resourceGroupName,
+        String resourceName, String skipToken, String filter) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            skipToken,
-                            filter,
-                            accept,
-                            context))
-            .<PagedResponse<ReplicationProtectedItemInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.list(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), skipToken, filter, accept, context))
+            .<PagedResponse<ReplicationProtectedItemInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the list of replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param skipToken The pagination token. Possible values: "FabricId" or "FabricId_CloudId" or null.
      * @param filter OData filter options.
      * @param context The context to associate with this operation.
@@ -9841,61 +6941,42 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of ASR replication protected items in the vault along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ReplicationProtectedItemInner>> listSinglePageAsync(
-        String resourceName, String resourceGroupName, String skipToken, String filter, Context context) {
+    private Mono<PagedResponse<ReplicationProtectedItemInner>> listSinglePageAsync(String resourceGroupName,
+        String resourceName, String skipToken, String filter, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .list(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                skipToken,
-                filter,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+            .list(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+                this.client.getSubscriptionId(), skipToken, filter, accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 
     /**
      * Gets the list of replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param skipToken The pagination token. Possible values: "FabricId" or "FabricId_CloudId" or null.
      * @param filter OData filter options.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -9904,41 +6985,39 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the list of ASR replication protected items in the vault as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ReplicationProtectedItemInner> listAsync(
-        String resourceName, String resourceGroupName, String skipToken, String filter) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(resourceName, resourceGroupName, skipToken, filter),
+    private PagedFlux<ReplicationProtectedItemInner> listAsync(String resourceGroupName, String resourceName,
+        String skipToken, String filter) {
+        return new PagedFlux<>(() -> listSinglePageAsync(resourceGroupName, resourceName, skipToken, filter),
             nextLink -> listNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets the list of replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of ASR replication protected items in the vault as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ReplicationProtectedItemInner> listAsync(String resourceName, String resourceGroupName) {
+    private PagedFlux<ReplicationProtectedItemInner> listAsync(String resourceGroupName, String resourceName) {
         final String skipToken = null;
         final String filter = null;
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(resourceName, resourceGroupName, skipToken, filter),
+        return new PagedFlux<>(() -> listSinglePageAsync(resourceGroupName, resourceName, skipToken, filter),
             nextLink -> listNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets the list of replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param skipToken The pagination token. Possible values: "FabricId" or "FabricId_CloudId" or null.
      * @param filter OData filter options.
      * @param context The context to associate with this operation.
@@ -9948,146 +7027,120 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
      * @return the list of ASR replication protected items in the vault as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ReplicationProtectedItemInner> listAsync(
-        String resourceName, String resourceGroupName, String skipToken, String filter, Context context) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(resourceName, resourceGroupName, skipToken, filter, context),
+    private PagedFlux<ReplicationProtectedItemInner> listAsync(String resourceGroupName, String resourceName,
+        String skipToken, String filter, Context context) {
+        return new PagedFlux<>(() -> listSinglePageAsync(resourceGroupName, resourceName, skipToken, filter, context),
             nextLink -> listNextSinglePageAsync(nextLink, context));
     }
 
     /**
      * Gets the list of replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR replication protected items in the vault as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR replication protected items in the vault as paginated response with
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<ReplicationProtectedItemInner> list(String resourceName, String resourceGroupName) {
+    public PagedIterable<ReplicationProtectedItemInner> list(String resourceGroupName, String resourceName) {
         final String skipToken = null;
         final String filter = null;
-        return new PagedIterable<>(listAsync(resourceName, resourceGroupName, skipToken, filter));
+        return new PagedIterable<>(listAsync(resourceGroupName, resourceName, skipToken, filter));
     }
 
     /**
      * Gets the list of replication protected items.
-     *
-     * <p>Gets the list of ASR replication protected items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR replication protected items in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param skipToken The pagination token. Possible values: "FabricId" or "FabricId_CloudId" or null.
      * @param filter OData filter options.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR replication protected items in the vault as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR replication protected items in the vault as paginated response with
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<ReplicationProtectedItemInner> list(
-        String resourceName, String resourceGroupName, String skipToken, String filter, Context context) {
-        return new PagedIterable<>(listAsync(resourceName, resourceGroupName, skipToken, filter, context));
+    public PagedIterable<ReplicationProtectedItemInner> list(String resourceGroupName, String resourceName,
+        String skipToken, String filter, Context context) {
+        return new PagedIterable<>(listAsync(resourceGroupName, resourceName, skipToken, filter, context));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return replication protected item collection along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return replication protected item collection along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ReplicationProtectedItemInner>> listByReplicationProtectionContainersNextSinglePageAsync(
-        String nextLink) {
+    private Mono<PagedResponse<ReplicationProtectedItemInner>>
+        listByReplicationProtectionContainersNextSinglePageAsync(String nextLink) {
         if (nextLink == null) {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listByReplicationProtectionContainersNext(
-                            nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<ReplicationProtectedItemInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.listByReplicationProtectionContainersNext(nextLink,
+                this.client.getEndpoint(), accept, context))
+            .<PagedResponse<ReplicationProtectedItemInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return replication protected item collection along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return replication protected item collection along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ReplicationProtectedItemInner>> listByReplicationProtectionContainersNextSinglePageAsync(
-        String nextLink, Context context) {
+    private Mono<PagedResponse<ReplicationProtectedItemInner>>
+        listByReplicationProtectionContainersNextSinglePageAsync(String nextLink, Context context) {
         if (nextLink == null) {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .listByReplicationProtectionContainersNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        return service.listByReplicationProtectionContainersNext(nextLink, this.client.getEndpoint(), accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return replication protected item collection along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return replication protected item collection along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ReplicationProtectedItemInner>> listNextSinglePageAsync(String nextLink) {
@@ -10095,62 +7148,41 @@ public final class ReplicationProtectedItemsClientImpl implements ReplicationPro
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        return FluxUtil
-            .withContext(context -> service.listNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<ReplicationProtectedItemInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+        return FluxUtil.withContext(context -> service.listNext(nextLink, this.client.getEndpoint(), accept, context))
+            .<PagedResponse<ReplicationProtectedItemInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return replication protected item collection along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return replication protected item collection along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ReplicationProtectedItemInner>> listNextSinglePageAsync(
-        String nextLink, Context context) {
+    private Mono<PagedResponse<ReplicationProtectedItemInner>> listNextSinglePageAsync(String nextLink,
+        Context context) {
         if (nextLink == null) {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .listNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        return service.listNext(nextLink, this.client.getEndpoint(), accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 }

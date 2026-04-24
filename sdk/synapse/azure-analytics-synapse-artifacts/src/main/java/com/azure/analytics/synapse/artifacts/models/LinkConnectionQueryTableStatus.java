@@ -5,42 +5,55 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The LinkConnectionQueryTableStatus model. */
+/**
+ * The LinkConnectionQueryTableStatus model.
+ */
 @Fluent
-public final class LinkConnectionQueryTableStatus {
+public final class LinkConnectionQueryTableStatus implements JsonSerializable<LinkConnectionQueryTableStatus> {
     /*
      * Link tables' status
      */
-    @JsonProperty(value = "value")
+    @Generated
     private List<LinkTableStatus> value;
 
     /*
      * Continuation token to query table status
      */
-    @JsonProperty(value = "continuationToken")
+    @Generated
     private Object continuationToken;
 
-    /** Creates an instance of LinkConnectionQueryTableStatus class. */
-    public LinkConnectionQueryTableStatus() {}
+    /**
+     * Creates an instance of LinkConnectionQueryTableStatus class.
+     */
+    @Generated
+    public LinkConnectionQueryTableStatus() {
+    }
 
     /**
      * Get the value property: Link tables' status.
-     *
+     * 
      * @return the value value.
      */
+    @Generated
     public List<LinkTableStatus> getValue() {
         return this.value;
     }
 
     /**
      * Set the value property: Link tables' status.
-     *
+     * 
      * @param value the value value to set.
      * @return the LinkConnectionQueryTableStatus object itself.
      */
+    @Generated
     public LinkConnectionQueryTableStatus setValue(List<LinkTableStatus> value) {
         this.value = value;
         return this;
@@ -48,21 +61,68 @@ public final class LinkConnectionQueryTableStatus {
 
     /**
      * Get the continuationToken property: Continuation token to query table status.
-     *
+     * 
      * @return the continuationToken value.
      */
+    @Generated
     public Object getContinuationToken() {
         return this.continuationToken;
     }
 
     /**
      * Set the continuationToken property: Continuation token to query table status.
-     *
+     * 
      * @param continuationToken the continuationToken value to set.
      * @return the LinkConnectionQueryTableStatus object itself.
      */
+    @Generated
     public LinkConnectionQueryTableStatus setContinuationToken(Object continuationToken) {
         this.continuationToken = continuationToken;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("value", this.value, (writer, element) -> writer.writeJson(element));
+        if (this.continuationToken != null) {
+            jsonWriter.writeUntypedField("continuationToken", this.continuationToken);
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of LinkConnectionQueryTableStatus from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of LinkConnectionQueryTableStatus if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the LinkConnectionQueryTableStatus.
+     */
+    @Generated
+    public static LinkConnectionQueryTableStatus fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            LinkConnectionQueryTableStatus deserializedLinkConnectionQueryTableStatus
+                = new LinkConnectionQueryTableStatus();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("value".equals(fieldName)) {
+                    List<LinkTableStatus> value = reader.readArray(reader1 -> LinkTableStatus.fromJson(reader1));
+                    deserializedLinkConnectionQueryTableStatus.value = value;
+                } else if ("continuationToken".equals(fieldName)) {
+                    deserializedLinkConnectionQueryTableStatus.continuationToken = reader.readUntyped();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedLinkConnectionQueryTableStatus;
+        });
     }
 }

@@ -11,15 +11,17 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.recoveryservicessiterecovery.fluent.models.RecoveryPointInner;
 
-/** An instance of this class provides access to all the operations defined in RecoveryPointsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in RecoveryPointsClient.
+ */
 public interface RecoveryPointsClient {
     /**
      * Gets the list of recovery points for a replication protected item.
-     *
-     * <p>Lists the available recovery points for a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the available recovery points for a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replication protected item name.
@@ -29,20 +31,16 @@ public interface RecoveryPointsClient {
      * @return collection of recovery point details as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<RecoveryPointInner> listByReplicationProtectedItems(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName);
+    PagedIterable<RecoveryPointInner> listByReplicationProtectedItems(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName);
 
     /**
      * Gets the list of recovery points for a replication protected item.
-     *
-     * <p>Lists the available recovery points for a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the available recovery points for a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replication protected item name.
@@ -53,21 +51,16 @@ public interface RecoveryPointsClient {
      * @return collection of recovery point details as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<RecoveryPointInner> listByReplicationProtectedItems(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context);
+    PagedIterable<RecoveryPointInner> listByReplicationProtectedItems(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context);
 
     /**
      * Gets a recovery point.
-     *
-     * <p>Get the details of specified recovery point.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Get the details of specified recovery point.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replication protected item name.
@@ -79,22 +72,16 @@ public interface RecoveryPointsClient {
      * @return the details of specified recovery point along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<RecoveryPointInner> getWithResponse(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        String recoveryPointName,
-        Context context);
+    Response<RecoveryPointInner> getWithResponse(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, String recoveryPointName, Context context);
 
     /**
      * Gets a recovery point.
-     *
-     * <p>Get the details of specified recovery point.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Get the details of specified recovery point.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName The fabric name.
      * @param protectionContainerName The protection container name.
      * @param replicatedProtectedItemName The replication protected item name.
@@ -105,11 +92,6 @@ public interface RecoveryPointsClient {
      * @return the details of specified recovery point.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    RecoveryPointInner get(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        String recoveryPointName);
+    RecoveryPointInner get(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String replicatedProtectedItemName, String recoveryPointName);
 }

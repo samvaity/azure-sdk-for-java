@@ -47,16 +47,17 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BuildHelperTests {
     private static final ClientLogger LOGGER = new ClientLogger(BuildHelperTests.class);
-    private static final StorageSharedKeyCredential CREDENTIALS =
-        new StorageSharedKeyCredential("accountName", "accountKey");
+    private static final StorageSharedKeyCredential CREDENTIALS
+        = new StorageSharedKeyCredential("accountName", "accountKey");
     private static final String ENDPOINT = "https://account.queue.core.windows.net/";
-    private static final RequestRetryOptions REQUEST_RETRY_OPTIONS =
-        new RequestRetryOptions(RetryPolicyType.FIXED, 2, 2, 1000L, 4000L, null);
+    private static final RequestRetryOptions REQUEST_RETRY_OPTIONS
+        = new RequestRetryOptions(RetryPolicyType.FIXED, 2, 2, 1000L, 4000L, null);
     private static final RetryOptions RETRY_OPTIONS = new RetryOptions(new FixedDelayOptions(1, Duration.ofSeconds(1)));
     private static final TokenCredential MOCK_CREDENTIAL = request -> null;
     private static final List<Header> CLIENT_OPTIONS_HEADERS;
@@ -76,8 +77,9 @@ public class BuildHelperTests {
 
     private static void sendRequestAndValidate(HttpPipeline pipeline, String url) {
         try {
-            StepVerifier.create(pipeline.send(new HttpRequest(HttpMethod.HEAD, new URL(url),
-                new HttpHeaders().set(HttpHeaderName.CONTENT_LENGTH, "0"), Flux.empty())))
+            StepVerifier
+                .create(pipeline.send(new HttpRequest(HttpMethod.HEAD, new URL(url),
+                    new HttpHeaders().set(HttpHeaderName.CONTENT_LENGTH, "0"), Flux.empty())))
                 .assertNext(response -> assertEquals(200, response.getStatusCode()))
                 .verifyComplete();
         } catch (MalformedURLException ex) {
@@ -85,10 +87,11 @@ public class BuildHelperTests {
         }
     }
 
-    private static HttpPipeline buildPipeline(HttpLogOptions logOptions, ClientOptions clientOptions, HttpClient
-        httpClient) {
+    private static HttpPipeline buildPipeline(HttpLogOptions logOptions, ClientOptions clientOptions,
+        HttpClient httpClient) {
         return BuilderHelper.buildPipeline(CREDENTIALS, null, null, null, ENDPOINT, REQUEST_RETRY_OPTIONS, null,
-            logOptions, clientOptions, httpClient, new ArrayList<>(), new ArrayList<>(), Configuration.NONE, LOGGER);
+            logOptions, clientOptions, httpClient, new ArrayList<>(), new ArrayList<>(), Configuration.NONE, null,
+            LOGGER);
     }
 
     /**
@@ -96,8 +99,8 @@ public class BuildHelperTests {
      */
     @Test
     public void freshDateAppliedOnRetry() {
-        HttpPipeline pipeline = buildPipeline(BuilderHelper.getDefaultHttpLogOptions(), new ClientOptions(),
-            new FreshDateTestClient());
+        HttpPipeline pipeline
+            = buildPipeline(BuilderHelper.getDefaultHttpLogOptions(), new ClientOptions(), new FreshDateTestClient());
 
         sendRequestAndValidate(pipeline, ENDPOINT);
     }
@@ -107,8 +110,7 @@ public class BuildHelperTests {
      */
     @Test
     public void serviceClientFreshDateOnRetry() {
-        QueueServiceClient serviceClient = new QueueServiceClientBuilder()
-            .endpoint(ENDPOINT)
+        QueueServiceClient serviceClient = new QueueServiceClientBuilder().endpoint(ENDPOINT)
             .credential(CREDENTIALS)
             .httpClient(new FreshDateTestClient())
             .retryOptions(REQUEST_RETRY_OPTIONS)
@@ -122,8 +124,7 @@ public class BuildHelperTests {
      */
     @Test
     public void queueClientFreshDateOnRetry() {
-        QueueClient queueClient = new QueueClientBuilder()
-            .endpoint(ENDPOINT)
+        QueueClient queueClient = new QueueClientBuilder().endpoint(ENDPOINT)
             .queueName("queue")
             .credential(CREDENTIALS)
             .httpClient(new FreshDateTestClient())
@@ -152,8 +153,7 @@ public class BuildHelperTests {
     @MethodSource("customApplicationIdSupplier")
     public void serviceClientCustomApplicationIdInUserAgentString(String logOptionsUA, String clientOptionsUA,
         String expectedUA) {
-        QueueServiceClient serviceClient = new QueueServiceClientBuilder()
-            .endpoint(ENDPOINT)
+        QueueServiceClient serviceClient = new QueueServiceClientBuilder().endpoint(ENDPOINT)
             .credential(CREDENTIALS)
             .httpLogOptions(new HttpLogOptions().setApplicationId(logOptionsUA))
             .clientOptions(new ClientOptions().setApplicationId(clientOptionsUA))
@@ -170,8 +170,7 @@ public class BuildHelperTests {
     @MethodSource("customApplicationIdSupplier")
     public void queueClientCustomApplicationIdInUserAgentString(String logOptionsUA, String clientOptionsUA,
         String expectedUA) {
-        QueueClient queueClient = new QueueClientBuilder()
-            .endpoint(ENDPOINT)
+        QueueClient queueClient = new QueueClientBuilder().endpoint(ENDPOINT)
             .queueName("queue")
             .credential(CREDENTIALS)
             .httpLogOptions(new HttpLogOptions().setApplicationId(logOptionsUA))
@@ -183,13 +182,11 @@ public class BuildHelperTests {
     }
 
     private static Stream<Arguments> customApplicationIdSupplier() {
-        return Stream.of(
-            Arguments.of("log-options-id", null, "log-options-id"),
+        return Stream.of(Arguments.of("log-options-id", null, "log-options-id"),
             Arguments.of(null, "client-options-id", "client-options-id"),
 
             // Client options preferred over log options
-            Arguments.of("log-options-id", "client-options-id", "client-options-id")
-        );
+            Arguments.of("log-options-id", "client-options-id", "client-options-id"));
     }
 
     /**
@@ -208,8 +205,7 @@ public class BuildHelperTests {
      */
     @Test
     public void serviceClientCustomHeadersClientOptions() {
-        QueueServiceClient serviceClient = new QueueServiceClientBuilder()
-            .endpoint(ENDPOINT)
+        QueueServiceClient serviceClient = new QueueServiceClientBuilder().endpoint(ENDPOINT)
             .credential(CREDENTIALS)
             .clientOptions(new ClientOptions().setHeaders(CLIENT_OPTIONS_HEADERS))
             .httpClient(new ClientOptionsHeadersTestClient(HEADERS_MAP))
@@ -223,8 +219,7 @@ public class BuildHelperTests {
      */
     @Test
     public void queueClientCustomHeadersClientOptions() {
-        QueueClient queueClient = new QueueClientBuilder()
-            .endpoint(ENDPOINT)
+        QueueClient queueClient = new QueueClientBuilder().endpoint(ENDPOINT)
             .queueName("queue")
             .credential(CREDENTIALS)
             .clientOptions(new ClientOptions().setHeaders(CLIENT_OPTIONS_HEADERS))
@@ -236,16 +231,14 @@ public class BuildHelperTests {
 
     @Test
     public void doesNotThrowOnAmbiguousCredentialsWithoutAzureSasCredential() {
-        assertDoesNotThrow(() -> new QueueClientBuilder()
-            .endpoint(ENDPOINT)
+        assertDoesNotThrow(() -> new QueueClientBuilder().endpoint(ENDPOINT)
             .queueName("foo")
             .credential(new StorageSharedKeyCredential("foo", "bar"))
             .credential(MOCK_CREDENTIAL)
             .sasToken("foo")
             .buildClient());
 
-        assertDoesNotThrow(() -> new QueueServiceClientBuilder()
-            .endpoint(ENDPOINT)
+        assertDoesNotThrow(() -> new QueueServiceClientBuilder().endpoint(ENDPOINT)
             .credential(new StorageSharedKeyCredential("foo", "bar"))
             .credential(MOCK_CREDENTIAL)
             .sasToken("foo")
@@ -254,73 +247,102 @@ public class BuildHelperTests {
 
     @Test
     public void throwsOnAmbiguousCredentialsWithAzureSasCredential() {
-        assertThrows(IllegalStateException.class, () -> new QueueClientBuilder()
-            .endpoint(ENDPOINT)
-            .queueName("foo")
-            .credential(new StorageSharedKeyCredential("foo", "bar"))
-            .credential(new AzureSasCredential("foo"))
-            .buildClient());
+        assertThrows(IllegalStateException.class,
+            () -> new QueueClientBuilder().endpoint(ENDPOINT)
+                .queueName("foo")
+                .credential(new StorageSharedKeyCredential("foo", "bar"))
+                .credential(new AzureSasCredential("foo"))
+                .buildClient());
 
-        assertThrows(IllegalStateException.class, () -> new QueueClientBuilder()
-            .endpoint(ENDPOINT)
-            .queueName("foo")
-            .credential(MOCK_CREDENTIAL)
-            .credential(new AzureSasCredential("foo"))
-            .buildClient());
+        assertThrows(IllegalStateException.class,
+            () -> new QueueClientBuilder().endpoint(ENDPOINT)
+                .queueName("foo")
+                .sasToken("foo")
+                .credential(new AzureSasCredential("foo"))
+                .buildClient());
 
-        assertThrows(IllegalStateException.class, () -> new QueueClientBuilder()
-            .endpoint(ENDPOINT)
-            .queueName("foo")
-            .sasToken("foo")
-            .credential(new AzureSasCredential("foo"))
-            .buildClient());
+        assertThrows(IllegalStateException.class,
+            () -> new QueueClientBuilder().endpoint(ENDPOINT + "?sig=foo")
+                .queueName("foo")
+                .credential(new AzureSasCredential("foo"))
+                .buildClient());
 
-        assertThrows(IllegalStateException.class, () -> new QueueClientBuilder()
-            .endpoint(ENDPOINT + "?sig=foo")
-            .queueName("foo")
-            .credential(new AzureSasCredential("foo"))
-            .buildClient());
+        assertThrows(IllegalStateException.class,
+            () -> new QueueServiceClientBuilder().endpoint(ENDPOINT)
+                .credential(new StorageSharedKeyCredential("foo", "bar"))
+                .credential(new AzureSasCredential("foo"))
+                .buildClient());
 
-        assertThrows(IllegalStateException.class, () -> new QueueServiceClientBuilder()
-            .endpoint(ENDPOINT)
-            .credential(new StorageSharedKeyCredential("foo", "bar"))
-            .credential(new AzureSasCredential("foo"))
-            .buildClient());
+        assertThrows(IllegalStateException.class,
+            () -> new QueueServiceClientBuilder().endpoint(ENDPOINT)
+                .sasToken("foo")
+                .credential(new AzureSasCredential("foo"))
+                .buildClient());
 
-        assertThrows(IllegalStateException.class, () -> new QueueServiceClientBuilder()
-            .endpoint(ENDPOINT)
-            .credential(MOCK_CREDENTIAL)
-            .credential(new AzureSasCredential("foo"))
-            .buildClient());
+        assertThrows(IllegalStateException.class,
+            () -> new QueueServiceClientBuilder().endpoint(ENDPOINT + "?sig=foo")
+                .credential(new AzureSasCredential("foo"))
+                .buildClient());
+    }
 
-        assertThrows(IllegalStateException.class, () -> new QueueServiceClientBuilder()
-            .endpoint(ENDPOINT)
-            .sasToken("foo")
-            .credential(new AzureSasCredential("foo"))
-            .buildClient());
+    @ParameterizedTest
+    @MethodSource("queueAccountNameSupplier")
+    void secondaryIpv6Dualstack(String urlString, String expectedAccountName) {
+        BuilderHelper.QueueUrlParts queueUrlParts = BuilderHelper.parseEndpoint(urlString, LOGGER);
 
-        assertThrows(IllegalStateException.class, () -> new QueueServiceClientBuilder()
-            .endpoint(ENDPOINT + "?sig=foo")
-            .credential(new AzureSasCredential("foo"))
-            .buildClient());
+        assertEquals("https", queueUrlParts.getScheme());
+        assertEquals(expectedAccountName, queueUrlParts.getAccountName());
+        assertNull(queueUrlParts.getQueueName());
+        assertNull(queueUrlParts.getSasToken());
+
+        String newUri = queueUrlParts.getEndpoint() + "/";
+        assertEquals(urlString, newUri);
+    }
+
+    private static Stream<Arguments> queueAccountNameSupplier() {
+        return Stream.of(Arguments.of("https://myaccount.queue.core.windows.net/", "myaccount"),
+            Arguments.of("https://myaccount-secondary.queue.core.windows.net/", "myaccount"),
+            Arguments.of("https://myaccount-dualstack.queue.core.windows.net/", "myaccount"),
+            Arguments.of("https://myaccount-ipv6.queue.core.windows.net/", "myaccount"),
+            Arguments.of("https://myaccount-secondary-dualstack.queue.core.windows.net/", "myaccount"),
+            Arguments.of("https://myaccount-secondary-ipv6.queue.core.windows.net/", "myaccount"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("queueManagedDiskAccountNameSupplier")
+    void ipv6InternalAccounts(String urlString, String expectedAccountName) {
+        BuilderHelper.QueueUrlParts queueUrlParts = BuilderHelper.parseEndpoint(urlString, LOGGER);
+
+        assertEquals("https", queueUrlParts.getScheme());
+        assertEquals(expectedAccountName, queueUrlParts.getAccountName());
+        assertNull(queueUrlParts.getQueueName());
+        assertNull(queueUrlParts.getSasToken());
+
+        String newUri = queueUrlParts.getEndpoint() + "/";
+        assertEquals(urlString, newUri);
+    }
+
+    private static Stream<Arguments> queueManagedDiskAccountNameSupplier() {
+        return Stream.of(Arguments.of("https://md-d3rqxhqbxbwq.queue.core.windows.net/", "md-d3rqxhqbxbwq"),
+            Arguments.of("https://md-ssd-bndub02px100c21.queue.core.windows.net/", "md-ssd-bndub02px100c21"));
     }
 
     @Test
     public void onlyOneRetryOptionsCanBeApplied() {
-        assertThrows(IllegalStateException.class, () -> new QueueServiceClientBuilder()
-            .endpoint(ENDPOINT)
-            .credential(CREDENTIALS)
-            .retryOptions(REQUEST_RETRY_OPTIONS)
-            .retryOptions(RETRY_OPTIONS)
-            .buildClient());
+        assertThrows(IllegalStateException.class,
+            () -> new QueueServiceClientBuilder().endpoint(ENDPOINT)
+                .credential(CREDENTIALS)
+                .retryOptions(REQUEST_RETRY_OPTIONS)
+                .retryOptions(RETRY_OPTIONS)
+                .buildClient());
 
-        assertThrows(IllegalStateException.class, () -> new QueueClientBuilder()
-            .endpoint(ENDPOINT)
-            .credential(CREDENTIALS)
-            .queueName("foo")
-            .retryOptions(REQUEST_RETRY_OPTIONS)
-            .retryOptions(RETRY_OPTIONS)
-            .buildClient());
+        assertThrows(IllegalStateException.class,
+            () -> new QueueClientBuilder().endpoint(ENDPOINT)
+                .credential(CREDENTIALS)
+                .queueName("foo")
+                .retryOptions(REQUEST_RETRY_OPTIONS)
+                .retryOptions(RETRY_OPTIONS)
+                .buildClient());
     }
 
     @Test

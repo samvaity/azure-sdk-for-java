@@ -5,69 +5,76 @@
 package com.azure.digitaltwins.core.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
-/** A model definition and metadata for that model. */
+/**
+ * A model definition and metadata for that model.
+ */
 @Fluent
-public final class DigitalTwinsModelData {
+public final class DigitalTwinsModelData implements JsonSerializable<DigitalTwinsModelData> {
     /*
-     * A language map that contains the localized display names as specified in
-     * the model definition.
+     * A language map that contains the localized display names as specified in the model definition.
      */
-    @JsonProperty(value = "displayName")
+    @Generated
     private Map<String, String> displayName;
 
     /*
-     * A language map that contains the localized descriptions as specified in
-     * the model definition.
+     * A language map that contains the localized descriptions as specified in the model definition.
      */
-    @JsonProperty(value = "description")
+    @Generated
     private Map<String, String> description;
 
     /*
      * The id of the model as specified in the model definition.
      */
-    @JsonProperty(value = "id", required = true)
-    private String id;
+    @Generated
+    private final String id;
 
     /*
      * The time the model was uploaded to the service.
      */
-    @JsonProperty(value = "uploadTime")
+    @Generated
     private OffsetDateTime uploadTime;
 
     /*
-     * Indicates if the model is decommissioned. Decommissioned models cannot
-     * be referenced by newly created digital twins.
+     * Indicates if the model is decommissioned. Decommissioned models cannot be referenced by newly created digital
+     * twins.
      */
-    @JsonProperty(value = "decommissioned")
+    @Generated
     private Boolean decommissioned;
 
     /*
      * The model definition.
      */
-    @JsonProperty(value = "model")
+    @Generated
     private Object model;
 
     /**
      * Creates an instance of DigitalTwinsModelData class.
-     *
+     * 
      * @param id the id value to set.
      */
-    @JsonCreator
-    public DigitalTwinsModelData(@JsonProperty(value = "id", required = true) String id) {
+    @Generated
+    public DigitalTwinsModelData(String id) {
         this.id = id;
     }
 
     /**
      * Get the displayName property: A language map that contains the localized display names as specified in the model
      * definition.
-     *
+     * 
      * @return the displayName value.
      */
+    @Generated
     public Map<String, String> getDisplayName() {
         return this.displayName;
     }
@@ -75,10 +82,11 @@ public final class DigitalTwinsModelData {
     /**
      * Set the displayName property: A language map that contains the localized display names as specified in the model
      * definition.
-     *
+     * 
      * @param displayName the displayName value to set.
      * @return the DigitalTwinsModelData object itself.
      */
+    @Generated
     public DigitalTwinsModelData setDisplayName(Map<String, String> displayName) {
         this.displayName = displayName;
         return this;
@@ -87,9 +95,10 @@ public final class DigitalTwinsModelData {
     /**
      * Get the description property: A language map that contains the localized descriptions as specified in the model
      * definition.
-     *
+     * 
      * @return the description value.
      */
+    @Generated
     public Map<String, String> getDescription() {
         return this.description;
     }
@@ -97,10 +106,11 @@ public final class DigitalTwinsModelData {
     /**
      * Set the description property: A language map that contains the localized descriptions as specified in the model
      * definition.
-     *
+     * 
      * @param description the description value to set.
      * @return the DigitalTwinsModelData object itself.
      */
+    @Generated
     public DigitalTwinsModelData setDescription(Map<String, String> description) {
         this.description = description;
         return this;
@@ -108,28 +118,31 @@ public final class DigitalTwinsModelData {
 
     /**
      * Get the id property: The id of the model as specified in the model definition.
-     *
+     * 
      * @return the id value.
      */
+    @Generated
     public String getId() {
         return this.id;
     }
 
     /**
      * Get the uploadTime property: The time the model was uploaded to the service.
-     *
+     * 
      * @return the uploadTime value.
      */
+    @Generated
     public OffsetDateTime getUploadTime() {
         return this.uploadTime;
     }
 
     /**
      * Set the uploadTime property: The time the model was uploaded to the service.
-     *
+     * 
      * @param uploadTime the uploadTime value to set.
      * @return the DigitalTwinsModelData object itself.
      */
+    @Generated
     public DigitalTwinsModelData setUploadTime(OffsetDateTime uploadTime) {
         this.uploadTime = uploadTime;
         return this;
@@ -138,9 +151,10 @@ public final class DigitalTwinsModelData {
     /**
      * Get the decommissioned property: Indicates if the model is decommissioned. Decommissioned models cannot be
      * referenced by newly created digital twins.
-     *
+     * 
      * @return the decommissioned value.
      */
+    @Generated
     public Boolean isDecommissioned() {
         return this.decommissioned;
     }
@@ -148,10 +162,11 @@ public final class DigitalTwinsModelData {
     /**
      * Set the decommissioned property: Indicates if the model is decommissioned. Decommissioned models cannot be
      * referenced by newly created digital twins.
-     *
+     * 
      * @param decommissioned the decommissioned value to set.
      * @return the DigitalTwinsModelData object itself.
      */
+    @Generated
     public DigitalTwinsModelData setDecommissioned(Boolean decommissioned) {
         this.decommissioned = decommissioned;
         return this;
@@ -159,32 +174,97 @@ public final class DigitalTwinsModelData {
 
     /**
      * Get the model property: The model definition.
-     *
+     * 
      * @return the model value.
      */
+    @Generated
     public Object getModel() {
         return this.model;
     }
 
     /**
      * Set the model property: The model definition.
-     *
+     * 
      * @param model the model value to set.
      * @return the DigitalTwinsModelData object itself.
      */
+    @Generated
     public DigitalTwinsModelData setModel(Object model) {
         this.model = model;
         return this;
     }
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * {@inheritDoc}
      */
-    public void validate() {
-        if (getId() == null) {
-            throw new IllegalArgumentException("Missing required property id in model DigitalTwinsModelData");
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("id", this.id);
+        jsonWriter.writeMapField("displayName", this.displayName, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeMapField("description", this.description, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("uploadTime",
+            this.uploadTime == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.uploadTime));
+        jsonWriter.writeBooleanField("decommissioned", this.decommissioned);
+        if (this.model != null) {
+            jsonWriter.writeUntypedField("model", this.model);
         }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DigitalTwinsModelData from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DigitalTwinsModelData if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DigitalTwinsModelData.
+     */
+    @Generated
+    public static DigitalTwinsModelData fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            boolean idFound = false;
+            String id = null;
+            Map<String, String> displayName = null;
+            Map<String, String> description = null;
+            OffsetDateTime uploadTime = null;
+            Boolean decommissioned = null;
+            Object model = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    id = reader.getString();
+                    idFound = true;
+                } else if ("displayName".equals(fieldName)) {
+                    displayName = reader.readMap(reader1 -> reader1.getString());
+                } else if ("description".equals(fieldName)) {
+                    description = reader.readMap(reader1 -> reader1.getString());
+                } else if ("uploadTime".equals(fieldName)) {
+                    uploadTime = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("decommissioned".equals(fieldName)) {
+                    decommissioned = reader.getNullable(JsonReader::getBoolean);
+                } else if ("model".equals(fieldName)) {
+                    model = reader.readUntyped();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (idFound) {
+                DigitalTwinsModelData deserializedDigitalTwinsModelData = new DigitalTwinsModelData(id);
+                deserializedDigitalTwinsModelData.displayName = displayName;
+                deserializedDigitalTwinsModelData.description = description;
+                deserializedDigitalTwinsModelData.uploadTime = uploadTime;
+                deserializedDigitalTwinsModelData.decommissioned = decommissioned;
+                deserializedDigitalTwinsModelData.model = model;
+
+                return deserializedDigitalTwinsModelData;
+            }
+            throw new IllegalStateException("Missing required property: id");
+        });
     }
 }

@@ -70,8 +70,8 @@ public final class BlobBatch {
      * Track the status codes expected for the batching operations here as the batch body does not get parsed in
      * Azure Core where this information is maintained.
      */
-    private static final int[] EXPECTED_DELETE_STATUS_CODES = {202};
-    private static final int[] EXPECTED_SET_TIER_STATUS_CODES = {200, 202};
+    private static final int[] EXPECTED_DELETE_STATUS_CODES = { 202 };
+    private static final int[] EXPECTED_SET_TIER_STATUS_CODES = { 200, 202 };
 
     private static final ClientLogger LOGGER = new ClientLogger(BlobBatch.class);
 
@@ -104,8 +104,7 @@ public final class BlobBatch {
         batchPipelineBuilder.tracer(pipeline.getTracer());
         batchPipelineBuilder.httpClient(pipeline.getHttpClient());
 
-        this.blobAsyncClient = new BlobClientBuilder()
-            .endpoint(accountUrl)
+        this.blobAsyncClient = new BlobClientBuilder().endpoint(accountUrl)
             .blobName("")
             .serviceVersion(serviceVersion)
             .pipeline(batchPipelineBuilder.build())
@@ -126,13 +125,14 @@ public final class BlobBatch {
      * <!-- end com.azure.storage.blob.batch.BlobBatch.deleteBlob#String-String -->
      *
      * @param containerName The container of the blob.
-     * @param blobName The name of the blob.
+     * @param blobName The name of the blob. If the blob name contains special characters, it should be URL encoded.
      * @return a {@link Response} that will be used to associate this operation to the response when the batch is
      * submitted.
      * @throws UnsupportedOperationException If this batch has already added an operation of another type.
      */
     public Response<Void> deleteBlob(String containerName, String blobName) {
-        return deleteBlobHelper(containerName + "/" + Utility.urlEncode(Utility.urlDecode(blobName)), null, null);
+        return deleteBlobHelper(Utility.urlEncode(containerName) + "/" + Utility.urlEncode(Utility.urlDecode(blobName)),
+            null, null);
     }
 
     /**
@@ -150,17 +150,17 @@ public final class BlobBatch {
      * <!-- end com.azure.storage.blob.batch.BlobBatch.deleteBlob#String-String-DeleteSnapshotsOptionType-BlobRequestConditions -->
      *
      * @param containerName The container of the blob.
-     * @param blobName The name of the blob.
+     * @param blobName The name of the blob. If the blob name contains special characters, it should be URL encoded.
      * @param deleteOptions Delete options for the blob and its snapshots.
      * @param blobRequestConditions Additional access conditions that must be met to allow this operation.
      * @return a {@link Response} that will be used to associate this operation to the response when the batch is
      * submitted.
      * @throws UnsupportedOperationException If this batch has already added an operation of another type.
      */
-    public Response<Void> deleteBlob(String containerName, String blobName,
-        DeleteSnapshotsOptionType deleteOptions, BlobRequestConditions blobRequestConditions) {
-        return deleteBlobHelper(containerName + "/" + Utility.urlEncode(Utility.urlDecode(blobName)), deleteOptions,
-            blobRequestConditions);
+    public Response<Void> deleteBlob(String containerName, String blobName, DeleteSnapshotsOptionType deleteOptions,
+        BlobRequestConditions blobRequestConditions) {
+        return deleteBlobHelper(Utility.urlEncode(containerName) + "/" + Utility.urlEncode(Utility.urlDecode(blobName)),
+            deleteOptions, blobRequestConditions);
     }
 
     /**
@@ -212,8 +212,8 @@ public final class BlobBatch {
     private Response<Void> deleteBlobHelper(String urlPath, DeleteSnapshotsOptionType deleteOptions,
         BlobRequestConditions blobRequestConditions) {
         setBatchType(BlobBatchType.DELETE);
-        return createBatchOperation(blobAsyncClient.deleteWithResponse(deleteOptions, blobRequestConditions),
-            urlPath, EXPECTED_DELETE_STATUS_CODES);
+        return createBatchOperation(blobAsyncClient.deleteWithResponse(deleteOptions, blobRequestConditions), urlPath,
+            EXPECTED_DELETE_STATUS_CODES);
     }
 
     /**
@@ -228,15 +228,16 @@ public final class BlobBatch {
      * <!-- end com.azure.storage.blob.batch.BlobBatch.setBlobAccessTier#String-String-AccessTier -->
      *
      * @param containerName The container of the blob.
-     * @param blobName The name of the blob.
+     * @param blobName The name of the blob. If the blob name contains special characters, it should be URL encoded.
      * @param accessTier The tier to set on the blob.
      * @return a {@link Response} that will be used to associate this operation to the response when the batch is
      * submitted.
      * @throws UnsupportedOperationException If this batch has already added an operation of another type.
      */
     public Response<Void> setBlobAccessTier(String containerName, String blobName, AccessTier accessTier) {
-        return setBlobAccessTierHelper(containerName + "/" + Utility.urlEncode(Utility.urlDecode(blobName)), accessTier,
-            null, null, null);
+        return setBlobAccessTierHelper(
+            Utility.urlEncode(containerName) + "/" + Utility.urlEncode(Utility.urlDecode(blobName)), accessTier, null,
+            null, null);
     }
 
     /**
@@ -252,7 +253,7 @@ public final class BlobBatch {
      * <!-- end com.azure.storage.blob.batch.BlobBatch.setBlobAccessTier#String-String-AccessTier-String -->
      *
      * @param containerName The container of the blob.
-     * @param blobName The name of the blob.
+     * @param blobName The name of the blob. If the blob name contains special characters, it should be URL encoded.
      * @param accessTier The tier to set on the blob.
      * @param leaseId The lease ID the active lease on the blob must match.
      * @return a {@link Response} that will be used to associate this operation to the response when the batch is
@@ -261,8 +262,9 @@ public final class BlobBatch {
      */
     public Response<Void> setBlobAccessTier(String containerName, String blobName, AccessTier accessTier,
         String leaseId) {
-        return setBlobAccessTierHelper(containerName + "/" + Utility.urlEncode(Utility.urlDecode(blobName)), accessTier,
-            null, leaseId, null);
+        return setBlobAccessTierHelper(
+            Utility.urlEncode(containerName) + "/" + Utility.urlEncode(Utility.urlDecode(blobName)), accessTier, null,
+            leaseId, null);
     }
 
     /**
@@ -334,9 +336,8 @@ public final class BlobBatch {
     private Response<Void> setBlobAccessTierHelper(String blobPath, AccessTier tier, RehydratePriority priority,
         String leaseId, String tagsConditions) {
         setBatchType(BlobBatchType.SET_TIER);
-        return createBatchOperation(blobAsyncClient.setAccessTierWithResponse(
-            new BlobSetAccessTierOptions(tier)
-                .setLeaseId(leaseId)
+        return createBatchOperation(
+            blobAsyncClient.setAccessTierWithResponse(new BlobSetAccessTierOptions(tier).setLeaseId(leaseId)
                 .setPriority(priority)
                 .setTagsConditions(tagsConditions)),
             blobPath, EXPECTED_SET_TIER_STATUS_CODES);
@@ -378,10 +379,12 @@ public final class BlobBatch {
         while (!operations.isEmpty()) {
             BlobBatchOperation<?> batchOperation = operations.pop();
 
-            batchOperationResponses.add(batchOperation.getResponse()
-                .contextWrite(Context.of(BATCH_REQUEST_URL_PATH, batchOperation.getRequestUrlPath(),
-                    BATCH_OPERATION_RESPONSE, batchOperation.getBatchOperationResponse(),
-                    BATCH_OPERATION_INFO, operationInfo)));
+            batchOperationResponses
+                .add(
+                    batchOperation.getResponse()
+                        .contextWrite(Context.of(BATCH_REQUEST_URL_PATH, batchOperation.getRequestUrlPath(),
+                            BATCH_OPERATION_RESPONSE, batchOperation.getBatchOperationResponse(), BATCH_OPERATION_INFO,
+                            operationInfo)));
         }
 
         /*
@@ -439,8 +442,8 @@ public final class BlobBatch {
      */
     private Mono<HttpResponse> buildBatchOperation(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
         BlobBatchOperationInfo operationInfo = (BlobBatchOperationInfo) context.getData(BATCH_OPERATION_INFO).get();
-        BlobBatchOperationResponse<?> batchOperationResponse =
-            (BlobBatchOperationResponse<?>) context.getData(BATCH_OPERATION_RESPONSE).get();
+        BlobBatchOperationResponse<?> batchOperationResponse
+            = (BlobBatchOperationResponse<?>) context.getData(BATCH_OPERATION_RESPONSE).get();
         operationInfo.addBatchOperation(batchOperationResponse, context.getHttpRequest());
 
         return Mono.empty();

@@ -3,19 +3,29 @@
 
 package com.azure.communication.callautomation;
 
-import com.azure.communication.callautomation.models.DtmfTone;
-import com.azure.communication.callautomation.models.PlayOptions;
-import com.azure.communication.callautomation.models.PlayToAllOptions;
-import com.azure.communication.callautomation.models.PlaySource;
+import java.util.List;
+
 import com.azure.communication.callautomation.models.CallMediaRecognizeOptions;
+import com.azure.communication.callautomation.models.ContinuousDtmfRecognitionOptions;
+import com.azure.communication.callautomation.models.DtmfTone;
+import com.azure.communication.callautomation.models.HoldOptions;
+import com.azure.communication.callautomation.models.PlayOptions;
+import com.azure.communication.callautomation.models.PlaySource;
+import com.azure.communication.callautomation.models.PlayToAllOptions;
+import com.azure.communication.callautomation.models.SendDtmfTonesOptions;
+import com.azure.communication.callautomation.models.SendDtmfTonesResult;
+import com.azure.communication.callautomation.models.StartMediaStreamingOptions;
+import com.azure.communication.callautomation.models.StartTranscriptionOptions;
+import com.azure.communication.callautomation.models.StopMediaStreamingOptions;
+import com.azure.communication.callautomation.models.StopTranscriptionOptions;
+import com.azure.communication.callautomation.models.UnholdOptions;
+import com.azure.communication.callautomation.models.UpdateTranscriptionOptions;
 import com.azure.communication.common.CommunicationIdentifier;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
-import com.azure.core.exception.HttpResponseException;
-
-import java.util.List;
 
 /**
  * CallContent.
@@ -102,9 +112,7 @@ public final class CallMedia {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Void> playToAllWithResponse(PlayToAllOptions options, Context context) {
-        return callMediaAsync
-            .playToAllWithResponseInternal(options, context)
-            .block();
+        return callMediaAsync.playToAllWithResponseInternal(options, context).block();
     }
 
     /**
@@ -123,10 +131,9 @@ public final class CallMedia {
      * @return Response for a successful recognize request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> startRecognizingWithResponse(CallMediaRecognizeOptions callMediaRecognizeOptions, Context context) {
-        return callMediaAsync
-            .recognizeWithResponseInternal(callMediaRecognizeOptions, context)
-            .block();
+    public Response<Void> startRecognizingWithResponse(CallMediaRecognizeOptions callMediaRecognizeOptions,
+        Context context) {
+        return callMediaAsync.recognizeWithResponseInternal(callMediaRecognizeOptions, context).block();
     }
 
     /**
@@ -152,25 +159,23 @@ public final class CallMedia {
      *
      * @param tones tones to be sent
      * @param targetParticipant the target participant
+     * @return Response for successful sendDtmfTones request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void sendDtmf(List<DtmfTone> tones, CommunicationIdentifier targetParticipant) {
-        callMediaAsync.sendDtmf(tones, targetParticipant).block();
+    public SendDtmfTonesResult sendDtmfTones(List<DtmfTone> tones, CommunicationIdentifier targetParticipant) {
+        return callMediaAsync.sendDtmfTones(tones, targetParticipant).block();
     }
 
     /**
-     * Sends Dtmf tones
-     *
-     * @param tones tones to be sent
-     * @param targetParticipant the target participant
-     * @param operationContext operationContext (pass null if not applicable)
-     * @param context Context
-     * @return Response for successful sendDtmf request.
-     */
+    * Sends Dtmf tones
+    *
+    * @param options SendDtmfTones configuration options
+    * @param context Context
+    * @return Response for successful sendDtmfTones request.
+    */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> sendDtmfWithResponse(List<DtmfTone> tones, CommunicationIdentifier targetParticipant,
-                                               String operationContext, Context context) {
-        return callMediaAsync.sendDtmfWithResponseInternal(targetParticipant, tones, operationContext, context).block();
+    public Response<SendDtmfTonesResult> sendDtmfTonesWithResponse(SendDtmfTonesOptions options, Context context) {
+        return callMediaAsync.sendDtmfTonesWithResponseInternal(options, context).block();
     }
 
     /**
@@ -185,14 +190,14 @@ public final class CallMedia {
     /**
      * Starts continuous Dtmf recognition.
      *
-     * @param targetParticipant the target participant
-     * @param operationContext operationContext (pass null if not applicable)
+     * @param options ContinuousDtmfRecognition configuration options
      * @param context Context
      * @return Response for successful start continuous dtmf recognition request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> startContinuousDtmfRecognitionWithResponse(CommunicationIdentifier targetParticipant, String operationContext, Context context) {
-        return callMediaAsync.startContinuousDtmfRecognitionWithResponseInternal(targetParticipant, operationContext, context).block();
+    public Response<Void> startContinuousDtmfRecognitionWithResponse(ContinuousDtmfRecognitionOptions options,
+        Context context) {
+        return callMediaAsync.startContinuousDtmfRecognitionWithResponseInternal(options, context).block();
     }
 
     /**
@@ -206,13 +211,163 @@ public final class CallMedia {
 
     /**
      * Stops continuous Dtmf recognition.
-     * @param targetParticipant the target participant
-     * @param operationContext operationContext (pass null if not applicable)
+     * @param options ContinuousDtmfRecognition configuration options
      * @param context Context
      * @return Response for successful stop continuous dtmf recognition request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> stopContinuousDtmfRecognitionWithResponse(CommunicationIdentifier targetParticipant, String operationContext, Context context) {
-        return callMediaAsync.stopContinuousDtmfRecognitionWithResponseInternal(targetParticipant, operationContext, context).block();
+    public Response<Void> stopContinuousDtmfRecognitionWithResponse(ContinuousDtmfRecognitionOptions options,
+        Context context) {
+        return callMediaAsync.stopContinuousDtmfRecognitionWithResponseInternal(options, context).block();
+    }
+
+    /**
+     * Holds participant in call.
+     * @param targetParticipant the target.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void hold(CommunicationIdentifier targetParticipant) {
+        callMediaAsync.hold(targetParticipant).block();
+    }
+
+    /**
+     * Holds participant in call.
+     * @param targetParticipant the target.
+     * @param playSource A {@link PlaySource} representing the source to play.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void hold(CommunicationIdentifier targetParticipant, PlaySource playSource) {
+        callMediaAsync.hold(targetParticipant, playSource).block();
+    }
+
+    /**
+     * Holds participant in call.
+     * @param options - Different options to pass to the request.
+     * @param context Context
+     * @return Response for successful operation.
+    */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> holdWithResponse(HoldOptions options, Context context) {
+        return callMediaAsync.holdWithResponseInternal(options, context).block();
+    }
+
+    /**
+     * Removes hold from participant in call.
+     * @param targetParticipant the target.
+    */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void unhold(CommunicationIdentifier targetParticipant) {
+        callMediaAsync.unhold(targetParticipant).block();
+    }
+
+    /**
+     * Removes hold from participant in call.
+     * @param options Different options to pass to the request.
+     * @param context Context.
+     * @return Response for successful operation.
+    */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> unholdWithResponse(UnholdOptions options, Context context) {
+        return callMediaAsync.unholdWithResponseInternal(options, context).block();
+    }
+
+    /**
+     * Starts transcription in the call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void startTranscription() {
+        callMediaAsync.startTranscription().block();
+    }
+
+    /**
+     * Starts transcription in the call.
+     *
+     * @param options Options for the Start Transcription operation.
+     * @param context Context
+     * @return Response for successful start transcription request.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> startTranscriptionWithResponse(StartTranscriptionOptions options, Context context) {
+        return callMediaAsync.startTranscriptionWithResponseInternal(options, context).block();
+    }
+
+    /**
+     * Stops transcription in the call.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void stopTranscription() {
+        callMediaAsync.stopTranscription().block();
+    }
+
+    /**
+     * Stops transcription in the call.
+     *
+     * @param options Options for the Stop Transcription operation.
+     * @param context Context
+     * @return Response for successful stop transcription request.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> stopTranscriptionWithResponse(StopTranscriptionOptions options, Context context) {
+        return callMediaAsync.stopTranscriptionWithResponseInternal(options, context).block();
+    }
+
+    /**
+     * Updates transcription language in the call.
+     * @param locale Defines new locale for transcription.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void updateTranscription(String locale) {
+        callMediaAsync.updateTranscription(locale).block();
+    }
+
+    /**
+     * Updates transcription language in the call.
+     *@param options Options for the Update Transcription operation.
+     * @param context Context
+     * @return Response for successful update transcription request.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> updateTranscriptionWithResponse(UpdateTranscriptionOptions options, Context context) {
+        return callMediaAsync.updateTranscriptionWithResponseInternal(options, context).block();
+    }
+
+    /**
+    * Starts media streaming in the call.
+    */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void startMediaStreaming() {
+        callMediaAsync.startMediaStreaming().block();
+    }
+
+    /**
+     * Starts media streaming in the call.
+     *
+     * @param options Options for the start media streaming operation.
+     * @param context Context
+     * @return Response for successful start transcription request.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> startMediaStreamingWithResponse(StartMediaStreamingOptions options, Context context) {
+        return callMediaAsync.startMediaStreamingWithResponseInternal(options, context).block();
+    }
+
+    /**
+    * Stop media streaming in the call.
+    */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void stopMediaStreaming() {
+        callMediaAsync.stopMediaStreaming().block();
+    }
+
+    /**
+     * Stop media streaming in the call.
+     *
+     * @param options Options for the stop media streaming operation.
+     * @param context Context
+     * @return Response for successful stop transcription request.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> stopMediaStreamingWithResponse(StopMediaStreamingOptions options, Context context) {
+        return callMediaAsync.stopMediaStreamingWithResponseInternal(options, context).block();
     }
 }

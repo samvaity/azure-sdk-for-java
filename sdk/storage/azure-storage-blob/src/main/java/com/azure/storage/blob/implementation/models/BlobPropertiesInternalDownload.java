@@ -167,6 +167,11 @@ public final class BlobPropertiesInternalDownload implements BlobPropertiesInter
     }
 
     @Override
+    public AccessTier getSmartAccessTier() {
+        return null;
+    }
+
+    @Override
     public ArchiveStatus getArchiveStatus() {
         return null;
     }
@@ -250,5 +255,10 @@ public final class BlobPropertiesInternalDownload implements BlobPropertiesInter
     @Override
     public Boolean hasLegalHold() {
         return headers.hasLegalHold();
+    }
+
+    @Override
+    public String getRequestId() {
+        return headers.getRequestId();
     }
 }

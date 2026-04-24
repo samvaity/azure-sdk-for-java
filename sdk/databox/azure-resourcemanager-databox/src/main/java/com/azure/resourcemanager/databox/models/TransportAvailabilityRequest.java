@@ -5,24 +5,37 @@
 package com.azure.resourcemanager.databox.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Request body to get the transport availability for given sku. */
+/**
+ * Request body to get the transport availability for given sku.
+ */
 @Fluent
-public final class TransportAvailabilityRequest {
+public final class TransportAvailabilityRequest implements JsonSerializable<TransportAvailabilityRequest> {
     /*
      * Type of the device.
      */
-    @JsonProperty(value = "skuName")
     private SkuName skuName;
 
-    /** Creates an instance of TransportAvailabilityRequest class. */
+    /*
+     * The customer friendly name of the combination of version and capacity of the device. This field is necessary only
+     * at the time of ordering the newer generation device i.e. AzureDataBox120 and AzureDataBox525 as of Feb/2025
+     */
+    private ModelName model;
+
+    /**
+     * Creates an instance of TransportAvailabilityRequest class.
+     */
     public TransportAvailabilityRequest() {
     }
 
     /**
      * Get the skuName property: Type of the device.
-     *
+     * 
      * @return the skuName value.
      */
     public SkuName skuName() {
@@ -31,7 +44,7 @@ public final class TransportAvailabilityRequest {
 
     /**
      * Set the skuName property: Type of the device.
-     *
+     * 
      * @param skuName the skuName value to set.
      * @return the TransportAvailabilityRequest object itself.
      */
@@ -41,10 +54,73 @@ public final class TransportAvailabilityRequest {
     }
 
     /**
+     * Get the model property: The customer friendly name of the combination of version and capacity of the device. This
+     * field is necessary only at the time of ordering the newer generation device i.e. AzureDataBox120 and
+     * AzureDataBox525 as of Feb/2025.
+     * 
+     * @return the model value.
+     */
+    public ModelName model() {
+        return this.model;
+    }
+
+    /**
+     * Set the model property: The customer friendly name of the combination of version and capacity of the device. This
+     * field is necessary only at the time of ordering the newer generation device i.e. AzureDataBox120 and
+     * AzureDataBox525 as of Feb/2025.
+     * 
+     * @param model the model value to set.
+     * @return the TransportAvailabilityRequest object itself.
+     */
+    public TransportAvailabilityRequest withModel(ModelName model) {
+        this.model = model;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("skuName", this.skuName == null ? null : this.skuName.toString());
+        jsonWriter.writeStringField("model", this.model == null ? null : this.model.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of TransportAvailabilityRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of TransportAvailabilityRequest if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the TransportAvailabilityRequest.
+     */
+    public static TransportAvailabilityRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            TransportAvailabilityRequest deserializedTransportAvailabilityRequest = new TransportAvailabilityRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("skuName".equals(fieldName)) {
+                    deserializedTransportAvailabilityRequest.skuName = SkuName.fromString(reader.getString());
+                } else if ("model".equals(fieldName)) {
+                    deserializedTransportAvailabilityRequest.model = ModelName.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedTransportAvailabilityRequest;
+        });
     }
 }

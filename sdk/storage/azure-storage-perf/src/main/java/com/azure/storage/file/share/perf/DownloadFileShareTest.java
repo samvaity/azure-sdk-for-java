@@ -3,6 +3,7 @@
 
 package com.azure.storage.file.share.perf;
 
+import com.azure.core.util.CoreUtils;
 import com.azure.perf.test.core.NullOutputStream;
 import com.azure.perf.test.core.PerfStressOptions;
 import com.azure.storage.StoragePerfUtils;
@@ -13,7 +14,6 @@ import com.azure.storage.file.share.perf.core.DirectoryTest;
 import reactor.core.publisher.Mono;
 
 import java.io.OutputStream;
-import java.util.UUID;
 
 import static com.azure.perf.test.core.TestDataCreationHelper.createRandomByteBufferFlux;
 
@@ -29,7 +29,7 @@ public class DownloadFileShareTest extends DirectoryTest<PerfStressOptions> {
 
     public DownloadFileShareTest(PerfStressOptions options) {
         super(options);
-        String fileName = "perfstressdfilev11" + UUID.randomUUID();
+        String fileName = "perfstressdfilev11" + CoreUtils.randomUuid();
         shareFileClient = shareDirectoryClient.getFileClient(fileName);
         shareFileAsyncClient = shareDirectoryAsyncClient.getFileClient(fileName);
 
@@ -39,9 +39,9 @@ public class DownloadFileShareTest extends DirectoryTest<PerfStressOptions> {
 
     // Required resource setup goes here, upload the file to be downloaded during tests.
     public Mono<Void> setupAsync() {
-        return super.setupAsync()
-            .then(shareFileAsyncClient.create(options.getSize()))
-            .then(shareFileAsyncClient.upload(createRandomByteBufferFlux(options.getSize()), new ParallelTransferOptions()))
+        return super.setupAsync().then(shareFileAsyncClient.create(options.getSize()))
+            .then(shareFileAsyncClient.upload(createRandomByteBufferFlux(options.getSize()),
+                new ParallelTransferOptions()))
             .then();
     }
 
@@ -53,16 +53,15 @@ public class DownloadFileShareTest extends DirectoryTest<PerfStressOptions> {
 
     @Override
     public Mono<Void> runAsync() {
-        return shareFileAsyncClient.download()
-            .map(b -> {
-                int readCount = 0;
-                int remaining = b.remaining();
-                while (readCount < remaining) {
-                    int expectedReadCount = Math.min(remaining - readCount, bufferSize);
-                    b.get(buffer, 0, expectedReadCount);
-                    readCount += expectedReadCount;
-                }
-                return 1;
-            }).then();
+        return shareFileAsyncClient.download().map(b -> {
+            int readCount = 0;
+            int remaining = b.remaining();
+            while (readCount < remaining) {
+                int expectedReadCount = Math.min(remaining - readCount, bufferSize);
+                b.get(buffer, 0, expectedReadCount);
+                readCount += expectedReadCount;
+            }
+            return 1;
+        }).then();
     }
 }

@@ -5,47 +5,61 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The LinkConnectionTargetDatabaseTypeProperties model. */
+/**
+ * The LinkConnectionTargetDatabaseTypeProperties model.
+ */
 @Fluent
-public final class LinkConnectionTargetDatabaseTypeProperties {
+public final class LinkConnectionTargetDatabaseTypeProperties
+    implements JsonSerializable<LinkConnectionTargetDatabaseTypeProperties> {
     /*
      * Enable cross table transaction consistency on target database
      */
-    @JsonProperty(value = "crossTableTransaction")
+    @Generated
     private Boolean crossTableTransaction;
 
     /*
      * Drop and recreate same existing target table on link connection target database
      */
-    @JsonProperty(value = "dropExistingTargetTableOnStart")
+    @Generated
     private Boolean dropExistingTargetTableOnStart;
 
     /*
      * Action on existing target table. If not specified, 'FailOnNonEmptyTable' action is used.
      */
-    @JsonProperty(value = "actionOnExistingTargetTable")
+    @Generated
     private ActionOnExistingTargetTable actionOnExistingTargetTable;
 
-    /** Creates an instance of LinkConnectionTargetDatabaseTypeProperties class. */
-    public LinkConnectionTargetDatabaseTypeProperties() {}
+    /**
+     * Creates an instance of LinkConnectionTargetDatabaseTypeProperties class.
+     */
+    @Generated
+    public LinkConnectionTargetDatabaseTypeProperties() {
+    }
 
     /**
      * Get the crossTableTransaction property: Enable cross table transaction consistency on target database.
-     *
+     * 
      * @return the crossTableTransaction value.
      */
+    @Generated
     public Boolean isCrossTableTransaction() {
         return this.crossTableTransaction;
     }
 
     /**
      * Set the crossTableTransaction property: Enable cross table transaction consistency on target database.
-     *
+     * 
      * @param crossTableTransaction the crossTableTransaction value to set.
      * @return the LinkConnectionTargetDatabaseTypeProperties object itself.
      */
+    @Generated
     public LinkConnectionTargetDatabaseTypeProperties setCrossTableTransaction(Boolean crossTableTransaction) {
         this.crossTableTransaction = crossTableTransaction;
         return this;
@@ -54,9 +68,10 @@ public final class LinkConnectionTargetDatabaseTypeProperties {
     /**
      * Get the dropExistingTargetTableOnStart property: Drop and recreate same existing target table on link connection
      * target database.
-     *
+     * 
      * @return the dropExistingTargetTableOnStart value.
      */
+    @Generated
     public Boolean isDropExistingTargetTableOnStart() {
         return this.dropExistingTargetTableOnStart;
     }
@@ -64,12 +79,13 @@ public final class LinkConnectionTargetDatabaseTypeProperties {
     /**
      * Set the dropExistingTargetTableOnStart property: Drop and recreate same existing target table on link connection
      * target database.
-     *
+     * 
      * @param dropExistingTargetTableOnStart the dropExistingTargetTableOnStart value to set.
      * @return the LinkConnectionTargetDatabaseTypeProperties object itself.
      */
-    public LinkConnectionTargetDatabaseTypeProperties setDropExistingTargetTableOnStart(
-            Boolean dropExistingTargetTableOnStart) {
+    @Generated
+    public LinkConnectionTargetDatabaseTypeProperties
+        setDropExistingTargetTableOnStart(Boolean dropExistingTargetTableOnStart) {
         this.dropExistingTargetTableOnStart = dropExistingTargetTableOnStart;
         return this;
     }
@@ -77,9 +93,10 @@ public final class LinkConnectionTargetDatabaseTypeProperties {
     /**
      * Get the actionOnExistingTargetTable property: Action on existing target table. If not specified,
      * 'FailOnNonEmptyTable' action is used.
-     *
+     * 
      * @return the actionOnExistingTargetTable value.
      */
+    @Generated
     public ActionOnExistingTargetTable getActionOnExistingTargetTable() {
         return this.actionOnExistingTargetTable;
     }
@@ -87,13 +104,63 @@ public final class LinkConnectionTargetDatabaseTypeProperties {
     /**
      * Set the actionOnExistingTargetTable property: Action on existing target table. If not specified,
      * 'FailOnNonEmptyTable' action is used.
-     *
+     * 
      * @param actionOnExistingTargetTable the actionOnExistingTargetTable value to set.
      * @return the LinkConnectionTargetDatabaseTypeProperties object itself.
      */
-    public LinkConnectionTargetDatabaseTypeProperties setActionOnExistingTargetTable(
-            ActionOnExistingTargetTable actionOnExistingTargetTable) {
+    @Generated
+    public LinkConnectionTargetDatabaseTypeProperties
+        setActionOnExistingTargetTable(ActionOnExistingTargetTable actionOnExistingTargetTable) {
         this.actionOnExistingTargetTable = actionOnExistingTargetTable;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeBooleanField("crossTableTransaction", this.crossTableTransaction);
+        jsonWriter.writeBooleanField("dropExistingTargetTableOnStart", this.dropExistingTargetTableOnStart);
+        jsonWriter.writeStringField("actionOnExistingTargetTable",
+            this.actionOnExistingTargetTable == null ? null : this.actionOnExistingTargetTable.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of LinkConnectionTargetDatabaseTypeProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of LinkConnectionTargetDatabaseTypeProperties if the JsonReader was pointing to an instance
+     * of it, or null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the LinkConnectionTargetDatabaseTypeProperties.
+     */
+    @Generated
+    public static LinkConnectionTargetDatabaseTypeProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            LinkConnectionTargetDatabaseTypeProperties deserializedLinkConnectionTargetDatabaseTypeProperties
+                = new LinkConnectionTargetDatabaseTypeProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("crossTableTransaction".equals(fieldName)) {
+                    deserializedLinkConnectionTargetDatabaseTypeProperties.crossTableTransaction
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("dropExistingTargetTableOnStart".equals(fieldName)) {
+                    deserializedLinkConnectionTargetDatabaseTypeProperties.dropExistingTargetTableOnStart
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("actionOnExistingTargetTable".equals(fieldName)) {
+                    deserializedLinkConnectionTargetDatabaseTypeProperties.actionOnExistingTargetTable
+                        = ActionOnExistingTargetTable.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedLinkConnectionTargetDatabaseTypeProperties;
+        });
     }
 }

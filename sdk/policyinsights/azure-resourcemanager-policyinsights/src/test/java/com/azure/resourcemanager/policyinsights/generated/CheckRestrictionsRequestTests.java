@@ -10,41 +10,36 @@ import com.azure.resourcemanager.policyinsights.models.CheckRestrictionsResource
 import com.azure.resourcemanager.policyinsights.models.PendingField;
 import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public final class CheckRestrictionsRequestTests {
-    @Test
-    public void testDeserialize() {
-        CheckRestrictionsRequest model =
-            BinaryData
-                .fromString(
-                    "{\"resourceDetails\":{\"apiVersion\":\"gxqquezik\",\"scope\":\"ggxkallatmelwuip\"},\"pendingFields\":[{\"field\":\"jzkzi\",\"values\":[\"vc\",\"ayrhyrnx\"]},{\"field\":\"mueedndrdvstk\",\"values\":[\"tchealmf\"]},{\"field\":\"tdaaygdvwvg\",\"values\":[\"hgwxrtfudx\",\"pxgy\",\"agvrvmnpkuk\",\"himdbl\"]},{\"field\":\"gwimfn\",\"values\":[\"j\",\"wmszkk\"]}]}")
-                .toObject(CheckRestrictionsRequest.class);
-        Assertions.assertEquals("gxqquezik", model.resourceDetails().apiVersion());
-        Assertions.assertEquals("ggxkallatmelwuip", model.resourceDetails().scope());
-        Assertions.assertEquals("jzkzi", model.pendingFields().get(0).field());
-        Assertions.assertEquals("vc", model.pendingFields().get(0).values().get(0));
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        CheckRestrictionsRequest model = BinaryData.fromString(
+            "{\"resourceDetails\":{\"resourceContent\":\"dataiflrzpasccbiu\",\"apiVersion\":\"zdlyjdfqw\",\"scope\":\"yoqufdvruz\"},\"pendingFields\":[{\"field\":\"ojhp\",\"values\":[\"nmdxotngfd\",\"ugeyzihgrkyuiza\"]},{\"field\":\"snmfpphojeevy\",\"values\":[\"sgzfczbg\"]},{\"field\":\"mfg\",\"values\":[\"lqgleohibet\",\"luan\"]}],\"includeAuditEffect\":true}")
+            .toObject(CheckRestrictionsRequest.class);
+        Assertions.assertEquals("zdlyjdfqw", model.resourceDetails().apiVersion());
+        Assertions.assertEquals("yoqufdvruz", model.resourceDetails().scope());
+        Assertions.assertEquals("ojhp", model.pendingFields().get(0).field());
+        Assertions.assertEquals("nmdxotngfd", model.pendingFields().get(0).values().get(0));
+        Assertions.assertTrue(model.includeAuditEffect());
     }
 
-    @Test
-    public void testSerialize() {
-        CheckRestrictionsRequest model =
-            new CheckRestrictionsRequest()
-                .withResourceDetails(
-                    new CheckRestrictionsResourceDetails().withApiVersion("gxqquezik").withScope("ggxkallatmelwuip"))
-                .withPendingFields(
-                    Arrays
-                        .asList(
-                            new PendingField().withField("jzkzi").withValues(Arrays.asList("vc", "ayrhyrnx")),
-                            new PendingField().withField("mueedndrdvstk").withValues(Arrays.asList("tchealmf")),
-                            new PendingField()
-                                .withField("tdaaygdvwvg")
-                                .withValues(Arrays.asList("hgwxrtfudx", "pxgy", "agvrvmnpkuk", "himdbl")),
-                            new PendingField().withField("gwimfn").withValues(Arrays.asList("j", "wmszkk"))));
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
+        CheckRestrictionsRequest model = new CheckRestrictionsRequest()
+            .withResourceDetails(new CheckRestrictionsResourceDetails().withResourceContent("dataiflrzpasccbiu")
+                .withApiVersion("zdlyjdfqw")
+                .withScope("yoqufdvruz"))
+            .withPendingFields(Arrays.asList(
+                new PendingField().withField("ojhp").withValues(Arrays.asList("nmdxotngfd", "ugeyzihgrkyuiza")),
+                new PendingField().withField("snmfpphojeevy").withValues(Arrays.asList("sgzfczbg")),
+                new PendingField().withField("mfg").withValues(Arrays.asList("lqgleohibet", "luan"))))
+            .withIncludeAuditEffect(true);
         model = BinaryData.fromObject(model).toObject(CheckRestrictionsRequest.class);
-        Assertions.assertEquals("gxqquezik", model.resourceDetails().apiVersion());
-        Assertions.assertEquals("ggxkallatmelwuip", model.resourceDetails().scope());
-        Assertions.assertEquals("jzkzi", model.pendingFields().get(0).field());
-        Assertions.assertEquals("vc", model.pendingFields().get(0).values().get(0));
+        Assertions.assertEquals("zdlyjdfqw", model.resourceDetails().apiVersion());
+        Assertions.assertEquals("yoqufdvruz", model.resourceDetails().scope());
+        Assertions.assertEquals("ojhp", model.pendingFields().get(0).field());
+        Assertions.assertEquals("nmdxotngfd", model.pendingFields().get(0).values().get(0));
+        Assertions.assertTrue(model.includeAuditEffect());
     }
 }

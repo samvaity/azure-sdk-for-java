@@ -5,139 +5,152 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/** The SparkBatchJob model. */
+/**
+ * The SparkBatchJob model.
+ */
 @Fluent
-public final class SparkBatchJob {
+public final class SparkBatchJob implements JsonSerializable<SparkBatchJob> {
     /*
      * The livyInfo property.
      */
-    @JsonProperty(value = "livyInfo")
+    @Generated
     private SparkBatchJobState livyInfo;
 
     /*
      * The batch name.
      */
-    @JsonProperty(value = "name")
+    @Generated
     private String name;
 
     /*
      * The workspace name.
      */
-    @JsonProperty(value = "workspaceName")
+    @Generated
     private String workspaceName;
 
     /*
      * The Spark pool name.
      */
-    @JsonProperty(value = "sparkPoolName")
+    @Generated
     private String sparkPoolName;
 
     /*
      * The submitter name.
      */
-    @JsonProperty(value = "submitterName")
+    @Generated
     private String submitterName;
 
     /*
      * The submitter identifier.
      */
-    @JsonProperty(value = "submitterId")
+    @Generated
     private String submitterId;
 
     /*
      * The artifact identifier.
      */
-    @JsonProperty(value = "artifactId")
+    @Generated
     private String artifactId;
 
     /*
      * The job type.
      */
-    @JsonProperty(value = "jobType")
+    @Generated
     private SparkJobType jobType;
 
     /*
      * The Spark batch job result.
      */
-    @JsonProperty(value = "result")
+    @Generated
     private SparkBatchJobResultType result;
 
     /*
      * The scheduler information.
      */
-    @JsonProperty(value = "schedulerInfo")
+    @Generated
     private SparkScheduler scheduler;
 
     /*
      * The plugin information.
      */
-    @JsonProperty(value = "pluginInfo")
+    @Generated
     private SparkServicePlugin plugin;
 
     /*
      * The error information.
      */
-    @JsonProperty(value = "errorInfo")
+    @Generated
     private List<SparkServiceError> errors;
 
     /*
      * The tags.
      */
-    @JsonProperty(value = "tags")
+    @Generated
     private Map<String, String> tags;
 
     /*
      * The session Id.
      */
-    @JsonProperty(value = "id", required = true)
+    @Generated
     private int id;
 
     /*
      * The application id of this session
      */
-    @JsonProperty(value = "appId")
+    @Generated
     private String appId;
 
     /*
      * The detailed application info.
      */
-    @JsonProperty(value = "appInfo")
+    @Generated
     private Map<String, String> appInfo;
 
     /*
      * The batch state
      */
-    @JsonProperty(value = "state")
+    @Generated
     private LivyStates state;
 
     /*
      * The log lines.
      */
-    @JsonProperty(value = "log")
+    @Generated
     private List<String> logLines;
 
-    /** Creates an instance of SparkBatchJob class. */
-    public SparkBatchJob() {}
+    /**
+     * Creates an instance of SparkBatchJob class.
+     */
+    @Generated
+    public SparkBatchJob() {
+    }
 
     /**
      * Get the livyInfo property: The livyInfo property.
-     *
+     * 
      * @return the livyInfo value.
      */
+    @Generated
     public SparkBatchJobState getLivyInfo() {
         return this.livyInfo;
     }
 
     /**
      * Set the livyInfo property: The livyInfo property.
-     *
+     * 
      * @param livyInfo the livyInfo value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setLivyInfo(SparkBatchJobState livyInfo) {
         this.livyInfo = livyInfo;
         return this;
@@ -145,19 +158,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the name property: The batch name.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The batch name.
-     *
+     * 
      * @param name the name value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setName(String name) {
         this.name = name;
         return this;
@@ -165,19 +180,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the workspaceName property: The workspace name.
-     *
+     * 
      * @return the workspaceName value.
      */
+    @Generated
     public String getWorkspaceName() {
         return this.workspaceName;
     }
 
     /**
      * Set the workspaceName property: The workspace name.
-     *
+     * 
      * @param workspaceName the workspaceName value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setWorkspaceName(String workspaceName) {
         this.workspaceName = workspaceName;
         return this;
@@ -185,19 +202,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the sparkPoolName property: The Spark pool name.
-     *
+     * 
      * @return the sparkPoolName value.
      */
+    @Generated
     public String getSparkPoolName() {
         return this.sparkPoolName;
     }
 
     /**
      * Set the sparkPoolName property: The Spark pool name.
-     *
+     * 
      * @param sparkPoolName the sparkPoolName value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setSparkPoolName(String sparkPoolName) {
         this.sparkPoolName = sparkPoolName;
         return this;
@@ -205,19 +224,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the submitterName property: The submitter name.
-     *
+     * 
      * @return the submitterName value.
      */
+    @Generated
     public String getSubmitterName() {
         return this.submitterName;
     }
 
     /**
      * Set the submitterName property: The submitter name.
-     *
+     * 
      * @param submitterName the submitterName value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setSubmitterName(String submitterName) {
         this.submitterName = submitterName;
         return this;
@@ -225,19 +246,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the submitterId property: The submitter identifier.
-     *
+     * 
      * @return the submitterId value.
      */
+    @Generated
     public String getSubmitterId() {
         return this.submitterId;
     }
 
     /**
      * Set the submitterId property: The submitter identifier.
-     *
+     * 
      * @param submitterId the submitterId value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setSubmitterId(String submitterId) {
         this.submitterId = submitterId;
         return this;
@@ -245,19 +268,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the artifactId property: The artifact identifier.
-     *
+     * 
      * @return the artifactId value.
      */
+    @Generated
     public String getArtifactId() {
         return this.artifactId;
     }
 
     /**
      * Set the artifactId property: The artifact identifier.
-     *
+     * 
      * @param artifactId the artifactId value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setArtifactId(String artifactId) {
         this.artifactId = artifactId;
         return this;
@@ -265,19 +290,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the jobType property: The job type.
-     *
+     * 
      * @return the jobType value.
      */
+    @Generated
     public SparkJobType getJobType() {
         return this.jobType;
     }
 
     /**
      * Set the jobType property: The job type.
-     *
+     * 
      * @param jobType the jobType value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setJobType(SparkJobType jobType) {
         this.jobType = jobType;
         return this;
@@ -285,19 +312,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the result property: The Spark batch job result.
-     *
+     * 
      * @return the result value.
      */
+    @Generated
     public SparkBatchJobResultType getResult() {
         return this.result;
     }
 
     /**
      * Set the result property: The Spark batch job result.
-     *
+     * 
      * @param result the result value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setResult(SparkBatchJobResultType result) {
         this.result = result;
         return this;
@@ -305,19 +334,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the scheduler property: The scheduler information.
-     *
+     * 
      * @return the scheduler value.
      */
+    @Generated
     public SparkScheduler getScheduler() {
         return this.scheduler;
     }
 
     /**
      * Set the scheduler property: The scheduler information.
-     *
+     * 
      * @param scheduler the scheduler value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setScheduler(SparkScheduler scheduler) {
         this.scheduler = scheduler;
         return this;
@@ -325,19 +356,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the plugin property: The plugin information.
-     *
+     * 
      * @return the plugin value.
      */
+    @Generated
     public SparkServicePlugin getPlugin() {
         return this.plugin;
     }
 
     /**
      * Set the plugin property: The plugin information.
-     *
+     * 
      * @param plugin the plugin value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setPlugin(SparkServicePlugin plugin) {
         this.plugin = plugin;
         return this;
@@ -345,19 +378,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the errors property: The error information.
-     *
+     * 
      * @return the errors value.
      */
+    @Generated
     public List<SparkServiceError> getErrors() {
         return this.errors;
     }
 
     /**
      * Set the errors property: The error information.
-     *
+     * 
      * @param errors the errors value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setErrors(List<SparkServiceError> errors) {
         this.errors = errors;
         return this;
@@ -365,19 +400,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the tags property: The tags.
-     *
+     * 
      * @return the tags value.
      */
+    @Generated
     public Map<String, String> getTags() {
         return this.tags;
     }
 
     /**
      * Set the tags property: The tags.
-     *
+     * 
      * @param tags the tags value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setTags(Map<String, String> tags) {
         this.tags = tags;
         return this;
@@ -385,19 +422,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the id property: The session Id.
-     *
+     * 
      * @return the id value.
      */
+    @Generated
     public int getId() {
         return this.id;
     }
 
     /**
      * Set the id property: The session Id.
-     *
+     * 
      * @param id the id value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setId(int id) {
         this.id = id;
         return this;
@@ -405,19 +444,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the appId property: The application id of this session.
-     *
+     * 
      * @return the appId value.
      */
+    @Generated
     public String getAppId() {
         return this.appId;
     }
 
     /**
      * Set the appId property: The application id of this session.
-     *
+     * 
      * @param appId the appId value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setAppId(String appId) {
         this.appId = appId;
         return this;
@@ -425,19 +466,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the appInfo property: The detailed application info.
-     *
+     * 
      * @return the appInfo value.
      */
+    @Generated
     public Map<String, String> getAppInfo() {
         return this.appInfo;
     }
 
     /**
      * Set the appInfo property: The detailed application info.
-     *
+     * 
      * @param appInfo the appInfo value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setAppInfo(Map<String, String> appInfo) {
         this.appInfo = appInfo;
         return this;
@@ -445,19 +488,21 @@ public final class SparkBatchJob {
 
     /**
      * Get the state property: The batch state.
-     *
+     * 
      * @return the state value.
      */
+    @Generated
     public LivyStates getState() {
         return this.state;
     }
 
     /**
      * Set the state property: The batch state.
-     *
+     * 
      * @param state the state value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setState(LivyStates state) {
         this.state = state;
         return this;
@@ -465,21 +510,117 @@ public final class SparkBatchJob {
 
     /**
      * Get the logLines property: The log lines.
-     *
+     * 
      * @return the logLines value.
      */
+    @Generated
     public List<String> getLogLines() {
         return this.logLines;
     }
 
     /**
      * Set the logLines property: The log lines.
-     *
+     * 
      * @param logLines the logLines value to set.
      * @return the SparkBatchJob object itself.
      */
+    @Generated
     public SparkBatchJob setLogLines(List<String> logLines) {
         this.logLines = logLines;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeIntField("id", this.id);
+        jsonWriter.writeJsonField("livyInfo", this.livyInfo);
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeStringField("workspaceName", this.workspaceName);
+        jsonWriter.writeStringField("sparkPoolName", this.sparkPoolName);
+        jsonWriter.writeStringField("submitterName", this.submitterName);
+        jsonWriter.writeStringField("submitterId", this.submitterId);
+        jsonWriter.writeStringField("artifactId", this.artifactId);
+        jsonWriter.writeStringField("jobType", this.jobType == null ? null : this.jobType.toString());
+        jsonWriter.writeStringField("result", this.result == null ? null : this.result.toString());
+        jsonWriter.writeJsonField("schedulerInfo", this.scheduler);
+        jsonWriter.writeJsonField("pluginInfo", this.plugin);
+        jsonWriter.writeArrayField("errorInfo", this.errors, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeMapField("tags", this.tags, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("appId", this.appId);
+        jsonWriter.writeMapField("appInfo", this.appInfo, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("state", this.state == null ? null : this.state.toString());
+        jsonWriter.writeArrayField("log", this.logLines, (writer, element) -> writer.writeString(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SparkBatchJob from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SparkBatchJob if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SparkBatchJob.
+     */
+    @Generated
+    public static SparkBatchJob fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SparkBatchJob deserializedSparkBatchJob = new SparkBatchJob();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedSparkBatchJob.id = reader.getInt();
+                } else if ("livyInfo".equals(fieldName)) {
+                    deserializedSparkBatchJob.livyInfo = SparkBatchJobState.fromJson(reader);
+                } else if ("name".equals(fieldName)) {
+                    deserializedSparkBatchJob.name = reader.getString();
+                } else if ("workspaceName".equals(fieldName)) {
+                    deserializedSparkBatchJob.workspaceName = reader.getString();
+                } else if ("sparkPoolName".equals(fieldName)) {
+                    deserializedSparkBatchJob.sparkPoolName = reader.getString();
+                } else if ("submitterName".equals(fieldName)) {
+                    deserializedSparkBatchJob.submitterName = reader.getString();
+                } else if ("submitterId".equals(fieldName)) {
+                    deserializedSparkBatchJob.submitterId = reader.getString();
+                } else if ("artifactId".equals(fieldName)) {
+                    deserializedSparkBatchJob.artifactId = reader.getString();
+                } else if ("jobType".equals(fieldName)) {
+                    deserializedSparkBatchJob.jobType = SparkJobType.fromString(reader.getString());
+                } else if ("result".equals(fieldName)) {
+                    deserializedSparkBatchJob.result = SparkBatchJobResultType.fromString(reader.getString());
+                } else if ("schedulerInfo".equals(fieldName)) {
+                    deserializedSparkBatchJob.scheduler = SparkScheduler.fromJson(reader);
+                } else if ("pluginInfo".equals(fieldName)) {
+                    deserializedSparkBatchJob.plugin = SparkServicePlugin.fromJson(reader);
+                } else if ("errorInfo".equals(fieldName)) {
+                    List<SparkServiceError> errors = reader.readArray(reader1 -> SparkServiceError.fromJson(reader1));
+                    deserializedSparkBatchJob.errors = errors;
+                } else if ("tags".equals(fieldName)) {
+                    Map<String, String> tags = reader.readMap(reader1 -> reader1.getString());
+                    deserializedSparkBatchJob.tags = tags;
+                } else if ("appId".equals(fieldName)) {
+                    deserializedSparkBatchJob.appId = reader.getString();
+                } else if ("appInfo".equals(fieldName)) {
+                    Map<String, String> appInfo = reader.readMap(reader1 -> reader1.getString());
+                    deserializedSparkBatchJob.appInfo = appInfo;
+                } else if ("state".equals(fieldName)) {
+                    deserializedSparkBatchJob.state = LivyStates.fromString(reader.getString());
+                } else if ("log".equals(fieldName)) {
+                    List<String> logLines = reader.readArray(reader1 -> reader1.getString());
+                    deserializedSparkBatchJob.logLines = logLines;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSparkBatchJob;
+        });
     }
 }

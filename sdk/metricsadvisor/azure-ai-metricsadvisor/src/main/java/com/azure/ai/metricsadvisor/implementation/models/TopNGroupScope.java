@@ -5,49 +5,62 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The TopNGroupScope model. */
+/**
+ * The TopNGroupScope model.
+ */
 @Fluent
-public final class TopNGroupScope {
+public final class TopNGroupScope implements JsonSerializable<TopNGroupScope> {
     /*
      * top N, value range : [1, +∞)
      */
-    @JsonProperty(value = "top", required = true)
+    @Generated
     private int top;
 
     /*
      * point count used to look back, value range : [1, +∞)
      */
-    @JsonProperty(value = "period", required = true)
+    @Generated
     private int period;
 
     /*
      * min count should be in top N, value range : [1, +∞)
-     *
+     * 
      * should be less than or equal to period
      */
-    @JsonProperty(value = "minTopCount", required = true)
+    @Generated
     private int minTopCount;
 
-    /** Creates an instance of TopNGroupScope class. */
-    public TopNGroupScope() {}
+    /**
+     * Creates an instance of TopNGroupScope class.
+     */
+    @Generated
+    public TopNGroupScope() {
+    }
 
     /**
      * Get the top property: top N, value range : [1, +∞).
-     *
+     * 
      * @return the top value.
      */
+    @Generated
     public int getTop() {
         return this.top;
     }
 
     /**
      * Set the top property: top N, value range : [1, +∞).
-     *
+     * 
      * @param top the top value to set.
      * @return the TopNGroupScope object itself.
      */
+    @Generated
     public TopNGroupScope setTop(int top) {
         this.top = top;
         return this;
@@ -55,19 +68,21 @@ public final class TopNGroupScope {
 
     /**
      * Get the period property: point count used to look back, value range : [1, +∞).
-     *
+     * 
      * @return the period value.
      */
+    @Generated
     public int getPeriod() {
         return this.period;
     }
 
     /**
      * Set the period property: point count used to look back, value range : [1, +∞).
-     *
+     * 
      * @param period the period value to set.
      * @return the TopNGroupScope object itself.
      */
+    @Generated
     public TopNGroupScope setPeriod(int period) {
         this.period = period;
         return this;
@@ -75,25 +90,72 @@ public final class TopNGroupScope {
 
     /**
      * Get the minTopCount property: min count should be in top N, value range : [1, +∞)
-     *
-     * <p>should be less than or equal to period.
-     *
+     * 
+     * should be less than or equal to period.
+     * 
      * @return the minTopCount value.
      */
+    @Generated
     public int getMinTopCount() {
         return this.minTopCount;
     }
 
     /**
      * Set the minTopCount property: min count should be in top N, value range : [1, +∞)
-     *
-     * <p>should be less than or equal to period.
-     *
+     * 
+     * should be less than or equal to period.
+     * 
      * @param minTopCount the minTopCount value to set.
      * @return the TopNGroupScope object itself.
      */
+    @Generated
     public TopNGroupScope setMinTopCount(int minTopCount) {
         this.minTopCount = minTopCount;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeIntField("top", this.top);
+        jsonWriter.writeIntField("period", this.period);
+        jsonWriter.writeIntField("minTopCount", this.minTopCount);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of TopNGroupScope from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of TopNGroupScope if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the TopNGroupScope.
+     */
+    @Generated
+    public static TopNGroupScope fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            TopNGroupScope deserializedTopNGroupScope = new TopNGroupScope();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("top".equals(fieldName)) {
+                    deserializedTopNGroupScope.top = reader.getInt();
+                } else if ("period".equals(fieldName)) {
+                    deserializedTopNGroupScope.period = reader.getInt();
+                } else if ("minTopCount".equals(fieldName)) {
+                    deserializedTopNGroupScope.minTopCount = reader.getInt();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedTopNGroupScope;
+        });
     }
 }

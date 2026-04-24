@@ -9,12 +9,16 @@ import com.azure.cosmos.CosmosAsyncDatabase;
 import com.azure.cosmos.CosmosBridgeInternal;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.cosmos.CosmosException;
+import com.azure.cosmos.CosmosItemSerializerNoExceptionWrapping;
+import com.azure.cosmos.CosmosNettyLeakDetectorFactory;
 import com.azure.cosmos.implementation.AsyncDocumentClient;
+import com.azure.cosmos.implementation.FeedResponseDiagnostics;
 import com.azure.cosmos.implementation.FeedResponseListValidator;
 import com.azure.cosmos.implementation.FeedResponseValidator;
 import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import com.azure.cosmos.implementation.InternalObjectNode;
 import com.azure.cosmos.implementation.PartitionKeyRange;
+import com.azure.cosmos.implementation.QueryMetrics;
 import com.azure.cosmos.implementation.Resource;
 import com.azure.cosmos.implementation.ResourceValidator;
 import com.azure.cosmos.implementation.Utils;
@@ -30,19 +34,24 @@ import com.azure.cosmos.models.IncludedPath;
 import com.azure.cosmos.models.IndexingPolicy;
 import com.azure.cosmos.models.ModelBridgeInternal;
 import com.azure.cosmos.models.PartitionKey;
+import com.azure.cosmos.models.ThroughputProperties;
 import com.azure.cosmos.util.CosmosPagedFlux;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.reactivex.subscribers.TestSubscriber;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import reactor.core.publisher.Flux;
+import reactor.util.retry.Retry;
+import reactor.test.StepVerifier;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,8 +59,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -64,6 +74,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
 
     private CosmosAsyncClient client;
     private CosmosAsyncContainer createdCollection;
+    private CosmosAsyncContainer roundTripsContainer;
     private CosmosAsyncDatabase createdDatabase;
     private List<InternalObjectNode> createdDocuments = new ArrayList<>();
 
@@ -74,16 +85,16 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         super(clientBuilder);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryDocumentsValidateContent() throws Exception {
         // removes undefined
         InternalObjectNode expectedDocument = createdDocuments
             .stream()
-            .filter(d -> ModelBridgeInternal.getMapFromJsonSerializable(d).containsKey("propInt"))
+            .filter(d -> d.getMap().containsKey("propInt"))
             .min(Comparator.comparing(o -> String.valueOf(o.get("propInt")))).get();
 
         String query = String.format("SELECT * from root r where r.propInt = %d ORDER BY r.propInt ASC"
-            , ModelBridgeInternal.getIntFromJsonSerializable(expectedDocument,"propInt"));
+            , expectedDocument.getInt("propInt"));
 
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
 
@@ -109,7 +120,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(), validator);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryDocuments_NoResults() throws Exception {
         String query = "SELECT * from root r where r.id = '2' ORDER BY r.propInt";
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
@@ -132,7 +143,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         return new Object[][] { { "ASC" }, {"DESC"} };
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT, dataProvider = "sortOrder")
+    @Test(groups = { "query" }, timeOut = TIMEOUT, dataProvider = "sortOrder")
     public void queryOrderBy(String sortOrder) throws Exception {
         String query = String.format("SELECT * FROM r where r.propInt != null ORDER BY r.propInt %s", sortOrder);
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
@@ -141,7 +152,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         CosmosPagedFlux<InternalObjectNode> queryObservable = createdCollection.queryItems(query, options, InternalObjectNode.class);
         Comparator<Integer> validatorComparator = Comparator.nullsFirst(Comparator.<Integer>naturalOrder());
 
-        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("propInt", d -> ModelBridgeInternal.getIntFromJsonSerializable(d,"propInt"), validatorComparator);
+        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("propInt", d -> d.getInt("propInt"), validatorComparator);
         if ("DESC".equals(sortOrder)) {
             Collections.reverse(expectedResourceIds);
         }
@@ -159,7 +170,32 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(pageSize), validator);
     }
 
-    @Test(groups = {"simple"}, timeOut = TIMEOUT, dataProvider = "sortOrder")
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
+    public void queryOrderByRoundTrips() {
+        String query = "SELECT c.v FROM c where c.type='testing' order by c.v asc";
+        CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
+
+        int pageSize = 5;
+        for (int i = 0; i < 100; i++) {
+            CosmosPagedFlux<RoundTripDocument> queryObservable = roundTripsContainer.queryItems(query, options, RoundTripDocument.class);
+            FeedResponse<RoundTripDocument> feedResponse = queryObservable.byPage(pageSize).take(1).blockFirst();
+            assertThat(feedResponse.getResults().size()).isEqualTo(5);
+            for (RoundTripDocument roundTripDocument : feedResponse.getResults()) {
+                assertThat(roundTripDocument.v).isEqualTo(3);
+            }
+            Map<String, QueryMetrics> queryMetricsMap = ModelBridgeInternal.queryMetricsMap(feedResponse);
+            List<QueryMetrics> queryMetrics = new ArrayList<>(queryMetricsMap.values());
+            for (QueryMetrics queryMetric : queryMetrics) {
+                // Only one extra page should be prefetched max
+                assertThat(queryMetric.getOutputDocumentCount()).isLessThanOrEqualTo(10);
+            }
+            FeedResponseDiagnostics feedResponseDiagnostics = ImplementationBridgeHelpers.CosmosDiagnosticsHelper.getCosmosDiagnosticsAccessor().getFeedResponseDiagnostics(feedResponse.getCosmosDiagnostics());
+            // 2 partitions 2 requests per partition + 2 prefetch requests
+            assertThat(feedResponseDiagnostics.getClientSideRequestStatistics().size()).isLessThanOrEqualTo(4);
+        }
+    }
+
+    @Test(groups = {"query"}, timeOut = TIMEOUT, dataProvider = "sortOrder")
     public void queryOrderByWithValue(String sortOrder) throws Exception {
         String query = String.format("SELECT value r.propInt FROM r where r.propInt != null ORDER BY r.propInt %s", sortOrder);
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
@@ -171,8 +207,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
 
         List<Integer> expectedValues =
             sortDocumentsAndCollectValues("propInt",
-                                               d -> ModelBridgeInternal
-                                                        .getIntFromJsonSerializable(d, "propInt"),
+                                               d -> d.getInt("propInt"),
                                                validatorComparator);
         if ("DESC".equals(sortOrder)) {
             Collections.reverse(expectedValues);
@@ -191,20 +226,32 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(pageSize), validator);
     }
 
-    @Test(groups = {"simple"}, timeOut = TIMEOUT, dataProvider = "sortOrder")
+    @Test(groups = {"query"}, timeOut = TIMEOUT, dataProvider = "sortOrder")
     public void queryOrderByWithValueAndCustomFactoryMethod(String sortOrder) throws Exception {
         String query = String.format("SELECT value r.propInt FROM r where r.propInt != null ORDER BY r.propInt %s", sortOrder);
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
         ImplementationBridgeHelpers
             .CosmosQueryRequestOptionsHelper
             .getCosmosQueryRequestOptionsAccessor()
+            .getImpl(options)
             // Custom Factory Method will always get the ObjectNode - so if VALUE function is used
             // the value needs to be extracted manually. This is intentional right now
             // to allow late-binding the decision whether we really want to surface JsonNode or ObjectNode to
             // customers if we ever make the custom factory method public
             // For now in Spark don't need to worry about extracting values - we would need a wrapper to
             // allow inferring schema anyway.
-            .setItemFactoryMethod(options, (node) -> node.get("_value").intValue());
+            .setCustomItemSerializer(
+                new CosmosItemSerializerNoExceptionWrapping() {
+                    @Override
+                    public <T> Map<String, Object> serialize(T item) {
+                        return null;
+                    }
+
+                    @Override
+                    public <T> T deserialize(Map<String, Object> jsonNodeMap, Class<T> classType) {
+                        return (T)(jsonNodeMap.get("_value"));
+                    }
+                });
 
         int pageSize = 3;
         CosmosPagedFlux<Integer> queryObservable = createdCollection.queryItems(query, options,
@@ -213,8 +260,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
 
         List<Integer> expectedValues =
             sortDocumentsAndCollectValues("propInt",
-                d -> ModelBridgeInternal
-                    .getIntFromJsonSerializable(d, "propInt"),
+                d -> d.getInt("propInt"),
                 validatorComparator);
         if ("DESC".equals(sortOrder)) {
             Collections.reverse(expectedValues);
@@ -233,7 +279,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(pageSize), validator);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryOrderByInt() throws Exception {
         String query = "SELECT * FROM r where r.propInt != null ORDER BY r.propInt";
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
@@ -242,7 +288,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         CosmosPagedFlux<InternalObjectNode> queryObservable = createdCollection.queryItems(query, options, InternalObjectNode.class);
 
         Comparator<Integer> validatorComparator = Comparator.nullsFirst(Comparator.<Integer>naturalOrder());
-        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("propInt", d -> ModelBridgeInternal.getIntFromJsonSerializable(d,"propInt"), validatorComparator);
+        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("propInt", d -> d.getInt("propInt"), validatorComparator);
         int expectedPageSize = expectedNumberOfPages(expectedResourceIds.size(), pageSize);
 
         FeedResponseListValidator<InternalObjectNode> validator = new FeedResponseListValidator.Builder<InternalObjectNode>()
@@ -256,7 +302,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(pageSize), validator);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryOrderByString() throws Exception {
         String query = "SELECT * FROM r where r.propStr != null ORDER BY r.propStr";
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
@@ -265,7 +311,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         CosmosPagedFlux<InternalObjectNode> queryObservable = createdCollection.queryItems(query, options, InternalObjectNode.class);
 
         Comparator<String> validatorComparator = Comparator.nullsFirst(Comparator.<String>naturalOrder());
-        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("propStr", d -> ModelBridgeInternal.getStringFromJsonSerializable(d,"propStr"), validatorComparator);
+        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("propStr", d -> d.getString("propStr"), validatorComparator);
         int expectedPageSize = expectedNumberOfPages(expectedResourceIds.size(), pageSize);
 
         FeedResponseListValidator<InternalObjectNode> validator = new FeedResponseListValidator.Builder<InternalObjectNode>()
@@ -279,7 +325,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         validateQuerySuccess(queryObservable.byPage(pageSize), validator);
     }
 
-    @Test(groups = {"simple"}, timeOut = TIMEOUT, dataProvider = "sortOrder")
+    @Test(groups = {"query"}, timeOut = TIMEOUT, dataProvider = "sortOrder")
     public void queryOrderByMixedTypes(String sortOrder) throws Exception {
         List<PartitionKeyRange> partitionKeyRanges = getPartitionKeyRanges(createdCollection.getId(),
                                                                            BridgeInternal
@@ -296,13 +342,14 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         int pageSize = 20;
         CosmosPagedFlux<InternalObjectNode> queryFlux = createdCollection
                                                             .queryItems(query, options, InternalObjectNode.class);
-        TestSubscriber<FeedResponse<InternalObjectNode>> subscriber = new TestSubscriber<>();
-        queryFlux.byPage(pageSize).subscribe(subscriber);
-        subscriber.awaitTerminalEvent();
-        subscriber.assertComplete();
-        subscriber.assertNoErrors();
+
         List<InternalObjectNode> results = new ArrayList<>();
-        subscriber.values().forEach(feedResponse -> results.addAll(feedResponse.getResults()));
+        StepVerifier.create(queryFlux.byPage(pageSize))
+            .thenConsumeWhile(feedResponse -> {
+                results.addAll(feedResponse.getResults());
+                return true;
+            }).verifyComplete();
+
         // Make sure all elements inserted are returned
         assertThat(results.size()).isEqualTo(createdDocuments.size());
 
@@ -394,7 +441,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
             { createdDocuments.size() + 1 }, { 2 * createdDocuments.size() } };
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT, dataProvider =  "topValue")
+    @Test(groups = { "query" }, timeOut = TIMEOUT, dataProvider =  "topValue")
     public void queryOrderWithTop(int topValue) throws Exception {
         String query = String.format("SELECT TOP %d * FROM r where r.propInt != null ORDER BY r.propInt", topValue);
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
@@ -405,7 +452,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         Comparator<Integer> validatorComparator = Comparator.nullsFirst(Comparator.<Integer>naturalOrder());
 
         List<String> expectedResourceIds =
-                sortDocumentsAndCollectResourceIds("propInt", d -> ModelBridgeInternal.getIntFromJsonSerializable(d,"propInt"), validatorComparator)
+                sortDocumentsAndCollectResourceIds("propInt", d -> d.getInt("propInt"), validatorComparator)
                 .stream().limit(topValue).collect(Collectors.toList());
 
         int expectedPageSize = expectedNumberOfPages(expectedResourceIds.size(), pageSize);
@@ -423,7 +470,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
 
     private <T> List<String> sortDocumentsAndCollectResourceIds(String propName, Function<InternalObjectNode, T> extractProp, Comparator<T> comparer) {
         return createdDocuments.stream()
-                               .filter(d -> ModelBridgeInternal.getMapFromJsonSerializable(d).containsKey(propName)) // removes undefined
+                               .filter(d -> d.getMap().containsKey(propName)) // removes undefined
                                .sorted((d1, d2) -> comparer.compare(extractProp.apply(d1), extractProp.apply(d2)))
                                .map(Resource::getResourceId).collect(Collectors.toList());
     }
@@ -432,29 +479,26 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
     private <T> List<T> sortDocumentsAndCollectValues(String propName,
                                                       Function<InternalObjectNode, T> extractProp, Comparator<T> comparer) {
         return createdDocuments.stream()
-                   .filter(d -> ModelBridgeInternal.getMapFromJsonSerializable(d).containsKey(propName)) // removes undefined
+                   .filter(d -> d.getMap().containsKey(propName)) // removes undefined
                    .sorted((d1, d2) -> comparer.compare(extractProp.apply(d1), extractProp.apply(d2)))
-                   .map(d -> (T)ModelBridgeInternal.getMapFromJsonSerializable(d).get(propName))
+                   .map(d -> (T)d.getMap().get(propName))
                    .collect(Collectors.toList());
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryScopedToSinglePartition_StartWithContinuationToken() throws Exception {
         String query = "SELECT * FROM r ORDER BY r.propScopedPartitionInt ASC";
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
         options.setPartitionKey(new PartitionKey("duplicatePartitionKeyValue"));
         CosmosPagedFlux<InternalObjectNode> queryObservable = createdCollection.queryItems(query, options, InternalObjectNode.class);
 
-        TestSubscriber<FeedResponse<InternalObjectNode>> subscriber = new TestSubscriber<>();
-        queryObservable.byPage(3).take(1).subscribe(subscriber);
+        int preferredPageSize = 3;
+        AtomicReference<FeedResponse<InternalObjectNode>> value = new AtomicReference<>();
+        StepVerifier.create(queryObservable.byPage(preferredPageSize).take(1))
+            .consumeNextWith(value::set)
+            .verifyComplete();
 
-        subscriber.awaitTerminalEvent();
-        subscriber.assertComplete();
-        subscriber.assertNoErrors();
-        assertThat(subscriber.valueCount()).isEqualTo(1);
-
-        @SuppressWarnings("unchecked")
-        FeedResponse<InternalObjectNode> page = (FeedResponse<InternalObjectNode>) subscriber.getEvents().get(0).get(0);
+        FeedResponse<InternalObjectNode> page = value.get();
         assertThat(page.getResults()).hasSize(3);
 
         assertThat(page.getContinuationToken()).isNotEmpty();
@@ -462,10 +506,9 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         queryObservable = createdCollection.queryItems(query, options, InternalObjectNode.class);
 
         List<InternalObjectNode> expectedDocs = createdDocuments.stream()
-                                                                .filter(d -> (StringUtils.equals("duplicatePartitionKeyValue", ModelBridgeInternal.getStringFromJsonSerializable(d,"mypk"))))
-                                                                .filter(d -> (ModelBridgeInternal.getIntFromJsonSerializable(d,"propScopedPartitionInt") > 2)).collect(Collectors.toList());
-        Integer maxItemCount = ModelBridgeInternal.getMaxItemCountFromQueryRequestOptions(options);
-        int expectedPageSize = (expectedDocs.size() + maxItemCount - 1) / maxItemCount;
+                                                                .filter(d -> (StringUtils.equals("duplicatePartitionKeyValue", d.getString("mypk"))))
+                                                                .filter(d -> (d.getInt("propScopedPartitionInt") > 2)).collect(Collectors.toList());
+        int expectedPageSize = (expectedDocs.size() + preferredPageSize - 1) / preferredPageSize;
 
         assertThat(expectedDocs).hasSize(10 - 3);
 
@@ -473,18 +516,18 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
 
         validator = new FeedResponseListValidator.Builder<InternalObjectNode>()
             .containsExactly(expectedDocs.stream()
-                .sorted((e1, e2) -> Integer.compare(ModelBridgeInternal.getIntFromJsonSerializable(e1,"propScopedPartitionInt"),
-                    ModelBridgeInternal.getIntFromJsonSerializable(e2,"propScopedPartitionInt")))
+                .sorted((e1, e2) -> Integer.compare(e1.getInt("propScopedPartitionInt"),
+                    e2.getInt("propScopedPartitionInt")))
                 .map(d -> d.getResourceId()).collect(Collectors.toList()))
             .numberOfPages(expectedPageSize)
             .allPagesSatisfy(new FeedResponseValidator.Builder<InternalObjectNode>()
                 .requestChargeGreaterThanOrEqualTo(1.0).build())
             .build();
 
-        validateQuerySuccess(queryObservable.byPage(page.getContinuationToken()), validator);
+        validateQuerySuccess(queryObservable.byPage(page.getContinuationToken(), preferredPageSize), validator);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
 	public void orderByContinuationTokenRoundTrip() throws Exception {
         {
         	// Positive
@@ -527,7 +570,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         	assertThat(OrderByContinuationToken.tryParse("{\"property\" : \"Not a valid Order By Token\"}", outOrderByContinuationToken)).isFalse();
         }
 	}
-    @Test(groups = { "simple" }, timeOut = TIMEOUT * 10, dataProvider = "sortOrder")
+    @Test(groups = { "query" }, timeOut = TIMEOUT * 10, dataProvider = "sortOrder")
     public void queryDocumentsWithOrderByContinuationTokensInteger(String sortOrder) throws Exception {
         // Get Actual
         String query = String.format("SELECT * FROM r where r.propInt != null ORDER BY r.propInt %s", sortOrder);
@@ -536,11 +579,11 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         Comparator<Integer> order = sortOrder.equals("ASC")?Comparator.naturalOrder():Comparator.reverseOrder();
         Comparator<Integer> validatorComparator = Comparator.nullsFirst(order);
 
-        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("propInt", d -> ModelBridgeInternal.getIntFromJsonSerializable(d,"propInt"), validatorComparator);
+        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("propInt", d -> d.getInt("propInt"), validatorComparator);
         this.queryWithContinuationTokensAndPageSizes(query, new int[] { 1, 5, 10, 100}, expectedResourceIds);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT * 10, dataProvider = "sortOrder")
+    @Test(groups = { "query" }, timeOut = TIMEOUT * 10, dataProvider = "sortOrder")
     public void queryDocumentsWithOrderByContinuationTokensString(String sortOrder) throws Exception {
         // Get Actual
         String query = String.format("SELECT * FROM c ORDER BY c.id %s", sortOrder);
@@ -549,11 +592,11 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         Comparator<String> order = sortOrder.equals("ASC")?Comparator.naturalOrder():Comparator.reverseOrder();
         Comparator<String> validatorComparator = Comparator.nullsFirst(order);
 
-        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("id", d -> ModelBridgeInternal.getStringFromJsonSerializable(d,"id"), validatorComparator);
+        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("id", d -> d.getString("id"), validatorComparator);
         this.queryWithContinuationTokensAndPageSizes(query, new int[] { 1, 5, 10, 100 }, expectedResourceIds);
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT * 10, dataProvider = "sortOrder")
+    @Test(groups = { "query" }, timeOut = TIMEOUT * 10, dataProvider = "sortOrder")
     public void queryDocumentsWithInvalidOrderByContinuationTokensString(String sortOrder) throws Exception {
         // Get Actual
         String query = String.format("SELECT * FROM c ORDER BY c.id %s", sortOrder);
@@ -565,11 +608,11 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         }else{
             validatorComparator = Comparator.nullsFirst(Comparator.<String>reverseOrder());
         }
-        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("id", d -> ModelBridgeInternal.getStringFromJsonSerializable(d,"id"), validatorComparator);
+        List<String> expectedResourceIds = sortDocumentsAndCollectResourceIds("id", d -> d.getString("id"), validatorComparator);
         this.assertInvalidContinuationToken(query, new int[] { 1, 5, 10, 100 }, expectedResourceIds);
     }
 
-    @Test(groups = {"simple"}, timeOut = TIMEOUT, dataProvider = "sortOrder")
+    @Test(groups = {"query"}, timeOut = TIMEOUT, dataProvider = "sortOrder")
     public void queryOrderByArray(String sortOrder) throws Exception {
         String query = String.format("SELECT * FROM r where r.propArray != null ORDER BY r.propArray %s", sortOrder);
 
@@ -583,7 +626,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
             .containsExactlyElementsOf(results2.stream().limit(pageSize).map(r -> r.getResourceId()).collect(Collectors.toList()));
     }
 
-    @Test(groups = {"simple"}, timeOut = TIMEOUT, dataProvider = "sortOrder")
+    @Test(groups = {"query"}, timeOut = TIMEOUT, dataProvider = "sortOrder")
     public void queryOrderByObject(String sortOrder) throws Exception {
         String query = String.format("SELECT * FROM r where r.propObject != null ORDER BY r.propObject %s", sortOrder);
 
@@ -602,7 +645,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         return BridgeInternal.getProperties(cosmosContainer.createItem(docDefinition).block());
     }
 
-    public List<InternalObjectNode> bulkInsert(CosmosAsyncContainer cosmosContainer, List<Map<String, Object>> keyValuePropsList) {
+    public List<InternalObjectNode> bulkInsertDocs(CosmosAsyncContainer cosmosContainer, List<Map<String, Object>> keyValuePropsList) {
 
         ArrayList<InternalObjectNode> result = new ArrayList<InternalObjectNode>();
 
@@ -611,21 +654,41 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
             result.add(docDefinition);
         }
 
-        return bulkInsertBlocking(cosmosContainer, result);
+        return insertAllItemsBlocking(cosmosContainer, result, true);
     }
 
-    @BeforeMethod(groups = { "simple" })
+    @BeforeMethod(groups = { "query" })
     public void beforeMethod() throws Exception {
         // add a cool off time
-        TimeUnit.SECONDS.sleep(10);
+        CosmosNettyLeakDetectorFactory.resetIdentifiedLeaks();
     }
 
-    @BeforeClass(groups = { "simple" }, timeOut = 4 * SETUP_TIMEOUT)
+    @AfterMethod(groups = { "query" }, alwaysRun = true)
+    public void afterMethod() throws Exception {
+        logger.info("captureNettyLeaks: {}", captureNettyLeaks());
+    }
+
+    @BeforeClass(groups = { "query" }, timeOut = 4 * SETUP_TIMEOUT)
     public void before_OrderbyDocumentQueryTest() throws Exception {
         client = getClientBuilder().buildAsyncClient();
         createdDatabase = getSharedCosmosDatabase(client);
         createdCollection = getSharedMultiPartitionCosmosContainer(client);
-        truncateCollection(createdCollection);
+        cleanUpContainer(createdCollection);
+        String containerName = "roundTripsContainer-" + UUID.randomUUID();
+        createdDatabase.createContainer(containerName,
+            "/mypk",
+            ThroughputProperties.createManualThroughput(10100))
+            .retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(5))
+                .filter(throwable -> {
+                    if (throwable instanceof CosmosException) {
+                        int statusCode = ((CosmosException) throwable).getStatusCode();
+                        return statusCode == 408 || statusCode == 429;
+                    }
+                    return false;
+                }))
+            .block();
+        roundTripsContainer = createdDatabase.getContainer(containerName);
+        setupRoundTripContainer();
 
         List<Map<String, Object>> keyValuePropsList = new ArrayList<>();
         Map<String, Object> props;
@@ -687,7 +750,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         props = new HashMap<>();
         keyValuePropsList.add(props);
 
-        createdDocuments = bulkInsert(createdCollection, keyValuePropsList);
+        createdDocuments = bulkInsertDocs(createdCollection, keyValuePropsList);
 
         for(int i = 0; i < 10; i++) {
             Map<String, Object> p = new HashMap<>();
@@ -697,23 +760,70 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         }
 
         numberOfPartitions = CosmosBridgeInternal.getAsyncDocumentClient(client)
-                .readPartitionKeyRanges("dbs/" + createdDatabase.getId() + "/colls/" + createdCollection.getId(), null)
+                .readPartitionKeyRanges("dbs/" + createdDatabase.getId() + "/colls/" + createdCollection.getId(), (CosmosQueryRequestOptions) null)
                 .flatMap(p -> Flux.fromIterable(p.getResults())).collectList().single().block().size();
 
         waitIfNeededForReplicasToCatchUp(getClientBuilder());
         updateCollectionIndex();
     }
 
-    @Test(groups = { "simple" }, timeOut = TIMEOUT)
+    private void setupRoundTripContainer() {
+        String pk = "pk1";
+        for (int i = 0; i < 15; i++) {
+            RoundTripDocument doc;
+            if (i < 13) {
+                 doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 3);
+            } else if (i == 13) {
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 4);
+            } else {
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 5);
+            }
+            roundTripsContainer.createItem(doc).block();
+        }
+        pk = "pk2";
+        for (int i = 0; i < 10; i++) {
+            RoundTripDocument doc;
+            if (i < 1) {
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 4);
+            } else if (i < 3) {
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 5);
+            } else if (i < 8) {
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 6);
+            } else if (i < 9) {
+               doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 7);
+            } else {
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 8);
+            }
+            roundTripsContainer.createItem(doc).block();
+        }
+        pk = "pk3";
+        for (int i = 0; i < 11; i++) {
+            RoundTripDocument doc;
+            if (i < 2) {
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 4);
+            } else if (i < 5){
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 5);
+            } else if (i < 7) {
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 6);
+            } else if (i < 9) {
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 7);
+            } else {
+                doc = new RoundTripDocument(UUID.randomUUID().toString(), pk, "testing", 8);
+            }
+            roundTripsContainer.createItem(doc).block();
+        }
+    }
+
+    @Test(groups = { "query" }, timeOut = TIMEOUT)
     public void queryDocumentsValidateContentWithObjectNode() throws Exception {
         // removes undefined
         InternalObjectNode expectedDocument = createdDocuments
             .stream()
-            .filter(d -> ModelBridgeInternal.getMapFromJsonSerializable(d).containsKey("propInt"))
+            .filter(d -> d.getMap().containsKey("propInt"))
             .min(Comparator.comparing(o -> String.valueOf(o.get("propInt")))).get();
 
         String query = String.format("SELECT * from root r where r.propInt = %d ORDER BY r.propInt ASC"
-            , ModelBridgeInternal.getIntFromJsonSerializable(expectedDocument,"propInt"));
+            , expectedDocument.getInt("propInt"));
 
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
 
@@ -758,7 +868,7 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         }
     }
 
-    @AfterClass(groups = { "simple" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
+    @AfterClass(groups = { "query" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
     public void afterClass() {
         safeClose(client);
     }
@@ -780,10 +890,9 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
                     options, InternalObjectNode.class);
 
             //Observable<FeedResponse<Document>> firstPageObservable = queryObservable.first();
-            TestSubscriber<FeedResponse<InternalObjectNode>> testSubscriber = new TestSubscriber<>();
-            queryObservable.byPage(orderByContinuationToken.toString(),1).subscribe(testSubscriber);
-            testSubscriber.awaitTerminalEvent(TIMEOUT, TimeUnit.MILLISECONDS);
-            testSubscriber.assertError(CosmosException.class);
+            StepVerifier.create(queryObservable.byPage(orderByContinuationToken.toString(), 1))
+                .expectError(CosmosException.class)
+                .verify(Duration.ofMillis(TIMEOUT));
         } while (requestContinuation != null);
     }
 
@@ -811,14 +920,13 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
                     options, InternalObjectNode.class);
 
             //Observable<FeedResponse<Document>> firstPageObservable = queryObservable.byPage().first();
-            TestSubscriber<FeedResponse<InternalObjectNode>> testSubscriber = new TestSubscriber<>();
-            queryObservable.byPage(requestContinuation, pageSize).subscribe(testSubscriber);
-            testSubscriber.awaitTerminalEvent(TIMEOUT, TimeUnit.MILLISECONDS);
-            testSubscriber.assertNoErrors();
-            testSubscriber.assertComplete();
+            AtomicReference<FeedResponse<InternalObjectNode>> value = new AtomicReference<>();
+            StepVerifier.create(queryObservable.byPage(requestContinuation, pageSize))
+                .consumeNextWith(value::set)
+                .thenConsumeWhile(Objects::nonNull)
+                .verifyComplete();
 
-            @SuppressWarnings("unchecked")
-            FeedResponse<InternalObjectNode> firstPage = (FeedResponse<InternalObjectNode>) testSubscriber.getEvents().get(0).get(0);
+            FeedResponse<InternalObjectNode> firstPage = value.get();
             requestContinuation = firstPage.getContinuationToken();
             receivedDocuments.addAll(firstPage.getResults());
             continuationTokens.add(requestContinuation);
@@ -862,4 +970,31 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
             throw new IllegalStateException(e);
 		}
 	}
+
+    static class RoundTripDocument {
+        @JsonProperty("id")
+        String id;
+        @JsonProperty("mypk")
+        String pk;
+        @JsonProperty("type")
+        String type;
+        @JsonProperty("v")
+        int v;
+
+
+        public RoundTripDocument(String id, String pk, String type, int v) {
+            this.id = id;
+            this.pk = pk;
+            this.type = type;
+            this.v = v;
+        }
+
+        public RoundTripDocument() {
+        }
+
+        public String getId() {
+            return id;
+        }
+
+    }
 }

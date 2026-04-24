@@ -5,7 +5,12 @@
 package com.azure.resourcemanager.datamigration.generated;
 
 import com.azure.core.util.BinaryData;
+import com.azure.resourcemanager.datamigration.models.ObjectType;
 import com.azure.resourcemanager.datamigration.models.SchemaComparisonValidationResult;
+import com.azure.resourcemanager.datamigration.models.SchemaComparisonValidationResultType;
+import com.azure.resourcemanager.datamigration.models.Severity;
+import com.azure.resourcemanager.datamigration.models.UpdateActionType;
+import com.azure.resourcemanager.datamigration.models.ValidationError;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
@@ -13,26 +18,39 @@ import org.junit.jupiter.api.Assertions;
 public final class SchemaComparisonValidationResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        SchemaComparisonValidationResult model =
-            BinaryData
-                .fromString(
-                    "{\"schemaDifferences\":{\"objectName\":\"hoqca\",\"objectType\":\"Function\",\"updateAction\":\"AddedOnTarget\"},\"validationErrors\":{\"text\":\"djvlpj\",\"severity\":\"Error\"},\"sourceDatabaseObjectCount\":{\"sgeivsiy\":6206470742211540343},\"targetDatabaseObjectCount\":{\"cjdx\":4044375509992632439,\"zoggculapz\":8303203525289313227}}")
-                .toObject(SchemaComparisonValidationResult.class);
-        Assertions.assertEquals(6206470742211540343L, model.sourceDatabaseObjectCount().get("sgeivsiy"));
-        Assertions.assertEquals(4044375509992632439L, model.targetDatabaseObjectCount().get("cjdx"));
+        SchemaComparisonValidationResult model = BinaryData.fromString(
+            "{\"schemaDifferences\":{\"objectName\":\"g\",\"objectType\":\"StoredProcedures\",\"updateAction\":\"ChangedOnTarget\"},\"validationErrors\":{\"text\":\"abbujftabenb\",\"severity\":\"Error\"},\"sourceDatabaseObjectCount\":{\"ucafedd\":3125504831221073323,\"lzafwxu\":365194165954905680},\"targetDatabaseObjectCount\":{\"ookrtalvnbw\":8202091905557917702,\"emeluclv\":5423357702381080106,\"ukyrdnqodxahh\":6196852251779054307,\"faqnvz\":8854757179811049458}}")
+            .toObject(SchemaComparisonValidationResult.class);
+        Assertions.assertEquals("g", model.schemaDifferences().objectName());
+        Assertions.assertEquals(ObjectType.STORED_PROCEDURES, model.schemaDifferences().objectType());
+        Assertions.assertEquals(UpdateActionType.CHANGED_ON_TARGET, model.schemaDifferences().updateAction());
+        Assertions.assertEquals("abbujftabenb", model.validationErrors().text());
+        Assertions.assertEquals(Severity.ERROR, model.validationErrors().severity());
+        Assertions.assertEquals(3125504831221073323L, model.sourceDatabaseObjectCount().get("ucafedd"));
+        Assertions.assertEquals(8202091905557917702L, model.targetDatabaseObjectCount().get("ookrtalvnbw"));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        SchemaComparisonValidationResult model =
-            new SchemaComparisonValidationResult()
-                .withSourceDatabaseObjectCount(mapOf("sgeivsiy", 6206470742211540343L))
-                .withTargetDatabaseObjectCount(mapOf("cjdx", 4044375509992632439L, "zoggculapz", 8303203525289313227L));
+        SchemaComparisonValidationResult model = new SchemaComparisonValidationResult()
+            .withSchemaDifferences(new SchemaComparisonValidationResultType().withObjectName("g")
+                .withObjectType(ObjectType.STORED_PROCEDURES)
+                .withUpdateAction(UpdateActionType.CHANGED_ON_TARGET))
+            .withValidationErrors(new ValidationError().withText("abbujftabenb").withSeverity(Severity.ERROR))
+            .withSourceDatabaseObjectCount(mapOf("ucafedd", 3125504831221073323L, "lzafwxu", 365194165954905680L))
+            .withTargetDatabaseObjectCount(mapOf("ookrtalvnbw", 8202091905557917702L, "emeluclv", 5423357702381080106L,
+                "ukyrdnqodxahh", 6196852251779054307L, "faqnvz", 8854757179811049458L));
         model = BinaryData.fromObject(model).toObject(SchemaComparisonValidationResult.class);
-        Assertions.assertEquals(6206470742211540343L, model.sourceDatabaseObjectCount().get("sgeivsiy"));
-        Assertions.assertEquals(4044375509992632439L, model.targetDatabaseObjectCount().get("cjdx"));
+        Assertions.assertEquals("g", model.schemaDifferences().objectName());
+        Assertions.assertEquals(ObjectType.STORED_PROCEDURES, model.schemaDifferences().objectType());
+        Assertions.assertEquals(UpdateActionType.CHANGED_ON_TARGET, model.schemaDifferences().updateAction());
+        Assertions.assertEquals("abbujftabenb", model.validationErrors().text());
+        Assertions.assertEquals(Severity.ERROR, model.validationErrors().severity());
+        Assertions.assertEquals(3125504831221073323L, model.sourceDatabaseObjectCount().get("ucafedd"));
+        Assertions.assertEquals(8202091905557917702L, model.targetDatabaseObjectCount().get("ookrtalvnbw"));
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

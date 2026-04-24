@@ -4,34 +4,53 @@
 
 package com.azure.data.tables.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for ResponseFormat. */
+/**
+ * Defines values for ResponseFormat.
+ */
 public final class ResponseFormat extends ExpandableStringEnum<ResponseFormat> {
-    /** Static value return-no-content for ResponseFormat. */
+    /**
+     * Static value return-no-content for ResponseFormat.
+     */
+    @Generated
     public static final ResponseFormat RETURN_NO_CONTENT = fromString("return-no-content");
 
-    /** Static value return-content for ResponseFormat. */
+    /**
+     * Static value return-content for ResponseFormat.
+     */
+    @Generated
     public static final ResponseFormat RETURN_CONTENT = fromString("return-content");
 
     /**
+     * Creates a new instance of ResponseFormat value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public ResponseFormat() {
+    }
+
+    /**
      * Creates or finds a ResponseFormat from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ResponseFormat.
      */
-    @JsonCreator
+    @Generated
     public static ResponseFormat fromString(String name) {
         return fromString(name, ResponseFormat.class);
     }
 
     /**
      * Gets known ResponseFormat values.
-     *
+     * 
      * @return known ResponseFormat values.
      */
+    @Generated
     public static Collection<ResponseFormat> values() {
         return values(ResponseFormat.class);
     }

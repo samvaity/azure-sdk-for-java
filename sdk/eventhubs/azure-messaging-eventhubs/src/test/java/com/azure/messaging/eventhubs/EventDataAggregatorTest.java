@@ -5,6 +5,8 @@ package com.azure.messaging.eventhubs;
 
 import com.azure.core.amqp.exception.AmqpErrorCondition;
 import com.azure.core.amqp.exception.AmqpException;
+import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.logging.LogLevel;
 import com.azure.messaging.eventhubs.EventHubBufferedProducerAsyncClient.BufferedProducerClientOptions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import reactor.core.Disposable;
+import reactor.core.publisher.MonoSink;
 import reactor.test.StepVerifier;
 import reactor.test.publisher.TestPublisher;
+import reactor.util.context.Context;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -21,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.LongConsumer;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,6 +35,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class EventDataAggregatorTest {
+    private static final ClientLogger LOGGER = new ClientLogger(EventDataAggregatorTest.class);
+
     private static final String NAMESPACE = "test.namespace";
     private static final String PARTITION_ID = "test-id";
 
@@ -85,21 +93,24 @@ public class EventDataAggregatorTest {
             switch (current) {
                 case 0:
                     return batch;
+
                 case 1:
                     return batch2;
+
                 default:
-                    throw new RuntimeException("pushesFullBatchesDownstream: Did not expect to get this many invocations.");
+                    throw new RuntimeException(
+                        "pushesFullBatchesDownstream: Did not expect to get this many invocations.");
             }
         };
 
         final TestPublisher<EventData> publisher = TestPublisher.createCold();
-        final EventDataAggregator aggregator = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
+        final EventDataAggregator aggregator
+            = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
 
         // Act & Assert
-        StepVerifier.create(aggregator)
-            .then(() -> {
-                publisher.next(event1, event2, event3);
-            })
+        StepVerifier.create(aggregator).then(() -> {
+            publisher.next(event1, event2, event3);
+        })
             .expectNext(batch)
             .then(() -> publisher.complete())
             .expectNext(batch2)
@@ -130,18 +141,15 @@ public class EventDataAggregatorTest {
         };
 
         final TestPublisher<EventData> publisher = TestPublisher.createCold();
-        final EventDataAggregator aggregator = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
+        final EventDataAggregator aggregator
+            = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
         final IllegalArgumentException testException = new IllegalArgumentException("Test exception.");
 
         // Act & Assert
-        StepVerifier.create(aggregator)
-            .then(() -> {
-                publisher.next(event1, event2);
-                publisher.error(testException);
-            })
-            .expectNext(batch)
-            .expectErrorMatches(e -> e.equals(testException))
-            .verify(Duration.ofSeconds(10));
+        StepVerifier.create(aggregator).then(() -> {
+            publisher.next(event1, event2);
+            publisher.error(testException);
+        }).expectNext(batch).expectErrorMatches(e -> e.equals(testException)).verify(Duration.ofSeconds(10));
 
         // Verify that these events were added to the batch.
         assertEquals(2, batchEvents.size());
@@ -172,30 +180,65 @@ public class EventDataAggregatorTest {
             switch (current) {
                 case 0:
                     return batch;
+
                 case 1:
                     return batch2;
+
                 default:
-                    System.out.println("Invoked get batch for the xth time:" + current);
+                    LOGGER.log(LogLevel.VERBOSE, () -> "Invoked get batch for the xth time:" + current);
                     return batch3;
             }
         };
 
         final TestPublisher<EventData> publisher = TestPublisher.createCold();
-        final EventDataAggregator aggregator = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
+        final EventDataAggregator aggregator
+            = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
 
         // Act & Assert
-        StepVerifier.create(aggregator)
-            .then(() ->  {
-                publisher.next(event1);
-                publisher.next(event2);
-            })
-            .thenAwait(waitTime)
-            .assertNext(b -> {
-                assertEquals(b, batch);
-                assertEquals(2, batchEvents.size());
-            })
-            .thenCancel()
-            .verify();
+        StepVerifier.create(aggregator).then(() -> {
+            publisher.next(event1);
+            publisher.next(event2);
+        }).thenAwait(waitTime).assertNext(b -> {
+            assertEquals(b, batch);
+            assertEquals(2, batchEvents.size());
+        }).thenCancel().verify();
+    }
+
+    /**
+     * Tests that it pushes partial batches downstream when flush signal arrives.
+     */
+    @Test
+    public void pushesBatchesOnFlushSignal() {
+        // Arrange
+        final List<EventData> batchEvents = new ArrayList<>();
+        setupBatchMock(batch, batchEvents, event1, event2);
+
+        final Duration waitTime = Duration.ofSeconds(30);
+        final BufferedProducerClientOptions options = new BufferedProducerClientOptions();
+        options.setMaxWaitTime(waitTime);
+
+        final AtomicBoolean first = new AtomicBoolean();
+        final Supplier<EventDataBatch> supplier = () -> {
+            if (first.compareAndSet(false, true)) {
+                return batch;
+            } else {
+                return batch2;
+            }
+        };
+
+        final TestPublisher<EventData> publisher = TestPublisher.createCold();
+        final EventDataAggregator aggregator
+            = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
+
+        // Act & Assert
+        StepVerifier.create(aggregator).then(() -> {
+            publisher.next(event1, event2, new FlushSignal(new NoopMonoSink()));
+        }).expectNext(batch).thenCancel().verify(Duration.ofSeconds(10));
+
+        // Verify that exactly two expected events were added to the batch.
+        assertEquals(2, batchEvents.size());
+        assertTrue(batchEvents.contains(event1));
+        assertTrue(batchEvents.contains(event2));
     }
 
     /**
@@ -221,17 +264,15 @@ public class EventDataAggregatorTest {
         };
 
         final TestPublisher<EventData> publisher = TestPublisher.createCold();
-        final EventDataAggregator aggregator = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
+        final EventDataAggregator aggregator
+            = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
 
-        StepVerifier.create(aggregator)
-            .then(() -> {
-                publisher.next(event1);
-            })
-            .consumeErrorWith(error -> {
-                assertTrue(error instanceof AmqpException);
-                assertEquals(AmqpErrorCondition.LINK_PAYLOAD_SIZE_EXCEEDED, ((AmqpException) error).getErrorCondition());
-            })
-            .verify(Duration.ofSeconds(20));
+        StepVerifier.create(aggregator).then(() -> {
+            publisher.next(event1);
+        }).consumeErrorWith(error -> {
+            assertTrue(error instanceof AmqpException);
+            assertEquals(AmqpErrorCondition.LINK_PAYLOAD_SIZE_EXCEEDED, ((AmqpException) error).getErrorCondition());
+        }).verify(Duration.ofSeconds(20));
     }
 
     /**
@@ -257,27 +298,25 @@ public class EventDataAggregatorTest {
             switch (current) {
                 case 0:
                     return batch;
+
                 case 1:
                     return batch2;
+
                 default:
                     throw new RuntimeException("respectsBackpressure: Did not expect to get this many invocations.");
             }
         };
 
         final TestPublisher<EventData> publisher = TestPublisher.createCold();
-        final EventDataAggregator aggregator = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
+        final EventDataAggregator aggregator
+            = new EventDataAggregator(publisher.flux(), supplier, NAMESPACE, options, PARTITION_ID);
 
         final long request = 1L;
 
-        StepVerifier.create(aggregator, request)
-            .then(() -> publisher.next(event1))
-            .assertNext(b -> {
-                assertEquals(1, b.getCount());
-                assertTrue(b.getEvents().contains(event1));
-            })
-            .expectNoEvent(waitTime)
-            .thenCancel()
-            .verify();
+        StepVerifier.create(aggregator, request).then(() -> publisher.next(event1)).assertNext(b -> {
+            assertEquals(1, b.getCount());
+            assertTrue(b.getEvents().contains(event1));
+        }).expectNoEvent(waitTime).thenCancel().verify();
 
         publisher.assertMaxRequested(request);
     }
@@ -306,5 +345,40 @@ public class EventDataAggregatorTest {
             return resultSet;
         });
         when(batch.getCount()).thenAnswer(invocation -> resultSet.size());
+    }
+
+    static final class NoopMonoSink implements MonoSink<Void> {
+        @Override
+        public void success() {
+        }
+
+        @Override
+        public void success(Void v) {
+
+        }
+
+        @Override
+        public void error(Throwable e) {
+        }
+
+        @Override
+        public Context currentContext() {
+            return Context.empty();
+        }
+
+        @Override
+        public MonoSink<Void> onRequest(LongConsumer consumer) {
+            return this;
+        }
+
+        @Override
+        public MonoSink<Void> onCancel(Disposable d) {
+            return this;
+        }
+
+        @Override
+        public MonoSink<Void> onDispose(Disposable d) {
+            return this;
+        }
     }
 }

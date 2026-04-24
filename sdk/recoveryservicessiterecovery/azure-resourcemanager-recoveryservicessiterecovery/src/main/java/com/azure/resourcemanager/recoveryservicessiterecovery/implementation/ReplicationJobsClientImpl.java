@@ -39,22 +39,28 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ReplicationJobsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ReplicationJobsClient.
+ */
 public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ReplicationJobsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final SiteRecoveryManagementClientImpl client;
 
     /**
      * Initializes an instance of ReplicationJobsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ReplicationJobsClientImpl(SiteRecoveryManagementClientImpl client) {
-        this.service =
-            RestProxy.create(ReplicationJobsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(ReplicationJobsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -65,243 +71,160 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
     @Host("{$host}")
     @ServiceInterface(name = "SiteRecoveryManageme")
     public interface ReplicationJobsService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationJobs")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationJobs")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<JobCollection>> list(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @QueryParam("$filter") String filter,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<JobCollection>> list(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @QueryParam("$filter") String filter, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationJobs/{jobName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<JobInner>> get(@HostParam("$host") String endpoint, @QueryParam("api-version") String apiVersion,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("resourceName") String resourceName,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("jobName") String jobName,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationJobs/{jobName}/cancel")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> cancel(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("jobName") String jobName, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationJobs/{jobName}/restart")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> restart(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("jobName") String jobName, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationJobs/{jobName}/resume")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> resume(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("jobName") String jobName, @BodyParam("application/json") ResumeJobParams resumeJobParams,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices/vaults/{resourceName}/replicationJobs/export")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> export(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("resourceName") String resourceName, @PathParam("subscriptionId") String subscriptionId,
+            @BodyParam("application/json") JobQueryParameter jobQueryParameter, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationJobs/{jobName}")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<JobInner>> get(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("jobName") String jobName,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationJobs/{jobName}/cancel")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> cancel(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("jobName") String jobName,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationJobs/{jobName}/restart")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> restart(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("jobName") String jobName,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationJobs/{jobName}/resume")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> resume(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("jobName") String jobName,
-            @BodyParam("application/json") ResumeJobParams resumeJobParams,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.RecoveryServices"
-                + "/vaults/{resourceName}/replicationJobs/export")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> export(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("subscriptionId") String subscriptionId,
-            @BodyParam("application/json") JobQueryParameter jobQueryParameter,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<JobCollection>> listNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<JobCollection>> listNext(@PathParam(value = "nextLink", encoded = true) String nextLink,
+            @HostParam("$host") String endpoint, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets the list of jobs.
-     *
-     * <p>Gets the list of Azure Site Recovery Jobs for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of Azure Site Recovery Jobs for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param filter OData filter options.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of Azure Site Recovery Jobs for the vault along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<JobInner>> listSinglePageAsync(
-        String resourceName, String resourceGroupName, String filter) {
+    private Mono<PagedResponse<JobInner>> listSinglePageAsync(String resourceGroupName, String resourceName,
+        String filter) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            filter,
-                            accept,
-                            context))
-            .<PagedResponse<JobInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.list(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), filter, accept, context))
+            .<PagedResponse<JobInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the list of jobs.
-     *
-     * <p>Gets the list of Azure Site Recovery Jobs for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of Azure Site Recovery Jobs for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param filter OData filter options.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of Azure Site Recovery Jobs for the vault along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<JobInner>> listSinglePageAsync(
-        String resourceName, String resourceGroupName, String filter, Context context) {
+    private Mono<PagedResponse<JobInner>> listSinglePageAsync(String resourceGroupName, String resourceName,
+        String filter, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service
-            .list(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                filter,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+            .list(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+                this.client.getSubscriptionId(), filter, accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 
     /**
      * Gets the list of jobs.
-     *
-     * <p>Gets the list of Azure Site Recovery Jobs for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of Azure Site Recovery Jobs for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param filter OData filter options.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -309,39 +232,37 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the list of Azure Site Recovery Jobs for the vault as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<JobInner> listAsync(String resourceName, String resourceGroupName, String filter) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(resourceName, resourceGroupName, filter),
+    private PagedFlux<JobInner> listAsync(String resourceGroupName, String resourceName, String filter) {
+        return new PagedFlux<>(() -> listSinglePageAsync(resourceGroupName, resourceName, filter),
             nextLink -> listNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets the list of jobs.
-     *
-     * <p>Gets the list of Azure Site Recovery Jobs for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of Azure Site Recovery Jobs for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of Azure Site Recovery Jobs for the vault as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<JobInner> listAsync(String resourceName, String resourceGroupName) {
+    private PagedFlux<JobInner> listAsync(String resourceGroupName, String resourceName) {
         final String filter = null;
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(resourceName, resourceGroupName, filter),
+        return new PagedFlux<>(() -> listSinglePageAsync(resourceGroupName, resourceName, filter),
             nextLink -> listNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets the list of jobs.
-     *
-     * <p>Gets the list of Azure Site Recovery Jobs for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of Azure Site Recovery Jobs for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param filter OData filter options.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -350,38 +271,37 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the list of Azure Site Recovery Jobs for the vault as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<JobInner> listAsync(
-        String resourceName, String resourceGroupName, String filter, Context context) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(resourceName, resourceGroupName, filter, context),
+    private PagedFlux<JobInner> listAsync(String resourceGroupName, String resourceName, String filter,
+        Context context) {
+        return new PagedFlux<>(() -> listSinglePageAsync(resourceGroupName, resourceName, filter, context),
             nextLink -> listNextSinglePageAsync(nextLink, context));
     }
 
     /**
      * Gets the list of jobs.
-     *
-     * <p>Gets the list of Azure Site Recovery Jobs for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of Azure Site Recovery Jobs for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of Azure Site Recovery Jobs for the vault as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<JobInner> list(String resourceName, String resourceGroupName) {
+    public PagedIterable<JobInner> list(String resourceGroupName, String resourceName) {
         final String filter = null;
-        return new PagedIterable<>(listAsync(resourceName, resourceGroupName, filter));
+        return new PagedIterable<>(listAsync(resourceGroupName, resourceName, filter));
     }
 
     /**
      * Gets the list of jobs.
-     *
-     * <p>Gets the list of Azure Site Recovery Jobs for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of Azure Site Recovery Jobs for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param filter OData filter options.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -390,127 +310,101 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the list of Azure Site Recovery Jobs for the vault as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<JobInner> list(String resourceName, String resourceGroupName, String filter, Context context) {
-        return new PagedIterable<>(listAsync(resourceName, resourceGroupName, filter, context));
+    public PagedIterable<JobInner> list(String resourceGroupName, String resourceName, String filter, Context context) {
+        return new PagedIterable<>(listAsync(resourceGroupName, resourceName, filter, context));
     }
 
     /**
      * Gets the job details.
-     *
-     * <p>Get the details of an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Get the details of an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the details of an Azure Site Recovery job along with {@link Response} on successful completion of {@link
-     *     Mono}.
+     * @return the details of an Azure Site Recovery job along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<JobInner>> getWithResponseAsync(
-        String resourceName, String resourceGroupName, String jobName) {
+    private Mono<Response<JobInner>> getWithResponseAsync(String resourceGroupName, String resourceName,
+        String jobName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (jobName == null) {
             return Mono.error(new IllegalArgumentException("Parameter jobName is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            jobName,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), jobName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the job details.
-     *
-     * <p>Get the details of an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Get the details of an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the details of an Azure Site Recovery job along with {@link Response} on successful completion of {@link
-     *     Mono}.
+     * @return the details of an Azure Site Recovery job along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<JobInner>> getWithResponseAsync(
-        String resourceName, String resourceGroupName, String jobName, Context context) {
+    private Mono<Response<JobInner>> getWithResponseAsync(String resourceGroupName, String resourceName, String jobName,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (jobName == null) {
             return Mono.error(new IllegalArgumentException("Parameter jobName is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                jobName,
-                accept,
-                context);
+        return service.get(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), jobName, accept, context);
     }
 
     /**
      * Gets the job details.
-     *
-     * <p>Get the details of an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Get the details of an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -518,18 +412,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the details of an Azure Site Recovery job on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<JobInner> getAsync(String resourceName, String resourceGroupName, String jobName) {
-        return getWithResponseAsync(resourceName, resourceGroupName, jobName)
+    private Mono<JobInner> getAsync(String resourceGroupName, String resourceName, String jobName) {
+        return getWithResponseAsync(resourceGroupName, resourceName, jobName)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the job details.
-     *
-     * <p>Get the details of an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Get the details of an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -538,18 +432,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the details of an Azure Site Recovery job along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<JobInner> getWithResponse(
-        String resourceName, String resourceGroupName, String jobName, Context context) {
-        return getWithResponseAsync(resourceName, resourceGroupName, jobName, context).block();
+    public Response<JobInner> getWithResponse(String resourceGroupName, String resourceName, String jobName,
+        Context context) {
+        return getWithResponseAsync(resourceGroupName, resourceName, jobName, context).block();
     }
 
     /**
      * Gets the job details.
-     *
-     * <p>Get the details of an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Get the details of an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -557,17 +451,17 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the details of an Azure Site Recovery job.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public JobInner get(String resourceName, String resourceGroupName, String jobName) {
-        return getWithResponse(resourceName, resourceGroupName, jobName, Context.NONE).getValue();
+    public JobInner get(String resourceGroupName, String resourceName, String jobName) {
+        return getWithResponse(resourceGroupName, resourceName, jobName, Context.NONE).getValue();
     }
 
     /**
      * Cancels the specified job.
-     *
-     * <p>The operation to cancel an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -575,54 +469,40 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> cancelWithResponseAsync(
-        String resourceName, String resourceGroupName, String jobName) {
+    private Mono<Response<Flux<ByteBuffer>>> cancelWithResponseAsync(String resourceGroupName, String resourceName,
+        String jobName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (jobName == null) {
             return Mono.error(new IllegalArgumentException("Parameter jobName is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .cancel(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            jobName,
-                            accept,
-                            context))
+            .withContext(context -> service.cancel(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), jobName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Cancels the specified job.
-     *
-     * <p>The operation to cancel an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -631,51 +511,39 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> cancelWithResponseAsync(
-        String resourceName, String resourceGroupName, String jobName, Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> cancelWithResponseAsync(String resourceGroupName, String resourceName,
+        String jobName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (jobName == null) {
             return Mono.error(new IllegalArgumentException("Parameter jobName is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .cancel(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                jobName,
-                accept,
-                context);
+        return service.cancel(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), jobName, accept, context);
     }
 
     /**
      * Cancels the specified job.
-     *
-     * <p>The operation to cancel an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -683,22 +551,20 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link PollerFlux} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<JobInner>, JobInner> beginCancelAsync(
-        String resourceName, String resourceGroupName, String jobName) {
-        Mono<Response<Flux<ByteBuffer>>> mono = cancelWithResponseAsync(resourceName, resourceGroupName, jobName);
-        return this
-            .client
-            .<JobInner, JobInner>getLroResult(
-                mono, this.client.getHttpPipeline(), JobInner.class, JobInner.class, this.client.getContext());
+    private PollerFlux<PollResult<JobInner>, JobInner> beginCancelAsync(String resourceGroupName, String resourceName,
+        String jobName) {
+        Mono<Response<Flux<ByteBuffer>>> mono = cancelWithResponseAsync(resourceGroupName, resourceName, jobName);
+        return this.client.<JobInner, JobInner>getLroResult(mono, this.client.getHttpPipeline(), JobInner.class,
+            JobInner.class, this.client.getContext());
     }
 
     /**
      * Cancels the specified job.
-     *
-     * <p>The operation to cancel an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -707,24 +573,22 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link PollerFlux} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<JobInner>, JobInner> beginCancelAsync(
-        String resourceName, String resourceGroupName, String jobName, Context context) {
+    private PollerFlux<PollResult<JobInner>, JobInner> beginCancelAsync(String resourceGroupName, String resourceName,
+        String jobName, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            cancelWithResponseAsync(resourceName, resourceGroupName, jobName, context);
-        return this
-            .client
-            .<JobInner, JobInner>getLroResult(
-                mono, this.client.getHttpPipeline(), JobInner.class, JobInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = cancelWithResponseAsync(resourceGroupName, resourceName, jobName, context);
+        return this.client.<JobInner, JobInner>getLroResult(mono, this.client.getHttpPipeline(), JobInner.class,
+            JobInner.class, context);
     }
 
     /**
      * Cancels the specified job.
-     *
-     * <p>The operation to cancel an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -732,18 +596,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link SyncPoller} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<JobInner>, JobInner> beginCancel(
-        String resourceName, String resourceGroupName, String jobName) {
-        return this.beginCancelAsync(resourceName, resourceGroupName, jobName).getSyncPoller();
+    public SyncPoller<PollResult<JobInner>, JobInner> beginCancel(String resourceGroupName, String resourceName,
+        String jobName) {
+        return this.beginCancelAsync(resourceGroupName, resourceName, jobName).getSyncPoller();
     }
 
     /**
      * Cancels the specified job.
-     *
-     * <p>The operation to cancel an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -752,18 +616,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link SyncPoller} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<JobInner>, JobInner> beginCancel(
-        String resourceName, String resourceGroupName, String jobName, Context context) {
-        return this.beginCancelAsync(resourceName, resourceGroupName, jobName, context).getSyncPoller();
+    public SyncPoller<PollResult<JobInner>, JobInner> beginCancel(String resourceGroupName, String resourceName,
+        String jobName, Context context) {
+        return this.beginCancelAsync(resourceGroupName, resourceName, jobName, context).getSyncPoller();
     }
 
     /**
      * Cancels the specified job.
-     *
-     * <p>The operation to cancel an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -771,19 +635,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<JobInner> cancelAsync(String resourceName, String resourceGroupName, String jobName) {
-        return beginCancelAsync(resourceName, resourceGroupName, jobName)
-            .last()
+    private Mono<JobInner> cancelAsync(String resourceGroupName, String resourceName, String jobName) {
+        return beginCancelAsync(resourceGroupName, resourceName, jobName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Cancels the specified job.
-     *
-     * <p>The operation to cancel an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -792,19 +655,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<JobInner> cancelAsync(String resourceName, String resourceGroupName, String jobName, Context context) {
-        return beginCancelAsync(resourceName, resourceGroupName, jobName, context)
-            .last()
+    private Mono<JobInner> cancelAsync(String resourceGroupName, String resourceName, String jobName, Context context) {
+        return beginCancelAsync(resourceGroupName, resourceName, jobName, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Cancels the specified job.
-     *
-     * <p>The operation to cancel an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -812,17 +674,17 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public JobInner cancel(String resourceName, String resourceGroupName, String jobName) {
-        return cancelAsync(resourceName, resourceGroupName, jobName).block();
+    public JobInner cancel(String resourceGroupName, String resourceName, String jobName) {
+        return cancelAsync(resourceGroupName, resourceName, jobName).block();
     }
 
     /**
      * Cancels the specified job.
-     *
-     * <p>The operation to cancel an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to cancel an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -831,17 +693,17 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public JobInner cancel(String resourceName, String resourceGroupName, String jobName, Context context) {
-        return cancelAsync(resourceName, resourceGroupName, jobName, context).block();
+    public JobInner cancel(String resourceGroupName, String resourceName, String jobName, Context context) {
+        return cancelAsync(resourceGroupName, resourceName, jobName, context).block();
     }
 
     /**
      * Restarts the specified job.
-     *
-     * <p>The operation to restart an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to restart an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -849,54 +711,40 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> restartWithResponseAsync(
-        String resourceName, String resourceGroupName, String jobName) {
+    private Mono<Response<Flux<ByteBuffer>>> restartWithResponseAsync(String resourceGroupName, String resourceName,
+        String jobName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (jobName == null) {
             return Mono.error(new IllegalArgumentException("Parameter jobName is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .restart(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            jobName,
-                            accept,
-                            context))
+            .withContext(context -> service.restart(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), jobName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Restarts the specified job.
-     *
-     * <p>The operation to restart an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to restart an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -905,51 +753,39 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> restartWithResponseAsync(
-        String resourceName, String resourceGroupName, String jobName, Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> restartWithResponseAsync(String resourceGroupName, String resourceName,
+        String jobName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (jobName == null) {
             return Mono.error(new IllegalArgumentException("Parameter jobName is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .restart(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                jobName,
-                accept,
-                context);
+        return service.restart(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), jobName, accept, context);
     }
 
     /**
      * Restarts the specified job.
-     *
-     * <p>The operation to restart an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to restart an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -957,22 +793,20 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link PollerFlux} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<JobInner>, JobInner> beginRestartAsync(
-        String resourceName, String resourceGroupName, String jobName) {
-        Mono<Response<Flux<ByteBuffer>>> mono = restartWithResponseAsync(resourceName, resourceGroupName, jobName);
-        return this
-            .client
-            .<JobInner, JobInner>getLroResult(
-                mono, this.client.getHttpPipeline(), JobInner.class, JobInner.class, this.client.getContext());
+    private PollerFlux<PollResult<JobInner>, JobInner> beginRestartAsync(String resourceGroupName, String resourceName,
+        String jobName) {
+        Mono<Response<Flux<ByteBuffer>>> mono = restartWithResponseAsync(resourceGroupName, resourceName, jobName);
+        return this.client.<JobInner, JobInner>getLroResult(mono, this.client.getHttpPipeline(), JobInner.class,
+            JobInner.class, this.client.getContext());
     }
 
     /**
      * Restarts the specified job.
-     *
-     * <p>The operation to restart an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to restart an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -981,24 +815,22 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link PollerFlux} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<JobInner>, JobInner> beginRestartAsync(
-        String resourceName, String resourceGroupName, String jobName, Context context) {
+    private PollerFlux<PollResult<JobInner>, JobInner> beginRestartAsync(String resourceGroupName, String resourceName,
+        String jobName, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            restartWithResponseAsync(resourceName, resourceGroupName, jobName, context);
-        return this
-            .client
-            .<JobInner, JobInner>getLroResult(
-                mono, this.client.getHttpPipeline(), JobInner.class, JobInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = restartWithResponseAsync(resourceGroupName, resourceName, jobName, context);
+        return this.client.<JobInner, JobInner>getLroResult(mono, this.client.getHttpPipeline(), JobInner.class,
+            JobInner.class, context);
     }
 
     /**
      * Restarts the specified job.
-     *
-     * <p>The operation to restart an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to restart an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1006,18 +838,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link SyncPoller} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<JobInner>, JobInner> beginRestart(
-        String resourceName, String resourceGroupName, String jobName) {
-        return this.beginRestartAsync(resourceName, resourceGroupName, jobName).getSyncPoller();
+    public SyncPoller<PollResult<JobInner>, JobInner> beginRestart(String resourceGroupName, String resourceName,
+        String jobName) {
+        return this.beginRestartAsync(resourceGroupName, resourceName, jobName).getSyncPoller();
     }
 
     /**
      * Restarts the specified job.
-     *
-     * <p>The operation to restart an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to restart an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1026,18 +858,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link SyncPoller} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<JobInner>, JobInner> beginRestart(
-        String resourceName, String resourceGroupName, String jobName, Context context) {
-        return this.beginRestartAsync(resourceName, resourceGroupName, jobName, context).getSyncPoller();
+    public SyncPoller<PollResult<JobInner>, JobInner> beginRestart(String resourceGroupName, String resourceName,
+        String jobName, Context context) {
+        return this.beginRestartAsync(resourceGroupName, resourceName, jobName, context).getSyncPoller();
     }
 
     /**
      * Restarts the specified job.
-     *
-     * <p>The operation to restart an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to restart an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1045,19 +877,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<JobInner> restartAsync(String resourceName, String resourceGroupName, String jobName) {
-        return beginRestartAsync(resourceName, resourceGroupName, jobName)
-            .last()
+    private Mono<JobInner> restartAsync(String resourceGroupName, String resourceName, String jobName) {
+        return beginRestartAsync(resourceGroupName, resourceName, jobName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Restarts the specified job.
-     *
-     * <p>The operation to restart an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to restart an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1066,20 +897,19 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<JobInner> restartAsync(
-        String resourceName, String resourceGroupName, String jobName, Context context) {
-        return beginRestartAsync(resourceName, resourceGroupName, jobName, context)
-            .last()
+    private Mono<JobInner> restartAsync(String resourceGroupName, String resourceName, String jobName,
+        Context context) {
+        return beginRestartAsync(resourceGroupName, resourceName, jobName, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Restarts the specified job.
-     *
-     * <p>The operation to restart an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to restart an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1087,17 +917,17 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public JobInner restart(String resourceName, String resourceGroupName, String jobName) {
-        return restartAsync(resourceName, resourceGroupName, jobName).block();
+    public JobInner restart(String resourceGroupName, String resourceName, String jobName) {
+        return restartAsync(resourceGroupName, resourceName, jobName).block();
     }
 
     /**
      * Restarts the specified job.
-     *
-     * <p>The operation to restart an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to restart an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1106,17 +936,17 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public JobInner restart(String resourceName, String resourceGroupName, String jobName, Context context) {
-        return restartAsync(resourceName, resourceGroupName, jobName, context).block();
+    public JobInner restart(String resourceGroupName, String resourceName, String jobName, Context context) {
+        return restartAsync(resourceGroupName, resourceName, jobName, context).block();
     }
 
     /**
      * Resumes the specified job.
-     *
-     * <p>The operation to resume an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resume an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param resumeJobParams Resume rob comments.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1125,26 +955,22 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> resumeWithResponseAsync(
-        String resourceName, String resourceGroupName, String jobName, ResumeJobParams resumeJobParams) {
+    private Mono<Response<Flux<ByteBuffer>>> resumeWithResponseAsync(String resourceGroupName, String resourceName,
+        String jobName, ResumeJobParams resumeJobParams) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (jobName == null) {
             return Mono.error(new IllegalArgumentException("Parameter jobName is required and cannot be null."));
@@ -1158,28 +984,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .resume(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            jobName,
-                            resumeJobParams,
-                            accept,
-                            context))
+                context -> service.resume(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName,
+                    resourceName, this.client.getSubscriptionId(), jobName, resumeJobParams, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Resumes the specified job.
-     *
-     * <p>The operation to resume an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resume an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param resumeJobParams Resume rob comments.
      * @param context The context to associate with this operation.
@@ -1189,30 +1005,22 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> resumeWithResponseAsync(
-        String resourceName,
-        String resourceGroupName,
-        String jobName,
-        ResumeJobParams resumeJobParams,
-        Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> resumeWithResponseAsync(String resourceGroupName, String resourceName,
+        String jobName, ResumeJobParams resumeJobParams, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (jobName == null) {
             return Mono.error(new IllegalArgumentException("Parameter jobName is required and cannot be null."));
@@ -1225,26 +1033,17 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .resume(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                jobName,
-                resumeJobParams,
-                accept,
-                context);
+        return service.resume(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), jobName, resumeJobParams, accept, context);
     }
 
     /**
      * Resumes the specified job.
-     *
-     * <p>The operation to resume an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resume an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param resumeJobParams Resume rob comments.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1253,23 +1052,21 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link PollerFlux} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<JobInner>, JobInner> beginResumeAsync(
-        String resourceName, String resourceGroupName, String jobName, ResumeJobParams resumeJobParams) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            resumeWithResponseAsync(resourceName, resourceGroupName, jobName, resumeJobParams);
-        return this
-            .client
-            .<JobInner, JobInner>getLroResult(
-                mono, this.client.getHttpPipeline(), JobInner.class, JobInner.class, this.client.getContext());
+    private PollerFlux<PollResult<JobInner>, JobInner> beginResumeAsync(String resourceGroupName, String resourceName,
+        String jobName, ResumeJobParams resumeJobParams) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = resumeWithResponseAsync(resourceGroupName, resourceName, jobName, resumeJobParams);
+        return this.client.<JobInner, JobInner>getLroResult(mono, this.client.getHttpPipeline(), JobInner.class,
+            JobInner.class, this.client.getContext());
     }
 
     /**
      * Resumes the specified job.
-     *
-     * <p>The operation to resume an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resume an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param resumeJobParams Resume rob comments.
      * @param context The context to associate with this operation.
@@ -1279,28 +1076,22 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link PollerFlux} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<JobInner>, JobInner> beginResumeAsync(
-        String resourceName,
-        String resourceGroupName,
-        String jobName,
-        ResumeJobParams resumeJobParams,
-        Context context) {
+    private PollerFlux<PollResult<JobInner>, JobInner> beginResumeAsync(String resourceGroupName, String resourceName,
+        String jobName, ResumeJobParams resumeJobParams, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            resumeWithResponseAsync(resourceName, resourceGroupName, jobName, resumeJobParams, context);
-        return this
-            .client
-            .<JobInner, JobInner>getLroResult(
-                mono, this.client.getHttpPipeline(), JobInner.class, JobInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = resumeWithResponseAsync(resourceGroupName, resourceName, jobName, resumeJobParams, context);
+        return this.client.<JobInner, JobInner>getLroResult(mono, this.client.getHttpPipeline(), JobInner.class,
+            JobInner.class, context);
     }
 
     /**
      * Resumes the specified job.
-     *
-     * <p>The operation to resume an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resume an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param resumeJobParams Resume rob comments.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1309,18 +1100,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link SyncPoller} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<JobInner>, JobInner> beginResume(
-        String resourceName, String resourceGroupName, String jobName, ResumeJobParams resumeJobParams) {
-        return this.beginResumeAsync(resourceName, resourceGroupName, jobName, resumeJobParams).getSyncPoller();
+    public SyncPoller<PollResult<JobInner>, JobInner> beginResume(String resourceGroupName, String resourceName,
+        String jobName, ResumeJobParams resumeJobParams) {
+        return this.beginResumeAsync(resourceGroupName, resourceName, jobName, resumeJobParams).getSyncPoller();
     }
 
     /**
      * Resumes the specified job.
-     *
-     * <p>The operation to resume an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resume an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param resumeJobParams Resume rob comments.
      * @param context The context to associate with this operation.
@@ -1330,24 +1121,19 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link SyncPoller} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<JobInner>, JobInner> beginResume(
-        String resourceName,
-        String resourceGroupName,
-        String jobName,
-        ResumeJobParams resumeJobParams,
-        Context context) {
-        return this
-            .beginResumeAsync(resourceName, resourceGroupName, jobName, resumeJobParams, context)
+    public SyncPoller<PollResult<JobInner>, JobInner> beginResume(String resourceGroupName, String resourceName,
+        String jobName, ResumeJobParams resumeJobParams, Context context) {
+        return this.beginResumeAsync(resourceGroupName, resourceName, jobName, resumeJobParams, context)
             .getSyncPoller();
     }
 
     /**
      * Resumes the specified job.
-     *
-     * <p>The operation to resume an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resume an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param resumeJobParams Resume rob comments.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1356,20 +1142,19 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<JobInner> resumeAsync(
-        String resourceName, String resourceGroupName, String jobName, ResumeJobParams resumeJobParams) {
-        return beginResumeAsync(resourceName, resourceGroupName, jobName, resumeJobParams)
-            .last()
+    private Mono<JobInner> resumeAsync(String resourceGroupName, String resourceName, String jobName,
+        ResumeJobParams resumeJobParams) {
+        return beginResumeAsync(resourceGroupName, resourceName, jobName, resumeJobParams).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Resumes the specified job.
-     *
-     * <p>The operation to resume an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resume an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param resumeJobParams Resume rob comments.
      * @param context The context to associate with this operation.
@@ -1379,24 +1164,19 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<JobInner> resumeAsync(
-        String resourceName,
-        String resourceGroupName,
-        String jobName,
-        ResumeJobParams resumeJobParams,
-        Context context) {
-        return beginResumeAsync(resourceName, resourceGroupName, jobName, resumeJobParams, context)
-            .last()
+    private Mono<JobInner> resumeAsync(String resourceGroupName, String resourceName, String jobName,
+        ResumeJobParams resumeJobParams, Context context) {
+        return beginResumeAsync(resourceGroupName, resourceName, jobName, resumeJobParams, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Resumes the specified job.
-     *
-     * <p>The operation to resume an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resume an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param resumeJobParams Resume rob comments.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1405,18 +1185,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public JobInner resume(
-        String resourceName, String resourceGroupName, String jobName, ResumeJobParams resumeJobParams) {
-        return resumeAsync(resourceName, resourceGroupName, jobName, resumeJobParams).block();
+    public JobInner resume(String resourceGroupName, String resourceName, String jobName,
+        ResumeJobParams resumeJobParams) {
+        return resumeAsync(resourceGroupName, resourceName, jobName, resumeJobParams).block();
     }
 
     /**
      * Resumes the specified job.
-     *
-     * <p>The operation to resume an Azure Site Recovery job.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resume an Azure Site Recovery job.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobName Job identifier.
      * @param resumeJobParams Resume rob comments.
      * @param context The context to associate with this operation.
@@ -1426,22 +1206,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public JobInner resume(
-        String resourceName,
-        String resourceGroupName,
-        String jobName,
-        ResumeJobParams resumeJobParams,
-        Context context) {
-        return resumeAsync(resourceName, resourceGroupName, jobName, resumeJobParams, context).block();
+    public JobInner resume(String resourceGroupName, String resourceName, String jobName,
+        ResumeJobParams resumeJobParams, Context context) {
+        return resumeAsync(resourceGroupName, resourceName, jobName, resumeJobParams, context).block();
     }
 
     /**
      * Exports the details of the Azure Site Recovery jobs of the vault.
-     *
-     * <p>The operation to export the details of the Azure Site Recovery jobs of the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to export the details of the Azure Site Recovery jobs of the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobQueryParameter job query filter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1449,26 +1225,22 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> exportWithResponseAsync(
-        String resourceName, String resourceGroupName, JobQueryParameter jobQueryParameter) {
+    private Mono<Response<Flux<ByteBuffer>>> exportWithResponseAsync(String resourceGroupName, String resourceName,
+        JobQueryParameter jobQueryParameter) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (jobQueryParameter == null) {
             return Mono
@@ -1478,28 +1250,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .export(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            resourceName,
-                            resourceGroupName,
-                            this.client.getSubscriptionId(),
-                            jobQueryParameter,
-                            accept,
-                            context))
+            .withContext(context -> service.export(this.client.getEndpoint(), this.client.getApiVersion(),
+                resourceGroupName, resourceName, this.client.getSubscriptionId(), jobQueryParameter, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Exports the details of the Azure Site Recovery jobs of the vault.
-     *
-     * <p>The operation to export the details of the Azure Site Recovery jobs of the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to export the details of the Azure Site Recovery jobs of the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobQueryParameter job query filter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1508,26 +1270,22 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> exportWithResponseAsync(
-        String resourceName, String resourceGroupName, JobQueryParameter jobQueryParameter, Context context) {
+    private Mono<Response<Flux<ByteBuffer>>> exportWithResponseAsync(String resourceGroupName, String resourceName,
+        JobQueryParameter jobQueryParameter, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
+        if (resourceName == null) {
+            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (jobQueryParameter == null) {
             return Mono
@@ -1537,25 +1295,17 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .export(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                resourceName,
-                resourceGroupName,
-                this.client.getSubscriptionId(),
-                jobQueryParameter,
-                accept,
-                context);
+        return service.export(this.client.getEndpoint(), this.client.getApiVersion(), resourceGroupName, resourceName,
+            this.client.getSubscriptionId(), jobQueryParameter, accept, context);
     }
 
     /**
      * Exports the details of the Azure Site Recovery jobs of the vault.
-     *
-     * <p>The operation to export the details of the Azure Site Recovery jobs of the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to export the details of the Azure Site Recovery jobs of the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobQueryParameter job query filter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1563,23 +1313,21 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link PollerFlux} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<JobInner>, JobInner> beginExportAsync(
-        String resourceName, String resourceGroupName, JobQueryParameter jobQueryParameter) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            exportWithResponseAsync(resourceName, resourceGroupName, jobQueryParameter);
-        return this
-            .client
-            .<JobInner, JobInner>getLroResult(
-                mono, this.client.getHttpPipeline(), JobInner.class, JobInner.class, this.client.getContext());
+    private PollerFlux<PollResult<JobInner>, JobInner> beginExportAsync(String resourceGroupName, String resourceName,
+        JobQueryParameter jobQueryParameter) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = exportWithResponseAsync(resourceGroupName, resourceName, jobQueryParameter);
+        return this.client.<JobInner, JobInner>getLroResult(mono, this.client.getHttpPipeline(), JobInner.class,
+            JobInner.class, this.client.getContext());
     }
 
     /**
      * Exports the details of the Azure Site Recovery jobs of the vault.
-     *
-     * <p>The operation to export the details of the Azure Site Recovery jobs of the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to export the details of the Azure Site Recovery jobs of the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobQueryParameter job query filter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1588,24 +1336,22 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link PollerFlux} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<JobInner>, JobInner> beginExportAsync(
-        String resourceName, String resourceGroupName, JobQueryParameter jobQueryParameter, Context context) {
+    private PollerFlux<PollResult<JobInner>, JobInner> beginExportAsync(String resourceGroupName, String resourceName,
+        JobQueryParameter jobQueryParameter, Context context) {
         context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            exportWithResponseAsync(resourceName, resourceGroupName, jobQueryParameter, context);
-        return this
-            .client
-            .<JobInner, JobInner>getLroResult(
-                mono, this.client.getHttpPipeline(), JobInner.class, JobInner.class, context);
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = exportWithResponseAsync(resourceGroupName, resourceName, jobQueryParameter, context);
+        return this.client.<JobInner, JobInner>getLroResult(mono, this.client.getHttpPipeline(), JobInner.class,
+            JobInner.class, context);
     }
 
     /**
      * Exports the details of the Azure Site Recovery jobs of the vault.
-     *
-     * <p>The operation to export the details of the Azure Site Recovery jobs of the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to export the details of the Azure Site Recovery jobs of the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobQueryParameter job query filter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1613,18 +1359,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link SyncPoller} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<JobInner>, JobInner> beginExport(
-        String resourceName, String resourceGroupName, JobQueryParameter jobQueryParameter) {
-        return this.beginExportAsync(resourceName, resourceGroupName, jobQueryParameter).getSyncPoller();
+    public SyncPoller<PollResult<JobInner>, JobInner> beginExport(String resourceGroupName, String resourceName,
+        JobQueryParameter jobQueryParameter) {
+        return this.beginExportAsync(resourceGroupName, resourceName, jobQueryParameter).getSyncPoller();
     }
 
     /**
      * Exports the details of the Azure Site Recovery jobs of the vault.
-     *
-     * <p>The operation to export the details of the Azure Site Recovery jobs of the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to export the details of the Azure Site Recovery jobs of the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobQueryParameter job query filter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1633,18 +1379,18 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return the {@link SyncPoller} for polling of job details.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<JobInner>, JobInner> beginExport(
-        String resourceName, String resourceGroupName, JobQueryParameter jobQueryParameter, Context context) {
-        return this.beginExportAsync(resourceName, resourceGroupName, jobQueryParameter, context).getSyncPoller();
+    public SyncPoller<PollResult<JobInner>, JobInner> beginExport(String resourceGroupName, String resourceName,
+        JobQueryParameter jobQueryParameter, Context context) {
+        return this.beginExportAsync(resourceGroupName, resourceName, jobQueryParameter, context).getSyncPoller();
     }
 
     /**
      * Exports the details of the Azure Site Recovery jobs of the vault.
-     *
-     * <p>The operation to export the details of the Azure Site Recovery jobs of the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to export the details of the Azure Site Recovery jobs of the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobQueryParameter job query filter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1652,20 +1398,19 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<JobInner> exportAsync(
-        String resourceName, String resourceGroupName, JobQueryParameter jobQueryParameter) {
-        return beginExportAsync(resourceName, resourceGroupName, jobQueryParameter)
-            .last()
+    private Mono<JobInner> exportAsync(String resourceGroupName, String resourceName,
+        JobQueryParameter jobQueryParameter) {
+        return beginExportAsync(resourceGroupName, resourceName, jobQueryParameter).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Exports the details of the Azure Site Recovery jobs of the vault.
-     *
-     * <p>The operation to export the details of the Azure Site Recovery jobs of the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to export the details of the Azure Site Recovery jobs of the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobQueryParameter job query filter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1674,20 +1419,19 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<JobInner> exportAsync(
-        String resourceName, String resourceGroupName, JobQueryParameter jobQueryParameter, Context context) {
-        return beginExportAsync(resourceName, resourceGroupName, jobQueryParameter, context)
-            .last()
+    private Mono<JobInner> exportAsync(String resourceGroupName, String resourceName,
+        JobQueryParameter jobQueryParameter, Context context) {
+        return beginExportAsync(resourceGroupName, resourceName, jobQueryParameter, context).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Exports the details of the Azure Site Recovery jobs of the vault.
-     *
-     * <p>The operation to export the details of the Azure Site Recovery jobs of the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to export the details of the Azure Site Recovery jobs of the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobQueryParameter job query filter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1695,17 +1439,17 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public JobInner export(String resourceName, String resourceGroupName, JobQueryParameter jobQueryParameter) {
-        return exportAsync(resourceName, resourceGroupName, jobQueryParameter).block();
+    public JobInner export(String resourceGroupName, String resourceName, JobQueryParameter jobQueryParameter) {
+        return exportAsync(resourceGroupName, resourceName, jobQueryParameter).block();
     }
 
     /**
      * Exports the details of the Azure Site Recovery jobs of the vault.
-     *
-     * <p>The operation to export the details of the Azure Site Recovery jobs of the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to export the details of the Azure Site Recovery jobs of the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param jobQueryParameter job query filter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1714,16 +1458,15 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
      * @return job details.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public JobInner export(
-        String resourceName, String resourceGroupName, JobQueryParameter jobQueryParameter, Context context) {
-        return exportAsync(resourceName, resourceGroupName, jobQueryParameter, context).block();
+    public JobInner export(String resourceGroupName, String resourceName, JobQueryParameter jobQueryParameter,
+        Context context) {
+        return exportAsync(resourceGroupName, resourceName, jobQueryParameter, context).block();
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1735,31 +1478,20 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        return FluxUtil
-            .withContext(context -> service.listNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<JobInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+        return FluxUtil.withContext(context -> service.listNext(nextLink, this.client.getEndpoint(), accept, context))
+            .<PagedResponse<JobInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1772,23 +1504,13 @@ public final class ReplicationJobsClientImpl implements ReplicationJobsClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .listNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        return service.listNext(nextLink, this.client.getEndpoint(), accept, context)
+            .map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(),
+                res.getValue().value(), res.getValue().nextLink(), null));
     }
 }

@@ -3,11 +3,14 @@
 package com.azure.cosmos.models;
 
 import com.azure.cosmos.ChangeFeedProcessor;
+import com.azure.cosmos.ThroughputControlGroupConfig;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 import java.time.Instant;
+
+import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNotNull;
 
 /**
  * Specifies the options associated with {@link ChangeFeedProcessor}.
@@ -17,6 +20,8 @@ public final class ChangeFeedProcessorOptions {
      * Default renew interval.
      */
     public static final Duration DEFAULT_RENEW_INTERVAL = Duration.ofMillis(0).plusSeconds(17);
+
+    public static final boolean DEFAULT_LEASE_VERIFICATION_ON_RESTART_ENABLED = false;
 
     /**
      * Default acquire interval.
@@ -45,8 +50,18 @@ public final class ChangeFeedProcessorOptions {
     private boolean startFromBeginning;
     private int minScaleCount;
     private int maxScaleCount;
+    /**
+     * Maximum number of leases the instance will try to acquire in a single load balancing cycle.
+     * <p>
+     * A value of {@code 0} keeps the legacy behavior (which is intentionally conservative when multiple workers exist and
+     * typically attempts to acquire at most one lease per cycle).
+     */
+    private int maxLeasesToAcquirePerCycle;
+
+    private boolean leaseVerificationOnRestartEnabled;
 
     private Scheduler scheduler;
+    private ThroughputControlGroupConfig feedPollThroughputControlGroupConfig;
 
     /**
      * Instantiates a new Change feed processor options.
@@ -59,8 +74,12 @@ public final class ChangeFeedProcessorOptions {
         this.leaseExpirationInterval = DEFAULT_EXPIRATION_INTERVAL;
         this.feedPollDelay = DEFAULT_FEED_POLL_DELAY;
         this.maxScaleCount = 0; // unlimited
+        // 0 -> legacy behavior (typically acquires at most one lease per balancing cycle when multiple CFP instances exist).
+        this.maxLeasesToAcquirePerCycle = 0;
 
         this.scheduler = Schedulers.boundedElastic();
+        this.feedPollThroughputControlGroupConfig = null;
+        this.leaseVerificationOnRestartEnabled = DEFAULT_LEASE_VERIFICATION_ON_RESTART_ENABLED;
     }
 
     /**
@@ -103,6 +122,37 @@ public final class ChangeFeedProcessorOptions {
      */
     public ChangeFeedProcessorOptions setLeaseAcquireInterval(Duration leaseAcquireInterval) {
         this.leaseAcquireInterval = leaseAcquireInterval;
+        return this;
+    }
+
+    /**
+     * Gets the maximum number of leases the instance will try to acquire in a single load balancing cycle.
+     * <p>
+     * A value of {@code 0} keeps the legacy behavior.
+     *
+     * @return maximum leases to acquire per cycle, or {@code 0} for legacy behavior.
+     */
+    public int getMaxLeasesToAcquirePerCycle() {
+        return this.maxLeasesToAcquirePerCycle;
+    }
+
+    /**
+     * Sets the maximum number of leases the instance will try to acquire in a single load balancing cycle.
+     * <p>
+     * Use this to speed up acquisition of unused/expired leases after scale-out or rolling deployments when using
+     * ephemeral host names.
+     * A value of {@code 0} keeps the legacy behavior.
+     * Higher values may increase RU consumption in the lease container and can increase lease acquisition conflicts
+     * when many instances are starting at the same time.
+     *
+     * @param maxLeasesToAcquirePerCycle max leases to acquire per cycle, or {@code 0} for legacy behavior.
+     * @return the current ChangeFeedProcessorOptions instance.
+     */
+    public ChangeFeedProcessorOptions setMaxLeasesToAcquirePerCycle(int maxLeasesToAcquirePerCycle) {
+        if (maxLeasesToAcquirePerCycle < 0) {
+            throw new IllegalArgumentException("maxLeasesToAcquirePerCycle cannot be negative");
+        }
+        this.maxLeasesToAcquirePerCycle = maxLeasesToAcquirePerCycle;
         return this;
     }
 
@@ -368,5 +418,55 @@ public final class ChangeFeedProcessorOptions {
         }
         this.scheduler = scheduler;
         return this;
+    }
+
+    /***
+     * Set the feed poll local throughput control config.
+     *
+     * Please use this config with caution. By default, CFP will try to process the changes as fast as possible,
+     * only use this config if you want to limit the RU that can be used for your change feed processing.
+     * By using this config, it can slow down the process and cause the lag.
+     * 
+     * For direct mode, please configure the throughput control group with the total RU you would allow for changeFeed processing.
+     * For gateway mode, please configure the throughput control group with the total RU you would allow for changeFeed processing / total CFP Instances.
+     *
+     * @param feedPollThroughputControlGroupConfig the throughput control for change feed requests for the monitored collection
+     * @return the {@link ChangeFeedProcessorOptions}.
+     */
+    public ChangeFeedProcessorOptions setFeedPollThroughputControlConfig(ThroughputControlGroupConfig feedPollThroughputControlGroupConfig) {
+        checkNotNull(
+            feedPollThroughputControlGroupConfig,
+            "Argument 'feedPollThroughputControlGroupConfig' can not be null");
+        this.feedPollThroughputControlGroupConfig = feedPollThroughputControlGroupConfig;
+
+        return this;
+    }
+
+    /**
+     * Get the feed pool throughput control config.
+     * @return the {@link ThroughputControlGroupConfig}.
+     */
+    public ThroughputControlGroupConfig getFeedPollThroughputControlGroupConfig() {
+        return this.feedPollThroughputControlGroupConfig;
+    }
+
+    /**
+     * Sets a flag to indicate whether on restart a check for missing leases should be executed. Usually this is not
+     * required - but it can help to ensure all leases are processed continuously if any other application or
+     * administrator etc. manually modifies lease documents. So, it is an additional safeguard to ensure correctness.
+     * @param enableLeaseVerificationOnRestart true to enable lease verification
+     * @return the {@link ChangeFeedProcessorOptions}.
+     */
+    public ChangeFeedProcessorOptions setLeaseVerificationEnabledOnRestart(boolean enableLeaseVerificationOnRestart) {
+        this.leaseVerificationOnRestartEnabled = enableLeaseVerificationOnRestart;
+        return this;
+    }
+
+    /**
+     * Gets a flag indicating whether a check for missing leases is done on every restart of the ChangeFeedProcessor.
+     * @return a flag indicating whether a check for missing leases is done on every restart of the ChangeFeedProcessor.
+     */
+    public boolean isLeaseVerificationEnabledOnRestart() {
+        return this.leaseVerificationOnRestartEnabled;
     }
 }

@@ -5,37 +5,89 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Response body structure for creating data flow debug session. */
+/**
+ * Response body structure for creating data flow debug session.
+ */
 @Fluent
-public final class CreateDataFlowDebugSessionResponse {
+public final class CreateDataFlowDebugSessionResponse implements JsonSerializable<CreateDataFlowDebugSessionResponse> {
     /*
      * The ID of data flow debug session.
      */
-    @JsonProperty(value = "sessionId")
+    @Generated
     private String sessionId;
 
-    /** Creates an instance of CreateDataFlowDebugSessionResponse class. */
-    public CreateDataFlowDebugSessionResponse() {}
+    /**
+     * Creates an instance of CreateDataFlowDebugSessionResponse class.
+     */
+    @Generated
+    public CreateDataFlowDebugSessionResponse() {
+    }
 
     /**
      * Get the sessionId property: The ID of data flow debug session.
-     *
+     * 
      * @return the sessionId value.
      */
+    @Generated
     public String getSessionId() {
         return this.sessionId;
     }
 
     /**
      * Set the sessionId property: The ID of data flow debug session.
-     *
+     * 
      * @param sessionId the sessionId value to set.
      * @return the CreateDataFlowDebugSessionResponse object itself.
      */
+    @Generated
     public CreateDataFlowDebugSessionResponse setSessionId(String sessionId) {
         this.sessionId = sessionId;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("sessionId", this.sessionId);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CreateDataFlowDebugSessionResponse from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CreateDataFlowDebugSessionResponse if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the CreateDataFlowDebugSessionResponse.
+     */
+    @Generated
+    public static CreateDataFlowDebugSessionResponse fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CreateDataFlowDebugSessionResponse deserializedCreateDataFlowDebugSessionResponse
+                = new CreateDataFlowDebugSessionResponse();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sessionId".equals(fieldName)) {
+                    deserializedCreateDataFlowDebugSessionResponse.sessionId = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedCreateDataFlowDebugSessionResponse;
+        });
     }
 }

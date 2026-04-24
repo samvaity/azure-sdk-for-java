@@ -4,14 +4,18 @@
 
 package com.azure.resourcemanager.iothub.generated;
 
-/** Samples for Certificates Get. */
+/**
+ * Samples for Certificates Get.
+ */
 public final class CertificatesGetSamples {
     /*
-     * x-ms-original-file: specification/iothub/resource-manager/Microsoft.Devices/preview/2022-11-15-preview/examples/iothub_getcertificate.json
+     * x-ms-original-file:
+     * specification/iothub/resource-manager/Microsoft.Devices/IoTHub/preview/2025-08-01-preview/examples/
+     * iothub_getcertificate.json
      */
     /**
      * Sample code: Certificates_Get.
-     *
+     * 
      * @param manager Entry point to IotHubManager.
      */
     public static void certificatesGet(com.azure.resourcemanager.iothub.IotHubManager manager) {

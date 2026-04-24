@@ -6,11 +6,9 @@ package com.azure.resourcemanager.iothub.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.iothub.IotHubManager;
 import com.azure.resourcemanager.iothub.models.RoutingMessage;
 import com.azure.resourcemanager.iothub.models.RoutingSource;
@@ -18,76 +16,47 @@ import com.azure.resourcemanager.iothub.models.RoutingTwin;
 import com.azure.resourcemanager.iothub.models.RoutingTwinProperties;
 import com.azure.resourcemanager.iothub.models.TestAllRoutesInput;
 import com.azure.resourcemanager.iothub.models.TestAllRoutesResult;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class IotHubResourcesTestAllRoutesWithResponseMockTests {
     @Test
     public void testTestAllRoutesWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"routes\":[{\"properties\":{\"name\":\"zsjqlh\",\"source\":\"TwinChangeEvents\",\"condition\":\"ibdeibq\",\"endpointNames\":[\"qkgh\"],\"isEnabled\":false}},{\"properties\":{\"name\":\"dzwmkrefajpj\",\"source\":\"DeviceMessages\",\"condition\":\"kqnyh\",\"endpointNames\":[\"ij\"],\"isEnabled\":true}},{\"properties\":{\"name\":\"vfxzsjab\",\"source\":\"DeviceConnectionStateEvents\",\"condition\":\"ystawfsdjpvkvp\",\"endpointNames\":[\"xbkzbzkdvncj\",\"budurgkakmo\",\"zhjjklffhmouwq\"],\"isEnabled\":false}},{\"properties\":{\"name\":\"rfzeey\",\"source\":\"DeviceJobLifecycleEvents\",\"condition\":\"zi\",\"endpointNames\":[\"yuhqlbjbsybbqwrv\",\"ldgmfpgvmpip\",\"slthaq\"],\"isEnabled\":false}}]}";
 
-        String responseStr = "{\"routes\":[{}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        IotHubManager manager = IotHubManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        TestAllRoutesResult response = manager.iotHubResources()
+            .testAllRoutesWithResponse("kyhejhzisxgf", "elolppvksrpqvuj",
+                new TestAllRoutesInput().withRoutingSource(RoutingSource.TWIN_CHANGE_EVENTS)
+                    .withMessage(new RoutingMessage().withBody("twdw")
+                        .withAppProperties(mapOf("dl", "swibyr", "hfwpracstwit", "h"))
+                        .withSystemProperties(mapOf("md", "evxccedcp", "zxltjcvn", "odn")))
+                    .withTwin(new RoutingTwin().withTags("dataiugcxnavvwxq")
+                        .withProperties(new RoutingTwinProperties().withDesired("dataqunyowxwlmdjr")
+                            .withReported("datafgbvfvpdbo"))),
+                com.azure.core.util.Context.NONE)
+            .getValue();
 
-        IotHubManager manager =
-            IotHubManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        TestAllRoutesResult response =
-            manager
-                .iotHubResources()
-                .testAllRoutesWithResponse(
-                    "ygqukyhejh",
-                    "isxgfp",
-                    new TestAllRoutesInput()
-                        .withRoutingSource(RoutingSource.DEVICE_CONNECTION_STATE_EVENTS)
-                        .withMessage(
-                            new RoutingMessage()
-                                .withBody("pv")
-                                .withAppProperties(mapOf("swibyr", "pqvujzraehtwdwrf"))
-                                .withSystemProperties(mapOf("hevxcced", "bhshfwpracstwity")))
-                        .withTwin(
-                            new RoutingTwin()
-                                .withTags("datamd")
-                                .withProperties(
-                                    new RoutingTwinProperties()
-                                        .withDesired("datanwzxltjcv")
-                                        .withReported("dataltiugcxnavv"))),
-                    com.azure.core.util.Context.NONE)
-                .getValue();
+        Assertions.assertEquals("zsjqlh", response.routes().get(0).properties().name());
+        Assertions.assertEquals(RoutingSource.TWIN_CHANGE_EVENTS, response.routes().get(0).properties().source());
+        Assertions.assertEquals("ibdeibq", response.routes().get(0).properties().condition());
+        Assertions.assertEquals("qkgh", response.routes().get(0).properties().endpointNames().get(0));
+        Assertions.assertFalse(response.routes().get(0).properties().isEnabled());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

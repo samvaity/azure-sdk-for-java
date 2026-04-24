@@ -8,7 +8,7 @@ import com.azure.core.annotation.Immutable;
 import com.azure.core.util.IterableStream;
 
 /**
- * The {@link ExtractiveSummaryResult} model.
+ * The {@code ExtractiveSummaryResult} model.
  */
 @Immutable
 public final class ExtractiveSummaryResult extends TextAnalyticsResult {
@@ -16,24 +16,24 @@ public final class ExtractiveSummaryResult extends TextAnalyticsResult {
     private IterableStream<TextAnalyticsWarning> warnings;
 
     static {
-        ExtractiveSummaryResultPropertiesHelper.setAccessor(
-            new ExtractiveSummaryResultPropertiesHelper.ExtractiveSummaryResultAccessor() {
+        ExtractiveSummaryResultPropertiesHelper
+            .setAccessor(new ExtractiveSummaryResultPropertiesHelper.ExtractiveSummaryResultAccessor() {
                 @Override
                 public void setSentences(ExtractiveSummaryResult documentResult,
-                                         IterableStream<ExtractiveSummarySentence> sentences) {
+                    IterableStream<ExtractiveSummarySentence> sentences) {
                     documentResult.setSentences(sentences);
                 }
 
                 @Override
                 public void setWarnings(ExtractiveSummaryResult documentResult,
-                                        IterableStream<TextAnalyticsWarning> warnings) {
+                    IterableStream<TextAnalyticsWarning> warnings) {
                     documentResult.setWarnings(warnings);
                 }
             });
     }
 
     /**
-     * Creates a {@link ExtractiveSummaryResult} model that describes extractive summarization result.
+     * Creates a {@code ExtractiveSummaryResult} model that describes extractive summarization result.
      *
      * @param id Unique, non-empty document identifier.
      * @param textDocumentStatistics The text document statistics.

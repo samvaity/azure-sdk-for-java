@@ -6,6 +6,7 @@ package com.azure.containers.containerregistry.implementation.models;
 
 import com.azure.containers.containerregistry.models.ArtifactManifestPlatform;
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.json.JsonReader;
 import com.azure.json.JsonSerializable;
 import com.azure.json.JsonToken;
@@ -13,37 +14,50 @@ import com.azure.json.JsonWriter;
 import java.io.IOException;
 import java.util.List;
 
-/** List of manifest attributes. */
+/**
+ * List of manifest attributes.
+ */
 @Fluent
 public final class ManifestAttributesManifest implements JsonSerializable<ManifestAttributesManifest> {
     /*
      * List of manifest attributes details
      */
+    @Generated
     private List<ArtifactManifestPlatform> references;
 
-    /** Creates an instance of ManifestAttributesManifest class. */
-    public ManifestAttributesManifest() {}
+    /**
+     * Creates an instance of ManifestAttributesManifest class.
+     */
+    @Generated
+    public ManifestAttributesManifest() {
+    }
 
     /**
      * Get the references property: List of manifest attributes details.
-     *
+     * 
      * @return the references value.
      */
+    @Generated
     public List<ArtifactManifestPlatform> getReferences() {
         return this.references;
     }
 
     /**
      * Set the references property: List of manifest attributes details.
-     *
+     * 
      * @param references the references value to set.
      * @return the ManifestAttributesManifest object itself.
      */
+    @Generated
     public ManifestAttributesManifest setReferences(List<ArtifactManifestPlatform> references) {
         this.references = references;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
         jsonWriter.writeStartObject();
@@ -53,31 +67,30 @@ public final class ManifestAttributesManifest implements JsonSerializable<Manife
 
     /**
      * Reads an instance of ManifestAttributesManifest from the JsonReader.
-     *
+     * 
      * @param jsonReader The JsonReader being read.
      * @return An instance of ManifestAttributesManifest if the JsonReader was pointing to an instance of it, or null if
-     *     it was pointing to JSON null.
+     * it was pointing to JSON null.
      * @throws IOException If an error occurs while reading the ManifestAttributesManifest.
      */
+    @Generated
     public static ManifestAttributesManifest fromJson(JsonReader jsonReader) throws IOException {
-        return jsonReader.readObject(
-                reader -> {
-                    ManifestAttributesManifest deserializedManifestAttributesManifest =
-                            new ManifestAttributesManifest();
-                    while (reader.nextToken() != JsonToken.END_OBJECT) {
-                        String fieldName = reader.getFieldName();
-                        reader.nextToken();
+        return jsonReader.readObject(reader -> {
+            ManifestAttributesManifest deserializedManifestAttributesManifest = new ManifestAttributesManifest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
 
-                        if ("references".equals(fieldName)) {
-                            List<ArtifactManifestPlatform> references =
-                                    reader.readArray(reader1 -> ArtifactManifestPlatform.fromJson(reader1));
-                            deserializedManifestAttributesManifest.references = references;
-                        } else {
-                            reader.skipChildren();
-                        }
-                    }
+                if ("references".equals(fieldName)) {
+                    List<ArtifactManifestPlatform> references
+                        = reader.readArray(reader1 -> ArtifactManifestPlatform.fromJson(reader1));
+                    deserializedManifestAttributesManifest.references = references;
+                } else {
+                    reader.skipChildren();
+                }
+            }
 
-                    return deserializedManifestAttributesManifest;
-                });
+            return deserializedManifestAttributesManifest;
+        });
     }
 }

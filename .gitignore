@@ -1,5 +1,6 @@
 # Default Assets restore directory
 .assets
+test-proxy.log
 
 *.class
 
@@ -14,6 +15,7 @@ temp/
 
 # Sensitive files
 *.json.env
+.env
 
 #javadoc overview files generated from README.md
 readme_overview.html
@@ -78,7 +80,8 @@ dependency-reduced-pom.xml
 package-lock.json
 
 # VS Code
-.vscode/
+.vscode/*
+!.vscode/mcp.json
 .factorypath
 jacoco.exec
 .vs/
@@ -108,6 +111,10 @@ scalastyle-output.xml
 # Flatten-pom
 .flattened-pom.xml
 flatter.pom
+
+# Local Maven extensions (credential provider for Azure Artifacts)
+.mvn/extensions.xml
+
 /.vs/
 
 
@@ -119,3 +126,6 @@ stress-test-addons*
 
 # Temp typespec files
 TempTypeSpecFiles/
+
+# Azure Artifacts Credential Provider runtime
+.azure-artifacts/

@@ -26,6 +26,7 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.resourcemanager.policyinsights.fluent.PolicyEventsClient;
 import com.azure.resourcemanager.policyinsights.fluent.models.PolicyEventInner;
 import com.azure.resourcemanager.policyinsights.models.PolicyEventsQueryResults;
@@ -33,22 +34,28 @@ import com.azure.resourcemanager.policyinsights.models.PolicyEventsResourceType;
 import java.time.OffsetDateTime;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in PolicyEventsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in PolicyEventsClient.
+ */
 public final class PolicyEventsClientImpl implements PolicyEventsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final PolicyEventsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final PolicyInsightsClientImpl client;
 
     /**
      * Initializes an instance of PolicyEventsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     PolicyEventsClientImpl(PolicyInsightsClientImpl client) {
-        this.service =
-            RestProxy.create(PolicyEventsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(PolicyEventsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -57,103 +64,121 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      * perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "PolicyInsightsClient")
-    private interface PolicyEventsService {
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/providers/{managementGroupsNamespace}/managementGroups/{managementGroupName}/providers"
-                + "/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
-        @ExpectedResponses({200})
+    @ServiceInterface(name = "PolicyInsightsClientPolicyEvents")
+    public interface PolicyEventsService {
+        @Headers({ "Content-Type: application/json" })
+        @Post("/providers/{managementGroupsNamespace}/managementGroups/{managementGroupName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PolicyEventsQueryResults>> listQueryResultsForManagementGroup(
-            @HostParam("$host") String endpoint,
+        Mono<Response<PolicyEventsQueryResults>> listQueryResultsForManagementGroup(@HostParam("$host") String endpoint,
             @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
             @PathParam("managementGroupsNamespace") String managementGroupsNamespace,
-            @PathParam("managementGroupName") String managementGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$orderby") String orderBy,
-            @QueryParam("$select") String select,
-            @QueryParam("$from") OffsetDateTime from,
-            @QueryParam("$to") OffsetDateTime to,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$apply") String apply,
-            @QueryParam("$skiptoken") String skipToken,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("managementGroupName") String managementGroupName, @QueryParam("api-version") String apiVersion,
+            @QueryParam("$top") Integer top, @QueryParam("$orderby") String orderBy,
+            @QueryParam("$select") String select, @QueryParam("$from") OffsetDateTime from,
+            @QueryParam("$to") OffsetDateTime to, @QueryParam("$filter") String filter,
+            @QueryParam("$apply") String apply, @QueryParam("$skiptoken") String skipToken,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}"
-                + "/queryResults")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/providers/{managementGroupsNamespace}/managementGroups/{managementGroupName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PolicyEventsQueryResults>> listQueryResultsForSubscription(
-            @HostParam("$host") String endpoint,
+        Response<PolicyEventsQueryResults> listQueryResultsForManagementGroupSync(@HostParam("$host") String endpoint,
+            @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
+            @PathParam("managementGroupsNamespace") String managementGroupsNamespace,
+            @PathParam("managementGroupName") String managementGroupName, @QueryParam("api-version") String apiVersion,
+            @QueryParam("$top") Integer top, @QueryParam("$orderby") String orderBy,
+            @QueryParam("$select") String select, @QueryParam("$from") OffsetDateTime from,
+            @QueryParam("$to") OffsetDateTime to, @QueryParam("$filter") String filter,
+            @QueryParam("$apply") String apply, @QueryParam("$skiptoken") String skipToken,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<PolicyEventsQueryResults>> listQueryResultsForSubscription(@HostParam("$host") String endpoint,
+            @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
+            @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion,
+            @QueryParam("$top") Integer top, @QueryParam("$orderby") String orderBy,
+            @QueryParam("$select") String select, @QueryParam("$from") OffsetDateTime from,
+            @QueryParam("$to") OffsetDateTime to, @QueryParam("$filter") String filter,
+            @QueryParam("$apply") String apply, @QueryParam("$skiptoken") String skipToken,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PolicyEventsQueryResults> listQueryResultsForSubscriptionSync(@HostParam("$host") String endpoint,
+            @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
+            @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion,
+            @QueryParam("$top") Integer top, @QueryParam("$orderby") String orderBy,
+            @QueryParam("$select") String select, @QueryParam("$from") OffsetDateTime from,
+            @QueryParam("$to") OffsetDateTime to, @QueryParam("$filter") String filter,
+            @QueryParam("$apply") String apply, @QueryParam("$skiptoken") String skipToken,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<PolicyEventsQueryResults>> listQueryResultsForResourceGroup(@HostParam("$host") String endpoint,
             @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
             @PathParam("subscriptionId") String subscriptionId,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$orderby") String orderBy,
-            @QueryParam("$select") String select,
-            @QueryParam("$from") OffsetDateTime from,
-            @QueryParam("$to") OffsetDateTime to,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$apply") String apply,
-            @QueryParam("$skiptoken") String skipToken,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("api-version") String apiVersion,
+            @QueryParam("$top") Integer top, @QueryParam("$orderby") String orderBy,
+            @QueryParam("$select") String select, @QueryParam("$from") OffsetDateTime from,
+            @QueryParam("$to") OffsetDateTime to, @QueryParam("$filter") String filter,
+            @QueryParam("$apply") String apply, @QueryParam("$skiptoken") String skipToken,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights"
-                + "/policyEvents/{policyEventsResource}/queryResults")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PolicyEventsQueryResults>> listQueryResultsForResourceGroup(
-            @HostParam("$host") String endpoint,
+        Response<PolicyEventsQueryResults> listQueryResultsForResourceGroupSync(@HostParam("$host") String endpoint,
             @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$orderby") String orderBy,
-            @QueryParam("$select") String select,
-            @QueryParam("$from") OffsetDateTime from,
-            @QueryParam("$to") OffsetDateTime to,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$apply") String apply,
-            @QueryParam("$skiptoken") String skipToken,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("api-version") String apiVersion,
+            @QueryParam("$top") Integer top, @QueryParam("$orderby") String orderBy,
+            @QueryParam("$select") String select, @QueryParam("$from") OffsetDateTime from,
+            @QueryParam("$to") OffsetDateTime to, @QueryParam("$filter") String filter,
+            @QueryParam("$apply") String apply, @QueryParam("$skiptoken") String skipToken,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Post("/{resourceId}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PolicyEventsQueryResults>> listQueryResultsForResource(
-            @HostParam("$host") String endpoint,
+        Mono<Response<PolicyEventsQueryResults>> listQueryResultsForResource(@HostParam("$host") String endpoint,
             @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
             @PathParam(value = "resourceId", encoded = true) String resourceId,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$orderby") String orderBy,
-            @QueryParam("$select") String select,
-            @QueryParam("$from") OffsetDateTime from,
-            @QueryParam("$to") OffsetDateTime to,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$apply") String apply,
-            @QueryParam("$expand") String expand,
-            @QueryParam("$skiptoken") String skipToken,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("api-version") String apiVersion, @QueryParam("$top") Integer top,
+            @QueryParam("$orderby") String orderBy, @QueryParam("$select") String select,
+            @QueryParam("$from") OffsetDateTime from, @QueryParam("$to") OffsetDateTime to,
+            @QueryParam("$filter") String filter, @QueryParam("$apply") String apply,
+            @QueryParam("$expand") String expand, @QueryParam("$skiptoken") String skipToken,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/providers/{authorizationNamespace}/policySetDefinitions"
-                + "/{policySetDefinitionName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}"
-                + "/queryResults")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/{resourceId}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PolicyEventsQueryResults> listQueryResultsForResourceSync(@HostParam("$host") String endpoint,
+            @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
+            @PathParam(value = "resourceId", encoded = true) String resourceId,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$top") Integer top,
+            @QueryParam("$orderby") String orderBy, @QueryParam("$select") String select,
+            @QueryParam("$from") OffsetDateTime from, @QueryParam("$to") OffsetDateTime to,
+            @QueryParam("$filter") String filter, @QueryParam("$apply") String apply,
+            @QueryParam("$expand") String expand, @QueryParam("$skiptoken") String skipToken,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/{authorizationNamespace}/policySetDefinitions/{policySetDefinitionName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<PolicyEventsQueryResults>> listQueryResultsForPolicySetDefinition(
             @HostParam("$host") String endpoint,
@@ -161,24 +186,31 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("authorizationNamespace") String authorizationNamespace,
             @PathParam("policySetDefinitionName") String policySetDefinitionName,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$orderby") String orderBy,
-            @QueryParam("$select") String select,
-            @QueryParam("$from") OffsetDateTime from,
-            @QueryParam("$to") OffsetDateTime to,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$apply") String apply,
-            @QueryParam("$skiptoken") String skipToken,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("api-version") String apiVersion, @QueryParam("$top") Integer top,
+            @QueryParam("$orderby") String orderBy, @QueryParam("$select") String select,
+            @QueryParam("$from") OffsetDateTime from, @QueryParam("$to") OffsetDateTime to,
+            @QueryParam("$filter") String filter, @QueryParam("$apply") String apply,
+            @QueryParam("$skiptoken") String skipToken, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/providers/{authorizationNamespace}/policyDefinitions"
-                + "/{policyDefinitionName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}"
-                + "/queryResults")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/{authorizationNamespace}/policySetDefinitions/{policySetDefinitionName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PolicyEventsQueryResults> listQueryResultsForPolicySetDefinitionSync(
+            @HostParam("$host") String endpoint,
+            @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("authorizationNamespace") String authorizationNamespace,
+            @PathParam("policySetDefinitionName") String policySetDefinitionName,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$top") Integer top,
+            @QueryParam("$orderby") String orderBy, @QueryParam("$select") String select,
+            @QueryParam("$from") OffsetDateTime from, @QueryParam("$to") OffsetDateTime to,
+            @QueryParam("$filter") String filter, @QueryParam("$apply") String apply,
+            @QueryParam("$skiptoken") String skipToken, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/{authorizationNamespace}/policyDefinitions/{policyDefinitionName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<PolicyEventsQueryResults>> listQueryResultsForPolicyDefinition(
             @HostParam("$host") String endpoint,
@@ -186,24 +218,30 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("authorizationNamespace") String authorizationNamespace,
             @PathParam("policyDefinitionName") String policyDefinitionName,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$orderby") String orderBy,
-            @QueryParam("$select") String select,
-            @QueryParam("$from") OffsetDateTime from,
-            @QueryParam("$to") OffsetDateTime to,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$apply") String apply,
-            @QueryParam("$skiptoken") String skipToken,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("api-version") String apiVersion, @QueryParam("$top") Integer top,
+            @QueryParam("$orderby") String orderBy, @QueryParam("$select") String select,
+            @QueryParam("$from") OffsetDateTime from, @QueryParam("$to") OffsetDateTime to,
+            @QueryParam("$filter") String filter, @QueryParam("$apply") String apply,
+            @QueryParam("$skiptoken") String skipToken, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/providers/{authorizationNamespace}/policyAssignments"
-                + "/{policyAssignmentName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}"
-                + "/queryResults")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/{authorizationNamespace}/policyDefinitions/{policyDefinitionName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PolicyEventsQueryResults> listQueryResultsForPolicyDefinitionSync(@HostParam("$host") String endpoint,
+            @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("authorizationNamespace") String authorizationNamespace,
+            @PathParam("policyDefinitionName") String policyDefinitionName,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$top") Integer top,
+            @QueryParam("$orderby") String orderBy, @QueryParam("$select") String select,
+            @QueryParam("$from") OffsetDateTime from, @QueryParam("$to") OffsetDateTime to,
+            @QueryParam("$filter") String filter, @QueryParam("$apply") String apply,
+            @QueryParam("$skiptoken") String skipToken, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/{authorizationNamespace}/policyAssignments/{policyAssignmentName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<PolicyEventsQueryResults>> listQueryResultsForSubscriptionLevelPolicyAssignment(
             @HostParam("$host") String endpoint,
@@ -211,24 +249,31 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("authorizationNamespace") String authorizationNamespace,
             @PathParam("policyAssignmentName") String policyAssignmentName,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$orderby") String orderBy,
-            @QueryParam("$select") String select,
-            @QueryParam("$from") OffsetDateTime from,
-            @QueryParam("$to") OffsetDateTime to,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$apply") String apply,
-            @QueryParam("$skiptoken") String skipToken,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("api-version") String apiVersion, @QueryParam("$top") Integer top,
+            @QueryParam("$orderby") String orderBy, @QueryParam("$select") String select,
+            @QueryParam("$from") OffsetDateTime from, @QueryParam("$to") OffsetDateTime to,
+            @QueryParam("$filter") String filter, @QueryParam("$apply") String apply,
+            @QueryParam("$skiptoken") String skipToken, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{authorizationNamespace}"
-                + "/policyAssignments/{policyAssignmentName}/providers/Microsoft.PolicyInsights/policyEvents"
-                + "/{policyEventsResource}/queryResults")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/{authorizationNamespace}/policyAssignments/{policyAssignmentName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PolicyEventsQueryResults> listQueryResultsForSubscriptionLevelPolicyAssignmentSync(
+            @HostParam("$host") String endpoint,
+            @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("authorizationNamespace") String authorizationNamespace,
+            @PathParam("policyAssignmentName") String policyAssignmentName,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$top") Integer top,
+            @QueryParam("$orderby") String orderBy, @QueryParam("$select") String select,
+            @QueryParam("$from") OffsetDateTime from, @QueryParam("$to") OffsetDateTime to,
+            @QueryParam("$filter") String filter, @QueryParam("$apply") String apply,
+            @QueryParam("$skiptoken") String skipToken, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{authorizationNamespace}/policyAssignments/{policyAssignmentName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<PolicyEventsQueryResults>> listQueryResultsForResourceGroupLevelPolicyAssignment(
             @HostParam("$host") String endpoint,
@@ -237,45 +282,63 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("authorizationNamespace") String authorizationNamespace,
             @PathParam("policyAssignmentName") String policyAssignmentName,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$orderby") String orderBy,
-            @QueryParam("$select") String select,
-            @QueryParam("$from") OffsetDateTime from,
-            @QueryParam("$to") OffsetDateTime to,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$apply") String apply,
-            @QueryParam("$skiptoken") String skipToken,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("api-version") String apiVersion, @QueryParam("$top") Integer top,
+            @QueryParam("$orderby") String orderBy, @QueryParam("$select") String select,
+            @QueryParam("$from") OffsetDateTime from, @QueryParam("$to") OffsetDateTime to,
+            @QueryParam("$filter") String filter, @QueryParam("$apply") String apply,
+            @QueryParam("$skiptoken") String skipToken, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Accept: application/json", "Content-Type: application/json"})
-        @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{authorizationNamespace}/policyAssignments/{policyAssignmentName}/providers/Microsoft.PolicyInsights/policyEvents/{policyEventsResource}/queryResults")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PolicyEventsQueryResults>> nextLink(
-            @PathParam(value = "nextLink", encoded = true) String nextLink, Context context);
+        Response<PolicyEventsQueryResults> listQueryResultsForResourceGroupLevelPolicyAssignmentSync(
+            @HostParam("$host") String endpoint,
+            @PathParam("policyEventsResource") PolicyEventsResourceType policyEventsResource,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("authorizationNamespace") String authorizationNamespace,
+            @PathParam("policyAssignmentName") String policyAssignmentName,
+            @QueryParam("api-version") String apiVersion, @QueryParam("$top") Integer top,
+            @QueryParam("$orderby") String orderBy, @QueryParam("$select") String select,
+            @QueryParam("$from") OffsetDateTime from, @QueryParam("$to") OffsetDateTime to,
+            @QueryParam("$filter") String filter, @QueryParam("$apply") String apply,
+            @QueryParam("$skiptoken") String skipToken, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Accept: application/json", "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<PolicyEventsQueryResults>>
+            nextLink(@PathParam(value = "nextLink", encoded = true) String nextLink, Context context);
+
+        @Headers({ "Accept: application/json", "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PolicyEventsQueryResults> nextLinkSync(@PathParam(value = "nextLink", encoded = true) String nextLink,
+            Context context);
     }
 
     /**
      * Queries policy events for the resources under the management group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param managementGroupName Management group name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -283,21 +346,11 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForManagementGroupSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String managementGroupName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken) {
+        PolicyEventsResourceType policyEventsResource, String managementGroupName, Integer top, String orderBy,
+        String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply, String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (policyEventsResource == null) {
             return Mono
@@ -308,143 +361,36 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
                 .error(new IllegalArgumentException("Parameter managementGroupName is required and cannot be null."));
         }
         final String managementGroupsNamespace = "Microsoft.Management";
-        final String apiVersion = "2019-10-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listQueryResultsForManagementGroup(
-                            this.client.getEndpoint(),
-                            policyEventsResource,
-                            managementGroupsNamespace,
-                            managementGroupName,
-                            apiVersion,
-                            top,
-                            orderBy,
-                            select,
-                            from,
-                            to,
-                            filter,
-                            apply,
-                            skipToken,
-                            accept,
-                            context))
-            .<PagedResponse<PolicyEventInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null))
+            .withContext(context -> service.listQueryResultsForManagementGroup(this.client.getEndpoint(),
+                policyEventsResource, managementGroupsNamespace, managementGroupName, apiVersion, top, orderBy, select,
+                from, to, filter, apply, skipToken, accept, context))
+            .<PagedResponse<PolicyEventInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().odataNextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Queries policy events for the resources under the management group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param managementGroupName Management group name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results along with {@link PagedResponse} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForManagementGroupSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String managementGroupName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (policyEventsResource == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
-        }
-        if (managementGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter managementGroupName is required and cannot be null."));
-        }
-        final String managementGroupsNamespace = "Microsoft.Management";
-        final String apiVersion = "2019-10-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listQueryResultsForManagementGroup(
-                this.client.getEndpoint(),
-                policyEventsResource,
-                managementGroupsNamespace,
-                managementGroupName,
-                apiVersion,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null));
-    }
-
-    /**
-     * Queries policy events for the resources under the management group.
-     *
-     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
-     * @param managementGroupName Management group name.
-     * @param top Maximum number of records to return.
-     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
-     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
-     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
-     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
-     * @param filter OData filter expression.
-     * @param apply OData apply expression for aggregations.
-     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -452,37 +398,18 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<PolicyEventInner> listQueryResultsForManagementGroupAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String managementGroupName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForManagementGroupSinglePageAsync(
-                    policyEventsResource,
-                    managementGroupName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
+        PolicyEventsResourceType policyEventsResource, String managementGroupName, Integer top, String orderBy,
+        String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply, String skipToken) {
+        return new PagedFlux<>(() -> listQueryResultsForManagementGroupSinglePageAsync(policyEventsResource,
+            managementGroupName, top, orderBy, select, from, to, filter, apply, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the resources under the management group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param managementGroupName Management group name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -500,82 +427,120 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String filter = null;
         final String apply = null;
         final String skipToken = null;
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForManagementGroupSinglePageAsync(
-                    policyEventsResource,
-                    managementGroupName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
+        return new PagedFlux<>(() -> listQueryResultsForManagementGroupSinglePageAsync(policyEventsResource,
+            managementGroupName, top, orderBy, select, from, to, filter, apply, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the resources under the management group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param managementGroupName Management group name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
+     * @return query results along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForManagementGroupAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String managementGroupName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForManagementGroupSinglePageAsync(
-                    policyEventsResource,
-                    managementGroupName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken,
-                    context),
-            nextLink -> nextLinkSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForManagementGroupSinglePage(
+        PolicyEventsResourceType policyEventsResource, String managementGroupName, Integer top, String orderBy,
+        String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply, String skipToken) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (managementGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter managementGroupName is required and cannot be null."));
+        }
+        final String managementGroupsNamespace = "Microsoft.Management";
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res = service.listQueryResultsForManagementGroupSync(
+            this.client.getEndpoint(), policyEventsResource, managementGroupsNamespace, managementGroupName, apiVersion,
+            top, orderBy, select, from, to, filter, apply, skipToken, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
 
     /**
      * Queries policy events for the resources under the management group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
+     * @param managementGroupName Management group name.
+     * @param top Maximum number of records to return.
+     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
+     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
+     * the service uses ($to - 1-day).
+     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
+     * service uses request time.
+     * @param filter OData filter expression.
+     * @param apply OData apply expression for aggregations.
+     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
+     * nextLink element.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForManagementGroupSinglePage(
+        PolicyEventsResourceType policyEventsResource, String managementGroupName, Integer top, String orderBy,
+        String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply, String skipToken,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (managementGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter managementGroupName is required and cannot be null."));
+        }
+        final String managementGroupsNamespace = "Microsoft.Management";
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res = service.listQueryResultsForManagementGroupSync(
+            this.client.getEndpoint(), policyEventsResource, managementGroupsNamespace, managementGroupName, apiVersion,
+            top, orderBy, select, from, to, filter, apply, skipToken, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
+    }
+
+    /**
+     * Queries policy events for the resources under the management group.
+     * 
+     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
+     * allowed.
      * @param managementGroupName Management group name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -583,8 +548,8 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      * @return query results as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<PolicyEventInner> listQueryResultsForManagementGroup(
-        PolicyEventsResourceType policyEventsResource, String managementGroupName) {
+    public PagedIterable<PolicyEventInner>
+        listQueryResultsForManagementGroup(PolicyEventsResourceType policyEventsResource, String managementGroupName) {
         final Integer top = null;
         final String orderBy = null;
         final String select = null;
@@ -593,30 +558,30 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String filter = null;
         final String apply = null;
         final String skipToken = null;
-        return new PagedIterable<>(
-            listQueryResultsForManagementGroupAsync(
-                policyEventsResource, managementGroupName, top, orderBy, select, from, to, filter, apply, skipToken));
+        return new PagedIterable<>(() -> listQueryResultsForManagementGroupSinglePage(policyEventsResource,
+            managementGroupName, top, orderBy, select, from, to, filter, apply, skipToken),
+            nextLink -> nextLinkSinglePage(nextLink));
     }
 
     /**
      * Queries policy events for the resources under the management group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param managementGroupName Management group name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -625,51 +590,34 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<PolicyEventInner> listQueryResultsForManagementGroup(
-        PolicyEventsResourceType policyEventsResource,
-        String managementGroupName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
+        PolicyEventsResourceType policyEventsResource, String managementGroupName, Integer top, String orderBy,
+        String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply, String skipToken,
         Context context) {
         return new PagedIterable<>(
-            listQueryResultsForManagementGroupAsync(
-                policyEventsResource,
-                managementGroupName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                context));
+            () -> listQueryResultsForManagementGroupSinglePage(policyEventsResource, managementGroupName, top, orderBy,
+                select, from, to, filter, apply, skipToken, context),
+            nextLink -> nextLinkSinglePage(nextLink, context));
     }
 
     /**
      * Queries policy events for the resources under the subscription.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -677,21 +625,11 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForSubscriptionSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken) {
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, Integer top, String orderBy,
+        String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply, String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (policyEventsResource == null) {
             return Mono
@@ -700,177 +638,193 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         if (subscriptionId == null) {
             return Mono.error(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
         }
-        final String apiVersion = "2019-10-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listQueryResultsForSubscription(
-                            this.client.getEndpoint(),
-                            policyEventsResource,
-                            subscriptionId,
-                            apiVersion,
-                            top,
-                            orderBy,
-                            select,
-                            from,
-                            to,
-                            filter,
-                            apply,
-                            skipToken,
-                            accept,
-                            context))
-            .<PagedResponse<PolicyEventInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null))
+            .withContext(context -> service.listQueryResultsForSubscription(this.client.getEndpoint(),
+                policyEventsResource, subscriptionId, apiVersion, top, orderBy, select, from, to, filter, apply,
+                skipToken, accept, context))
+            .<PagedResponse<PolicyEventInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().odataNextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Queries policy events for the resources under the subscription.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results along with {@link PagedResponse} on successful completion of {@link Mono}.
+     * @return query results as paginated response with {@link PagedFlux}.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<PolicyEventInner> listQueryResultsForSubscriptionAsync(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, Integer top, String orderBy,
+        String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply, String skipToken) {
+        return new PagedFlux<>(() -> listQueryResultsForSubscriptionSinglePageAsync(policyEventsResource,
+            subscriptionId, top, orderBy, select, from, to, filter, apply, skipToken),
+            nextLink -> nextLinkSinglePageAsync(nextLink));
+    }
+
+    /**
+     * Queries policy events for the resources under the subscription.
+     * 
+     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
+     * allowed.
+     * @param subscriptionId Microsoft Azure subscription ID.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results as paginated response with {@link PagedFlux}.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<PolicyEventInner>
+        listQueryResultsForSubscriptionAsync(PolicyEventsResourceType policyEventsResource, String subscriptionId) {
+        final Integer top = null;
+        final String orderBy = null;
+        final String select = null;
+        final OffsetDateTime from = null;
+        final OffsetDateTime to = null;
+        final String filter = null;
+        final String apply = null;
+        final String skipToken = null;
+        return new PagedFlux<>(() -> listQueryResultsForSubscriptionSinglePageAsync(policyEventsResource,
+            subscriptionId, top, orderBy, select, from, to, filter, apply, skipToken),
+            nextLink -> nextLinkSinglePageAsync(nextLink));
+    }
+
+    /**
+     * Queries policy events for the resources under the subscription.
+     * 
+     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
+     * allowed.
+     * @param subscriptionId Microsoft Azure subscription ID.
+     * @param top Maximum number of records to return.
+     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
+     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
+     * the service uses ($to - 1-day).
+     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
+     * service uses request time.
+     * @param filter OData filter expression.
+     * @param apply OData apply expression for aggregations.
+     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
+     * nextLink element.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForSubscriptionSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
+    private PagedResponse<PolicyEventInner> listQueryResultsForSubscriptionSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, Integer top, String orderBy,
+        String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply, String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (policyEventsResource == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
         }
         if (subscriptionId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
         }
-        final String apiVersion = "2019-10-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listQueryResultsForSubscription(
-                this.client.getEndpoint(),
-                policyEventsResource,
-                subscriptionId,
-                apiVersion,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null));
+        Response<PolicyEventsQueryResults> res = service.listQueryResultsForSubscriptionSync(this.client.getEndpoint(),
+            policyEventsResource, subscriptionId, apiVersion, top, orderBy, select, from, to, filter, apply, skipToken,
+            accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
 
     /**
      * Queries policy events for the resources under the subscription.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
+     * @return query results along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForSubscriptionAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForSubscriptionSinglePageAsync(
-                    policyEventsResource, subscriptionId, top, orderBy, select, from, to, filter, apply, skipToken),
-            nextLink -> nextLinkSinglePageAsync(nextLink));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForSubscriptionSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, Integer top, String orderBy,
+        String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply, String skipToken,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (subscriptionId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForSubscriptionSync(this.client.getEndpoint(), policyEventsResource,
+                subscriptionId, apiVersion, top, orderBy, select, from, to, filter, apply, skipToken, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
 
     /**
      * Queries policy events for the resources under the subscription.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
+     * @return query results as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForSubscriptionAsync(
-        PolicyEventsResourceType policyEventsResource, String subscriptionId) {
+    public PagedIterable<PolicyEventInner>
+        listQueryResultsForSubscription(PolicyEventsResourceType policyEventsResource, String subscriptionId) {
         final Integer top = null;
         final String orderBy = null;
         final String select = null;
@@ -879,114 +833,29 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String filter = null;
         final String apply = null;
         final String skipToken = null;
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForSubscriptionSinglePageAsync(
-                    policyEventsResource, subscriptionId, top, orderBy, select, from, to, filter, apply, skipToken),
-            nextLink -> nextLinkSinglePageAsync(nextLink));
+        return new PagedIterable<>(() -> listQueryResultsForSubscriptionSinglePage(policyEventsResource, subscriptionId,
+            top, orderBy, select, from, to, filter, apply, skipToken), nextLink -> nextLinkSinglePage(nextLink));
     }
 
     /**
      * Queries policy events for the resources under the subscription.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForSubscriptionAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForSubscriptionSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken,
-                    context),
-            nextLink -> nextLinkSinglePageAsync(nextLink, context));
-    }
-
-    /**
-     * Queries policy events for the resources under the subscription.
-     *
-     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
-     * @param subscriptionId Microsoft Azure subscription ID.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedIterable}.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<PolicyEventInner> listQueryResultsForSubscription(
-        PolicyEventsResourceType policyEventsResource, String subscriptionId) {
-        final Integer top = null;
-        final String orderBy = null;
-        final String select = null;
-        final OffsetDateTime from = null;
-        final OffsetDateTime to = null;
-        final String filter = null;
-        final String apply = null;
-        final String skipToken = null;
-        return new PagedIterable<>(
-            listQueryResultsForSubscriptionAsync(
-                policyEventsResource, subscriptionId, top, orderBy, select, from, to, filter, apply, skipToken));
-    }
-
-    /**
-     * Queries policy events for the resources under the subscription.
-     *
-     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
-     * @param subscriptionId Microsoft Azure subscription ID.
-     * @param top Maximum number of records to return.
-     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
-     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
-     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
-     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
-     * @param filter OData filter expression.
-     * @param apply OData apply expression for aggregations.
-     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -995,52 +864,34 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<PolicyEventInner> listQueryResultsForSubscription(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, Integer top, String orderBy,
+        String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply, String skipToken,
         Context context) {
-        return new PagedIterable<>(
-            listQueryResultsForSubscriptionAsync(
-                policyEventsResource,
-                subscriptionId,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                context));
+        return new PagedIterable<>(() -> listQueryResultsForSubscriptionSinglePage(policyEventsResource, subscriptionId,
+            top, orderBy, select, from, to, filter, apply, skipToken, context),
+            nextLink -> nextLinkSinglePage(nextLink, context));
     }
 
     /**
      * Queries policy events for the resources under the resource group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1048,22 +899,12 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForResourceGroupSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
         String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (policyEventsResource == null) {
             return Mono
@@ -1076,148 +917,37 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
-        final String apiVersion = "2019-10-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listQueryResultsForResourceGroup(
-                            this.client.getEndpoint(),
-                            policyEventsResource,
-                            subscriptionId,
-                            resourceGroupName,
-                            apiVersion,
-                            top,
-                            orderBy,
-                            select,
-                            from,
-                            to,
-                            filter,
-                            apply,
-                            skipToken,
-                            accept,
-                            context))
-            .<PagedResponse<PolicyEventInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null))
+            .withContext(context -> service.listQueryResultsForResourceGroup(this.client.getEndpoint(),
+                policyEventsResource, subscriptionId, resourceGroupName, apiVersion, top, orderBy, select, from, to,
+                filter, apply, skipToken, accept, context))
+            .<PagedResponse<PolicyEventInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().odataNextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Queries policy events for the resources under the resource group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results along with {@link PagedResponse} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForResourceGroupSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (policyEventsResource == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
-        }
-        if (subscriptionId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        final String apiVersion = "2019-10-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listQueryResultsForResourceGroup(
-                this.client.getEndpoint(),
-                policyEventsResource,
-                subscriptionId,
-                resourceGroupName,
-                apiVersion,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null));
-    }
-
-    /**
-     * Queries policy events for the resources under the resource group.
-     *
-     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
-     * @param subscriptionId Microsoft Azure subscription ID.
-     * @param resourceGroupName Resource group name.
-     * @param top Maximum number of records to return.
-     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
-     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
-     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
-     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
-     * @param filter OData filter expression.
-     * @param apply OData apply expression for aggregations.
-     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1225,39 +955,20 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<PolicyEventInner> listQueryResultsForResourceGroupAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
         String skipToken) {
         return new PagedFlux<>(
-            () ->
-                listQueryResultsForResourceGroupSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    resourceGroupName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
+            () -> listQueryResultsForResourceGroupSinglePageAsync(policyEventsResource, subscriptionId,
+                resourceGroupName, top, orderBy, select, from, to, filter, apply, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the resources under the resource group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1277,85 +988,129 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String apply = null;
         final String skipToken = null;
         return new PagedFlux<>(
-            () ->
-                listQueryResultsForResourceGroupSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    resourceGroupName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
+            () -> listQueryResultsForResourceGroupSinglePageAsync(policyEventsResource, subscriptionId,
+                resourceGroupName, top, orderBy, select, from, to, filter, apply, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the resources under the resource group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
+     * @return query results along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForResourceGroupAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForResourceGroupSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    resourceGroupName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken,
-                    context),
-            nextLink -> nextLinkSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForResourceGroupSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (subscriptionId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res = service.listQueryResultsForResourceGroupSync(this.client.getEndpoint(),
+            policyEventsResource, subscriptionId, resourceGroupName, apiVersion, top, orderBy, select, from, to, filter,
+            apply, skipToken, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
 
     /**
      * Queries policy events for the resources under the resource group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
+     * @param subscriptionId Microsoft Azure subscription ID.
+     * @param resourceGroupName Resource group name.
+     * @param top Maximum number of records to return.
+     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
+     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
+     * the service uses ($to - 1-day).
+     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
+     * service uses request time.
+     * @param filter OData filter expression.
+     * @param apply OData apply expression for aggregations.
+     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
+     * nextLink element.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForResourceGroupSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (subscriptionId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res = service.listQueryResultsForResourceGroupSync(this.client.getEndpoint(),
+            policyEventsResource, subscriptionId, resourceGroupName, apiVersion, top, orderBy, select, from, to, filter,
+            apply, skipToken, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
+    }
+
+    /**
+     * Queries policy events for the resources under the resource group.
+     * 
+     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1374,41 +1129,31 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String filter = null;
         final String apply = null;
         final String skipToken = null;
-        return new PagedIterable<>(
-            listQueryResultsForResourceGroupAsync(
-                policyEventsResource,
-                subscriptionId,
-                resourceGroupName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken));
+        return new PagedIterable<>(() -> listQueryResultsForResourceGroupSinglePage(policyEventsResource,
+            subscriptionId, resourceGroupName, top, orderBy, select, from, to, filter, apply, skipToken),
+            nextLink -> nextLinkSinglePage(nextLink));
     }
 
     /**
      * Queries policy events for the resources under the resource group.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1417,54 +1162,35 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<PolicyEventInner> listQueryResultsForResourceGroup(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken, Context context) {
         return new PagedIterable<>(
-            listQueryResultsForResourceGroupAsync(
-                policyEventsResource,
-                subscriptionId,
-                resourceGroupName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                context));
+            () -> listQueryResultsForResourceGroupSinglePage(policyEventsResource, subscriptionId, resourceGroupName,
+                top, orderBy, select, from, to, filter, apply, skipToken, context),
+            nextLink -> nextLinkSinglePage(nextLink, context));
     }
 
     /**
      * Queries policy events for the resource.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param resourceId Resource ID.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param expand The $expand query parameter. For example, to expand components use $expand=components.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1472,22 +1198,11 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForResourceSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String resourceId,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String expand,
-        String skipToken) {
+        PolicyEventsResourceType policyEventsResource, String resourceId, Integer top, String orderBy, String select,
+        OffsetDateTime from, OffsetDateTime to, String filter, String apply, String expand, String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (policyEventsResource == null) {
             return Mono
@@ -1496,174 +1211,56 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         if (resourceId == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
         }
-        final String apiVersion = "2019-10-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listQueryResultsForResource(
-                            this.client.getEndpoint(),
-                            policyEventsResource,
-                            resourceId,
-                            apiVersion,
-                            top,
-                            orderBy,
-                            select,
-                            from,
-                            to,
-                            filter,
-                            apply,
-                            expand,
-                            skipToken,
-                            accept,
-                            context))
-            .<PagedResponse<PolicyEventInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null))
+            .withContext(context -> service.listQueryResultsForResource(this.client.getEndpoint(), policyEventsResource,
+                resourceId, apiVersion, top, orderBy, select, from, to, filter, apply, expand, skipToken, accept,
+                context))
+            .<PagedResponse<PolicyEventInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().odataNextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Queries policy events for the resource.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param resourceId Resource ID.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param expand The $expand query parameter. For example, to expand components use $expand=components.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results along with {@link PagedResponse} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForResourceSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String resourceId,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String expand,
-        String skipToken,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (policyEventsResource == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
-        }
-        if (resourceId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
-        }
-        final String apiVersion = "2019-10-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listQueryResultsForResource(
-                this.client.getEndpoint(),
-                policyEventsResource,
-                resourceId,
-                apiVersion,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                expand,
-                skipToken,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null));
-    }
-
-    /**
-     * Queries policy events for the resource.
-     *
-     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
-     * @param resourceId Resource ID.
-     * @param top Maximum number of records to return.
-     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
-     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
-     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
-     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
-     * @param filter OData filter expression.
-     * @param apply OData apply expression for aggregations.
-     * @param expand The $expand query parameter. For example, to expand components use $expand=components.
-     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return query results as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForResourceAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String resourceId,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String expand,
-        String skipToken) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForResourceSinglePageAsync(
-                    policyEventsResource, resourceId, top, orderBy, select, from, to, filter, apply, expand, skipToken),
+    private PagedFlux<PolicyEventInner> listQueryResultsForResourceAsync(PolicyEventsResourceType policyEventsResource,
+        String resourceId, Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to,
+        String filter, String apply, String expand, String skipToken) {
+        return new PagedFlux<>(() -> listQueryResultsForResourceSinglePageAsync(policyEventsResource, resourceId, top,
+            orderBy, select, from, to, filter, apply, expand, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the resource.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param resourceId Resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1671,8 +1268,8 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      * @return query results as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForResourceAsync(
-        PolicyEventsResourceType policyEventsResource, String resourceId) {
+    private PagedFlux<PolicyEventInner> listQueryResultsForResourceAsync(PolicyEventsResourceType policyEventsResource,
+        String resourceId) {
         final Integer top = null;
         final String orderBy = null;
         final String select = null;
@@ -1682,76 +1279,120 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String apply = null;
         final String expand = null;
         final String skipToken = null;
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForResourceSinglePageAsync(
-                    policyEventsResource, resourceId, top, orderBy, select, from, to, filter, apply, expand, skipToken),
+        return new PagedFlux<>(() -> listQueryResultsForResourceSinglePageAsync(policyEventsResource, resourceId, top,
+            orderBy, select, from, to, filter, apply, expand, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the resource.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param resourceId Resource ID.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param expand The $expand query parameter. For example, to expand components use $expand=components.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
+     * @return query results along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForResourceAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String resourceId,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String expand,
-        String skipToken,
-        Context context) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForResourceSinglePageAsync(
-                    policyEventsResource,
-                    resourceId,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    expand,
-                    skipToken,
-                    context),
-            nextLink -> nextLinkSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForResourceSinglePage(
+        PolicyEventsResourceType policyEventsResource, String resourceId, Integer top, String orderBy, String select,
+        OffsetDateTime from, OffsetDateTime to, String filter, String apply, String expand, String skipToken) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (resourceId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForResourceSync(this.client.getEndpoint(), policyEventsResource, resourceId,
+                apiVersion, top, orderBy, select, from, to, filter, apply, expand, skipToken, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
 
     /**
      * Queries policy events for the resource.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
+     * @param resourceId Resource ID.
+     * @param top Maximum number of records to return.
+     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
+     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
+     * the service uses ($to - 1-day).
+     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
+     * service uses request time.
+     * @param filter OData filter expression.
+     * @param apply OData apply expression for aggregations.
+     * @param expand The $expand query parameter. For example, to expand components use $expand=components.
+     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
+     * nextLink element.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForResourceSinglePage(
+        PolicyEventsResourceType policyEventsResource, String resourceId, Integer top, String orderBy, String select,
+        OffsetDateTime from, OffsetDateTime to, String filter, String apply, String expand, String skipToken,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (resourceId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForResourceSync(this.client.getEndpoint(), policyEventsResource, resourceId,
+                apiVersion, top, orderBy, select, from, to, filter, apply, expand, skipToken, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
+    }
+
+    /**
+     * Queries policy events for the resource.
+     * 
+     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
+     * allowed.
      * @param resourceId Resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1759,8 +1400,8 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      * @return query results as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<PolicyEventInner> listQueryResultsForResource(
-        PolicyEventsResourceType policyEventsResource, String resourceId) {
+    public PagedIterable<PolicyEventInner> listQueryResultsForResource(PolicyEventsResourceType policyEventsResource,
+        String resourceId) {
         final Integer top = null;
         final String orderBy = null;
         final String select = null;
@@ -1770,31 +1411,30 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String apply = null;
         final String expand = null;
         final String skipToken = null;
-        return new PagedIterable<>(
-            listQueryResultsForResourceAsync(
-                policyEventsResource, resourceId, top, orderBy, select, from, to, filter, apply, expand, skipToken));
+        return new PagedIterable<>(() -> listQueryResultsForResourceSinglePage(policyEventsResource, resourceId, top,
+            orderBy, select, from, to, filter, apply, expand, skipToken), nextLink -> nextLinkSinglePage(nextLink));
     }
 
     /**
      * Queries policy events for the resource.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param resourceId Resource ID.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param expand The $expand query parameter. For example, to expand components use $expand=components.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1802,55 +1442,34 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      * @return query results as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<PolicyEventInner> listQueryResultsForResource(
-        PolicyEventsResourceType policyEventsResource,
-        String resourceId,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String expand,
-        String skipToken,
-        Context context) {
-        return new PagedIterable<>(
-            listQueryResultsForResourceAsync(
-                policyEventsResource,
-                resourceId,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                expand,
-                skipToken,
-                context));
+    public PagedIterable<PolicyEventInner> listQueryResultsForResource(PolicyEventsResourceType policyEventsResource,
+        String resourceId, Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to,
+        String filter, String apply, String expand, String skipToken, Context context) {
+        return new PagedIterable<>(() -> listQueryResultsForResourceSinglePage(policyEventsResource, resourceId, top,
+            orderBy, select, from, to, filter, apply, expand, skipToken, context),
+            nextLink -> nextLinkSinglePage(nextLink, context));
     }
 
     /**
      * Queries policy events for the subscription level policy set definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policySetDefinitionName Policy set definition name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1858,22 +1477,12 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForPolicySetDefinitionSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policySetDefinitionName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policySetDefinitionName,
+        Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
         String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (policyEventsResource == null) {
             return Mono
@@ -1883,157 +1492,41 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
             return Mono.error(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
         }
         if (policySetDefinitionName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter policySetDefinitionName is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter policySetDefinitionName is required and cannot be null."));
         }
         final String authorizationNamespace = "Microsoft.Authorization";
-        final String apiVersion = "2019-10-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listQueryResultsForPolicySetDefinition(
-                            this.client.getEndpoint(),
-                            policyEventsResource,
-                            subscriptionId,
-                            authorizationNamespace,
-                            policySetDefinitionName,
-                            apiVersion,
-                            top,
-                            orderBy,
-                            select,
-                            from,
-                            to,
-                            filter,
-                            apply,
-                            skipToken,
-                            accept,
-                            context))
-            .<PagedResponse<PolicyEventInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null))
+            .withContext(context -> service.listQueryResultsForPolicySetDefinition(this.client.getEndpoint(),
+                policyEventsResource, subscriptionId, authorizationNamespace, policySetDefinitionName, apiVersion, top,
+                orderBy, select, from, to, filter, apply, skipToken, accept, context))
+            .<PagedResponse<PolicyEventInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().odataNextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Queries policy events for the subscription level policy set definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policySetDefinitionName Policy set definition name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results along with {@link PagedResponse} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForPolicySetDefinitionSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policySetDefinitionName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (policyEventsResource == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
-        }
-        if (subscriptionId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
-        }
-        if (policySetDefinitionName == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException("Parameter policySetDefinitionName is required and cannot be null."));
-        }
-        final String authorizationNamespace = "Microsoft.Authorization";
-        final String apiVersion = "2019-10-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listQueryResultsForPolicySetDefinition(
-                this.client.getEndpoint(),
-                policyEventsResource,
-                subscriptionId,
-                authorizationNamespace,
-                policySetDefinitionName,
-                apiVersion,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null));
-    }
-
-    /**
-     * Queries policy events for the subscription level policy set definition.
-     *
-     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
-     * @param subscriptionId Microsoft Azure subscription ID.
-     * @param policySetDefinitionName Policy set definition name.
-     * @param top Maximum number of records to return.
-     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
-     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
-     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
-     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
-     * @param filter OData filter expression.
-     * @param apply OData apply expression for aggregations.
-     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2041,39 +1534,20 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<PolicyEventInner> listQueryResultsForPolicySetDefinitionAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policySetDefinitionName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policySetDefinitionName,
+        Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
         String skipToken) {
         return new PagedFlux<>(
-            () ->
-                listQueryResultsForPolicySetDefinitionSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    policySetDefinitionName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
+            () -> listQueryResultsForPolicySetDefinitionSinglePageAsync(policyEventsResource, subscriptionId,
+                policySetDefinitionName, top, orderBy, select, from, to, filter, apply, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the subscription level policy set definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policySetDefinitionName Policy set definition name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2093,85 +1567,133 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String apply = null;
         final String skipToken = null;
         return new PagedFlux<>(
-            () ->
-                listQueryResultsForPolicySetDefinitionSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    policySetDefinitionName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
+            () -> listQueryResultsForPolicySetDefinitionSinglePageAsync(policyEventsResource, subscriptionId,
+                policySetDefinitionName, top, orderBy, select, from, to, filter, apply, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the subscription level policy set definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policySetDefinitionName Policy set definition name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
+     * @return query results along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForPolicySetDefinitionAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policySetDefinitionName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForPolicySetDefinitionSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    policySetDefinitionName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken,
-                    context),
-            nextLink -> nextLinkSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForPolicySetDefinitionSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policySetDefinitionName,
+        Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (subscriptionId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+        }
+        if (policySetDefinitionName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policySetDefinitionName is required and cannot be null."));
+        }
+        final String authorizationNamespace = "Microsoft.Authorization";
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForPolicySetDefinitionSync(this.client.getEndpoint(), policyEventsResource,
+                subscriptionId, authorizationNamespace, policySetDefinitionName, apiVersion, top, orderBy, select, from,
+                to, filter, apply, skipToken, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
 
     /**
      * Queries policy events for the subscription level policy set definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
+     * @param subscriptionId Microsoft Azure subscription ID.
+     * @param policySetDefinitionName Policy set definition name.
+     * @param top Maximum number of records to return.
+     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
+     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
+     * the service uses ($to - 1-day).
+     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
+     * service uses request time.
+     * @param filter OData filter expression.
+     * @param apply OData apply expression for aggregations.
+     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
+     * nextLink element.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForPolicySetDefinitionSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policySetDefinitionName,
+        Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (subscriptionId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+        }
+        if (policySetDefinitionName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policySetDefinitionName is required and cannot be null."));
+        }
+        final String authorizationNamespace = "Microsoft.Authorization";
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForPolicySetDefinitionSync(this.client.getEndpoint(), policyEventsResource,
+                subscriptionId, authorizationNamespace, policySetDefinitionName, apiVersion, top, orderBy, select, from,
+                to, filter, apply, skipToken, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
+    }
+
+    /**
+     * Queries policy events for the subscription level policy set definition.
+     * 
+     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policySetDefinitionName Policy set definition name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2191,40 +1713,31 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String apply = null;
         final String skipToken = null;
         return new PagedIterable<>(
-            listQueryResultsForPolicySetDefinitionAsync(
-                policyEventsResource,
-                subscriptionId,
-                policySetDefinitionName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken));
+            () -> listQueryResultsForPolicySetDefinitionSinglePage(policyEventsResource, subscriptionId,
+                policySetDefinitionName, top, orderBy, select, from, to, filter, apply, skipToken),
+            nextLink -> nextLinkSinglePage(nextLink));
     }
 
     /**
      * Queries policy events for the subscription level policy set definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policySetDefinitionName Policy set definition name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -2233,54 +1746,35 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<PolicyEventInner> listQueryResultsForPolicySetDefinition(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policySetDefinitionName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policySetDefinitionName,
+        Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken, Context context) {
         return new PagedIterable<>(
-            listQueryResultsForPolicySetDefinitionAsync(
-                policyEventsResource,
-                subscriptionId,
-                policySetDefinitionName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                context));
+            () -> listQueryResultsForPolicySetDefinitionSinglePage(policyEventsResource, subscriptionId,
+                policySetDefinitionName, top, orderBy, select, from, to, filter, apply, skipToken, context),
+            nextLink -> nextLinkSinglePage(nextLink, context));
     }
 
     /**
      * Queries policy events for the subscription level policy definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyDefinitionName Policy definition name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2288,22 +1782,12 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForPolicyDefinitionSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policyDefinitionName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policyDefinitionName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
         String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (policyEventsResource == null) {
             return Mono
@@ -2317,151 +1801,37 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
                 .error(new IllegalArgumentException("Parameter policyDefinitionName is required and cannot be null."));
         }
         final String authorizationNamespace = "Microsoft.Authorization";
-        final String apiVersion = "2019-10-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listQueryResultsForPolicyDefinition(
-                            this.client.getEndpoint(),
-                            policyEventsResource,
-                            subscriptionId,
-                            authorizationNamespace,
-                            policyDefinitionName,
-                            apiVersion,
-                            top,
-                            orderBy,
-                            select,
-                            from,
-                            to,
-                            filter,
-                            apply,
-                            skipToken,
-                            accept,
-                            context))
-            .<PagedResponse<PolicyEventInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null))
+            .withContext(context -> service.listQueryResultsForPolicyDefinition(this.client.getEndpoint(),
+                policyEventsResource, subscriptionId, authorizationNamespace, policyDefinitionName, apiVersion, top,
+                orderBy, select, from, to, filter, apply, skipToken, accept, context))
+            .<PagedResponse<PolicyEventInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().odataNextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Queries policy events for the subscription level policy definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyDefinitionName Policy definition name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results along with {@link PagedResponse} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForPolicyDefinitionSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policyDefinitionName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (policyEventsResource == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
-        }
-        if (subscriptionId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
-        }
-        if (policyDefinitionName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyDefinitionName is required and cannot be null."));
-        }
-        final String authorizationNamespace = "Microsoft.Authorization";
-        final String apiVersion = "2019-10-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listQueryResultsForPolicyDefinition(
-                this.client.getEndpoint(),
-                policyEventsResource,
-                subscriptionId,
-                authorizationNamespace,
-                policyDefinitionName,
-                apiVersion,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null));
-    }
-
-    /**
-     * Queries policy events for the subscription level policy definition.
-     *
-     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
-     * @param subscriptionId Microsoft Azure subscription ID.
-     * @param policyDefinitionName Policy definition name.
-     * @param top Maximum number of records to return.
-     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
-     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
-     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
-     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
-     * @param filter OData filter expression.
-     * @param apply OData apply expression for aggregations.
-     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2469,39 +1839,20 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<PolicyEventInner> listQueryResultsForPolicyDefinitionAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policyDefinitionName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policyDefinitionName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
         String skipToken) {
         return new PagedFlux<>(
-            () ->
-                listQueryResultsForPolicyDefinitionSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    policyDefinitionName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
+            () -> listQueryResultsForPolicyDefinitionSinglePageAsync(policyEventsResource, subscriptionId,
+                policyDefinitionName, top, orderBy, select, from, to, filter, apply, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the subscription level policy definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyDefinitionName Policy definition name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2521,85 +1872,133 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String apply = null;
         final String skipToken = null;
         return new PagedFlux<>(
-            () ->
-                listQueryResultsForPolicyDefinitionSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    policyDefinitionName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
+            () -> listQueryResultsForPolicyDefinitionSinglePageAsync(policyEventsResource, subscriptionId,
+                policyDefinitionName, top, orderBy, select, from, to, filter, apply, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the subscription level policy definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyDefinitionName Policy definition name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
+     * @return query results along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForPolicyDefinitionAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policyDefinitionName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForPolicyDefinitionSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    policyDefinitionName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken,
-                    context),
-            nextLink -> nextLinkSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForPolicyDefinitionSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policyDefinitionName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (subscriptionId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+        }
+        if (policyDefinitionName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyDefinitionName is required and cannot be null."));
+        }
+        final String authorizationNamespace = "Microsoft.Authorization";
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForPolicyDefinitionSync(this.client.getEndpoint(), policyEventsResource,
+                subscriptionId, authorizationNamespace, policyDefinitionName, apiVersion, top, orderBy, select, from,
+                to, filter, apply, skipToken, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
 
     /**
      * Queries policy events for the subscription level policy definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
+     * @param subscriptionId Microsoft Azure subscription ID.
+     * @param policyDefinitionName Policy definition name.
+     * @param top Maximum number of records to return.
+     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
+     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
+     * the service uses ($to - 1-day).
+     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
+     * service uses request time.
+     * @param filter OData filter expression.
+     * @param apply OData apply expression for aggregations.
+     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
+     * nextLink element.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForPolicyDefinitionSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policyDefinitionName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (subscriptionId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+        }
+        if (policyDefinitionName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyDefinitionName is required and cannot be null."));
+        }
+        final String authorizationNamespace = "Microsoft.Authorization";
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForPolicyDefinitionSync(this.client.getEndpoint(), policyEventsResource,
+                subscriptionId, authorizationNamespace, policyDefinitionName, apiVersion, top, orderBy, select, from,
+                to, filter, apply, skipToken, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
+    }
+
+    /**
+     * Queries policy events for the subscription level policy definition.
+     * 
+     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyDefinitionName Policy definition name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2619,40 +2018,31 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String apply = null;
         final String skipToken = null;
         return new PagedIterable<>(
-            listQueryResultsForPolicyDefinitionAsync(
-                policyEventsResource,
-                subscriptionId,
-                policyDefinitionName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken));
+            () -> listQueryResultsForPolicyDefinitionSinglePage(policyEventsResource, subscriptionId,
+                policyDefinitionName, top, orderBy, select, from, to, filter, apply, skipToken),
+            nextLink -> nextLinkSinglePage(nextLink));
     }
 
     /**
      * Queries policy events for the subscription level policy definition.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyDefinitionName Policy definition name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -2661,54 +2051,35 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<PolicyEventInner> listQueryResultsForPolicyDefinition(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policyDefinitionName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policyDefinitionName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken, Context context) {
         return new PagedIterable<>(
-            listQueryResultsForPolicyDefinitionAsync(
-                policyEventsResource,
-                subscriptionId,
-                policyDefinitionName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                context));
+            () -> listQueryResultsForPolicyDefinitionSinglePage(policyEventsResource, subscriptionId,
+                policyDefinitionName, top, orderBy, select, from, to, filter, apply, skipToken, context),
+            nextLink -> nextLinkSinglePage(nextLink, context));
     }
 
     /**
      * Queries policy events for the subscription level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyAssignmentName Policy assignment name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2716,22 +2087,12 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policyAssignmentName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policyAssignmentName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
         String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (policyEventsResource == null) {
             return Mono
@@ -2745,151 +2106,38 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
                 .error(new IllegalArgumentException("Parameter policyAssignmentName is required and cannot be null."));
         }
         final String authorizationNamespace = "Microsoft.Authorization";
-        final String apiVersion = "2019-10-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .listQueryResultsForSubscriptionLevelPolicyAssignment(
-                            this.client.getEndpoint(),
-                            policyEventsResource,
-                            subscriptionId,
-                            authorizationNamespace,
-                            policyAssignmentName,
-                            apiVersion,
-                            top,
-                            orderBy,
-                            select,
-                            from,
-                            to,
-                            filter,
-                            apply,
-                            skipToken,
-                            accept,
-                            context))
-            .<PagedResponse<PolicyEventInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null))
+                context -> service.listQueryResultsForSubscriptionLevelPolicyAssignment(this.client.getEndpoint(),
+                    policyEventsResource, subscriptionId, authorizationNamespace, policyAssignmentName, apiVersion, top,
+                    orderBy, select, from, to, filter, apply, skipToken, accept, context))
+            .<PagedResponse<PolicyEventInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().odataNextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Queries policy events for the subscription level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyAssignmentName Policy assignment name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results along with {@link PagedResponse} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policyAssignmentName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (policyEventsResource == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
-        }
-        if (subscriptionId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
-        }
-        if (policyAssignmentName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyAssignmentName is required and cannot be null."));
-        }
-        final String authorizationNamespace = "Microsoft.Authorization";
-        final String apiVersion = "2019-10-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listQueryResultsForSubscriptionLevelPolicyAssignment(
-                this.client.getEndpoint(),
-                policyEventsResource,
-                subscriptionId,
-                authorizationNamespace,
-                policyAssignmentName,
-                apiVersion,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null));
-    }
-
-    /**
-     * Queries policy events for the subscription level policy assignment.
-     *
-     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
-     * @param subscriptionId Microsoft Azure subscription ID.
-     * @param policyAssignmentName Policy assignment name.
-     * @param top Maximum number of records to return.
-     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
-     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
-     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
-     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
-     * @param filter OData filter expression.
-     * @param apply OData apply expression for aggregations.
-     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2897,39 +2145,20 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<PolicyEventInner> listQueryResultsForSubscriptionLevelPolicyAssignmentAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policyAssignmentName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policyAssignmentName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
         String skipToken) {
         return new PagedFlux<>(
-            () ->
-                listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    policyAssignmentName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
+            () -> listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePageAsync(policyEventsResource,
+                subscriptionId, policyAssignmentName, top, orderBy, select, from, to, filter, apply, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the subscription level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyAssignmentName Policy assignment name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2949,85 +2178,133 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String apply = null;
         final String skipToken = null;
         return new PagedFlux<>(
-            () ->
-                listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    policyAssignmentName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
+            () -> listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePageAsync(policyEventsResource,
+                subscriptionId, policyAssignmentName, top, orderBy, select, from, to, filter, apply, skipToken),
             nextLink -> nextLinkSinglePageAsync(nextLink));
     }
 
     /**
      * Queries policy events for the subscription level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyAssignmentName Policy assignment name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
+     * @return query results along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForSubscriptionLevelPolicyAssignmentAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policyAssignmentName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    policyAssignmentName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken,
-                    context),
-            nextLink -> nextLinkSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policyAssignmentName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (subscriptionId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+        }
+        if (policyAssignmentName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyAssignmentName is required and cannot be null."));
+        }
+        final String authorizationNamespace = "Microsoft.Authorization";
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForSubscriptionLevelPolicyAssignmentSync(this.client.getEndpoint(),
+                policyEventsResource, subscriptionId, authorizationNamespace, policyAssignmentName, apiVersion, top,
+                orderBy, select, from, to, filter, apply, skipToken, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
 
     /**
      * Queries policy events for the subscription level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
+     * @param subscriptionId Microsoft Azure subscription ID.
+     * @param policyAssignmentName Policy assignment name.
+     * @param top Maximum number of records to return.
+     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
+     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
+     * the service uses ($to - 1-day).
+     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
+     * service uses request time.
+     * @param filter OData filter expression.
+     * @param apply OData apply expression for aggregations.
+     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
+     * nextLink element.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policyAssignmentName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (subscriptionId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+        }
+        if (policyAssignmentName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyAssignmentName is required and cannot be null."));
+        }
+        final String authorizationNamespace = "Microsoft.Authorization";
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForSubscriptionLevelPolicyAssignmentSync(this.client.getEndpoint(),
+                policyEventsResource, subscriptionId, authorizationNamespace, policyAssignmentName, apiVersion, top,
+                orderBy, select, from, to, filter, apply, skipToken, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
+    }
+
+    /**
+     * Queries policy events for the subscription level policy assignment.
+     * 
+     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyAssignmentName Policy assignment name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -3047,40 +2324,31 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String apply = null;
         final String skipToken = null;
         return new PagedIterable<>(
-            listQueryResultsForSubscriptionLevelPolicyAssignmentAsync(
-                policyEventsResource,
-                subscriptionId,
-                policyAssignmentName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken));
+            () -> listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePage(policyEventsResource, subscriptionId,
+                policyAssignmentName, top, orderBy, select, from, to, filter, apply, skipToken),
+            nextLink -> nextLinkSinglePage(nextLink));
     }
 
     /**
      * Queries policy events for the subscription level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param policyAssignmentName Policy assignment name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -3089,55 +2357,36 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<PolicyEventInner> listQueryResultsForSubscriptionLevelPolicyAssignment(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String policyAssignmentName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String policyAssignmentName, Integer top,
+        String orderBy, String select, OffsetDateTime from, OffsetDateTime to, String filter, String apply,
+        String skipToken, Context context) {
         return new PagedIterable<>(
-            listQueryResultsForSubscriptionLevelPolicyAssignmentAsync(
-                policyEventsResource,
-                subscriptionId,
-                policyAssignmentName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                context));
+            () -> listQueryResultsForSubscriptionLevelPolicyAssignmentSinglePage(policyEventsResource, subscriptionId,
+                policyAssignmentName, top, orderBy, select, from, to, filter, apply, skipToken, context),
+            nextLink -> nextLinkSinglePage(nextLink, context));
     }
 
     /**
      * Queries policy events for the resource group level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @param policyAssignmentName Policy assignment name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -3145,23 +2394,12 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        String policyAssignmentName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken) {
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName,
+        String policyAssignmentName, Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to,
+        String filter, String apply, String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (policyEventsResource == null) {
             return Mono
@@ -3179,308 +2417,216 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
                 .error(new IllegalArgumentException("Parameter policyAssignmentName is required and cannot be null."));
         }
         final String authorizationNamespace = "Microsoft.Authorization";
-        final String apiVersion = "2019-10-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listQueryResultsForResourceGroupLevelPolicyAssignment(
-                            this.client.getEndpoint(),
-                            policyEventsResource,
-                            subscriptionId,
-                            resourceGroupName,
-                            authorizationNamespace,
-                            policyAssignmentName,
-                            apiVersion,
-                            top,
-                            orderBy,
-                            select,
-                            from,
-                            to,
-                            filter,
-                            apply,
-                            skipToken,
-                            accept,
-                            context))
-            .<PagedResponse<PolicyEventInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null))
+            .withContext(context -> service.listQueryResultsForResourceGroupLevelPolicyAssignment(
+                this.client.getEndpoint(), policyEventsResource, subscriptionId, resourceGroupName,
+                authorizationNamespace, policyAssignmentName, apiVersion, top, orderBy, select, from, to, filter, apply,
+                skipToken, accept, context))
+            .<PagedResponse<PolicyEventInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().odataNextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Queries policy events for the resource group level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @param policyAssignmentName Policy assignment name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @param context The context to associate with this operation.
+     * nextLink element.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results along with {@link PagedResponse} on successful completion of {@link Mono}.
+     * @return query results as paginated response with {@link PagedFlux}.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<PolicyEventInner> listQueryResultsForResourceGroupLevelPolicyAssignmentAsync(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName,
+        String policyAssignmentName, Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to,
+        String filter, String apply, String skipToken) {
+        return new PagedFlux<>(() -> listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePageAsync(
+            policyEventsResource, subscriptionId, resourceGroupName, policyAssignmentName, top, orderBy, select, from,
+            to, filter, apply, skipToken), nextLink -> nextLinkSinglePageAsync(nextLink));
+    }
+
+    /**
+     * Queries policy events for the resource group level policy assignment.
+     * 
+     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
+     * allowed.
+     * @param subscriptionId Microsoft Azure subscription ID.
+     * @param resourceGroupName Resource group name.
+     * @param policyAssignmentName Policy assignment name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results as paginated response with {@link PagedFlux}.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<PolicyEventInner> listQueryResultsForResourceGroupLevelPolicyAssignmentAsync(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName,
+        String policyAssignmentName) {
+        final Integer top = null;
+        final String orderBy = null;
+        final String select = null;
+        final OffsetDateTime from = null;
+        final OffsetDateTime to = null;
+        final String filter = null;
+        final String apply = null;
+        final String skipToken = null;
+        return new PagedFlux<>(() -> listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePageAsync(
+            policyEventsResource, subscriptionId, resourceGroupName, policyAssignmentName, top, orderBy, select, from,
+            to, filter, apply, skipToken), nextLink -> nextLinkSinglePageAsync(nextLink));
+    }
+
+    /**
+     * Queries policy events for the resource group level policy assignment.
+     * 
+     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
+     * allowed.
+     * @param subscriptionId Microsoft Azure subscription ID.
+     * @param resourceGroupName Resource group name.
+     * @param policyAssignmentName Policy assignment name.
+     * @param top Maximum number of records to return.
+     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
+     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
+     * the service uses ($to - 1-day).
+     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
+     * service uses request time.
+     * @param filter OData filter expression.
+     * @param apply OData apply expression for aggregations.
+     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
+     * nextLink element.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PolicyEventInner>> listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePageAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        String policyAssignmentName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
+    private PagedResponse<PolicyEventInner> listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName,
+        String policyAssignmentName, Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to,
+        String filter, String apply, String skipToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (policyEventsResource == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
         }
         if (subscriptionId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (policyAssignmentName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter policyAssignmentName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyAssignmentName is required and cannot be null."));
         }
         final String authorizationNamespace = "Microsoft.Authorization";
-        final String apiVersion = "2019-10-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listQueryResultsForResourceGroupLevelPolicyAssignment(
-                this.client.getEndpoint(),
-                policyEventsResource,
-                subscriptionId,
-                resourceGroupName,
-                authorizationNamespace,
-                policyAssignmentName,
-                apiVersion,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null));
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForResourceGroupLevelPolicyAssignmentSync(this.client.getEndpoint(),
+                policyEventsResource, subscriptionId, resourceGroupName, authorizationNamespace, policyAssignmentName,
+                apiVersion, top, orderBy, select, from, to, filter, apply, skipToken, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
 
     /**
      * Queries policy events for the resource group level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @param policyAssignmentName Policy assignment name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForResourceGroupLevelPolicyAssignmentAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        String policyAssignmentName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    resourceGroupName,
-                    policyAssignmentName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
-            nextLink -> nextLinkSinglePageAsync(nextLink));
-    }
-
-    /**
-     * Queries policy events for the resource group level policy assignment.
-     *
-     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
-     * @param subscriptionId Microsoft Azure subscription ID.
-     * @param resourceGroupName Resource group name.
-     * @param policyAssignmentName Policy assignment name.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
-     */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForResourceGroupLevelPolicyAssignmentAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        String policyAssignmentName) {
-        final Integer top = null;
-        final String orderBy = null;
-        final String select = null;
-        final OffsetDateTime from = null;
-        final OffsetDateTime to = null;
-        final String filter = null;
-        final String apply = null;
-        final String skipToken = null;
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    resourceGroupName,
-                    policyAssignmentName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken),
-            nextLink -> nextLinkSinglePageAsync(nextLink));
-    }
-
-    /**
-     * Queries policy events for the resource group level policy assignment.
-     *
-     * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
-     * @param subscriptionId Microsoft Azure subscription ID.
-     * @param resourceGroupName Resource group name.
-     * @param policyAssignmentName Policy assignment name.
-     * @param top Maximum number of records to return.
-     * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
-     * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
-     * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
-     * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
-     * @param filter OData filter expression.
-     * @param apply OData apply expression for aggregations.
-     * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results as paginated response with {@link PagedFlux}.
+     * @return query results along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PolicyEventInner> listQueryResultsForResourceGroupLevelPolicyAssignmentAsync(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        String policyAssignmentName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        return new PagedFlux<>(
-            () ->
-                listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePageAsync(
-                    policyEventsResource,
-                    subscriptionId,
-                    resourceGroupName,
-                    policyAssignmentName,
-                    top,
-                    orderBy,
-                    select,
-                    from,
-                    to,
-                    filter,
-                    apply,
-                    skipToken,
-                    context),
-            nextLink -> nextLinkSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePage(
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName,
+        String policyAssignmentName, Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to,
+        String filter, String apply, String skipToken, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (policyEventsResource == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyEventsResource is required and cannot be null."));
+        }
+        if (subscriptionId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter subscriptionId is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (policyAssignmentName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter policyAssignmentName is required and cannot be null."));
+        }
+        final String authorizationNamespace = "Microsoft.Authorization";
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<PolicyEventsQueryResults> res
+            = service.listQueryResultsForResourceGroupLevelPolicyAssignmentSync(this.client.getEndpoint(),
+                policyEventsResource, subscriptionId, resourceGroupName, authorizationNamespace, policyAssignmentName,
+                apiVersion, top, orderBy, select, from, to, filter, apply, skipToken, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
 
     /**
      * Queries policy events for the resource group level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @param policyAssignmentName Policy assignment name.
@@ -3491,9 +2637,7 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<PolicyEventInner> listQueryResultsForResourceGroupLevelPolicyAssignment(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName,
         String policyAssignmentName) {
         final Integer top = null;
         final String orderBy = null;
@@ -3504,42 +2648,32 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         final String apply = null;
         final String skipToken = null;
         return new PagedIterable<>(
-            listQueryResultsForResourceGroupLevelPolicyAssignmentAsync(
-                policyEventsResource,
-                subscriptionId,
-                resourceGroupName,
-                policyAssignmentName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken));
+            () -> listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePage(policyEventsResource, subscriptionId,
+                resourceGroupName, policyAssignmentName, top, orderBy, select, from, to, filter, apply, skipToken),
+            nextLink -> nextLinkSinglePage(nextLink));
     }
 
     /**
      * Queries policy events for the resource group level policy assignment.
-     *
+     * 
      * @param policyEventsResource The name of the virtual resource under PolicyEvents resource type; only "default" is
-     *     allowed.
+     * allowed.
      * @param subscriptionId Microsoft Azure subscription ID.
      * @param resourceGroupName Resource group name.
      * @param policyAssignmentName Policy assignment name.
      * @param top Maximum number of records to return.
      * @param orderBy Ordering expression using OData notation. One or more comma-separated column names with an
-     *     optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
+     * optional "desc" (the default) or "asc", e.g. "$orderby=PolicyAssignmentId, ResourceId asc".
      * @param select Select expression using OData notation. Limits the columns on each record to just those requested,
-     *     e.g. "$select=PolicyAssignmentId, ResourceId".
+     * e.g. "$select=PolicyAssignmentId, ResourceId".
      * @param from ISO 8601 formatted timestamp specifying the start time of the interval to query. When not specified,
-     *     the service uses ($to - 1-day).
+     * the service uses ($to - 1-day).
      * @param to ISO 8601 formatted timestamp specifying the end time of the interval to query. When not specified, the
-     *     service uses request time.
+     * service uses request time.
      * @param filter OData filter expression.
      * @param apply OData apply expression for aggregations.
      * @param skipToken Skiptoken is only provided if a previous response returned a partial result as a part of
-     *     nextLink element.
+     * nextLink element.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -3548,41 +2682,18 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<PolicyEventInner> listQueryResultsForResourceGroupLevelPolicyAssignment(
-        PolicyEventsResourceType policyEventsResource,
-        String subscriptionId,
-        String resourceGroupName,
-        String policyAssignmentName,
-        Integer top,
-        String orderBy,
-        String select,
-        OffsetDateTime from,
-        OffsetDateTime to,
-        String filter,
-        String apply,
-        String skipToken,
-        Context context) {
-        return new PagedIterable<>(
-            listQueryResultsForResourceGroupLevelPolicyAssignmentAsync(
-                policyEventsResource,
-                subscriptionId,
-                resourceGroupName,
-                policyAssignmentName,
-                top,
-                orderBy,
-                select,
-                from,
-                to,
-                filter,
-                apply,
-                skipToken,
-                context));
+        PolicyEventsResourceType policyEventsResource, String subscriptionId, String resourceGroupName,
+        String policyAssignmentName, Integer top, String orderBy, String select, OffsetDateTime from, OffsetDateTime to,
+        String filter, String apply, String skipToken, Context context) {
+        return new PagedIterable<>(() -> listQueryResultsForResourceGroupLevelPolicyAssignmentSinglePage(
+            policyEventsResource, subscriptionId, resourceGroupName, policyAssignmentName, top, orderBy, select, from,
+            to, filter, apply, skipToken, context), nextLink -> nextLinkSinglePage(nextLink, context));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -3593,47 +2704,52 @@ public final class PolicyEventsClientImpl implements PolicyEventsClient {
         if (nextLink == null) {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
-        return FluxUtil
-            .withContext(context -> service.nextLink(nextLink, context))
-            .<PagedResponse<PolicyEventInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null))
+        return FluxUtil.withContext(context -> service.nextLink(nextLink, context))
+            .<PagedResponse<PolicyEventInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().odataNextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return query results along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PolicyEventInner> nextLinkSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        Response<PolicyEventsQueryResults> res = service.nextLinkSync(nextLink, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return query results along with {@link PagedResponse} on successful completion of {@link Mono}.
+     * @return query results along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PolicyEventInner>> nextLinkSinglePageAsync(String nextLink, Context context) {
+    private PagedResponse<PolicyEventInner> nextLinkSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
-        context = this.client.mergeContext(context);
-        return service
-            .nextLink(nextLink, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().odataNextLink(),
-                        null));
+        Response<PolicyEventsQueryResults> res = service.nextLinkSync(nextLink, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().odataNextLink(), null);
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(PolicyEventsClientImpl.class);
 }

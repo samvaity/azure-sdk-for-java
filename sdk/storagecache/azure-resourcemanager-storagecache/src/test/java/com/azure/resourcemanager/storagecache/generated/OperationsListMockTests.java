@@ -6,68 +6,64 @@ package com.azure.resourcemanager.storagecache.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.storagecache.StorageCacheManager;
 import com.azure.resourcemanager.storagecache.models.ApiOperation;
-import java.nio.ByteBuffer;
+import com.azure.resourcemanager.storagecache.models.MetricAggregationType;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class OperationsListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"display\":{\"operation\":\"ivsiy\",\"provider\":\"kdncj\",\"resource\":\"onbzoggculapzwy\",\"description\":\"gogtqxepnylbf\"},\"origin\":\"jlyjtlvofq\",\"isDataAction\":true,\"name\":\"cib\",\"properties\":{\"serviceSpecification\":{\"metricSpecifications\":[{\"name\":\"xrkjpvdw\",\"displayName\":\"zwiivwzjbhyzs\",\"displayDescription\":\"rkambt\",\"unit\":\"egv\",\"aggregationType\":\"vuqeqvldspast\",\"supportedAggregationTypes\":[\"Minimum\",\"Maximum\"],\"metricClass\":\"flvestmjlxrrilo\",\"dimensions\":[{},{},{}]},{\"name\":\"ewchpxlktwku\",\"displayName\":\"ycslevufuztcktyh\",\"displayDescription\":\"qedcgzulwm\",\"unit\":\"qzz\",\"aggregationType\":\"jvpglydzgk\",\"supportedAggregationTypes\":[\"Maximum\",\"Average\"],\"metricClass\":\"toepryu\",\"dimensions\":[{},{},{}]},{\"name\":\"tpzdmovzvfvaawzq\",\"displayName\":\"f\",\"displayDescription\":\"z\",\"unit\":\"iglaecx\",\"aggregationType\":\"t\",\"supportedAggregationTypes\":[\"None\",\"Average\"],\"metricClass\":\"zmlqtmldgxo\",\"dimensions\":[{},{}]},{\"name\":\"clnpkci\",\"displayName\":\"zriykhy\",\"displayDescription\":\"fvjlboxqvkjlmx\",\"unit\":\"mdy\",\"aggregationType\":\"dwdigumb\",\"supportedAggregationTypes\":[\"Total\",\"Minimum\",\"NotSpecified\",\"Minimum\"],\"metricClass\":\"tj\",\"dimensions\":[{},{}]}],\"logSpecifications\":[{\"name\":\"hezwwvaiq\",\"displayName\":\"vv\"}]}}}]}";
 
-        String responseStr =
-            "{\"value\":[{\"display\":{\"operation\":\"lt\",\"provider\":\"cjvefkdlfo\",\"resource\":\"ggkfpagaowpul\",\"description\":\"blylsyxkqjnsj\"},\"origin\":\"vti\",\"isDataAction\":true,\"name\":\"dszue\",\"properties\":{\"serviceSpecification\":{\"metricSpecifications\":[],\"logSpecifications\":[]}}}]}";
-
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
-
-        StorageCacheManager manager =
-            StorageCacheManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        StorageCacheManager manager = StorageCacheManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
         PagedIterable<ApiOperation> response = manager.operations().list(com.azure.core.util.Context.NONE);
 
-        Assertions.assertEquals("lt", response.iterator().next().display().operation());
-        Assertions.assertEquals("cjvefkdlfo", response.iterator().next().display().provider());
-        Assertions.assertEquals("ggkfpagaowpul", response.iterator().next().display().resource());
-        Assertions.assertEquals("blylsyxkqjnsj", response.iterator().next().display().description());
-        Assertions.assertEquals("vti", response.iterator().next().origin());
-        Assertions.assertEquals(true, response.iterator().next().isDataAction());
-        Assertions.assertEquals("dszue", response.iterator().next().name());
+        Assertions.assertEquals("ivsiy", response.iterator().next().display().operation());
+        Assertions.assertEquals("kdncj", response.iterator().next().display().provider());
+        Assertions.assertEquals("onbzoggculapzwy", response.iterator().next().display().resource());
+        Assertions.assertEquals("gogtqxepnylbf", response.iterator().next().display().description());
+        Assertions.assertEquals("jlyjtlvofq", response.iterator().next().origin());
+        Assertions.assertTrue(response.iterator().next().isDataAction());
+        Assertions.assertEquals("cib", response.iterator().next().name());
+        Assertions.assertEquals("xrkjpvdw",
+            response.iterator().next().serviceSpecification().metricSpecifications().get(0).name());
+        Assertions.assertEquals("zwiivwzjbhyzs",
+            response.iterator().next().serviceSpecification().metricSpecifications().get(0).displayName());
+        Assertions.assertEquals("rkambt",
+            response.iterator().next().serviceSpecification().metricSpecifications().get(0).displayDescription());
+        Assertions.assertEquals("egv",
+            response.iterator().next().serviceSpecification().metricSpecifications().get(0).unit());
+        Assertions.assertEquals("vuqeqvldspast",
+            response.iterator().next().serviceSpecification().metricSpecifications().get(0).aggregationType());
+        Assertions.assertEquals(MetricAggregationType.MINIMUM,
+            response.iterator()
+                .next()
+                .serviceSpecification()
+                .metricSpecifications()
+                .get(0)
+                .supportedAggregationTypes()
+                .get(0));
+        Assertions.assertEquals("flvestmjlxrrilo",
+            response.iterator().next().serviceSpecification().metricSpecifications().get(0).metricClass());
+        Assertions.assertEquals("hezwwvaiq",
+            response.iterator().next().serviceSpecification().logSpecifications().get(0).name());
+        Assertions.assertEquals("vv",
+            response.iterator().next().serviceSpecification().logSpecifications().get(0).displayName());
     }
 }

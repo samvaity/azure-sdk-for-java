@@ -11,6 +11,7 @@ import com.azure.core.util.Context;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.resourcemanager.networkcloud.fluent.BareMetalMachinesClient;
 import com.azure.resourcemanager.networkcloud.fluent.models.BareMetalMachineInner;
+import com.azure.resourcemanager.networkcloud.fluent.models.OperationStatusResultInner;
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachine;
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachineCordonParameters;
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachinePowerOffParameters;
@@ -18,8 +19,8 @@ import com.azure.resourcemanager.networkcloud.models.BareMetalMachineReplacePara
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachineRunCommandParameters;
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachineRunDataExtractsParameters;
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachineRunReadCommandsParameters;
-import com.azure.resourcemanager.networkcloud.models.BareMetalMachineValidateHardwareParameters;
 import com.azure.resourcemanager.networkcloud.models.BareMetalMachines;
+import com.azure.resourcemanager.networkcloud.models.OperationStatusResult;
 
 public final class BareMetalMachinesImpl implements BareMetalMachines {
     private static final ClientLogger LOGGER = new ClientLogger(BareMetalMachinesImpl.class);
@@ -28,8 +29,7 @@ public final class BareMetalMachinesImpl implements BareMetalMachines {
 
     private final com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager;
 
-    public BareMetalMachinesImpl(
-        BareMetalMachinesClient innerClient,
+    public BareMetalMachinesImpl(BareMetalMachinesClient innerClient,
         com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
@@ -37,34 +37,32 @@ public final class BareMetalMachinesImpl implements BareMetalMachines {
 
     public PagedIterable<BareMetalMachine> list() {
         PagedIterable<BareMetalMachineInner> inner = this.serviceClient().list();
-        return Utils.mapPage(inner, inner1 -> new BareMetalMachineImpl(inner1, this.manager()));
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new BareMetalMachineImpl(inner1, this.manager()));
     }
 
-    public PagedIterable<BareMetalMachine> list(Context context) {
-        PagedIterable<BareMetalMachineInner> inner = this.serviceClient().list(context);
-        return Utils.mapPage(inner, inner1 -> new BareMetalMachineImpl(inner1, this.manager()));
+    public PagedIterable<BareMetalMachine> list(Integer top, String skipToken, Context context) {
+        PagedIterable<BareMetalMachineInner> inner = this.serviceClient().list(top, skipToken, context);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new BareMetalMachineImpl(inner1, this.manager()));
     }
 
     public PagedIterable<BareMetalMachine> listByResourceGroup(String resourceGroupName) {
         PagedIterable<BareMetalMachineInner> inner = this.serviceClient().listByResourceGroup(resourceGroupName);
-        return Utils.mapPage(inner, inner1 -> new BareMetalMachineImpl(inner1, this.manager()));
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new BareMetalMachineImpl(inner1, this.manager()));
     }
 
-    public PagedIterable<BareMetalMachine> listByResourceGroup(String resourceGroupName, Context context) {
-        PagedIterable<BareMetalMachineInner> inner =
-            this.serviceClient().listByResourceGroup(resourceGroupName, context);
-        return Utils.mapPage(inner, inner1 -> new BareMetalMachineImpl(inner1, this.manager()));
+    public PagedIterable<BareMetalMachine> listByResourceGroup(String resourceGroupName, Integer top, String skipToken,
+        Context context) {
+        PagedIterable<BareMetalMachineInner> inner
+            = this.serviceClient().listByResourceGroup(resourceGroupName, top, skipToken, context);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new BareMetalMachineImpl(inner1, this.manager()));
     }
 
-    public Response<BareMetalMachine> getByResourceGroupWithResponse(
-        String resourceGroupName, String bareMetalMachineName, Context context) {
-        Response<BareMetalMachineInner> inner =
-            this.serviceClient().getByResourceGroupWithResponse(resourceGroupName, bareMetalMachineName, context);
+    public Response<BareMetalMachine> getByResourceGroupWithResponse(String resourceGroupName,
+        String bareMetalMachineName, Context context) {
+        Response<BareMetalMachineInner> inner
+            = this.serviceClient().getByResourceGroupWithResponse(resourceGroupName, bareMetalMachineName, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new BareMetalMachineImpl(inner.getValue(), this.manager()));
         } else {
             return null;
@@ -80,245 +78,311 @@ public final class BareMetalMachinesImpl implements BareMetalMachines {
         }
     }
 
-    public void deleteByResourceGroup(String resourceGroupName, String bareMetalMachineName) {
-        this.serviceClient().delete(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult deleteByResourceGroup(String resourceGroupName, String bareMetalMachineName) {
+        OperationStatusResultInner inner = this.serviceClient().delete(resourceGroupName, bareMetalMachineName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void delete(String resourceGroupName, String bareMetalMachineName, Context context) {
-        this.serviceClient().delete(resourceGroupName, bareMetalMachineName, context);
+    public OperationStatusResult delete(String resourceGroupName, String bareMetalMachineName, String ifMatch,
+        String ifNoneMatch, Context context) {
+        OperationStatusResultInner inner
+            = this.serviceClient().delete(resourceGroupName, bareMetalMachineName, ifMatch, ifNoneMatch, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void cordon(String resourceGroupName, String bareMetalMachineName) {
-        this.serviceClient().cordon(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult cordon(String resourceGroupName, String bareMetalMachineName) {
+        OperationStatusResultInner inner = this.serviceClient().cordon(resourceGroupName, bareMetalMachineName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void cordon(
-        String resourceGroupName,
-        String bareMetalMachineName,
-        BareMetalMachineCordonParameters bareMetalMachineCordonParameters,
-        Context context) {
-        this.serviceClient().cordon(resourceGroupName, bareMetalMachineName, bareMetalMachineCordonParameters, context);
+    public OperationStatusResult cordon(String resourceGroupName, String bareMetalMachineName,
+        BareMetalMachineCordonParameters bareMetalMachineCordonParameters, Context context) {
+        OperationStatusResultInner inner = this.serviceClient()
+            .cordon(resourceGroupName, bareMetalMachineName, bareMetalMachineCordonParameters, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void powerOff(String resourceGroupName, String bareMetalMachineName) {
-        this.serviceClient().powerOff(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult powerOff(String resourceGroupName, String bareMetalMachineName) {
+        OperationStatusResultInner inner = this.serviceClient().powerOff(resourceGroupName, bareMetalMachineName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void powerOff(
-        String resourceGroupName,
-        String bareMetalMachineName,
-        BareMetalMachinePowerOffParameters bareMetalMachinePowerOffParameters,
-        Context context) {
-        this
-            .serviceClient()
+    public OperationStatusResult powerOff(String resourceGroupName, String bareMetalMachineName,
+        BareMetalMachinePowerOffParameters bareMetalMachinePowerOffParameters, Context context) {
+        OperationStatusResultInner inner = this.serviceClient()
             .powerOff(resourceGroupName, bareMetalMachineName, bareMetalMachinePowerOffParameters, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void reimage(String resourceGroupName, String bareMetalMachineName) {
-        this.serviceClient().reimage(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult reimage(String resourceGroupName, String bareMetalMachineName) {
+        OperationStatusResultInner inner = this.serviceClient().reimage(resourceGroupName, bareMetalMachineName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void reimage(String resourceGroupName, String bareMetalMachineName, Context context) {
-        this.serviceClient().reimage(resourceGroupName, bareMetalMachineName, context);
+    public OperationStatusResult reimage(String resourceGroupName, String bareMetalMachineName, Context context) {
+        OperationStatusResultInner inner
+            = this.serviceClient().reimage(resourceGroupName, bareMetalMachineName, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void replace(String resourceGroupName, String bareMetalMachineName) {
-        this.serviceClient().replace(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult replace(String resourceGroupName, String bareMetalMachineName) {
+        OperationStatusResultInner inner = this.serviceClient().replace(resourceGroupName, bareMetalMachineName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void replace(
-        String resourceGroupName,
-        String bareMetalMachineName,
-        BareMetalMachineReplaceParameters bareMetalMachineReplaceParameters,
-        Context context) {
-        this
-            .serviceClient()
+    public OperationStatusResult replace(String resourceGroupName, String bareMetalMachineName,
+        BareMetalMachineReplaceParameters bareMetalMachineReplaceParameters, Context context) {
+        OperationStatusResultInner inner = this.serviceClient()
             .replace(resourceGroupName, bareMetalMachineName, bareMetalMachineReplaceParameters, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void restart(String resourceGroupName, String bareMetalMachineName) {
-        this.serviceClient().restart(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult restart(String resourceGroupName, String bareMetalMachineName) {
+        OperationStatusResultInner inner = this.serviceClient().restart(resourceGroupName, bareMetalMachineName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void restart(String resourceGroupName, String bareMetalMachineName, Context context) {
-        this.serviceClient().restart(resourceGroupName, bareMetalMachineName, context);
+    public OperationStatusResult restart(String resourceGroupName, String bareMetalMachineName, Context context) {
+        OperationStatusResultInner inner
+            = this.serviceClient().restart(resourceGroupName, bareMetalMachineName, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void runCommand(
-        String resourceGroupName,
-        String bareMetalMachineName,
+    public OperationStatusResult runCommand(String resourceGroupName, String bareMetalMachineName,
         BareMetalMachineRunCommandParameters bareMetalMachineRunCommandParameters) {
-        this.serviceClient().runCommand(resourceGroupName, bareMetalMachineName, bareMetalMachineRunCommandParameters);
+        OperationStatusResultInner inner = this.serviceClient()
+            .runCommand(resourceGroupName, bareMetalMachineName, bareMetalMachineRunCommandParameters);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void runCommand(
-        String resourceGroupName,
-        String bareMetalMachineName,
-        BareMetalMachineRunCommandParameters bareMetalMachineRunCommandParameters,
-        Context context) {
-        this
-            .serviceClient()
+    public OperationStatusResult runCommand(String resourceGroupName, String bareMetalMachineName,
+        BareMetalMachineRunCommandParameters bareMetalMachineRunCommandParameters, Context context) {
+        OperationStatusResultInner inner = this.serviceClient()
             .runCommand(resourceGroupName, bareMetalMachineName, bareMetalMachineRunCommandParameters, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void runDataExtracts(
-        String resourceGroupName,
-        String bareMetalMachineName,
+    public OperationStatusResult runDataExtracts(String resourceGroupName, String bareMetalMachineName,
         BareMetalMachineRunDataExtractsParameters bareMetalMachineRunDataExtractsParameters) {
-        this
-            .serviceClient()
+        OperationStatusResultInner inner = this.serviceClient()
             .runDataExtracts(resourceGroupName, bareMetalMachineName, bareMetalMachineRunDataExtractsParameters);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void runDataExtracts(
-        String resourceGroupName,
-        String bareMetalMachineName,
-        BareMetalMachineRunDataExtractsParameters bareMetalMachineRunDataExtractsParameters,
+    public OperationStatusResult runDataExtracts(String resourceGroupName, String bareMetalMachineName,
+        BareMetalMachineRunDataExtractsParameters bareMetalMachineRunDataExtractsParameters, Context context) {
+        OperationStatusResultInner inner = this.serviceClient()
+            .runDataExtracts(resourceGroupName, bareMetalMachineName, bareMetalMachineRunDataExtractsParameters,
+                context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
+    }
+
+    public OperationStatusResult runDataExtractsRestricted(String resourceGroupName, String bareMetalMachineName,
+        BareMetalMachineRunDataExtractsParameters bareMetalMachineRunDataExtractsRestrictedParameters) {
+        OperationStatusResultInner inner = this.serviceClient()
+            .runDataExtractsRestricted(resourceGroupName, bareMetalMachineName,
+                bareMetalMachineRunDataExtractsRestrictedParameters);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
+    }
+
+    public OperationStatusResult runDataExtractsRestricted(String resourceGroupName, String bareMetalMachineName,
+        BareMetalMachineRunDataExtractsParameters bareMetalMachineRunDataExtractsRestrictedParameters,
         Context context) {
-        this
-            .serviceClient()
-            .runDataExtracts(
-                resourceGroupName, bareMetalMachineName, bareMetalMachineRunDataExtractsParameters, context);
+        OperationStatusResultInner inner = this.serviceClient()
+            .runDataExtractsRestricted(resourceGroupName, bareMetalMachineName,
+                bareMetalMachineRunDataExtractsRestrictedParameters, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void runReadCommands(
-        String resourceGroupName,
-        String bareMetalMachineName,
+    public OperationStatusResult runReadCommands(String resourceGroupName, String bareMetalMachineName,
         BareMetalMachineRunReadCommandsParameters bareMetalMachineRunReadCommandsParameters) {
-        this
-            .serviceClient()
+        OperationStatusResultInner inner = this.serviceClient()
             .runReadCommands(resourceGroupName, bareMetalMachineName, bareMetalMachineRunReadCommandsParameters);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void runReadCommands(
-        String resourceGroupName,
-        String bareMetalMachineName,
-        BareMetalMachineRunReadCommandsParameters bareMetalMachineRunReadCommandsParameters,
-        Context context) {
-        this
-            .serviceClient()
-            .runReadCommands(
-                resourceGroupName, bareMetalMachineName, bareMetalMachineRunReadCommandsParameters, context);
+    public OperationStatusResult runReadCommands(String resourceGroupName, String bareMetalMachineName,
+        BareMetalMachineRunReadCommandsParameters bareMetalMachineRunReadCommandsParameters, Context context) {
+        OperationStatusResultInner inner = this.serviceClient()
+            .runReadCommands(resourceGroupName, bareMetalMachineName, bareMetalMachineRunReadCommandsParameters,
+                context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void start(String resourceGroupName, String bareMetalMachineName) {
-        this.serviceClient().start(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult start(String resourceGroupName, String bareMetalMachineName) {
+        OperationStatusResultInner inner = this.serviceClient().start(resourceGroupName, bareMetalMachineName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void start(String resourceGroupName, String bareMetalMachineName, Context context) {
-        this.serviceClient().start(resourceGroupName, bareMetalMachineName, context);
+    public OperationStatusResult start(String resourceGroupName, String bareMetalMachineName, Context context) {
+        OperationStatusResultInner inner = this.serviceClient().start(resourceGroupName, bareMetalMachineName, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void uncordon(String resourceGroupName, String bareMetalMachineName) {
-        this.serviceClient().uncordon(resourceGroupName, bareMetalMachineName);
+    public OperationStatusResult uncordon(String resourceGroupName, String bareMetalMachineName) {
+        OperationStatusResultInner inner = this.serviceClient().uncordon(resourceGroupName, bareMetalMachineName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void uncordon(String resourceGroupName, String bareMetalMachineName, Context context) {
-        this.serviceClient().uncordon(resourceGroupName, bareMetalMachineName, context);
-    }
-
-    public void validateHardware(
-        String resourceGroupName,
-        String bareMetalMachineName,
-        BareMetalMachineValidateHardwareParameters bareMetalMachineValidateHardwareParameters) {
-        this
-            .serviceClient()
-            .validateHardware(resourceGroupName, bareMetalMachineName, bareMetalMachineValidateHardwareParameters);
-    }
-
-    public void validateHardware(
-        String resourceGroupName,
-        String bareMetalMachineName,
-        BareMetalMachineValidateHardwareParameters bareMetalMachineValidateHardwareParameters,
-        Context context) {
-        this
-            .serviceClient()
-            .validateHardware(
-                resourceGroupName, bareMetalMachineName, bareMetalMachineValidateHardwareParameters, context);
+    public OperationStatusResult uncordon(String resourceGroupName, String bareMetalMachineName, Context context) {
+        OperationStatusResultInner inner
+            = this.serviceClient().uncordon(resourceGroupName, bareMetalMachineName, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
     public BareMetalMachine getById(String id) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String bareMetalMachineName = Utils.getValueFromIdByName(id, "bareMetalMachines");
+        String bareMetalMachineName = ResourceManagerUtils.getValueFromIdByName(id, "bareMetalMachines");
         if (bareMetalMachineName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'bareMetalMachines'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'bareMetalMachines'.", id)));
         }
         return this.getByResourceGroupWithResponse(resourceGroupName, bareMetalMachineName, Context.NONE).getValue();
     }
 
     public Response<BareMetalMachine> getByIdWithResponse(String id, Context context) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String bareMetalMachineName = Utils.getValueFromIdByName(id, "bareMetalMachines");
+        String bareMetalMachineName = ResourceManagerUtils.getValueFromIdByName(id, "bareMetalMachines");
         if (bareMetalMachineName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'bareMetalMachines'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'bareMetalMachines'.", id)));
         }
         return this.getByResourceGroupWithResponse(resourceGroupName, bareMetalMachineName, context);
     }
 
-    public void deleteById(String id) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+    public OperationStatusResult deleteById(String id) {
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String bareMetalMachineName = Utils.getValueFromIdByName(id, "bareMetalMachines");
+        String bareMetalMachineName = ResourceManagerUtils.getValueFromIdByName(id, "bareMetalMachines");
         if (bareMetalMachineName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'bareMetalMachines'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'bareMetalMachines'.", id)));
         }
-        this.delete(resourceGroupName, bareMetalMachineName, Context.NONE);
+        String localIfMatch = null;
+        String localIfNoneMatch = null;
+        return this.delete(resourceGroupName, bareMetalMachineName, localIfMatch, localIfNoneMatch, Context.NONE);
     }
 
-    public void deleteByIdWithResponse(String id, Context context) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+    public OperationStatusResult deleteByIdWithResponse(String id, String ifMatch, String ifNoneMatch,
+        Context context) {
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String bareMetalMachineName = Utils.getValueFromIdByName(id, "bareMetalMachines");
+        String bareMetalMachineName = ResourceManagerUtils.getValueFromIdByName(id, "bareMetalMachines");
         if (bareMetalMachineName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'bareMetalMachines'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'bareMetalMachines'.", id)));
         }
-        this.delete(resourceGroupName, bareMetalMachineName, context);
+        return this.delete(resourceGroupName, bareMetalMachineName, ifMatch, ifNoneMatch, context);
     }
 
     private BareMetalMachinesClient serviceClient() {

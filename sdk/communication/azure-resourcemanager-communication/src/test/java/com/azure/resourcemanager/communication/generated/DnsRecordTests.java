@@ -10,10 +10,10 @@ import com.azure.resourcemanager.communication.models.DnsRecord;
 public final class DnsRecordTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DnsRecord model =
-            BinaryData
-                .fromString("{\"type\":\"dxob\",\"name\":\"dxkqpx\",\"value\":\"ajionpimexgstxg\",\"ttl\":1489591694}")
-                .toObject(DnsRecord.class);
+        DnsRecord model = BinaryData
+            .fromString(
+                "{\"type\":\"fjpgddtocjjxhvp\",\"name\":\"uexhdzx\",\"value\":\"qeojnxqbzvddntw\",\"ttl\":592172158}")
+            .toObject(DnsRecord.class);
     }
 
     @org.junit.jupiter.api.Test

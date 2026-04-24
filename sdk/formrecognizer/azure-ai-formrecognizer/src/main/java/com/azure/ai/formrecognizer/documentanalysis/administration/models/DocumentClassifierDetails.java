@@ -40,10 +40,11 @@ public final class DocumentClassifierDetails {
     /*
      * List of document types to classify against.
      */
-    private Map<String, ClassifierDocumentTypeDetails> docTypes;
+    private Map<String, ClassifierDocumentTypeDetails> documentTypes;
 
     /** Creates an instance of DocumentClassifierDetails class. */
-    public DocumentClassifierDetails() {}
+    public DocumentClassifierDetails() {
+    }
 
     /**
      * Get the classifierId property: Unique document classifier name.
@@ -118,71 +119,76 @@ public final class DocumentClassifierDetails {
     }
 
     /**
-     * Get the apiVersion property: API version used to create this document classifier.
+     * Get the Service version used to create this document classifier.
      *
-     * @return the apiVersion value.
+     * @return the serviceVersion value.
      */
     public String getServiceVersion() {
         return this.serviceVersion;
     }
 
     /**
-     * Set the apiVersion property: API version used to create this document classifier.
+     * Set the service version used to create this document classifier.
      *
-     * @param serviceVersion the apiVersion value to set.
+     * @param serviceVersion the service version value to set.
      */
     void setServiceVersion(String serviceVersion) {
         this.serviceVersion = serviceVersion;
     }
 
     /**
-     * Get the docTypes property: List of document types to classify against.
+     * Get list of document types to classify against along with their details.
      *
      * @return the docTypes value.
      */
-    public Map<String, ClassifierDocumentTypeDetails> getDocumentTypeDetails() {
-        return this.docTypes;
+    public Map<String, ClassifierDocumentTypeDetails> getDocumentTypes() {
+        return this.documentTypes;
     }
 
     /**
      * Set the docTypes property: List of document types to classify against.
      *
-     * @param docTypes the docTypes value to set.
+     * @param documentTypes the docTypes value to set.
      */
-    void setDocTypes(Map<String, ClassifierDocumentTypeDetails> docTypes) {
-        this.docTypes = docTypes;
+    void setDocumentTypes(Map<String, ClassifierDocumentTypeDetails> documentTypes) {
+        this.documentTypes = documentTypes;
     }
 
     static {
-        DocumentClassifierDetailsHelper.setAccessor(new DocumentClassifierDetailsHelper.DocumentClassifierDetailsAccessor() {
-            @Override
-            public void setClassifierId(DocumentClassifierDetails documentClassifierDetails, String modelId) {
-                documentClassifierDetails.setClassifierId(modelId);
-            }
+        DocumentClassifierDetailsHelper
+            .setAccessor(new DocumentClassifierDetailsHelper.DocumentClassifierDetailsAccessor() {
+                @Override
+                public void setClassifierId(DocumentClassifierDetails documentClassifierDetails, String modelId) {
+                    documentClassifierDetails.setClassifierId(modelId);
+                }
 
-            @Override
-            public void setApiVersion(DocumentClassifierDetails documentClassifierDetails, String description) {
-                documentClassifierDetails.setServiceVersion(description);
-            }
+                @Override
+                public void setServiceVersion(DocumentClassifierDetails documentClassifierDetails, String description) {
+                    documentClassifierDetails.setServiceVersion(description);
+                }
 
-            @Override
-            public void setDescription(DocumentClassifierDetails documentClassifierDetails, String description) {
-                documentClassifierDetails.setDescription(description);
-            }
+                @Override
+                public void setDescription(DocumentClassifierDetails documentClassifierDetails, String description) {
+                    documentClassifierDetails.setDescription(description);
+                }
 
-            @Override
-            public void setCreatedOn(DocumentClassifierDetails documentClassifierDetails, OffsetDateTime createdDateTime) {
-                documentClassifierDetails.setCreatedDateTime(createdDateTime);
-            }
+                @Override
+                public void setCreatedOn(DocumentClassifierDetails documentClassifierDetails,
+                    OffsetDateTime createdDateTime) {
+                    documentClassifierDetails.setCreatedDateTime(createdDateTime);
+                }
 
-            @Override
-            public void setExpiresOn(DocumentClassifierDetails documentClassifierDetails, OffsetDateTime createdDateTime) {
-                documentClassifierDetails.setExpirationDateTime(createdDateTime);
-            }
-            @Override
-            public void setDocTypes(DocumentClassifierDetails documentClassifierDetails, Map<String, ClassifierDocumentTypeDetails> docTypes) {
-                documentClassifierDetails.setDocTypes(docTypes);
-            }
-        });
+                @Override
+                public void setExpiresOn(DocumentClassifierDetails documentClassifierDetails,
+                    OffsetDateTime createdDateTime) {
+                    documentClassifierDetails.setExpirationDateTime(createdDateTime);
+                }
+
+                @Override
+                public void setDocTypes(DocumentClassifierDetails documentClassifierDetails,
+                    Map<String, ClassifierDocumentTypeDetails> docTypes) {
+                    documentClassifierDetails.setDocumentTypes(docTypes);
+                }
+            });
     }
 }

@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Assertions;
 public final class ManagedIdentityPatchDefinitionTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ManagedIdentityPatchDefinition model =
-            BinaryData.fromString("{\"clientId\":\"ae\"}").toObject(ManagedIdentityPatchDefinition.class);
-        Assertions.assertEquals("ae", model.clientId());
+        ManagedIdentityPatchDefinition model
+            = BinaryData.fromString("{\"clientId\":\"ljyoxgvcltb\"}").toObject(ManagedIdentityPatchDefinition.class);
+        Assertions.assertEquals("ljyoxgvcltb", model.clientId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ManagedIdentityPatchDefinition model = new ManagedIdentityPatchDefinition().withClientId("ae");
+        ManagedIdentityPatchDefinition model = new ManagedIdentityPatchDefinition().withClientId("ljyoxgvcltb");
         model = BinaryData.fromObject(model).toObject(ManagedIdentityPatchDefinition.class);
-        Assertions.assertEquals("ae", model.clientId());
+        Assertions.assertEquals("ljyoxgvcltb", model.clientId());
     }
 }

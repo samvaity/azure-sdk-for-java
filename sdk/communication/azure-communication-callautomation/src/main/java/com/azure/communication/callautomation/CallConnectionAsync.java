@@ -7,38 +7,41 @@ import com.azure.communication.callautomation.implementation.CallConnectionsImpl
 import com.azure.communication.callautomation.implementation.CallMediasImpl;
 import com.azure.communication.callautomation.implementation.accesshelpers.AddParticipantResponseConstructorProxy;
 import com.azure.communication.callautomation.implementation.accesshelpers.CallConnectionPropertiesConstructorProxy;
+import com.azure.communication.callautomation.implementation.accesshelpers.CancelAddParticipantResponseConstructorProxy;
 import com.azure.communication.callautomation.implementation.accesshelpers.MuteParticipantsResponseConstructorProxy;
 import com.azure.communication.callautomation.implementation.accesshelpers.RemoveParticipantResponseConstructorProxy;
 import com.azure.communication.callautomation.implementation.accesshelpers.TransferCallResponseConstructorProxy;
-import com.azure.communication.callautomation.implementation.accesshelpers.UnmuteParticipantsResponseConstructorProxy;
 import com.azure.communication.callautomation.implementation.converters.CallParticipantConverter;
 import com.azure.communication.callautomation.implementation.converters.CommunicationIdentifierConverter;
 import com.azure.communication.callautomation.implementation.converters.PhoneNumberIdentifierConverter;
 import com.azure.communication.callautomation.implementation.models.AddParticipantRequestInternal;
-import com.azure.communication.callautomation.implementation.models.CustomContext;
+import com.azure.communication.callautomation.implementation.models.CancelAddParticipantRequest;
+import com.azure.communication.callautomation.implementation.models.CustomCallingContext;
 import com.azure.communication.callautomation.implementation.models.MuteParticipantsRequestInternal;
 import com.azure.communication.callautomation.implementation.models.RemoveParticipantRequestInternal;
 import com.azure.communication.callautomation.implementation.models.TransferToParticipantRequestInternal;
-import com.azure.communication.callautomation.implementation.models.UnmuteParticipantsRequestInternal;
-import com.azure.communication.callautomation.models.AddParticipantResult;
-import com.azure.communication.callautomation.models.CallParticipant;
 import com.azure.communication.callautomation.models.AddParticipantOptions;
+import com.azure.communication.callautomation.models.AddParticipantResult;
 import com.azure.communication.callautomation.models.CallConnectionProperties;
 import com.azure.communication.callautomation.models.CallInvite;
-import com.azure.communication.callautomation.models.MuteParticipantsOptions;
-import com.azure.communication.callautomation.models.MuteParticipantsResult;
+import com.azure.communication.callautomation.models.CallParticipant;
+import com.azure.communication.callautomation.models.CancelAddParticipantOperationOptions;
+import com.azure.communication.callautomation.models.CancelAddParticipantOperationResult;
+import com.azure.communication.callautomation.models.MuteParticipantOptions;
+import com.azure.communication.callautomation.models.MuteParticipantResult;
 import com.azure.communication.callautomation.models.RemoveParticipantOptions;
 import com.azure.communication.callautomation.models.RemoveParticipantResult;
 import com.azure.communication.callautomation.models.TransferCallResult;
 import com.azure.communication.callautomation.models.TransferCallToParticipantOptions;
-import com.azure.communication.callautomation.models.UnmuteParticipantsOptions;
-import com.azure.communication.callautomation.models.UnmuteParticipantsResult;
 import com.azure.communication.common.CommunicationIdentifier;
 import com.azure.communication.common.CommunicationUserIdentifier;
+import com.azure.communication.common.MicrosoftTeamsAppIdentifier;
 import com.azure.communication.common.MicrosoftTeamsUserIdentifier;
 import com.azure.communication.common.PhoneNumberIdentifier;
+import com.azure.communication.common.TeamsExtensionUserIdentifier;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.rest.PagedFlux;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
@@ -46,13 +49,12 @@ import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
 import reactor.core.publisher.Mono;
-import com.azure.core.exception.HttpResponseException;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.time.OffsetDateTime;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static com.azure.core.util.FluxUtil.monoError;
 import static com.azure.core.util.FluxUtil.withContext;
@@ -66,9 +68,7 @@ public final class CallConnectionAsync {
     private final CallMediasImpl callMediasInternal;
     private final ClientLogger logger;
 
-    CallConnectionAsync(
-        String callConnectionId,
-        CallConnectionsImpl callConnectionInternal,
+    CallConnectionAsync(String callConnectionId, CallConnectionsImpl callConnectionInternal,
         CallMediasImpl contentsInternal) {
         this.callConnectionId = callConnectionId;
         this.callConnectionInternal = callConnectionInternal;
@@ -104,14 +104,14 @@ public final class CallConnectionAsync {
         try {
             context = context == null ? Context.NONE : context;
 
-            return callConnectionInternal.getCallWithResponseAsync(callConnectionId, context)
-                .map(response -> {
-                    try {
-                        return new SimpleResponse<>(response, CallConnectionPropertiesConstructorProxy.create(response.getValue()));
-                    } catch (URISyntaxException e) {
-                        throw logger.logExceptionAsError(new RuntimeException(e));
-                    }
-                });
+            return callConnectionInternal.getCallWithResponseAsync(callConnectionId, context).map(response -> {
+                try {
+                    return new SimpleResponse<>(response,
+                        CallConnectionPropertiesConstructorProxy.create(response.getValue()));
+                } catch (URISyntaxException e) {
+                    throw logger.logExceptionAsError(new RuntimeException(e));
+                }
+            });
         } catch (RuntimeException ex) {
             return monoError(logger, ex);
         }
@@ -147,11 +147,8 @@ public final class CallConnectionAsync {
         try {
             context = context == null ? Context.NONE : context;
 
-            return (isForEveryone ? callConnectionInternal.terminateCallWithResponseAsync(
-                    callConnectionId,
-                    UUID.randomUUID(),
-                    OffsetDateTime.now(),
-                    context)
+            return (isForEveryone
+                ? callConnectionInternal.terminateCallWithResponseAsync(callConnectionId, context)
                 : callConnectionInternal.hangupCallWithResponseAsync(callConnectionId, context));
         } catch (RuntimeException ex) {
             return monoError(logger, ex);
@@ -184,14 +181,21 @@ public final class CallConnectionAsync {
         return withContext(context -> getParticipantWithResponseInternal(targetParticipant, context));
     }
 
-    Mono<Response<CallParticipant>> getParticipantWithResponseInternal(CommunicationIdentifier targetParticipant, Context context) {
+    Mono<Response<CallParticipant>> getParticipantWithResponseInternal(CommunicationIdentifier targetParticipant,
+        Context context) {
         try {
             context = context == null ? Context.NONE : context;
 
             String participantMri = targetParticipant.getRawId();
-            return callConnectionInternal.getParticipantWithResponseAsync(callConnectionId, participantMri, context)
-                .map(response ->
-                    new SimpleResponse<>(response, CallParticipantConverter.convert(response.getValue())));
+            String escapedParticipantMri = participantMri;
+            try {
+                escapedParticipantMri = URLEncoder.encode(participantMri, StandardCharsets.UTF_8.toString());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            return callConnectionInternal
+                .getParticipantWithResponseAsync(callConnectionId, escapedParticipantMri, context)
+                .map(response -> new SimpleResponse<>(response, CallParticipantConverter.convert(response.getValue())));
         } catch (RuntimeException ex) {
             return monoError(logger, ex);
         }
@@ -208,11 +212,11 @@ public final class CallConnectionAsync {
     public PagedFlux<CallParticipant> listParticipants() {
         try {
             return new PagedFlux<>(
-                () -> withContext(context -> this.callConnectionInternal.getParticipantsSinglePageAsync(
-                    callConnectionId, context)),
-                nextLink -> withContext(context -> this.callConnectionInternal.getParticipantsNextSinglePageAsync(
-                    nextLink, context)))
-                .mapPage(CallParticipantConverter::convert);
+                () -> withContext(
+                    context -> this.callConnectionInternal.getParticipantsSinglePageAsync(callConnectionId, context)),
+                nextLink -> withContext(
+                    context -> this.callConnectionInternal.getParticipantsNextSinglePageAsync(nextLink, context)))
+                        .mapPage(CallParticipantConverter::convert);
         } catch (RuntimeException ex) {
             return new PagedFlux<>(() -> monoError(logger, ex));
         }
@@ -221,7 +225,8 @@ public final class CallConnectionAsync {
     PagedFlux<CallParticipant> listParticipantsWithContext(Context context) {
         try {
             final Context serviceContext = context == null ? Context.NONE : context;
-            return callConnectionInternal.getParticipantsAsync(callConnectionId, serviceContext).mapPage(CallParticipantConverter::convert);
+            return callConnectionInternal.getParticipantsAsync(callConnectionId, serviceContext)
+                .mapPage(CallParticipantConverter::convert);
         } catch (RuntimeException ex) {
             return new PagedFlux<>(() -> monoError(logger, ex));
         }
@@ -240,11 +245,25 @@ public final class CallConnectionAsync {
     public Mono<TransferCallResult> transferCallToParticipant(CommunicationIdentifier targetParticipant) {
 
         if (targetParticipant instanceof CommunicationUserIdentifier) {
-            return transferCallToParticipantWithResponse(new TransferCallToParticipantOptions((CommunicationUserIdentifier) targetParticipant)).flatMap(FluxUtil::toMono);
+            return transferCallToParticipantWithResponse(
+                new TransferCallToParticipantOptions((CommunicationUserIdentifier) targetParticipant))
+                    .flatMap(FluxUtil::toMono);
         } else if (targetParticipant instanceof PhoneNumberIdentifier) {
-            return transferCallToParticipantWithResponse(new TransferCallToParticipantOptions((PhoneNumberIdentifier) targetParticipant)).flatMap(FluxUtil::toMono);
+            return transferCallToParticipantWithResponse(
+                new TransferCallToParticipantOptions((PhoneNumberIdentifier) targetParticipant))
+                    .flatMap(FluxUtil::toMono);
         } else if (targetParticipant instanceof MicrosoftTeamsUserIdentifier) {
-            return transferCallToParticipantWithResponse(new TransferCallToParticipantOptions((MicrosoftTeamsUserIdentifier) targetParticipant)).flatMap(FluxUtil::toMono);
+            return transferCallToParticipantWithResponse(
+                new TransferCallToParticipantOptions((MicrosoftTeamsUserIdentifier) targetParticipant))
+                    .flatMap(FluxUtil::toMono);
+        } else if (targetParticipant instanceof MicrosoftTeamsAppIdentifier) {
+            return transferCallToParticipantWithResponse(
+                new TransferCallToParticipantOptions((MicrosoftTeamsAppIdentifier) targetParticipant))
+                    .flatMap(FluxUtil::toMono);
+        } else if (targetParticipant instanceof TeamsExtensionUserIdentifier) {
+            return transferCallToParticipantWithResponse(
+                new TransferCallToParticipantOptions((TeamsExtensionUserIdentifier) targetParticipant))
+                    .flatMap(FluxUtil::toMono);
         } else {
             throw logger.logExceptionAsError(new IllegalArgumentException("targetParticipant type is invalid."));
         }
@@ -259,9 +278,10 @@ public final class CallConnectionAsync {
      * @return Response with result of transferring the call to a designated participant.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<TransferCallResult>> transferCallToParticipantWithResponse(
-        TransferCallToParticipantOptions transferCallToParticipantOptions) {
-        return withContext(context -> transferCallToParticipantWithResponseInternal(transferCallToParticipantOptions, context));
+    public Mono<Response<TransferCallResult>>
+        transferCallToParticipantWithResponse(TransferCallToParticipantOptions transferCallToParticipantOptions) {
+        return withContext(
+            context -> transferCallToParticipantWithResponseInternal(transferCallToParticipantOptions, context));
     }
 
     Mono<Response<TransferCallResult>> transferCallToParticipantWithResponseInternal(
@@ -270,26 +290,28 @@ public final class CallConnectionAsync {
             context = context == null ? Context.NONE : context;
 
             TransferToParticipantRequestInternal request = new TransferToParticipantRequestInternal()
-                .setTargetParticipant(CommunicationIdentifierConverter.convert(transferCallToParticipantOptions.getTargetParticipant()))
+                .setTargetParticipant(
+                    CommunicationIdentifierConverter.convert(transferCallToParticipantOptions.getTargetParticipant()))
                 .setOperationContext(transferCallToParticipantOptions.getOperationContext())
-                .setCallbackUriOverride(transferCallToParticipantOptions.getCallbackUrlOverride());
+                .setOperationCallbackUri(transferCallToParticipantOptions.getOperationCallbackUrl())
+                .setSourceCallerIdNumber(
+                    PhoneNumberIdentifierConverter.convert(transferCallToParticipantOptions.getSourceCallerIdNumber()));
 
-            if (transferCallToParticipantOptions.getCustomContext().getSipHeaders() != null || transferCallToParticipantOptions.getCustomContext().getVoipHeaders() != null) {
-                request.setCustomContext(new CustomContext()
-                            .setSipHeaders(transferCallToParticipantOptions.getCustomContext().getSipHeaders())
-                            .setVoipHeaders(transferCallToParticipantOptions.getCustomContext().getVoipHeaders()));
+            if (transferCallToParticipantOptions.getCustomCallingContext().getSipHeaders() != null
+                || transferCallToParticipantOptions.getCustomCallingContext().getVoipHeaders() != null) {
+                request.setCustomCallingContext(new CustomCallingContext()
+                    .setSipHeaders(transferCallToParticipantOptions.getCustomCallingContext().getSipHeaders())
+                    .setVoipHeaders(transferCallToParticipantOptions.getCustomCallingContext().getVoipHeaders()));
             }
-            
+
             if (transferCallToParticipantOptions.getTransferee() != null) {
-                request.setTransferee(CommunicationIdentifierConverter.convert(transferCallToParticipantOptions.getTransferee()));
+                request.setTransferee(
+                    CommunicationIdentifierConverter.convert(transferCallToParticipantOptions.getTransferee()));
             }
 
-            return callConnectionInternal.transferToParticipantWithResponseAsync(
-                    callConnectionId,
-                    request,
-                    UUID.randomUUID(),
-                    OffsetDateTime.now(),
-                    context).map(response -> new SimpleResponse<>(response, TransferCallResponseConstructorProxy.create(response.getValue())));
+            return callConnectionInternal.transferToParticipantWithResponseAsync(callConnectionId, request, context)
+                .map(response -> new SimpleResponse<>(response,
+                    TransferCallResponseConstructorProxy.create(response.getValue())));
         } catch (RuntimeException ex) {
             return monoError(logger, ex);
         }
@@ -317,19 +339,22 @@ public final class CallConnectionAsync {
      * @return Response with result of adding a participant to the call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<AddParticipantResult>> addParticipantWithResponse(AddParticipantOptions addParticipantOptions) {
+    public Mono<Response<AddParticipantResult>>
+        addParticipantWithResponse(AddParticipantOptions addParticipantOptions) {
         return withContext(context -> addParticipantWithResponseInternal(addParticipantOptions, context));
     }
 
     Mono<Response<AddParticipantResult>> addParticipantWithResponseInternal(AddParticipantOptions addParticipantOptions,
-                                                                              Context context) {
+        Context context) {
         try {
             AddParticipantRequestInternal request = new AddParticipantRequestInternal()
-                .setParticipantToAdd(CommunicationIdentifierConverter.convert(addParticipantOptions.getTargetParticipant().getTargetParticipant()))
+                .setParticipantToAdd(CommunicationIdentifierConverter
+                    .convert(addParticipantOptions.getTargetParticipant().getTargetParticipant()))
                 .setSourceDisplayName(addParticipantOptions.getTargetParticipant().getSourceDisplayName())
-                .setSourceCallerIdNumber(PhoneNumberIdentifierConverter.convert(addParticipantOptions.getTargetParticipant().getSourceCallerIdNumber()))
+                .setSourceCallerIdNumber(PhoneNumberIdentifierConverter
+                    .convert(addParticipantOptions.getTargetParticipant().getSourceCallerIdNumber()))
                 .setOperationContext(addParticipantOptions.getOperationContext())
-                .setCallbackUriOverride(addParticipantOptions.getCallbackUrlOverride());
+                .setOperationCallbackUri(addParticipantOptions.getOperationCallbackUrl());
 
             // Need to do a null check since it is optional; it might be a null and breaks the get function as well as type casting.
             if (addParticipantOptions.getInvitationTimeout() != null) {
@@ -337,20 +362,19 @@ public final class CallConnectionAsync {
             }
 
             // Need to do a null check since SipHeaders and VoipHeaders are optional; If they both are null then we do not need to set custom context
-            if (addParticipantOptions.getTargetParticipant().getCustomContext().getSipHeaders() != null || addParticipantOptions.getTargetParticipant().getCustomContext().getVoipHeaders() != null) {
-                CustomContext customContext = new CustomContext();
-                customContext.setSipHeaders(addParticipantOptions.getTargetParticipant().getCustomContext().getSipHeaders());
-                customContext.setVoipHeaders(addParticipantOptions.getTargetParticipant().getCustomContext().getVoipHeaders());
-                request.setCustomContext(customContext);
+            if (addParticipantOptions.getTargetParticipant().getCustomCallingContext().getSipHeaders() != null
+                || addParticipantOptions.getTargetParticipant().getCustomCallingContext().getVoipHeaders() != null) {
+                CustomCallingContext customCallingContext = new CustomCallingContext();
+                customCallingContext.setSipHeaders(
+                    addParticipantOptions.getTargetParticipant().getCustomCallingContext().getSipHeaders());
+                customCallingContext.setVoipHeaders(
+                    addParticipantOptions.getTargetParticipant().getCustomCallingContext().getVoipHeaders());
+                request.setCustomCallingContext(customCallingContext);
             }
 
-            return callConnectionInternal.addParticipantWithResponseAsync(
-                    callConnectionId,
-                    request,
-                    UUID.randomUUID(),
-                    OffsetDateTime.now(),
-                    context
-            ).map(response -> new SimpleResponse<>(response, AddParticipantResponseConstructorProxy.create(response.getValue())));
+            return callConnectionInternal.addParticipantWithResponseAsync(callConnectionId, request, context)
+                .map(response -> new SimpleResponse<>(response,
+                    AddParticipantResponseConstructorProxy.create(response.getValue())));
         } catch (RuntimeException ex) {
             return monoError(logger, ex);
         }
@@ -366,7 +390,8 @@ public final class CallConnectionAsync {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<RemoveParticipantResult> removeParticipant(CommunicationIdentifier participantToRemove) {
-        return removeParticipantWithResponse(new RemoveParticipantOptions(participantToRemove)).flatMap(FluxUtil::toMono);
+        return removeParticipantWithResponse(new RemoveParticipantOptions(participantToRemove))
+            .flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -378,111 +403,112 @@ public final class CallConnectionAsync {
      * @return Response with result of removing a participant from the call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<RemoveParticipantResult>> removeParticipantWithResponse(RemoveParticipantOptions removeParticipantOptions) {
+    public Mono<Response<RemoveParticipantResult>>
+        removeParticipantWithResponse(RemoveParticipantOptions removeParticipantOptions) {
         return withContext(context -> removeParticipantWithResponseInternal(removeParticipantOptions, context));
     }
 
-    Mono<Response<RemoveParticipantResult>> removeParticipantWithResponseInternal(RemoveParticipantOptions removeParticipantOptions, Context context) {
+    Mono<Response<RemoveParticipantResult>>
+        removeParticipantWithResponseInternal(RemoveParticipantOptions removeParticipantOptions, Context context) {
         try {
             context = context == null ? Context.NONE : context;
 
             RemoveParticipantRequestInternal request = new RemoveParticipantRequestInternal()
-                .setParticipantToRemove(CommunicationIdentifierConverter.convert(removeParticipantOptions.getParticipant()))
+                .setParticipantToRemove(
+                    CommunicationIdentifierConverter.convert(removeParticipantOptions.getParticipant()))
                 .setOperationContext(removeParticipantOptions.getOperationContext())
-                .setCallbackUriOverride(removeParticipantOptions.getCallbackUrlOverride());
+                .setOperationCallbackUri(removeParticipantOptions.getOperationCallbackUrl());
 
-            return callConnectionInternal.removeParticipantWithResponseAsync(
-                    callConnectionId,
-                    request,
-                    UUID.randomUUID(),
-                    OffsetDateTime.now(),
-                    context).map(response -> new SimpleResponse<>(response, RemoveParticipantResponseConstructorProxy.create(response.getValue())));
+            return callConnectionInternal.removeParticipantWithResponseAsync(callConnectionId, request, context)
+                .map(response -> new SimpleResponse<>(response,
+                    RemoveParticipantResponseConstructorProxy.create(response.getValue())));
         } catch (RuntimeException ex) {
             return monoError(logger, ex);
         }
     }
 
     /**
-     * Mutes participants in the call.
+     * Mutes a participant in the call.
+     *
      * @param targetParticipant - Participant to be muted. Only ACS Users are currently supported.
-     * @return A MuteParticipantsResult object.
+     * @return A MuteParticipantResult object.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<MuteParticipantsResult> muteParticipantsAsync(CommunicationIdentifier targetParticipant) {
-        return muteParticipantWithResponseInternal(
-            new MuteParticipantsOptions(Collections.singletonList(targetParticipant)),
-            null)
+    public Mono<MuteParticipantResult> muteParticipant(CommunicationIdentifier targetParticipant) {
+        return muteParticipantWithResponseInternal(new MuteParticipantOptions(targetParticipant), null)
             .flatMap(FluxUtil::toMono);
     }
 
     /**
-     * Mute participants in the call.
-     * @param muteParticipantsOptions - Options for the request.
-     * @return a Response containing the MuteParticipantsResult object.
+     * Mutes a participant in the call.
+     *
+     * @param options - Options for the request.
+     * @return Response containing the MuteParticipantResult object.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<MuteParticipantsResult>> muteParticipantsWithResponse(MuteParticipantsOptions muteParticipantsOptions) {
-        return withContext(context -> muteParticipantWithResponseInternal(muteParticipantsOptions, context));
+    public Mono<Response<MuteParticipantResult>> muteParticipantWithResponse(MuteParticipantOptions options) {
+        return withContext(context -> muteParticipantWithResponseInternal(options, context));
     }
 
-    Mono<Response<MuteParticipantsResult>> muteParticipantWithResponseInternal(MuteParticipantsOptions muteParticipantsOptions, Context context) {
+    Mono<Response<MuteParticipantResult>> muteParticipantWithResponseInternal(MuteParticipantOptions options,
+        Context context) {
         try {
             context = context == null ? Context.NONE : context;
             MuteParticipantsRequestInternal request = new MuteParticipantsRequestInternal()
-                .setTargetParticipants(muteParticipantsOptions.getTargetParticipant().stream()
-                    .map(CommunicationIdentifierConverter::convert)
-                    .collect(Collectors.toList()))
-                .setOperationContext(muteParticipantsOptions.getOperationContext());
+                .setTargetParticipants(
+                    Collections.singletonList(CommunicationIdentifierConverter.convert(options.getTargetParticipant())))
+                .setOperationContext(options.getOperationContext());
 
-            return callConnectionInternal.muteWithResponseAsync(
-                    callConnectionId,
-                    request,
-                    UUID.randomUUID(),
-                    OffsetDateTime.now(),
-                    context).map(internalResponse -> new SimpleResponse<>(internalResponse, MuteParticipantsResponseConstructorProxy.create(internalResponse.getValue())));
+            return callConnectionInternal.muteWithResponseAsync(callConnectionId, request, context)
+                .map(internalResponse -> new SimpleResponse<>(internalResponse,
+                    MuteParticipantsResponseConstructorProxy.create(internalResponse.getValue())));
         } catch (RuntimeException ex) {
             return monoError(logger, ex);
         }
     }
 
     /**
-     * Unmutes participants in the call.
-     * @param targetParticipant - Participant to be unmuted. Only ACS Users are currently supported.
-     * @return An UnmuteParticipantsResult object.
+     * Cancel add participant operation request.
+     *
+     * @param invitationId invitation ID used to add participant.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return Result of cancelling add participant request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<UnmuteParticipantsResult> unmuteParticipantsAsync(CommunicationIdentifier targetParticipant) {
-        return unmuteParticipantWithResponseInternal(
-            new UnmuteParticipantsOptions(Collections.singletonList(targetParticipant)),
-            null)
+    public Mono<CancelAddParticipantOperationResult> cancelAddParticipantOperation(String invitationId) {
+        return cancelAddParticipantOperationWithResponse(new CancelAddParticipantOperationOptions(invitationId))
             .flatMap(FluxUtil::toMono);
     }
 
     /**
-     * Unmute participants in the call.
-     * @param unmuteParticipantsOptions - Options for the request.
-     * @return a Response containing the UnmuteParticipantsResult object.
+     * Cancel add participant operation request.
+     *
+     * @param cancelAddParticipantOperationOptions Options bag for cancelAddParticipantOperationOptions.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return Response with result of cancelling add participant request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<UnmuteParticipantsResult>> unmuteParticipantsWithResponse(UnmuteParticipantsOptions unmuteParticipantsOptions) {
-        return withContext(context -> unmuteParticipantWithResponseInternal(unmuteParticipantsOptions, context));
+    public Mono<Response<CancelAddParticipantOperationResult>> cancelAddParticipantOperationWithResponse(
+        CancelAddParticipantOperationOptions cancelAddParticipantOperationOptions) {
+        return withContext(context -> cancelAddParticipantOperationWithResponseInternal(
+            cancelAddParticipantOperationOptions, context));
     }
 
-    Mono<Response<UnmuteParticipantsResult>> unmuteParticipantWithResponseInternal(UnmuteParticipantsOptions unmuteParticipantsOptions, Context context) {
+    Mono<Response<CancelAddParticipantOperationResult>> cancelAddParticipantOperationWithResponseInternal(
+        CancelAddParticipantOperationOptions cancelAddParticipantOperationOptions, Context context) {
         try {
             context = context == null ? Context.NONE : context;
-            UnmuteParticipantsRequestInternal request = new UnmuteParticipantsRequestInternal()
-                .setTargetParticipants(unmuteParticipantsOptions.getTargetParticipant().stream()
-                    .map(CommunicationIdentifierConverter::convert)
-                    .collect(Collectors.toList()))
-                .setOperationContext(unmuteParticipantsOptions.getOperationContext());
 
-            return callConnectionInternal.unmuteWithResponseAsync(
-                    callConnectionId,
-                    request,
-                    UUID.randomUUID(),
-                    OffsetDateTime.now(),
-                    context).map(internalResponse -> new SimpleResponse<>(internalResponse, UnmuteParticipantsResponseConstructorProxy.create(internalResponse.getValue())));
+            CancelAddParticipantRequest request = new CancelAddParticipantRequest()
+                .setInvitationId((cancelAddParticipantOperationOptions.getInvitationId()))
+                .setOperationContext(cancelAddParticipantOperationOptions.getOperationContext())
+                .setOperationCallbackUri(cancelAddParticipantOperationOptions.getOperationCallbackUrl());
+
+            return callConnectionInternal.cancelAddParticipantWithResponseAsync(callConnectionId, request, context)
+                .map(response -> new SimpleResponse<>(response,
+                    CancelAddParticipantResponseConstructorProxy.create(response.getValue())));
         } catch (RuntimeException ex) {
             return monoError(logger, ex);
         }

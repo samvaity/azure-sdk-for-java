@@ -5,99 +5,118 @@
 package com.azure.storage.file.share.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.util.DateTimeRfc1123;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.time.OffsetDateTime;
 
-/** The FilesDeleteHeaders model. */
-@JacksonXmlRootElement(localName = "null")
+/**
+ * The FilesDeleteHeaders model.
+ */
 @Fluent
 public final class FilesDeleteHeaders {
     /*
-     * The x-ms-version property.
-     */
-    @JsonProperty(value = "x-ms-version")
-    private String xMsVersion;
-
-    /*
      * The x-ms-request-id property.
      */
-    @JsonProperty(value = "x-ms-request-id")
+    @Generated
     private String xMsRequestId;
+
+    /*
+     * The x-ms-version property.
+     */
+    @Generated
+    private String xMsVersion;
 
     /*
      * The Date property.
      */
-    @JsonProperty(value = "Date")
+    @Generated
     private DateTimeRfc1123 date;
+
+    /*
+     * The x-ms-link-count property.
+     */
+    @Generated
+    private Long xMsLinkCount;
 
     private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
 
-    private static final HttpHeaderName X_MS_REQUEST_ID = HttpHeaderName.fromString("x-ms-request-id");
+    private static final HttpHeaderName X_MS_LINK_COUNT = HttpHeaderName.fromString("x-ms-link-count");
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of FilesDeleteHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public FilesDeleteHeaders(HttpHeaders rawHeaders) {
+        this.xMsRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_REQUEST_ID);
         this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
-        this.xMsRequestId = rawHeaders.getValue(X_MS_REQUEST_ID);
         String date = rawHeaders.getValue(HttpHeaderName.DATE);
         if (date != null) {
             this.date = new DateTimeRfc1123(date);
+        } else {
+            this.date = null;
+        }
+        String xMsLinkCount = rawHeaders.getValue(X_MS_LINK_COUNT);
+        if (xMsLinkCount != null) {
+            this.xMsLinkCount = Long.parseLong(xMsLinkCount);
+        } else {
+            this.xMsLinkCount = null;
         }
     }
 
     /**
-     * Get the xMsVersion property: The x-ms-version property.
-     *
-     * @return the xMsVersion value.
-     */
-    public String getXMsVersion() {
-        return this.xMsVersion;
-    }
-
-    /**
-     * Set the xMsVersion property: The x-ms-version property.
-     *
-     * @param xMsVersion the xMsVersion value to set.
-     * @return the FilesDeleteHeaders object itself.
-     */
-    public FilesDeleteHeaders setXMsVersion(String xMsVersion) {
-        this.xMsVersion = xMsVersion;
-        return this;
-    }
-
-    /**
      * Get the xMsRequestId property: The x-ms-request-id property.
-     *
+     * 
      * @return the xMsRequestId value.
      */
+    @Generated
     public String getXMsRequestId() {
         return this.xMsRequestId;
     }
 
     /**
      * Set the xMsRequestId property: The x-ms-request-id property.
-     *
+     * 
      * @param xMsRequestId the xMsRequestId value to set.
      * @return the FilesDeleteHeaders object itself.
      */
+    @Generated
     public FilesDeleteHeaders setXMsRequestId(String xMsRequestId) {
         this.xMsRequestId = xMsRequestId;
         return this;
     }
 
     /**
+     * Get the xMsVersion property: The x-ms-version property.
+     * 
+     * @return the xMsVersion value.
+     */
+    @Generated
+    public String getXMsVersion() {
+        return this.xMsVersion;
+    }
+
+    /**
+     * Set the xMsVersion property: The x-ms-version property.
+     * 
+     * @param xMsVersion the xMsVersion value to set.
+     * @return the FilesDeleteHeaders object itself.
+     */
+    @Generated
+    public FilesDeleteHeaders setXMsVersion(String xMsVersion) {
+        this.xMsVersion = xMsVersion;
+        return this;
+    }
+
+    /**
      * Get the date property: The Date property.
-     *
+     * 
      * @return the date value.
      */
+    @Generated
     public OffsetDateTime getDate() {
         if (this.date == null) {
             return null;
@@ -107,16 +126,39 @@ public final class FilesDeleteHeaders {
 
     /**
      * Set the date property: The Date property.
-     *
+     * 
      * @param date the date value to set.
      * @return the FilesDeleteHeaders object itself.
      */
+    @Generated
     public FilesDeleteHeaders setDate(OffsetDateTime date) {
         if (date == null) {
             this.date = null;
         } else {
             this.date = new DateTimeRfc1123(date);
         }
+        return this;
+    }
+
+    /**
+     * Get the xMsLinkCount property: The x-ms-link-count property.
+     * 
+     * @return the xMsLinkCount value.
+     */
+    @Generated
+    public Long getXMsLinkCount() {
+        return this.xMsLinkCount;
+    }
+
+    /**
+     * Set the xMsLinkCount property: The x-ms-link-count property.
+     * 
+     * @param xMsLinkCount the xMsLinkCount value to set.
+     * @return the FilesDeleteHeaders object itself.
+     */
+    @Generated
+    public FilesDeleteHeaders setXMsLinkCount(Long xMsLinkCount) {
+        this.xMsLinkCount = xMsLinkCount;
         return this;
     }
 }

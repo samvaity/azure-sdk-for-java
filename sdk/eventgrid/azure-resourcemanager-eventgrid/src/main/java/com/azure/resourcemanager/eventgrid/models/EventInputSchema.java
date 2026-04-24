@@ -5,17 +5,20 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** This determines the format that is expected for incoming events published to the topic. */
+/**
+ * This determines the format that is expected for incoming events published to the topic.
+ */
 public final class EventInputSchema extends ExpandableStringEnum<EventInputSchema> {
-    /** Static value CloudEventSchemaV1_0 for EventInputSchema. */
+    /**
+     * Static value CloudEventSchemaV1_0 for EventInputSchema.
+     */
     public static final EventInputSchema CLOUD_EVENT_SCHEMA_V1_0 = fromString("CloudEventSchemaV1_0");
 
     /**
      * Creates a new instance of EventInputSchema value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -24,18 +27,17 @@ public final class EventInputSchema extends ExpandableStringEnum<EventInputSchem
 
     /**
      * Creates or finds a EventInputSchema from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding EventInputSchema.
      */
-    @JsonCreator
     public static EventInputSchema fromString(String name) {
         return fromString(name, EventInputSchema.class);
     }
 
     /**
      * Gets known EventInputSchema values.
-     *
+     * 
      * @return known EventInputSchema values.
      */
     public static Collection<EventInputSchema> values() {

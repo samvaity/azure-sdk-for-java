@@ -5,98 +5,111 @@
 package com.azure.storage.blob.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** An Azure Storage blob. */
-@JacksonXmlRootElement(localName = "Blob")
+/**
+ * An Azure Storage blob.
+ */
 @Fluent
-public final class BlobItemInternal {
+public final class BlobItemInternal implements XmlSerializable<BlobItemInternal> {
     /*
      * The Name property.
      */
-    @JsonProperty(value = "Name", required = true)
+    @Generated
     private BlobName name;
 
     /*
      * The Deleted property.
      */
-    @JsonProperty(value = "Deleted", required = true)
+    @Generated
     private boolean deleted;
 
     /*
      * The Snapshot property.
      */
-    @JsonProperty(value = "Snapshot", required = true)
+    @Generated
     private String snapshot;
 
     /*
      * The VersionId property.
      */
-    @JsonProperty(value = "VersionId", required = true)
+    @Generated
     private String versionId;
 
     /*
      * The IsCurrentVersion property.
      */
-    @JsonProperty(value = "IsCurrentVersion")
+    @Generated
     private Boolean isCurrentVersion;
 
     /*
      * Properties of a blob
      */
-    @JsonProperty(value = "Properties", required = true)
+    @Generated
     private BlobItemPropertiesInternal properties;
 
     /*
      * Dictionary of <string>
      */
-    @JsonProperty(value = "Metadata")
+    @Generated
     private Map<String, String> metadata;
 
     /*
      * Blob tags
      */
-    @JsonProperty(value = "Tags")
+    @Generated
     private BlobTags blobTags;
 
     /*
      * Dictionary of <string>
      */
-    @JsonProperty(value = "OrMetadata")
+    @Generated
     private Map<String, String> objectReplicationMetadata;
 
     /*
      * The HasVersionsOnly property.
      */
-    @JsonProperty(value = "HasVersionsOnly")
+    @Generated
     private Boolean hasVersionsOnly;
 
     /*
      * The IsPrefix property.
      */
-    @JsonProperty(value = "IsPrefix")
+    @Generated
     private Boolean isPrefix;
 
-    /** Creates an instance of BlobItemInternal class. */
-    public BlobItemInternal() {}
+    /**
+     * Creates an instance of BlobItemInternal class.
+     */
+    @Generated
+    public BlobItemInternal() {
+    }
 
     /**
      * Get the name property: The Name property.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public BlobName getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The Name property.
-     *
+     * 
      * @param name the name value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setName(BlobName name) {
         this.name = name;
         return this;
@@ -104,19 +117,21 @@ public final class BlobItemInternal {
 
     /**
      * Get the deleted property: The Deleted property.
-     *
+     * 
      * @return the deleted value.
      */
+    @Generated
     public boolean isDeleted() {
         return this.deleted;
     }
 
     /**
      * Set the deleted property: The Deleted property.
-     *
+     * 
      * @param deleted the deleted value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setDeleted(boolean deleted) {
         this.deleted = deleted;
         return this;
@@ -124,19 +139,21 @@ public final class BlobItemInternal {
 
     /**
      * Get the snapshot property: The Snapshot property.
-     *
+     * 
      * @return the snapshot value.
      */
+    @Generated
     public String getSnapshot() {
         return this.snapshot;
     }
 
     /**
      * Set the snapshot property: The Snapshot property.
-     *
+     * 
      * @param snapshot the snapshot value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setSnapshot(String snapshot) {
         this.snapshot = snapshot;
         return this;
@@ -144,19 +161,21 @@ public final class BlobItemInternal {
 
     /**
      * Get the versionId property: The VersionId property.
-     *
+     * 
      * @return the versionId value.
      */
+    @Generated
     public String getVersionId() {
         return this.versionId;
     }
 
     /**
      * Set the versionId property: The VersionId property.
-     *
+     * 
      * @param versionId the versionId value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setVersionId(String versionId) {
         this.versionId = versionId;
         return this;
@@ -164,19 +183,21 @@ public final class BlobItemInternal {
 
     /**
      * Get the isCurrentVersion property: The IsCurrentVersion property.
-     *
+     * 
      * @return the isCurrentVersion value.
      */
+    @Generated
     public Boolean isCurrentVersion() {
         return this.isCurrentVersion;
     }
 
     /**
      * Set the isCurrentVersion property: The IsCurrentVersion property.
-     *
+     * 
      * @param isCurrentVersion the isCurrentVersion value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setIsCurrentVersion(Boolean isCurrentVersion) {
         this.isCurrentVersion = isCurrentVersion;
         return this;
@@ -184,19 +205,21 @@ public final class BlobItemInternal {
 
     /**
      * Get the properties property: Properties of a blob.
-     *
+     * 
      * @return the properties value.
      */
+    @Generated
     public BlobItemPropertiesInternal getProperties() {
         return this.properties;
     }
 
     /**
      * Set the properties property: Properties of a blob.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setProperties(BlobItemPropertiesInternal properties) {
         this.properties = properties;
         return this;
@@ -204,19 +227,21 @@ public final class BlobItemInternal {
 
     /**
      * Get the metadata property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the metadata value.
      */
+    @Generated
     public Map<String, String> getMetadata() {
         return this.metadata;
     }
 
     /**
      * Set the metadata property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param metadata the metadata value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
         return this;
@@ -224,19 +249,21 @@ public final class BlobItemInternal {
 
     /**
      * Get the blobTags property: Blob tags.
-     *
+     * 
      * @return the blobTags value.
      */
+    @Generated
     public BlobTags getBlobTags() {
         return this.blobTags;
     }
 
     /**
      * Set the blobTags property: Blob tags.
-     *
+     * 
      * @param blobTags the blobTags value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setBlobTags(BlobTags blobTags) {
         this.blobTags = blobTags;
         return this;
@@ -244,19 +271,21 @@ public final class BlobItemInternal {
 
     /**
      * Get the objectReplicationMetadata property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the objectReplicationMetadata value.
      */
+    @Generated
     public Map<String, String> getObjectReplicationMetadata() {
         return this.objectReplicationMetadata;
     }
 
     /**
      * Set the objectReplicationMetadata property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param objectReplicationMetadata the objectReplicationMetadata value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setObjectReplicationMetadata(Map<String, String> objectReplicationMetadata) {
         this.objectReplicationMetadata = objectReplicationMetadata;
         return this;
@@ -264,19 +293,21 @@ public final class BlobItemInternal {
 
     /**
      * Get the hasVersionsOnly property: The HasVersionsOnly property.
-     *
+     * 
      * @return the hasVersionsOnly value.
      */
+    @Generated
     public Boolean isHasVersionsOnly() {
         return this.hasVersionsOnly;
     }
 
     /**
      * Set the hasVersionsOnly property: The HasVersionsOnly property.
-     *
+     * 
      * @param hasVersionsOnly the hasVersionsOnly value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setHasVersionsOnly(Boolean hasVersionsOnly) {
         this.hasVersionsOnly = hasVersionsOnly;
         return this;
@@ -284,21 +315,134 @@ public final class BlobItemInternal {
 
     /**
      * Get the isPrefix property: The IsPrefix property.
-     *
+     * 
      * @return the isPrefix value.
      */
+    @Generated
     public Boolean isPrefix() {
         return this.isPrefix;
     }
 
     /**
      * Set the isPrefix property: The IsPrefix property.
-     *
+     * 
      * @param isPrefix the isPrefix value to set.
      * @return the BlobItemInternal object itself.
      */
+    @Generated
     public BlobItemInternal setIsPrefix(Boolean isPrefix) {
         this.isPrefix = isPrefix;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "Blob" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeXml(this.name, "Name");
+        xmlWriter.writeBooleanElement("Deleted", this.deleted);
+        xmlWriter.writeStringElement("Snapshot", this.snapshot);
+        xmlWriter.writeStringElement("VersionId", this.versionId);
+        xmlWriter.writeBooleanElement("IsCurrentVersion", this.isCurrentVersion);
+        xmlWriter.writeXml(this.properties, "Properties");
+        if (this.metadata != null) {
+            xmlWriter.writeStartElement("Metadata");
+            for (Map.Entry<String, String> entry : this.metadata.entrySet()) {
+                xmlWriter.writeStringElement(entry.getKey(), entry.getValue());
+            }
+            xmlWriter.writeEndElement();
+        }
+        xmlWriter.writeXml(this.blobTags, "Tags");
+        if (this.objectReplicationMetadata != null) {
+            xmlWriter.writeStartElement("OrMetadata");
+            for (Map.Entry<String, String> entry : this.objectReplicationMetadata.entrySet()) {
+                xmlWriter.writeStringElement(entry.getKey(), entry.getValue());
+            }
+            xmlWriter.writeEndElement();
+        }
+        xmlWriter.writeBooleanElement("HasVersionsOnly", this.hasVersionsOnly);
+        xmlWriter.writeBooleanElement("IsPrefix", this.isPrefix);
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of BlobItemInternal from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of BlobItemInternal if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the BlobItemInternal.
+     */
+    @Generated
+    public static BlobItemInternal fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of BlobItemInternal from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of BlobItemInternal if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the BlobItemInternal.
+     */
+    @Generated
+    public static BlobItemInternal fromXml(XmlReader xmlReader, String rootElementName) throws XMLStreamException {
+        String finalRootElementName = rootElementName == null || rootElementName.isEmpty() ? "Blob" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            BlobItemInternal deserializedBlobItemInternal = new BlobItemInternal();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Name".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemInternal.name = BlobName.fromXml(reader, "Name");
+                } else if ("Deleted".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemInternal.deleted = reader.getBooleanElement();
+                } else if ("Snapshot".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemInternal.snapshot = reader.getStringElement();
+                } else if ("VersionId".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemInternal.versionId = reader.getStringElement();
+                } else if ("IsCurrentVersion".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemInternal.isCurrentVersion = reader.getNullableElement(Boolean::parseBoolean);
+                } else if ("Properties".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemInternal.properties = BlobItemPropertiesInternal.fromXml(reader, "Properties");
+                } else if ("Metadata".equals(elementName.getLocalPart())) {
+                    while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                        if (deserializedBlobItemInternal.metadata == null) {
+                            deserializedBlobItemInternal.metadata = new LinkedHashMap<>();
+                        }
+                        deserializedBlobItemInternal.metadata.put(reader.getElementName().getLocalPart(),
+                            reader.getStringElement());
+                    }
+                } else if ("Tags".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemInternal.blobTags = BlobTags.fromXml(reader, "Tags");
+                } else if ("OrMetadata".equals(elementName.getLocalPart())) {
+                    while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                        if (deserializedBlobItemInternal.objectReplicationMetadata == null) {
+                            deserializedBlobItemInternal.objectReplicationMetadata = new LinkedHashMap<>();
+                        }
+                        deserializedBlobItemInternal.objectReplicationMetadata
+                            .put(reader.getElementName().getLocalPart(), reader.getStringElement());
+                    }
+                } else if ("HasVersionsOnly".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemInternal.hasVersionsOnly = reader.getNullableElement(Boolean::parseBoolean);
+                } else if ("IsPrefix".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemInternal.isPrefix = reader.getNullableElement(Boolean::parseBoolean);
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedBlobItemInternal;
+        });
     }
 }

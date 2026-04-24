@@ -5,48 +5,60 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The SentimentDocumentResult model. */
+/**
+ * The SentimentDocumentResult model.
+ */
 @Fluent
 public class SentimentDocumentResult extends DocumentResult {
     /*
      * Predicted sentiment for document (Negative, Neutral, Positive, or Mixed).
      */
-    @JsonProperty(value = "sentiment", required = true)
+    @Generated
     private DocumentSentimentValue sentiment;
 
     /*
      * Document level sentiment confidence scores between 0 and 1 for each sentiment class.
      */
-    @JsonProperty(value = "confidenceScores", required = true)
+    @Generated
     private SentimentConfidenceScorePerLabel confidenceScores;
 
     /*
      * Sentence level sentiment analysis.
      */
-    @JsonProperty(value = "sentences", required = true)
+    @Generated
     private List<SentenceSentiment> sentences;
 
-    /** Creates an instance of SentimentDocumentResult class. */
-    public SentimentDocumentResult() {}
+    /**
+     * Creates an instance of SentimentDocumentResult class.
+     */
+    @Generated
+    public SentimentDocumentResult() {
+    }
 
     /**
      * Get the sentiment property: Predicted sentiment for document (Negative, Neutral, Positive, or Mixed).
-     *
+     * 
      * @return the sentiment value.
      */
+    @Generated
     public DocumentSentimentValue getSentiment() {
         return this.sentiment;
     }
 
     /**
      * Set the sentiment property: Predicted sentiment for document (Negative, Neutral, Positive, or Mixed).
-     *
+     * 
      * @param sentiment the sentiment value to set.
      * @return the SentimentDocumentResult object itself.
      */
+    @Generated
     public SentimentDocumentResult setSentiment(DocumentSentimentValue sentiment) {
         this.sentiment = sentiment;
         return this;
@@ -55,9 +67,10 @@ public class SentimentDocumentResult extends DocumentResult {
     /**
      * Get the confidenceScores property: Document level sentiment confidence scores between 0 and 1 for each sentiment
      * class.
-     *
+     * 
      * @return the confidenceScores value.
      */
+    @Generated
     public SentimentConfidenceScorePerLabel getConfidenceScores() {
         return this.confidenceScores;
     }
@@ -65,10 +78,11 @@ public class SentimentDocumentResult extends DocumentResult {
     /**
      * Set the confidenceScores property: Document level sentiment confidence scores between 0 and 1 for each sentiment
      * class.
-     *
+     * 
      * @param confidenceScores the confidenceScores value to set.
      * @return the SentimentDocumentResult object itself.
      */
+    @Generated
     public SentimentDocumentResult setConfidenceScores(SentimentConfidenceScorePerLabel confidenceScores) {
         this.confidenceScores = confidenceScores;
         return this;
@@ -76,42 +90,112 @@ public class SentimentDocumentResult extends DocumentResult {
 
     /**
      * Get the sentences property: Sentence level sentiment analysis.
-     *
+     * 
      * @return the sentences value.
      */
+    @Generated
     public List<SentenceSentiment> getSentences() {
         return this.sentences;
     }
 
     /**
      * Set the sentences property: Sentence level sentiment analysis.
-     *
+     * 
      * @param sentences the sentences value to set.
      * @return the SentimentDocumentResult object itself.
      */
+    @Generated
     public SentimentDocumentResult setSentences(List<SentenceSentiment> sentences) {
         this.sentences = sentences;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SentimentDocumentResult setId(String id) {
         super.setId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SentimentDocumentResult setWarnings(List<DocumentWarning> warnings) {
         super.setWarnings(warnings);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SentimentDocumentResult setStatistics(DocumentStatistics statistics) {
         super.setStatistics(statistics);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("id", getId());
+        jsonWriter.writeArrayField("warnings", getWarnings(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("statistics", getStatistics());
+        jsonWriter.writeStringField("sentiment", this.sentiment == null ? null : this.sentiment.toString());
+        jsonWriter.writeJsonField("confidenceScores", this.confidenceScores);
+        jsonWriter.writeArrayField("sentences", this.sentences, (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SentimentDocumentResult from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SentimentDocumentResult if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SentimentDocumentResult.
+     */
+    @Generated
+    public static SentimentDocumentResult fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SentimentDocumentResult deserializedSentimentDocumentResult = new SentimentDocumentResult();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedSentimentDocumentResult.setId(reader.getString());
+                } else if ("warnings".equals(fieldName)) {
+                    List<DocumentWarning> warnings = reader.readArray(reader1 -> DocumentWarning.fromJson(reader1));
+                    deserializedSentimentDocumentResult.setWarnings(warnings);
+                } else if ("statistics".equals(fieldName)) {
+                    deserializedSentimentDocumentResult.setStatistics(DocumentStatistics.fromJson(reader));
+                } else if ("sentiment".equals(fieldName)) {
+                    deserializedSentimentDocumentResult.sentiment
+                        = DocumentSentimentValue.fromString(reader.getString());
+                } else if ("confidenceScores".equals(fieldName)) {
+                    deserializedSentimentDocumentResult.confidenceScores
+                        = SentimentConfidenceScorePerLabel.fromJson(reader);
+                } else if ("sentences".equals(fieldName)) {
+                    List<SentenceSentiment> sentences
+                        = reader.readArray(reader1 -> SentenceSentiment.fromJson(reader1));
+                    deserializedSentimentDocumentResult.sentences = sentences;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSentimentDocumentResult;
+        });
     }
 }

@@ -11,20 +11,18 @@ import org.junit.jupiter.api.Assertions;
 public final class LoadBalancerNatRuleReferenceTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        LoadBalancerNatRuleReference model =
-            BinaryData
-                .fromString("{\"name\":\"fssxqukkfplg\",\"sourceArmResourceId\":\"gsxnkjzkdeslpv\"}")
-                .toObject(LoadBalancerNatRuleReference.class);
-        Assertions.assertEquals("gsxnkjzkdeslpv", model.sourceArmResourceId());
-        Assertions.assertEquals("fssxqukkfplg", model.name());
+        LoadBalancerNatRuleReference model = BinaryData.fromString("{\"name\":\"c\",\"sourceArmResourceId\":\"hmdua\"}")
+            .toObject(LoadBalancerNatRuleReference.class);
+        Assertions.assertEquals("hmdua", model.sourceArmResourceId());
+        Assertions.assertEquals("c", model.name());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        LoadBalancerNatRuleReference model =
-            new LoadBalancerNatRuleReference().withSourceArmResourceId("gsxnkjzkdeslpv").withName("fssxqukkfplg");
+        LoadBalancerNatRuleReference model
+            = new LoadBalancerNatRuleReference().withSourceArmResourceId("hmdua").withName("c");
         model = BinaryData.fromObject(model).toObject(LoadBalancerNatRuleReference.class);
-        Assertions.assertEquals("gsxnkjzkdeslpv", model.sourceArmResourceId());
-        Assertions.assertEquals("fssxqukkfplg", model.name());
+        Assertions.assertEquals("hmdua", model.sourceArmResourceId());
+        Assertions.assertEquals("c", model.name());
     }
 }

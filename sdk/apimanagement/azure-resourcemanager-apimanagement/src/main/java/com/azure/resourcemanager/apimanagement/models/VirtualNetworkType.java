@@ -5,32 +5,51 @@
 package com.azure.resourcemanager.apimanagement.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for VirtualNetworkType. */
+/**
+ * The type of VPN in which API Management gateway needs to be configured in.
+ */
 public final class VirtualNetworkType extends ExpandableStringEnum<VirtualNetworkType> {
-    /** Static value None for VirtualNetworkType. */
+    /**
+     * Static value None for VirtualNetworkType.
+     */
     public static final VirtualNetworkType NONE = fromString("None");
 
-    /** Static value External for VirtualNetworkType. */
+    /**
+     * Static value External for VirtualNetworkType.
+     */
     public static final VirtualNetworkType EXTERNAL = fromString("External");
 
-    /** Static value Internal for VirtualNetworkType. */
+    /**
+     * Static value Internal for VirtualNetworkType.
+     */
     public static final VirtualNetworkType INTERNAL = fromString("Internal");
 
     /**
+     * Creates a new instance of VirtualNetworkType value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Deprecated
+    public VirtualNetworkType() {
+    }
+
+    /**
      * Creates or finds a VirtualNetworkType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding VirtualNetworkType.
      */
-    @JsonCreator
     public static VirtualNetworkType fromString(String name) {
         return fromString(name, VirtualNetworkType.class);
     }
 
-    /** @return known VirtualNetworkType values. */
+    /**
+     * Gets known VirtualNetworkType values.
+     * 
+     * @return known VirtualNetworkType values.
+     */
     public static Collection<VirtualNetworkType> values() {
         return values(VirtualNetworkType.class);
     }

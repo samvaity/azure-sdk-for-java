@@ -5,20 +5,25 @@
 package com.azure.resourcemanager.servicefabric.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The activation Mode of the service package. */
+/**
+ * The activation Mode of the service package.
+ */
 public final class ArmUpgradeFailureAction extends ExpandableStringEnum<ArmUpgradeFailureAction> {
-    /** Static value Rollback for ArmUpgradeFailureAction. */
+    /**
+     * Static value Rollback for ArmUpgradeFailureAction.
+     */
     public static final ArmUpgradeFailureAction ROLLBACK = fromString("Rollback");
 
-    /** Static value Manual for ArmUpgradeFailureAction. */
+    /**
+     * Static value Manual for ArmUpgradeFailureAction.
+     */
     public static final ArmUpgradeFailureAction MANUAL = fromString("Manual");
 
     /**
      * Creates a new instance of ArmUpgradeFailureAction value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -27,18 +32,17 @@ public final class ArmUpgradeFailureAction extends ExpandableStringEnum<ArmUpgra
 
     /**
      * Creates or finds a ArmUpgradeFailureAction from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ArmUpgradeFailureAction.
      */
-    @JsonCreator
     public static ArmUpgradeFailureAction fromString(String name) {
         return fromString(name, ArmUpgradeFailureAction.class);
     }
 
     /**
      * Gets known ArmUpgradeFailureAction values.
-     *
+     * 
      * @return known ArmUpgradeFailureAction values.
      */
     public static Collection<ArmUpgradeFailureAction> values() {

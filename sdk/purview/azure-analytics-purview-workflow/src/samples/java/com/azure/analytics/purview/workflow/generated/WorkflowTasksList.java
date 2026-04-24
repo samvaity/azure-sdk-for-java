@@ -4,8 +4,8 @@
 
 package com.azure.analytics.purview.workflow.generated;
 
-import com.azure.analytics.purview.workflow.PurviewWorkflowClient;
-import com.azure.analytics.purview.workflow.PurviewWorkflowClientBuilder;
+import com.azure.analytics.purview.workflow.WorkflowTasksClient;
+import com.azure.analytics.purview.workflow.WorkflowTasksClientBuilder;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.RequestOptions;
 import com.azure.core.util.BinaryData;
@@ -14,19 +14,16 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 
 public class WorkflowTasksList {
     public static void main(String[] args) {
-        PurviewWorkflowClient purviewWorkflowClient =
-                new PurviewWorkflowClientBuilder()
-                        .credential(new DefaultAzureCredentialBuilder().build())
-                        .endpoint(Configuration.getGlobalConfiguration().get("ENDPOINT"))
-                        .buildClient();
-        // BEGIN:com.azure.analytics.purview.workflow.generated.listworkflowtasks.workflowtaskslist
-        RequestOptions requestOptions =
-                new RequestOptions()
-                        .addQueryParam("maxpagesize", "1000")
-                        .addQueryParam("orderby", "createdTime desc")
-                        .addQueryParam("timeWindow", "30d")
-                        .addQueryParam("viewMode", "sent");
-        PagedIterable<BinaryData> response = purviewWorkflowClient.listWorkflowTasks(requestOptions);
-        // END:com.azure.analytics.purview.workflow.generated.listworkflowtasks.workflowtaskslist
+        WorkflowTasksClient workflowTasksClient
+            = new WorkflowTasksClientBuilder().credential(new DefaultAzureCredentialBuilder().build())
+                .endpoint(Configuration.getGlobalConfiguration().get("ENDPOINT"))
+                .buildClient();
+        // BEGIN:com.azure.analytics.purview.workflow.generated.workflow-tasks-list.workflow-tasks-list
+        RequestOptions requestOptions = new RequestOptions().addQueryParam("maxpagesize", "1000")
+            .addQueryParam("orderby", "createdTime desc")
+            .addQueryParam("timeWindow", "30d")
+            .addQueryParam("viewMode", "sent");
+        PagedIterable<BinaryData> response = workflowTasksClient.list(requestOptions);
+        // END:com.azure.analytics.purview.workflow.generated.workflow-tasks-list.workflow-tasks-list
     }
 }

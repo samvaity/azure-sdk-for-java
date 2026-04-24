@@ -61,9 +61,13 @@ async function defaultInfo() {
 
 const maxParallelism = parseInt(args["parallel"], 10) || os.cpus().length;
 var projects = args["projects"];
-var autoRestVersion = "3.9.6"; // default
+var autoRestVersion = "3.9.7"; // default
 if (args["autorest"] !== undefined) {
     autoRestVersion = args["autorest"];
+}
+var autoRestJava = "@autorest/java@latest"; // default
+if (args["autorest-java"] !== undefined) {
+    autoRestJava = args["autorest-java"];
 }
 var debug = args["debugger"];
 var autoRestArgs = args["autorest-args"] || "";
@@ -108,9 +112,6 @@ function codegen(project, cb) {
         const sourcesToDelete = path.join(mappings[project].dir, "/src/main/java/", packagePath);
 
         deleteFolderRecursive(sourcesToDelete);
-
-        generatedSamplesTarget = path.join("azure-resourcemanager/src/samples/java/", packagePath, "generated");
-        deleteFolderRecursive(generatedSamplesTarget);
     }
 
     // path.join won't work if specRoot is a URL
@@ -123,10 +124,10 @@ function codegen(project, cb) {
         generator = "";
     }
 
-    const generatorPath = args["autorest-java"]
-        ? args["autorest-java"].startsWith("@autorest/java")
-            ? `--use=${args["autorest-java"]} `
-            : `--use=${path.resolve(args["autorest-java"])} `
+    const generatorPath = autoRestJava
+        ? autoRestJava.startsWith("@autorest/java")
+            ? `--use=${autoRestJava} `
+            : `--use=${path.resolve(autoRestJava)} `
         : "";
 
     const regenManager = args["regenerate-manager"] ? " --regenerate-manager " : "";
@@ -138,7 +139,7 @@ function codegen(project, cb) {
         readmeFile +
         " --java " +
         " --azure-arm " +
-        " --modelerfour.additional-checks=false --modelerfour.lenient-model-deduplication=true " +
+        " --modelerfour.additional-checks=false " +
         " --generate-samples " +
         generator +
         ` --java.namespace=${mappings[project].package} ` +
@@ -159,13 +160,6 @@ function codegen(project, cb) {
     console.log("Command: " + cmd);
     autorest_result = execa.sync(cmd, [], { shell: true, stdio: "inherit" });
 
-    // move generated samples to azure-resourcemanager
-    generatedSamplesSource = path.join(mappings[project].dir, "/src/samples/java/", packagePath, "generated");
-    generatedSamplesTarget = path.join("azure-resourcemanager/src/samples/java/", packagePath);
-
-    copyFolderRecursiveSync(generatedSamplesSource, generatedSamplesTarget);
-    deleteFolderRecursive(generatedSamplesSource);
-
     return autorest_result;
 }
 
@@ -185,44 +179,6 @@ function deleteFolderRecursive(path) {
                 }
             }
         });
-    }
-}
-
-function copyFileSync(source, target) {
-    var targetFile = target;
-
-    // If target is a directory, a new file with the same name will be created
-    if (fs.existsSync(target)) {
-        if (fs.lstatSync(target).isDirectory()) {
-            targetFile = path.join(target, path.basename(source));
-        }
-    }
-
-    fs.writeFileSync(targetFile, fs.readFileSync(source));
-}
-
-function copyFolderRecursiveSync(source, target) {
-    if (fs.existsSync(source)) {
-        var files = [];
-
-        // Check if folder needs to be created or integrated
-        var targetFolder = path.join(target, path.basename(source));
-        if (!fs.existsSync(targetFolder)) {
-            fs.mkdirSync(targetFolder, { recursive: true });
-        }
-
-        // Copy
-        if (fs.lstatSync(source).isDirectory()) {
-            files = fs.readdirSync(source);
-            files.forEach(function (file) {
-                var curSource = path.join(source, file);
-                if (fs.lstatSync(curSource).isDirectory()) {
-                    copyFolderRecursiveSync(curSource, targetFolder);
-                } else {
-                    copyFileSync(curSource, targetFolder);
-                }
-            });
-        }
     }
 }
 

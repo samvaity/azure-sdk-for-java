@@ -50,6 +50,10 @@ public final class L3NetworkImpl implements L3Network, L3Network.Definition, L3N
         }
     }
 
+    public String etag() {
+        return this.innerModel().etag();
+    }
+
     public ExtendedLocation extendedLocation() {
         return this.innerModel().extendedLocation();
     }
@@ -157,6 +161,14 @@ public final class L3NetworkImpl implements L3Network, L3Network.Definition, L3N
 
     private String l3NetworkName;
 
+    private String createIfMatch;
+
+    private String createIfNoneMatch;
+
+    private String updateIfMatch;
+
+    private String updateIfNoneMatch;
+
     private L3NetworkPatchParameters updateL3NetworkUpdateParameters;
 
     public L3NetworkImpl withExistingResourceGroup(String resourceGroupName) {
@@ -165,20 +177,18 @@ public final class L3NetworkImpl implements L3Network, L3Network.Definition, L3N
     }
 
     public L3Network create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL3Networks()
-                .createOrUpdate(resourceGroupName, l3NetworkName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getL3Networks()
+            .createOrUpdate(resourceGroupName, l3NetworkName, this.innerModel(), createIfMatch, createIfNoneMatch,
+                Context.NONE);
         return this;
     }
 
     public L3Network create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL3Networks()
-                .createOrUpdate(resourceGroupName, l3NetworkName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getL3Networks()
+            .createOrUpdate(resourceGroupName, l3NetworkName, this.innerModel(), createIfMatch, createIfNoneMatch,
+                context);
         return this;
     }
 
@@ -186,58 +196,56 @@ public final class L3NetworkImpl implements L3Network, L3Network.Definition, L3N
         this.innerObject = new L3NetworkInner();
         this.serviceManager = serviceManager;
         this.l3NetworkName = name;
+        this.createIfMatch = null;
+        this.createIfNoneMatch = null;
     }
 
     public L3NetworkImpl update() {
+        this.updateIfMatch = null;
+        this.updateIfNoneMatch = null;
         this.updateL3NetworkUpdateParameters = new L3NetworkPatchParameters();
         return this;
     }
 
     public L3Network apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL3Networks()
-                .updateWithResponse(resourceGroupName, l3NetworkName, updateL3NetworkUpdateParameters, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getL3Networks()
+            .updateWithResponse(resourceGroupName, l3NetworkName, updateIfMatch, updateIfNoneMatch,
+                updateL3NetworkUpdateParameters, Context.NONE)
+            .getValue();
         return this;
     }
 
     public L3Network apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL3Networks()
-                .updateWithResponse(resourceGroupName, l3NetworkName, updateL3NetworkUpdateParameters, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getL3Networks()
+            .updateWithResponse(resourceGroupName, l3NetworkName, updateIfMatch, updateIfNoneMatch,
+                updateL3NetworkUpdateParameters, context)
+            .getValue();
         return this;
     }
 
-    L3NetworkImpl(
-        L3NetworkInner innerObject, com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
+    L3NetworkImpl(L3NetworkInner innerObject,
+        com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.l3NetworkName = Utils.getValueFromIdByName(innerObject.id(), "l3Networks");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.l3NetworkName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "l3Networks");
     }
 
     public L3Network refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL3Networks()
-                .getByResourceGroupWithResponse(resourceGroupName, l3NetworkName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getL3Networks()
+            .getByResourceGroupWithResponse(resourceGroupName, l3NetworkName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public L3Network refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL3Networks()
-                .getByResourceGroupWithResponse(resourceGroupName, l3NetworkName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getL3Networks()
+            .getByResourceGroupWithResponse(resourceGroupName, l3NetworkName, context)
+            .getValue();
         return this;
     }
 
@@ -306,7 +314,27 @@ public final class L3NetworkImpl implements L3Network, L3Network.Definition, L3N
         return this;
     }
 
+    public L3NetworkImpl withIfMatch(String ifMatch) {
+        if (isInCreateMode()) {
+            this.createIfMatch = ifMatch;
+            return this;
+        } else {
+            this.updateIfMatch = ifMatch;
+            return this;
+        }
+    }
+
+    public L3NetworkImpl withIfNoneMatch(String ifNoneMatch) {
+        if (isInCreateMode()) {
+            this.createIfNoneMatch = ifNoneMatch;
+            return this;
+        } else {
+            this.updateIfNoneMatch = ifNoneMatch;
+            return this;
+        }
+    }
+
     private boolean isInCreateMode() {
-        return this.innerModel().id() == null;
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

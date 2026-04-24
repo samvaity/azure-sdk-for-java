@@ -6,72 +6,44 @@ package com.azure.resourcemanager.policyinsights.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
-import com.azure.core.util.Context;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.policyinsights.PolicyInsightsManager;
 import com.azure.resourcemanager.policyinsights.models.Attestation;
 import com.azure.resourcemanager.policyinsights.models.ComplianceState;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class AttestationsListForResourceMockTests {
     @Test
     public void testListForResource() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"properties\":{\"policyAssignmentId\":\"vsa\",\"policyDefinitionReferenceId\":\"thkslgeuufkb\",\"complianceState\":\"Compliant\",\"expiresOn\":\"2021-08-12T19:01:29Z\",\"owner\":\"blajyb\",\"comments\":\"bycsbtoi\",\"evidence\":[{\"description\":\"jmofs\",\"sourceUri\":\"zxgnywxu\"},{\"description\":\"lfj\",\"sourceUri\":\"gwtmszcf\"},{\"description\":\"q\",\"sourceUri\":\"qregfurdpagknx\"},{\"description\":\"ovrgih\",\"sourceUri\":\"zffewvqkyc\"}],\"provisioningState\":\"geipqxxs\",\"lastComplianceStateChangeAt\":\"2021-02-14T13:04:34Z\",\"assessmentDate\":\"2021-06-05T22:44:15Z\",\"metadata\":\"dataydsmmabh\"},\"id\":\"lejqzhpvhxp\",\"name\":\"adj\",\"type\":\"eullgfyog\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"properties\":{\"policyAssignmentId\":\"ey\",\"policyDefinitionReferenceId\":\"wlpaugmrmfjlrxwt\",\"complianceState\":\"Compliant\",\"expiresOn\":\"2020-12-30T18:48:10Z\",\"owner\":\"kvci\",\"comments\":\"zmoaeds\",\"evidence\":[],\"provisioningState\":\"ive\",\"lastComplianceStateChangeAt\":\"2021-07-30T03:06:58Z\",\"assessmentDate\":\"2021-03-24T06:06:26Z\"},\"id\":\"wxeiqbpsmgomg\",\"name\":\"amljdlrgmsplzgau\",\"type\":\"cshhv\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        PolicyInsightsManager manager = PolicyInsightsManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<Attestation> response = manager.attestations()
+            .listForResource("lkyhtrrqwfyybpt", 2012792757, "jrnogykugdl", com.azure.core.util.Context.NONE);
 
-        PolicyInsightsManager manager =
-            PolicyInsightsManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<Attestation> response =
-            manager.attestations().listForResource("ljvrcmyfqipgxhnp", 1740146281, "yqwcabvnuil", Context.NONE);
-
-        Assertions.assertEquals("ey", response.iterator().next().policyAssignmentId());
-        Assertions.assertEquals("wlpaugmrmfjlrxwt", response.iterator().next().policyDefinitionReferenceId());
+        Assertions.assertEquals("vsa", response.iterator().next().policyAssignmentId());
+        Assertions.assertEquals("thkslgeuufkb", response.iterator().next().policyDefinitionReferenceId());
         Assertions.assertEquals(ComplianceState.COMPLIANT, response.iterator().next().complianceState());
-        Assertions.assertEquals(OffsetDateTime.parse("2020-12-30T18:48:10Z"), response.iterator().next().expiresOn());
-        Assertions.assertEquals("kvci", response.iterator().next().owner());
-        Assertions.assertEquals("zmoaeds", response.iterator().next().comments());
-        Assertions
-            .assertEquals(OffsetDateTime.parse("2021-03-24T06:06:26Z"), response.iterator().next().assessmentDate());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-08-12T19:01:29Z"), response.iterator().next().expiresOn());
+        Assertions.assertEquals("blajyb", response.iterator().next().owner());
+        Assertions.assertEquals("bycsbtoi", response.iterator().next().comments());
+        Assertions.assertEquals("jmofs", response.iterator().next().evidence().get(0).description());
+        Assertions.assertEquals("zxgnywxu", response.iterator().next().evidence().get(0).sourceUri());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-06-05T22:44:15Z"),
+            response.iterator().next().assessmentDate());
     }
 }

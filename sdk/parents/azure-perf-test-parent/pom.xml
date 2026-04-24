@@ -43,6 +43,7 @@
     <!-- Skip all linting in performance tests. -->
     <codesnippet.skip>true</codesnippet.skip>
     <checkstyle.skip>true</checkstyle.skip>
+    <jacoco.skip>true</jacoco.skip>
     <spotbugs.skip>true</spotbugs.skip>
     <revapi.skip>true</revapi.skip>
 
@@ -50,7 +51,7 @@
     <perf.test.mainClass></perf.test.mainClass>
 
     <!-- Skip missing Javadocs in performance tests. -->
-    <doclint>all,-missing</doclint>
+    <doclintMissingInclusion>-</doclintMissingInclusion>
   </properties>
 
   <build>
@@ -58,7 +59,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.3.0</version> <!-- {x-version-update;org.apache.maven.plugins:maven-assembly-plugin;external_dependency} -->
+        <version>3.7.1</version> <!-- {x-version-update;org.apache.maven.plugins:maven-assembly-plugin;external_dependency} -->
         <executions>
           <execution>
             <phase>package</phase>

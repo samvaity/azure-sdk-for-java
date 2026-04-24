@@ -7,7 +7,7 @@ import java.time.Duration;
 
 import org.springframework.util.StringUtils;
 
-import com.azure.identity.ManagedIdentityCredentialBuilder;
+import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.security.keyvault.secrets.SecretAsyncClient;
 import com.azure.security.keyvault.secrets.SecretClientBuilder;
 import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
@@ -29,8 +29,10 @@ public final class AppConfigurationSecretClientManager {
     private final KeyVaultSecretProvider keyVaultSecretProvider;
 
     private final SecretClientBuilderFactory secretClientFactory;
-    
+
     private final boolean credentialConfigured;
+    
+    private final int timeout = 30;
 
     /**
      * Creates a Client for connecting to Key Vault
@@ -41,7 +43,8 @@ public final class AppConfigurationSecretClientManager {
      * @param credentialConfigured Is a credential configured with Global Configurations or Service Configurations
      */
     public AppConfigurationSecretClientManager(String endpoint, SecretClientCustomizer keyVaultClientProvider,
-        KeyVaultSecretProvider keyVaultSecretProvider, SecretClientBuilderFactory secretClientFactory, boolean credentialConfigured) {
+        KeyVaultSecretProvider keyVaultSecretProvider, SecretClientBuilderFactory secretClientFactory,
+        boolean credentialConfigured) {
         this.endpoint = endpoint;
         this.keyVaultClientProvider = keyVaultClientProvider;
         this.keyVaultSecretProvider = keyVaultSecretProvider;
@@ -54,7 +57,7 @@ public final class AppConfigurationSecretClientManager {
 
         if (!credentialConfigured) {
             // System Assigned Identity.
-            builder.credential(new ManagedIdentityCredentialBuilder().build());
+            builder.credential(new DefaultAzureCredentialBuilder().build());
         }
         builder.vaultUrl(endpoint);
 
@@ -74,7 +77,7 @@ public final class AppConfigurationSecretClientManager {
      * @param timeout How long it waits for a response from Key Vault
      * @return Secret values that matches the secretIdentifier
      */
-    public KeyVaultSecret getSecret(URI secretIdentifier, int timeout) {
+    public KeyVaultSecret getSecret(URI secretIdentifier) {
         if (secretClient == null) {
             build();
         }

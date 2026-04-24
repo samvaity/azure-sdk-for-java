@@ -10,6 +10,7 @@ import com.azure.core.credential.TokenCredential;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
 import com.azure.messaging.servicebus.ServiceBusClientBuilder;
+import com.azure.spring.cloud.core.customizer.AzureServiceClientBuilderCustomizer;
 import com.azure.spring.cloud.core.implementation.credential.descriptor.AuthenticationDescriptor;
 import com.azure.spring.cloud.core.implementation.credential.descriptor.NamedKeyAuthenticationDescriptor;
 import com.azure.spring.cloud.core.implementation.credential.descriptor.SasAuthenticationDescriptor;
@@ -17,6 +18,10 @@ import com.azure.spring.cloud.core.implementation.credential.descriptor.TokenAut
 import com.azure.spring.cloud.core.implementation.factory.AbstractAzureAmqpClientBuilderFactory;
 import com.azure.spring.cloud.core.properties.AzureProperties;
 import com.azure.spring.cloud.service.implementation.servicebus.properties.ServiceBusClientCommonProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,37 +32,77 @@ import java.util.function.BiConsumer;
  */
 abstract class AbstractServiceBusSubClientBuilderFactory<T, P extends ServiceBusClientCommonProperties> extends AbstractAzureAmqpClientBuilderFactory<T> {
 
-    private final P properties;
-    private final ServiceBusClientBuilder serviceBusClientBuilder;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractServiceBusSubClientBuilderFactory.class);
+
+    protected final P properties;
+
+    private ServiceBusClientBuilder serviceBusClientBuilder;
     private final boolean shareServiceBusClientBuilder;
+    private ServiceBusClientBuilderFactory serviceBusClientBuilderFactory;
 
     /**
-     * Create a {@link AbstractServiceBusSubClientBuilderFactory} instance with the properties.
+     * Create a {@link AbstractServiceBusSubClientBuilderFactory} instance with the properties and the collection of
+     * @{link ServiceBusClientBuilder} customizers.
      * @param properties the properties describing the service bus sub client, which could be a sender, a receiver or
      *                   a processor.
+     * @param serviceClientBuilderCustomizers the collection of customizers for the service bus client builder.
      */
-    AbstractServiceBusSubClientBuilderFactory(P properties) {
-        this(null, properties);
+    AbstractServiceBusSubClientBuilderFactory(P properties,
+                                              List<AzureServiceClientBuilderCustomizer<ServiceBusClientBuilder>> serviceClientBuilderCustomizers) {
+        this(null, properties, serviceClientBuilderCustomizers);
     }
 
-    /**
-     * Create a {@link AbstractServiceBusSubClientBuilderFactory} instance with a {@link ServiceBusClientBuilder} and
-     * the properties.
-     * @param serviceBusClientBuilder the provided Service Bus client builder. If provided, the sub clients will be created
-     *                                from this builder.
-     * @param properties the properties describing the service bus sub client, which could be a sender, a receiver or
-     *                   a processor.
-     */
+
     AbstractServiceBusSubClientBuilderFactory(ServiceBusClientBuilder serviceBusClientBuilder,
                                               P properties) {
+        this(serviceBusClientBuilder, properties, null);
+        if (serviceBusClientBuilder == null) {
+            LOGGER.debug("The shared ServiceBusClientBuilder instance is null, the {} instance has used a non-shared ServiceBusClientBuilder "
+                + "and ignored the customizers.", this.getClass().getSimpleName());
+        }
+    }
+
+    protected AbstractServiceBusSubClientBuilderFactory(ServiceBusClientBuilder serviceBusClientBuilder,
+                                              P properties,
+                                              List<AzureServiceClientBuilderCustomizer<ServiceBusClientBuilder>> serviceBusClientBuilderCustomizers) {
         this.properties = properties;
         if (serviceBusClientBuilder != null) {
             this.serviceBusClientBuilder = serviceBusClientBuilder;
             this.shareServiceBusClientBuilder = true;
+            this.serviceBusClientBuilderFactory = null;
         } else {
-            this.serviceBusClientBuilder = new ServiceBusClientBuilder();
+            this.serviceBusClientBuilderFactory = new ServiceBusClientBuilderFactory(properties);
+            if (serviceBusClientBuilderCustomizers != null) {
+                serviceBusClientBuilderCustomizers.forEach(this.serviceBusClientBuilderFactory::addBuilderCustomizer);
+            }
+            // Don't build yet - defer until first use when ApplicationContext is available
+            this.serviceBusClientBuilder = null;
             this.shareServiceBusClientBuilder = false;
         }
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        super.setApplicationContext(applicationContext);
+        // Propagate ApplicationContext to the nested ServiceBusClientBuilderFactory
+        if (this.serviceBusClientBuilderFactory != null) {
+            this.serviceBusClientBuilderFactory.setApplicationContext(applicationContext);
+        }
+    }
+
+    @Override
+    protected void configureCredential(T builder) {
+        // skip to avoid overriding the parent builder's credentials.
+    }
+
+    @Override
+    protected void configureConnectionString(T builder) {
+        // skip to avoid overriding the parent builder's credentials.
+    }
+
+    @Override
+    protected void configureDefaultCredential(T builder) {
+        // skip to avoid overriding the parent builder's credentials.
     }
 
     protected boolean isShareServiceBusClientBuilder() {
@@ -68,7 +113,7 @@ abstract class AbstractServiceBusSubClientBuilderFactory<T, P extends ServiceBus
     protected BiConsumer<T, ProxyOptions> consumeProxyOptions() {
         return (builder, proxy) -> {
             if (!isShareServiceBusClientBuilder()) {
-                this.serviceBusClientBuilder.proxyOptions(proxy);
+                getServiceBusClientBuilder().proxyOptions(proxy);
             }
         };
     }
@@ -77,7 +122,7 @@ abstract class AbstractServiceBusSubClientBuilderFactory<T, P extends ServiceBus
     protected BiConsumer<T, AmqpTransportType> consumeAmqpTransportType() {
         return (builder, t) -> {
             if (!isShareServiceBusClientBuilder()) {
-                this.serviceBusClientBuilder.transportType(t);
+                getServiceBusClientBuilder().transportType(t);
             }
         };
     }
@@ -86,7 +131,7 @@ abstract class AbstractServiceBusSubClientBuilderFactory<T, P extends ServiceBus
     protected BiConsumer<T, AmqpRetryOptions> consumeAmqpRetryOptions() {
         return (builder, retry) -> {
             if (!isShareServiceBusClientBuilder()) {
-                this.serviceBusClientBuilder.retryOptions(retry);
+                getServiceBusClientBuilder().retryOptions(retry);
             }
         };
     }
@@ -95,7 +140,7 @@ abstract class AbstractServiceBusSubClientBuilderFactory<T, P extends ServiceBus
     protected BiConsumer<T, ClientOptions> consumeClientOptions() {
         return (builder, client) -> {
             if (!isShareServiceBusClientBuilder()) {
-                this.serviceBusClientBuilder.clientOptions(client);
+                getServiceBusClientBuilder().clientOptions(client);
             }
         };
     }
@@ -110,17 +155,17 @@ abstract class AbstractServiceBusSubClientBuilderFactory<T, P extends ServiceBus
         return Arrays.asList(
             new NamedKeyAuthenticationDescriptor(credential -> {
                 if (!isShareServiceBusClientBuilder()) {
-                    this.serviceBusClientBuilder.credential(credential);
+                    getServiceBusClientBuilder().credential(credential);
                 }
             }),
             new SasAuthenticationDescriptor(credential -> {
                 if (!isShareServiceBusClientBuilder()) {
-                    this.serviceBusClientBuilder.credential(credential);
+                    getServiceBusClientBuilder().credential(credential);
                 }
             }),
             new TokenAuthenticationDescriptor(this.tokenCredentialResolver, credential -> {
                 if (!isShareServiceBusClientBuilder()) {
-                    this.serviceBusClientBuilder.credential(credential);
+                    getServiceBusClientBuilder().credential(credential);
                 }
             })
         );
@@ -130,7 +175,7 @@ abstract class AbstractServiceBusSubClientBuilderFactory<T, P extends ServiceBus
     protected BiConsumer<T, Configuration> consumeConfiguration() {
         return (builder, configuration) -> {
             if (!isShareServiceBusClientBuilder()) {
-                this.serviceBusClientBuilder.configuration(configuration);
+                getServiceBusClientBuilder().configuration(configuration);
             }
         };
     }
@@ -139,7 +184,7 @@ abstract class AbstractServiceBusSubClientBuilderFactory<T, P extends ServiceBus
     protected BiConsumer<T, TokenCredential> consumeDefaultTokenCredential() {
         return (builder, credential) -> {
             if (!isShareServiceBusClientBuilder()) {
-                this.serviceBusClientBuilder.credential(credential);
+                getServiceBusClientBuilder().credential(credential);
             }
         };
     }
@@ -148,7 +193,7 @@ abstract class AbstractServiceBusSubClientBuilderFactory<T, P extends ServiceBus
     protected BiConsumer<T, String> consumeConnectionString() {
         return (builder, connectionString) -> {
             if (!isShareServiceBusClientBuilder()) {
-                this.serviceBusClientBuilder.connectionString(connectionString);
+                getServiceBusClientBuilder().connectionString(connectionString);
             }
         };
     }
@@ -156,11 +201,15 @@ abstract class AbstractServiceBusSubClientBuilderFactory<T, P extends ServiceBus
     @Override
     protected void configureService(T builder) {
         if (!isShareServiceBusClientBuilder()) {
-            this.serviceBusClientBuilder.fullyQualifiedNamespace(properties.getFullyQualifiedNamespace());
+            getServiceBusClientBuilder().fullyQualifiedNamespace(properties.getFullyQualifiedNamespace());
         }
     }
 
     protected ServiceBusClientBuilder getServiceBusClientBuilder() {
+        // Lazy initialization: build only when first accessed, ensuring ApplicationContext is available
+        if (serviceBusClientBuilder == null && serviceBusClientBuilderFactory != null) {
+            serviceBusClientBuilder = serviceBusClientBuilderFactory.build();
+        }
         return serviceBusClientBuilder;
     }
 }

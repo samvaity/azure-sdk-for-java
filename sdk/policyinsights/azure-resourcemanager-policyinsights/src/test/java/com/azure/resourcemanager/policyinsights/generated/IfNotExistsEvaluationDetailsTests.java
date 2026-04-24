@@ -7,25 +7,23 @@ package com.azure.resourcemanager.policyinsights.generated;
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.policyinsights.models.IfNotExistsEvaluationDetails;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public final class IfNotExistsEvaluationDetailsTests {
-    @Test
-    public void testDeserialize() {
-        IfNotExistsEvaluationDetails model =
-            BinaryData
-                .fromString("{\"resourceId\":\"ndnhj\",\"totalResources\":1922459268}")
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        IfNotExistsEvaluationDetails model
+            = BinaryData.fromString("{\"resourceId\":\"qhl\",\"totalResources\":1378743202}")
                 .toObject(IfNotExistsEvaluationDetails.class);
-        Assertions.assertEquals("ndnhj", model.resourceId());
-        Assertions.assertEquals(1922459268, model.totalResources());
+        Assertions.assertEquals("qhl", model.resourceId());
+        Assertions.assertEquals(1378743202, model.totalResources());
     }
 
-    @Test
-    public void testSerialize() {
-        IfNotExistsEvaluationDetails model =
-            new IfNotExistsEvaluationDetails().withResourceId("ndnhj").withTotalResources(1922459268);
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
+        IfNotExistsEvaluationDetails model
+            = new IfNotExistsEvaluationDetails().withResourceId("qhl").withTotalResources(1378743202);
         model = BinaryData.fromObject(model).toObject(IfNotExistsEvaluationDetails.class);
-        Assertions.assertEquals("ndnhj", model.resourceId());
-        Assertions.assertEquals(1922459268, model.totalResources());
+        Assertions.assertEquals("qhl", model.resourceId());
+        Assertions.assertEquals(1378743202, model.totalResources());
     }
 }

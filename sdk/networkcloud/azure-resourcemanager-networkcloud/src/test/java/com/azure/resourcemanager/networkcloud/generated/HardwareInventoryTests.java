@@ -10,11 +10,9 @@ import com.azure.resourcemanager.networkcloud.models.HardwareInventory;
 public final class HardwareInventoryTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        HardwareInventory model =
-            BinaryData
-                .fromString(
-                    "{\"additionalHostInformation\":\"lxxwrljdouskc\",\"interfaces\":[{\"linkStatus\":\"cr\",\"macAddress\":\"dkwt\",\"name\":\"xbnjbiksq\",\"networkInterfaceId\":\"lssai\"},{\"linkStatus\":\"p\",\"macAddress\":\"nzl\",\"name\":\"fmppe\",\"networkInterfaceId\":\"vmgxsab\"},{\"linkStatus\":\"qduujitcjczdz\",\"macAddress\":\"ndhkrw\",\"name\":\"appd\",\"networkInterfaceId\":\"dkvwrwjfe\"},{\"linkStatus\":\"nhutjeltmrldhugj\",\"macAddress\":\"datqxhocdgeabl\",\"name\":\"huticndvkao\",\"networkInterfaceId\":\"yiftyhxhuro\"}],\"nics\":[{\"lldpNeighbor\":{\"portDescription\":\"olniwpwcukjf\",\"portName\":\"iawxklry\",\"systemDescription\":\"wckbasyypnd\",\"systemName\":\"sgcbac\"},\"macAddress\":\"ejk\",\"name\":\"ynqgoulzndlikwyq\"},{\"lldpNeighbor\":{\"portDescription\":\"gibma\",\"portName\":\"akeqs\",\"systemDescription\":\"yb\",\"systemName\":\"qedqytbciqfoufl\"},\"macAddress\":\"nkzsmodmglou\",\"name\":\"b\"},{\"lldpNeighbor\":{\"portDescription\":\"mutduqktaps\",\"portName\":\"gcue\",\"systemDescription\":\"umkdosvqwhbmd\",\"systemName\":\"bjf\"},\"macAddress\":\"gmbmbexppbh\",\"name\":\"qrolfpf\"}]}")
-                .toObject(HardwareInventory.class);
+        HardwareInventory model = BinaryData.fromString(
+            "{\"additionalHostInformation\":\"qfbow\",\"interfaces\":[{\"linkStatus\":\"yktz\",\"macAddress\":\"u\",\"name\":\"wgqyw\",\"networkInterfaceId\":\"drvyn\"},{\"linkStatus\":\"gpphrcgyn\",\"macAddress\":\"cpecfvmmcoofs\",\"name\":\"zevgb\",\"networkInterfaceId\":\"jqabcypmivkwlzuv\"},{\"linkStatus\":\"fwnfnb\",\"macAddress\":\"fionl\",\"name\":\"x\",\"networkInterfaceId\":\"qgtz\"},{\"linkStatus\":\"pnqbqqwxrjfe\",\"macAddress\":\"lnwsubisn\",\"name\":\"mpmngnzscxaqwoo\",\"networkInterfaceId\":\"cbonqvpk\"}],\"nics\":[{\"lldpNeighbor\":{\"portDescription\":\"jease\",\"portName\":\"heoflokeyyienjbd\",\"systemDescription\":\"tgrhpdjpjumas\",\"systemName\":\"zj\"},\"macAddress\":\"yegu\",\"name\":\"hb\"},{\"lldpNeighbor\":{\"portDescription\":\"e\",\"portName\":\"zzvdudgwds\",\"systemDescription\":\"hotwmcynpwlbjnp\",\"systemName\":\"cftadeh\"},\"macAddress\":\"ltyfsop\",\"name\":\"suesnzw\"},{\"lldpNeighbor\":{\"portDescription\":\"bavo\",\"portName\":\"zdmohctbqvu\",\"systemDescription\":\"xdn\",\"systemName\":\"vo\"},\"macAddress\":\"ujjugwdkcglh\",\"name\":\"azjdyggd\"},{\"lldpNeighbor\":{\"portDescription\":\"xhbkuofq\",\"portName\":\"yk\",\"systemDescription\":\"enevfyexfwhybci\",\"systemName\":\"yvdcsitynnaa\"},\"macAddress\":\"ectehf\",\"name\":\"scjeypv\"}]}")
+            .toObject(HardwareInventory.class);
     }
 
     @org.junit.jupiter.api.Test

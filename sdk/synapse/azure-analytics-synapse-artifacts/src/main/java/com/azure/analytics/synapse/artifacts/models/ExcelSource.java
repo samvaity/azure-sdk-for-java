@@ -5,46 +5,73 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity excel source. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("ExcelSource")
+/**
+ * A copy activity excel source.
+ */
 @Fluent
 public final class ExcelSource extends CopySource {
     /*
+     * Copy source type.
+     */
+    @Generated
+    private String type = "ExcelSource";
+
+    /*
      * Excel store settings.
      */
-    @JsonProperty(value = "storeSettings")
+    @Generated
     private StoreReadSettings storeSettings;
 
     /*
      * Specifies the additional columns to be added to source data. Type: array of objects(AdditionalColumns) (or
      * Expression with resultType array of objects).
      */
-    @JsonProperty(value = "additionalColumns")
+    @Generated
     private Object additionalColumns;
 
-    /** Creates an instance of ExcelSource class. */
-    public ExcelSource() {}
+    /**
+     * Creates an instance of ExcelSource class.
+     */
+    @Generated
+    public ExcelSource() {
+    }
+
+    /**
+     * Get the type property: Copy source type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the storeSettings property: Excel store settings.
-     *
+     * 
      * @return the storeSettings value.
      */
+    @Generated
     public StoreReadSettings getStoreSettings() {
         return this.storeSettings;
     }
 
     /**
      * Set the storeSettings property: Excel store settings.
-     *
+     * 
      * @param storeSettings the storeSettings value to set.
      * @return the ExcelSource object itself.
      */
+    @Generated
     public ExcelSource setStoreSettings(StoreReadSettings storeSettings) {
         this.storeSettings = storeSettings;
         return this;
@@ -53,9 +80,10 @@ public final class ExcelSource extends CopySource {
     /**
      * Get the additionalColumns property: Specifies the additional columns to be added to source data. Type: array of
      * objects(AdditionalColumns) (or Expression with resultType array of objects).
-     *
+     * 
      * @return the additionalColumns value.
      */
+    @Generated
     public Object getAdditionalColumns() {
         return this.additionalColumns;
     }
@@ -63,33 +91,115 @@ public final class ExcelSource extends CopySource {
     /**
      * Set the additionalColumns property: Specifies the additional columns to be added to source data. Type: array of
      * objects(AdditionalColumns) (or Expression with resultType array of objects).
-     *
+     * 
      * @param additionalColumns the additionalColumns value to set.
      * @return the ExcelSource object itself.
      */
+    @Generated
     public ExcelSource setAdditionalColumns(Object additionalColumns) {
         this.additionalColumns = additionalColumns;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ExcelSource setSourceRetryCount(Object sourceRetryCount) {
         super.setSourceRetryCount(sourceRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ExcelSource setSourceRetryWait(Object sourceRetryWait) {
         super.setSourceRetryWait(sourceRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ExcelSource setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getSourceRetryCount() != null) {
+            jsonWriter.writeUntypedField("sourceRetryCount", getSourceRetryCount());
+        }
+        if (getSourceRetryWait() != null) {
+            jsonWriter.writeUntypedField("sourceRetryWait", getSourceRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        jsonWriter.writeJsonField("storeSettings", this.storeSettings);
+        if (this.additionalColumns != null) {
+            jsonWriter.writeUntypedField("additionalColumns", this.additionalColumns);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ExcelSource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ExcelSource if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ExcelSource.
+     */
+    @Generated
+    public static ExcelSource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ExcelSource deserializedExcelSource = new ExcelSource();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sourceRetryCount".equals(fieldName)) {
+                    deserializedExcelSource.setSourceRetryCount(reader.readUntyped());
+                } else if ("sourceRetryWait".equals(fieldName)) {
+                    deserializedExcelSource.setSourceRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedExcelSource.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedExcelSource.type = reader.getString();
+                } else if ("storeSettings".equals(fieldName)) {
+                    deserializedExcelSource.storeSettings = StoreReadSettings.fromJson(reader);
+                } else if ("additionalColumns".equals(fieldName)) {
+                    deserializedExcelSource.additionalColumns = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedExcelSource.setAdditionalProperties(additionalProperties);
+
+            return deserializedExcelSource;
+        });
     }
 }

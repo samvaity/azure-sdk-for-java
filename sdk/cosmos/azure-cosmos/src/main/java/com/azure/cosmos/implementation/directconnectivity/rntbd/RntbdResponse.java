@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -87,7 +88,7 @@ public final class RntbdResponse implements ReferenceCounted {
         this.content = content.copy();
 
         final HttpResponseStatus status = HttpResponseStatus.valueOf(statusCode);
-        final int length = RntbdResponseStatus.LENGTH + this.headers.computeLength();
+        final int length = RntbdResponseStatus.LENGTH + this.headers.computeLength(false);
 
         this.frame = new RntbdResponseStatus(length, status, activityId);
         this.messageLength = length + this.content.writerIndex();
@@ -105,7 +106,7 @@ public final class RntbdResponse implements ReferenceCounted {
         this.frame = frame;
         this.headers = headers;
         this.content = content;
-        this.messageLength = message.writerIndex();;
+        this.messageLength = message.writerIndex();
     }
 
     // endregion
@@ -172,7 +173,7 @@ public final class RntbdResponse implements ReferenceCounted {
         final int start = out.writerIndex();
 
         this.frame.encode(out);
-        this.headers.encode(out);
+        this.headers.encode(out, false);
 
         final int length = out.writerIndex() - start;
         checkState(length == this.frame.getLength());
@@ -243,7 +244,7 @@ public final class RntbdResponse implements ReferenceCounted {
 
             if (referenceCount < decrement) {
                 throw new IllegalReferenceCountException(referenceCount, -decrease);
-            };
+            }
 
             referenceCount = referenceCount - decrease;
 
@@ -317,7 +318,7 @@ public final class RntbdResponse implements ReferenceCounted {
         return this;
     }
 
-    static RntbdResponse decode(final ByteBuf in) {
+    public static RntbdResponse decode(final ByteBuf in) {
 
         final int start = in.markReaderIndex().readerIndex();
 
@@ -346,24 +347,28 @@ public final class RntbdResponse implements ReferenceCounted {
         return new RntbdResponse(in.readSlice(end - start), frame, headers, content);
     }
 
-    StoreResponse toStoreResponse(final RntbdContext context) {
+    StoreResponse toStoreResponse(final String serverVersion, final String endpoint) {
 
-        checkNotNull(context, "expected non-null context");
+        checkNotNull(serverVersion, "Argument 'serverVersion' must not be null.");
 
         final int length = this.content.writerIndex();
-        final byte[] content;
 
         if (length == 0) {
-            content = null;
-        } else {
-            //  TODO:(kuthapar) Add a byte array pool instead of creating a new array every time.
-            content = new byte[length];
-            this.content.getBytes(0, content);
+            return new StoreResponse(
+                endpoint,
+                this.getStatus().code(),
+                this.headers.asMap(serverVersion, this.getActivityId()),
+                null,
+                0);
         }
 
-        return new StoreResponse(this.getStatus().code(), this.headers.asMap(context, this.getActivityId()), content);
+        return new StoreResponse(
+            endpoint,
+            this.getStatus().code(),
+            this.headers.asMap(serverVersion, this.getActivityId()),
+            new ByteBufInputStream(this.content.retain(), true),
+            length);
     }
-
     // endregion
 
     // region Types

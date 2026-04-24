@@ -11,26 +11,22 @@ import org.junit.jupiter.api.Assertions;
 public final class MigrationValidationOptionsTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrationValidationOptions model =
-            BinaryData
-                .fromString(
-                    "{\"enableSchemaValidation\":false,\"enableDataIntegrityValidation\":true,\"enableQueryAnalysisValidation\":true}")
-                .toObject(MigrationValidationOptions.class);
-        Assertions.assertEquals(false, model.enableSchemaValidation());
-        Assertions.assertEquals(true, model.enableDataIntegrityValidation());
-        Assertions.assertEquals(true, model.enableQueryAnalysisValidation());
+        MigrationValidationOptions model = BinaryData.fromString(
+            "{\"enableSchemaValidation\":false,\"enableDataIntegrityValidation\":true,\"enableQueryAnalysisValidation\":true}")
+            .toObject(MigrationValidationOptions.class);
+        Assertions.assertFalse(model.enableSchemaValidation());
+        Assertions.assertTrue(model.enableDataIntegrityValidation());
+        Assertions.assertTrue(model.enableQueryAnalysisValidation());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MigrationValidationOptions model =
-            new MigrationValidationOptions()
-                .withEnableSchemaValidation(false)
-                .withEnableDataIntegrityValidation(true)
-                .withEnableQueryAnalysisValidation(true);
+        MigrationValidationOptions model = new MigrationValidationOptions().withEnableSchemaValidation(false)
+            .withEnableDataIntegrityValidation(true)
+            .withEnableQueryAnalysisValidation(true);
         model = BinaryData.fromObject(model).toObject(MigrationValidationOptions.class);
-        Assertions.assertEquals(false, model.enableSchemaValidation());
-        Assertions.assertEquals(true, model.enableDataIntegrityValidation());
-        Assertions.assertEquals(true, model.enableQueryAnalysisValidation());
+        Assertions.assertFalse(model.enableSchemaValidation());
+        Assertions.assertTrue(model.enableDataIntegrityValidation());
+        Assertions.assertTrue(model.enableQueryAnalysisValidation());
     }
 }

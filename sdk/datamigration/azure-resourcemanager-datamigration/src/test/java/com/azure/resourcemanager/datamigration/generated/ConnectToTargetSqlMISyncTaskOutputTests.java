@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.ConnectToTargetSqlMISyncTa
 public final class ConnectToTargetSqlMISyncTaskOutputTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ConnectToTargetSqlMISyncTaskOutput model =
-            BinaryData
-                .fromString(
-                    "{\"targetServerVersion\":\"vmkcx\",\"targetServerBrandVersion\":\"apvhelxprgly\",\"validationErrors\":[{\"message\":\"ckcb\",\"actionableMessage\":\"ejrjxgciqibrho\",\"filePath\":\"sdqrhzoymibmrq\",\"lineNumber\":\"bahwfl\",\"hResult\":575673761,\"stackTrace\":\"tmhrkwofyyvoqacp\"}]}")
-                .toObject(ConnectToTargetSqlMISyncTaskOutput.class);
+        ConnectToTargetSqlMISyncTaskOutput model = BinaryData.fromString(
+            "{\"targetServerVersion\":\"xoyzunbix\",\"targetServerBrandVersion\":\"ti\",\"validationErrors\":[{\"message\":\"wpgclrcivt\",\"actionableMessage\":\"xfrk\",\"filePath\":\"xpmyyefrpmpdnq\",\"lineNumber\":\"ka\",\"hResult\":1047059312,\"stackTrace\":\"vmm\"},{\"message\":\"pqfrtqlkz\",\"actionableMessage\":\"gnitgvkxlzyq\",\"filePath\":\"fegcea\",\"lineNumber\":\"xwh\",\"hResult\":1238946257,\"stackTrace\":\"ymo\"}]}")
+            .toObject(ConnectToTargetSqlMISyncTaskOutput.class);
     }
 
     @org.junit.jupiter.api.Test

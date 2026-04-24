@@ -11,20 +11,17 @@ import org.junit.jupiter.api.Assertions;
 public final class EndpointDependencyTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        EndpointDependency model =
-            BinaryData
-                .fromString("{\"domainName\":\"twhrdxwzywqsm\",\"port\":5342463007448617537}")
-                .toObject(EndpointDependency.class);
-        Assertions.assertEquals("twhrdxwzywqsm", model.domainName());
-        Assertions.assertEquals(5342463007448617537L, model.port());
+        EndpointDependency model = BinaryData.fromString("{\"domainName\":\"vgomz\",\"port\":8511094552590420060}")
+            .toObject(EndpointDependency.class);
+        Assertions.assertEquals("vgomz", model.domainName());
+        Assertions.assertEquals(8511094552590420060L, model.port());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        EndpointDependency model =
-            new EndpointDependency().withDomainName("twhrdxwzywqsm").withPort(5342463007448617537L);
+        EndpointDependency model = new EndpointDependency().withDomainName("vgomz").withPort(8511094552590420060L);
         model = BinaryData.fromObject(model).toObject(EndpointDependency.class);
-        Assertions.assertEquals("twhrdxwzywqsm", model.domainName());
-        Assertions.assertEquals(5342463007448617537L, model.port());
+        Assertions.assertEquals("vgomz", model.domainName());
+        Assertions.assertEquals(8511094552590420060L, model.port());
     }
 }

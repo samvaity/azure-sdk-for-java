@@ -35,16 +35,14 @@ import com.azure.cosmos.implementation.http.HttpHeaders;
 import com.azure.cosmos.implementation.http.HttpRequest;
 import com.azure.cosmos.implementation.http.HttpResponse;
 import io.netty.channel.ConnectTimeoutException;
-import io.reactivex.subscribers.TestSubscriber;
-import org.assertj.core.api.Assertions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import static com.azure.cosmos.implementation.TestUtils.mockDiagnosticsClientContext;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -113,7 +111,7 @@ public class HttpTransportClientTest {
             }
 
             @Override
-            HttpClient createHttpClient(ConnectionPolicy connectionPolicy) {
+            HttpClient createHttpClient(Configs configs, ConnectionPolicy connectionPolicy) {
                 return httpClient;
             }
         }
@@ -141,6 +139,7 @@ public class HttpTransportClientTest {
         RxDocumentServiceRequest request = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
                 OperationType.Create, "dbs/db/colls/col", ResourceType.Document);
         request.setContentBytes(new byte[0]);
+        request.setResponseTimeout(connectionPolicy.getHttpNetworkRequestTimeout());
 
         transportClient.invokeResourceOperationAsync(Uri.create(physicalAddress), request).block();
 
@@ -460,6 +459,7 @@ public class HttpTransportClientTest {
                 httpClientMockWrapper.getClient());
         RxDocumentServiceRequest request = RxDocumentServiceRequest.createFromName(mockDiagnosticsClientContext(),
                 OperationType.Create, "dbs/db/colls/col", ResourceType.Document);
+        request.setResponseTimeout(connectionPolicy.getHttpNetworkRequestTimeout());
         request.setContentBytes(new byte[0]);
         request.requestContext.resourcePhysicalAddress = "dbs/db/colls/col";
 
@@ -568,6 +568,7 @@ public class HttpTransportClientTest {
         UserAgentContainer userAgentContainer = new UserAgentContainer();
         ConnectionPolicy connectionPolicy = ConnectionPolicy.getDefaultPolicy();
         connectionPolicy.setHttpNetworkRequestTimeout(Duration.ofSeconds(100));
+        request.setResponseTimeout(connectionPolicy.getHttpNetworkRequestTimeout());
         HttpTransportClient transportClient = getHttpTransportClientUnderTest(
                 connectionPolicy,
                 userAgentContainer,
@@ -608,14 +609,10 @@ public class HttpTransportClientTest {
 
     public static void validateSuccess(Mono<StoreResponse> single,
                                        StoreResponseValidator validator, long timeout) {
-
-        TestSubscriber<StoreResponse> testSubscriber = new TestSubscriber<>();
-        single.subscribe(testSubscriber);
-        testSubscriber.awaitTerminalEvent(timeout, TimeUnit.MILLISECONDS);
-        testSubscriber.assertNoErrors();
-        testSubscriber.assertComplete();
-        testSubscriber.assertValueCount(1);
-        validator.validate(testSubscriber.values().get(0));
+        StepVerifier.create(single)
+            .assertNext(validator::validate)
+            .expectComplete()
+            .verify(Duration.ofMillis(timeout));
     }
 
     public void validateFailure(Mono<StoreResponse> single,
@@ -625,13 +622,8 @@ public class HttpTransportClientTest {
 
     public static void validateFailure(Mono<StoreResponse> single,
                                        FailureValidator validator, long timeout) {
-
-        TestSubscriber<StoreResponse> testSubscriber = new TestSubscriber<>();
-        single.subscribe(testSubscriber);
-        testSubscriber.awaitTerminalEvent(timeout, TimeUnit.MILLISECONDS);
-        testSubscriber.assertNotComplete();
-        testSubscriber.assertTerminated();
-        Assertions.assertThat(testSubscriber.errorCount()).isEqualTo(1);
-        validator.validate(testSubscriber.errors().get(0));
+        StepVerifier.create(single)
+            .expectErrorSatisfies(validator::validate)
+            .verify(Duration.ofMillis(timeout));
     }
 }

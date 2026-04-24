@@ -10,17 +10,15 @@ import com.azure.resourcemanager.datamigration.models.MigrateMySqlAzureDbForMySq
 public final class MigrateMySqlAzureDbForMySqlSyncTaskOutputMigrationLevelTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateMySqlAzureDbForMySqlSyncTaskOutputMigrationLevel model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"MigrationLevelOutput\",\"startedOn\":\"2021-11-07T07:11:51Z\",\"endedOn\":\"2021-02-27T05:40:13Z\",\"sourceServerVersion\":\"infwjlfltkacjve\",\"sourceServer\":\"dlfoakggkfp\",\"targetServerVersion\":\"ao\",\"targetServer\":\"ulpqblylsyxkqjn\",\"id\":\"ervtiagxs\"}")
-                .toObject(MigrateMySqlAzureDbForMySqlSyncTaskOutputMigrationLevel.class);
+        MigrateMySqlAzureDbForMySqlSyncTaskOutputMigrationLevel model = BinaryData.fromString(
+            "{\"resultType\":\"MigrationLevelOutput\",\"startedOn\":\"2021-01-26T14:06:14Z\",\"endedOn\":\"2021-02-10T08:00:40Z\",\"sourceServerVersion\":\"w\",\"sourceServer\":\"wl\",\"targetServerVersion\":\"jwetnpsihcla\",\"targetServer\":\"va\",\"id\":\"pt\"}")
+            .toObject(MigrateMySqlAzureDbForMySqlSyncTaskOutputMigrationLevel.class);
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MigrateMySqlAzureDbForMySqlSyncTaskOutputMigrationLevel model =
-            new MigrateMySqlAzureDbForMySqlSyncTaskOutputMigrationLevel();
+        MigrateMySqlAzureDbForMySqlSyncTaskOutputMigrationLevel model
+            = new MigrateMySqlAzureDbForMySqlSyncTaskOutputMigrationLevel();
         model = BinaryData.fromObject(model).toObject(MigrateMySqlAzureDbForMySqlSyncTaskOutputMigrationLevel.class);
     }
 }

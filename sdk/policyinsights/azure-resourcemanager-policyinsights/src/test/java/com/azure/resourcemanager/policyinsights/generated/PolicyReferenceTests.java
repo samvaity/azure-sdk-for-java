@@ -6,20 +6,17 @@ package com.azure.resourcemanager.policyinsights.generated;
 
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.policyinsights.models.PolicyReference;
-import org.junit.jupiter.api.Test;
 
 public final class PolicyReferenceTests {
-    @Test
-    public void testDeserialize() {
-        PolicyReference model =
-            BinaryData
-                .fromString(
-                    "{\"policyDefinitionId\":\"foakgg\",\"policySetDefinitionId\":\"pagao\",\"policyDefinitionReferenceId\":\"ulpqblylsyxkqjn\",\"policyAssignmentId\":\"ervtiagxs\"}")
-                .toObject(PolicyReference.class);
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        PolicyReference model = BinaryData.fromString(
+            "{\"policyDefinitionId\":\"g\",\"policySetDefinitionId\":\"mzyospspshck\",\"policyDefinitionReferenceId\":\"yjpmspbpssdfppyo\",\"policyAssignmentId\":\"ieyujtvc\"}")
+            .toObject(PolicyReference.class);
     }
 
-    @Test
-    public void testSerialize() {
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
         PolicyReference model = new PolicyReference();
         model = BinaryData.fromObject(model).toObject(PolicyReference.class);
     }

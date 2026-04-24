@@ -6,25 +6,26 @@ import com.azure.cosmos.models.CosmosPatchItemRequestOptions;
 import com.azure.cosmos.models.CosmosPatchOperations;
 import com.azure.cosmos.models.PartitionKey;
 import com.azure.spring.data.cosmos.ReactiveIntegrationTestCollectionManager;
+import com.azure.spring.data.cosmos.common.ResponseDiagnosticsTestUtils;
 import com.azure.spring.data.cosmos.common.TestConstants;
+import com.azure.spring.data.cosmos.config.CosmosConfig;
 import com.azure.spring.data.cosmos.core.ReactiveCosmosTemplate;
 import com.azure.spring.data.cosmos.domain.Course;
 import com.azure.spring.data.cosmos.exception.CosmosAccessException;
+import com.azure.spring.data.cosmos.exception.CosmosNotFoundException;
+import com.azure.spring.data.cosmos.exception.CosmosPreconditionFailedException;
 import com.azure.spring.data.cosmos.repository.TestRepositoryConfig;
 import com.azure.spring.data.cosmos.repository.repository.ReactiveCourseRepository;
 import com.azure.spring.data.cosmos.repository.support.CosmosEntityInformation;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -35,7 +36,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestRepositoryConfig.class)
 public class ReactiveCourseRepositoryIT {
 
@@ -62,7 +66,7 @@ public class ReactiveCourseRepositoryIT {
     private static final Course COURSE_4 = new Course(COURSE_ID_4, COURSE_NAME_4, DEPARTMENT_NAME_1);
     private static final Course COURSE_5 = new Course(COURSE_ID_5, COURSE_NAME_5, DEPARTMENT_NAME_1);
 
-    @ClassRule
+
     public static final ReactiveIntegrationTestCollectionManager collectionManager = new ReactiveIntegrationTestCollectionManager();
 
     @Autowired
@@ -70,6 +74,13 @@ public class ReactiveCourseRepositoryIT {
 
     @Autowired
     private ReactiveCourseRepository repository;
+
+    @Autowired
+    private CosmosConfig cosmosConfig;
+
+    @Autowired
+    private ResponseDiagnosticsTestUtils responseDiagnosticsTestUtils;
+
     private CosmosEntityInformation<Course, ?> entityInformation;
 
     CosmosPatchOperations patchSetOperation = CosmosPatchOperations
@@ -86,7 +97,7 @@ public class ReactiveCourseRepositoryIT {
 
     private static final CosmosPatchItemRequestOptions options = new CosmosPatchItemRequestOptions();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         collectionManager.ensureContainersCreatedAndEmpty(template, Course.class);
         entityInformation = collectionManager.getEntityInformation(Course.class);
@@ -181,7 +192,7 @@ public class ReactiveCourseRepositoryIT {
     @Test
     public void testDeleteByIdWithoutPartitionKey() {
         final Mono<Void> deleteMono = repository.deleteById(COURSE_1.getCourseId());
-        StepVerifier.create(deleteMono).expectError(CosmosAccessException.class).verify();
+        StepVerifier.create(deleteMono).expectError(CosmosNotFoundException.class).verify();
     }
 
     @Test
@@ -209,13 +220,13 @@ public class ReactiveCourseRepositoryIT {
     @Test
     public void testDeleteByIdNotFound() {
         final Mono<Void> deleteMono = repository.deleteById(COURSE_ID_5);
-        StepVerifier.create(deleteMono).expectError(CosmosAccessException.class).verify();
+        StepVerifier.create(deleteMono).expectError(CosmosNotFoundException.class).verify();
     }
 
     @Test
     public void testDeleteByEntityNotFound() {
         final Mono<Void> deleteMono = repository.delete(COURSE_5);
-        StepVerifier.create(deleteMono).expectError(CosmosAccessException.class).verify();
+        StepVerifier.create(deleteMono).expectError(CosmosNotFoundException.class).verify();
     }
 
     @Test
@@ -309,7 +320,7 @@ public class ReactiveCourseRepositoryIT {
         courseResultSet.add(COURSE_1);
         courseResultSet.add(COURSE_2);
         StepVerifier.create(findResult).expectNextCount(2).thenConsumeWhile(value -> {
-            Assertions.assertThat(courseResultSet.contains(value)).isTrue();
+            assertThat(courseResultSet.contains(value)).isTrue();
             return true;
         }).verifyComplete();
     }
@@ -325,9 +336,9 @@ public class ReactiveCourseRepositoryIT {
     public void testFindByNameJsonNode() {
         final Flux<JsonNode> findResult = repository.annotatedFindByName(COURSE_NAME_1);
         StepVerifier.create(findResult).consumeNextWith(result -> {
-            Assert.assertEquals(result.findValue("courseId").asText(), COURSE_1.getCourseId());
-            Assert.assertEquals(result.findValue("name").asText(), COURSE_1.getName());
-            Assert.assertEquals(result.findValue("department").asText(), COURSE_1.getDepartment());
+            assertEquals(result.findValue("courseId").asText(), COURSE_1.getCourseId());
+            assertEquals(result.findValue("name").asText(), COURSE_1.getName());
+            assertEquals(result.findValue("department").asText(), COURSE_1.getDepartment());
         }).verifyComplete();
     }
 
@@ -375,7 +386,74 @@ public class ReactiveCourseRepositoryIT {
     public void testPatchPreConditionFail() {
         options.setFilterPredicate("FROM course a WHERE a.department = 'dummy'");
         Mono<Course> patchedCourse = repository.save(COURSE_ID_1, new PartitionKey(DEPARTMENT_NAME_3), Course.class, patchSetOperation, options);
-        StepVerifier.create(patchedCourse).expectErrorMatches(ex -> ex instanceof CosmosAccessException &&
+        StepVerifier.create(patchedCourse).expectErrorMatches(ex -> ex instanceof CosmosPreconditionFailedException &&
             ((CosmosAccessException) ex).getCosmosException().getStatusCode() == TestConstants.PRECONDITION_FAILED_STATUS_CODE).verify();
+    }
+
+    @Test
+    public void queryDatabaseWithQueryMetricsEnabled() {
+        // Test flag is true
+        assertThat(cosmosConfig.isQueryMetricsEnabled()).isTrue();
+
+        // Make sure a query runs
+        final Flux<Course> allFlux = repository.findAll();
+        StepVerifier.create(allFlux).expectNextCount(4).verifyComplete();
+
+        String queryDiagnostics = responseDiagnosticsTestUtils.getCosmosDiagnostics().toString();
+        assertThat(queryDiagnostics).contains("retrievedDocumentCount");
+        assertThat(queryDiagnostics).contains("queryPreparationTimes");
+        assertThat(queryDiagnostics).contains("runtimeExecutionTimes");
+        assertThat(queryDiagnostics).contains("fetchExecutionRanges");
+    }
+
+    @Test
+    public void queryDatabaseWithIndexMetricsEnabled() {
+        // Test flag is true
+        assertThat(cosmosConfig.isIndexMetricsEnabled()).isTrue();
+
+        // Make sure a query runs
+        final Flux<Course> allFlux = repository.findAll();
+        StepVerifier.create(allFlux).expectNextCount(4).verifyComplete();
+
+        String queryDiagnostics = responseDiagnosticsTestUtils.getCosmosDiagnostics().toString();
+
+        assertThat(queryDiagnostics).contains("\"indexUtilizationInfo\"");
+        assertThat(queryDiagnostics).contains("\"UtilizedSingleIndexes\"");
+        assertThat(queryDiagnostics).contains("\"PotentialSingleIndexes\"");
+        assertThat(queryDiagnostics).contains("\"UtilizedCompositeIndexes\"");
+        assertThat(queryDiagnostics).contains("\"PotentialCompositeIndexes\"");
+    }
+
+    @Test
+    public void testFindAllByStreetNotNull() {
+        Course TEST_COURSE_TEMP = new Course(COURSE_ID_5, null, DEPARTMENT_NAME_1);
+        final Mono<Course> saveFlux = repository.save(TEST_COURSE_TEMP);
+        StepVerifier.create(saveFlux).expectNextMatches(course -> {
+            if (course.getCourseId().equals(COURSE_ID_5)) {
+                return true;
+            }
+            return false;
+        }).verifyComplete();
+        final Flux<Course> result = repository.findAllByNameNotNull();
+        StepVerifier.create(result)
+            .expectNext(COURSE_1)
+            .expectNext(COURSE_2)
+            .expectNext(COURSE_3)
+            .expectNext(COURSE_4).verifyComplete();
+
+    }
+
+    @Test
+    public void testCountByStreetNotNull() {
+        Course TEST_COURSE_TEMP = new Course(COURSE_ID_5, null, DEPARTMENT_NAME_1);
+        final Mono<Course> saveFlux = repository.save(TEST_COURSE_TEMP);
+        StepVerifier.create(saveFlux).expectNextMatches(course -> {
+            if (course.getCourseId().equals(COURSE_ID_5)) {
+                return true;
+            }
+            return false;
+        }).verifyComplete();
+        final Mono<Long> result = repository.countByNameNotNull();
+        StepVerifier.create(result).expectNext(4L).verifyComplete();
     }
 }

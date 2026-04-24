@@ -13,7 +13,6 @@ import com.azure.resourcemanager.appcontainers.models.ContainerAppJobExecutions;
 import com.azure.resourcemanager.appcontainers.models.Job;
 import com.azure.resourcemanager.appcontainers.models.JobConfiguration;
 import com.azure.resourcemanager.appcontainers.models.JobExecutionBase;
-import com.azure.resourcemanager.appcontainers.models.JobExecutionNamesCollection;
 import com.azure.resourcemanager.appcontainers.models.JobExecutionTemplate;
 import com.azure.resourcemanager.appcontainers.models.JobPatchProperties;
 import com.azure.resourcemanager.appcontainers.models.JobPatchPropertiesProperties;
@@ -128,20 +127,16 @@ public final class JobImpl implements Job, Job.Definition, Job.Update {
     }
 
     public Job create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getJobs()
-                .createOrUpdate(resourceGroupName, jobName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getJobs()
+            .createOrUpdate(resourceGroupName, jobName, this.innerModel(), Context.NONE);
         return this;
     }
 
     public Job create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getJobs()
-                .createOrUpdate(resourceGroupName, jobName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getJobs()
+            .createOrUpdate(resourceGroupName, jobName, this.innerModel(), context);
         return this;
     }
 
@@ -157,62 +152,55 @@ public final class JobImpl implements Job, Job.Definition, Job.Update {
     }
 
     public Job apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getJobs()
-                .update(resourceGroupName, jobName, updateJobEnvelope, Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getJobs()
+            .update(resourceGroupName, jobName, updateJobEnvelope, Context.NONE);
         return this;
     }
 
     public Job apply(Context context) {
-        this.innerObject =
-            serviceManager.serviceClient().getJobs().update(resourceGroupName, jobName, updateJobEnvelope, context);
+        this.innerObject
+            = serviceManager.serviceClient().getJobs().update(resourceGroupName, jobName, updateJobEnvelope, context);
         return this;
     }
 
     JobImpl(JobInner innerObject, com.azure.resourcemanager.appcontainers.ContainerAppsApiManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.jobName = Utils.getValueFromIdByName(innerObject.id(), "jobs");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.jobName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "jobs");
     }
 
     public Job refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getJobs()
-                .getByResourceGroupWithResponse(resourceGroupName, jobName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getJobs()
+            .getByResourceGroupWithResponse(resourceGroupName, jobName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public Job refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getJobs()
-                .getByResourceGroupWithResponse(resourceGroupName, jobName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getJobs()
+            .getByResourceGroupWithResponse(resourceGroupName, jobName, context)
+            .getValue();
         return this;
     }
 
-    public JobExecutionBase start(JobExecutionTemplate template) {
-        return serviceManager.jobs().start(resourceGroupName, jobName, template);
+    public JobExecutionBase start() {
+        return serviceManager.jobs().start(resourceGroupName, jobName);
     }
 
     public JobExecutionBase start(JobExecutionTemplate template, Context context) {
         return serviceManager.jobs().start(resourceGroupName, jobName, template, context);
     }
 
-    public ContainerAppJobExecutions stopMultipleExecutions(JobExecutionNamesCollection jobExecutionName) {
-        return serviceManager.jobs().stopMultipleExecutions(resourceGroupName, jobName, jobExecutionName);
+    public ContainerAppJobExecutions stopMultipleExecutions() {
+        return serviceManager.jobs().stopMultipleExecutions(resourceGroupName, jobName);
     }
 
-    public ContainerAppJobExecutions stopMultipleExecutions(
-        JobExecutionNamesCollection jobExecutionName, Context context) {
-        return serviceManager.jobs().stopMultipleExecutions(resourceGroupName, jobName, jobExecutionName, context);
+    public ContainerAppJobExecutions stopMultipleExecutions(Context context) {
+        return serviceManager.jobs().stopMultipleExecutions(resourceGroupName, jobName, context);
     }
 
     public Response<JobSecretsCollection> listSecretsWithResponse(Context context) {
@@ -279,6 +267,6 @@ public final class JobImpl implements Job, Job.Definition, Job.Update {
     }
 
     private boolean isInCreateMode() {
-        return this.innerModel().id() == null;
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

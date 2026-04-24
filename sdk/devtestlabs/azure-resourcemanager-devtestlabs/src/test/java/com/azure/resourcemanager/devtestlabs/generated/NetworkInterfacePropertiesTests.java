@@ -15,78 +15,60 @@ import org.junit.jupiter.api.Assertions;
 public final class NetworkInterfacePropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        NetworkInterfaceProperties model =
-            BinaryData
-                .fromString(
-                    "{\"virtualNetworkId\":\"j\",\"subnetId\":\"ivfxzsjabibsyst\",\"publicIpAddressId\":\"fsdjpvkvp\",\"publicIpAddress\":\"xbkzbzkdvncj\",\"privateIpAddress\":\"udurgkakmokz\",\"dnsName\":\"jk\",\"rdpAuthority\":\"fhmouwq\",\"sshAuthority\":\"zrfze\",\"sharedPublicIpAddressConfiguration\":{\"inboundNatRules\":[{\"transportProtocol\":\"Tcp\",\"frontendPort\":707940784,\"backendPort\":2103532940},{\"transportProtocol\":\"Udp\",\"frontendPort\":1810814701,\"backendPort\":2014142159},{\"transportProtocol\":\"Tcp\",\"frontendPort\":377677013,\"backendPort\":684811222}]}}")
-                .toObject(NetworkInterfaceProperties.class);
-        Assertions.assertEquals("j", model.virtualNetworkId());
-        Assertions.assertEquals("ivfxzsjabibsyst", model.subnetId());
-        Assertions.assertEquals("fsdjpvkvp", model.publicIpAddressId());
-        Assertions.assertEquals("xbkzbzkdvncj", model.publicIpAddress());
-        Assertions.assertEquals("udurgkakmokz", model.privateIpAddress());
-        Assertions.assertEquals("jk", model.dnsName());
-        Assertions.assertEquals("fhmouwq", model.rdpAuthority());
-        Assertions.assertEquals("zrfze", model.sshAuthority());
-        Assertions
-            .assertEquals(
-                TransportProtocol.TCP,
-                model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).transportProtocol());
-        Assertions
-            .assertEquals(
-                707940784, model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).frontendPort());
-        Assertions
-            .assertEquals(
-                2103532940, model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).backendPort());
+        NetworkInterfaceProperties model = BinaryData.fromString(
+            "{\"virtualNetworkId\":\"exdrrvqahqkg\",\"subnetId\":\"pwijnhy\",\"publicIpAddressId\":\"vfycxzb\",\"publicIpAddress\":\"oowvrv\",\"privateIpAddress\":\"gjqppy\",\"dnsName\":\"tronzmyhgfi\",\"rdpAuthority\":\"sxkm\",\"sshAuthority\":\"a\",\"sharedPublicIpAddressConfiguration\":{\"inboundNatRules\":[{\"transportProtocol\":\"Udp\",\"frontendPort\":1897122560,\"backendPort\":339219254},{\"transportProtocol\":\"Udp\",\"frontendPort\":747215260,\"backendPort\":1781492308},{\"transportProtocol\":\"Udp\",\"frontendPort\":991905690,\"backendPort\":716245940}]}}")
+            .toObject(NetworkInterfaceProperties.class);
+        Assertions.assertEquals("exdrrvqahqkg", model.virtualNetworkId());
+        Assertions.assertEquals("pwijnhy", model.subnetId());
+        Assertions.assertEquals("vfycxzb", model.publicIpAddressId());
+        Assertions.assertEquals("oowvrv", model.publicIpAddress());
+        Assertions.assertEquals("gjqppy", model.privateIpAddress());
+        Assertions.assertEquals("tronzmyhgfi", model.dnsName());
+        Assertions.assertEquals("sxkm", model.rdpAuthority());
+        Assertions.assertEquals("a", model.sshAuthority());
+        Assertions.assertEquals(TransportProtocol.UDP,
+            model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).transportProtocol());
+        Assertions.assertEquals(1897122560,
+            model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).frontendPort());
+        Assertions.assertEquals(339219254,
+            model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).backendPort());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        NetworkInterfaceProperties model =
-            new NetworkInterfaceProperties()
-                .withVirtualNetworkId("j")
-                .withSubnetId("ivfxzsjabibsyst")
-                .withPublicIpAddressId("fsdjpvkvp")
-                .withPublicIpAddress("xbkzbzkdvncj")
-                .withPrivateIpAddress("udurgkakmokz")
-                .withDnsName("jk")
-                .withRdpAuthority("fhmouwq")
-                .withSshAuthority("zrfze")
-                .withSharedPublicIpAddressConfiguration(
-                    new SharedPublicIpAddressConfiguration()
-                        .withInboundNatRules(
-                            Arrays
-                                .asList(
-                                    new InboundNatRule()
-                                        .withTransportProtocol(TransportProtocol.TCP)
-                                        .withFrontendPort(707940784)
-                                        .withBackendPort(2103532940),
-                                    new InboundNatRule()
-                                        .withTransportProtocol(TransportProtocol.UDP)
-                                        .withFrontendPort(1810814701)
-                                        .withBackendPort(2014142159),
-                                    new InboundNatRule()
-                                        .withTransportProtocol(TransportProtocol.TCP)
-                                        .withFrontendPort(377677013)
-                                        .withBackendPort(684811222))));
+        NetworkInterfaceProperties model = new NetworkInterfaceProperties().withVirtualNetworkId("exdrrvqahqkg")
+            .withSubnetId("pwijnhy")
+            .withPublicIpAddressId("vfycxzb")
+            .withPublicIpAddress("oowvrv")
+            .withPrivateIpAddress("gjqppy")
+            .withDnsName("tronzmyhgfi")
+            .withRdpAuthority("sxkm")
+            .withSshAuthority("a")
+            .withSharedPublicIpAddressConfiguration(
+                new SharedPublicIpAddressConfiguration().withInboundNatRules(Arrays.asList(
+                    new InboundNatRule().withTransportProtocol(TransportProtocol.UDP)
+                        .withFrontendPort(1897122560)
+                        .withBackendPort(339219254),
+                    new InboundNatRule().withTransportProtocol(TransportProtocol.UDP)
+                        .withFrontendPort(747215260)
+                        .withBackendPort(1781492308),
+                    new InboundNatRule().withTransportProtocol(TransportProtocol.UDP)
+                        .withFrontendPort(991905690)
+                        .withBackendPort(716245940))));
         model = BinaryData.fromObject(model).toObject(NetworkInterfaceProperties.class);
-        Assertions.assertEquals("j", model.virtualNetworkId());
-        Assertions.assertEquals("ivfxzsjabibsyst", model.subnetId());
-        Assertions.assertEquals("fsdjpvkvp", model.publicIpAddressId());
-        Assertions.assertEquals("xbkzbzkdvncj", model.publicIpAddress());
-        Assertions.assertEquals("udurgkakmokz", model.privateIpAddress());
-        Assertions.assertEquals("jk", model.dnsName());
-        Assertions.assertEquals("fhmouwq", model.rdpAuthority());
-        Assertions.assertEquals("zrfze", model.sshAuthority());
-        Assertions
-            .assertEquals(
-                TransportProtocol.TCP,
-                model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).transportProtocol());
-        Assertions
-            .assertEquals(
-                707940784, model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).frontendPort());
-        Assertions
-            .assertEquals(
-                2103532940, model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).backendPort());
+        Assertions.assertEquals("exdrrvqahqkg", model.virtualNetworkId());
+        Assertions.assertEquals("pwijnhy", model.subnetId());
+        Assertions.assertEquals("vfycxzb", model.publicIpAddressId());
+        Assertions.assertEquals("oowvrv", model.publicIpAddress());
+        Assertions.assertEquals("gjqppy", model.privateIpAddress());
+        Assertions.assertEquals("tronzmyhgfi", model.dnsName());
+        Assertions.assertEquals("sxkm", model.rdpAuthority());
+        Assertions.assertEquals("a", model.sshAuthority());
+        Assertions.assertEquals(TransportProtocol.UDP,
+            model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).transportProtocol());
+        Assertions.assertEquals(1897122560,
+            model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).frontendPort());
+        Assertions.assertEquals(339219254,
+            model.sharedPublicIpAddressConfiguration().inboundNatRules().get(0).backendPort());
     }
 }

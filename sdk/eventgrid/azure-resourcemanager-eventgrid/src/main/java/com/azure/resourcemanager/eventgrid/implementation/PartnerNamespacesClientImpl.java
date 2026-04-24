@@ -29,8 +29,10 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.management.polling.PollResult;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.resourcemanager.eventgrid.fluent.PartnerNamespacesClient;
@@ -43,22 +45,28 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in PartnerNamespacesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in PartnerNamespacesClient.
+ */
 public final class PartnerNamespacesClientImpl implements PartnerNamespacesClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final PartnerNamespacesService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final EventGridManagementClientImpl client;
 
     /**
      * Initializes an instance of PartnerNamespacesClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     PartnerNamespacesClientImpl(EventGridManagementClientImpl client) {
-        this.service =
-            RestProxy.create(PartnerNamespacesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(PartnerNamespacesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -67,148 +75,216 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * service to perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "EventGridManagementC")
+    @ServiceInterface(name = "EventGridManagementClientPartnerNamespaces")
     public interface PartnerNamespacesService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PartnerNamespaceInner>> getByResourceGroup(
-            @HostParam("$host") String endpoint,
+        Mono<Response<PartnerNamespaceInner>> getByResourceGroup(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
-        @ExpectedResponses({201})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> createOrUpdate(
-            @HostParam("$host") String endpoint,
+        Response<PartnerNamespaceInner> getByResourceGroupSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
+        @ExpectedResponses({ 201 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> createOrUpdate(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") PartnerNamespaceInner partnerNamespaceInfo,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
-        @ExpectedResponses({200, 202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
+        @ExpectedResponses({ 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> delete(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> createOrUpdateSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
             @QueryParam("api-version") String apiVersion,
-            Context context);
+            @BodyParam("application/json") PartnerNamespaceInner partnerNamespaceInfo,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Patch(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
-        @ExpectedResponses({200, 201})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
+        @ExpectedResponses({ 200, 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> update(
-            @HostParam("$host") String endpoint,
+        Mono<Response<Flux<ByteBuffer>>> delete(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
+        @ExpectedResponses({ 200, 202, 204 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> deleteSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
+        @ExpectedResponses({ 200, 201 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> update(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/partnerNamespaces")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}")
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PartnerNamespacesListResult>> list(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$top") Integer top,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PartnerNamespacesListResult>> listByResourceGroup(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @QueryParam("$filter") String filter,
-            @QueryParam("$top") Integer top,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/listKeys")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PartnerNamespaceSharedAccessKeysInner>> listSharedAccessKeys(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> updateSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
             @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/partnerNamespaces")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<PartnerNamespacesListResult>> list(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion,
+            @QueryParam("$filter") String filter, @QueryParam("$top") Integer top, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/regenerateKey")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/partnerNamespaces")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PartnerNamespaceSharedAccessKeysInner>> regenerateKey(
-            @HostParam("$host") String endpoint,
+        Response<PartnerNamespacesListResult> listSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion,
+            @QueryParam("$filter") String filter, @QueryParam("$top") Integer top, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<PartnerNamespacesListResult>> listByResourceGroup(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("api-version") String apiVersion,
+            @QueryParam("$filter") String filter, @QueryParam("$top") Integer top, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PartnerNamespacesListResult> listByResourceGroupSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("api-version") String apiVersion,
+            @QueryParam("$filter") String filter, @QueryParam("$top") Integer top, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/listKeys")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<PartnerNamespaceSharedAccessKeysInner>> listSharedAccessKeys(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/listKeys")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PartnerNamespaceSharedAccessKeysInner> listSharedAccessKeysSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/regenerateKey")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<PartnerNamespaceSharedAccessKeysInner>> regenerateKey(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
             @PathParam("partnerNamespaceName") String partnerNamespaceName,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") PartnerNamespaceRegenerateKeyRequest regenerateKeyRequest,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EventGrid/partnerNamespaces/{partnerNamespaceName}/regenerateKey")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PartnerNamespaceSharedAccessKeysInner> regenerateKeySync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("partnerNamespaceName") String partnerNamespaceName,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") PartnerNamespaceRegenerateKeyRequest regenerateKeyRequest,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<PartnerNamespacesListResult>> listBySubscriptionNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PartnerNamespacesListResult> listBySubscriptionNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<PartnerNamespacesListResult>> listByResourceGroupNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<PartnerNamespacesListResult> listByResourceGroupNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Get a partner namespace.
-     *
-     * <p>Get properties of a partner namespace.
-     *
+     * 
+     * Get properties of a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -217,19 +293,15 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return properties of a partner namespace along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PartnerNamespaceInner>> getByResourceGroupWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName) {
+    private Mono<Response<PartnerNamespaceInner>> getByResourceGroupWithResponseAsync(String resourceGroupName,
+        String partnerNamespaceName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -242,73 +314,16 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .getByResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+                context -> service.getByResourceGroup(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, partnerNamespaceName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get a partner namespace.
-     *
-     * <p>Get properties of a partner namespace.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties of a partner namespace along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PartnerNamespaceInner>> getByResourceGroupWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getByResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Get a partner namespace.
-     *
-     * <p>Get properties of a partner namespace.
-     *
+     * 
+     * Get properties of a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -324,9 +339,9 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
 
     /**
      * Get a partner namespace.
-     *
-     * <p>Get properties of a partner namespace.
-     *
+     * 
+     * Get properties of a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param context The context to associate with this operation.
@@ -336,16 +351,36 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return properties of a partner namespace along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PartnerNamespaceInner> getByResourceGroupWithResponse(
-        String resourceGroupName, String partnerNamespaceName, Context context) {
-        return getByResourceGroupWithResponseAsync(resourceGroupName, partnerNamespaceName, context).block();
+    public Response<PartnerNamespaceInner> getByResourceGroupWithResponse(String resourceGroupName,
+        String partnerNamespaceName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getByResourceGroupSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, partnerNamespaceName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Get a partner namespace.
-     *
-     * <p>Get properties of a partner namespace.
-     *
+     * 
+     * Get properties of a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -360,9 +395,9 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
 
     /**
      * Create a partner namespace.
-     *
-     * <p>Asynchronously creates a new partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously creates a new partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceInfo PartnerNamespace information.
@@ -372,19 +407,15 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return eventGrid Partner Namespace along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, PartnerNamespaceInner partnerNamespaceInfo) {
+    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(String resourceGroupName,
+        String partnerNamespaceName, PartnerNamespaceInner partnerNamespaceInfo) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -402,86 +433,108 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .createOrUpdate(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            this.client.getApiVersion(),
-                            partnerNamespaceInfo,
-                            accept,
-                            context))
+            .withContext(context -> service.createOrUpdate(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, partnerNamespaceName, this.client.getApiVersion(), partnerNamespaceInfo, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Create a partner namespace.
-     *
-     * <p>Asynchronously creates a new partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously creates a new partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceInfo PartnerNamespace information.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return eventGrid Partner Namespace along with {@link Response} on successful completion of {@link Mono}.
+     * @return eventGrid Partner Namespace along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateWithResponseAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceInner partnerNamespaceInfo,
-        Context context) {
+    private Response<BinaryData> createOrUpdateWithResponse(String resourceGroupName, String partnerNamespaceName,
+        PartnerNamespaceInner partnerNamespaceInfo) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
         }
         if (partnerNamespaceInfo == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceInfo is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceInfo is required and cannot be null."));
         } else {
             partnerNamespaceInfo.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .createOrUpdate(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                this.client.getApiVersion(),
-                partnerNamespaceInfo,
-                accept,
-                context);
+        return service.createOrUpdateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, this.client.getApiVersion(), partnerNamespaceInfo, accept, Context.NONE);
     }
 
     /**
      * Create a partner namespace.
-     *
-     * <p>Asynchronously creates a new partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously creates a new partner namespace with the specified parameters.
+     * 
+     * @param resourceGroupName The name of the resource group within the user's subscription.
+     * @param partnerNamespaceName Name of the partner namespace.
+     * @param partnerNamespaceInfo PartnerNamespace information.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return eventGrid Partner Namespace along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createOrUpdateWithResponse(String resourceGroupName, String partnerNamespaceName,
+        PartnerNamespaceInner partnerNamespaceInfo, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        if (partnerNamespaceInfo == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceInfo is required and cannot be null."));
+        } else {
+            partnerNamespaceInfo.validate();
+        }
+        final String accept = "application/json";
+        return service.createOrUpdateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, this.client.getApiVersion(), partnerNamespaceInfo, accept, context);
+    }
+
+    /**
+     * Create a partner namespace.
+     * 
+     * Asynchronously creates a new partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceInfo PartnerNamespace information.
@@ -493,52 +546,18 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<PartnerNamespaceInner>, PartnerNamespaceInner> beginCreateOrUpdateAsync(
         String resourceGroupName, String partnerNamespaceName, PartnerNamespaceInner partnerNamespaceInfo) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateWithResponseAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo);
-        return this
-            .client
-            .<PartnerNamespaceInner, PartnerNamespaceInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                PartnerNamespaceInner.class,
-                PartnerNamespaceInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = createOrUpdateWithResponseAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo);
+        return this.client.<PartnerNamespaceInner, PartnerNamespaceInner>getLroResult(mono,
+            this.client.getHttpPipeline(), PartnerNamespaceInner.class, PartnerNamespaceInner.class,
+            this.client.getContext());
     }
 
     /**
      * Create a partner namespace.
-     *
-     * <p>Asynchronously creates a new partner namespace with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param partnerNamespaceInfo PartnerNamespace information.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of eventGrid Partner Namespace.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<PartnerNamespaceInner>, PartnerNamespaceInner> beginCreateOrUpdateAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceInner partnerNamespaceInfo,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateWithResponseAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo, context);
-        return this
-            .client
-            .<PartnerNamespaceInner, PartnerNamespaceInner>getLroResult(
-                mono, this.client.getHttpPipeline(), PartnerNamespaceInner.class, PartnerNamespaceInner.class, context);
-    }
-
-    /**
-     * Create a partner namespace.
-     *
-     * <p>Asynchronously creates a new partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously creates a new partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceInfo PartnerNamespace information.
@@ -550,16 +569,17 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<PartnerNamespaceInner>, PartnerNamespaceInner> beginCreateOrUpdate(
         String resourceGroupName, String partnerNamespaceName, PartnerNamespaceInner partnerNamespaceInfo) {
-        return this
-            .beginCreateOrUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo)
-            .getSyncPoller();
+        Response<BinaryData> response
+            = createOrUpdateWithResponse(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo);
+        return this.client.<PartnerNamespaceInner, PartnerNamespaceInner>getLroResult(response,
+            PartnerNamespaceInner.class, PartnerNamespaceInner.class, Context.NONE);
     }
 
     /**
      * Create a partner namespace.
-     *
-     * <p>Asynchronously creates a new partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously creates a new partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceInfo PartnerNamespace information.
@@ -571,20 +591,19 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<PartnerNamespaceInner>, PartnerNamespaceInner> beginCreateOrUpdate(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceInner partnerNamespaceInfo,
+        String resourceGroupName, String partnerNamespaceName, PartnerNamespaceInner partnerNamespaceInfo,
         Context context) {
-        return this
-            .beginCreateOrUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo, context)
-            .getSyncPoller();
+        Response<BinaryData> response
+            = createOrUpdateWithResponse(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo, context);
+        return this.client.<PartnerNamespaceInner, PartnerNamespaceInner>getLroResult(response,
+            PartnerNamespaceInner.class, PartnerNamespaceInner.class, context);
     }
 
     /**
      * Create a partner namespace.
-     *
-     * <p>Asynchronously creates a new partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously creates a new partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceInfo PartnerNamespace information.
@@ -594,43 +613,17 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return eventGrid Partner Namespace on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PartnerNamespaceInner> createOrUpdateAsync(
-        String resourceGroupName, String partnerNamespaceName, PartnerNamespaceInner partnerNamespaceInfo) {
-        return beginCreateOrUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo)
-            .last()
+    private Mono<PartnerNamespaceInner> createOrUpdateAsync(String resourceGroupName, String partnerNamespaceName,
+        PartnerNamespaceInner partnerNamespaceInfo) {
+        return beginCreateOrUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Create a partner namespace.
-     *
-     * <p>Asynchronously creates a new partner namespace with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param partnerNamespaceInfo PartnerNamespace information.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return eventGrid Partner Namespace on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PartnerNamespaceInner> createOrUpdateAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceInner partnerNamespaceInfo,
-        Context context) {
-        return beginCreateOrUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Create a partner namespace.
-     *
-     * <p>Asynchronously creates a new partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously creates a new partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceInfo PartnerNamespace information.
@@ -640,16 +633,16 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return eventGrid Partner Namespace.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PartnerNamespaceInner createOrUpdate(
-        String resourceGroupName, String partnerNamespaceName, PartnerNamespaceInner partnerNamespaceInfo) {
-        return createOrUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo).block();
+    public PartnerNamespaceInner createOrUpdate(String resourceGroupName, String partnerNamespaceName,
+        PartnerNamespaceInner partnerNamespaceInfo) {
+        return beginCreateOrUpdate(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo).getFinalResult();
     }
 
     /**
      * Create a partner namespace.
-     *
-     * <p>Asynchronously creates a new partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously creates a new partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceInfo PartnerNamespace information.
@@ -660,19 +653,17 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return eventGrid Partner Namespace.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PartnerNamespaceInner createOrUpdate(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceInner partnerNamespaceInfo,
-        Context context) {
-        return createOrUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo, context).block();
+    public PartnerNamespaceInner createOrUpdate(String resourceGroupName, String partnerNamespaceName,
+        PartnerNamespaceInner partnerNamespaceInfo, Context context) {
+        return beginCreateOrUpdate(resourceGroupName, partnerNamespaceName, partnerNamespaceInfo, context)
+            .getFinalResult();
     }
 
     /**
      * Delete a partner namespace.
-     *
-     * <p>Delete existing partner namespace.
-     *
+     * 
+     * Delete existing partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -681,19 +672,15 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName) {
+    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName,
+        String partnerNamespaceName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -703,72 +690,94 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
             return Mono
                 .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
         }
+        final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            this.client.getApiVersion(),
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, partnerNamespaceName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Delete a partner namespace.
-     *
-     * <p>Delete existing partner namespace.
-     *
+     * 
+     * Delete existing partner namespace.
+     * 
+     * @param resourceGroupName The name of the resource group within the user's subscription.
+     * @param partnerNamespaceName Name of the partner namespace.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String partnerNamespaceName) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, this.client.getApiVersion(), accept, Context.NONE);
+    }
+
+    /**
+     * Delete a partner namespace.
+     * 
+     * Delete existing partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, Context context) {
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String partnerNamespaceName,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
         }
-        context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                this.client.getApiVersion(),
-                context);
+        final String accept = "application/json";
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Delete a partner namespace.
-     *
-     * <p>Delete existing partner namespace.
-     *
+     * 
+     * Delete existing partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -779,41 +788,15 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String partnerNamespaceName) {
         Mono<Response<Flux<ByteBuffer>>> mono = deleteWithResponseAsync(resourceGroupName, partnerNamespaceName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Delete a partner namespace.
-     *
-     * <p>Delete existing partner namespace.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceGroupName, String partnerNamespaceName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            deleteWithResponseAsync(resourceGroupName, partnerNamespaceName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Delete a partner namespace.
-     *
-     * <p>Delete existing partner namespace.
-     *
+     * 
+     * Delete existing partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -823,14 +806,15 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String partnerNamespaceName) {
-        return this.beginDeleteAsync(resourceGroupName, partnerNamespaceName).getSyncPoller();
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, partnerNamespaceName);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Delete a partner namespace.
-     *
-     * <p>Delete existing partner namespace.
-     *
+     * 
+     * Delete existing partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param context The context to associate with this operation.
@@ -840,16 +824,17 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceGroupName, String partnerNamespaceName, Context context) {
-        return this.beginDeleteAsync(resourceGroupName, partnerNamespaceName, context).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String partnerNamespaceName,
+        Context context) {
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, partnerNamespaceName, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Delete a partner namespace.
-     *
-     * <p>Delete existing partner namespace.
-     *
+     * 
+     * Delete existing partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -859,36 +844,15 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Void> deleteAsync(String resourceGroupName, String partnerNamespaceName) {
-        return beginDeleteAsync(resourceGroupName, partnerNamespaceName)
-            .last()
+        return beginDeleteAsync(resourceGroupName, partnerNamespaceName).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Delete a partner namespace.
-     *
-     * <p>Delete existing partner namespace.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(String resourceGroupName, String partnerNamespaceName, Context context) {
-        return beginDeleteAsync(resourceGroupName, partnerNamespaceName, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Delete a partner namespace.
-     *
-     * <p>Delete existing partner namespace.
-     *
+     * 
+     * Delete existing partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -897,14 +861,14 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String partnerNamespaceName) {
-        deleteAsync(resourceGroupName, partnerNamespaceName).block();
+        beginDelete(resourceGroupName, partnerNamespaceName).getFinalResult();
     }
 
     /**
      * Delete a partner namespace.
-     *
-     * <p>Delete existing partner namespace.
-     *
+     * 
+     * Delete existing partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param context The context to associate with this operation.
@@ -914,14 +878,14 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String partnerNamespaceName, Context context) {
-        deleteAsync(resourceGroupName, partnerNamespaceName, context).block();
+        beginDelete(resourceGroupName, partnerNamespaceName, context).getFinalResult();
     }
 
     /**
      * Update a partner namespace.
-     *
-     * <p>Asynchronously updates a partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously updates a partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceUpdateParameters Partner namespace update information.
@@ -931,21 +895,15 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return the response body along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters) {
+    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(String resourceGroupName,
+        String partnerNamespaceName, PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -956,97 +914,117 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
                 .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
         }
         if (partnerNamespaceUpdateParameters == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter partnerNamespaceUpdateParameters is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter partnerNamespaceUpdateParameters is required and cannot be null."));
         } else {
             partnerNamespaceUpdateParameters.validate();
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .update(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            this.client.getApiVersion(),
-                            partnerNamespaceUpdateParameters,
-                            accept,
-                            context))
+            .withContext(context -> service.update(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, partnerNamespaceName, this.client.getApiVersion(), partnerNamespaceUpdateParameters,
+                accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Update a partner namespace.
-     *
-     * <p>Asynchronously updates a partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously updates a partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceUpdateParameters Partner namespace update information.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response body along with {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateWithResponseAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters,
-        Context context) {
+    private Response<BinaryData> updateWithResponse(String resourceGroupName, String partnerNamespaceName,
+        PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
         }
         if (partnerNamespaceUpdateParameters == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter partnerNamespaceUpdateParameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter partnerNamespaceUpdateParameters is required and cannot be null."));
         } else {
             partnerNamespaceUpdateParameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .update(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                this.client.getApiVersion(),
-                partnerNamespaceUpdateParameters,
-                accept,
-                context);
+        return service.updateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, this.client.getApiVersion(), partnerNamespaceUpdateParameters, accept, Context.NONE);
     }
 
     /**
      * Update a partner namespace.
-     *
-     * <p>Asynchronously updates a partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously updates a partner namespace with the specified parameters.
+     * 
+     * @param resourceGroupName The name of the resource group within the user's subscription.
+     * @param partnerNamespaceName Name of the partner namespace.
+     * @param partnerNamespaceUpdateParameters Partner namespace update information.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> updateWithResponse(String resourceGroupName, String partnerNamespaceName,
+        PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        if (partnerNamespaceUpdateParameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter partnerNamespaceUpdateParameters is required and cannot be null."));
+        } else {
+            partnerNamespaceUpdateParameters.validate();
+        }
+        final String accept = "application/json";
+        return service.updateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, this.client.getApiVersion(), partnerNamespaceUpdateParameters, accept, context);
+    }
+
+    /**
+     * Update a partner namespace.
+     * 
+     * Asynchronously updates a partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceUpdateParameters Partner namespace update information.
@@ -1057,55 +1035,20 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<PartnerNamespaceInner>, PartnerNamespaceInner> beginUpdateAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
+        String resourceGroupName, String partnerNamespaceName,
         PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateWithResponseAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters);
-        return this
-            .client
-            .<PartnerNamespaceInner, PartnerNamespaceInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                PartnerNamespaceInner.class,
-                PartnerNamespaceInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = updateWithResponseAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters);
+        return this.client.<PartnerNamespaceInner, PartnerNamespaceInner>getLroResult(mono,
+            this.client.getHttpPipeline(), PartnerNamespaceInner.class, PartnerNamespaceInner.class,
+            this.client.getContext());
     }
 
     /**
      * Update a partner namespace.
-     *
-     * <p>Asynchronously updates a partner namespace with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param partnerNamespaceUpdateParameters Partner namespace update information.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<PartnerNamespaceInner>, PartnerNamespaceInner> beginUpdateAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateWithResponseAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters, context);
-        return this
-            .client
-            .<PartnerNamespaceInner, PartnerNamespaceInner>getLroResult(
-                mono, this.client.getHttpPipeline(), PartnerNamespaceInner.class, PartnerNamespaceInner.class, context);
-    }
-
-    /**
-     * Update a partner namespace.
-     *
-     * <p>Asynchronously updates a partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously updates a partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceUpdateParameters Partner namespace update information.
@@ -1115,20 +1058,19 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<PartnerNamespaceInner>, PartnerNamespaceInner> beginUpdate(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters) {
-        return this
-            .beginUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters)
-            .getSyncPoller();
+    public SyncPoller<PollResult<PartnerNamespaceInner>, PartnerNamespaceInner> beginUpdate(String resourceGroupName,
+        String partnerNamespaceName, PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters) {
+        Response<BinaryData> response
+            = updateWithResponse(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters);
+        return this.client.<PartnerNamespaceInner, PartnerNamespaceInner>getLroResult(response,
+            PartnerNamespaceInner.class, PartnerNamespaceInner.class, Context.NONE);
     }
 
     /**
      * Update a partner namespace.
-     *
-     * <p>Asynchronously updates a partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously updates a partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceUpdateParameters Partner namespace update information.
@@ -1139,21 +1081,20 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<PartnerNamespaceInner>, PartnerNamespaceInner> beginUpdate(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters,
+    public SyncPoller<PollResult<PartnerNamespaceInner>, PartnerNamespaceInner> beginUpdate(String resourceGroupName,
+        String partnerNamespaceName, PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters,
         Context context) {
-        return this
-            .beginUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters, context)
-            .getSyncPoller();
+        Response<BinaryData> response
+            = updateWithResponse(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters, context);
+        return this.client.<PartnerNamespaceInner, PartnerNamespaceInner>getLroResult(response,
+            PartnerNamespaceInner.class, PartnerNamespaceInner.class, context);
     }
 
     /**
      * Update a partner namespace.
-     *
-     * <p>Asynchronously updates a partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously updates a partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceUpdateParameters Partner namespace update information.
@@ -1163,45 +1104,17 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return the response body on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PartnerNamespaceInner> updateAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
+    private Mono<PartnerNamespaceInner> updateAsync(String resourceGroupName, String partnerNamespaceName,
         PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters) {
-        return beginUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters)
-            .last()
+        return beginUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Update a partner namespace.
-     *
-     * <p>Asynchronously updates a partner namespace with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param partnerNamespaceUpdateParameters Partner namespace update information.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response body on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PartnerNamespaceInner> updateAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters,
-        Context context) {
-        return beginUpdateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Update a partner namespace.
-     *
-     * <p>Asynchronously updates a partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously updates a partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceUpdateParameters Partner namespace update information.
@@ -1211,18 +1124,16 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PartnerNamespaceInner update(
-        String resourceGroupName,
-        String partnerNamespaceName,
+    public PartnerNamespaceInner update(String resourceGroupName, String partnerNamespaceName,
         PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters) {
-        return updateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters).block();
+        return beginUpdate(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters).getFinalResult();
     }
 
     /**
      * Update a partner namespace.
-     *
-     * <p>Asynchronously updates a partner namespace with the specified parameters.
-     *
+     * 
+     * Asynchronously updates a partner namespace with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param partnerNamespaceUpdateParameters Partner namespace update information.
@@ -1233,142 +1144,61 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return the response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PartnerNamespaceInner update(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters,
-        Context context) {
-        return updateAsync(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters, context).block();
+    public PartnerNamespaceInner update(String resourceGroupName, String partnerNamespaceName,
+        PartnerNamespaceUpdateParameters partnerNamespaceUpdateParameters, Context context) {
+        return beginUpdate(resourceGroupName, partnerNamespaceName, partnerNamespaceUpdateParameters, context)
+            .getFinalResult();
     }
 
     /**
      * List partner namespaces under an Azure subscription.
-     *
-     * <p>List all the partner namespaces under an Azure subscription.
-     *
+     * 
+     * List all the partner namespaces under an Azure subscription.
+     * 
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return result of the List Partner Namespaces operation along with {@link PagedResponse} on successful completion
-     *     of {@link Mono}.
+     * of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PartnerNamespaceInner>> listSinglePageAsync(String filter, Integer top) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            this.client.getApiVersion(),
-                            filter,
-                            top,
-                            accept,
-                            context))
-            .<PagedResponse<PartnerNamespaceInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.list(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                this.client.getApiVersion(), filter, top, accept, context))
+            .<PagedResponse<PartnerNamespaceInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * List partner namespaces under an Azure subscription.
-     *
-     * <p>List all the partner namespaces under an Azure subscription.
-     *
+     * 
+     * List all the partner namespaces under an Azure subscription.
+     * 
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Partner Namespaces operation along with {@link PagedResponse} on successful completion
-     *     of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PartnerNamespaceInner>> listSinglePageAsync(
-        String filter, Integer top, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .list(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                this.client.getApiVersion(),
-                filter,
-                top,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * List partner namespaces under an Azure subscription.
-     *
-     * <p>List all the partner namespaces under an Azure subscription.
-     *
-     * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
-     * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -1376,15 +1206,15 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<PartnerNamespaceInner> listAsync(String filter, Integer top) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(filter, top), nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
+        return new PagedFlux<>(() -> listSinglePageAsync(filter, top),
+            nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
     }
 
     /**
      * List partner namespaces under an Azure subscription.
-     *
-     * <p>List all the partner namespaces under an Azure subscription.
-     *
+     * 
+     * List all the partner namespaces under an Azure subscription.
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return result of the List Partner Namespaces operation as paginated response with {@link PagedFlux}.
@@ -1393,41 +1223,88 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
     private PagedFlux<PartnerNamespaceInner> listAsync() {
         final String filter = null;
         final Integer top = null;
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(filter, top), nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
+        return new PagedFlux<>(() -> listSinglePageAsync(filter, top),
+            nextLink -> listBySubscriptionNextSinglePageAsync(nextLink));
     }
 
     /**
      * List partner namespaces under an Azure subscription.
-     *
-     * <p>List all the partner namespaces under an Azure subscription.
-     *
+     * 
+     * List all the partner namespaces under an Azure subscription.
+     * 
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return result of the List Partner Namespaces operation along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PartnerNamespaceInner> listSinglePage(String filter, Integer top) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<PartnerNamespacesListResult> res = service.listSync(this.client.getEndpoint(),
+            this.client.getSubscriptionId(), this.client.getApiVersion(), filter, top, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * List partner namespaces under an Azure subscription.
+     * 
+     * List all the partner namespaces under an Azure subscription.
+     * 
+     * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
+     * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Partner Namespaces operation as paginated response with {@link PagedFlux}.
+     * @return result of the List Partner Namespaces operation along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PartnerNamespaceInner> listAsync(String filter, Integer top, Context context) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(filter, top, context),
-            nextLink -> listBySubscriptionNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PartnerNamespaceInner> listSinglePage(String filter, Integer top, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<PartnerNamespacesListResult> res = service.listSync(this.client.getEndpoint(),
+            this.client.getSubscriptionId(), this.client.getApiVersion(), filter, top, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * List partner namespaces under an Azure subscription.
-     *
-     * <p>List all the partner namespaces under an Azure subscription.
-     *
+     * 
+     * List all the partner namespaces under an Azure subscription.
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return result of the List Partner Namespaces operation as paginated response with {@link PagedIterable}.
@@ -1436,22 +1313,22 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
     public PagedIterable<PartnerNamespaceInner> list() {
         final String filter = null;
         final Integer top = null;
-        return new PagedIterable<>(listAsync(filter, top));
+        return new PagedIterable<>(() -> listSinglePage(filter, top),
+            nextLink -> listBySubscriptionNextSinglePage(nextLink));
     }
 
     /**
      * List partner namespaces under an Azure subscription.
-     *
-     * <p>List all the partner namespaces under an Azure subscription.
-     *
+     * 
+     * List all the partner namespaces under an Azure subscription.
+     * 
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1460,43 +1337,39 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<PartnerNamespaceInner> list(String filter, Integer top, Context context) {
-        return new PagedIterable<>(listAsync(filter, top, context));
+        return new PagedIterable<>(() -> listSinglePage(filter, top, context),
+            nextLink -> listBySubscriptionNextSinglePage(nextLink, context));
     }
 
     /**
      * List partner namespaces under a resource group.
-     *
-     * <p>List all the partner namespaces under a resource group.
-     *
+     * 
+     * List all the partner namespaces under a resource group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return result of the List Partner Namespaces operation along with {@link PagedResponse} on successful completion
-     *     of {@link Mono}.
+     * of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PartnerNamespaceInner>> listByResourceGroupSinglePageAsync(
-        String resourceGroupName, String filter, Integer top) {
+    private Mono<PagedResponse<PartnerNamespaceInner>> listByResourceGroupSinglePageAsync(String resourceGroupName,
+        String filter, Integer top) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1505,124 +1378,43 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .listByResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            this.client.getApiVersion(),
-                            filter,
-                            top,
-                            accept,
-                            context))
-            .<PagedResponse<PartnerNamespaceInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+                context -> service.listByResourceGroup(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, this.client.getApiVersion(), filter, top, accept, context))
+            .<PagedResponse<PartnerNamespaceInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * List partner namespaces under a resource group.
-     *
-     * <p>List all the partner namespaces under a resource group.
-     *
+     * 
+     * List all the partner namespaces under a resource group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Partner Namespaces operation along with {@link PagedResponse} on successful completion
-     *     of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PartnerNamespaceInner>> listByResourceGroupSinglePageAsync(
-        String resourceGroupName, String filter, Integer top, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                this.client.getApiVersion(),
-                filter,
-                top,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * List partner namespaces under a resource group.
-     *
-     * <p>List all the partner namespaces under a resource group.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
-     * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return result of the List Partner Namespaces operation as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PartnerNamespaceInner> listByResourceGroupAsync(
-        String resourceGroupName, String filter, Integer top) {
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, filter, top),
+    private PagedFlux<PartnerNamespaceInner> listByResourceGroupAsync(String resourceGroupName, String filter,
+        Integer top) {
+        return new PagedFlux<>(() -> listByResourceGroupSinglePageAsync(resourceGroupName, filter, top),
             nextLink -> listByResourceGroupNextSinglePageAsync(nextLink));
     }
 
     /**
      * List partner namespaces under a resource group.
-     *
-     * <p>List all the partner namespaces under a resource group.
-     *
+     * 
+     * List all the partner namespaces under a resource group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1633,44 +1425,102 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
     private PagedFlux<PartnerNamespaceInner> listByResourceGroupAsync(String resourceGroupName) {
         final String filter = null;
         final Integer top = null;
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, filter, top),
+        return new PagedFlux<>(() -> listByResourceGroupSinglePageAsync(resourceGroupName, filter, top),
             nextLink -> listByResourceGroupNextSinglePageAsync(nextLink));
     }
 
     /**
      * List partner namespaces under a resource group.
-     *
-     * <p>List all the partner namespaces under a resource group.
-     *
+     * 
+     * List all the partner namespaces under a resource group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
-     * @param context The context to associate with this operation.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Partner Namespaces operation as paginated response with {@link PagedFlux}.
+     * @return result of the List Partner Namespaces operation along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<PartnerNamespaceInner> listByResourceGroupAsync(
-        String resourceGroupName, String filter, Integer top, Context context) {
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, filter, top, context),
-            nextLink -> listByResourceGroupNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PartnerNamespaceInner> listByResourceGroupSinglePage(String resourceGroupName, String filter,
+        Integer top) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<PartnerNamespacesListResult> res
+            = service.listByResourceGroupSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, this.client.getApiVersion(), filter, top, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * List partner namespaces under a resource group.
-     *
-     * <p>List all the partner namespaces under a resource group.
-     *
+     * 
+     * List all the partner namespaces under a resource group.
+     * 
+     * @param resourceGroupName The name of the resource group within the user's subscription.
+     * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
+     * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return result of the List Partner Namespaces operation along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PartnerNamespaceInner> listByResourceGroupSinglePage(String resourceGroupName, String filter,
+        Integer top, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<PartnerNamespacesListResult> res
+            = service.listByResourceGroupSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, this.client.getApiVersion(), filter, top, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * List partner namespaces under a resource group.
+     * 
+     * List all the partner namespaces under a resource group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1681,23 +1531,23 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
     public PagedIterable<PartnerNamespaceInner> listByResourceGroup(String resourceGroupName) {
         final String filter = null;
         final Integer top = null;
-        return new PagedIterable<>(listByResourceGroupAsync(resourceGroupName, filter, top));
+        return new PagedIterable<>(() -> listByResourceGroupSinglePage(resourceGroupName, filter, top),
+            nextLink -> listByResourceGroupNextSinglePage(nextLink));
     }
 
     /**
      * List partner namespaces under a resource group.
-     *
-     * <p>List all the partner namespaces under a resource group.
-     *
+     * 
+     * List all the partner namespaces under a resource group.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param filter The query used to filter the search results using OData syntax. Filtering is permitted on the
-     *     'name' property only and with limited number of OData operations. These operations are: the 'contains'
-     *     function as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal).
-     *     No arithmetic operations are supported. The following is a valid filter example: $filter=contains(namE,
-     *     'PATTERN') and name ne 'PATTERN-1'. The following is not a valid filter example: $filter=location eq
-     *     'westus'.
+     * 'name' property only and with limited number of OData operations. These operations are: the 'contains' function
+     * as well as the following logical operations: not, and, or, eq (for equal), and ne (for not equal). No arithmetic
+     * operations are supported. The following is a valid filter example: $filter=contains(namE, 'PATTERN') and name ne
+     * 'PATTERN-1'. The following is not a valid filter example: $filter=location eq 'westus'.
      * @param top The number of results to return per page for the list operation. Valid range for top parameter is 1 to
-     *     100. If not specified, the default number of results to be returned is 20 items per page.
+     * 100. If not specified, the default number of results to be returned is 20 items per page.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1705,38 +1555,35 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return result of the List Partner Namespaces operation as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<PartnerNamespaceInner> listByResourceGroup(
-        String resourceGroupName, String filter, Integer top, Context context) {
-        return new PagedIterable<>(listByResourceGroupAsync(resourceGroupName, filter, top, context));
+    public PagedIterable<PartnerNamespaceInner> listByResourceGroup(String resourceGroupName, String filter,
+        Integer top, Context context) {
+        return new PagedIterable<>(() -> listByResourceGroupSinglePage(resourceGroupName, filter, top, context),
+            nextLink -> listByResourceGroupNextSinglePage(nextLink, context));
     }
 
     /**
      * List keys for a partner namespace.
-     *
-     * <p>List the two keys used to publish to a partner namespace.
-     *
+     * 
+     * List the two keys used to publish to a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return shared access keys of the partner namespace along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PartnerNamespaceSharedAccessKeysInner>> listSharedAccessKeysWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName) {
+    private Mono<Response<PartnerNamespaceSharedAccessKeysInner>>
+        listSharedAccessKeysWithResponseAsync(String resourceGroupName, String partnerNamespaceName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1749,74 +1596,16 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .listSharedAccessKeys(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+                context -> service.listSharedAccessKeys(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, partnerNamespaceName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * List keys for a partner namespace.
-     *
-     * <p>List the two keys used to publish to a partner namespace.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return shared access keys of the partner namespace along with {@link Response} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PartnerNamespaceSharedAccessKeysInner>> listSharedAccessKeysWithResponseAsync(
-        String resourceGroupName, String partnerNamespaceName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listSharedAccessKeys(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * List keys for a partner namespace.
-     *
-     * <p>List the two keys used to publish to a partner namespace.
-     *
+     * 
+     * List the two keys used to publish to a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1825,17 +1614,17 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return shared access keys of the partner namespace on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PartnerNamespaceSharedAccessKeysInner> listSharedAccessKeysAsync(
-        String resourceGroupName, String partnerNamespaceName) {
+    private Mono<PartnerNamespaceSharedAccessKeysInner> listSharedAccessKeysAsync(String resourceGroupName,
+        String partnerNamespaceName) {
         return listSharedAccessKeysWithResponseAsync(resourceGroupName, partnerNamespaceName)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * List keys for a partner namespace.
-     *
-     * <p>List the two keys used to publish to a partner namespace.
-     *
+     * 
+     * List the two keys used to publish to a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param context The context to associate with this operation.
@@ -1845,16 +1634,36 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return shared access keys of the partner namespace along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PartnerNamespaceSharedAccessKeysInner> listSharedAccessKeysWithResponse(
-        String resourceGroupName, String partnerNamespaceName, Context context) {
-        return listSharedAccessKeysWithResponseAsync(resourceGroupName, partnerNamespaceName, context).block();
+    public Response<PartnerNamespaceSharedAccessKeysInner> listSharedAccessKeysWithResponse(String resourceGroupName,
+        String partnerNamespaceName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.listSharedAccessKeysSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, partnerNamespaceName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * List keys for a partner namespace.
-     *
-     * <p>List the two keys used to publish to a partner namespace.
-     *
+     * 
+     * List the two keys used to publish to a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1863,16 +1672,16 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return shared access keys of the partner namespace.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PartnerNamespaceSharedAccessKeysInner listSharedAccessKeys(
-        String resourceGroupName, String partnerNamespaceName) {
+    public PartnerNamespaceSharedAccessKeysInner listSharedAccessKeys(String resourceGroupName,
+        String partnerNamespaceName) {
         return listSharedAccessKeysWithResponse(resourceGroupName, partnerNamespaceName, Context.NONE).getValue();
     }
 
     /**
      * Regenerate key for a partner namespace.
-     *
-     * <p>Regenerate a shared access key for a partner namespace.
-     *
+     * 
+     * Regenerate a shared access key for a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param regenerateKeyRequest Request body to regenerate key.
@@ -1880,24 +1689,19 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return shared access keys of the partner namespace along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<PartnerNamespaceSharedAccessKeysInner>> regenerateKeyWithResponseAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
+        String resourceGroupName, String partnerNamespaceName,
         PartnerNamespaceRegenerateKeyRequest regenerateKeyRequest) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1915,87 +1719,17 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .regenerateKey(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            partnerNamespaceName,
-                            this.client.getApiVersion(),
-                            regenerateKeyRequest,
-                            accept,
-                            context))
+            .withContext(context -> service.regenerateKey(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, partnerNamespaceName, this.client.getApiVersion(), regenerateKeyRequest, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Regenerate key for a partner namespace.
-     *
-     * <p>Regenerate a shared access key for a partner namespace.
-     *
-     * @param resourceGroupName The name of the resource group within the user's subscription.
-     * @param partnerNamespaceName Name of the partner namespace.
-     * @param regenerateKeyRequest Request body to regenerate key.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return shared access keys of the partner namespace along with {@link Response} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PartnerNamespaceSharedAccessKeysInner>> regenerateKeyWithResponseAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceRegenerateKeyRequest regenerateKeyRequest,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (partnerNamespaceName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
-        }
-        if (regenerateKeyRequest == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter regenerateKeyRequest is required and cannot be null."));
-        } else {
-            regenerateKeyRequest.validate();
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .regenerateKey(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                partnerNamespaceName,
-                this.client.getApiVersion(),
-                regenerateKeyRequest,
-                accept,
-                context);
-    }
-
-    /**
-     * Regenerate key for a partner namespace.
-     *
-     * <p>Regenerate a shared access key for a partner namespace.
-     *
+     * 
+     * Regenerate a shared access key for a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param regenerateKeyRequest Request body to regenerate key.
@@ -2005,19 +1739,17 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return shared access keys of the partner namespace on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PartnerNamespaceSharedAccessKeysInner> regenerateKeyAsync(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceRegenerateKeyRequest regenerateKeyRequest) {
+    private Mono<PartnerNamespaceSharedAccessKeysInner> regenerateKeyAsync(String resourceGroupName,
+        String partnerNamespaceName, PartnerNamespaceRegenerateKeyRequest regenerateKeyRequest) {
         return regenerateKeyWithResponseAsync(resourceGroupName, partnerNamespaceName, regenerateKeyRequest)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Regenerate key for a partner namespace.
-     *
-     * <p>Regenerate a shared access key for a partner namespace.
-     *
+     * 
+     * Regenerate a shared access key for a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param regenerateKeyRequest Request body to regenerate key.
@@ -2028,20 +1760,42 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return shared access keys of the partner namespace along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PartnerNamespaceSharedAccessKeysInner> regenerateKeyWithResponse(
-        String resourceGroupName,
-        String partnerNamespaceName,
-        PartnerNamespaceRegenerateKeyRequest regenerateKeyRequest,
-        Context context) {
-        return regenerateKeyWithResponseAsync(resourceGroupName, partnerNamespaceName, regenerateKeyRequest, context)
-            .block();
+    public Response<PartnerNamespaceSharedAccessKeysInner> regenerateKeyWithResponse(String resourceGroupName,
+        String partnerNamespaceName, PartnerNamespaceRegenerateKeyRequest regenerateKeyRequest, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (partnerNamespaceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter partnerNamespaceName is required and cannot be null."));
+        }
+        if (regenerateKeyRequest == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter regenerateKeyRequest is required and cannot be null."));
+        } else {
+            regenerateKeyRequest.validate();
+        }
+        final String accept = "application/json";
+        return service.regenerateKeySync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            partnerNamespaceName, this.client.getApiVersion(), regenerateKeyRequest, accept, context);
     }
 
     /**
      * Regenerate key for a partner namespace.
-     *
-     * <p>Regenerate a shared access key for a partner namespace.
-     *
+     * 
+     * Regenerate a shared access key for a partner namespace.
+     * 
      * @param resourceGroupName The name of the resource group within the user's subscription.
      * @param partnerNamespaceName Name of the partner namespace.
      * @param regenerateKeyRequest Request body to regenerate key.
@@ -2051,9 +1805,7 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
      * @return shared access keys of the partner namespace.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public PartnerNamespaceSharedAccessKeysInner regenerateKey(
-        String resourceGroupName,
-        String partnerNamespaceName,
+    public PartnerNamespaceSharedAccessKeysInner regenerateKey(String resourceGroupName, String partnerNamespaceName,
         PartnerNamespaceRegenerateKeyRequest regenerateKeyRequest) {
         return regenerateKeyWithResponse(resourceGroupName, partnerNamespaceName, regenerateKeyRequest, Context.NONE)
             .getValue();
@@ -2061,14 +1813,13 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return result of the List Partner Namespaces operation along with {@link PagedResponse} on successful completion
-     *     of {@link Mono}.
+     * of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PartnerNamespaceInner>> listBySubscriptionNextSinglePageAsync(String nextLink) {
@@ -2076,76 +1827,82 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listBySubscriptionNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<PartnerNamespaceInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<PartnerNamespaceInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
-     * @param context The context to associate with this operation.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Partner Namespaces operation along with {@link PagedResponse} on successful completion
-     *     of {@link Mono}.
+     * @return result of the List Partner Namespaces operation along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PartnerNamespaceInner>> listBySubscriptionNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<PartnerNamespaceInner> listBySubscriptionNextSinglePage(String nextLink) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listBySubscriptionNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<PartnerNamespacesListResult> res
+            = service.listBySubscriptionNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return result of the List Partner Namespaces operation along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PartnerNamespaceInner> listBySubscriptionNextSinglePage(String nextLink, Context context) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<PartnerNamespacesListResult> res
+            = service.listBySubscriptionNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return result of the List Partner Namespaces operation along with {@link PagedResponse} on successful completion
-     *     of {@link Mono}.
+     * of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<PartnerNamespaceInner>> listByResourceGroupNextSinglePageAsync(String nextLink) {
@@ -2153,63 +1910,72 @@ public final class PartnerNamespacesClientImpl implements PartnerNamespacesClien
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listByResourceGroupNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<PartnerNamespaceInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<PartnerNamespaceInner>>map(res -> new PagedResponseBase<>(res.getRequest(),
+                res.getStatusCode(), res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return result of the List Partner Namespaces operation along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<PartnerNamespaceInner> listByResourceGroupNextSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<PartnerNamespacesListResult> res
+            = service.listByResourceGroupNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return result of the List Partner Namespaces operation along with {@link PagedResponse} on successful completion
-     *     of {@link Mono}.
+     * @return result of the List Partner Namespaces operation along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<PartnerNamespaceInner>> listByResourceGroupNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<PartnerNamespaceInner> listByResourceGroupNextSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByResourceGroupNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<PartnerNamespacesListResult> res
+            = service.listByResourceGroupNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(PartnerNamespacesClientImpl.class);
 }

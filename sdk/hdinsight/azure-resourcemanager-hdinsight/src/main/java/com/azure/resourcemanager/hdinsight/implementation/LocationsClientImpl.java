@@ -23,6 +23,7 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.resourcemanager.hdinsight.fluent.LocationsClient;
 import com.azure.resourcemanager.hdinsight.fluent.models.AsyncOperationResultInner;
 import com.azure.resourcemanager.hdinsight.fluent.models.BillingResponseListResultInner;
@@ -34,22 +35,28 @@ import com.azure.resourcemanager.hdinsight.models.ClusterCreateRequestValidation
 import com.azure.resourcemanager.hdinsight.models.NameAvailabilityCheckRequestParameters;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in LocationsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in LocationsClient.
+ */
 public final class LocationsClientImpl implements LocationsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final LocationsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final HDInsightManagementClientImpl client;
 
     /**
      * Initializes an instance of LocationsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     LocationsClientImpl(HDInsightManagementClientImpl client) {
-        this.service =
-            RestProxy.create(LocationsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(LocationsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -58,172 +65,148 @@ public final class LocationsClientImpl implements LocationsClient {
      * perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "HDInsightManagementC")
+    @ServiceInterface(name = "HDInsightManagementClientLocations")
     public interface LocationsService {
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/capabilities")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<CapabilitiesResultInner>> getCapabilities(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("location") String location,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<CapabilitiesResultInner>> getCapabilities(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("location") String location,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/capabilities")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<CapabilitiesResultInner> getCapabilitiesSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("location") String location,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/usages")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<UsagesListResultInner>> listUsages(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("location") String location,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<UsagesListResultInner>> listUsages(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("location") String location,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/usages")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<UsagesListResultInner> listUsagesSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("location") String location,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/billingSpecs")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BillingResponseListResultInner>> listBillingSpecs(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("location") String location,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<BillingResponseListResultInner>> listBillingSpecs(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("location") String location,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/azureasyncoperations/{operationId}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/billingSpecs")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<AsyncOperationResultInner>> getAzureAsyncOperationStatus(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("location") String location,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("operationId") String operationId,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Response<BillingResponseListResultInner> listBillingSpecsSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("location") String location,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/checkNameAvailability")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/azureasyncoperations/{operationId}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<NameAvailabilityCheckResultInner>> checkNameAvailability(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("location") String location,
+        Mono<Response<AsyncOperationResultInner>> getAzureAsyncOperationStatus(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("location") String location,
+            @QueryParam("api-version") String apiVersion, @PathParam("operationId") String operationId,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/azureasyncoperations/{operationId}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AsyncOperationResultInner> getAzureAsyncOperationStatusSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("location") String location,
+            @QueryParam("api-version") String apiVersion, @PathParam("operationId") String operationId,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/checkNameAvailability")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<NameAvailabilityCheckResultInner>> checkNameAvailability(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("location") String location,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") NameAvailabilityCheckRequestParameters parameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/validateCreateRequest")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/checkNameAvailability")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<NameAvailabilityCheckResultInner> checkNameAvailabilitySync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("location") String location,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") NameAvailabilityCheckRequestParameters parameters,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/validateCreateRequest")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<ClusterCreateValidationResultInner>> validateClusterCreateRequest(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("location") String location,
-            @QueryParam("api-version") String apiVersion,
+            @HostParam("$host") String endpoint, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("location") String location, @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") ClusterCreateRequestValidationParameters parameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/locations/{location}/validateCreateRequest")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ClusterCreateValidationResultInner> validateClusterCreateRequestSync(
+            @HostParam("$host") String endpoint, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("location") String location, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ClusterCreateRequestValidationParameters parameters,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets the capabilities for the specified location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the capabilities for the specified location along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<CapabilitiesResultInner>> getCapabilitiesWithResponseAsync(String location) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (location == null) {
             return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getCapabilities(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            location,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.getCapabilities(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                location, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the capabilities for the specified location.
-     *
-     * @param location The Azure location (region) for which to make the request.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the capabilities for the specified location along with {@link Response} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<CapabilitiesResultInner>> getCapabilitiesWithResponseAsync(String location, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (location == null) {
-            return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getCapabilities(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                location,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Gets the capabilities for the specified location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -237,7 +220,7 @@ public final class LocationsClientImpl implements LocationsClient {
 
     /**
      * Gets the capabilities for the specified location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -247,12 +230,28 @@ public final class LocationsClientImpl implements LocationsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<CapabilitiesResultInner> getCapabilitiesWithResponse(String location, Context context) {
-        return getCapabilitiesWithResponseAsync(location, context).block();
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (location == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter location is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getCapabilitiesSync(this.client.getEndpoint(), this.client.getSubscriptionId(), location,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets the capabilities for the specified location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -266,95 +265,43 @@ public final class LocationsClientImpl implements LocationsClient {
 
     /**
      * Lists the usages for the specified location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response for the operation to get regional usages for a subscription along with {@link Response} on
-     *     successful completion of {@link Mono}.
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<UsagesListResultInner>> listUsagesWithResponseAsync(String location) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (location == null) {
             return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listUsages(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            location,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.listUsages(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                location, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Lists the usages for the specified location.
-     *
-     * @param location The Azure location (region) for which to make the request.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response for the operation to get regional usages for a subscription along with {@link Response} on
-     *     successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<UsagesListResultInner>> listUsagesWithResponseAsync(String location, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (location == null) {
-            return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listUsages(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                location,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Lists the usages for the specified location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response for the operation to get regional usages for a subscription on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<UsagesListResultInner> listUsagesAsync(String location) {
@@ -363,7 +310,7 @@ public final class LocationsClientImpl implements LocationsClient {
 
     /**
      * Lists the usages for the specified location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -373,12 +320,28 @@ public final class LocationsClientImpl implements LocationsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<UsagesListResultInner> listUsagesWithResponse(String location, Context context) {
-        return listUsagesWithResponseAsync(location, context).block();
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (location == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter location is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.listUsagesSync(this.client.getEndpoint(), this.client.getSubscriptionId(), location,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Lists the usages for the specified location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -392,96 +355,43 @@ public final class LocationsClientImpl implements LocationsClient {
 
     /**
      * Lists the billingSpecs for the specified subscription and location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response for the operation to get regional billingSpecs for a subscription along with {@link
-     *     Response} on successful completion of {@link Mono}.
+     * @return the response for the operation to get regional billingSpecs for a subscription along with
+     * {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<BillingResponseListResultInner>> listBillingSpecsWithResponseAsync(String location) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (location == null) {
             return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listBillingSpecs(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            location,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.listBillingSpecs(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                location, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Lists the billingSpecs for the specified subscription and location.
-     *
-     * @param location The Azure location (region) for which to make the request.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response for the operation to get regional billingSpecs for a subscription along with {@link
-     *     Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BillingResponseListResultInner>> listBillingSpecsWithResponseAsync(
-        String location, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (location == null) {
-            return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listBillingSpecs(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                location,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Lists the billingSpecs for the specified subscription and location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response for the operation to get regional billingSpecs for a subscription on successful completion
-     *     of {@link Mono}.
+     * of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<BillingResponseListResultInner> listBillingSpecsAsync(String location) {
@@ -490,23 +400,39 @@ public final class LocationsClientImpl implements LocationsClient {
 
     /**
      * Lists the billingSpecs for the specified subscription and location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response for the operation to get regional billingSpecs for a subscription along with {@link
-     *     Response}.
+     * @return the response for the operation to get regional billingSpecs for a subscription along with
+     * {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<BillingResponseListResultInner> listBillingSpecsWithResponse(String location, Context context) {
-        return listBillingSpecsWithResponseAsync(location, context).block();
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (location == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter location is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.listBillingSpecsSync(this.client.getEndpoint(), this.client.getSubscriptionId(), location,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Lists the billingSpecs for the specified subscription and location.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -520,7 +446,7 @@ public final class LocationsClientImpl implements LocationsClient {
 
     /**
      * Get the async operation status.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @param operationId The long running operation id.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -529,19 +455,15 @@ public final class LocationsClientImpl implements LocationsClient {
      * @return the async operation status along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AsyncOperationResultInner>> getAzureAsyncOperationStatusWithResponseAsync(
-        String location, String operationId) {
+    private Mono<Response<AsyncOperationResultInner>> getAzureAsyncOperationStatusWithResponseAsync(String location,
+        String operationId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (location == null) {
             return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
@@ -551,68 +473,14 @@ public final class LocationsClientImpl implements LocationsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getAzureAsyncOperationStatus(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            location,
-                            this.client.getApiVersion(),
-                            operationId,
-                            accept,
-                            context))
+            .withContext(context -> service.getAzureAsyncOperationStatus(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), location, this.client.getApiVersion(), operationId, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the async operation status.
-     *
-     * @param location The Azure location (region) for which to make the request.
-     * @param operationId The long running operation id.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the async operation status along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AsyncOperationResultInner>> getAzureAsyncOperationStatusWithResponseAsync(
-        String location, String operationId, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (location == null) {
-            return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
-        }
-        if (operationId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter operationId is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getAzureAsyncOperationStatus(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                location,
-                this.client.getApiVersion(),
-                operationId,
-                accept,
-                context);
-    }
-
-    /**
-     * Get the async operation status.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @param operationId The long running operation id.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -628,7 +496,7 @@ public final class LocationsClientImpl implements LocationsClient {
 
     /**
      * Get the async operation status.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @param operationId The long running operation id.
      * @param context The context to associate with this operation.
@@ -638,14 +506,34 @@ public final class LocationsClientImpl implements LocationsClient {
      * @return the async operation status along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<AsyncOperationResultInner> getAzureAsyncOperationStatusWithResponse(
-        String location, String operationId, Context context) {
-        return getAzureAsyncOperationStatusWithResponseAsync(location, operationId, context).block();
+    public Response<AsyncOperationResultInner> getAzureAsyncOperationStatusWithResponse(String location,
+        String operationId, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (location == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter location is required and cannot be null."));
+        }
+        if (operationId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter operationId is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getAzureAsyncOperationStatusSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            location, this.client.getApiVersion(), operationId, accept, context);
     }
 
     /**
      * Get the async operation status.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
      * @param operationId The long running operation id.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -660,29 +548,25 @@ public final class LocationsClientImpl implements LocationsClient {
 
     /**
      * Check the cluster name is available or not.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
-     * @param parameters The request spec of checking name availability.
+     * @param parameters The parameters parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response spec of checking name availability along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<NameAvailabilityCheckResultInner>> checkNameAvailabilityWithResponseAsync(
-        String location, NameAvailabilityCheckRequestParameters parameters) {
+    private Mono<Response<NameAvailabilityCheckResultInner>> checkNameAvailabilityWithResponseAsync(String location,
+        NameAvailabilityCheckRequestParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (location == null) {
             return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
@@ -694,90 +578,33 @@ public final class LocationsClientImpl implements LocationsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .checkNameAvailability(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            location,
-                            this.client.getApiVersion(),
-                            parameters,
-                            accept,
-                            context))
+            .withContext(context -> service.checkNameAvailability(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), location, this.client.getApiVersion(), parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Check the cluster name is available or not.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
-     * @param parameters The request spec of checking name availability.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response spec of checking name availability along with {@link Response} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<NameAvailabilityCheckResultInner>> checkNameAvailabilityWithResponseAsync(
-        String location, NameAvailabilityCheckRequestParameters parameters, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (location == null) {
-            return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
-        }
-        if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
-        } else {
-            parameters.validate();
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .checkNameAvailability(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                location,
-                this.client.getApiVersion(),
-                parameters,
-                accept,
-                context);
-    }
-
-    /**
-     * Check the cluster name is available or not.
-     *
-     * @param location The Azure location (region) for which to make the request.
-     * @param parameters The request spec of checking name availability.
+     * @param parameters The parameters parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response spec of checking name availability on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<NameAvailabilityCheckResultInner> checkNameAvailabilityAsync(
-        String location, NameAvailabilityCheckRequestParameters parameters) {
+    private Mono<NameAvailabilityCheckResultInner> checkNameAvailabilityAsync(String location,
+        NameAvailabilityCheckRequestParameters parameters) {
         return checkNameAvailabilityWithResponseAsync(location, parameters)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Check the cluster name is available or not.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
-     * @param parameters The request spec of checking name availability.
+     * @param parameters The parameters parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -785,52 +612,70 @@ public final class LocationsClientImpl implements LocationsClient {
      * @return the response spec of checking name availability along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<NameAvailabilityCheckResultInner> checkNameAvailabilityWithResponse(
-        String location, NameAvailabilityCheckRequestParameters parameters, Context context) {
-        return checkNameAvailabilityWithResponseAsync(location, parameters, context).block();
+    public Response<NameAvailabilityCheckResultInner> checkNameAvailabilityWithResponse(String location,
+        NameAvailabilityCheckRequestParameters parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (location == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter location is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String accept = "application/json";
+        return service.checkNameAvailabilitySync(this.client.getEndpoint(), this.client.getSubscriptionId(), location,
+            this.client.getApiVersion(), parameters, accept, context);
     }
 
     /**
      * Check the cluster name is available or not.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
-     * @param parameters The request spec of checking name availability.
+     * @param parameters The parameters parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response spec of checking name availability.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public NameAvailabilityCheckResultInner checkNameAvailability(
-        String location, NameAvailabilityCheckRequestParameters parameters) {
+    public NameAvailabilityCheckResultInner checkNameAvailability(String location,
+        NameAvailabilityCheckRequestParameters parameters) {
         return checkNameAvailabilityWithResponse(location, parameters, Context.NONE).getValue();
     }
 
     /**
      * Validate the cluster create request spec is valid or not.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
-     * @param parameters The cluster create request specification.
+     * @param parameters The parameters parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response of cluster create request validation along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<ClusterCreateValidationResultInner>> validateClusterCreateRequestWithResponseAsync(
         String location, ClusterCreateRequestValidationParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (location == null) {
             return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
@@ -842,90 +687,33 @@ public final class LocationsClientImpl implements LocationsClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .validateClusterCreateRequest(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            location,
-                            this.client.getApiVersion(),
-                            parameters,
-                            accept,
-                            context))
+            .withContext(context -> service.validateClusterCreateRequest(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), location, this.client.getApiVersion(), parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Validate the cluster create request spec is valid or not.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
-     * @param parameters The cluster create request specification.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response of cluster create request validation along with {@link Response} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ClusterCreateValidationResultInner>> validateClusterCreateRequestWithResponseAsync(
-        String location, ClusterCreateRequestValidationParameters parameters, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (location == null) {
-            return Mono.error(new IllegalArgumentException("Parameter location is required and cannot be null."));
-        }
-        if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
-        } else {
-            parameters.validate();
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .validateClusterCreateRequest(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                location,
-                this.client.getApiVersion(),
-                parameters,
-                accept,
-                context);
-    }
-
-    /**
-     * Validate the cluster create request spec is valid or not.
-     *
-     * @param location The Azure location (region) for which to make the request.
-     * @param parameters The cluster create request specification.
+     * @param parameters The parameters parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response of cluster create request validation on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ClusterCreateValidationResultInner> validateClusterCreateRequestAsync(
-        String location, ClusterCreateRequestValidationParameters parameters) {
+    private Mono<ClusterCreateValidationResultInner> validateClusterCreateRequestAsync(String location,
+        ClusterCreateRequestValidationParameters parameters) {
         return validateClusterCreateRequestWithResponseAsync(location, parameters)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Validate the cluster create request spec is valid or not.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
-     * @param parameters The cluster create request specification.
+     * @param parameters The parameters parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -933,24 +721,48 @@ public final class LocationsClientImpl implements LocationsClient {
      * @return the response of cluster create request validation along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ClusterCreateValidationResultInner> validateClusterCreateRequestWithResponse(
-        String location, ClusterCreateRequestValidationParameters parameters, Context context) {
-        return validateClusterCreateRequestWithResponseAsync(location, parameters, context).block();
+    public Response<ClusterCreateValidationResultInner> validateClusterCreateRequestWithResponse(String location,
+        ClusterCreateRequestValidationParameters parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (location == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter location is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String accept = "application/json";
+        return service.validateClusterCreateRequestSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            location, this.client.getApiVersion(), parameters, accept, context);
     }
 
     /**
      * Validate the cluster create request spec is valid or not.
-     *
+     * 
      * @param location The Azure location (region) for which to make the request.
-     * @param parameters The cluster create request specification.
+     * @param parameters The parameters parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the response of cluster create request validation.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ClusterCreateValidationResultInner validateClusterCreateRequest(
-        String location, ClusterCreateRequestValidationParameters parameters) {
+    public ClusterCreateValidationResultInner validateClusterCreateRequest(String location,
+        ClusterCreateRequestValidationParameters parameters) {
         return validateClusterCreateRequestWithResponse(location, parameters, Context.NONE).getValue();
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(LocationsClientImpl.class);
 }

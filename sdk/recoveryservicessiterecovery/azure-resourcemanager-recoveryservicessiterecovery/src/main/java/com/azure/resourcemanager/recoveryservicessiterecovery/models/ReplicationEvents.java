@@ -8,29 +8,31 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of ReplicationEvents. */
+/**
+ * Resource collection API of ReplicationEvents.
+ */
 public interface ReplicationEvents {
     /**
      * Gets the list of Azure Site Recovery events.
-     *
-     * <p>Gets the list of Azure Site Recovery events for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of Azure Site Recovery events for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of Azure Site Recovery events for the vault as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<Event> list(String resourceName, String resourceGroupName);
+    PagedIterable<Event> list(String resourceGroupName, String resourceName);
 
     /**
      * Gets the list of Azure Site Recovery events.
-     *
-     * <p>Gets the list of Azure Site Recovery events for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of Azure Site Recovery events for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param filter OData filter options.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -38,15 +40,15 @@ public interface ReplicationEvents {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of Azure Site Recovery events for the vault as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<Event> list(String resourceName, String resourceGroupName, String filter, Context context);
+    PagedIterable<Event> list(String resourceGroupName, String resourceName, String filter, Context context);
 
     /**
      * Get the details of an Azure Site recovery event.
-     *
-     * <p>The operation to get the details of an Azure Site recovery event.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to get the details of an Azure Site recovery event.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param eventName The name of the Azure Site Recovery event.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -54,20 +56,20 @@ public interface ReplicationEvents {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return implements the Event class along with {@link Response}.
      */
-    Response<Event> getWithResponse(String resourceName, String resourceGroupName, String eventName, Context context);
+    Response<Event> getWithResponse(String resourceGroupName, String resourceName, String eventName, Context context);
 
     /**
      * Get the details of an Azure Site recovery event.
-     *
-     * <p>The operation to get the details of an Azure Site recovery event.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to get the details of an Azure Site recovery event.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param eventName The name of the Azure Site Recovery event.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return implements the Event class.
      */
-    Event get(String resourceName, String resourceGroupName, String eventName);
+    Event get(String resourceGroupName, String resourceName, String eventName);
 }

@@ -29,7 +29,6 @@ import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
 import javax.net.ssl.SSLException;
 import java.net.URI;
@@ -40,14 +39,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 final class WebSocketSessionNettyImpl implements WebSocketSession {
-
     private final AtomicReference<ClientLogger> loggerReference;
     private final MessageEncoder messageEncoder;
     private final MessageDecoder messageDecoder;
     private final String path;
     private final String protocol;
     private final String userAgent;
-    private final Consumer<Object> messageHandler;
+    private final Consumer<WebPubSubMessage> messageHandler;
     private final Consumer<WebSocketSession> openHandler;
     private final Consumer<CloseReason> closeHandler;
 
@@ -76,19 +74,15 @@ final class WebSocketSessionNettyImpl implements WebSocketSession {
             if (sslCtx != null) {
                 p.addLast(sslCtx.newHandler(ch.alloc(), host, port));
             }
-            p.addLast(
-                new HttpClientCodec(),
-                new HttpObjectAggregator(8192),
-                WebSocketClientCompressionHandler.INSTANCE,
+
+            p.addLast(new HttpClientCodec(), new HttpObjectAggregator(8192), WebSocketClientCompressionHandler.INSTANCE,
                 handler);
         }
     }
 
     WebSocketSessionNettyImpl(ClientEndpointConfiguration cec, String path,
-                              AtomicReference<ClientLogger> loggerReference,
-                              Consumer<Object> messageHandler,
-                              Consumer<WebSocketSession> openHandler,
-                              Consumer<CloseReason> closeHandler) {
+        AtomicReference<ClientLogger> loggerReference, Consumer<WebPubSubMessage> messageHandler,
+        Consumer<WebSocketSession> openHandler, Consumer<CloseReason> closeHandler) {
         this.path = path;
         this.loggerReference = loggerReference;
         this.messageEncoder = cec.getMessageEncoder();
@@ -124,19 +118,17 @@ final class WebSocketSessionNettyImpl implements WebSocketSession {
         final boolean ssl = "wss".equalsIgnoreCase(scheme);
         final SslContext sslCtx;
         if (ssl) {
-            sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+            sslCtx = SslContextBuilder.forClient().endpointIdentificationAlgorithm("HTTPS").build();
         } else {
             sslCtx = null;
         }
 
         group = new NioEventLoopGroup();
 
-        handshaker = WebSocketClientHandshakerFactory.newHandshaker(
-            uri, WebSocketVersion.V13, protocol, true,
+        handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, protocol, true,
             new DefaultHttpHeaders().add(HttpHeaderName.USER_AGENT.getCaseInsensitiveName(), userAgent));
 
-        clientHandler =
-            new WebSocketClientHandler(handshaker, loggerReference, messageDecoder, messageHandler);
+        clientHandler = new WebSocketClientHandler(handshaker, loggerReference, messageDecoder, messageHandler);
 
         Bootstrap b = new Bootstrap();
         b.group(group)
@@ -181,8 +173,7 @@ final class WebSocketSessionNettyImpl implements WebSocketSession {
 
     @Override
     public boolean isOpen() {
-        return ch != null && ch.isOpen()
-            && handshaker != null && handshaker.isHandshakeComplete();
+        return ch != null && ch.isOpen() && handshaker != null && handshaker.isHandshakeComplete();
     }
 
     @Override
@@ -199,9 +190,7 @@ final class WebSocketSessionNettyImpl implements WebSocketSession {
     public void sendTextAsync(String text, Consumer<SendResult> handler) {
         if (ch != null && ch.isOpen()) {
             TextWebSocketFrame frame = new TextWebSocketFrame(text);
-            loggerReference.get().atVerbose()
-                .addKeyValue("text", frame.text())
-                .log("Send TextWebSocketFrame");
+            loggerReference.get().atVerbose().addKeyValue("text", frame.text()).log("Send TextWebSocketFrame");
             ch.writeAndFlush(frame).addListener(future -> {
                 if (future.isSuccess()) {
                     handler.accept(new SendResult());
@@ -241,7 +230,8 @@ final class WebSocketSessionNettyImpl implements WebSocketSession {
                     clientHandler.setClientCloseCallbackFuture(closeCallbackFuture);
 
                     CloseWebSocketFrame closeFrame = new CloseWebSocketFrame(WebSocketCloseStatus.NORMAL_CLOSURE);
-                    loggerReference.get().atVerbose()
+                    loggerReference.get()
+                        .atVerbose()
                         .addKeyValue("statusCode", closeFrame.statusCode())
                         .addKeyValue("reasonText", closeFrame.reasonText())
                         .log("Send CloseWebSocketFrame");

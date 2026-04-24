@@ -12,48 +12,50 @@ import com.azure.core.util.Context;
 import com.azure.resourcemanager.recoveryservicessiterecovery.fluent.models.AlertInner;
 import com.azure.resourcemanager.recoveryservicessiterecovery.models.ConfigureAlertRequest;
 
-/** An instance of this class provides access to all the operations defined in ReplicationAlertSettingsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ReplicationAlertSettingsClient.
+ */
 public interface ReplicationAlertSettingsClient {
     /**
      * Gets the list of configured email notification(alert) configurations.
-     *
-     * <p>Gets the list of email notification(alert) configurations for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of email notification(alert) configurations for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of email notification(alert) configurations for the vault as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of email notification(alert) configurations for the vault as paginated response with
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<AlertInner> list(String resourceName, String resourceGroupName);
+    PagedIterable<AlertInner> list(String resourceGroupName, String resourceName);
 
     /**
      * Gets the list of configured email notification(alert) configurations.
-     *
-     * <p>Gets the list of email notification(alert) configurations for the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of email notification(alert) configurations for the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of email notification(alert) configurations for the vault as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of email notification(alert) configurations for the vault as paginated response with
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<AlertInner> list(String resourceName, String resourceGroupName, Context context);
+    PagedIterable<AlertInner> list(String resourceGroupName, String resourceName, Context context);
 
     /**
      * Gets an email notification(alert) configuration.
-     *
-     * <p>Gets the details of the specified email notification(alert) configuration.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of the specified email notification(alert) configuration.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param alertSettingName The name of the email notification configuration.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -62,16 +64,16 @@ public interface ReplicationAlertSettingsClient {
      * @return the details of the specified email notification(alert) configuration along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<AlertInner> getWithResponse(
-        String resourceName, String resourceGroupName, String alertSettingName, Context context);
+    Response<AlertInner> getWithResponse(String resourceGroupName, String resourceName, String alertSettingName,
+        Context context);
 
     /**
      * Gets an email notification(alert) configuration.
-     *
-     * <p>Gets the details of the specified email notification(alert) configuration.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of the specified email notification(alert) configuration.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param alertSettingName The name of the email notification configuration.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -79,15 +81,15 @@ public interface ReplicationAlertSettingsClient {
      * @return the details of the specified email notification(alert) configuration.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    AlertInner get(String resourceName, String resourceGroupName, String alertSettingName);
+    AlertInner get(String resourceGroupName, String resourceName, String alertSettingName);
 
     /**
      * Configures email notifications for this vault.
-     *
-     * <p>Create or update an email notification(alert) configuration.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Create or update an email notification(alert) configuration.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param alertSettingName The name of the email notification(alert) configuration.
      * @param request The input to configure the email notification(alert).
      * @param context The context to associate with this operation.
@@ -97,20 +99,16 @@ public interface ReplicationAlertSettingsClient {
      * @return implements the Alert class along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<AlertInner> createWithResponse(
-        String resourceName,
-        String resourceGroupName,
-        String alertSettingName,
-        ConfigureAlertRequest request,
-        Context context);
+    Response<AlertInner> createWithResponse(String resourceGroupName, String resourceName, String alertSettingName,
+        ConfigureAlertRequest request, Context context);
 
     /**
      * Configures email notifications for this vault.
-     *
-     * <p>Create or update an email notification(alert) configuration.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Create or update an email notification(alert) configuration.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param alertSettingName The name of the email notification(alert) configuration.
      * @param request The input to configure the email notification(alert).
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -119,6 +117,6 @@ public interface ReplicationAlertSettingsClient {
      * @return implements the Alert class.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    AlertInner create(
-        String resourceName, String resourceGroupName, String alertSettingName, ConfigureAlertRequest request);
+    AlertInner create(String resourceGroupName, String resourceName, String alertSettingName,
+        ConfigureAlertRequest request);
 }

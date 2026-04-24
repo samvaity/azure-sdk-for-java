@@ -5,36 +5,46 @@
 package com.azure.resourcemanager.databox.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Request body to get the configuration for the region. */
+/**
+ * Request body to get the configuration for the region.
+ */
 @Fluent
-public final class RegionConfigurationRequest {
+public final class RegionConfigurationRequest implements JsonSerializable<RegionConfigurationRequest> {
     /*
      * Request body to get the availability for scheduling orders.
      */
-    @JsonProperty(value = "scheduleAvailabilityRequest")
     private ScheduleAvailabilityRequest scheduleAvailabilityRequest;
 
     /*
      * Request body to get the transport availability for given sku.
      */
-    @JsonProperty(value = "transportAvailabilityRequest")
     private TransportAvailabilityRequest transportAvailabilityRequest;
 
     /*
      * Request body to get the datacenter address for given sku.
      */
-    @JsonProperty(value = "datacenterAddressRequest")
     private DatacenterAddressRequest datacenterAddressRequest;
 
-    /** Creates an instance of RegionConfigurationRequest class. */
+    /*
+     * Request body to get the device capabilities for a given sku.
+     */
+    private DeviceCapabilityRequest deviceCapabilityRequest;
+
+    /**
+     * Creates an instance of RegionConfigurationRequest class.
+     */
     public RegionConfigurationRequest() {
     }
 
     /**
      * Get the scheduleAvailabilityRequest property: Request body to get the availability for scheduling orders.
-     *
+     * 
      * @return the scheduleAvailabilityRequest value.
      */
     public ScheduleAvailabilityRequest scheduleAvailabilityRequest() {
@@ -43,19 +53,19 @@ public final class RegionConfigurationRequest {
 
     /**
      * Set the scheduleAvailabilityRequest property: Request body to get the availability for scheduling orders.
-     *
+     * 
      * @param scheduleAvailabilityRequest the scheduleAvailabilityRequest value to set.
      * @return the RegionConfigurationRequest object itself.
      */
-    public RegionConfigurationRequest withScheduleAvailabilityRequest(
-        ScheduleAvailabilityRequest scheduleAvailabilityRequest) {
+    public RegionConfigurationRequest
+        withScheduleAvailabilityRequest(ScheduleAvailabilityRequest scheduleAvailabilityRequest) {
         this.scheduleAvailabilityRequest = scheduleAvailabilityRequest;
         return this;
     }
 
     /**
      * Get the transportAvailabilityRequest property: Request body to get the transport availability for given sku.
-     *
+     * 
      * @return the transportAvailabilityRequest value.
      */
     public TransportAvailabilityRequest transportAvailabilityRequest() {
@@ -64,19 +74,19 @@ public final class RegionConfigurationRequest {
 
     /**
      * Set the transportAvailabilityRequest property: Request body to get the transport availability for given sku.
-     *
+     * 
      * @param transportAvailabilityRequest the transportAvailabilityRequest value to set.
      * @return the RegionConfigurationRequest object itself.
      */
-    public RegionConfigurationRequest withTransportAvailabilityRequest(
-        TransportAvailabilityRequest transportAvailabilityRequest) {
+    public RegionConfigurationRequest
+        withTransportAvailabilityRequest(TransportAvailabilityRequest transportAvailabilityRequest) {
         this.transportAvailabilityRequest = transportAvailabilityRequest;
         return this;
     }
 
     /**
      * Get the datacenterAddressRequest property: Request body to get the datacenter address for given sku.
-     *
+     * 
      * @return the datacenterAddressRequest value.
      */
     public DatacenterAddressRequest datacenterAddressRequest() {
@@ -85,7 +95,7 @@ public final class RegionConfigurationRequest {
 
     /**
      * Set the datacenterAddressRequest property: Request body to get the datacenter address for given sku.
-     *
+     * 
      * @param datacenterAddressRequest the datacenterAddressRequest value to set.
      * @return the RegionConfigurationRequest object itself.
      */
@@ -95,8 +105,28 @@ public final class RegionConfigurationRequest {
     }
 
     /**
+     * Get the deviceCapabilityRequest property: Request body to get the device capabilities for a given sku.
+     * 
+     * @return the deviceCapabilityRequest value.
+     */
+    public DeviceCapabilityRequest deviceCapabilityRequest() {
+        return this.deviceCapabilityRequest;
+    }
+
+    /**
+     * Set the deviceCapabilityRequest property: Request body to get the device capabilities for a given sku.
+     * 
+     * @param deviceCapabilityRequest the deviceCapabilityRequest value to set.
+     * @return the RegionConfigurationRequest object itself.
+     */
+    public RegionConfigurationRequest withDeviceCapabilityRequest(DeviceCapabilityRequest deviceCapabilityRequest) {
+        this.deviceCapabilityRequest = deviceCapabilityRequest;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -109,5 +139,57 @@ public final class RegionConfigurationRequest {
         if (datacenterAddressRequest() != null) {
             datacenterAddressRequest().validate();
         }
+        if (deviceCapabilityRequest() != null) {
+            deviceCapabilityRequest().validate();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("scheduleAvailabilityRequest", this.scheduleAvailabilityRequest);
+        jsonWriter.writeJsonField("transportAvailabilityRequest", this.transportAvailabilityRequest);
+        jsonWriter.writeJsonField("datacenterAddressRequest", this.datacenterAddressRequest);
+        jsonWriter.writeJsonField("deviceCapabilityRequest", this.deviceCapabilityRequest);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RegionConfigurationRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RegionConfigurationRequest if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the RegionConfigurationRequest.
+     */
+    public static RegionConfigurationRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RegionConfigurationRequest deserializedRegionConfigurationRequest = new RegionConfigurationRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("scheduleAvailabilityRequest".equals(fieldName)) {
+                    deserializedRegionConfigurationRequest.scheduleAvailabilityRequest
+                        = ScheduleAvailabilityRequest.fromJson(reader);
+                } else if ("transportAvailabilityRequest".equals(fieldName)) {
+                    deserializedRegionConfigurationRequest.transportAvailabilityRequest
+                        = TransportAvailabilityRequest.fromJson(reader);
+                } else if ("datacenterAddressRequest".equals(fieldName)) {
+                    deserializedRegionConfigurationRequest.datacenterAddressRequest
+                        = DatacenterAddressRequest.fromJson(reader);
+                } else if ("deviceCapabilityRequest".equals(fieldName)) {
+                    deserializedRegionConfigurationRequest.deviceCapabilityRequest
+                        = DeviceCapabilityRequest.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRegionConfigurationRequest;
+        });
     }
 }

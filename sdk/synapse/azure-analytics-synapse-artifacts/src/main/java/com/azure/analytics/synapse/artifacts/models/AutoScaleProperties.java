@@ -5,51 +5,62 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
 /**
  * Spark pool auto-scaling properties
- *
- * <p>Auto-scaling properties of a Big Data pool powered by Apache Spark.
+ * 
+ * Auto-scaling properties of a Big Data pool powered by Apache Spark.
  */
 @Fluent
-public final class AutoScaleProperties {
+public final class AutoScaleProperties implements JsonSerializable<AutoScaleProperties> {
     /*
      * The minimum number of nodes the Big Data pool can support.
      */
-    @JsonProperty(value = "minNodeCount")
+    @Generated
     private Integer minNodeCount;
 
     /*
      * Whether automatic scaling is enabled for the Big Data pool.
      */
-    @JsonProperty(value = "enabled")
+    @Generated
     private Boolean enabled;
 
     /*
      * The maximum number of nodes the Big Data pool can support.
      */
-    @JsonProperty(value = "maxNodeCount")
+    @Generated
     private Integer maxNodeCount;
 
-    /** Creates an instance of AutoScaleProperties class. */
-    public AutoScaleProperties() {}
+    /**
+     * Creates an instance of AutoScaleProperties class.
+     */
+    @Generated
+    public AutoScaleProperties() {
+    }
 
     /**
      * Get the minNodeCount property: The minimum number of nodes the Big Data pool can support.
-     *
+     * 
      * @return the minNodeCount value.
      */
+    @Generated
     public Integer getMinNodeCount() {
         return this.minNodeCount;
     }
 
     /**
      * Set the minNodeCount property: The minimum number of nodes the Big Data pool can support.
-     *
+     * 
      * @param minNodeCount the minNodeCount value to set.
      * @return the AutoScaleProperties object itself.
      */
+    @Generated
     public AutoScaleProperties setMinNodeCount(Integer minNodeCount) {
         this.minNodeCount = minNodeCount;
         return this;
@@ -57,19 +68,21 @@ public final class AutoScaleProperties {
 
     /**
      * Get the enabled property: Whether automatic scaling is enabled for the Big Data pool.
-     *
+     * 
      * @return the enabled value.
      */
+    @Generated
     public Boolean isEnabled() {
         return this.enabled;
     }
 
     /**
      * Set the enabled property: Whether automatic scaling is enabled for the Big Data pool.
-     *
+     * 
      * @param enabled the enabled value to set.
      * @return the AutoScaleProperties object itself.
      */
+    @Generated
     public AutoScaleProperties setEnabled(Boolean enabled) {
         this.enabled = enabled;
         return this;
@@ -77,21 +90,67 @@ public final class AutoScaleProperties {
 
     /**
      * Get the maxNodeCount property: The maximum number of nodes the Big Data pool can support.
-     *
+     * 
      * @return the maxNodeCount value.
      */
+    @Generated
     public Integer getMaxNodeCount() {
         return this.maxNodeCount;
     }
 
     /**
      * Set the maxNodeCount property: The maximum number of nodes the Big Data pool can support.
-     *
+     * 
      * @param maxNodeCount the maxNodeCount value to set.
      * @return the AutoScaleProperties object itself.
      */
+    @Generated
     public AutoScaleProperties setMaxNodeCount(Integer maxNodeCount) {
         this.maxNodeCount = maxNodeCount;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeNumberField("minNodeCount", this.minNodeCount);
+        jsonWriter.writeBooleanField("enabled", this.enabled);
+        jsonWriter.writeNumberField("maxNodeCount", this.maxNodeCount);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AutoScaleProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AutoScaleProperties if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the AutoScaleProperties.
+     */
+    @Generated
+    public static AutoScaleProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AutoScaleProperties deserializedAutoScaleProperties = new AutoScaleProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("minNodeCount".equals(fieldName)) {
+                    deserializedAutoScaleProperties.minNodeCount = reader.getNullable(JsonReader::getInt);
+                } else if ("enabled".equals(fieldName)) {
+                    deserializedAutoScaleProperties.enabled = reader.getNullable(JsonReader::getBoolean);
+                } else if ("maxNodeCount".equals(fieldName)) {
+                    deserializedAutoScaleProperties.maxNodeCount = reader.getNullable(JsonReader::getInt);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedAutoScaleProperties;
+        });
     }
 }

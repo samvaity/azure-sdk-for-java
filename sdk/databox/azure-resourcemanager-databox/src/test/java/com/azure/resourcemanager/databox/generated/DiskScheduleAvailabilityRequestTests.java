@@ -6,31 +6,31 @@ package com.azure.resourcemanager.databox.generated;
 
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.databox.models.DiskScheduleAvailabilityRequest;
+import com.azure.resourcemanager.databox.models.ModelName;
 import org.junit.jupiter.api.Assertions;
 
 public final class DiskScheduleAvailabilityRequestTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DiskScheduleAvailabilityRequest model =
-            BinaryData
-                .fromString(
-                    "{\"skuName\":\"DataBoxDisk\",\"expectedDataSizeInTeraBytes\":1305337055,\"storageLocation\":\"xbjhwuaanozjosph\",\"country\":\"ulpjr\"}")
-                .toObject(DiskScheduleAvailabilityRequest.class);
-        Assertions.assertEquals("xbjhwuaanozjosph", model.storageLocation());
-        Assertions.assertEquals("ulpjr", model.country());
-        Assertions.assertEquals(1305337055, model.expectedDataSizeInTeraBytes());
+        DiskScheduleAvailabilityRequest model = BinaryData.fromString(
+            "{\"skuName\":\"DataBoxDisk\",\"expectedDataSizeInTeraBytes\":1060937316,\"storageLocation\":\"rgzdwmsweyp\",\"country\":\"dxggicccnxqhuexm\",\"model\":\"DataBoxCustomerDisk\"}")
+            .toObject(DiskScheduleAvailabilityRequest.class);
+        Assertions.assertEquals("rgzdwmsweyp", model.storageLocation());
+        Assertions.assertEquals("dxggicccnxqhuexm", model.country());
+        Assertions.assertEquals(ModelName.DATA_BOX_CUSTOMER_DISK, model.model());
+        Assertions.assertEquals(1060937316, model.expectedDataSizeInTeraBytes());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        DiskScheduleAvailabilityRequest model =
-            new DiskScheduleAvailabilityRequest()
-                .withStorageLocation("xbjhwuaanozjosph")
-                .withCountry("ulpjr")
-                .withExpectedDataSizeInTeraBytes(1305337055);
+        DiskScheduleAvailabilityRequest model = new DiskScheduleAvailabilityRequest().withStorageLocation("rgzdwmsweyp")
+            .withCountry("dxggicccnxqhuexm")
+            .withModel(ModelName.DATA_BOX_CUSTOMER_DISK)
+            .withExpectedDataSizeInTeraBytes(1060937316);
         model = BinaryData.fromObject(model).toObject(DiskScheduleAvailabilityRequest.class);
-        Assertions.assertEquals("xbjhwuaanozjosph", model.storageLocation());
-        Assertions.assertEquals("ulpjr", model.country());
-        Assertions.assertEquals(1305337055, model.expectedDataSizeInTeraBytes());
+        Assertions.assertEquals("rgzdwmsweyp", model.storageLocation());
+        Assertions.assertEquals("dxggicccnxqhuexm", model.country());
+        Assertions.assertEquals(ModelName.DATA_BOX_CUSTOMER_DISK, model.model());
+        Assertions.assertEquals(1060937316, model.expectedDataSizeInTeraBytes());
     }
 }

@@ -4,36 +4,65 @@
 
 package com.azure.analytics.synapse.spark.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for SparkSessionResultType. */
+/**
+ * Defines values for SparkSessionResultType.
+ */
 public final class SparkSessionResultType extends ExpandableStringEnum<SparkSessionResultType> {
-    /** Static value Uncertain for SparkSessionResultType. */
+    /**
+     * Static value Uncertain for SparkSessionResultType.
+     */
+    @Generated
     public static final SparkSessionResultType UNCERTAIN = fromString("Uncertain");
 
-    /** Static value Succeeded for SparkSessionResultType. */
+    /**
+     * Static value Succeeded for SparkSessionResultType.
+     */
+    @Generated
     public static final SparkSessionResultType SUCCEEDED = fromString("Succeeded");
 
-    /** Static value Failed for SparkSessionResultType. */
+    /**
+     * Static value Failed for SparkSessionResultType.
+     */
+    @Generated
     public static final SparkSessionResultType FAILED = fromString("Failed");
 
-    /** Static value Cancelled for SparkSessionResultType. */
+    /**
+     * Static value Cancelled for SparkSessionResultType.
+     */
+    @Generated
     public static final SparkSessionResultType CANCELLED = fromString("Cancelled");
 
     /**
+     * Creates a new instance of SparkSessionResultType value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public SparkSessionResultType() {
+    }
+
+    /**
      * Creates or finds a SparkSessionResultType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding SparkSessionResultType.
      */
-    @JsonCreator
+    @Generated
     public static SparkSessionResultType fromString(String name) {
         return fromString(name, SparkSessionResultType.class);
     }
 
-    /** @return known SparkSessionResultType values. */
+    /**
+     * Gets known SparkSessionResultType values.
+     * 
+     * @return known SparkSessionResultType values.
+     */
+    @Generated
     public static Collection<SparkSessionResultType> values() {
         return values(SparkSessionResultType.class);
     }

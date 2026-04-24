@@ -5,7 +5,6 @@
 package com.azure.resourcemanager.networkcloud.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
 /**
@@ -13,18 +12,24 @@ import java.util.Collection;
  * specify Disabled. Otherwise, Disabled is the only permitted value.
  */
 public final class VirtualMachineIpAllocationMethod extends ExpandableStringEnum<VirtualMachineIpAllocationMethod> {
-    /** Static value Dynamic for VirtualMachineIpAllocationMethod. */
+    /**
+     * Static value Dynamic for VirtualMachineIpAllocationMethod.
+     */
     public static final VirtualMachineIpAllocationMethod DYNAMIC = fromString("Dynamic");
 
-    /** Static value Static for VirtualMachineIpAllocationMethod. */
+    /**
+     * Static value Static for VirtualMachineIpAllocationMethod.
+     */
     public static final VirtualMachineIpAllocationMethod STATIC = fromString("Static");
 
-    /** Static value Disabled for VirtualMachineIpAllocationMethod. */
+    /**
+     * Static value Disabled for VirtualMachineIpAllocationMethod.
+     */
     public static final VirtualMachineIpAllocationMethod DISABLED = fromString("Disabled");
 
     /**
      * Creates a new instance of VirtualMachineIpAllocationMethod value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -33,18 +38,17 @@ public final class VirtualMachineIpAllocationMethod extends ExpandableStringEnum
 
     /**
      * Creates or finds a VirtualMachineIpAllocationMethod from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding VirtualMachineIpAllocationMethod.
      */
-    @JsonCreator
     public static VirtualMachineIpAllocationMethod fromString(String name) {
         return fromString(name, VirtualMachineIpAllocationMethod.class);
     }
 
     /**
      * Gets known VirtualMachineIpAllocationMethod values.
-     *
+     * 
      * @return known VirtualMachineIpAllocationMethod values.
      */
     public static Collection<VirtualMachineIpAllocationMethod> values() {

@@ -6,28 +6,51 @@ package com.azure.resourcemanager.databox.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Request to validate create order limit for current subscription. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "validationType")
-@JsonTypeName("ValidateCreateOrderLimit")
+/**
+ * Request to validate create order limit for current subscription.
+ */
 @Fluent
 public final class CreateOrderLimitForSubscriptionValidationRequest extends ValidationInputRequest {
     /*
+     * Identifies the type of validation request.
+     */
+    private ValidationInputDiscriminator validationType = ValidationInputDiscriminator.VALIDATE_CREATE_ORDER_LIMIT;
+
+    /*
      * Device type to be used for the job.
      */
-    @JsonProperty(value = "deviceType", required = true)
     private SkuName deviceType;
 
-    /** Creates an instance of CreateOrderLimitForSubscriptionValidationRequest class. */
+    /*
+     * The customer friendly name of the combination of version and capacity of the device. This field is necessary only
+     * at the time of ordering the newer generation device i.e. AzureDataBox120 and AzureDataBox525 as of Feb/2025
+     */
+    private ModelName model;
+
+    /**
+     * Creates an instance of CreateOrderLimitForSubscriptionValidationRequest class.
+     */
     public CreateOrderLimitForSubscriptionValidationRequest() {
     }
 
     /**
+     * Get the validationType property: Identifies the type of validation request.
+     * 
+     * @return the validationType value.
+     */
+    @Override
+    public ValidationInputDiscriminator validationType() {
+        return this.validationType;
+    }
+
+    /**
      * Get the deviceType property: Device type to be used for the job.
-     *
+     * 
      * @return the deviceType value.
      */
     public SkuName deviceType() {
@@ -36,7 +59,7 @@ public final class CreateOrderLimitForSubscriptionValidationRequest extends Vali
 
     /**
      * Set the deviceType property: Device type to be used for the job.
-     *
+     * 
      * @param deviceType the deviceType value to set.
      * @return the CreateOrderLimitForSubscriptionValidationRequest object itself.
      */
@@ -46,21 +69,90 @@ public final class CreateOrderLimitForSubscriptionValidationRequest extends Vali
     }
 
     /**
+     * Get the model property: The customer friendly name of the combination of version and capacity of the device. This
+     * field is necessary only at the time of ordering the newer generation device i.e. AzureDataBox120 and
+     * AzureDataBox525 as of Feb/2025.
+     * 
+     * @return the model value.
+     */
+    public ModelName model() {
+        return this.model;
+    }
+
+    /**
+     * Set the model property: The customer friendly name of the combination of version and capacity of the device. This
+     * field is necessary only at the time of ordering the newer generation device i.e. AzureDataBox120 and
+     * AzureDataBox525 as of Feb/2025.
+     * 
+     * @param model the model value to set.
+     * @return the CreateOrderLimitForSubscriptionValidationRequest object itself.
+     */
+    public CreateOrderLimitForSubscriptionValidationRequest withModel(ModelName model) {
+        this.model = model;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
     public void validate() {
-        super.validate();
         if (deviceType() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property deviceType in model"
-                            + " CreateOrderLimitForSubscriptionValidationRequest"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property deviceType in model CreateOrderLimitForSubscriptionValidationRequest"));
         }
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(CreateOrderLimitForSubscriptionValidationRequest.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("deviceType", this.deviceType == null ? null : this.deviceType.toString());
+        jsonWriter.writeStringField("validationType",
+            this.validationType == null ? null : this.validationType.toString());
+        jsonWriter.writeStringField("model", this.model == null ? null : this.model.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CreateOrderLimitForSubscriptionValidationRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CreateOrderLimitForSubscriptionValidationRequest if the JsonReader was pointing to an
+     * instance of it, or null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the CreateOrderLimitForSubscriptionValidationRequest.
+     */
+    public static CreateOrderLimitForSubscriptionValidationRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CreateOrderLimitForSubscriptionValidationRequest deserializedCreateOrderLimitForSubscriptionValidationRequest
+                = new CreateOrderLimitForSubscriptionValidationRequest();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("deviceType".equals(fieldName)) {
+                    deserializedCreateOrderLimitForSubscriptionValidationRequest.deviceType
+                        = SkuName.fromString(reader.getString());
+                } else if ("validationType".equals(fieldName)) {
+                    deserializedCreateOrderLimitForSubscriptionValidationRequest.validationType
+                        = ValidationInputDiscriminator.fromString(reader.getString());
+                } else if ("model".equals(fieldName)) {
+                    deserializedCreateOrderLimitForSubscriptionValidationRequest.model
+                        = ModelName.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedCreateOrderLimitForSubscriptionValidationRequest;
+        });
+    }
 }

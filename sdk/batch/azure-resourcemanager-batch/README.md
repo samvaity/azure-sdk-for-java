@@ -2,7 +2,7 @@
 
 Azure Resource Manager Batch client library for Java.
 
-This package contains Microsoft Azure SDK for Batch Management SDK. Batch Client. Package tag package-2023-05. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+This package contains Microsoft Azure SDK for Batch Management SDK. The Batch Management Client. Package api-version 2025-06-01. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
 
 ## We'd love to hear your feedback
 
@@ -32,7 +32,7 @@ Various documentation is available to help you get started
 <dependency>
     <groupId>com.azure.resourcemanager</groupId>
     <artifactId>azure-resourcemanager-batch</artifactId>
-    <version>1.1.0-beta.2</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 [//]: # ({x-version-update-end})
@@ -45,18 +45,14 @@ Azure Management Libraries require a `TokenCredential` implementation for authen
 
 ### Authentication
 
-By default, Azure Active Directory token authentication depends on correct configuration of the following environment variables.
+Microsoft Entra ID token authentication relies on the [credential class][azure_identity_credentials] from [Azure Identity][azure_identity] package.
 
-- `AZURE_CLIENT_ID` for Azure client ID.
-- `AZURE_TENANT_ID` for Azure tenant ID.
-- `AZURE_CLIENT_SECRET` or `AZURE_CLIENT_CERTIFICATE_PATH` for client secret or client certificate.
+Azure subscription ID can be configured via `AZURE_SUBSCRIPTION_ID` environment variable.
 
-In addition, Azure subscription ID can be configured via `AZURE_SUBSCRIPTION_ID` environment variable.
-
-With above configuration, `azure` client can be authenticated using the following code:
+Assuming the use of the `DefaultAzureCredential` credential class, the client can be authenticated using the following code:
 
 ```java
-AzureProfile profile = new AzureProfile(AzureEnvironment.AZURE);
+AzureProfile profile = new AzureProfile(AzureCloud.AZURE_PUBLIC_CLOUD);
 TokenCredential credential = new DefaultAzureCredentialBuilder()
     .authorityHost(profile.getEnvironment().getActiveDirectoryEndpoint())
     .build();
@@ -64,7 +60,7 @@ BatchManager manager = BatchManager
     .authenticate(credential, profile);
 ```
 
-The sample code assumes global Azure. Please change `AzureEnvironment.AZURE` variable if otherwise.
+The sample code assumes global Azure. Please change the `AzureCloud.AZURE_PUBLIC_CLOUD` variable if otherwise.
 
 See [Authentication][authenticate] for more options.
 
@@ -76,8 +72,7 @@ See [API design][design] for general introduction on design and key concepts on 
 
 ```java
 // batch account
-account = batchManager
-    .batchAccounts()
+account = batchManager.batchAccounts()
     .define(batchAccountName)
     .withRegion(REGION)
     .withExistingResourceGroup(resourceGroup)
@@ -88,18 +83,16 @@ pool = batchManager.pools()
     .define(poolName)
     .withExistingBatchAccount(resourceGroup, batchAccountName)
     .withDisplayName(poolDisplayName)
-    .withDeploymentConfiguration(
-        new DeploymentConfiguration()
-            .withCloudServiceConfiguration(
-                new CloudServiceConfiguration().withOsFamily("4")))
-    .withScaleSettings(
-        new ScaleSettings()
-            .withFixedScale(
-                new FixedScaleSettings()
-                    .withResizeTimeout(Duration.parse("PT8M"))
-                    .withTargetDedicatedNodes(1)
-                    .withTargetLowPriorityNodes(1)
-                    .withNodeDeallocationOption(ComputeNodeDeallocationOption.TASK_COMPLETION)))
+    .withDeploymentConfiguration(new DeploymentConfiguration().withVirtualMachineConfiguration(
+        new VirtualMachineConfiguration().withImageReference(new ImageReference().withPublisher("Canonical")
+            .withOffer("UbuntuServer")
+            .withSku("18.04-LTS")
+            .withVersion("latest")).withNodeAgentSkuId("batch.node.ubuntu 18.04")))
+    .withScaleSettings(new ScaleSettings()
+        .withFixedScale(new FixedScaleSettings().withResizeTimeout(Duration.parse("PT8M"))
+            .withTargetDedicatedNodes(1)
+            .withTargetLowPriorityNodes(1)
+            .withNodeDeallocationOption(ComputeNodeDeallocationOption.TASK_COMPLETION)))
     .withVmSize("Standard_D1")
     .create();
 ```
@@ -123,14 +116,13 @@ This project has adopted the [Microsoft Open Source Code of Conduct][coc]. For m
 <!-- LINKS -->
 [survey]: https://microsoft.qualtrics.com/jfe/form/SV_ehN0lIk2FKEBkwd?Q_CHL=DOCS
 [docs]: https://azure.github.io/azure-sdk-for-java/
-[jdk]: https://docs.microsoft.com/java/azure/jdk/
+[jdk]: https://learn.microsoft.com/azure/developer/java/fundamentals/
 [azure_subscription]: https://azure.microsoft.com/free/
 [azure_identity]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/identity/azure-identity
+[azure_identity_credentials]: https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/identity/azure-identity#credentials
 [azure_core_http_netty]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/core/azure-core-http-netty
 [authenticate]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/resourcemanager/docs/AUTH.md
 [design]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/resourcemanager/docs/DESIGN.md
 [cg]: https://github.com/Azure/azure-sdk-for-java/blob/main/CONTRIBUTING.md
 [coc]: https://opensource.microsoft.com/codeofconduct/
 [coc_faq]: https://opensource.microsoft.com/codeofconduct/faq/
-
-![Impressions](https://azure-sdk-impressions.azurewebsites.net/api/impressions/azure-sdk-for-java%2Fsdk%2Fbatch%2Fazure-resourcemanager-batch%2FREADME.png)

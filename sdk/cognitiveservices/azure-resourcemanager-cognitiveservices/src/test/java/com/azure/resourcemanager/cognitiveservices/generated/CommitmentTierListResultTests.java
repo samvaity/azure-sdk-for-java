@@ -11,18 +11,16 @@ import org.junit.jupiter.api.Assertions;
 public final class CommitmentTierListResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CommitmentTierListResult model =
-            BinaryData
-                .fromString(
-                    "{\"nextLink\":\"lo\",\"value\":[{\"kind\":\"yfjfcnjbkcn\",\"skuName\":\"hbttkphyw\",\"hostingModel\":\"ProvisionedWeb\",\"planType\":\"t\",\"tier\":\"nermcl\",\"maxCount\":1227353846,\"quota\":{\"quantity\":8408659910270038809,\"unit\":\"scrpabgyepsbjt\"},\"cost\":{\"commitmentMeterId\":\"ugxywpmueef\",\"overageMeterId\":\"wfqkquj\"}}]}")
-                .toObject(CommitmentTierListResult.class);
-        Assertions.assertEquals("lo", model.nextLink());
+        CommitmentTierListResult model = BinaryData.fromString(
+            "{\"nextLink\":\"xpvgo\",\"value\":[{\"kind\":\"misgwbnb\",\"skuName\":\"ldawkzbaliourqha\",\"hostingModel\":\"DisconnectedContainer\",\"planType\":\"ashsfwxos\",\"tier\":\"z\",\"maxCount\":1177990560,\"quota\":{\"quantity\":8073809250590062964,\"unit\":\"oxdjebwpuc\"},\"cost\":{\"commitmentMeterId\":\"vo\",\"overageMeterId\":\"vmeueci\"}}]}")
+            .toObject(CommitmentTierListResult.class);
+        Assertions.assertEquals("xpvgo", model.nextLink());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CommitmentTierListResult model = new CommitmentTierListResult().withNextLink("lo");
+        CommitmentTierListResult model = new CommitmentTierListResult().withNextLink("xpvgo");
         model = BinaryData.fromObject(model).toObject(CommitmentTierListResult.class);
-        Assertions.assertEquals("lo", model.nextLink());
+        Assertions.assertEquals("xpvgo", model.nextLink());
     }
 }

@@ -52,6 +52,10 @@ public final class BareMetalMachineKeySetImpl
         }
     }
 
+    public String etag() {
+        return this.innerModel().etag();
+    }
+
     public ExtendedLocation extendedLocation() {
         return this.innerModel().extendedLocation();
     }
@@ -95,6 +99,10 @@ public final class BareMetalMachineKeySetImpl
 
     public BareMetalMachineKeySetPrivilegeLevel privilegeLevel() {
         return this.innerModel().privilegeLevel();
+    }
+
+    public String privilegeLevelName() {
+        return this.innerModel().privilegeLevelName();
     }
 
     public BareMetalMachineKeySetProvisioningState provisioningState() {
@@ -145,6 +153,14 @@ public final class BareMetalMachineKeySetImpl
 
     private String bareMetalMachineKeySetName;
 
+    private String createIfMatch;
+
+    private String createIfNoneMatch;
+
+    private String updateIfMatch;
+
+    private String updateIfNoneMatch;
+
     private BareMetalMachineKeySetPatchParameters updateBareMetalMachineKeySetUpdateParameters;
 
     public BareMetalMachineKeySetImpl withExistingCluster(String resourceGroupName, String clusterName) {
@@ -154,21 +170,18 @@ public final class BareMetalMachineKeySetImpl
     }
 
     public BareMetalMachineKeySet create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachineKeySets()
-                .createOrUpdate(
-                    resourceGroupName, clusterName, bareMetalMachineKeySetName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachineKeySets()
+            .createOrUpdate(resourceGroupName, clusterName, bareMetalMachineKeySetName, this.innerModel(),
+                createIfMatch, createIfNoneMatch, Context.NONE);
         return this;
     }
 
     public BareMetalMachineKeySet create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachineKeySets()
-                .createOrUpdate(resourceGroupName, clusterName, bareMetalMachineKeySetName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachineKeySets()
+            .createOrUpdate(resourceGroupName, clusterName, bareMetalMachineKeySetName, this.innerModel(),
+                createIfMatch, createIfNoneMatch, context);
         return this;
     }
 
@@ -176,68 +189,56 @@ public final class BareMetalMachineKeySetImpl
         this.innerObject = new BareMetalMachineKeySetInner();
         this.serviceManager = serviceManager;
         this.bareMetalMachineKeySetName = name;
+        this.createIfMatch = null;
+        this.createIfNoneMatch = null;
     }
 
     public BareMetalMachineKeySetImpl update() {
+        this.updateIfMatch = null;
+        this.updateIfNoneMatch = null;
         this.updateBareMetalMachineKeySetUpdateParameters = new BareMetalMachineKeySetPatchParameters();
         return this;
     }
 
     public BareMetalMachineKeySet apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachineKeySets()
-                .update(
-                    resourceGroupName,
-                    clusterName,
-                    bareMetalMachineKeySetName,
-                    updateBareMetalMachineKeySetUpdateParameters,
-                    Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachineKeySets()
+            .update(resourceGroupName, clusterName, bareMetalMachineKeySetName, updateIfMatch, updateIfNoneMatch,
+                updateBareMetalMachineKeySetUpdateParameters, Context.NONE);
         return this;
     }
 
     public BareMetalMachineKeySet apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachineKeySets()
-                .update(
-                    resourceGroupName,
-                    clusterName,
-                    bareMetalMachineKeySetName,
-                    updateBareMetalMachineKeySetUpdateParameters,
-                    context);
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachineKeySets()
+            .update(resourceGroupName, clusterName, bareMetalMachineKeySetName, updateIfMatch, updateIfNoneMatch,
+                updateBareMetalMachineKeySetUpdateParameters, context);
         return this;
     }
 
-    BareMetalMachineKeySetImpl(
-        BareMetalMachineKeySetInner innerObject,
+    BareMetalMachineKeySetImpl(BareMetalMachineKeySetInner innerObject,
         com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.clusterName = Utils.getValueFromIdByName(innerObject.id(), "clusters");
-        this.bareMetalMachineKeySetName = Utils.getValueFromIdByName(innerObject.id(), "bareMetalMachineKeySets");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.clusterName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "clusters");
+        this.bareMetalMachineKeySetName
+            = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "bareMetalMachineKeySets");
     }
 
     public BareMetalMachineKeySet refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachineKeySets()
-                .getWithResponse(resourceGroupName, clusterName, bareMetalMachineKeySetName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachineKeySets()
+            .getWithResponse(resourceGroupName, clusterName, bareMetalMachineKeySetName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public BareMetalMachineKeySet refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBareMetalMachineKeySets()
-                .getWithResponse(resourceGroupName, clusterName, bareMetalMachineKeySetName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getBareMetalMachineKeySets()
+            .getWithResponse(resourceGroupName, clusterName, bareMetalMachineKeySetName, context)
+            .getValue();
         return this;
     }
 
@@ -311,7 +312,32 @@ public final class BareMetalMachineKeySetImpl
         return this;
     }
 
+    public BareMetalMachineKeySetImpl withPrivilegeLevelName(String privilegeLevelName) {
+        this.innerModel().withPrivilegeLevelName(privilegeLevelName);
+        return this;
+    }
+
+    public BareMetalMachineKeySetImpl withIfMatch(String ifMatch) {
+        if (isInCreateMode()) {
+            this.createIfMatch = ifMatch;
+            return this;
+        } else {
+            this.updateIfMatch = ifMatch;
+            return this;
+        }
+    }
+
+    public BareMetalMachineKeySetImpl withIfNoneMatch(String ifNoneMatch) {
+        if (isInCreateMode()) {
+            this.createIfNoneMatch = ifNoneMatch;
+            return this;
+        } else {
+            this.updateIfNoneMatch = ifNoneMatch;
+            return this;
+        }
+    }
+
     private boolean isInCreateMode() {
-        return this.innerModel().id() == null;
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

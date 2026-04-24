@@ -4,45 +4,59 @@
 
 package com.azure.storage.queue.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The status of the secondary location. */
+/**
+ * The status of the secondary location.
+ */
 public final class GeoReplicationStatus extends ExpandableStringEnum<GeoReplicationStatus> {
-    /** Static value live for GeoReplicationStatus. */
+    /**
+     * Static value live for GeoReplicationStatus.
+     */
+    @Generated
     public static final GeoReplicationStatus LIVE = fromString("live");
 
-    /** Static value bootstrap for GeoReplicationStatus. */
+    /**
+     * Static value bootstrap for GeoReplicationStatus.
+     */
+    @Generated
     public static final GeoReplicationStatus BOOTSTRAP = fromString("bootstrap");
 
-    /** Static value unavailable for GeoReplicationStatus. */
+    /**
+     * Static value unavailable for GeoReplicationStatus.
+     */
+    @Generated
     public static final GeoReplicationStatus UNAVAILABLE = fromString("unavailable");
 
     /**
      * Creates a new instance of GeoReplicationStatus value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public GeoReplicationStatus() {}
+    public GeoReplicationStatus() {
+    }
 
     /**
      * Creates or finds a GeoReplicationStatus from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding GeoReplicationStatus.
      */
-    @JsonCreator
+    @Generated
     public static GeoReplicationStatus fromString(String name) {
         return fromString(name, GeoReplicationStatus.class);
     }
 
     /**
      * Gets known GeoReplicationStatus values.
-     *
+     * 
      * @return known GeoReplicationStatus values.
      */
+    @Generated
     public static Collection<GeoReplicationStatus> values() {
         return values(GeoReplicationStatus.class);
     }

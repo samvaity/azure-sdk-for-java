@@ -7,6 +7,8 @@
 #Requires -PSEdition Core
 #Requires -Modules @{ModuleName='Az.Accounts'; ModuleVersion='1.6.4'}
 #Requires -Modules @{ModuleName='Az.Resources'; ModuleVersion='1.8.0'}
+#Requires -Modules @{ModuleName='Az.Storage'; ModuleVersion='7.0.0'}
+#Requires -Modules @{ModuleName='Az.StorageSync'; ModuleVersion='2.1.1'}
 
 [CmdletBinding(DefaultParameterSetName = 'Default', SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
 param (
@@ -34,8 +36,8 @@ param (
     [ValidatePattern('^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$')]
     [string] $ProvisionerApplicationId,
 
-    [Parameter(ParameterSetName = 'Default+Provisioner', Mandatory = $true)]
-    [Parameter(ParameterSetName = 'ResourceGroup+Provisioner', Mandatory = $true)]
+    [Parameter(ParameterSetName = 'Default+Provisioner')]
+    [Parameter(ParameterSetName = 'ResourceGroup+Provisioner')]
     [string] $ProvisionerApplicationSecret,
 
     [Parameter(ParameterSetName = 'Default', Position = 0)]
@@ -56,6 +58,24 @@ param (
     [ValidateSet('test', 'perf')]
     [string] $ResourceType = 'test',
 
+    [Parameter(ParameterSetName = 'Default+Provisioner')]
+    [Parameter(ParameterSetName = 'ResourceGroup+Provisioner')]
+    [Parameter()]
+    [switch] $ServicePrincipalAuth,
+
+    # List of CIDR ranges to add to specific resource firewalls, e.g. @(10.100.0.0/16, 10.200.0.0/16)
+    [Parameter()]
+    [ValidateCount(0,399)]
+    [Validatescript({
+        foreach ($range in $PSItem) {
+            if ($range -like '*/31' -or $range -like '*/32') {
+                throw "Firewall IP Ranges cannot contain a /31 or /32 CIDR"
+            }
+        }
+        return $true
+    })]
+    [array] $AllowIpRanges = @(),
+
     [Parameter()]
     [switch] $Force,
 
@@ -63,6 +83,9 @@ param (
     [Parameter(ValueFromRemainingArguments = $true)]
     $RemoveTestResourcesRemainingArguments
 )
+
+. (Join-Path $PSScriptRoot .. scripts Helpers Resource-Helpers.ps1)
+. (Join-Path $PSScriptRoot TestResources-Helpers.ps1)
 
 # By default stop for any error.
 if (!$PSBoundParameters.ContainsKey('ErrorAction')) {
@@ -110,7 +133,7 @@ function Retry([scriptblock] $Action, [int] $Attempts = 5) {
     }
 }
 
-if ($ProvisionerApplicationId) {
+if ($ProvisionerApplicationId -and $ServicePrincipalAuth) {
     $null = Disable-AzContextAutosave -Scope Process
 
     Log "Logging into service principal '$ProvisionerApplicationId'"
@@ -136,10 +159,6 @@ $context = Get-AzContext
 
 if (!$ResourceGroupName) {
     if ($CI) {
-        if (!$ServiceDirectory) {
-            Write-Warning "ServiceDirectory parameter is empty, nothing to remove"
-            exit 0
-        }
         $envVarName = (BuildServiceDirectoryPrefix (GetServiceLeafDirectoryName $ServiceDirectory)) + "RESOURCE_GROUP"
         $ResourceGroupName = [Environment]::GetEnvironmentVariable($envVarName)
         if (!$ResourceGroupName) {
@@ -157,25 +176,25 @@ if (!$ResourceGroupName) {
     }
 }
 
-# If no subscription was specified, try to select the Azure SDK Developer Playground subscription.
+# If no subscription was specified, try to select the 'Azure SDK Test Resources - TME' subscription.
 # Ignore errors to leave the automatically selected subscription.
 if ($SubscriptionId) {
     $currentSubcriptionId = $context.Subscription.Id
     if ($currentSubcriptionId -ne $SubscriptionId) {
         Log "Selecting subscription '$SubscriptionId'"
-        $null = Select-AzSubscription -Subscription $SubscriptionId
+        $null = Select-AzSubscription -Subscription $SubscriptionId -WarningAction Ignore
 
         $exitActions += {
             Log "Selecting previous subscription '$currentSubcriptionId'"
-            $null = Select-AzSubscription -Subscription $currentSubcriptionId
+            $null = Select-AzSubscription -Subscription $currentSubcriptionId -WarningAction Ignore
         }
 
         # Update the context.
         $context = Get-AzContext
     }
 } else {
-    Log "Attempting to select subscription 'Azure SDK Developer Playground (faa080af-c1d8-40ad-9cce-e1a450ca5b57)'"
-    $null = Select-AzSubscription -Subscription 'faa080af-c1d8-40ad-9cce-e1a450ca5b57' -ErrorAction Ignore
+    Log "Attempting to select subscription 'Azure SDK Test Resources - TME (4d042dc6-fe17-4698-a23f-ec6a8d1e98f4)'"
+    $null = Select-AzSubscription -Subscription '4d042dc6-fe17-4698-a23f-ec6a8d1e98f4' -ErrorAction Ignore -WarningAction Ignore
 
     # Update the context.
     $context = Get-AzContext
@@ -189,6 +208,7 @@ $wellKnownSubscriptions = @{
     'faa080af-c1d8-40ad-9cce-e1a450ca5b57' = 'Azure SDK Developer Playground'
     'a18897a6-7e44-457d-9260-f2854c0aca42' = 'Azure SDK Engineering System'
     '2cd617ea-1866-46b1-90e3-fffb087ebf9b' = 'Azure SDK Test Resources'
+    '4d042dc6-fe17-4698-a23f-ec6a8d1e98f4' = 'Azure SDK Test Resources - TME'
 }
 
 # Print which subscription is currently selected.
@@ -200,7 +220,12 @@ if ($wellKnownSubscriptions.ContainsKey($subscriptionName)) {
 Log "Selected subscription '$subscriptionName'"
 
 if ($ServiceDirectory) {
-    $root = [System.IO.Path]::Combine("$PSScriptRoot/../../../sdk", $ServiceDirectory) | Resolve-Path
+    $root = "$PSScriptRoot/../../.."
+    if($ServiceDirectory) {
+      $root = "$root/sdk/$ServiceDirectory"
+    }
+    $root = $root | Resolve-Path
+    
     $preRemovalScript = Join-Path -Path $root -ChildPath "remove-$ResourceType-resources-pre.ps1"
     if (Test-Path $preRemovalScript) {
         Log "Invoking pre resource removal script '$preRemovalScript'"
@@ -214,6 +239,7 @@ if ($ServiceDirectory) {
 
     # Make sure environment files from New-TestResources -OutFile are removed.
     Get-ChildItem -Path $root -Filter "$ResourceType-resources.json.env" -Recurse | Remove-Item -Force:$Force
+    Get-ChildItem -Path $root -Filter ".env" -Recurse -Force | Remove-Item -Force
 }
 
 $verifyDeleteScript = {
@@ -235,6 +261,10 @@ $verifyDeleteScript = {
 
 # Get any resources that can be purged after the resource group is deleted coerced into a collection even if empty.
 $purgeableResources = Get-PurgeableGroupResources $ResourceGroupName
+
+SetResourceNetworkAccessRules -ResourceGroupName $ResourceGroupName -AllowIpRanges $AllowIpRanges -SetFirewall -CI:$CI
+Remove-WormStorageAccounts -GroupPrefix $ResourceGroupName -CI:$CI
+Remove-StorageSyncServices -GroupPrefix $ResourceGroupName -CI:$CI
 
 Log "Deleting resource group '$ResourceGroupName'"
 if ($Force -and !$purgeableResources) {
@@ -304,6 +334,9 @@ Run script in CI mode. Infers various environment variable names based on CI con
 
 .PARAMETER Force
 Force removal of resource group without asking for user confirmation
+
+.PARAMETER ServicePrincipalAuth
+Log in with provided Provisioner application credentials.
 
 .EXAMPLE
 Remove-TestResources.ps1 keyvault -Force

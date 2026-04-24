@@ -4,37 +4,59 @@
 
 package com.azure.maps.route.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for WindingnessLevel. */
+/**
+ * Defines values for WindingnessLevel.
+ */
 public final class WindingnessLevel extends ExpandableStringEnum<WindingnessLevel> {
-    /** Static value low for WindingnessLevel. */
+    /**
+     * low.
+     */
+    @Generated
     public static final WindingnessLevel LOW = fromString("low");
 
-    /** Static value normal for WindingnessLevel. */
+    /**
+     * normal.
+     */
+    @Generated
     public static final WindingnessLevel NORMAL = fromString("normal");
 
-    /** Static value high for WindingnessLevel. */
+    /**
+     * high.
+     */
+    @Generated
     public static final WindingnessLevel HIGH = fromString("high");
 
     /**
+     * Creates a new instance of WindingnessLevel value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public WindingnessLevel() {
+    }
+
+    /**
      * Creates or finds a WindingnessLevel from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding WindingnessLevel.
      */
-    @JsonCreator
+    @Generated
     public static WindingnessLevel fromString(String name) {
         return fromString(name, WindingnessLevel.class);
     }
 
     /**
      * Gets known WindingnessLevel values.
-     *
+     * 
      * @return known WindingnessLevel values.
      */
+    @Generated
     public static Collection<WindingnessLevel> values() {
         return values(WindingnessLevel.class);
     }

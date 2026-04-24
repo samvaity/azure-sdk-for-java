@@ -11,18 +11,19 @@ import org.junit.jupiter.api.Assertions;
 public final class KeyVaultResourceSettingsTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        KeyVaultResourceSettings model =
-            BinaryData
-                .fromString(
-                    "{\"resourceType\":\"Microsoft.KeyVault/vaults\",\"targetResourceName\":\"yvxqtayriwwroy\"}")
-                .toObject(KeyVaultResourceSettings.class);
-        Assertions.assertEquals("yvxqtayriwwroy", model.targetResourceName());
+        KeyVaultResourceSettings model = BinaryData.fromString(
+            "{\"resourceType\":\"Microsoft.KeyVault/vaults\",\"targetResourceName\":\"aolps\",\"targetResourceGroupName\":\"qlfmmdnbb\"}")
+            .toObject(KeyVaultResourceSettings.class);
+        Assertions.assertEquals("aolps", model.targetResourceName());
+        Assertions.assertEquals("qlfmmdnbb", model.targetResourceGroupName());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        KeyVaultResourceSettings model = new KeyVaultResourceSettings().withTargetResourceName("yvxqtayriwwroy");
+        KeyVaultResourceSettings model
+            = new KeyVaultResourceSettings().withTargetResourceName("aolps").withTargetResourceGroupName("qlfmmdnbb");
         model = BinaryData.fromObject(model).toObject(KeyVaultResourceSettings.class);
-        Assertions.assertEquals("yvxqtayriwwroy", model.targetResourceName());
+        Assertions.assertEquals("aolps", model.targetResourceName());
+        Assertions.assertEquals("qlfmmdnbb", model.targetResourceGroupName());
     }
 }

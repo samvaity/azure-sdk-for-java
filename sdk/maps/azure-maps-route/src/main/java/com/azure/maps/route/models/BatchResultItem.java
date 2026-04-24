@@ -4,24 +4,88 @@
 
 package com.azure.maps.route.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** An item returned from Batch API. Extend with 'response' property. */
+/**
+ * An item returned from Batch API. Extend with 'response' property.
+ */
 @Immutable
-public class BatchResultItem {
+public class BatchResultItem implements JsonSerializable<BatchResultItem> {
     /*
      * HTTP request status code.
      */
-    @JsonProperty(value = "statusCode", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private Integer statusCode;
 
     /**
+     * Creates an instance of BatchResultItem class.
+     */
+    @Generated
+    public BatchResultItem() {
+    }
+
+    /**
      * Get the statusCode property: HTTP request status code.
-     *
+     * 
      * @return the statusCode value.
      */
+    @Generated
     public Integer getStatusCode() {
         return this.statusCode;
+    }
+
+    /**
+     * Set the statusCode property: HTTP request status code.
+     * 
+     * @param statusCode the statusCode value to set.
+     * @return the BatchResultItem object itself.
+     */
+    @Generated
+    BatchResultItem setStatusCode(Integer statusCode) {
+        this.statusCode = statusCode;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of BatchResultItem from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of BatchResultItem if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the BatchResultItem.
+     */
+    @Generated
+    public static BatchResultItem fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            BatchResultItem deserializedBatchResultItem = new BatchResultItem();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("statusCode".equals(fieldName)) {
+                    deserializedBatchResultItem.statusCode = reader.getNullable(JsonReader::getInt);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedBatchResultItem;
+        });
     }
 }

@@ -5,17 +5,20 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Static routing enrichment value type. For e.g. this property value can be 'String'. */
+/**
+ * Static routing enrichment value type. For e.g. this property value can be 'String'.
+ */
 public final class StaticRoutingEnrichmentType extends ExpandableStringEnum<StaticRoutingEnrichmentType> {
-    /** Static value String for StaticRoutingEnrichmentType. */
+    /**
+     * Static value String for StaticRoutingEnrichmentType.
+     */
     public static final StaticRoutingEnrichmentType STRING = fromString("String");
 
     /**
      * Creates a new instance of StaticRoutingEnrichmentType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -24,18 +27,17 @@ public final class StaticRoutingEnrichmentType extends ExpandableStringEnum<Stat
 
     /**
      * Creates or finds a StaticRoutingEnrichmentType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding StaticRoutingEnrichmentType.
      */
-    @JsonCreator
     public static StaticRoutingEnrichmentType fromString(String name) {
         return fromString(name, StaticRoutingEnrichmentType.class);
     }
 
     /**
      * Gets known StaticRoutingEnrichmentType values.
-     *
+     * 
      * @return known StaticRoutingEnrichmentType values.
      */
     public static Collection<StaticRoutingEnrichmentType> values() {

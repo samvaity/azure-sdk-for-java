@@ -5,65 +5,78 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The SentenceAssessment model. */
+/**
+ * The SentenceAssessment model.
+ */
 @Fluent
-public final class SentenceAssessment {
+public final class SentenceAssessment implements JsonSerializable<SentenceAssessment> {
     /*
      * Assessment sentiment in the sentence.
      */
-    @JsonProperty(value = "sentiment", required = true)
+    @Generated
     private TokenSentimentValue sentiment;
 
     /*
      * Assessment sentiment confidence scores in the sentence.
      */
-    @JsonProperty(value = "confidenceScores", required = true)
+    @Generated
     private TargetConfidenceScoreLabel confidenceScores;
 
     /*
      * The assessment offset from the start of the sentence.
      */
-    @JsonProperty(value = "offset", required = true)
+    @Generated
     private int offset;
 
     /*
      * The length of the assessment.
      */
-    @JsonProperty(value = "length", required = true)
+    @Generated
     private int length;
 
     /*
      * The assessment text detected.
      */
-    @JsonProperty(value = "text", required = true)
+    @Generated
     private String text;
 
     /*
      * The indicator representing if the assessment is negated.
      */
-    @JsonProperty(value = "isNegated", required = true)
+    @Generated
     private boolean isNegated;
 
-    /** Creates an instance of SentenceAssessment class. */
-    public SentenceAssessment() {}
+    /**
+     * Creates an instance of SentenceAssessment class.
+     */
+    @Generated
+    public SentenceAssessment() {
+    }
 
     /**
      * Get the sentiment property: Assessment sentiment in the sentence.
-     *
+     * 
      * @return the sentiment value.
      */
+    @Generated
     public TokenSentimentValue getSentiment() {
         return this.sentiment;
     }
 
     /**
      * Set the sentiment property: Assessment sentiment in the sentence.
-     *
+     * 
      * @param sentiment the sentiment value to set.
      * @return the SentenceAssessment object itself.
      */
+    @Generated
     public SentenceAssessment setSentiment(TokenSentimentValue sentiment) {
         this.sentiment = sentiment;
         return this;
@@ -71,19 +84,21 @@ public final class SentenceAssessment {
 
     /**
      * Get the confidenceScores property: Assessment sentiment confidence scores in the sentence.
-     *
+     * 
      * @return the confidenceScores value.
      */
+    @Generated
     public TargetConfidenceScoreLabel getConfidenceScores() {
         return this.confidenceScores;
     }
 
     /**
      * Set the confidenceScores property: Assessment sentiment confidence scores in the sentence.
-     *
+     * 
      * @param confidenceScores the confidenceScores value to set.
      * @return the SentenceAssessment object itself.
      */
+    @Generated
     public SentenceAssessment setConfidenceScores(TargetConfidenceScoreLabel confidenceScores) {
         this.confidenceScores = confidenceScores;
         return this;
@@ -91,19 +106,21 @@ public final class SentenceAssessment {
 
     /**
      * Get the offset property: The assessment offset from the start of the sentence.
-     *
+     * 
      * @return the offset value.
      */
+    @Generated
     public int getOffset() {
         return this.offset;
     }
 
     /**
      * Set the offset property: The assessment offset from the start of the sentence.
-     *
+     * 
      * @param offset the offset value to set.
      * @return the SentenceAssessment object itself.
      */
+    @Generated
     public SentenceAssessment setOffset(int offset) {
         this.offset = offset;
         return this;
@@ -111,19 +128,21 @@ public final class SentenceAssessment {
 
     /**
      * Get the length property: The length of the assessment.
-     *
+     * 
      * @return the length value.
      */
+    @Generated
     public int getLength() {
         return this.length;
     }
 
     /**
      * Set the length property: The length of the assessment.
-     *
+     * 
      * @param length the length value to set.
      * @return the SentenceAssessment object itself.
      */
+    @Generated
     public SentenceAssessment setLength(int length) {
         this.length = length;
         return this;
@@ -131,19 +150,21 @@ public final class SentenceAssessment {
 
     /**
      * Get the text property: The assessment text detected.
-     *
+     * 
      * @return the text value.
      */
+    @Generated
     public String getText() {
         return this.text;
     }
 
     /**
      * Set the text property: The assessment text detected.
-     *
+     * 
      * @param text the text value to set.
      * @return the SentenceAssessment object itself.
      */
+    @Generated
     public SentenceAssessment setText(String text) {
         this.text = text;
         return this;
@@ -151,21 +172,77 @@ public final class SentenceAssessment {
 
     /**
      * Get the isNegated property: The indicator representing if the assessment is negated.
-     *
+     * 
      * @return the isNegated value.
      */
+    @Generated
     public boolean isNegated() {
         return this.isNegated;
     }
 
     /**
      * Set the isNegated property: The indicator representing if the assessment is negated.
-     *
+     * 
      * @param isNegated the isNegated value to set.
      * @return the SentenceAssessment object itself.
      */
+    @Generated
     public SentenceAssessment setIsNegated(boolean isNegated) {
         this.isNegated = isNegated;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("sentiment", this.sentiment == null ? null : this.sentiment.toString());
+        jsonWriter.writeJsonField("confidenceScores", this.confidenceScores);
+        jsonWriter.writeIntField("offset", this.offset);
+        jsonWriter.writeIntField("length", this.length);
+        jsonWriter.writeStringField("text", this.text);
+        jsonWriter.writeBooleanField("isNegated", this.isNegated);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SentenceAssessment from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SentenceAssessment if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SentenceAssessment.
+     */
+    @Generated
+    public static SentenceAssessment fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SentenceAssessment deserializedSentenceAssessment = new SentenceAssessment();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sentiment".equals(fieldName)) {
+                    deserializedSentenceAssessment.sentiment = TokenSentimentValue.fromString(reader.getString());
+                } else if ("confidenceScores".equals(fieldName)) {
+                    deserializedSentenceAssessment.confidenceScores = TargetConfidenceScoreLabel.fromJson(reader);
+                } else if ("offset".equals(fieldName)) {
+                    deserializedSentenceAssessment.offset = reader.getInt();
+                } else if ("length".equals(fieldName)) {
+                    deserializedSentenceAssessment.length = reader.getInt();
+                } else if ("text".equals(fieldName)) {
+                    deserializedSentenceAssessment.text = reader.getString();
+                } else if ("isNegated".equals(fieldName)) {
+                    deserializedSentenceAssessment.isNegated = reader.getBoolean();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSentenceAssessment;
+        });
     }
 }

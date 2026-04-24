@@ -15,6 +15,7 @@ import reactor.netty.transport.ProxyProvider;
 
 import java.net.InetSocketAddress;
 import java.time.Duration;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,8 +29,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class NettyAsyncHttpClientProviderTests {
     @Test
     public void nullOptionsReturnsBaseClient() {
-        NettyAsyncHttpClient httpClient = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider()
-            .createInstance(null);
+        NettyAsyncHttpClient httpClient
+            = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider().createInstance(null);
 
         ProxyOptions environmentProxy = ProxyOptions.fromConfiguration(Configuration.getGlobalConfiguration());
         if (environmentProxy == null) {
@@ -37,15 +38,18 @@ public class NettyAsyncHttpClientProviderTests {
         } else {
             assertTrue(httpClient.nettyClient.configuration().hasProxy());
 
-            ProxyProvider proxyProvider = httpClient.nettyClient.configuration().proxyProvider();
-            assertEquals(environmentProxy.getAddress(), proxyProvider.getAddress().get());
+            // If hasProxy is true, the configuration either has a proxyProvider or a proxyProviderSupplier.
+            ProxyProvider proxyProvider = Optional.ofNullable(httpClient.nettyClient.configuration().proxyProvider())
+                .orElseGet(httpClient.nettyClient.configuration().proxyProviderSupplier()::get);
+
+            assertEquals(environmentProxy.getAddress(), proxyProvider.getSocketAddress().get());
         }
     }
 
     @Test
     public void defaultOptionsReturnsBaseClient() {
-        NettyAsyncHttpClient httpClient = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider()
-            .createInstance(new HttpClientOptions());
+        NettyAsyncHttpClient httpClient
+            = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider().createInstance(new HttpClientOptions());
 
         ProxyOptions environmentProxy = ProxyOptions.fromConfiguration(Configuration.getGlobalConfiguration());
         if (environmentProxy == null) {
@@ -53,8 +57,11 @@ public class NettyAsyncHttpClientProviderTests {
         } else {
             assertTrue(httpClient.nettyClient.configuration().hasProxy());
 
-            ProxyProvider proxyProvider = httpClient.nettyClient.configuration().proxyProvider();
-            assertEquals(environmentProxy.getAddress(), proxyProvider.getAddress().get());
+            // If hasProxy is true, the configuration either has a proxyProvider or a proxyProviderSupplier.
+            ProxyProvider proxyProvider = Optional.ofNullable(httpClient.nettyClient.configuration().proxyProvider())
+                .orElseGet(httpClient.nettyClient.configuration().proxyProviderSupplier()::get);
+
+            assertEquals(environmentProxy.getAddress(), proxyProvider.getSocketAddress().get());
         }
     }
 
@@ -63,46 +70,47 @@ public class NettyAsyncHttpClientProviderTests {
         ProxyOptions proxyOptions = new ProxyOptions(ProxyOptions.Type.HTTP, new InetSocketAddress("localhost", 8888));
         HttpClientOptions clientOptions = new HttpClientOptions().setProxyOptions(proxyOptions);
 
-        NettyAsyncHttpClient httpClient = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider()
-            .createInstance(clientOptions);
+        NettyAsyncHttpClient httpClient
+            = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider().createInstance(clientOptions);
 
         assertTrue(httpClient.nettyClient.configuration().hasProxy());
 
-        ProxyProvider proxyProvider = httpClient.nettyClient.configuration().proxyProvider();
-        assertEquals(proxyOptions.getAddress(), proxyProvider.getAddress().get());
+        // If hasProxy is true, the configuration either has a proxyProvider or a proxyProviderSupplier.
+        ProxyProvider proxyProvider = Optional.ofNullable(httpClient.nettyClient.configuration().proxyProvider())
+            .orElseGet(httpClient.nettyClient.configuration().proxyProviderSupplier()::get);
+
+        assertEquals(proxyOptions.getAddress(), proxyProvider.getSocketAddress().get());
     }
 
     @Test
     public void optionsWithTimeouts() {
         long expectedTimeout = 15000;
         Duration timeout = Duration.ofMillis(expectedTimeout);
-        HttpClientOptions clientOptions = new HttpClientOptions()
-            .setConnectTimeout(timeout)
+        HttpClientOptions clientOptions = new HttpClientOptions().setConnectTimeout(timeout)
             .setWriteTimeout(timeout)
             .setResponseTimeout(timeout)
             .setReadTimeout(timeout);
 
-        NettyAsyncHttpClient httpClient = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider()
-            .createInstance(clientOptions);
+        NettyAsyncHttpClient httpClient
+            = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider().createInstance(clientOptions);
 
-        Integer connectTimeout = (Integer) httpClient.nettyClient.configuration().options()
-            .get(ChannelOption.CONNECT_TIMEOUT_MILLIS);
+        Integer connectTimeout
+            = (Integer) httpClient.nettyClient.configuration().options().get(ChannelOption.CONNECT_TIMEOUT_MILLIS);
         assertEquals((int) expectedTimeout, connectTimeout.intValue());
     }
 
     @Test
     @Disabled("Due to a bug in reactor-netty that doesn't read maxConnections value from implementation."
-            + "Bug fix will be available in reactor-netty version 1.0.15. See https://github.com/reactor/reactor-netty/issues/1941#issuecomment-997846176")
+        + "Bug fix will be available in reactor-netty version 1.0.15. See https://github.com/reactor/reactor-netty/issues/1941#issuecomment-997846176")
     public void testDefaultMaxConnections() {
-        NettyAsyncHttpClient httpClient = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider()
-                .createInstance(null);
+        NettyAsyncHttpClient httpClient
+            = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider().createInstance(null);
         int actualMaxConnections = httpClient.nettyClient.configuration().connectionProvider().maxConnections();
         // There's a bug in reactor-netty that doesn't read the `maxConnections from the implementation of
         // ConnectionProvider. It reads from the default implementation in the interface which always returns -1.
         // assertEquals(500, actualMaxConnections);
 
-        httpClient = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider()
-                .createInstance(new HttpClientOptions());
+        httpClient = (NettyAsyncHttpClient) new NettyAsyncHttpClientProvider().createInstance(new HttpClientOptions());
         actualMaxConnections = httpClient.nettyClient.configuration().connectionProvider().maxConnections();
         // assertEquals(500, actualMaxConnections);
     }
@@ -123,7 +131,7 @@ public class NettyAsyncHttpClientProviderTests {
         assertThrows(IllegalStateException.class, () -> HttpClient.createDefault(options));
     }
 
-    class AnotherHttpClientProvider implements HttpClientProvider {
+    static class AnotherHttpClientProvider implements HttpClientProvider {
         @Override
         public HttpClient createInstance() {
             throw new IllegalStateException("should never be called");

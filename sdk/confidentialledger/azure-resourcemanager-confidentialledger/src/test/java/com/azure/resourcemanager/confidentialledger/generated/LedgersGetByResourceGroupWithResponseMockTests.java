@@ -6,67 +6,60 @@ package com.azure.resourcemanager.confidentialledger.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.confidentialledger.ConfidentialLedgerManager;
+import com.azure.resourcemanager.confidentialledger.models.ApplicationType;
 import com.azure.resourcemanager.confidentialledger.models.ConfidentialLedger;
+import com.azure.resourcemanager.confidentialledger.models.EnclavePlatform;
+import com.azure.resourcemanager.confidentialledger.models.LedgerRoleName;
+import com.azure.resourcemanager.confidentialledger.models.LedgerSku;
 import com.azure.resourcemanager.confidentialledger.models.LedgerType;
 import com.azure.resourcemanager.confidentialledger.models.RunningState;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class LedgersGetByResourceGroupWithResponseMockTests {
     @Test
     public void testGetByResourceGroupWithResponse() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"properties\":{\"ledgerName\":\"vxyqjpkcattpngjc\",\"ledgerUri\":\"czsqpjhvm\",\"identityServiceUri\":\"jvnysounqe\",\"ledgerInternalNamespace\":\"noae\",\"runningState\":\"Unknown\",\"ledgerType\":\"Private\",\"provisioningState\":\"Failed\",\"ledgerSku\":\"Standard\",\"aadBasedSecurityPrincipals\":[{\"principalId\":\"pjmcmatuokthfuiu\",\"tenantId\":\"dsfcpkvxodpuoz\",\"ledgerRoleName\":\"Contributor\"},{\"principalId\":\"dagfuaxbezyiuok\",\"tenantId\":\"whrdxwzywqsmbsu\",\"ledgerRoleName\":\"Reader\"}],\"certBasedSecurityPrincipals\":[{\"cert\":\"ryocfsfksymdd\",\"ledgerRoleName\":\"Reader\"},{\"cert\":\"i\",\"ledgerRoleName\":\"Administrator\"},{\"cert\":\"qyud\",\"ledgerRoleName\":\"Administrator\"},{\"cert\":\"qn\",\"ledgerRoleName\":\"Contributor\"}],\"hostLevel\":\"zvyifqrvkdvj\",\"maxBodySizeInMb\":838682594,\"subjectName\":\"mvvd\",\"nodeCount\":1391003633,\"writeLBAddressPrefix\":\"kpnpulexxbczwtr\",\"workerThreads\":1083545989,\"enclavePlatform\":\"IntelSgx\",\"applicationType\":\"CodeTransparency\"},\"location\":\"vsovmyokac\",\"tags\":{\"hzdobpxjmflbvvnc\":\"w\",\"rsa\":\"rkcciwwzjuqk\"},\"id\":\"iwkuofos\",\"name\":\"ghsauuimjmvxied\",\"type\":\"ugidyjrr\"}";
 
-        String responseStr =
-            "{\"properties\":{\"ledgerName\":\"nyktzlcuiy\",\"ledgerUri\":\"qyw\",\"identityServiceUri\":\"drvyn\",\"ledgerInternalNamespace\":\"gpphrcgyn\",\"runningState\":\"Pausing\",\"ledgerType\":\"Unknown\",\"provisioningState\":\"Canceled\",\"aadBasedSecurityPrincipals\":[],\"certBasedSecurityPrincipals\":[]},\"location\":\"ofsx\",\"tags\":{\"bmqj\":\"v\",\"lzu\":\"abcypmivk\"},\"id\":\"ccfwnfnbacfion\",\"name\":\"ebxetqgtzxdp\",\"type\":\"qbqqwxr\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        ConfidentialLedgerManager manager = ConfidentialLedgerManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        ConfidentialLedger response = manager.ledgers()
+            .getByResourceGroupWithResponse("gm", "qsl", com.azure.core.util.Context.NONE)
+            .getValue();
 
-        ConfidentialLedgerManager manager =
-            ConfidentialLedgerManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        ConfidentialLedger response =
-            manager.ledgers().getByResourceGroupWithResponse("h", "qfbow", com.azure.core.util.Context.NONE).getValue();
-
-        Assertions.assertEquals("ofsx", response.location());
-        Assertions.assertEquals("v", response.tags().get("bmqj"));
-        Assertions.assertEquals(RunningState.PAUSING, response.properties().runningState());
-        Assertions.assertEquals(LedgerType.UNKNOWN, response.properties().ledgerType());
+        Assertions.assertEquals("vsovmyokac", response.location());
+        Assertions.assertEquals("w", response.tags().get("hzdobpxjmflbvvnc"));
+        Assertions.assertEquals(RunningState.UNKNOWN, response.properties().runningState());
+        Assertions.assertEquals(LedgerType.PRIVATE, response.properties().ledgerType());
+        Assertions.assertEquals(LedgerSku.STANDARD, response.properties().ledgerSku());
+        Assertions.assertEquals("pjmcmatuokthfuiu",
+            response.properties().aadBasedSecurityPrincipals().get(0).principalId());
+        Assertions.assertEquals("dsfcpkvxodpuoz", response.properties().aadBasedSecurityPrincipals().get(0).tenantId());
+        Assertions.assertEquals(LedgerRoleName.CONTRIBUTOR,
+            response.properties().aadBasedSecurityPrincipals().get(0).ledgerRoleName());
+        Assertions.assertEquals("ryocfsfksymdd", response.properties().certBasedSecurityPrincipals().get(0).cert());
+        Assertions.assertEquals(LedgerRoleName.READER,
+            response.properties().certBasedSecurityPrincipals().get(0).ledgerRoleName());
+        Assertions.assertEquals("zvyifqrvkdvj", response.properties().hostLevel());
+        Assertions.assertEquals(838682594, response.properties().maxBodySizeInMb());
+        Assertions.assertEquals("mvvd", response.properties().subjectName());
+        Assertions.assertEquals(1391003633, response.properties().nodeCount());
+        Assertions.assertEquals("kpnpulexxbczwtr", response.properties().writeLBAddressPrefix());
+        Assertions.assertEquals(1083545989, response.properties().workerThreads());
+        Assertions.assertEquals(EnclavePlatform.INTEL_SGX, response.properties().enclavePlatform());
+        Assertions.assertEquals(ApplicationType.CODE_TRANSPARENCY, response.properties().applicationType());
     }
 }

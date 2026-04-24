@@ -7,15 +7,17 @@ package com.azure.resourcemanager.recoveryservicessiterecovery.models;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.util.Context;
 
-/** Resource collection API of TargetComputeSizes. */
+/**
+ * Resource collection API of TargetComputeSizes.
+ */
 public interface TargetComputeSizes {
     /**
      * Gets the list of target compute sizes for the replication protected item.
-     *
-     * <p>Lists the available target compute sizes for a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the available target compute sizes for a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -24,20 +26,16 @@ public interface TargetComputeSizes {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return target compute size collection as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<TargetComputeSize> listByReplicationProtectedItems(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName);
+    PagedIterable<TargetComputeSize> listByReplicationProtectedItems(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName);
 
     /**
      * Gets the list of target compute sizes for the replication protected item.
-     *
-     * <p>Lists the available target compute sizes for a replication protected item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the available target compute sizes for a replication protected item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName protection container name.
      * @param replicatedProtectedItemName Replication protected item name.
@@ -47,11 +45,6 @@ public interface TargetComputeSizes {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return target compute size collection as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<TargetComputeSize> listByReplicationProtectedItems(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String replicatedProtectedItemName,
-        Context context);
+    PagedIterable<TargetComputeSize> listByReplicationProtectedItems(String resourceGroupName, String resourceName,
+        String fabricName, String protectionContainerName, String replicatedProtectedItemName, Context context);
 }

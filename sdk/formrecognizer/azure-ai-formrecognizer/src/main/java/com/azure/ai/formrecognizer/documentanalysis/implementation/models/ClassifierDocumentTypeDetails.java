@@ -5,34 +5,46 @@
 package com.azure.ai.formrecognizer.documentanalysis.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Classifier document type info. */
+/**
+ * Classifier document type info.
+ */
 @Fluent
-public final class ClassifierDocumentTypeDetails {
+public final class ClassifierDocumentTypeDetails implements JsonSerializable<ClassifierDocumentTypeDetails> {
     /*
-     * Azure Blob Storage location containing the training data for a classifier document type.  Either azureBlobSource
+     * Azure Blob Storage location containing the training data for a classifier document type. Either azureBlobSource
      * or azureBlobFileListSource must be specified.
      */
-    @JsonProperty(value = "azureBlobSource")
+    @Generated
     private AzureBlobContentSource azureBlobSource;
 
     /*
-     * Azure Blob Storage file list specifying the training data for a classifier document type.  Either
-     * azureBlobSource or azureBlobFileListSource must be specified.
+     * Azure Blob Storage file list specifying the training data for a classifier document type. Either azureBlobSource
+     * or azureBlobFileListSource must be specified.
      */
-    @JsonProperty(value = "azureBlobFileListSource")
+    @Generated
     private AzureBlobFileListContentSource azureBlobFileListSource;
 
-    /** Creates an instance of ClassifierDocumentTypeDetails class. */
-    public ClassifierDocumentTypeDetails() {}
+    /**
+     * Creates an instance of ClassifierDocumentTypeDetails class.
+     */
+    @Generated
+    public ClassifierDocumentTypeDetails() {
+    }
 
     /**
      * Get the azureBlobSource property: Azure Blob Storage location containing the training data for a classifier
      * document type. Either azureBlobSource or azureBlobFileListSource must be specified.
-     *
+     * 
      * @return the azureBlobSource value.
      */
+    @Generated
     public AzureBlobContentSource getAzureBlobSource() {
         return this.azureBlobSource;
     }
@@ -40,10 +52,11 @@ public final class ClassifierDocumentTypeDetails {
     /**
      * Set the azureBlobSource property: Azure Blob Storage location containing the training data for a classifier
      * document type. Either azureBlobSource or azureBlobFileListSource must be specified.
-     *
+     * 
      * @param azureBlobSource the azureBlobSource value to set.
      * @return the ClassifierDocumentTypeDetails object itself.
      */
+    @Generated
     public ClassifierDocumentTypeDetails setAzureBlobSource(AzureBlobContentSource azureBlobSource) {
         this.azureBlobSource = azureBlobSource;
         return this;
@@ -52,9 +65,10 @@ public final class ClassifierDocumentTypeDetails {
     /**
      * Get the azureBlobFileListSource property: Azure Blob Storage file list specifying the training data for a
      * classifier document type. Either azureBlobSource or azureBlobFileListSource must be specified.
-     *
+     * 
      * @return the azureBlobFileListSource value.
      */
+    @Generated
     public AzureBlobFileListContentSource getAzureBlobFileListSource() {
         return this.azureBlobFileListSource;
     }
@@ -62,13 +76,57 @@ public final class ClassifierDocumentTypeDetails {
     /**
      * Set the azureBlobFileListSource property: Azure Blob Storage file list specifying the training data for a
      * classifier document type. Either azureBlobSource or azureBlobFileListSource must be specified.
-     *
+     * 
      * @param azureBlobFileListSource the azureBlobFileListSource value to set.
      * @return the ClassifierDocumentTypeDetails object itself.
      */
-    public ClassifierDocumentTypeDetails setAzureBlobFileListSource(
-            AzureBlobFileListContentSource azureBlobFileListSource) {
+    @Generated
+    public ClassifierDocumentTypeDetails
+        setAzureBlobFileListSource(AzureBlobFileListContentSource azureBlobFileListSource) {
         this.azureBlobFileListSource = azureBlobFileListSource;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("azureBlobSource", this.azureBlobSource);
+        jsonWriter.writeJsonField("azureBlobFileListSource", this.azureBlobFileListSource);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ClassifierDocumentTypeDetails from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ClassifierDocumentTypeDetails if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ClassifierDocumentTypeDetails.
+     */
+    @Generated
+    public static ClassifierDocumentTypeDetails fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ClassifierDocumentTypeDetails deserializedClassifierDocumentTypeDetails
+                = new ClassifierDocumentTypeDetails();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("azureBlobSource".equals(fieldName)) {
+                    deserializedClassifierDocumentTypeDetails.azureBlobSource = AzureBlobContentSource.fromJson(reader);
+                } else if ("azureBlobFileListSource".equals(fieldName)) {
+                    deserializedClassifierDocumentTypeDetails.azureBlobFileListSource
+                        = AzureBlobFileListContentSource.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedClassifierDocumentTypeDetails;
+        });
     }
 }

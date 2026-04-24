@@ -5,106 +5,110 @@
 package com.azure.storage.blob.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
-/** The ServicesSubmitBatchHeaders model. */
-@JacksonXmlRootElement(localName = "null")
+/**
+ * The ServicesSubmitBatchHeaders model.
+ */
 @Fluent
 public final class ServicesSubmitBatchHeaders {
     /*
-     * The x-ms-version property.
+     * The Content-Type property.
      */
-    @JsonProperty(value = "x-ms-version")
-    private String xMsVersion;
+    @Generated
+    private String contentType;
 
     /*
      * The x-ms-request-id property.
      */
-    @JsonProperty(value = "x-ms-request-id")
+    @Generated
     private String xMsRequestId;
 
     /*
-     * The Content-Type property.
+     * The x-ms-version property.
      */
-    @JsonProperty(value = "Content-Type")
-    private String contentType;
+    @Generated
+    private String xMsVersion;
 
     private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
-
-    private static final HttpHeaderName X_MS_REQUEST_ID = HttpHeaderName.fromString("x-ms-request-id");
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of ServicesSubmitBatchHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public ServicesSubmitBatchHeaders(HttpHeaders rawHeaders) {
-        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
-        this.xMsRequestId = rawHeaders.getValue(X_MS_REQUEST_ID);
         this.contentType = rawHeaders.getValue(HttpHeaderName.CONTENT_TYPE);
-    }
-
-    /**
-     * Get the xMsVersion property: The x-ms-version property.
-     *
-     * @return the xMsVersion value.
-     */
-    public String getXMsVersion() {
-        return this.xMsVersion;
-    }
-
-    /**
-     * Set the xMsVersion property: The x-ms-version property.
-     *
-     * @param xMsVersion the xMsVersion value to set.
-     * @return the ServicesSubmitBatchHeaders object itself.
-     */
-    public ServicesSubmitBatchHeaders setXMsVersion(String xMsVersion) {
-        this.xMsVersion = xMsVersion;
-        return this;
-    }
-
-    /**
-     * Get the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @return the xMsRequestId value.
-     */
-    public String getXMsRequestId() {
-        return this.xMsRequestId;
-    }
-
-    /**
-     * Set the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @param xMsRequestId the xMsRequestId value to set.
-     * @return the ServicesSubmitBatchHeaders object itself.
-     */
-    public ServicesSubmitBatchHeaders setXMsRequestId(String xMsRequestId) {
-        this.xMsRequestId = xMsRequestId;
-        return this;
+        this.xMsRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_REQUEST_ID);
+        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
     }
 
     /**
      * Get the contentType property: The Content-Type property.
-     *
+     * 
      * @return the contentType value.
      */
+    @Generated
     public String getContentType() {
         return this.contentType;
     }
 
     /**
      * Set the contentType property: The Content-Type property.
-     *
+     * 
      * @param contentType the contentType value to set.
      * @return the ServicesSubmitBatchHeaders object itself.
      */
+    @Generated
     public ServicesSubmitBatchHeaders setContentType(String contentType) {
         this.contentType = contentType;
+        return this;
+    }
+
+    /**
+     * Get the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @return the xMsRequestId value.
+     */
+    @Generated
+    public String getXMsRequestId() {
+        return this.xMsRequestId;
+    }
+
+    /**
+     * Set the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @param xMsRequestId the xMsRequestId value to set.
+     * @return the ServicesSubmitBatchHeaders object itself.
+     */
+    @Generated
+    public ServicesSubmitBatchHeaders setXMsRequestId(String xMsRequestId) {
+        this.xMsRequestId = xMsRequestId;
+        return this;
+    }
+
+    /**
+     * Get the xMsVersion property: The x-ms-version property.
+     * 
+     * @return the xMsVersion value.
+     */
+    @Generated
+    public String getXMsVersion() {
+        return this.xMsVersion;
+    }
+
+    /**
+     * Set the xMsVersion property: The x-ms-version property.
+     * 
+     * @param xMsVersion the xMsVersion value to set.
+     * @return the ServicesSubmitBatchHeaders object itself.
+     */
+    @Generated
+    public ServicesSubmitBatchHeaders setXMsVersion(String xMsVersion) {
+        this.xMsVersion = xMsVersion;
         return this;
     }
 }

@@ -4,42 +4,53 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The type of the query. Type: string. */
+/**
+ * The type of the ScriptActivityScriptBlock.
+ */
 public final class ScriptType extends ExpandableStringEnum<ScriptType> {
-    /** Static value Query for ScriptType. */
+    /**
+     * Static value Query for ScriptType.
+     */
+    @Generated
     public static final ScriptType QUERY = fromString("Query");
 
-    /** Static value NonQuery for ScriptType. */
+    /**
+     * Static value NonQuery for ScriptType.
+     */
+    @Generated
     public static final ScriptType NON_QUERY = fromString("NonQuery");
 
     /**
      * Creates a new instance of ScriptType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public ScriptType() {}
+    public ScriptType() {
+    }
 
     /**
      * Creates or finds a ScriptType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ScriptType.
      */
-    @JsonCreator
+    @Generated
     public static ScriptType fromString(String name) {
         return fromString(name, ScriptType.class);
     }
 
     /**
      * Gets known ScriptType values.
-     *
+     * 
      * @return known ScriptType values.
      */
+    @Generated
     public static Collection<ScriptType> values() {
         return values(ScriptType.class);
     }

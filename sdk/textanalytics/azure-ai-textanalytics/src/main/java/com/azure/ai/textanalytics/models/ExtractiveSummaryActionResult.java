@@ -8,15 +8,21 @@ import com.azure.ai.textanalytics.util.ExtractiveSummaryResultCollection;
 import com.azure.core.annotation.Immutable;
 
 /**
- * The {@link ExtractiveSummaryActionResult} model.
+ * The {@code ExtractiveSummaryActionResult} model.
  */
 @Immutable
 public final class ExtractiveSummaryActionResult extends TextAnalyticsActionResult {
     private ExtractiveSummaryResultCollection documentsResults;
 
     static {
-        ExtractiveSummaryActionResultPropertiesHelper.setAccessor(
-            (actionResult, documentsResults) -> actionResult.setDocumentsResults(documentsResults));
+        ExtractiveSummaryActionResultPropertiesHelper
+            .setAccessor((actionResult, documentsResults) -> actionResult.setDocumentsResults(documentsResults));
+    }
+
+    /**
+     * Constructs a {@code ExtractiveSummaryActionResult} model.
+     */
+    public ExtractiveSummaryActionResult() {
     }
 
     /**

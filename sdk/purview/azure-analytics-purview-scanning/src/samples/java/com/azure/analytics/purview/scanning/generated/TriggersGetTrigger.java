@@ -13,15 +13,14 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 
 public class TriggersGetTrigger {
     public static void main(String[] args) {
-        TriggersClient triggersClient =
-                new PurviewScanningClientBuilder()
-                        .credential(new DefaultAzureCredentialBuilder().build())
-                        .endpoint("{Endpoint}")
-                        .buildTriggersClient();
-        // BEGIN:com.azure.analytics.purview.scanning.generated.triggersgettrigger.triggersgettrigger
+        TriggersClient triggersClient
+            = new PurviewScanningClientBuilder().credential(new DefaultAzureCredentialBuilder().build())
+                .endpoint("{Endpoint}")
+                .buildTriggersClient();
+        // BEGIN:com.azure.analytics.purview.scanning.generated.triggers-get-trigger.triggers-get-trigger
         RequestOptions requestOptions = new RequestOptions();
-        Response<BinaryData> response =
-                triggersClient.getTriggerWithResponse("myDataSourceName", "myScanName", requestOptions);
-        // END:com.azure.analytics.purview.scanning.generated.triggersgettrigger.triggersgettrigger
+        Response<BinaryData> response
+            = triggersClient.getTriggerWithResponse("myDataSourceName", "myScanName", requestOptions);
+        // END:com.azure.analytics.purview.scanning.generated.triggers-get-trigger.triggers-get-trigger
     }
 }

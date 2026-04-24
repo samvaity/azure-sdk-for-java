@@ -7,20 +7,23 @@ package com.azure.resourcemanager.servicefabric.generated;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for ApplicationTypeVersions CreateOrUpdate. */
+/**
+ * Samples for ApplicationTypeVersions CreateOrUpdate.
+ */
 public final class ApplicationTypeVersionsCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/servicefabric/resource-manager/Microsoft.ServiceFabric/stable/2021-06-01/examples/ApplicationTypeVersionPutOperation_example.json
+     * x-ms-original-file:
+     * specification/servicefabric/resource-manager/Microsoft.ServiceFabric/stable/2021-06-01/examples/
+     * ApplicationTypeVersionPutOperation_example.json
      */
     /**
      * Sample code: Put an application type version.
-     *
+     * 
      * @param manager Entry point to ServiceFabricManager.
      */
-    public static void putAnApplicationTypeVersion(
-        com.azure.resourcemanager.servicefabric.ServiceFabricManager manager) {
-        manager
-            .applicationTypeVersions()
+    public static void
+        putAnApplicationTypeVersion(com.azure.resourcemanager.servicefabric.ServiceFabricManager manager) {
+        manager.applicationTypeVersions()
             .define("1.0")
             .withExistingApplicationType("resRg", "myCluster", "myAppType")
             .withTags(mapOf())
@@ -28,6 +31,7 @@ public final class ApplicationTypeVersionsCreateOrUpdateSamples {
             .create();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

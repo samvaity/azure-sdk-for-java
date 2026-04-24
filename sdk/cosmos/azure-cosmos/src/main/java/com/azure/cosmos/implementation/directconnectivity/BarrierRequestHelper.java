@@ -120,7 +120,9 @@ public class BarrierRequestHelper {
                 assert false : unknownAuthToken;
                 logger.error(unknownAuthToken);
                 throw Exceptions.propagate(
-                    new InternalServerErrorException(unknownAuthToken + " - " + RMResources.InternalServerError));
+                    new InternalServerErrorException(
+                        com.azure.cosmos.implementation.Exceptions.getInternalServerErrorMessage(unknownAuthToken),
+                        HttpConstants.SubStatusCodes.UNKNOWN_AUTHORIZATION_TOKEN_KIND));
         }
 
         if (!hasAadToken) {
@@ -128,6 +130,10 @@ public class BarrierRequestHelper {
         }
 
         barrierLsnRequest.requestContext = request.requestContext.clone();
+
+        // barrier requests are associated with the write/read operation
+        // copy over the fault injection context here
+        barrierLsnRequest.faultInjectionRequestContext = request.faultInjectionRequestContext;
 
         if (request.getPartitionKeyRangeIdentity() != null) {
             barrierLsnRequest.routeTo(request.getPartitionKeyRangeIdentity());
@@ -139,6 +145,8 @@ public class BarrierRequestHelper {
         if (request.getHeaders().get(WFConstants.BackendHeaders.COLLECTION_RID) != null) {
             barrierLsnRequest.getHeaders().put(WFConstants.BackendHeaders.COLLECTION_RID, request.getHeaders().get(WFConstants.BackendHeaders.COLLECTION_RID));
         }
+
+        barrierLsnRequest.isBarrierRequest = true;
 
         if (hasAadToken) {
             return authorizationTokenProvider.populateAuthorizationHeader(barrierLsnRequest);

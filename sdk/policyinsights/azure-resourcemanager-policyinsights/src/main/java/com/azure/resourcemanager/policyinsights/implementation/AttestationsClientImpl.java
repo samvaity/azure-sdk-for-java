@@ -27,8 +27,10 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.management.polling.PollResult;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.resourcemanager.policyinsights.fluent.AttestationsClient;
@@ -38,22 +40,28 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in AttestationsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in AttestationsClient.
+ */
 public final class AttestationsClientImpl implements AttestationsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final AttestationsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final PolicyInsightsClientImpl client;
 
     /**
      * Initializes an instance of AttestationsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     AttestationsClientImpl(PolicyInsightsClientImpl client) {
-        this.service =
-            RestProxy.create(AttestationsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(AttestationsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -62,297 +70,315 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "PolicyInsightsClient")
-    private interface AttestationsService {
-        @Headers({"Content-Type: application/json"})
+    @ServiceInterface(name = "PolicyInsightsClientAttestations")
+    public interface AttestationsService {
+        @Headers({ "Content-Type: application/json" })
         @Get("/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/attestations")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<AttestationListResult>> list(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$filter") String filter,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<AttestationListResult>> list(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @QueryParam("$top") Integer top,
+            @QueryParam("$filter") String filter, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/attestations")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AttestationListResult> listSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @QueryParam("$top") Integer top,
+            @QueryParam("$filter") String filter, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Put("/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
-        @ExpectedResponses({200, 201})
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtSubscription(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("attestationName") String attestationName,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") AttestationInner parameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtSubscription(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("attestationName") String attestationName,
+            @QueryParam("api-version") String apiVersion, @BodyParam("application/json") AttestationInner parameters,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200, 201 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> createOrUpdateAtSubscriptionSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("attestationName") String attestationName,
+            @QueryParam("api-version") String apiVersion, @BodyParam("application/json") AttestationInner parameters,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<AttestationInner>> getAtSubscription(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("attestationName") String attestationName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<AttestationInner>> getAtSubscription(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("attestationName") String attestationName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AttestationInner> getAtSubscriptionSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("attestationName") String attestationName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Delete("/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
-        @ExpectedResponses({200, 204})
+        @ExpectedResponses({ 200, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Void>> deleteAtSubscription(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("attestationName") String attestationName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<Void>> deleteAtSubscription(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("attestationName") String attestationName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights"
-                + "/attestations")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<AttestationListResult>> listByResourceGroup(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$filter") String filter,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Response<Void> deleteAtSubscriptionSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @PathParam("attestationName") String attestationName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights"
-                + "/attestations/{attestationName}")
-        @ExpectedResponses({200, 201})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights/attestations")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtResourceGroup(
-            @HostParam("$host") String endpoint,
+        Mono<Response<AttestationListResult>> listByResourceGroup(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("attestationName") String attestationName,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") AttestationInner parameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("$top") Integer top,
+            @QueryParam("$filter") String filter, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights"
-                + "/attestations/{attestationName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights/attestations")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<AttestationInner>> getByResourceGroup(
-            @HostParam("$host") String endpoint,
+        Response<AttestationListResult> listByResourceGroupSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("$top") Integer top,
+            @QueryParam("$filter") String filter, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200, 201 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtResourceGroup(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("attestationName") String attestationName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") AttestationInner parameters, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights"
-                + "/attestations/{attestationName}")
-        @ExpectedResponses({200, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Void>> delete(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> createOrUpdateAtResourceGroupSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("attestationName") String attestationName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") AttestationInner parameters, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<AttestationInner>> getByResourceGroup(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AttestationInner> getByResourceGroupSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200, 204 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Void>> delete(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200, 204 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<Void> deleteSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("/{resourceId}/providers/Microsoft.PolicyInsights/attestations")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<AttestationListResult>> listForResource(
-            @HostParam("$host") String endpoint,
-            @PathParam(value = "resourceId", encoded = true) String resourceId,
-            @QueryParam("$top") Integer top,
-            @QueryParam("$filter") String filter,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<AttestationListResult>> listForResource(@HostParam("$host") String endpoint,
+            @PathParam(value = "resourceId", encoded = true) String resourceId, @QueryParam("$top") Integer top,
+            @QueryParam("$filter") String filter, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/{resourceId}/providers/Microsoft.PolicyInsights/attestations")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AttestationListResult> listForResourceSync(@HostParam("$host") String endpoint,
+            @PathParam(value = "resourceId", encoded = true) String resourceId, @QueryParam("$top") Integer top,
+            @QueryParam("$filter") String filter, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Put("/{resourceId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
-        @ExpectedResponses({200, 201})
+        @ExpectedResponses({ 200, 201 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtResource(
-            @HostParam("$host") String endpoint,
+        Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtResource(@HostParam("$host") String endpoint,
             @PathParam(value = "resourceId", encoded = true) String resourceId,
-            @PathParam("attestationName") String attestationName,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") AttestationInner parameters,
-            @HeaderParam("Accept") String accept,
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") AttestationInner parameters, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/{resourceId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200, 201 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> createOrUpdateAtResourceSync(@HostParam("$host") String endpoint,
+            @PathParam(value = "resourceId", encoded = true) String resourceId,
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") AttestationInner parameters, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("/{resourceId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<AttestationInner>> getAtResource(
-            @HostParam("$host") String endpoint,
+        Mono<Response<AttestationInner>> getAtResource(@HostParam("$host") String endpoint,
             @PathParam(value = "resourceId", encoded = true) String resourceId,
-            @PathParam("attestationName") String attestationName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/{resourceId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AttestationInner> getAtResourceSync(@HostParam("$host") String endpoint,
+            @PathParam(value = "resourceId", encoded = true) String resourceId,
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Delete("/{resourceId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
-        @ExpectedResponses({200, 204})
+        @ExpectedResponses({ 200, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Void>> deleteAtResource(
-            @HostParam("$host") String endpoint,
+        Mono<Response<Void>> deleteAtResource(@HostParam("$host") String endpoint,
             @PathParam(value = "resourceId", encoded = true) String resourceId,
-            @PathParam("attestationName") String attestationName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/{resourceId}/providers/Microsoft.PolicyInsights/attestations/{attestationName}")
+        @ExpectedResponses({ 200, 204 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<Void> deleteAtResourceSync(@HostParam("$host") String endpoint,
+            @PathParam(value = "resourceId", encoded = true) String resourceId,
+            @PathParam("attestationName") String attestationName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<AttestationListResult>> listForSubscriptionNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AttestationListResult> listForSubscriptionNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<AttestationListResult>> listForResourceGroupNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AttestationListResult> listForResourceGroupNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<AttestationListResult>> listForResourceNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AttestationListResult> listForResourceNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets all attestations for the subscription.
-     *
+     * 
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all attestations for the subscription along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return all attestations for the subscription along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<AttestationInner>> listSinglePageAsync(Integer top, String filter) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            top,
-                            filter,
-                            apiVersion,
-                            accept,
-                            context))
-            .<PagedResponse<AttestationInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.list(this.client.getEndpoint(), this.client.getSubscriptionId(), top,
+                filter, apiVersion, accept, context))
+            .<PagedResponse<AttestationInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets all attestations for the subscription.
-     *
-     * @param top Maximum number of records to return.
-     * @param filter OData filter expression.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all attestations for the subscription along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AttestationInner>> listSinglePageAsync(Integer top, String filter, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        final String apiVersion = "2022-09-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .list(this.client.getEndpoint(), this.client.getSubscriptionId(), top, filter, apiVersion, accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * Gets all attestations for the subscription.
-     *
+     * 
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -362,13 +388,13 @@ public final class AttestationsClientImpl implements AttestationsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<AttestationInner> listAsync(Integer top, String filter) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(top, filter), nextLink -> listForSubscriptionNextSinglePageAsync(nextLink));
+        return new PagedFlux<>(() -> listSinglePageAsync(top, filter),
+            nextLink -> listForSubscriptionNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets all attestations for the subscription.
-     *
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return all attestations for the subscription as paginated response with {@link PagedFlux}.
@@ -377,31 +403,74 @@ public final class AttestationsClientImpl implements AttestationsClient {
     private PagedFlux<AttestationInner> listAsync() {
         final Integer top = null;
         final String filter = null;
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(top, filter), nextLink -> listForSubscriptionNextSinglePageAsync(nextLink));
+        return new PagedFlux<>(() -> listSinglePageAsync(top, filter),
+            nextLink -> listForSubscriptionNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets all attestations for the subscription.
-     *
+     * 
+     * @param top Maximum number of records to return.
+     * @param filter OData filter expression.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all attestations for the subscription along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AttestationInner> listSinglePage(Integer top, String filter) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<AttestationListResult> res = service.listSync(this.client.getEndpoint(),
+            this.client.getSubscriptionId(), top, filter, apiVersion, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Gets all attestations for the subscription.
+     * 
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all attestations for the subscription as paginated response with {@link PagedFlux}.
+     * @return all attestations for the subscription along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<AttestationInner> listAsync(Integer top, String filter, Context context) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(top, filter, context),
-            nextLink -> listForSubscriptionNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AttestationInner> listSinglePage(Integer top, String filter, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<AttestationListResult> res = service.listSync(this.client.getEndpoint(),
+            this.client.getSubscriptionId(), top, filter, apiVersion, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Gets all attestations for the subscription.
-     *
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return all attestations for the subscription as paginated response with {@link PagedIterable}.
@@ -410,12 +479,13 @@ public final class AttestationsClientImpl implements AttestationsClient {
     public PagedIterable<AttestationInner> list() {
         final Integer top = null;
         final String filter = null;
-        return new PagedIterable<>(listAsync(top, filter));
+        return new PagedIterable<>(() -> listSinglePage(top, filter),
+            nextLink -> listForSubscriptionNextSinglePage(nextLink));
     }
 
     /**
      * Gets all attestations for the subscription.
-     *
+     * 
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
      * @param context The context to associate with this operation.
@@ -426,12 +496,13 @@ public final class AttestationsClientImpl implements AttestationsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<AttestationInner> list(Integer top, String filter, Context context) {
-        return new PagedIterable<>(listAsync(top, filter, context));
+        return new PagedIterable<>(() -> listSinglePage(top, filter, context),
+            nextLink -> listForSubscriptionNextSinglePage(nextLink, context));
     }
 
     /**
      * Creates or updates an attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -440,19 +511,15 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtSubscriptionWithResponseAsync(
-        String attestationName, AttestationInner parameters) {
+    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtSubscriptionWithResponseAsync(String attestationName,
+        AttestationInner parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (attestationName == null) {
             return Mono
@@ -463,75 +530,96 @@ public final class AttestationsClientImpl implements AttestationsClient {
         } else {
             parameters.validate();
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .createOrUpdateAtSubscription(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            attestationName,
-                            apiVersion,
-                            parameters,
-                            accept,
-                            context))
+            .withContext(context -> service.createOrUpdateAtSubscription(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), attestationName, apiVersion, parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Creates or updates an attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an attestation resource along with {@link Response} on successful completion of {@link Mono}.
+     * @return an attestation resource along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtSubscriptionWithResponseAsync(
-        String attestationName, AttestationInner parameters, Context context) {
+    private Response<BinaryData> createOrUpdateAtSubscriptionWithResponse(String attestationName,
+        AttestationInner parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (attestationName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
         }
         if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
         } else {
             parameters.validate();
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .createOrUpdateAtSubscription(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                attestationName,
-                apiVersion,
-                parameters,
-                accept,
-                context);
+        return service.createOrUpdateAtSubscriptionSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            attestationName, apiVersion, parameters, accept, Context.NONE);
     }
 
     /**
      * Creates or updates an attestation at subscription scope.
-     *
+     * 
+     * @param attestationName The name of the attestation.
+     * @param parameters The attestation parameters.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return an attestation resource along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createOrUpdateAtSubscriptionWithResponse(String attestationName,
+        AttestationInner parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (attestationName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        return service.createOrUpdateAtSubscriptionSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            attestationName, apiVersion, parameters, accept, context);
+    }
+
+    /**
+     * Creates or updates an attestation at subscription scope.
+     * 
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -540,46 +628,17 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return the {@link PollerFlux} for polling of an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtSubscriptionAsync(
-        String attestationName, AttestationInner parameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateAtSubscriptionWithResponseAsync(attestationName, parameters);
-        return this
-            .client
-            .<AttestationInner, AttestationInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                AttestationInner.class,
-                AttestationInner.class,
-                this.client.getContext());
+    private PollerFlux<PollResult<AttestationInner>, AttestationInner>
+        beginCreateOrUpdateAtSubscriptionAsync(String attestationName, AttestationInner parameters) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = createOrUpdateAtSubscriptionWithResponseAsync(attestationName, parameters);
+        return this.client.<AttestationInner, AttestationInner>getLroResult(mono, this.client.getHttpPipeline(),
+            AttestationInner.class, AttestationInner.class, this.client.getContext());
     }
 
     /**
      * Creates or updates an attestation at subscription scope.
-     *
-     * @param attestationName The name of the attestation.
-     * @param parameters The attestation parameters.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of an attestation resource.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtSubscriptionAsync(
-        String attestationName, AttestationInner parameters, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateAtSubscriptionWithResponseAsync(attestationName, parameters, context);
-        return this
-            .client
-            .<AttestationInner, AttestationInner>getLroResult(
-                mono, this.client.getHttpPipeline(), AttestationInner.class, AttestationInner.class, context);
-    }
-
-    /**
-     * Creates or updates an attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -588,14 +647,16 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return the {@link SyncPoller} for polling of an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtSubscription(
-        String attestationName, AttestationInner parameters) {
-        return beginCreateOrUpdateAtSubscriptionAsync(attestationName, parameters).getSyncPoller();
+    public SyncPoller<PollResult<AttestationInner>, AttestationInner>
+        beginCreateOrUpdateAtSubscription(String attestationName, AttestationInner parameters) {
+        Response<BinaryData> response = createOrUpdateAtSubscriptionWithResponse(attestationName, parameters);
+        return this.client.<AttestationInner, AttestationInner>getLroResult(response, AttestationInner.class,
+            AttestationInner.class, Context.NONE);
     }
 
     /**
      * Creates or updates an attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
      * @param context The context to associate with this operation.
@@ -605,14 +666,16 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return the {@link SyncPoller} for polling of an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtSubscription(
-        String attestationName, AttestationInner parameters, Context context) {
-        return beginCreateOrUpdateAtSubscriptionAsync(attestationName, parameters, context).getSyncPoller();
+    public SyncPoller<PollResult<AttestationInner>, AttestationInner>
+        beginCreateOrUpdateAtSubscription(String attestationName, AttestationInner parameters, Context context) {
+        Response<BinaryData> response = createOrUpdateAtSubscriptionWithResponse(attestationName, parameters, context);
+        return this.client.<AttestationInner, AttestationInner>getLroResult(response, AttestationInner.class,
+            AttestationInner.class, context);
     }
 
     /**
      * Creates or updates an attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -621,35 +684,15 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<AttestationInner> createOrUpdateAtSubscriptionAsync(
-        String attestationName, AttestationInner parameters) {
-        return beginCreateOrUpdateAtSubscriptionAsync(attestationName, parameters)
-            .last()
+    private Mono<AttestationInner> createOrUpdateAtSubscriptionAsync(String attestationName,
+        AttestationInner parameters) {
+        return beginCreateOrUpdateAtSubscriptionAsync(attestationName, parameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Creates or updates an attestation at subscription scope.
-     *
-     * @param attestationName The name of the attestation.
-     * @param parameters The attestation parameters.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an attestation resource on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<AttestationInner> createOrUpdateAtSubscriptionAsync(
-        String attestationName, AttestationInner parameters, Context context) {
-        return beginCreateOrUpdateAtSubscriptionAsync(attestationName, parameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Creates or updates an attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -659,12 +702,12 @@ public final class AttestationsClientImpl implements AttestationsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public AttestationInner createOrUpdateAtSubscription(String attestationName, AttestationInner parameters) {
-        return createOrUpdateAtSubscriptionAsync(attestationName, parameters).block();
+        return beginCreateOrUpdateAtSubscription(attestationName, parameters).getFinalResult();
     }
 
     /**
      * Creates or updates an attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
      * @param context The context to associate with this operation.
@@ -674,101 +717,46 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public AttestationInner createOrUpdateAtSubscription(
-        String attestationName, AttestationInner parameters, Context context) {
-        return createOrUpdateAtSubscriptionAsync(attestationName, parameters, context).block();
+    public AttestationInner createOrUpdateAtSubscription(String attestationName, AttestationInner parameters,
+        Context context) {
+        return beginCreateOrUpdateAtSubscription(attestationName, parameters, context).getFinalResult();
     }
 
     /**
      * Gets an existing attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return an existing attestation at subscription scope along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<AttestationInner>> getAtSubscriptionWithResponseAsync(String attestationName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (attestationName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getAtSubscription(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            attestationName,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getAtSubscription(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), attestationName, apiVersion, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets an existing attestation at subscription scope.
-     *
-     * @param attestationName The name of the attestation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an existing attestation at subscription scope along with {@link Response} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AttestationInner>> getAtSubscriptionWithResponseAsync(
-        String attestationName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (attestationName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
-        }
-        final String apiVersion = "2022-09-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getAtSubscription(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                attestationName,
-                apiVersion,
-                accept,
-                context);
-    }
-
-    /**
-     * Gets an existing attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -782,7 +770,7 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Gets an existing attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -792,12 +780,29 @@ public final class AttestationsClientImpl implements AttestationsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<AttestationInner> getAtSubscriptionWithResponse(String attestationName, Context context) {
-        return getAtSubscriptionWithResponseAsync(attestationName, context).block();
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (attestationName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        return service.getAtSubscriptionSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            attestationName, apiVersion, accept, context);
     }
 
     /**
      * Gets an existing attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -811,7 +816,7 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Deletes an existing attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -821,81 +826,28 @@ public final class AttestationsClientImpl implements AttestationsClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<Void>> deleteAtSubscriptionWithResponseAsync(String attestationName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (attestationName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .deleteAtSubscription(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            attestationName,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.deleteAtSubscription(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), attestationName, apiVersion, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Deletes an existing attestation at subscription scope.
-     *
-     * @param attestationName The name of the attestation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> deleteAtSubscriptionWithResponseAsync(String attestationName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (attestationName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
-        }
-        final String apiVersion = "2022-09-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .deleteAtSubscription(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                attestationName,
-                apiVersion,
-                accept,
-                context);
-    }
-
-    /**
-     * Deletes an existing attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -909,7 +861,7 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Deletes an existing attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -919,12 +871,29 @@ public final class AttestationsClientImpl implements AttestationsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Void> deleteAtSubscriptionWithResponse(String attestationName, Context context) {
-        return deleteAtSubscriptionWithResponseAsync(attestationName, context).block();
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (attestationName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        return service.deleteAtSubscriptionSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            attestationName, apiVersion, accept, context);
     }
 
     /**
      * Deletes an existing attestation at subscription scope.
-     *
+     * 
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -937,7 +906,7 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Gets all attestations for the resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
@@ -945,113 +914,36 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return all attestations for the resource group along with {@link PagedResponse} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AttestationInner>> listByResourceGroupSinglePageAsync(
-        String resourceGroupName, Integer top, String filter) {
+    private Mono<PagedResponse<AttestationInner>> listByResourceGroupSinglePageAsync(String resourceGroupName,
+        Integer top, String filter) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
                 .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listByResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            top,
-                            filter,
-                            apiVersion,
-                            accept,
-                            context))
-            .<PagedResponse<AttestationInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.listByResourceGroup(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), resourceGroupName, top, filter, apiVersion, accept, context))
+            .<PagedResponse<AttestationInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets all attestations for the resource group.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param top Maximum number of records to return.
-     * @param filter OData filter expression.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all attestations for the resource group along with {@link PagedResponse} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AttestationInner>> listByResourceGroupSinglePageAsync(
-        String resourceGroupName, Integer top, String filter, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        final String apiVersion = "2022-09-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                top,
-                filter,
-                apiVersion,
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * Gets all attestations for the resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
@@ -1062,14 +954,13 @@ public final class AttestationsClientImpl implements AttestationsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<AttestationInner> listByResourceGroupAsync(String resourceGroupName, Integer top, String filter) {
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, top, filter),
+        return new PagedFlux<>(() -> listByResourceGroupSinglePageAsync(resourceGroupName, top, filter),
             nextLink -> listForResourceGroupNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets all attestations for the resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1080,14 +971,49 @@ public final class AttestationsClientImpl implements AttestationsClient {
     private PagedFlux<AttestationInner> listByResourceGroupAsync(String resourceGroupName) {
         final Integer top = null;
         final String filter = null;
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, top, filter),
+        return new PagedFlux<>(() -> listByResourceGroupSinglePageAsync(resourceGroupName, top, filter),
             nextLink -> listForResourceGroupNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets all attestations for the resource group.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param top Maximum number of records to return.
+     * @param filter OData filter expression.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all attestations for the resource group along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AttestationInner> listByResourceGroupSinglePage(String resourceGroupName, Integer top,
+        String filter) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<AttestationListResult> res = service.listByResourceGroupSync(this.client.getEndpoint(),
+            this.client.getSubscriptionId(), resourceGroupName, top, filter, apiVersion, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Gets all attestations for the resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
@@ -1095,19 +1021,36 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all attestations for the resource group as paginated response with {@link PagedFlux}.
+     * @return all attestations for the resource group along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<AttestationInner> listByResourceGroupAsync(
-        String resourceGroupName, Integer top, String filter, Context context) {
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, top, filter, context),
-            nextLink -> listForResourceGroupNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AttestationInner> listByResourceGroupSinglePage(String resourceGroupName, Integer top,
+        String filter, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<AttestationListResult> res = service.listByResourceGroupSync(this.client.getEndpoint(),
+            this.client.getSubscriptionId(), resourceGroupName, top, filter, apiVersion, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Gets all attestations for the resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1118,12 +1061,13 @@ public final class AttestationsClientImpl implements AttestationsClient {
     public PagedIterable<AttestationInner> listByResourceGroup(String resourceGroupName) {
         final Integer top = null;
         final String filter = null;
-        return new PagedIterable<>(listByResourceGroupAsync(resourceGroupName, top, filter));
+        return new PagedIterable<>(() -> listByResourceGroupSinglePage(resourceGroupName, top, filter),
+            nextLink -> listForResourceGroupNextSinglePage(nextLink));
     }
 
     /**
      * Gets all attestations for the resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
@@ -1134,14 +1078,15 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return all attestations for the resource group as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<AttestationInner> listByResourceGroup(
-        String resourceGroupName, Integer top, String filter, Context context) {
-        return new PagedIterable<>(listByResourceGroupAsync(resourceGroupName, top, filter, context));
+    public PagedIterable<AttestationInner> listByResourceGroup(String resourceGroupName, Integer top, String filter,
+        Context context) {
+        return new PagedIterable<>(() -> listByResourceGroupSinglePage(resourceGroupName, top, filter, context),
+            nextLink -> listForResourceGroupNextSinglePage(nextLink, context));
     }
 
     /**
      * Creates or updates an attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -1151,19 +1096,15 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtResourceGroupWithResponseAsync(
-        String resourceGroupName, String attestationName, AttestationInner parameters) {
+    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtResourceGroupWithResponseAsync(String resourceGroupName,
+        String attestationName, AttestationInner parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1178,82 +1119,107 @@ public final class AttestationsClientImpl implements AttestationsClient {
         } else {
             parameters.validate();
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .createOrUpdateAtResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            attestationName,
-                            apiVersion,
-                            parameters,
-                            accept,
-                            context))
+            .withContext(context -> service.createOrUpdateAtResourceGroup(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), resourceGroupName, attestationName, apiVersion, parameters, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Creates or updates an attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an attestation resource along with {@link Response} on successful completion of {@link Mono}.
+     * @return an attestation resource along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtResourceGroupWithResponseAsync(
-        String resourceGroupName, String attestationName, AttestationInner parameters, Context context) {
+    private Response<BinaryData> createOrUpdateAtResourceGroupWithResponse(String resourceGroupName,
+        String attestationName, AttestationInner parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (attestationName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
         }
         if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
         } else {
             parameters.validate();
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .createOrUpdateAtResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                attestationName,
-                apiVersion,
-                parameters,
-                accept,
-                context);
+        return service.createOrUpdateAtResourceGroupSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, attestationName, apiVersion, parameters, accept, Context.NONE);
     }
 
     /**
      * Creates or updates an attestation at resource group scope.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param attestationName The name of the attestation.
+     * @param parameters The attestation parameters.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return an attestation resource along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createOrUpdateAtResourceGroupWithResponse(String resourceGroupName,
+        String attestationName, AttestationInner parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (attestationName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        return service.createOrUpdateAtResourceGroupSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, attestationName, apiVersion, parameters, accept, context);
+    }
+
+    /**
+     * Creates or updates an attestation at resource group scope.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -1265,45 +1231,15 @@ public final class AttestationsClientImpl implements AttestationsClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtResourceGroupAsync(
         String resourceGroupName, String attestationName, AttestationInner parameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateAtResourceGroupWithResponseAsync(resourceGroupName, attestationName, parameters);
-        return this
-            .client
-            .<AttestationInner, AttestationInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                AttestationInner.class,
-                AttestationInner.class,
-                this.client.getContext());
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = createOrUpdateAtResourceGroupWithResponseAsync(resourceGroupName, attestationName, parameters);
+        return this.client.<AttestationInner, AttestationInner>getLroResult(mono, this.client.getHttpPipeline(),
+            AttestationInner.class, AttestationInner.class, this.client.getContext());
     }
 
     /**
      * Creates or updates an attestation at resource group scope.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param attestationName The name of the attestation.
-     * @param parameters The attestation parameters.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of an attestation resource.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtResourceGroupAsync(
-        String resourceGroupName, String attestationName, AttestationInner parameters, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateAtResourceGroupWithResponseAsync(resourceGroupName, attestationName, parameters, context);
-        return this
-            .client
-            .<AttestationInner, AttestationInner>getLroResult(
-                mono, this.client.getHttpPipeline(), AttestationInner.class, AttestationInner.class, context);
-    }
-
-    /**
-     * Creates or updates an attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -1315,12 +1251,15 @@ public final class AttestationsClientImpl implements AttestationsClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtResourceGroup(
         String resourceGroupName, String attestationName, AttestationInner parameters) {
-        return beginCreateOrUpdateAtResourceGroupAsync(resourceGroupName, attestationName, parameters).getSyncPoller();
+        Response<BinaryData> response
+            = createOrUpdateAtResourceGroupWithResponse(resourceGroupName, attestationName, parameters);
+        return this.client.<AttestationInner, AttestationInner>getLroResult(response, AttestationInner.class,
+            AttestationInner.class, Context.NONE);
     }
 
     /**
      * Creates or updates an attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -1333,13 +1272,15 @@ public final class AttestationsClientImpl implements AttestationsClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtResourceGroup(
         String resourceGroupName, String attestationName, AttestationInner parameters, Context context) {
-        return beginCreateOrUpdateAtResourceGroupAsync(resourceGroupName, attestationName, parameters, context)
-            .getSyncPoller();
+        Response<BinaryData> response
+            = createOrUpdateAtResourceGroupWithResponse(resourceGroupName, attestationName, parameters, context);
+        return this.client.<AttestationInner, AttestationInner>getLroResult(response, AttestationInner.class,
+            AttestationInner.class, context);
     }
 
     /**
      * Creates or updates an attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -1349,36 +1290,15 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<AttestationInner> createOrUpdateAtResourceGroupAsync(
-        String resourceGroupName, String attestationName, AttestationInner parameters) {
-        return beginCreateOrUpdateAtResourceGroupAsync(resourceGroupName, attestationName, parameters)
-            .last()
+    private Mono<AttestationInner> createOrUpdateAtResourceGroupAsync(String resourceGroupName, String attestationName,
+        AttestationInner parameters) {
+        return beginCreateOrUpdateAtResourceGroupAsync(resourceGroupName, attestationName, parameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Creates or updates an attestation at resource group scope.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param attestationName The name of the attestation.
-     * @param parameters The attestation parameters.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an attestation resource on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<AttestationInner> createOrUpdateAtResourceGroupAsync(
-        String resourceGroupName, String attestationName, AttestationInner parameters, Context context) {
-        return beginCreateOrUpdateAtResourceGroupAsync(resourceGroupName, attestationName, parameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Creates or updates an attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -1388,14 +1308,14 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public AttestationInner createOrUpdateAtResourceGroup(
-        String resourceGroupName, String attestationName, AttestationInner parameters) {
-        return createOrUpdateAtResourceGroupAsync(resourceGroupName, attestationName, parameters).block();
+    public AttestationInner createOrUpdateAtResourceGroup(String resourceGroupName, String attestationName,
+        AttestationInner parameters) {
+        return beginCreateOrUpdateAtResourceGroup(resourceGroupName, attestationName, parameters).getFinalResult();
     }
 
     /**
      * Creates or updates an attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -1406,36 +1326,33 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public AttestationInner createOrUpdateAtResourceGroup(
-        String resourceGroupName, String attestationName, AttestationInner parameters, Context context) {
-        return createOrUpdateAtResourceGroupAsync(resourceGroupName, attestationName, parameters, context).block();
+    public AttestationInner createOrUpdateAtResourceGroup(String resourceGroupName, String attestationName,
+        AttestationInner parameters, Context context) {
+        return beginCreateOrUpdateAtResourceGroup(resourceGroupName, attestationName, parameters, context)
+            .getFinalResult();
     }
 
     /**
      * Gets an existing attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return an existing attestation at resource group scope along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AttestationInner>> getByResourceGroupWithResponseAsync(
-        String resourceGroupName, String attestationName) {
+    private Mono<Response<AttestationInner>> getByResourceGroupWithResponseAsync(String resourceGroupName,
+        String attestationName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1445,75 +1362,17 @@ public final class AttestationsClientImpl implements AttestationsClient {
             return Mono
                 .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getByResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            attestationName,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getByResourceGroup(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), resourceGroupName, attestationName, apiVersion, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets an existing attestation at resource group scope.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param attestationName The name of the attestation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an existing attestation at resource group scope along with {@link Response} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AttestationInner>> getByResourceGroupWithResponseAsync(
-        String resourceGroupName, String attestationName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (attestationName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
-        }
-        final String apiVersion = "2022-09-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getByResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                attestationName,
-                apiVersion,
-                accept,
-                context);
-    }
-
-    /**
-     * Gets an existing attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1529,7 +1388,7 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Gets an existing attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @param context The context to associate with this operation.
@@ -1539,14 +1398,35 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an existing attestation at resource group scope along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<AttestationInner> getByResourceGroupWithResponse(
-        String resourceGroupName, String attestationName, Context context) {
-        return getByResourceGroupWithResponseAsync(resourceGroupName, attestationName, context).block();
+    public Response<AttestationInner> getByResourceGroupWithResponse(String resourceGroupName, String attestationName,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (attestationName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        return service.getByResourceGroupSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, attestationName, apiVersion, accept, context);
     }
 
     /**
      * Gets an existing attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1561,7 +1441,7 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Deletes an existing attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1572,16 +1452,12 @@ public final class AttestationsClientImpl implements AttestationsClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<Void>> deleteWithResponseAsync(String resourceGroupName, String attestationName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1591,74 +1467,17 @@ public final class AttestationsClientImpl implements AttestationsClient {
             return Mono
                 .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            attestationName,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, attestationName, apiVersion, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Deletes an existing attestation at resource group scope.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param attestationName The name of the attestation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> deleteWithResponseAsync(
-        String resourceGroupName, String attestationName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (attestationName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
-        }
-        final String apiVersion = "2022-09-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                attestationName,
-                apiVersion,
-                accept,
-                context);
-    }
-
-    /**
-     * Deletes an existing attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1673,7 +1492,7 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Deletes an existing attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @param context The context to associate with this operation.
@@ -1684,12 +1503,33 @@ public final class AttestationsClientImpl implements AttestationsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Void> deleteWithResponse(String resourceGroupName, String attestationName, Context context) {
-        return deleteWithResponseAsync(resourceGroupName, attestationName, context).block();
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (attestationName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            attestationName, apiVersion, accept, context);
     }
 
     /**
      * Deletes an existing attestation at resource group scope.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1703,92 +1543,39 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Gets all attestations for a resource.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all attestations for a resource along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return all attestations for a resource along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AttestationInner>> listForResourceSinglePageAsync(
-        String resourceId, Integer top, String filter) {
+    private Mono<PagedResponse<AttestationInner>> listForResourceSinglePageAsync(String resourceId, Integer top,
+        String filter) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceId == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listForResource(
-                            this.client.getEndpoint(), resourceId, top, filter, apiVersion, accept, context))
-            .<PagedResponse<AttestationInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.listForResource(this.client.getEndpoint(), resourceId, top, filter,
+                apiVersion, accept, context))
+            .<PagedResponse<AttestationInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets all attestations for a resource.
-     *
-     * @param resourceId Resource ID.
-     * @param top Maximum number of records to return.
-     * @param filter OData filter expression.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all attestations for a resource along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AttestationInner>> listForResourceSinglePageAsync(
-        String resourceId, Integer top, String filter, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
-        }
-        final String apiVersion = "2022-09-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listForResource(this.client.getEndpoint(), resourceId, top, filter, apiVersion, accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * Gets all attestations for a resource.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
@@ -1799,14 +1586,13 @@ public final class AttestationsClientImpl implements AttestationsClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<AttestationInner> listForResourceAsync(String resourceId, Integer top, String filter) {
-        return new PagedFlux<>(
-            () -> listForResourceSinglePageAsync(resourceId, top, filter),
+        return new PagedFlux<>(() -> listForResourceSinglePageAsync(resourceId, top, filter),
             nextLink -> listForResourceNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets all attestations for a resource.
-     *
+     * 
      * @param resourceId Resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1817,14 +1603,43 @@ public final class AttestationsClientImpl implements AttestationsClient {
     private PagedFlux<AttestationInner> listForResourceAsync(String resourceId) {
         final Integer top = null;
         final String filter = null;
-        return new PagedFlux<>(
-            () -> listForResourceSinglePageAsync(resourceId, top, filter),
+        return new PagedFlux<>(() -> listForResourceSinglePageAsync(resourceId, top, filter),
             nextLink -> listForResourceNextSinglePageAsync(nextLink));
     }
 
     /**
      * Gets all attestations for a resource.
-     *
+     * 
+     * @param resourceId Resource ID.
+     * @param top Maximum number of records to return.
+     * @param filter OData filter expression.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all attestations for a resource along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AttestationInner> listForResourceSinglePage(String resourceId, Integer top, String filter) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (resourceId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<AttestationListResult> res = service.listForResourceSync(this.client.getEndpoint(), resourceId, top,
+            filter, apiVersion, accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Gets all attestations for a resource.
+     * 
      * @param resourceId Resource ID.
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
@@ -1832,19 +1647,31 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all attestations for a resource as paginated response with {@link PagedFlux}.
+     * @return all attestations for a resource along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<AttestationInner> listForResourceAsync(
-        String resourceId, Integer top, String filter, Context context) {
-        return new PagedFlux<>(
-            () -> listForResourceSinglePageAsync(resourceId, top, filter, context),
-            nextLink -> listForResourceNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AttestationInner> listForResourceSinglePage(String resourceId, Integer top, String filter,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (resourceId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        Response<AttestationListResult> res = service.listForResourceSync(this.client.getEndpoint(), resourceId, top,
+            filter, apiVersion, accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Gets all attestations for a resource.
-     *
+     * 
      * @param resourceId Resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1855,12 +1682,13 @@ public final class AttestationsClientImpl implements AttestationsClient {
     public PagedIterable<AttestationInner> listForResource(String resourceId) {
         final Integer top = null;
         final String filter = null;
-        return new PagedIterable<>(listForResourceAsync(resourceId, top, filter));
+        return new PagedIterable<>(() -> listForResourceSinglePage(resourceId, top, filter),
+            nextLink -> listForResourceNextSinglePage(nextLink));
     }
 
     /**
      * Gets all attestations for a resource.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param top Maximum number of records to return.
      * @param filter OData filter expression.
@@ -1871,14 +1699,15 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return all attestations for a resource as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<AttestationInner> listForResource(
-        String resourceId, Integer top, String filter, Context context) {
-        return new PagedIterable<>(listForResourceAsync(resourceId, top, filter, context));
+    public PagedIterable<AttestationInner> listForResource(String resourceId, Integer top, String filter,
+        Context context) {
+        return new PagedIterable<>(() -> listForResourceSinglePage(resourceId, top, filter, context),
+            nextLink -> listForResourceNextSinglePage(nextLink, context));
     }
 
     /**
      * Creates or updates an attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -1888,13 +1717,11 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtResourceWithResponseAsync(
-        String resourceId, String attestationName, AttestationInner parameters) {
+    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtResourceWithResponseAsync(String resourceId,
+        String attestationName, AttestationInner parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceId == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
@@ -1908,67 +1735,96 @@ public final class AttestationsClientImpl implements AttestationsClient {
         } else {
             parameters.validate();
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .createOrUpdateAtResource(
-                            this.client.getEndpoint(),
-                            resourceId,
-                            attestationName,
-                            apiVersion,
-                            parameters,
-                            accept,
-                            context))
+            .withContext(context -> service.createOrUpdateAtResource(this.client.getEndpoint(), resourceId,
+                attestationName, apiVersion, parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Creates or updates an attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an attestation resource along with {@link Response} on successful completion of {@link Mono}.
+     * @return an attestation resource along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createOrUpdateAtResourceWithResponseAsync(
-        String resourceId, String attestationName, AttestationInner parameters, Context context) {
+    private Response<BinaryData> createOrUpdateAtResourceWithResponse(String resourceId, String attestationName,
+        AttestationInner parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
         }
         if (attestationName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
         }
         if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
         } else {
             parameters.validate();
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .createOrUpdateAtResource(
-                this.client.getEndpoint(), resourceId, attestationName, apiVersion, parameters, accept, context);
+        return service.createOrUpdateAtResourceSync(this.client.getEndpoint(), resourceId, attestationName, apiVersion,
+            parameters, accept, Context.NONE);
     }
 
     /**
      * Creates or updates an attestation at resource scope.
-     *
+     * 
+     * @param resourceId Resource ID.
+     * @param attestationName The name of the attestation.
+     * @param parameters The attestation parameters.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return an attestation resource along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createOrUpdateAtResourceWithResponse(String resourceId, String attestationName,
+        AttestationInner parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (resourceId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
+        }
+        if (attestationName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        return service.createOrUpdateAtResourceSync(this.client.getEndpoint(), resourceId, attestationName, apiVersion,
+            parameters, accept, context);
+    }
+
+    /**
+     * Creates or updates an attestation at resource scope.
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -1978,47 +1834,17 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return the {@link PollerFlux} for polling of an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtResourceAsync(
-        String resourceId, String attestationName, AttestationInner parameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateAtResourceWithResponseAsync(resourceId, attestationName, parameters);
-        return this
-            .client
-            .<AttestationInner, AttestationInner>getLroResult(
-                mono,
-                this.client.getHttpPipeline(),
-                AttestationInner.class,
-                AttestationInner.class,
-                this.client.getContext());
+    private PollerFlux<PollResult<AttestationInner>, AttestationInner>
+        beginCreateOrUpdateAtResourceAsync(String resourceId, String attestationName, AttestationInner parameters) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = createOrUpdateAtResourceWithResponseAsync(resourceId, attestationName, parameters);
+        return this.client.<AttestationInner, AttestationInner>getLroResult(mono, this.client.getHttpPipeline(),
+            AttestationInner.class, AttestationInner.class, this.client.getContext());
     }
 
     /**
      * Creates or updates an attestation at resource scope.
-     *
-     * @param resourceId Resource ID.
-     * @param attestationName The name of the attestation.
-     * @param parameters The attestation parameters.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of an attestation resource.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtResourceAsync(
-        String resourceId, String attestationName, AttestationInner parameters, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createOrUpdateAtResourceWithResponseAsync(resourceId, attestationName, parameters, context);
-        return this
-            .client
-            .<AttestationInner, AttestationInner>getLroResult(
-                mono, this.client.getHttpPipeline(), AttestationInner.class, AttestationInner.class, context);
-    }
-
-    /**
-     * Creates or updates an attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -2028,14 +1854,16 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return the {@link SyncPoller} for polling of an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtResource(
-        String resourceId, String attestationName, AttestationInner parameters) {
-        return beginCreateOrUpdateAtResourceAsync(resourceId, attestationName, parameters).getSyncPoller();
+    public SyncPoller<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtResource(String resourceId,
+        String attestationName, AttestationInner parameters) {
+        Response<BinaryData> response = createOrUpdateAtResourceWithResponse(resourceId, attestationName, parameters);
+        return this.client.<AttestationInner, AttestationInner>getLroResult(response, AttestationInner.class,
+            AttestationInner.class, Context.NONE);
     }
 
     /**
      * Creates or updates an attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -2046,14 +1874,17 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return the {@link SyncPoller} for polling of an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtResource(
-        String resourceId, String attestationName, AttestationInner parameters, Context context) {
-        return beginCreateOrUpdateAtResourceAsync(resourceId, attestationName, parameters, context).getSyncPoller();
+    public SyncPoller<PollResult<AttestationInner>, AttestationInner> beginCreateOrUpdateAtResource(String resourceId,
+        String attestationName, AttestationInner parameters, Context context) {
+        Response<BinaryData> response
+            = createOrUpdateAtResourceWithResponse(resourceId, attestationName, parameters, context);
+        return this.client.<AttestationInner, AttestationInner>getLroResult(response, AttestationInner.class,
+            AttestationInner.class, context);
     }
 
     /**
      * Creates or updates an attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -2063,36 +1894,15 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<AttestationInner> createOrUpdateAtResourceAsync(
-        String resourceId, String attestationName, AttestationInner parameters) {
-        return beginCreateOrUpdateAtResourceAsync(resourceId, attestationName, parameters)
-            .last()
+    private Mono<AttestationInner> createOrUpdateAtResourceAsync(String resourceId, String attestationName,
+        AttestationInner parameters) {
+        return beginCreateOrUpdateAtResourceAsync(resourceId, attestationName, parameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Creates or updates an attestation at resource scope.
-     *
-     * @param resourceId Resource ID.
-     * @param attestationName The name of the attestation.
-     * @param parameters The attestation parameters.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an attestation resource on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<AttestationInner> createOrUpdateAtResourceAsync(
-        String resourceId, String attestationName, AttestationInner parameters, Context context) {
-        return beginCreateOrUpdateAtResourceAsync(resourceId, attestationName, parameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Creates or updates an attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -2102,14 +1912,14 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public AttestationInner createOrUpdateAtResource(
-        String resourceId, String attestationName, AttestationInner parameters) {
-        return createOrUpdateAtResourceAsync(resourceId, attestationName, parameters).block();
+    public AttestationInner createOrUpdateAtResource(String resourceId, String attestationName,
+        AttestationInner parameters) {
+        return beginCreateOrUpdateAtResource(resourceId, attestationName, parameters).getFinalResult();
     }
 
     /**
      * Creates or updates an attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @param parameters The attestation parameters.
@@ -2120,29 +1930,27 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an attestation resource.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public AttestationInner createOrUpdateAtResource(
-        String resourceId, String attestationName, AttestationInner parameters, Context context) {
-        return createOrUpdateAtResourceAsync(resourceId, attestationName, parameters, context).block();
+    public AttestationInner createOrUpdateAtResource(String resourceId, String attestationName,
+        AttestationInner parameters, Context context) {
+        return beginCreateOrUpdateAtResource(resourceId, attestationName, parameters, context).getFinalResult();
     }
 
     /**
      * Gets an existing attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an existing attestation at resource scope along with {@link Response} on successful completion of {@link
-     *     Mono}.
+     * @return an existing attestation at resource scope along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<AttestationInner>> getAtResourceWithResponseAsync(String resourceId, String attestationName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceId == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
@@ -2151,55 +1959,17 @@ public final class AttestationsClientImpl implements AttestationsClient {
             return Mono
                 .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getAtResource(
-                            this.client.getEndpoint(), resourceId, attestationName, apiVersion, accept, context))
+            .withContext(context -> service.getAtResource(this.client.getEndpoint(), resourceId, attestationName,
+                apiVersion, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets an existing attestation at resource scope.
-     *
-     * @param resourceId Resource ID.
-     * @param attestationName The name of the attestation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an existing attestation at resource scope along with {@link Response} on successful completion of {@link
-     *     Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AttestationInner>> getAtResourceWithResponseAsync(
-        String resourceId, String attestationName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
-        }
-        if (attestationName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
-        }
-        final String apiVersion = "2022-09-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getAtResource(this.client.getEndpoint(), resourceId, attestationName, apiVersion, accept, context);
-    }
-
-    /**
-     * Gets an existing attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2215,7 +1985,7 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Gets an existing attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @param context The context to associate with this operation.
@@ -2225,14 +1995,30 @@ public final class AttestationsClientImpl implements AttestationsClient {
      * @return an existing attestation at resource scope along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<AttestationInner> getAtResourceWithResponse(
-        String resourceId, String attestationName, Context context) {
-        return getAtResourceWithResponseAsync(resourceId, attestationName, context).block();
+    public Response<AttestationInner> getAtResourceWithResponse(String resourceId, String attestationName,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (resourceId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
+        }
+        if (attestationName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        return service.getAtResourceSync(this.client.getEndpoint(), resourceId, attestationName, apiVersion, accept,
+            context);
     }
 
     /**
      * Gets an existing attestation at resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2247,7 +2033,7 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Deletes an existing attestation at individual resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2258,10 +2044,8 @@ public final class AttestationsClientImpl implements AttestationsClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<Void>> deleteAtResourceWithResponseAsync(String resourceId, String attestationName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (resourceId == null) {
             return Mono.error(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
@@ -2270,54 +2054,17 @@ public final class AttestationsClientImpl implements AttestationsClient {
             return Mono
                 .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
         }
-        final String apiVersion = "2022-09-01";
+        final String apiVersion = "2024-10-01";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .deleteAtResource(
-                            this.client.getEndpoint(), resourceId, attestationName, apiVersion, accept, context))
+            .withContext(context -> service.deleteAtResource(this.client.getEndpoint(), resourceId, attestationName,
+                apiVersion, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Deletes an existing attestation at individual resource scope.
-     *
-     * @param resourceId Resource ID.
-     * @param attestationName The name of the attestation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> deleteAtResourceWithResponseAsync(
-        String resourceId, String attestationName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (resourceId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
-        }
-        if (attestationName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
-        }
-        final String apiVersion = "2022-09-01";
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .deleteAtResource(this.client.getEndpoint(), resourceId, attestationName, apiVersion, accept, context);
-    }
-
-    /**
-     * Deletes an existing attestation at individual resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2332,7 +2079,7 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Deletes an existing attestation at individual resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @param context The context to associate with this operation.
@@ -2343,12 +2090,28 @@ public final class AttestationsClientImpl implements AttestationsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<Void> deleteAtResourceWithResponse(String resourceId, String attestationName, Context context) {
-        return deleteAtResourceWithResponseAsync(resourceId, attestationName, context).block();
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (resourceId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceId is required and cannot be null."));
+        }
+        if (attestationName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter attestationName is required and cannot be null."));
+        }
+        final String apiVersion = "2024-10-01";
+        final String accept = "application/json";
+        return service.deleteAtResourceSync(this.client.getEndpoint(), resourceId, attestationName, apiVersion, accept,
+            context);
     }
 
     /**
      * Deletes an existing attestation at individual resource scope.
-     *
+     * 
      * @param resourceId Resource ID.
      * @param attestationName The name of the attestation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2362,9 +2125,8 @@ public final class AttestationsClientImpl implements AttestationsClient {
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2376,70 +2138,77 @@ public final class AttestationsClientImpl implements AttestationsClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listForSubscriptionNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<AttestationInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<AttestationInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
-     * @param context The context to associate with this operation.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return list of attestations along with {@link PagedResponse} on successful completion of {@link Mono}.
+     * @return list of attestations along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AttestationInner>> listForSubscriptionNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<AttestationInner> listForSubscriptionNextSinglePage(String nextLink) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listForSubscriptionNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<AttestationListResult> res
+            = service.listForSubscriptionNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return list of attestations along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AttestationInner> listForSubscriptionNextSinglePage(String nextLink, Context context) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<AttestationListResult> res
+            = service.listForSubscriptionNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2451,70 +2220,77 @@ public final class AttestationsClientImpl implements AttestationsClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listForResourceGroupNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<AttestationInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<AttestationInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
-     * @param context The context to associate with this operation.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return list of attestations along with {@link PagedResponse} on successful completion of {@link Mono}.
+     * @return list of attestations along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AttestationInner>> listForResourceGroupNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<AttestationInner> listForResourceGroupNextSinglePage(String nextLink) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listForResourceGroupNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<AttestationListResult> res
+            = service.listForResourceGroupNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return list of attestations along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AttestationInner> listForResourceGroupNextSinglePage(String nextLink, Context context) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<AttestationListResult> res
+            = service.listForResourceGroupNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -2526,60 +2302,71 @@ public final class AttestationsClientImpl implements AttestationsClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(context -> service.listForResourceNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<AttestationInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<AttestationInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return list of attestations along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AttestationInner> listForResourceNextSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<AttestationListResult> res
+            = service.listForResourceNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return list of attestations along with {@link PagedResponse} on successful completion of {@link Mono}.
+     * @return list of attestations along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AttestationInner>> listForResourceNextSinglePageAsync(String nextLink, Context context) {
+    private PagedResponse<AttestationInner> listForResourceNextSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listForResourceNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<AttestationListResult> res
+            = service.listForResourceNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(AttestationsClientImpl.class);
 }

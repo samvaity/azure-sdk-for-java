@@ -5,42 +5,55 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** A list activity runs. */
+/**
+ * A list activity runs.
+ */
 @Fluent
-public final class ActivityRunsQueryResponse {
+public final class ActivityRunsQueryResponse implements JsonSerializable<ActivityRunsQueryResponse> {
     /*
      * List of activity runs.
      */
-    @JsonProperty(value = "value", required = true)
+    @Generated
     private List<ActivityRun> value;
 
     /*
      * The continuation token for getting the next page of results, if any remaining results exist, null otherwise.
      */
-    @JsonProperty(value = "continuationToken")
+    @Generated
     private String continuationToken;
 
-    /** Creates an instance of ActivityRunsQueryResponse class. */
-    public ActivityRunsQueryResponse() {}
+    /**
+     * Creates an instance of ActivityRunsQueryResponse class.
+     */
+    @Generated
+    public ActivityRunsQueryResponse() {
+    }
 
     /**
      * Get the value property: List of activity runs.
-     *
+     * 
      * @return the value value.
      */
+    @Generated
     public List<ActivityRun> getValue() {
         return this.value;
     }
 
     /**
      * Set the value property: List of activity runs.
-     *
+     * 
      * @param value the value value to set.
      * @return the ActivityRunsQueryResponse object itself.
      */
+    @Generated
     public ActivityRunsQueryResponse setValue(List<ActivityRun> value) {
         this.value = value;
         return this;
@@ -49,9 +62,10 @@ public final class ActivityRunsQueryResponse {
     /**
      * Get the continuationToken property: The continuation token for getting the next page of results, if any remaining
      * results exist, null otherwise.
-     *
+     * 
      * @return the continuationToken value.
      */
+    @Generated
     public String getContinuationToken() {
         return this.continuationToken;
     }
@@ -59,12 +73,56 @@ public final class ActivityRunsQueryResponse {
     /**
      * Set the continuationToken property: The continuation token for getting the next page of results, if any remaining
      * results exist, null otherwise.
-     *
+     * 
      * @param continuationToken the continuationToken value to set.
      * @return the ActivityRunsQueryResponse object itself.
      */
+    @Generated
     public ActivityRunsQueryResponse setContinuationToken(String continuationToken) {
         this.continuationToken = continuationToken;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("value", this.value, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("continuationToken", this.continuationToken);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ActivityRunsQueryResponse from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ActivityRunsQueryResponse if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ActivityRunsQueryResponse.
+     */
+    @Generated
+    public static ActivityRunsQueryResponse fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ActivityRunsQueryResponse deserializedActivityRunsQueryResponse = new ActivityRunsQueryResponse();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("value".equals(fieldName)) {
+                    List<ActivityRun> value = reader.readArray(reader1 -> ActivityRun.fromJson(reader1));
+                    deserializedActivityRunsQueryResponse.value = value;
+                } else if ("continuationToken".equals(fieldName)) {
+                    deserializedActivityRunsQueryResponse.continuationToken = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedActivityRunsQueryResponse;
+        });
     }
 }

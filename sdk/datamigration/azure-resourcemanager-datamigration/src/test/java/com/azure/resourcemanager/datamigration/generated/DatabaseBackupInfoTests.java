@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.DatabaseBackupInfo;
 public final class DatabaseBackupInfoTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DatabaseBackupInfo model =
-            BinaryData
-                .fromString(
-                    "{\"databaseName\":\"stbz\",\"backupType\":\"Database\",\"backupFiles\":[\"uqn\",\"ophzfylsgcrp\"],\"position\":1192657678,\"isDamaged\":true,\"isCompressed\":true,\"familyCount\":691935711,\"backupFinishDate\":\"2021-01-26T14:06:14Z\"}")
-                .toObject(DatabaseBackupInfo.class);
+        DatabaseBackupInfo model = BinaryData.fromString(
+            "{\"databaseName\":\"w\",\"backupType\":\"Database\",\"backupFiles\":[\"cgbfzuscstun\"],\"position\":1668969246,\"isDamaged\":false,\"isCompressed\":false,\"familyCount\":194023020,\"backupFinishDate\":\"2021-03-23T14:39:02Z\"}")
+            .toObject(DatabaseBackupInfo.class);
     }
 
     @org.junit.jupiter.api.Test

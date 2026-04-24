@@ -4,45 +4,59 @@
 
 package com.azure.ai.metricsadvisor.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** detection direction. */
+/**
+ * detection direction.
+ */
 public final class AnomalyDetectorDirection extends ExpandableStringEnum<AnomalyDetectorDirection> {
-    /** Static value Both for AnomalyDetectorDirection. */
+    /**
+     * Static value Both for AnomalyDetectorDirection.
+     */
+    @Generated
     public static final AnomalyDetectorDirection BOTH = fromString("Both");
 
-    /** Static value Down for AnomalyDetectorDirection. */
+    /**
+     * Static value Down for AnomalyDetectorDirection.
+     */
+    @Generated
     public static final AnomalyDetectorDirection DOWN = fromString("Down");
 
-    /** Static value Up for AnomalyDetectorDirection. */
+    /**
+     * Static value Up for AnomalyDetectorDirection.
+     */
+    @Generated
     public static final AnomalyDetectorDirection UP = fromString("Up");
 
     /**
      * Creates a new instance of AnomalyDetectorDirection value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public AnomalyDetectorDirection() {}
+    public AnomalyDetectorDirection() {
+    }
 
     /**
      * Creates or finds a AnomalyDetectorDirection from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding AnomalyDetectorDirection.
      */
-    @JsonCreator
+    @Generated
     public static AnomalyDetectorDirection fromString(String name) {
         return fromString(name, AnomalyDetectorDirection.class);
     }
 
     /**
      * Gets known AnomalyDetectorDirection values.
-     *
+     * 
      * @return known AnomalyDetectorDirection values.
      */
+    @Generated
     public static Collection<AnomalyDetectorDirection> values() {
         return values(AnomalyDetectorDirection.class);
     }

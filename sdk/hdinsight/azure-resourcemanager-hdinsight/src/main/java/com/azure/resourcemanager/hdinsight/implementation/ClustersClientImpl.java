@@ -29,8 +29,10 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.management.polling.PollResult;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.PollerFlux;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.resourcemanager.hdinsight.fluent.ClustersClient;
@@ -51,17 +53,23 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ClustersClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ClustersClient.
+ */
 public final class ClustersClientImpl implements ClustersClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ClustersService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final HDInsightManagementClientImpl client;
 
     /**
      * Initializes an instance of ClustersClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ClustersClientImpl(HDInsightManagementClientImpl client) {
@@ -74,238 +82,328 @@ public final class ClustersClientImpl implements ClustersClient {
      * perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "HDInsightManagementC")
+    @ServiceInterface(name = "HDInsightManagementClientClusters")
     public interface ClustersService {
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> create(
-            @HostParam("$host") String endpoint,
+        Mono<Response<Flux<ByteBuffer>>> create(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") ClusterCreateParametersExtended parameters,
-            @HeaderParam("Accept") String accept,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> createSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ClusterCreateParametersExtended parameters,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<ClusterInner>> update(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ClusterPatchParameters parameters, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Patch(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ClusterInner>> update(
-            @HostParam("$host") String endpoint,
+        Response<ClusterInner> updateSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
             @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") ClusterPatchParameters parameters,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") ClusterPatchParameters parameters, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
-        @ExpectedResponses({200, 202, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
+        @ExpectedResponses({ 200, 202, 204 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> delete(
-            @HostParam("$host") String endpoint,
+        Mono<Response<Flux<ByteBuffer>>> delete(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
+        @ExpectedResponses({ 200, 202, 204 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> deleteSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<ClusterInner>> getByResourceGroup(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ClusterInner> getByResourceGroupSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<ClusterListResult>> listByResourceGroup(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ClusterListResult> listByResourceGroupSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/roles/{roleName}/resize")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> resize(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @PathParam("roleName") RoleName roleName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ClusterResizeParameters parameters, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/roles/{roleName}/resize")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ClusterInner>> getByResourceGroup(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> resizeSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @PathParam("roleName") RoleName roleName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ClusterResizeParameters parameters, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/roles/{roleName}/autoscale")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ClusterListResult>> listByResourceGroup(
-            @HostParam("$host") String endpoint,
+        Mono<Response<Flux<ByteBuffer>>> updateAutoScaleConfiguration(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/roles/{roleName}/resize")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> resize(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
-            @PathParam("roleName") RoleName roleName,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") ClusterResizeParameters parameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/roles/{roleName}/autoscale")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> updateAutoScaleConfiguration(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
-            @PathParam("roleName") RoleName roleName,
-            @QueryParam("api-version") String apiVersion,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @PathParam("roleName") RoleName roleName, @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") AutoscaleConfigurationUpdateParameter parameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/roles/{roleName}/autoscale")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> updateAutoScaleConfigurationSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @PathParam("roleName") RoleName roleName, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") AutoscaleConfigurationUpdateParameter parameters,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/clusters")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ClusterListResult>> list(
-            @HostParam("$host") String endpoint,
-            @PathParam("subscriptionId") String subscriptionId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<ClusterListResult>> list(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/rotatediskencryptionkey")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/providers/Microsoft.HDInsight/clusters")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> rotateDiskEncryptionKey(
-            @HostParam("$host") String endpoint,
+        Response<ClusterListResult> listSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/rotatediskencryptionkey")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> rotateDiskEncryptionKey(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") ClusterDiskEncryptionParameters parameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/getGatewaySettings")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/rotatediskencryptionkey")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<GatewaySettingsInner>> getGatewaySettings(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> rotateDiskEncryptionKeySync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
             @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @BodyParam("application/json") ClusterDiskEncryptionParameters parameters,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/updateGatewaySettings")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/getGatewaySettings")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> updateGatewaySettings(
-            @HostParam("$host") String endpoint,
+        Mono<Response<GatewaySettingsInner>> getGatewaySettings(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/getGatewaySettings")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<GatewaySettingsInner> getGatewaySettingsSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/updateGatewaySettings")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> updateGatewaySettings(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") UpdateGatewaySettingsParameters parameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/azureasyncoperations/{operationId}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/updateGatewaySettings")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<AsyncOperationResultInner>> getAzureAsyncOperationStatus(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> updateGatewaySettingsSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
             @QueryParam("api-version") String apiVersion,
-            @PathParam("operationId") String operationId,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @BodyParam("application/json") UpdateGatewaySettingsParameters parameters,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/updateClusterIdentityCertificate")
-        @ExpectedResponses({200, 202})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/azureasyncoperations/{operationId}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> updateIdentityCertificate(
-            @HostParam("$host") String endpoint,
+        Mono<Response<AsyncOperationResultInner>> getAzureAsyncOperationStatus(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion, @PathParam("operationId") String operationId,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/azureasyncoperations/{operationId}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<AsyncOperationResultInner> getAzureAsyncOperationStatusSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion, @PathParam("operationId") String operationId,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/updateClusterIdentityCertificate")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> updateIdentityCertificate(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") UpdateClusterIdentityCertificateParameters parameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/executeScriptActions")
-        @ExpectedResponses({200, 202})
-        @UnexpectedResponseExceptionType(
-            value = ManagementException.class,
-            code = {404})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/updateClusterIdentityCertificate")
+        @ExpectedResponses({ 200, 202 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Flux<ByteBuffer>>> executeScriptActions(
-            @HostParam("$host") String endpoint,
+        Response<BinaryData> updateIdentityCertificateSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("clusterName") String clusterName,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") UpdateClusterIdentityCertificateParameters parameters,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/executeScriptActions")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(value = ManagementException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<Flux<ByteBuffer>>> executeScriptActions(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") ExecuteScriptActionParameters parameters,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Post("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/executeScriptActions")
+        @ExpectedResponses({ 200, 202 })
+        @UnexpectedResponseExceptionType(value = ManagementException.class, code = { 404 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<BinaryData> executeScriptActionsSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("clusterName") String clusterName,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") ExecuteScriptActionParameters parameters,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<ClusterListResult>> listByResourceGroupNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ClusterListResult>> listNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Response<ClusterListResult> listByResourceGroupNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<ClusterListResult>> listNext(@PathParam(value = "nextLink", encoded = true) String nextLink,
+            @HostParam("$host") String endpoint, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Response<ClusterListResult> listNextSync(@PathParam(value = "nextLink", encoded = true) String nextLink,
+            @HostParam("$host") String endpoint, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Creates a new HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster create request.
@@ -315,19 +413,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the HDInsight cluster along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(
-        String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters) {
+    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(String resourceGroupName, String clusterName,
+        ClusterCreateParametersExtended parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -343,24 +437,57 @@ public final class ClustersClientImpl implements ClustersClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .create(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            this.client.getApiVersion(),
-                            parameters,
-                            accept,
-                            context))
+            .withContext(context -> service.create(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Creates a new HDInsight cluster with the specified parameters.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group.
+     * @param clusterName The name of the cluster.
+     * @param parameters The cluster create request.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the HDInsight cluster along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createWithResponse(String resourceGroupName, String clusterName,
+        ClusterCreateParametersExtended parameters) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String accept = "application/json";
+        return service.createSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            clusterName, this.client.getApiVersion(), parameters, accept, Context.NONE);
+    }
+
+    /**
+     * Creates a new HDInsight cluster with the specified parameters.
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster create request.
@@ -368,52 +495,43 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the HDInsight cluster along with {@link Response} on successful completion of {@link Mono}.
+     * @return the HDInsight cluster along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> createWithResponseAsync(
-        String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters, Context context) {
+    private Response<BinaryData> createWithResponse(String resourceGroupName, String clusterName,
+        ClusterCreateParametersExtended parameters, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
         }
         if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
         } else {
             parameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .create(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                this.client.getApiVersion(),
-                parameters,
-                accept,
-                context);
+        return service.createSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            clusterName, this.client.getApiVersion(), parameters, accept, context);
     }
 
     /**
      * Creates a new HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster create request.
@@ -423,42 +541,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link PollerFlux} for polling of the HDInsight cluster.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<ClusterInner>, ClusterInner> beginCreateAsync(
-        String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters) {
+    private PollerFlux<PollResult<ClusterInner>, ClusterInner> beginCreateAsync(String resourceGroupName,
+        String clusterName, ClusterCreateParametersExtended parameters) {
         Mono<Response<Flux<ByteBuffer>>> mono = createWithResponseAsync(resourceGroupName, clusterName, parameters);
-        return this
-            .client
-            .<ClusterInner, ClusterInner>getLroResult(
-                mono, this.client.getHttpPipeline(), ClusterInner.class, ClusterInner.class, this.client.getContext());
+        return this.client.<ClusterInner, ClusterInner>getLroResult(mono, this.client.getHttpPipeline(),
+            ClusterInner.class, ClusterInner.class, this.client.getContext());
     }
 
     /**
      * Creates a new HDInsight cluster with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The cluster create request.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of the HDInsight cluster.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<ClusterInner>, ClusterInner> beginCreateAsync(
-        String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            createWithResponseAsync(resourceGroupName, clusterName, parameters, context);
-        return this
-            .client
-            .<ClusterInner, ClusterInner>getLroResult(
-                mono, this.client.getHttpPipeline(), ClusterInner.class, ClusterInner.class, context);
-    }
-
-    /**
-     * Creates a new HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster create request.
@@ -468,14 +560,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of the HDInsight cluster.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<ClusterInner>, ClusterInner> beginCreate(
-        String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters) {
-        return this.beginCreateAsync(resourceGroupName, clusterName, parameters).getSyncPoller();
+    public SyncPoller<PollResult<ClusterInner>, ClusterInner> beginCreate(String resourceGroupName, String clusterName,
+        ClusterCreateParametersExtended parameters) {
+        Response<BinaryData> response = createWithResponse(resourceGroupName, clusterName, parameters);
+        return this.client.<ClusterInner, ClusterInner>getLroResult(response, ClusterInner.class, ClusterInner.class,
+            Context.NONE);
     }
 
     /**
      * Creates a new HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster create request.
@@ -486,14 +580,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of the HDInsight cluster.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<ClusterInner>, ClusterInner> beginCreate(
-        String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters, Context context) {
-        return this.beginCreateAsync(resourceGroupName, clusterName, parameters, context).getSyncPoller();
+    public SyncPoller<PollResult<ClusterInner>, ClusterInner> beginCreate(String resourceGroupName, String clusterName,
+        ClusterCreateParametersExtended parameters, Context context) {
+        Response<BinaryData> response = createWithResponse(resourceGroupName, clusterName, parameters, context);
+        return this.client.<ClusterInner, ClusterInner>getLroResult(response, ClusterInner.class, ClusterInner.class,
+            context);
     }
 
     /**
      * Creates a new HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster create request.
@@ -503,36 +599,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the HDInsight cluster on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ClusterInner> createAsync(
-        String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters) {
-        return beginCreateAsync(resourceGroupName, clusterName, parameters)
-            .last()
+    private Mono<ClusterInner> createAsync(String resourceGroupName, String clusterName,
+        ClusterCreateParametersExtended parameters) {
+        return beginCreateAsync(resourceGroupName, clusterName, parameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Creates a new HDInsight cluster with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The cluster create request.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the HDInsight cluster on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ClusterInner> createAsync(
-        String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters, Context context) {
-        return beginCreateAsync(resourceGroupName, clusterName, parameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Creates a new HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster create request.
@@ -542,14 +617,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the HDInsight cluster.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ClusterInner create(
-        String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters) {
-        return createAsync(resourceGroupName, clusterName, parameters).block();
+    public ClusterInner create(String resourceGroupName, String clusterName,
+        ClusterCreateParametersExtended parameters) {
+        return beginCreate(resourceGroupName, clusterName, parameters).getFinalResult();
     }
 
     /**
      * Creates a new HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster create request.
@@ -560,14 +635,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the HDInsight cluster.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ClusterInner create(
-        String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters, Context context) {
-        return createAsync(resourceGroupName, clusterName, parameters, context).block();
+    public ClusterInner create(String resourceGroupName, String clusterName, ClusterCreateParametersExtended parameters,
+        Context context) {
+        return beginCreate(resourceGroupName, clusterName, parameters, context).getFinalResult();
     }
 
     /**
      * Patch HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster patch request.
@@ -577,19 +652,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the HDInsight cluster along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ClusterInner>> updateWithResponseAsync(
-        String resourceGroupName, String clusterName, ClusterPatchParameters parameters) {
+    private Mono<Response<ClusterInner>> updateWithResponseAsync(String resourceGroupName, String clusterName,
+        ClusterPatchParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -605,77 +676,14 @@ public final class ClustersClientImpl implements ClustersClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .update(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            this.client.getApiVersion(),
-                            parameters,
-                            accept,
-                            context))
+            .withContext(context -> service.update(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Patch HDInsight cluster with the specified parameters.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The cluster patch request.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the HDInsight cluster along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ClusterInner>> updateWithResponseAsync(
-        String resourceGroupName, String clusterName, ClusterPatchParameters parameters, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
-        }
-        if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
-        } else {
-            parameters.validate();
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .update(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                this.client.getApiVersion(),
-                parameters,
-                accept,
-                context);
-    }
-
-    /**
-     * Patch HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster patch request.
@@ -685,15 +693,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the HDInsight cluster on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ClusterInner> updateAsync(
-        String resourceGroupName, String clusterName, ClusterPatchParameters parameters) {
+    private Mono<ClusterInner> updateAsync(String resourceGroupName, String clusterName,
+        ClusterPatchParameters parameters) {
         return updateWithResponseAsync(resourceGroupName, clusterName, parameters)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Patch HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster patch request.
@@ -704,14 +712,40 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the HDInsight cluster along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ClusterInner> updateWithResponse(
-        String resourceGroupName, String clusterName, ClusterPatchParameters parameters, Context context) {
-        return updateWithResponseAsync(resourceGroupName, clusterName, parameters, context).block();
+    public Response<ClusterInner> updateWithResponse(String resourceGroupName, String clusterName,
+        ClusterPatchParameters parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String accept = "application/json";
+        return service.updateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            clusterName, this.client.getApiVersion(), parameters, accept, context);
     }
 
     /**
      * Patch HDInsight cluster with the specified parameters.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster patch request.
@@ -727,7 +761,7 @@ public final class ClustersClientImpl implements ClustersClient {
 
     /**
      * Deletes the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -738,16 +772,12 @@ public final class ClustersClientImpl implements ClustersClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(String resourceGroupName, String clusterName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -758,69 +788,85 @@ public final class ClustersClientImpl implements ClustersClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, clusterName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Deletes the specified HDInsight cluster.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group.
+     * @param clusterName The name of the cluster.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String clusterName) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            clusterName, this.client.getApiVersion(), accept, Context.NONE);
+    }
+
+    /**
+     * Deletes the specified HDInsight cluster.
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> deleteWithResponseAsync(
-        String resourceGroupName, String clusterName, Context context) {
+    private Response<BinaryData> deleteWithResponse(String resourceGroupName, String clusterName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                this.client.getApiVersion(),
-                accept,
-                context);
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            clusterName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Deletes the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -831,36 +877,13 @@ public final class ClustersClientImpl implements ClustersClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(String resourceGroupName, String clusterName) {
         Mono<Response<Flux<ByteBuffer>>> mono = deleteWithResponseAsync(resourceGroupName, clusterName);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Deletes the specified HDInsight cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginDeleteAsync(
-        String resourceGroupName, String clusterName, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono = deleteWithResponseAsync(resourceGroupName, clusterName, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Deletes the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -870,12 +893,13 @@ public final class ClustersClientImpl implements ClustersClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String clusterName) {
-        return this.beginDeleteAsync(resourceGroupName, clusterName).getSyncPoller();
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, clusterName);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Deletes the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param context The context to associate with this operation.
@@ -885,14 +909,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceGroupName, String clusterName, Context context) {
-        return this.beginDeleteAsync(resourceGroupName, clusterName, context).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String clusterName,
+        Context context) {
+        Response<BinaryData> response = deleteWithResponse(resourceGroupName, clusterName, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Deletes the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -907,25 +932,7 @@ public final class ClustersClientImpl implements ClustersClient {
 
     /**
      * Deletes the specified HDInsight cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> deleteAsync(String resourceGroupName, String clusterName, Context context) {
-        return beginDeleteAsync(resourceGroupName, clusterName, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Deletes the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -934,12 +941,12 @@ public final class ClustersClientImpl implements ClustersClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String clusterName) {
-        deleteAsync(resourceGroupName, clusterName).block();
+        beginDelete(resourceGroupName, clusterName).getFinalResult();
     }
 
     /**
      * Deletes the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param context The context to associate with this operation.
@@ -949,12 +956,12 @@ public final class ClustersClientImpl implements ClustersClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String resourceGroupName, String clusterName, Context context) {
-        deleteAsync(resourceGroupName, clusterName, context).block();
+        beginDelete(resourceGroupName, clusterName, context).getFinalResult();
     }
 
     /**
      * Gets the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -963,19 +970,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the specified cluster along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ClusterInner>> getByResourceGroupWithResponseAsync(
-        String resourceGroupName, String clusterName) {
+    private Mono<Response<ClusterInner>> getByResourceGroupWithResponseAsync(String resourceGroupName,
+        String clusterName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -987,68 +990,14 @@ public final class ClustersClientImpl implements ClustersClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .getByResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+                context -> service.getByResourceGroup(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, clusterName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the specified cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the specified cluster along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ClusterInner>> getByResourceGroupWithResponseAsync(
-        String resourceGroupName, String clusterName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getByResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Gets the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1064,7 +1013,7 @@ public final class ClustersClientImpl implements ClustersClient {
 
     /**
      * Gets the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param context The context to associate with this operation.
@@ -1074,14 +1023,34 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the specified cluster along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ClusterInner> getByResourceGroupWithResponse(
-        String resourceGroupName, String clusterName, Context context) {
-        return getByResourceGroupWithResponseAsync(resourceGroupName, clusterName, context).block();
+    public Response<ClusterInner> getByResourceGroupWithResponse(String resourceGroupName, String clusterName,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getByResourceGroupSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1096,27 +1065,23 @@ public final class ClustersClientImpl implements ClustersClient {
 
     /**
      * Lists the HDInsight clusters in a resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ClusterInner>> listByResourceGroupSinglePageAsync(String resourceGroupName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1124,82 +1089,16 @@ public final class ClustersClientImpl implements ClustersClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listByResourceGroup(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
-            .<PagedResponse<ClusterInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.listByResourceGroup(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), resourceGroupName, this.client.getApiVersion(), accept, context))
+            .<PagedResponse<ClusterInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Lists the HDInsight clusters in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ClusterInner>> listByResourceGroupSinglePageAsync(
-        String resourceGroupName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByResourceGroup(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                this.client.getApiVersion(),
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * Lists the HDInsight clusters in a resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1208,31 +1107,78 @@ public final class ClustersClientImpl implements ClustersClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<ClusterInner> listByResourceGroupAsync(String resourceGroupName) {
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName),
+        return new PagedFlux<>(() -> listByResourceGroupSinglePageAsync(resourceGroupName),
             nextLink -> listByResourceGroupNextSinglePageAsync(nextLink));
     }
 
     /**
      * Lists the HDInsight clusters in a resource group.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the List Cluster operation response along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ClusterInner> listByResourceGroupSinglePage(String resourceGroupName) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ClusterListResult> res = service.listByResourceGroupSync(this.client.getEndpoint(),
+            this.client.getSubscriptionId(), resourceGroupName, this.client.getApiVersion(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Lists the HDInsight clusters in a resource group.
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the List Cluster operation response as paginated response with {@link PagedFlux}.
+     * @return the List Cluster operation response along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ClusterInner> listByResourceGroupAsync(String resourceGroupName, Context context) {
-        return new PagedFlux<>(
-            () -> listByResourceGroupSinglePageAsync(resourceGroupName, context),
-            nextLink -> listByResourceGroupNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ClusterInner> listByResourceGroupSinglePage(String resourceGroupName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ClusterListResult> res = service.listByResourceGroupSync(this.client.getEndpoint(),
+            this.client.getSubscriptionId(), resourceGroupName, this.client.getApiVersion(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Lists the HDInsight clusters in a resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -1241,12 +1187,13 @@ public final class ClustersClientImpl implements ClustersClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ClusterInner> listByResourceGroup(String resourceGroupName) {
-        return new PagedIterable<>(listByResourceGroupAsync(resourceGroupName));
+        return new PagedIterable<>(() -> listByResourceGroupSinglePage(resourceGroupName),
+            nextLink -> listByResourceGroupNextSinglePage(nextLink));
     }
 
     /**
      * Lists the HDInsight clusters in a resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1256,12 +1203,13 @@ public final class ClustersClientImpl implements ClustersClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ClusterInner> listByResourceGroup(String resourceGroupName, Context context) {
-        return new PagedIterable<>(listByResourceGroupAsync(resourceGroupName, context));
+        return new PagedIterable<>(() -> listByResourceGroupSinglePage(resourceGroupName, context),
+            nextLink -> listByResourceGroupNextSinglePage(nextLink, context));
     }
 
     /**
      * Resizes the specified HDInsight cluster to the specified size.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1272,19 +1220,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> resizeWithResponseAsync(
-        String resourceGroupName, String clusterName, RoleName roleName, ClusterResizeParameters parameters) {
+    private Mono<Response<Flux<ByteBuffer>>> resizeWithResponseAsync(String resourceGroupName, String clusterName,
+        RoleName roleName, ClusterResizeParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1303,87 +1247,111 @@ public final class ClustersClientImpl implements ClustersClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .resize(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            roleName,
-                            this.client.getApiVersion(),
-                            parameters,
-                            accept,
-                            context))
+            .withContext(context -> service.resize(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, clusterName, roleName, this.client.getApiVersion(), parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Resizes the specified HDInsight cluster to the specified size.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
      * @param parameters The parameters for the resize operation.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> resizeWithResponseAsync(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        ClusterResizeParameters parameters,
-        Context context) {
+    private Response<BinaryData> resizeWithResponse(String resourceGroupName, String clusterName, RoleName roleName,
+        ClusterResizeParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
         }
         if (roleName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter roleName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter roleName is required and cannot be null."));
         }
         if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
         } else {
             parameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .resize(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                roleName,
-                this.client.getApiVersion(),
-                parameters,
-                accept,
-                context);
+        return service.resizeSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            clusterName, roleName, this.client.getApiVersion(), parameters, accept, Context.NONE);
     }
 
     /**
      * Resizes the specified HDInsight cluster to the specified size.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group.
+     * @param clusterName The name of the cluster.
+     * @param roleName The constant value for the roleName.
+     * @param parameters The parameters for the resize operation.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> resizeWithResponse(String resourceGroupName, String clusterName, RoleName roleName,
+        ClusterResizeParameters parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        if (roleName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter roleName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String accept = "application/json";
+        return service.resizeSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            clusterName, roleName, this.client.getApiVersion(), parameters, accept, context);
+    }
+
+    /**
+     * Resizes the specified HDInsight cluster to the specified size.
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1394,47 +1362,17 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginResizeAsync(
-        String resourceGroupName, String clusterName, RoleName roleName, ClusterResizeParameters parameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            resizeWithResponseAsync(resourceGroupName, clusterName, roleName, parameters);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginResizeAsync(String resourceGroupName, String clusterName,
+        RoleName roleName, ClusterResizeParameters parameters) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = resizeWithResponseAsync(resourceGroupName, clusterName, roleName, parameters);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Resizes the specified HDInsight cluster to the specified size.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param roleName The constant value for the roleName.
-     * @param parameters The parameters for the resize operation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginResizeAsync(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        ClusterResizeParameters parameters,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            resizeWithResponseAsync(resourceGroupName, clusterName, roleName, parameters, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Resizes the specified HDInsight cluster to the specified size.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1445,14 +1383,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginResize(
-        String resourceGroupName, String clusterName, RoleName roleName, ClusterResizeParameters parameters) {
-        return this.beginResizeAsync(resourceGroupName, clusterName, roleName, parameters).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginResize(String resourceGroupName, String clusterName,
+        RoleName roleName, ClusterResizeParameters parameters) {
+        Response<BinaryData> response = resizeWithResponse(resourceGroupName, clusterName, roleName, parameters);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Resizes the specified HDInsight cluster to the specified size.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1464,18 +1403,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginResize(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        ClusterResizeParameters parameters,
-        Context context) {
-        return this.beginResizeAsync(resourceGroupName, clusterName, roleName, parameters, context).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginResize(String resourceGroupName, String clusterName,
+        RoleName roleName, ClusterResizeParameters parameters, Context context) {
+        Response<BinaryData> response
+            = resizeWithResponse(resourceGroupName, clusterName, roleName, parameters, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Resizes the specified HDInsight cluster to the specified size.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1486,41 +1423,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> resizeAsync(
-        String resourceGroupName, String clusterName, RoleName roleName, ClusterResizeParameters parameters) {
-        return beginResizeAsync(resourceGroupName, clusterName, roleName, parameters)
-            .last()
+    private Mono<Void> resizeAsync(String resourceGroupName, String clusterName, RoleName roleName,
+        ClusterResizeParameters parameters) {
+        return beginResizeAsync(resourceGroupName, clusterName, roleName, parameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Resizes the specified HDInsight cluster to the specified size.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param roleName The constant value for the roleName.
-     * @param parameters The parameters for the resize operation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> resizeAsync(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        ClusterResizeParameters parameters,
-        Context context) {
-        return beginResizeAsync(resourceGroupName, clusterName, roleName, parameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Resizes the specified HDInsight cluster to the specified size.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1530,14 +1441,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void resize(
-        String resourceGroupName, String clusterName, RoleName roleName, ClusterResizeParameters parameters) {
-        resizeAsync(resourceGroupName, clusterName, roleName, parameters).block();
+    public void resize(String resourceGroupName, String clusterName, RoleName roleName,
+        ClusterResizeParameters parameters) {
+        beginResize(resourceGroupName, clusterName, roleName, parameters).getFinalResult();
     }
 
     /**
      * Resizes the specified HDInsight cluster to the specified size.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1548,18 +1459,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void resize(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        ClusterResizeParameters parameters,
-        Context context) {
-        resizeAsync(resourceGroupName, clusterName, roleName, parameters, context).block();
+    public void resize(String resourceGroupName, String clusterName, RoleName roleName,
+        ClusterResizeParameters parameters, Context context) {
+        beginResize(resourceGroupName, clusterName, roleName, parameters, context).getFinalResult();
     }
 
     /**
      * Updates the Autoscale Configuration for HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1570,22 +1477,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateAutoScaleConfigurationWithResponseAsync(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        AutoscaleConfigurationUpdateParameter parameters) {
+    private Mono<Response<Flux<ByteBuffer>>> updateAutoScaleConfigurationWithResponseAsync(String resourceGroupName,
+        String clusterName, RoleName roleName, AutoscaleConfigurationUpdateParameter parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -1604,87 +1504,112 @@ public final class ClustersClientImpl implements ClustersClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .updateAutoScaleConfiguration(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            roleName,
-                            this.client.getApiVersion(),
-                            parameters,
-                            accept,
-                            context))
+            .withContext(context -> service.updateAutoScaleConfiguration(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), resourceGroupName, clusterName, roleName, this.client.getApiVersion(),
+                parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Updates the Autoscale Configuration for HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
      * @param parameters The parameters for the update autoscale configuration operation.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateAutoScaleConfigurationWithResponseAsync(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        AutoscaleConfigurationUpdateParameter parameters,
-        Context context) {
+    private Response<BinaryData> updateAutoScaleConfigurationWithResponse(String resourceGroupName, String clusterName,
+        RoleName roleName, AutoscaleConfigurationUpdateParameter parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
         }
         if (roleName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter roleName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter roleName is required and cannot be null."));
         }
         if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
         } else {
             parameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .updateAutoScaleConfiguration(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                roleName,
-                this.client.getApiVersion(),
-                parameters,
-                accept,
-                context);
+        return service.updateAutoScaleConfigurationSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, roleName, this.client.getApiVersion(), parameters, accept, Context.NONE);
     }
 
     /**
      * Updates the Autoscale Configuration for HDInsight cluster.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group.
+     * @param clusterName The name of the cluster.
+     * @param roleName The constant value for the roleName.
+     * @param parameters The parameters for the update autoscale configuration operation.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> updateAutoScaleConfigurationWithResponse(String resourceGroupName, String clusterName,
+        RoleName roleName, AutoscaleConfigurationUpdateParameter parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        if (roleName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter roleName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String accept = "application/json";
+        return service.updateAutoScaleConfigurationSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, roleName, this.client.getApiVersion(), parameters, accept, context);
+    }
+
+    /**
+     * Updates the Autoscale Configuration for HDInsight cluster.
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1695,51 +1620,17 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginUpdateAutoScaleConfigurationAsync(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        AutoscaleConfigurationUpdateParameter parameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateAutoScaleConfigurationWithResponseAsync(resourceGroupName, clusterName, roleName, parameters);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginUpdateAutoScaleConfigurationAsync(String resourceGroupName,
+        String clusterName, RoleName roleName, AutoscaleConfigurationUpdateParameter parameters) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = updateAutoScaleConfigurationWithResponseAsync(resourceGroupName, clusterName, roleName, parameters);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Updates the Autoscale Configuration for HDInsight cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param roleName The constant value for the roleName.
-     * @param parameters The parameters for the update autoscale configuration operation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginUpdateAutoScaleConfigurationAsync(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        AutoscaleConfigurationUpdateParameter parameters,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateAutoScaleConfigurationWithResponseAsync(
-                resourceGroupName, clusterName, roleName, parameters, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Updates the Autoscale Configuration for HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1750,19 +1641,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginUpdateAutoScaleConfiguration(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        AutoscaleConfigurationUpdateParameter parameters) {
-        return this
-            .beginUpdateAutoScaleConfigurationAsync(resourceGroupName, clusterName, roleName, parameters)
-            .getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginUpdateAutoScaleConfiguration(String resourceGroupName,
+        String clusterName, RoleName roleName, AutoscaleConfigurationUpdateParameter parameters) {
+        Response<BinaryData> response
+            = updateAutoScaleConfigurationWithResponse(resourceGroupName, clusterName, roleName, parameters);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Updates the Autoscale Configuration for HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1774,20 +1662,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginUpdateAutoScaleConfiguration(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        AutoscaleConfigurationUpdateParameter parameters,
-        Context context) {
-        return this
-            .beginUpdateAutoScaleConfigurationAsync(resourceGroupName, clusterName, roleName, parameters, context)
-            .getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginUpdateAutoScaleConfiguration(String resourceGroupName,
+        String clusterName, RoleName roleName, AutoscaleConfigurationUpdateParameter parameters, Context context) {
+        Response<BinaryData> response
+            = updateAutoScaleConfigurationWithResponse(resourceGroupName, clusterName, roleName, parameters, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Updates the Autoscale Configuration for HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1798,44 +1682,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> updateAutoScaleConfigurationAsync(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        AutoscaleConfigurationUpdateParameter parameters) {
-        return beginUpdateAutoScaleConfigurationAsync(resourceGroupName, clusterName, roleName, parameters)
-            .last()
+    private Mono<Void> updateAutoScaleConfigurationAsync(String resourceGroupName, String clusterName,
+        RoleName roleName, AutoscaleConfigurationUpdateParameter parameters) {
+        return beginUpdateAutoScaleConfigurationAsync(resourceGroupName, clusterName, roleName, parameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Updates the Autoscale Configuration for HDInsight cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param roleName The constant value for the roleName.
-     * @param parameters The parameters for the update autoscale configuration operation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> updateAutoScaleConfigurationAsync(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        AutoscaleConfigurationUpdateParameter parameters,
-        Context context) {
-        return beginUpdateAutoScaleConfigurationAsync(resourceGroupName, clusterName, roleName, parameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Updates the Autoscale Configuration for HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1845,17 +1700,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void updateAutoScaleConfiguration(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
+    public void updateAutoScaleConfiguration(String resourceGroupName, String clusterName, RoleName roleName,
         AutoscaleConfigurationUpdateParameter parameters) {
-        updateAutoScaleConfigurationAsync(resourceGroupName, clusterName, roleName, parameters).block();
+        beginUpdateAutoScaleConfiguration(resourceGroupName, clusterName, roleName, parameters).getFinalResult();
     }
 
     /**
      * Updates the Autoscale Configuration for HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param roleName The constant value for the roleName.
@@ -1866,107 +1718,42 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void updateAutoScaleConfiguration(
-        String resourceGroupName,
-        String clusterName,
-        RoleName roleName,
-        AutoscaleConfigurationUpdateParameter parameters,
-        Context context) {
-        updateAutoScaleConfigurationAsync(resourceGroupName, clusterName, roleName, parameters, context).block();
+    public void updateAutoScaleConfiguration(String resourceGroupName, String clusterName, RoleName roleName,
+        AutoscaleConfigurationUpdateParameter parameters, Context context) {
+        beginUpdateAutoScaleConfiguration(resourceGroupName, clusterName, roleName, parameters, context)
+            .getFinalResult();
     }
 
     /**
      * Lists all the HDInsight clusters under the subscription.
-     *
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ClusterInner>> listSinglePageAsync() {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
-            .<PagedResponse<ClusterInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .withContext(context -> service.list(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                this.client.getApiVersion(), accept, context))
+            .<PagedResponse<ClusterInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Lists all the HDInsight clusters under the subscription.
-     *
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ClusterInner>> listSinglePageAsync(Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .list(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                this.client.getApiVersion(),
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * Lists all the HDInsight clusters under the subscription.
-     *
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the List Cluster operation response as paginated response with {@link PagedFlux}.
@@ -1978,34 +1765,73 @@ public final class ClustersClientImpl implements ClustersClient {
 
     /**
      * Lists all the HDInsight clusters under the subscription.
-     *
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the List Cluster operation response as paginated response with {@link PagedFlux}.
+     * @return the List Cluster operation response along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<ClusterInner> listAsync(Context context) {
-        return new PagedFlux<>(
-            () -> listSinglePageAsync(context), nextLink -> listNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ClusterInner> listSinglePage() {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ClusterListResult> res = service.listSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            this.client.getApiVersion(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Lists all the HDInsight clusters under the subscription.
-     *
+     * 
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the List Cluster operation response along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ClusterInner> listSinglePage(Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ClusterListResult> res = service.listSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            this.client.getApiVersion(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Lists all the HDInsight clusters under the subscription.
+     * 
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the List Cluster operation response as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ClusterInner> list() {
-        return new PagedIterable<>(listAsync());
+        return new PagedIterable<>(() -> listSinglePage(), nextLink -> listNextSinglePage(nextLink));
     }
 
     /**
      * Lists all the HDInsight clusters under the subscription.
-     *
+     * 
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -2014,12 +1840,12 @@ public final class ClustersClientImpl implements ClustersClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ClusterInner> list(Context context) {
-        return new PagedIterable<>(listAsync(context));
+        return new PagedIterable<>(() -> listSinglePage(context), nextLink -> listNextSinglePage(nextLink, context));
     }
 
     /**
      * Rotate disk encryption key of the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for the disk encryption operation.
@@ -2029,19 +1855,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> rotateDiskEncryptionKeyWithResponseAsync(
-        String resourceGroupName, String clusterName, ClusterDiskEncryptionParameters parameters) {
+    private Mono<Response<Flux<ByteBuffer>>> rotateDiskEncryptionKeyWithResponseAsync(String resourceGroupName,
+        String clusterName, ClusterDiskEncryptionParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -2058,76 +1880,101 @@ public final class ClustersClientImpl implements ClustersClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .rotateDiskEncryptionKey(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            this.client.getApiVersion(),
-                            parameters,
-                            accept,
-                            context))
+                context -> service.rotateDiskEncryptionKey(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Rotate disk encryption key of the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for the disk encryption operation.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> rotateDiskEncryptionKeyWithResponseAsync(
-        String resourceGroupName, String clusterName, ClusterDiskEncryptionParameters parameters, Context context) {
+    private Response<BinaryData> rotateDiskEncryptionKeyWithResponse(String resourceGroupName, String clusterName,
+        ClusterDiskEncryptionParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
         }
         if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
         } else {
             parameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .rotateDiskEncryptionKey(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                this.client.getApiVersion(),
-                parameters,
-                accept,
-                context);
+        return service.rotateDiskEncryptionKeySync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, Context.NONE);
     }
 
     /**
      * Rotate disk encryption key of the specified HDInsight cluster.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group.
+     * @param clusterName The name of the cluster.
+     * @param parameters The parameters for the disk encryption operation.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> rotateDiskEncryptionKeyWithResponse(String resourceGroupName, String clusterName,
+        ClusterDiskEncryptionParameters parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String accept = "application/json";
+        return service.rotateDiskEncryptionKeySync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, context);
+    }
+
+    /**
+     * Rotate disk encryption key of the specified HDInsight cluster.
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for the disk encryption operation.
@@ -2137,42 +1984,17 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginRotateDiskEncryptionKeyAsync(
-        String resourceGroupName, String clusterName, ClusterDiskEncryptionParameters parameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            rotateDiskEncryptionKeyWithResponseAsync(resourceGroupName, clusterName, parameters);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginRotateDiskEncryptionKeyAsync(String resourceGroupName,
+        String clusterName, ClusterDiskEncryptionParameters parameters) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = rotateDiskEncryptionKeyWithResponseAsync(resourceGroupName, clusterName, parameters);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Rotate disk encryption key of the specified HDInsight cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The parameters for the disk encryption operation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginRotateDiskEncryptionKeyAsync(
-        String resourceGroupName, String clusterName, ClusterDiskEncryptionParameters parameters, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            rotateDiskEncryptionKeyWithResponseAsync(resourceGroupName, clusterName, parameters, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Rotate disk encryption key of the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for the disk encryption operation.
@@ -2182,14 +2004,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginRotateDiskEncryptionKey(
-        String resourceGroupName, String clusterName, ClusterDiskEncryptionParameters parameters) {
-        return this.beginRotateDiskEncryptionKeyAsync(resourceGroupName, clusterName, parameters).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginRotateDiskEncryptionKey(String resourceGroupName, String clusterName,
+        ClusterDiskEncryptionParameters parameters) {
+        Response<BinaryData> response = rotateDiskEncryptionKeyWithResponse(resourceGroupName, clusterName, parameters);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Rotate disk encryption key of the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for the disk encryption operation.
@@ -2200,16 +2023,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginRotateDiskEncryptionKey(
-        String resourceGroupName, String clusterName, ClusterDiskEncryptionParameters parameters, Context context) {
-        return this
-            .beginRotateDiskEncryptionKeyAsync(resourceGroupName, clusterName, parameters, context)
-            .getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginRotateDiskEncryptionKey(String resourceGroupName, String clusterName,
+        ClusterDiskEncryptionParameters parameters, Context context) {
+        Response<BinaryData> response
+            = rotateDiskEncryptionKeyWithResponse(resourceGroupName, clusterName, parameters, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Rotate disk encryption key of the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for the disk encryption operation.
@@ -2219,36 +2042,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> rotateDiskEncryptionKeyAsync(
-        String resourceGroupName, String clusterName, ClusterDiskEncryptionParameters parameters) {
-        return beginRotateDiskEncryptionKeyAsync(resourceGroupName, clusterName, parameters)
-            .last()
+    private Mono<Void> rotateDiskEncryptionKeyAsync(String resourceGroupName, String clusterName,
+        ClusterDiskEncryptionParameters parameters) {
+        return beginRotateDiskEncryptionKeyAsync(resourceGroupName, clusterName, parameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Rotate disk encryption key of the specified HDInsight cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The parameters for the disk encryption operation.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> rotateDiskEncryptionKeyAsync(
-        String resourceGroupName, String clusterName, ClusterDiskEncryptionParameters parameters, Context context) {
-        return beginRotateDiskEncryptionKeyAsync(resourceGroupName, clusterName, parameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Rotate disk encryption key of the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for the disk encryption operation.
@@ -2257,14 +2059,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void rotateDiskEncryptionKey(
-        String resourceGroupName, String clusterName, ClusterDiskEncryptionParameters parameters) {
-        rotateDiskEncryptionKeyAsync(resourceGroupName, clusterName, parameters).block();
+    public void rotateDiskEncryptionKey(String resourceGroupName, String clusterName,
+        ClusterDiskEncryptionParameters parameters) {
+        beginRotateDiskEncryptionKey(resourceGroupName, clusterName, parameters).getFinalResult();
     }
 
     /**
      * Rotate disk encryption key of the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for the disk encryption operation.
@@ -2274,36 +2076,32 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void rotateDiskEncryptionKey(
-        String resourceGroupName, String clusterName, ClusterDiskEncryptionParameters parameters, Context context) {
-        rotateDiskEncryptionKeyAsync(resourceGroupName, clusterName, parameters, context).block();
+    public void rotateDiskEncryptionKey(String resourceGroupName, String clusterName,
+        ClusterDiskEncryptionParameters parameters, Context context) {
+        beginRotateDiskEncryptionKey(resourceGroupName, clusterName, parameters, context).getFinalResult();
     }
 
     /**
      * Gets the gateway settings for the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the gateway settings for the specified cluster along with {@link Response} on successful completion of
-     *     {@link Mono}.
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<GatewaySettingsInner>> getGatewaySettingsWithResponseAsync(
-        String resourceGroupName, String clusterName) {
+    private Mono<Response<GatewaySettingsInner>> getGatewaySettingsWithResponseAsync(String resourceGroupName,
+        String clusterName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -2315,69 +2113,14 @@ public final class ClustersClientImpl implements ClustersClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .getGatewaySettings(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+                context -> service.getGatewaySettings(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, clusterName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the gateway settings for the specified cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the gateway settings for the specified cluster along with {@link Response} on successful completion of
-     *     {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<GatewaySettingsInner>> getGatewaySettingsWithResponseAsync(
-        String resourceGroupName, String clusterName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getGatewaySettings(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Gets the gateway settings for the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2393,7 +2136,7 @@ public final class ClustersClientImpl implements ClustersClient {
 
     /**
      * Gets the gateway settings for the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param context The context to associate with this operation.
@@ -2403,14 +2146,34 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the gateway settings for the specified cluster along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<GatewaySettingsInner> getGatewaySettingsWithResponse(
-        String resourceGroupName, String clusterName, Context context) {
-        return getGatewaySettingsWithResponseAsync(resourceGroupName, clusterName, context).block();
+    public Response<GatewaySettingsInner> getGatewaySettingsWithResponse(String resourceGroupName, String clusterName,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getGatewaySettingsSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets the gateway settings for the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -2425,7 +2188,7 @@ public final class ClustersClientImpl implements ClustersClient {
 
     /**
      * Configures the gateway settings on the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -2435,19 +2198,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateGatewaySettingsWithResponseAsync(
-        String resourceGroupName, String clusterName, UpdateGatewaySettingsParameters parameters) {
+    private Mono<Response<Flux<ByteBuffer>>> updateGatewaySettingsWithResponseAsync(String resourceGroupName,
+        String clusterName, UpdateGatewaySettingsParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -2464,76 +2223,101 @@ public final class ClustersClientImpl implements ClustersClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .updateGatewaySettings(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            this.client.getApiVersion(),
-                            parameters,
-                            accept,
-                            context))
+                context -> service.updateGatewaySettings(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Configures the gateway settings on the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateGatewaySettingsWithResponseAsync(
-        String resourceGroupName, String clusterName, UpdateGatewaySettingsParameters parameters, Context context) {
+    private Response<BinaryData> updateGatewaySettingsWithResponse(String resourceGroupName, String clusterName,
+        UpdateGatewaySettingsParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
         }
         if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
         } else {
             parameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .updateGatewaySettings(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                this.client.getApiVersion(),
-                parameters,
-                accept,
-                context);
+        return service.updateGatewaySettingsSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, Context.NONE);
     }
 
     /**
      * Configures the gateway settings on the specified cluster.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group.
+     * @param clusterName The name of the cluster.
+     * @param parameters The cluster configurations.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> updateGatewaySettingsWithResponse(String resourceGroupName, String clusterName,
+        UpdateGatewaySettingsParameters parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String accept = "application/json";
+        return service.updateGatewaySettingsSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, context);
+    }
+
+    /**
+     * Configures the gateway settings on the specified cluster.
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -2543,42 +2327,17 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginUpdateGatewaySettingsAsync(
-        String resourceGroupName, String clusterName, UpdateGatewaySettingsParameters parameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateGatewaySettingsWithResponseAsync(resourceGroupName, clusterName, parameters);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginUpdateGatewaySettingsAsync(String resourceGroupName,
+        String clusterName, UpdateGatewaySettingsParameters parameters) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = updateGatewaySettingsWithResponseAsync(resourceGroupName, clusterName, parameters);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Configures the gateway settings on the specified cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The cluster configurations.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginUpdateGatewaySettingsAsync(
-        String resourceGroupName, String clusterName, UpdateGatewaySettingsParameters parameters, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateGatewaySettingsWithResponseAsync(resourceGroupName, clusterName, parameters, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Configures the gateway settings on the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -2588,14 +2347,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginUpdateGatewaySettings(
-        String resourceGroupName, String clusterName, UpdateGatewaySettingsParameters parameters) {
-        return this.beginUpdateGatewaySettingsAsync(resourceGroupName, clusterName, parameters).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginUpdateGatewaySettings(String resourceGroupName, String clusterName,
+        UpdateGatewaySettingsParameters parameters) {
+        Response<BinaryData> response = updateGatewaySettingsWithResponse(resourceGroupName, clusterName, parameters);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Configures the gateway settings on the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -2606,16 +2366,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginUpdateGatewaySettings(
-        String resourceGroupName, String clusterName, UpdateGatewaySettingsParameters parameters, Context context) {
-        return this
-            .beginUpdateGatewaySettingsAsync(resourceGroupName, clusterName, parameters, context)
-            .getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginUpdateGatewaySettings(String resourceGroupName, String clusterName,
+        UpdateGatewaySettingsParameters parameters, Context context) {
+        Response<BinaryData> response
+            = updateGatewaySettingsWithResponse(resourceGroupName, clusterName, parameters, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Configures the gateway settings on the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -2625,36 +2385,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> updateGatewaySettingsAsync(
-        String resourceGroupName, String clusterName, UpdateGatewaySettingsParameters parameters) {
-        return beginUpdateGatewaySettingsAsync(resourceGroupName, clusterName, parameters)
-            .last()
+    private Mono<Void> updateGatewaySettingsAsync(String resourceGroupName, String clusterName,
+        UpdateGatewaySettingsParameters parameters) {
+        return beginUpdateGatewaySettingsAsync(resourceGroupName, clusterName, parameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Configures the gateway settings on the specified cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The cluster configurations.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> updateGatewaySettingsAsync(
-        String resourceGroupName, String clusterName, UpdateGatewaySettingsParameters parameters, Context context) {
-        return beginUpdateGatewaySettingsAsync(resourceGroupName, clusterName, parameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Configures the gateway settings on the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -2663,14 +2402,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void updateGatewaySettings(
-        String resourceGroupName, String clusterName, UpdateGatewaySettingsParameters parameters) {
-        updateGatewaySettingsAsync(resourceGroupName, clusterName, parameters).block();
+    public void updateGatewaySettings(String resourceGroupName, String clusterName,
+        UpdateGatewaySettingsParameters parameters) {
+        beginUpdateGatewaySettings(resourceGroupName, clusterName, parameters).getFinalResult();
     }
 
     /**
      * Configures the gateway settings on the specified cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -2680,14 +2419,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void updateGatewaySettings(
-        String resourceGroupName, String clusterName, UpdateGatewaySettingsParameters parameters, Context context) {
-        updateGatewaySettingsAsync(resourceGroupName, clusterName, parameters, context).block();
+    public void updateGatewaySettings(String resourceGroupName, String clusterName,
+        UpdateGatewaySettingsParameters parameters, Context context) {
+        beginUpdateGatewaySettings(resourceGroupName, clusterName, parameters, context).getFinalResult();
     }
 
     /**
      * The the async operation status.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param operationId The long running operation id.
@@ -2700,16 +2439,12 @@ public final class ClustersClientImpl implements ClustersClient {
     private Mono<Response<AsyncOperationResultInner>> getAzureAsyncOperationStatusWithResponseAsync(
         String resourceGroupName, String clusterName, String operationId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -2723,75 +2458,15 @@ public final class ClustersClientImpl implements ClustersClient {
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getAzureAsyncOperationStatus(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            this.client.getApiVersion(),
-                            operationId,
-                            accept,
-                            context))
+            .withContext(context -> service.getAzureAsyncOperationStatus(this.client.getEndpoint(),
+                this.client.getSubscriptionId(), resourceGroupName, clusterName, this.client.getApiVersion(),
+                operationId, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * The the async operation status.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param operationId The long running operation id.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the azure async operation response along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AsyncOperationResultInner>> getAzureAsyncOperationStatusWithResponseAsync(
-        String resourceGroupName, String clusterName, String operationId, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
-        }
-        if (operationId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter operationId is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .getAzureAsyncOperationStatus(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                this.client.getApiVersion(),
-                operationId,
-                accept,
-                context);
-    }
-
-    /**
-     * The the async operation status.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param operationId The long running operation id.
@@ -2801,15 +2476,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the azure async operation response on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<AsyncOperationResultInner> getAzureAsyncOperationStatusAsync(
-        String resourceGroupName, String clusterName, String operationId) {
+    private Mono<AsyncOperationResultInner> getAzureAsyncOperationStatusAsync(String resourceGroupName,
+        String clusterName, String operationId) {
         return getAzureAsyncOperationStatusWithResponseAsync(resourceGroupName, clusterName, operationId)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * The the async operation status.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param operationId The long running operation id.
@@ -2820,15 +2495,38 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the azure async operation response along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<AsyncOperationResultInner> getAzureAsyncOperationStatusWithResponse(
-        String resourceGroupName, String clusterName, String operationId, Context context) {
-        return getAzureAsyncOperationStatusWithResponseAsync(resourceGroupName, clusterName, operationId, context)
-            .block();
+    public Response<AsyncOperationResultInner> getAzureAsyncOperationStatusWithResponse(String resourceGroupName,
+        String clusterName, String operationId, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        if (operationId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter operationId is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getAzureAsyncOperationStatusSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), operationId, accept, context);
     }
 
     /**
      * The the async operation status.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param operationId The long running operation id.
@@ -2838,15 +2536,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the azure async operation response.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public AsyncOperationResultInner getAzureAsyncOperationStatus(
-        String resourceGroupName, String clusterName, String operationId) {
+    public AsyncOperationResultInner getAzureAsyncOperationStatus(String resourceGroupName, String clusterName,
+        String operationId) {
         return getAzureAsyncOperationStatusWithResponse(resourceGroupName, clusterName, operationId, Context.NONE)
             .getValue();
     }
 
     /**
      * Updates the cluster identity certificate.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -2856,19 +2554,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateIdentityCertificateWithResponseAsync(
-        String resourceGroupName, String clusterName, UpdateClusterIdentityCertificateParameters parameters) {
+    private Mono<Response<Flux<ByteBuffer>>> updateIdentityCertificateWithResponseAsync(String resourceGroupName,
+        String clusterName, UpdateClusterIdentityCertificateParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -2885,79 +2579,101 @@ public final class ClustersClientImpl implements ClustersClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .updateIdentityCertificate(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            this.client.getApiVersion(),
-                            parameters,
-                            accept,
-                            context))
+                context -> service.updateIdentityCertificate(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Updates the cluster identity certificate.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> updateIdentityCertificateWithResponseAsync(
-        String resourceGroupName,
-        String clusterName,
-        UpdateClusterIdentityCertificateParameters parameters,
-        Context context) {
+    private Response<BinaryData> updateIdentityCertificateWithResponse(String resourceGroupName, String clusterName,
+        UpdateClusterIdentityCertificateParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
         }
         if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
         } else {
             parameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .updateIdentityCertificate(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                this.client.getApiVersion(),
-                parameters,
-                accept,
-                context);
+        return service.updateIdentityCertificateSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, Context.NONE);
     }
 
     /**
      * Updates the cluster identity certificate.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group.
+     * @param clusterName The name of the cluster.
+     * @param parameters The cluster configurations.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> updateIdentityCertificateWithResponse(String resourceGroupName, String clusterName,
+        UpdateClusterIdentityCertificateParameters parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String accept = "application/json";
+        return service.updateIdentityCertificateSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, context);
+    }
+
+    /**
+     * Updates the cluster identity certificate.
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -2967,45 +2683,17 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginUpdateIdentityCertificateAsync(
-        String resourceGroupName, String clusterName, UpdateClusterIdentityCertificateParameters parameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateIdentityCertificateWithResponseAsync(resourceGroupName, clusterName, parameters);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginUpdateIdentityCertificateAsync(String resourceGroupName,
+        String clusterName, UpdateClusterIdentityCertificateParameters parameters) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = updateIdentityCertificateWithResponseAsync(resourceGroupName, clusterName, parameters);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Updates the cluster identity certificate.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The cluster configurations.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginUpdateIdentityCertificateAsync(
-        String resourceGroupName,
-        String clusterName,
-        UpdateClusterIdentityCertificateParameters parameters,
-        Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            updateIdentityCertificateWithResponseAsync(resourceGroupName, clusterName, parameters, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Updates the cluster identity certificate.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -3015,14 +2703,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginUpdateIdentityCertificate(
-        String resourceGroupName, String clusterName, UpdateClusterIdentityCertificateParameters parameters) {
-        return this.beginUpdateIdentityCertificateAsync(resourceGroupName, clusterName, parameters).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginUpdateIdentityCertificate(String resourceGroupName,
+        String clusterName, UpdateClusterIdentityCertificateParameters parameters) {
+        Response<BinaryData> response
+            = updateIdentityCertificateWithResponse(resourceGroupName, clusterName, parameters);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Updates the cluster identity certificate.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -3033,19 +2723,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginUpdateIdentityCertificate(
-        String resourceGroupName,
-        String clusterName,
-        UpdateClusterIdentityCertificateParameters parameters,
-        Context context) {
-        return this
-            .beginUpdateIdentityCertificateAsync(resourceGroupName, clusterName, parameters, context)
-            .getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginUpdateIdentityCertificate(String resourceGroupName,
+        String clusterName, UpdateClusterIdentityCertificateParameters parameters, Context context) {
+        Response<BinaryData> response
+            = updateIdentityCertificateWithResponse(resourceGroupName, clusterName, parameters, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Updates the cluster identity certificate.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -3055,39 +2742,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> updateIdentityCertificateAsync(
-        String resourceGroupName, String clusterName, UpdateClusterIdentityCertificateParameters parameters) {
-        return beginUpdateIdentityCertificateAsync(resourceGroupName, clusterName, parameters)
-            .last()
+    private Mono<Void> updateIdentityCertificateAsync(String resourceGroupName, String clusterName,
+        UpdateClusterIdentityCertificateParameters parameters) {
+        return beginUpdateIdentityCertificateAsync(resourceGroupName, clusterName, parameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Updates the cluster identity certificate.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The cluster configurations.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> updateIdentityCertificateAsync(
-        String resourceGroupName,
-        String clusterName,
-        UpdateClusterIdentityCertificateParameters parameters,
-        Context context) {
-        return beginUpdateIdentityCertificateAsync(resourceGroupName, clusterName, parameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Updates the cluster identity certificate.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -3096,14 +2759,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void updateIdentityCertificate(
-        String resourceGroupName, String clusterName, UpdateClusterIdentityCertificateParameters parameters) {
-        updateIdentityCertificateAsync(resourceGroupName, clusterName, parameters).block();
+    public void updateIdentityCertificate(String resourceGroupName, String clusterName,
+        UpdateClusterIdentityCertificateParameters parameters) {
+        beginUpdateIdentityCertificate(resourceGroupName, clusterName, parameters).getFinalResult();
     }
 
     /**
      * Updates the cluster identity certificate.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The cluster configurations.
@@ -3113,17 +2776,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void updateIdentityCertificate(
-        String resourceGroupName,
-        String clusterName,
-        UpdateClusterIdentityCertificateParameters parameters,
-        Context context) {
-        updateIdentityCertificateAsync(resourceGroupName, clusterName, parameters, context).block();
+    public void updateIdentityCertificate(String resourceGroupName, String clusterName,
+        UpdateClusterIdentityCertificateParameters parameters, Context context) {
+        beginUpdateIdentityCertificate(resourceGroupName, clusterName, parameters, context).getFinalResult();
     }
 
     /**
      * Executes script actions on the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for executing script actions.
@@ -3134,19 +2794,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> executeScriptActionsWithResponseAsync(
-        String resourceGroupName, String clusterName, ExecuteScriptActionParameters parameters) {
+    private Mono<Response<Flux<ByteBuffer>>> executeScriptActionsWithResponseAsync(String resourceGroupName,
+        String clusterName, ExecuteScriptActionParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -3163,77 +2819,103 @@ public final class ClustersClientImpl implements ClustersClient {
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .executeScriptActions(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            clusterName,
-                            this.client.getApiVersion(),
-                            parameters,
-                            accept,
-                            context))
+                context -> service.executeScriptActions(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Executes script actions on the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for executing script actions.
-     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws ManagementException thrown if the request is rejected by server on status code 404.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
+     * @return the response body along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Flux<ByteBuffer>>> executeScriptActionsWithResponseAsync(
-        String resourceGroupName, String clusterName, ExecuteScriptActionParameters parameters, Context context) {
+    private Response<BinaryData> executeScriptActionsWithResponse(String resourceGroupName, String clusterName,
+        ExecuteScriptActionParameters parameters) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
         }
         if (clusterName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
         }
         if (parameters == null) {
-            return Mono.error(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
         } else {
             parameters.validate();
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .executeScriptActions(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                clusterName,
-                this.client.getApiVersion(),
-                parameters,
-                accept,
-                context);
+        return service.executeScriptActionsSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, Context.NONE);
     }
 
     /**
      * Executes script actions on the specified HDInsight cluster.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group.
+     * @param clusterName The name of the cluster.
+     * @param parameters The parameters for executing script actions.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws ManagementException thrown if the request is rejected by server on status code 404.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> executeScriptActionsWithResponse(String resourceGroupName, String clusterName,
+        ExecuteScriptActionParameters parameters, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (clusterName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter clusterName is required and cannot be null."));
+        }
+        if (parameters == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter parameters is required and cannot be null."));
+        } else {
+            parameters.validate();
+        }
+        final String accept = "application/json";
+        return service.executeScriptActionsSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+            resourceGroupName, clusterName, this.client.getApiVersion(), parameters, accept, context);
+    }
+
+    /**
+     * Executes script actions on the specified HDInsight cluster.
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for executing script actions.
@@ -3244,43 +2926,17 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginExecuteScriptActionsAsync(
-        String resourceGroupName, String clusterName, ExecuteScriptActionParameters parameters) {
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            executeScriptActionsWithResponseAsync(resourceGroupName, clusterName, parameters);
-        return this
-            .client
-            .<Void, Void>getLroResult(
-                mono, this.client.getHttpPipeline(), Void.class, Void.class, this.client.getContext());
+    private PollerFlux<PollResult<Void>, Void> beginExecuteScriptActionsAsync(String resourceGroupName,
+        String clusterName, ExecuteScriptActionParameters parameters) {
+        Mono<Response<Flux<ByteBuffer>>> mono
+            = executeScriptActionsWithResponseAsync(resourceGroupName, clusterName, parameters);
+        return this.client.<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class,
+            this.client.getContext());
     }
 
     /**
      * Executes script actions on the specified HDInsight cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The parameters for executing script actions.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws ManagementException thrown if the request is rejected by server on status code 404.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link PollerFlux} for polling of long-running operation.
-     */
-    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    private PollerFlux<PollResult<Void>, Void> beginExecuteScriptActionsAsync(
-        String resourceGroupName, String clusterName, ExecuteScriptActionParameters parameters, Context context) {
-        context = this.client.mergeContext(context);
-        Mono<Response<Flux<ByteBuffer>>> mono =
-            executeScriptActionsWithResponseAsync(resourceGroupName, clusterName, parameters, context);
-        return this
-            .client
-            .<Void, Void>getLroResult(mono, this.client.getHttpPipeline(), Void.class, Void.class, context);
-    }
-
-    /**
-     * Executes script actions on the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for executing script actions.
@@ -3291,14 +2947,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginExecuteScriptActions(
-        String resourceGroupName, String clusterName, ExecuteScriptActionParameters parameters) {
-        return this.beginExecuteScriptActionsAsync(resourceGroupName, clusterName, parameters).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginExecuteScriptActions(String resourceGroupName, String clusterName,
+        ExecuteScriptActionParameters parameters) {
+        Response<BinaryData> response = executeScriptActionsWithResponse(resourceGroupName, clusterName, parameters);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, Context.NONE);
     }
 
     /**
      * Executes script actions on the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for executing script actions.
@@ -3310,14 +2967,16 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult<Void>, Void> beginExecuteScriptActions(
-        String resourceGroupName, String clusterName, ExecuteScriptActionParameters parameters, Context context) {
-        return this.beginExecuteScriptActionsAsync(resourceGroupName, clusterName, parameters, context).getSyncPoller();
+    public SyncPoller<PollResult<Void>, Void> beginExecuteScriptActions(String resourceGroupName, String clusterName,
+        ExecuteScriptActionParameters parameters, Context context) {
+        Response<BinaryData> response
+            = executeScriptActionsWithResponse(resourceGroupName, clusterName, parameters, context);
+        return this.client.<Void, Void>getLroResult(response, Void.class, Void.class, context);
     }
 
     /**
      * Executes script actions on the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for executing script actions.
@@ -3328,37 +2987,15 @@ public final class ClustersClientImpl implements ClustersClient {
      * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> executeScriptActionsAsync(
-        String resourceGroupName, String clusterName, ExecuteScriptActionParameters parameters) {
-        return beginExecuteScriptActionsAsync(resourceGroupName, clusterName, parameters)
-            .last()
+    private Mono<Void> executeScriptActionsAsync(String resourceGroupName, String clusterName,
+        ExecuteScriptActionParameters parameters) {
+        return beginExecuteScriptActionsAsync(resourceGroupName, clusterName, parameters).last()
             .flatMap(this.client::getLroFinalResultOrError);
     }
 
     /**
      * Executes script actions on the specified HDInsight cluster.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param clusterName The name of the cluster.
-     * @param parameters The parameters for executing script actions.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws ManagementException thrown if the request is rejected by server on status code 404.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return A {@link Mono} that completes when a successful response is received.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> executeScriptActionsAsync(
-        String resourceGroupName, String clusterName, ExecuteScriptActionParameters parameters, Context context) {
-        return beginExecuteScriptActionsAsync(resourceGroupName, clusterName, parameters, context)
-            .last()
-            .flatMap(this.client::getLroFinalResultOrError);
-    }
-
-    /**
-     * Executes script actions on the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for executing script actions.
@@ -3368,14 +3005,14 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void executeScriptActions(
-        String resourceGroupName, String clusterName, ExecuteScriptActionParameters parameters) {
-        executeScriptActionsAsync(resourceGroupName, clusterName, parameters).block();
+    public void executeScriptActions(String resourceGroupName, String clusterName,
+        ExecuteScriptActionParameters parameters) {
+        beginExecuteScriptActions(resourceGroupName, clusterName, parameters).getFinalResult();
     }
 
     /**
      * Executes script actions on the specified HDInsight cluster.
-     *
+     * 
      * @param resourceGroupName The name of the resource group.
      * @param clusterName The name of the cluster.
      * @param parameters The parameters for executing script actions.
@@ -3386,21 +3023,20 @@ public final class ClustersClientImpl implements ClustersClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void executeScriptActions(
-        String resourceGroupName, String clusterName, ExecuteScriptActionParameters parameters, Context context) {
-        executeScriptActionsAsync(resourceGroupName, clusterName, parameters, context).block();
+    public void executeScriptActions(String resourceGroupName, String clusterName,
+        ExecuteScriptActionParameters parameters, Context context) {
+        beginExecuteScriptActions(resourceGroupName, clusterName, parameters, context).getFinalResult();
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ClusterInner>> listByResourceGroupNextSinglePageAsync(String nextLink) {
@@ -3408,75 +3044,82 @@ public final class ClustersClientImpl implements ClustersClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listByResourceGroupNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<ClusterInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<ClusterInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
-     * @param context The context to associate with this operation.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return the List Cluster operation response along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ClusterInner>> listByResourceGroupNextSinglePageAsync(String nextLink, Context context) {
+    private PagedResponse<ClusterInner> listByResourceGroupNextSinglePage(String nextLink) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByResourceGroupNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<ClusterListResult> res
+            = service.listByResourceGroupNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return the List Cluster operation response along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ClusterInner> listByResourceGroupNextSinglePage(String nextLink, Context context) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ClusterListResult> res
+            = service.listByResourceGroupNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<ClusterInner>> listNextSinglePageAsync(String nextLink) {
@@ -3484,61 +3127,69 @@ public final class ClustersClientImpl implements ClustersClient {
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        return FluxUtil
-            .withContext(context -> service.listNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<ClusterInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+        return FluxUtil.withContext(context -> service.listNext(nextLink, this.client.getEndpoint(), accept, context))
+            .<PagedResponse<ClusterInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the List Cluster operation response along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<ClusterInner> listNextSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<ClusterListResult> res
+            = service.listNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the List Cluster operation response along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return the List Cluster operation response along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<ClusterInner>> listNextSinglePageAsync(String nextLink, Context context) {
+    private PagedResponse<ClusterInner> listNextSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<ClusterListResult> res = service.listNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(ClustersClientImpl.class);
 }

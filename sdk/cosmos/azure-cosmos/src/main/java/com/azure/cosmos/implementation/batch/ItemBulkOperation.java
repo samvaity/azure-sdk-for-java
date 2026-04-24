@@ -3,6 +3,9 @@
 
 package com.azure.cosmos.implementation.batch;
 
+import com.azure.cosmos.CosmosItemSerializer;
+import com.azure.cosmos.implementation.DefaultCosmosItemSerializer;
+import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import com.azure.cosmos.implementation.JsonSerializable;
 import com.azure.cosmos.implementation.RequestOptions;
 import com.azure.cosmos.implementation.apachecommons.lang.StringUtils;
@@ -22,14 +25,20 @@ import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNo
  */
 public final class ItemBulkOperation<TInternal, TContext> extends CosmosItemOperationBase {
 
+    private static CosmosItemSerializer internalDefaultSerializer() {
+        return ImplementationBridgeHelpers.CosmosItemSerializerHelper.getCosmosItemSerializerAccessor().getInternalDefaultSerializer();
+    }
+
     private final TInternal item;
     private final TContext context;
     private final String id;
     private final PartitionKey partitionKey;
     private final CosmosItemOperationType operationType;
     private final RequestOptions requestOptions;
+    private final BulkOperationStatusTracker bulkOperationStatusTracker;
     private String partitionKeyJson;
     private BulkOperationRetryPolicy bulkOperationRetryPolicy;
+    private CosmosItemSerializer effectiveItemSerializerForResult;
 
     public ItemBulkOperation(
         CosmosItemOperationType operationType,
@@ -47,6 +56,14 @@ public final class ItemBulkOperation<TInternal, TContext> extends CosmosItemOper
         this.item = item;
         this.context = context;
         this.requestOptions = requestOptions;
+        this.bulkOperationStatusTracker = new BulkOperationStatusTracker();
+    }
+
+    @Override
+    public CosmosItemSerializer getEffectiveItemSerializerForResult() {
+        return this.effectiveItemSerializerForResult != null
+            ? this.effectiveItemSerializerForResult
+            : CosmosItemSerializer.DEFAULT_SERIALIZER;
     }
 
     /**
@@ -57,27 +74,47 @@ public final class ItemBulkOperation<TInternal, TContext> extends CosmosItemOper
      * @return instance of JsonSerializable containing values for a operation.
      */
     @Override
-    JsonSerializable getSerializedOperationInternal() {
+    JsonSerializable getSerializedOperationInternal(CosmosItemSerializer effectiveItemSerializer) {
         final JsonSerializable jsonSerializable = new JsonSerializable();
+        this.effectiveItemSerializerForResult = effectiveItemSerializer;
 
         jsonSerializable.set(
             BatchRequestResponseConstants.FIELD_OPERATION_TYPE,
-            ModelBridgeInternal.getOperationValueForCosmosItemOperationType(this.getOperationType()));
+            ModelBridgeInternal.getOperationValueForCosmosItemOperationType(this.getOperationType()),
+            internalDefaultSerializer(),
+            false);
 
         if (StringUtils.isNotEmpty(this.getPartitionKeyJson())) {
-            jsonSerializable.set(BatchRequestResponseConstants.FIELD_PARTITION_KEY, this.getPartitionKeyJson());
+            jsonSerializable.set(
+                BatchRequestResponseConstants.FIELD_PARTITION_KEY,
+                this.getPartitionKeyJson(),
+                internalDefaultSerializer(),
+                false);
         }
 
         if (StringUtils.isNotEmpty(this.getId())) {
-            jsonSerializable.set(BatchRequestResponseConstants.FIELD_ID, this.getId());
+            jsonSerializable.set(
+                BatchRequestResponseConstants.FIELD_ID,
+                this.getId(),
+                internalDefaultSerializer(),
+                false);
         }
 
         if (this.getItemInternal() != null) {
             if (this.getOperationType() == CosmosItemOperationType.PATCH) {
-                jsonSerializable.set(BatchRequestResponseConstants.FIELD_RESOURCE_BODY,
-                    PatchUtil.serializableBatchPatchOperation((CosmosPatchOperations) this.getItemInternal(), this.getRequestOptions()));
+                jsonSerializable.set(
+                    BatchRequestResponseConstants.FIELD_RESOURCE_BODY,
+                    PatchUtil.serializableBatchPatchOperation(
+                        (CosmosPatchOperations) this.getItemInternal(),
+                        this.getRequestOptions()),
+                    internalDefaultSerializer(),
+                    false);
             } else {
-                jsonSerializable.set(BatchRequestResponseConstants.FIELD_RESOURCE_BODY, this.getItemInternal());
+                jsonSerializable.set(
+                    BatchRequestResponseConstants.FIELD_RESOURCE_BODY,
+                    this.getItemInternal(),
+                    this.getEffectiveItemSerializerForResult(),
+                    true);
             }
         }
 
@@ -85,20 +122,31 @@ public final class ItemBulkOperation<TInternal, TContext> extends CosmosItemOper
             RequestOptions requestOptions = this.getRequestOptions();
 
             if (StringUtils.isNotEmpty(requestOptions.getIfMatchETag())) {
-                jsonSerializable.set(BatchRequestResponseConstants.FIELD_IF_MATCH, requestOptions.getIfMatchETag());
+                jsonSerializable.set(
+                    BatchRequestResponseConstants.FIELD_IF_MATCH,
+                    requestOptions.getIfMatchETag(),
+                    internalDefaultSerializer(),
+                    false);
             }
 
             if (StringUtils.isNotEmpty(requestOptions.getIfNoneMatchETag())) {
-                jsonSerializable.set(BatchRequestResponseConstants.FIELD_IF_NONE_MATCH, requestOptions.getIfNoneMatchETag());
+                jsonSerializable.set(
+                    BatchRequestResponseConstants.FIELD_IF_NONE_MATCH,
+                    requestOptions.getIfNoneMatchETag(),
+                    internalDefaultSerializer(),
+                    false);
             }
 
             //  If content response on write is not enabled, and operation is document write - then add
             //  minimalReturnPreference field, Otherwise don't add this field, which means return the full response.
             if (requestOptions.isContentResponseOnWriteEnabled() != null) {
                 if (!requestOptions.isContentResponseOnWriteEnabled() && BulkExecutorUtil.isWriteOperation(operationType)) {
-                    jsonSerializable.set(BatchRequestResponseConstants.FIELD_MINIMAL_RETURN_PREFERENCE, true);
+                    jsonSerializable.set(
+                        BatchRequestResponseConstants.FIELD_MINIMAL_RETURN_PREFERENCE,
+                        true,
+                        internalDefaultSerializer(),
+                        false);
                 }
-
             }
         }
 
@@ -150,4 +198,9 @@ public final class ItemBulkOperation<TInternal, TContext> extends CosmosItemOper
     void setRetryPolicy(BulkOperationRetryPolicy bulkOperationRetryPolicy) {
         this.bulkOperationRetryPolicy = bulkOperationRetryPolicy;
     }
+
+    public BulkOperationStatusTracker getStatusTracker() {
+        return this.bulkOperationStatusTracker;
+    }
+
 }

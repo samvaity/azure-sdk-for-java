@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.MigrateMySqlAzureDbForMySq
 public final class MigrateMySqlAzureDbForMySqlSyncTaskOutputErrorTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateMySqlAzureDbForMySqlSyncTaskOutputError model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"ErrorOutput\",\"error\":{\"message\":\"dut\",\"actionableMessage\":\"ormrlxqtvcofudfl\",\"filePath\":\"gj\",\"lineNumber\":\"gdknnqv\",\"hResult\":1989846717,\"stackTrace\":\"qntorudsgsahmkyc\"},\"id\":\"auwjuetaebu\"}")
-                .toObject(MigrateMySqlAzureDbForMySqlSyncTaskOutputError.class);
+        MigrateMySqlAzureDbForMySqlSyncTaskOutputError model = BinaryData.fromString(
+            "{\"resultType\":\"ErrorOutput\",\"error\":{\"message\":\"velfcldu\",\"actionableMessage\":\"birdsvuwcobiegs\",\"filePath\":\"ninwjizc\",\"lineNumber\":\"nghgshej\",\"hResult\":1075398674,\"stackTrace\":\"qmuluxlxqz\"},\"id\":\"ers\"}")
+            .toObject(MigrateMySqlAzureDbForMySqlSyncTaskOutputError.class);
     }
 
     @org.junit.jupiter.api.Test

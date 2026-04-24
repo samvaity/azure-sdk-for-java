@@ -5,32 +5,48 @@
 package com.azure.maps.render.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.http.HttpHeaderName;
+import com.azure.core.http.HttpHeaders;
 
-/** The RendersGetMapStateTileHeaders model. */
+/**
+ * The RendersGetMapStateTileHeaders model.
+ */
 @Fluent
 public final class RendersGetMapStateTileHeaders {
     /*
      * The Content-Type property.
      */
-    @JsonProperty(value = "Content-Type")
+    @Generated
     private String contentType;
+
+    // HttpHeaders containing the raw property values.
+    /**
+     * Creates an instance of RendersGetMapStateTileHeaders class.
+     * 
+     * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
+     */
+    public RendersGetMapStateTileHeaders(HttpHeaders rawHeaders) {
+        this.contentType = rawHeaders.getValue(HttpHeaderName.CONTENT_TYPE);
+    }
 
     /**
      * Get the contentType property: The Content-Type property.
-     *
+     * 
      * @return the contentType value.
      */
+    @Generated
     public String getContentType() {
         return this.contentType;
     }
 
     /**
      * Set the contentType property: The Content-Type property.
-     *
+     * 
      * @param contentType the contentType value to set.
      * @return the RendersGetMapStateTileHeaders object itself.
      */
+    @Generated
     public RendersGetMapStateTileHeaders setContentType(String contentType) {
         this.contentType = contentType;
         return this;

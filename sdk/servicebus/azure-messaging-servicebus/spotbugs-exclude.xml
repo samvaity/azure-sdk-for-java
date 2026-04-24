@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter xmlns="https://github.com/spotbugs/filter/3.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+  <Match>
+    <Bug pattern="CT_CONSTRUCTOR_THROW" />
+    <Or>
+      <Class name="com.azure.messaging.servicebus.LockRenewalOperation" />
+      <Class name="com.azure.messaging.servicebus.ServiceBusMessage" />
+      <Class name="com.azure.messaging.servicebus.ServiceBusSessionManager" />
+      <Class name="com.azure.messaging.servicebus.SynchronousMessageSubscriber" />
+      <Class name="com.azure.messaging.servicebus.administration.models.CorrelationRuleFilter" />
+      <Class name="com.azure.messaging.servicebus.administration.models.SqlRuleAction" />
+      <Class name="com.azure.messaging.servicebus.administration.models.SqlRuleFilter" />
+      <Class name="com.azure.messaging.servicebus.implementation.ServiceBusReactorReceiver" />
+      <Class name="com.azure.messaging.servicebus.implementation.ServiceBusReceiveLinkProcessor" />
+      <Class name="com.azure.messaging.servicebus.implementation.ServiceBusSharedKeyCredential" />
+    </Or>
+  </Match>
+  <Match>
+    <Bug pattern="EI_EXPOSE_STATIC_REP2" />
+    <Or>
+      <Class name="com.azure.messaging.servicebus.administration.implementation.EntityHelper" />
+      <Class name="com.azure.messaging.servicebus.implementation.instrumentation.ContextAccessor" />
+    </Or>
+  </Match>
+  <Match>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+    <Or>
+      <Class name="com.azure.messaging.servicebus.administration.implementation.models.FalseFilter" />
+      <Class name="com.azure.messaging.servicebus.administration.implementation.models.TrueFilter" />
+    </Or>
+  </Match>
+  <Match>
+    <Bug pattern="SE_BAD_FIELD" />
+    <Or>
+      <Class name="com.azure.messaging.servicebus.ServiceBusProcessor$RollingMessagePump" />
+      <Class name="com.azure.messaging.servicebus.ServiceBusSingleSessionManager$SessionReceiverStream" />
+      <Class name="com.azure.messaging.servicebus.SessionsMessagePump$RollingSessionReceiver" />
+    </Or>
+  </Match>
+</FindBugsFilter>

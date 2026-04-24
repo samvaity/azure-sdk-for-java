@@ -5,54 +5,67 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The ExtractedSummarySentence model. */
+/**
+ * The ExtractedSummarySentence model.
+ */
 @Fluent
-public final class ExtractedSummarySentence {
+public final class ExtractedSummarySentence implements JsonSerializable<ExtractedSummarySentence> {
     /*
      * The extracted sentence text.
      */
-    @JsonProperty(value = "text", required = true)
+    @Generated
     private String text;
 
     /*
      * A double value representing the relevance of the sentence within the summary. Higher values indicate higher
      * importance.
      */
-    @JsonProperty(value = "rankScore", required = true)
+    @Generated
     private double rankScore;
 
     /*
      * The sentence offset from the start of the document, based on the value of the parameter StringIndexType.
      */
-    @JsonProperty(value = "offset", required = true)
+    @Generated
     private int offset;
 
     /*
      * The length of the sentence.
      */
-    @JsonProperty(value = "length", required = true)
+    @Generated
     private int length;
 
-    /** Creates an instance of ExtractedSummarySentence class. */
-    public ExtractedSummarySentence() {}
+    /**
+     * Creates an instance of ExtractedSummarySentence class.
+     */
+    @Generated
+    public ExtractedSummarySentence() {
+    }
 
     /**
      * Get the text property: The extracted sentence text.
-     *
+     * 
      * @return the text value.
      */
+    @Generated
     public String getText() {
         return this.text;
     }
 
     /**
      * Set the text property: The extracted sentence text.
-     *
+     * 
      * @param text the text value to set.
      * @return the ExtractedSummarySentence object itself.
      */
+    @Generated
     public ExtractedSummarySentence setText(String text) {
         this.text = text;
         return this;
@@ -61,9 +74,10 @@ public final class ExtractedSummarySentence {
     /**
      * Get the rankScore property: A double value representing the relevance of the sentence within the summary. Higher
      * values indicate higher importance.
-     *
+     * 
      * @return the rankScore value.
      */
+    @Generated
     public double getRankScore() {
         return this.rankScore;
     }
@@ -71,10 +85,11 @@ public final class ExtractedSummarySentence {
     /**
      * Set the rankScore property: A double value representing the relevance of the sentence within the summary. Higher
      * values indicate higher importance.
-     *
+     * 
      * @param rankScore the rankScore value to set.
      * @return the ExtractedSummarySentence object itself.
      */
+    @Generated
     public ExtractedSummarySentence setRankScore(double rankScore) {
         this.rankScore = rankScore;
         return this;
@@ -83,9 +98,10 @@ public final class ExtractedSummarySentence {
     /**
      * Get the offset property: The sentence offset from the start of the document, based on the value of the parameter
      * StringIndexType.
-     *
+     * 
      * @return the offset value.
      */
+    @Generated
     public int getOffset() {
         return this.offset;
     }
@@ -93,10 +109,11 @@ public final class ExtractedSummarySentence {
     /**
      * Set the offset property: The sentence offset from the start of the document, based on the value of the parameter
      * StringIndexType.
-     *
+     * 
      * @param offset the offset value to set.
      * @return the ExtractedSummarySentence object itself.
      */
+    @Generated
     public ExtractedSummarySentence setOffset(int offset) {
         this.offset = offset;
         return this;
@@ -104,21 +121,71 @@ public final class ExtractedSummarySentence {
 
     /**
      * Get the length property: The length of the sentence.
-     *
+     * 
      * @return the length value.
      */
+    @Generated
     public int getLength() {
         return this.length;
     }
 
     /**
      * Set the length property: The length of the sentence.
-     *
+     * 
      * @param length the length value to set.
      * @return the ExtractedSummarySentence object itself.
      */
+    @Generated
     public ExtractedSummarySentence setLength(int length) {
         this.length = length;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("text", this.text);
+        jsonWriter.writeDoubleField("rankScore", this.rankScore);
+        jsonWriter.writeIntField("offset", this.offset);
+        jsonWriter.writeIntField("length", this.length);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ExtractedSummarySentence from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ExtractedSummarySentence if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ExtractedSummarySentence.
+     */
+    @Generated
+    public static ExtractedSummarySentence fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ExtractedSummarySentence deserializedExtractedSummarySentence = new ExtractedSummarySentence();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("text".equals(fieldName)) {
+                    deserializedExtractedSummarySentence.text = reader.getString();
+                } else if ("rankScore".equals(fieldName)) {
+                    deserializedExtractedSummarySentence.rankScore = reader.getDouble();
+                } else if ("offset".equals(fieldName)) {
+                    deserializedExtractedSummarySentence.offset = reader.getInt();
+                } else if ("length".equals(fieldName)) {
+                    deserializedExtractedSummarySentence.length = reader.getInt();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedExtractedSummarySentence;
+        });
     }
 }

@@ -5,7 +5,6 @@ package com.azure.ai.textanalytics.models;
 
 import com.azure.core.annotation.Immutable;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -16,7 +15,6 @@ import java.util.Collection;
 @Immutable
 public final class TextAnalyticsErrorCode extends ExpandableStringEnum<TextAnalyticsErrorCode> implements Serializable {
     private static final long serialVersionUID = 21436310107606058L;
-
     /**
      * Enum value InvalidRequest.
      */
@@ -83,17 +81,29 @@ public final class TextAnalyticsErrorCode extends ExpandableStringEnum<TextAnaly
     public static final TextAnalyticsErrorCode INVALID_COUNTRY_HINT = fromString("InvalidCountryHint");
 
     /**
+     * Creates a new instance of {@code TextAnalyticsErrorCode} value.
+     *
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Deprecated
+    public TextAnalyticsErrorCode() {
+    }
+
+    /**
      * Creates or finds a TextAnalyticsErrorCode from its string representation.
      *
      * @param name The string name to look for.
      * @return The corresponding TextAnalyticsErrorCode.
      */
-    @JsonCreator
     public static TextAnalyticsErrorCode fromString(String name) {
         return fromString(name, TextAnalyticsErrorCode.class);
     }
 
-    /** @return known TextAnalyticsErrorCode values. */
+    /**
+     * All known TextAnalyticsErrorCode values.
+     *
+     * @return known TextAnalyticsErrorCode values.
+     */
     public static Collection<TextAnalyticsErrorCode> values() {
         return values(TextAnalyticsErrorCode.class);
     }

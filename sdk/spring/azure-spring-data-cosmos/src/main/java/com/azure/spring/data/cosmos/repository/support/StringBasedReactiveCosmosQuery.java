@@ -16,12 +16,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Parameter;
 import org.springframework.data.repository.query.ResultProcessor;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.azure.spring.data.cosmos.core.convert.MappingCosmosConverter.toCosmosDbValue;
@@ -72,8 +72,7 @@ public class StringBasedReactiveCosmosQuery extends AbstractReactiveCosmosQuery 
             if (!("").equals(paramName)) {
                 String inParamCheck = "array_contains(@" + paramName.toLowerCase(Locale.US);
                 if (parameters[paramIndex] instanceof Collection  && !modifiedExpandedQuery.contains(inParamCheck)) {
-                    ArrayList<String> expandParam = (ArrayList<String>) ((Collection<?>) parameters[paramIndex]).stream()
-                        .map(Object::toString).collect(Collectors.toList());
+                    List<Object> expandParam = ((Collection<?>) parameters[paramIndex]).stream().collect(Collectors.toList());
                     List<String> expandedParamKeys = new ArrayList<>();
                     for (int arrayIndex = 0; arrayIndex < expandParam.size(); arrayIndex++) {
                         expandedParamKeys.add("@" + paramName + arrayIndex);
@@ -83,22 +82,32 @@ public class StringBasedReactiveCosmosQuery extends AbstractReactiveCosmosQuery 
                 } else {
                     if (!Pageable.class.isAssignableFrom(queryParam.getType())
                         && !Sort.class.isAssignableFrom(queryParam.getType())) {
-                        sqlParameters.add(new SqlParameter("@" + queryParam.getName().orElse(""), toCosmosDbValue(parameters[paramIndex])));
+                        if (!(parameters[paramIndex] instanceof Optional<?>)
+                            || (parameters[paramIndex] instanceof Optional<?>
+                            && ((Optional<?>) parameters[paramIndex]).isPresent())) {
+                            sqlParameters.add(new SqlParameter("@" + queryParam.getName().orElse(""), toCosmosDbValue(parameters[paramIndex])));
+                        }
                     }
                 }
             }
         }
 
-        SqlQuerySpec querySpec = new SqlQuerySpec(expandedQuery, sqlParameters);
+        SqlQuerySpec querySpec = new SqlQuerySpec(stripExtraWhitespaceFromString(expandedQuery), sqlParameters);
         if (isCountQuery()) {
             final String container = ((SimpleReactiveCosmosEntityMetadata<?>) getQueryMethod().getEntityInformation()).getContainerName();
-            final Mono<Long> mono = this.operations.count(querySpec, container);
-            return mono;
+            return this.operations.count(querySpec, container);
+        } else if (isSumQuery()) {
+            final String container = ((SimpleReactiveCosmosEntityMetadata<?>) getQueryMethod().getEntityInformation()).getContainerName();
+            return this.operations.sum(querySpec, container);
         } else {
             Flux<?> flux = this.operations.runQuery(querySpec, accessor.getSort(), processor.getReturnedType().getDomainType(),
                                                     processor.getReturnedType().getReturnedType());
             return flux;
         }
+    }
+
+    private String stripExtraWhitespaceFromString(String input) {
+        return input.replaceAll("\\s+{1,}", " ").trim();
     }
 
     @Override
@@ -113,6 +122,14 @@ public class StringBasedReactiveCosmosQuery extends AbstractReactiveCosmosQuery 
 
     protected boolean isCountQuery() {
         return StringBasedCosmosQuery.isCountQuery(query, getQueryMethod().getReturnedObjectType());
+    }
+
+    /**
+     * This method is used to determine if the query is a sum query.
+     * @return boolean if the query is a sum query
+     */
+    protected boolean isSumQuery() {
+        return StringBasedCosmosQuery.isSumQuery(query, getQueryMethod().getReturnedObjectType());
     }
 
 }

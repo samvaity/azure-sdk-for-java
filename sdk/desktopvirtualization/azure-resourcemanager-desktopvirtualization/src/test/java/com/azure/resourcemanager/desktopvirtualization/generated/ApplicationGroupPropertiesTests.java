@@ -12,29 +12,28 @@ import org.junit.jupiter.api.Assertions;
 public final class ApplicationGroupPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ApplicationGroupProperties model =
-            BinaryData
-                .fromString(
-                    "{\"objectId\":\"lqidyby\",\"description\":\"zfcl\",\"friendlyName\":\"axdbabph\",\"hostPoolArmPath\":\"wrqlfktsthsuco\",\"workspaceArmPath\":\"nyyazttbtwwrqpue\",\"applicationGroupType\":\"Desktop\",\"cloudPcResource\":false}")
-                .toObject(ApplicationGroupProperties.class);
-        Assertions.assertEquals("zfcl", model.description());
-        Assertions.assertEquals("axdbabph", model.friendlyName());
-        Assertions.assertEquals("wrqlfktsthsuco", model.hostPoolArmPath());
-        Assertions.assertEquals(ApplicationGroupType.DESKTOP, model.applicationGroupType());
+        ApplicationGroupProperties model = BinaryData.fromString(
+            "{\"objectId\":\"keqdcvdrhvoods\",\"description\":\"bobzdopcjwvnhd\",\"friendlyName\":\"wmgxcxrsl\",\"hostPoolArmPath\":\"mutwuoe\",\"workspaceArmPath\":\"pkhjwni\",\"applicationGroupType\":\"RemoteApp\",\"cloudPcResource\":true,\"showInFeed\":false}")
+            .toObject(ApplicationGroupProperties.class);
+        Assertions.assertEquals("bobzdopcjwvnhd", model.description());
+        Assertions.assertEquals("wmgxcxrsl", model.friendlyName());
+        Assertions.assertEquals("mutwuoe", model.hostPoolArmPath());
+        Assertions.assertEquals(ApplicationGroupType.REMOTE_APP, model.applicationGroupType());
+        Assertions.assertEquals(false, model.showInFeed());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ApplicationGroupProperties model =
-            new ApplicationGroupProperties()
-                .withDescription("zfcl")
-                .withFriendlyName("axdbabph")
-                .withHostPoolArmPath("wrqlfktsthsuco")
-                .withApplicationGroupType(ApplicationGroupType.DESKTOP);
+        ApplicationGroupProperties model = new ApplicationGroupProperties().withDescription("bobzdopcjwvnhd")
+            .withFriendlyName("wmgxcxrsl")
+            .withHostPoolArmPath("mutwuoe")
+            .withApplicationGroupType(ApplicationGroupType.REMOTE_APP)
+            .withShowInFeed(false);
         model = BinaryData.fromObject(model).toObject(ApplicationGroupProperties.class);
-        Assertions.assertEquals("zfcl", model.description());
-        Assertions.assertEquals("axdbabph", model.friendlyName());
-        Assertions.assertEquals("wrqlfktsthsuco", model.hostPoolArmPath());
-        Assertions.assertEquals(ApplicationGroupType.DESKTOP, model.applicationGroupType());
+        Assertions.assertEquals("bobzdopcjwvnhd", model.description());
+        Assertions.assertEquals("wmgxcxrsl", model.friendlyName());
+        Assertions.assertEquals("mutwuoe", model.hostPoolArmPath());
+        Assertions.assertEquals(ApplicationGroupType.REMOTE_APP, model.applicationGroupType());
+        Assertions.assertEquals(false, model.showInFeed());
     }
 }

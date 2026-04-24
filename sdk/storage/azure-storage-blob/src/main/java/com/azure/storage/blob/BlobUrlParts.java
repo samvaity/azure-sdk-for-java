@@ -12,6 +12,7 @@ import com.azure.storage.common.Utility;
 import com.azure.storage.common.implementation.SasImplUtils;
 import com.azure.storage.common.sas.CommonSasQueryParameters;
 import com.azure.storage.common.implementation.Constants;
+import com.azure.storage.common.implementation.StorageImplUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -104,34 +105,46 @@ public final class BlobUrlParts {
         try {
             this.isIpUrl = ModelHelper.determineAuthorityIsIpStyle(host);
         } catch (MalformedURLException e) {
-            throw LOGGER.logExceptionAsError(new IllegalStateException("Authority is malformed. Host: "
-                + host, e));
+            throw LOGGER.logExceptionAsError(new IllegalStateException("Authority is malformed. Host: " + host, e));
         }
         return this;
     }
 
     /**
-     * Gets the container name that will be used as part of the URL path.
+     * Gets the decoded container name that will be used as part of the URL path.
+     * <p> Note:
+     * This value may differ from the original value provided to {@link #setContainerName(String)}
+     * because the setter and getter do not guarantee round-trip consistency.
+     * This behavior is intentional to normalize names that may or may not be URL encoded. </p>
      *
-     * @return the container name.
+     * @return the decoded container name.
      */
     public String getBlobContainerName() {
-        return containerName;
+        return (containerName == null) ? null : Utility.urlDecode(containerName);
     }
 
     /**
      * Sets the container name that will be used as part of the URL path.
+     * <p> Note:
+     * The setter and getter do not guarantee round-trip consistency.
+     * This is because container names with special characters may need URL encoding,
+     * and this method normalizes the input by decoding and then encoding it.
+     * If the container name contains special characters, it is recommended to URL encode it. </p>
      *
-     * @param containerName The container nme.
+     * @param containerName The container name. If the container name contains special characters, it should be URL encoded.
      * @return the updated BlobUrlParts object.
      */
     public BlobUrlParts setContainerName(String containerName) {
-        this.containerName = containerName;
+        this.containerName = Utility.urlEncode(Utility.urlDecode(containerName));
         return this;
     }
 
     /**
-     * Decodes and gets the blob name that will be used as part of the URL path.
+     * Gets the decoded blob name that will be used as part of the URL path.
+     * <p> Note:
+     * This value may differ from the original value provided to {@link #setBlobName(String)}
+     * because the setter and getter do not guarantee round-trip consistency.
+     * This behavior is intentional to normalize names that may or may not be URL encoded. </p>
      *
      * @return the decoded blob name.
      */
@@ -141,9 +154,13 @@ public final class BlobUrlParts {
 
     /**
      * Sets the blob name that will be used as part of the URL path.
+     * <p> Note:
+     * The setter and getter do not guarantee round-trip consistency.
+     * This is because blob names with special characters may need URL encoding,
+     * and this method normalizes the input by decoding and then encoding it.
+     * If the blob name contains special characters, it is recommended to URL encode it. </p>
      *
-     * @param blobName The blob name. If the blob name contains special characters, pass in the url encoded version
-     * of the blob name.
+     * @param blobName The blob name. If the blob name contains special characters, it should be URL encoded.
      * @return the updated BlobUrlParts object.
      */
     public BlobUrlParts setBlobName(String blobName) {
@@ -213,8 +230,8 @@ public final class BlobUrlParts {
     @Deprecated
     public BlobUrlParts setSasQueryParameters(BlobServiceSasQueryParameters blobServiceSasQueryParameters) {
         String encodedBlobSas = blobServiceSasQueryParameters.encode();
-        this.commonSasQueryParameters = new CommonSasQueryParameters(SasImplUtils.parseQueryString(encodedBlobSas),
-            true);
+        this.commonSasQueryParameters
+            = new CommonSasQueryParameters(SasImplUtils.parseQueryString(encodedBlobSas), true);
         return this;
     }
 
@@ -316,8 +333,7 @@ public final class BlobUrlParts {
 
         for (Map.Entry<String, String[]> entry : this.unparsedParameters.entrySet()) {
             // The commas are intentionally encoded.
-            url.setQueryParameter(entry.getKey(),
-                Utility.urlEncode(String.join(",", entry.getValue())));
+            url.setQueryParameter(entry.getKey(), Utility.urlEncode(String.join(",", entry.getValue())));
         }
 
         try {
@@ -374,8 +390,8 @@ public final class BlobUrlParts {
                 parseNonIpUrl(url, parts);
             }
         } catch (MalformedURLException e) {
-            throw LOGGER.logExceptionAsError(new IllegalStateException("Authority is malformed. Host: "
-                + url.getAuthority(), e));
+            throw LOGGER.logExceptionAsError(
+                new IllegalStateException("Authority is malformed. Host: " + url.getAuthority(), e));
         }
 
         Map<String, String[]> queryParamsMap = SasImplUtils.parseQueryString(url.getQuery());
@@ -392,8 +408,7 @@ public final class BlobUrlParts {
 
         CommonSasQueryParameters commonSasQueryParameters = new CommonSasQueryParameters(queryParamsMap, true);
 
-        return parts.setCommonSasQueryParameters(commonSasQueryParameters)
-            .setUnparsedParameters(queryParamsMap);
+        return parts.setCommonSasQueryParameters(commonSasQueryParameters).setUnparsedParameters(queryParamsMap);
     }
 
     /*
@@ -437,17 +452,26 @@ public final class BlobUrlParts {
         String host = url.getHost();
         parts.setHost(host);
 
-        //Parse host to get account name
-        // host will look like this : <accountname>.blob.core.windows.net
-        if (!CoreUtils.isNullOrEmpty(host)) {
-            int accountNameIndex = host.indexOf('.');
-            if (accountNameIndex == -1) {
-                // host only contains account name
-                parts.setAccountName(host);
-            } else {
-                // if host is separated by .
-                parts.setAccountName(host.substring(0, accountNameIndex));
+        // Parse host to get account name. Prefer known blob/dfs subdomains; fall back to first label otherwise.
+        boolean isBlobEndpoint = host != null && host.contains(Constants.UrlConstants.BLOB_URI_SUBDOMAIN);
+        boolean isDfsEndpoint = host != null && host.contains(Constants.UrlConstants.DFS_URI_SUBDOMAIN);
+
+        if (isBlobEndpoint) {
+            parts.setAccountName(
+                StorageImplUtils.getAccountNameFromHost(host, Constants.UrlConstants.BLOB_URI_SUBDOMAIN));
+        } else if (isDfsEndpoint) {
+            parts.setAccountName(
+                StorageImplUtils.getAccountNameFromHost(host, Constants.UrlConstants.DFS_URI_SUBDOMAIN));
+        } else {
+            // Fallback: use the first label of the host as the account name.
+            String accountName = host;
+            if (!CoreUtils.isNullOrEmpty(host)) {
+                int dotIndex = host.indexOf('.');
+                if (dotIndex != -1) {
+                    accountName = host.substring(0, dotIndex);
+                }
             }
+            parts.setAccountName(accountName);
         }
 
         // find the container & blob names (if any)

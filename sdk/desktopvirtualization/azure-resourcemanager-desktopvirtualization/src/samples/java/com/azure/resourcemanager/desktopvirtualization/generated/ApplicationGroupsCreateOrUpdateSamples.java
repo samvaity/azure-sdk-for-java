@@ -8,20 +8,23 @@ import com.azure.resourcemanager.desktopvirtualization.models.ApplicationGroupTy
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for ApplicationGroups CreateOrUpdate. */
+/**
+ * Samples for ApplicationGroups CreateOrUpdate.
+ */
 public final class ApplicationGroupsCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/desktopvirtualization/resource-manager/Microsoft.DesktopVirtualization/stable/2022-09-09/examples/ApplicationGroup_Create.json
+     * x-ms-original-file:
+     * specification/desktopvirtualization/resource-manager/Microsoft.DesktopVirtualization/stable/2024-04-03/examples/
+     * ApplicationGroup_Create.json
      */
     /**
      * Sample code: ApplicationGroup_Create.
-     *
+     * 
      * @param manager Entry point to DesktopVirtualizationManager.
      */
-    public static void applicationGroupCreate(
-        com.azure.resourcemanager.desktopvirtualization.DesktopVirtualizationManager manager) {
-        manager
-            .applicationGroups()
+    public static void
+        applicationGroupCreate(com.azure.resourcemanager.desktopvirtualization.DesktopVirtualizationManager manager) {
+        manager.applicationGroups()
             .define("applicationGroup1")
             .withRegion("centralus")
             .withExistingResourceGroup("resourceGroup1")
@@ -31,9 +34,11 @@ public final class ApplicationGroupsCreateOrUpdateSamples {
             .withTags(mapOf("tag1", "value1", "tag2", "value2"))
             .withDescription("des1")
             .withFriendlyName("friendly")
+            .withShowInFeed(true)
             .create();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

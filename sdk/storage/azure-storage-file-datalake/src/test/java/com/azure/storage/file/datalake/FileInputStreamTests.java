@@ -4,13 +4,13 @@ package com.azure.storage.file.datalake;
 
 import com.azure.core.test.utils.TestUtils;
 import com.azure.storage.common.implementation.Constants;
+import com.azure.storage.common.test.shared.extensions.LiveOnly;
 import com.azure.storage.file.datalake.models.ConsistentReadControl;
 import com.azure.storage.file.datalake.models.DataLakeRequestConditions;
 import com.azure.storage.file.datalake.models.PathProperties;
 import com.azure.storage.file.datalake.options.DataLakeFileInputStreamOptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -42,8 +42,8 @@ public class FileInputStreamTests extends DataLakeTestBase {
         byte[] randomBytes = getRandomByteArray(length);
         fc.upload(new ByteArrayInputStream(randomBytes), length, true);
 
-        try (InputStream is = fc.openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(blockSize))
-            .getInputStream()) {
+        try (InputStream is
+            = fc.openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(blockSize)).getInputStream()) {
             TestUtils.assertArraysEqual(randomBytes, convertInputStreamToByteArray(is, length));
         }
     }
@@ -51,10 +51,8 @@ public class FileInputStreamTests extends DataLakeTestBase {
     private static Stream<Arguments> readInputStreamSupplier() {
         return Stream.of(
             // length | blockSize
-            Arguments.of(Constants.KB, null),
-            Arguments.of(4 * Constants.KB, Constants.KB),
-            Arguments.of(4 * Constants.KB + 5, Constants.KB)
-        );
+            Arguments.of(Constants.KB, null), Arguments.of(4 * Constants.KB, Constants.KB),
+            Arguments.of(4 * Constants.KB + 5, Constants.KB));
     }
 
     // can't port zero-size test from blobs; datalake doesn't support empty append calls
@@ -75,15 +73,15 @@ public class FileInputStreamTests extends DataLakeTestBase {
     }
 
     // Only run this test in live mode as BlobOutputStream dynamically assigns blocks
-    @EnabledIf("com.azure.storage.file.datalake.DataLakeTestBase#isLiveMode")
+    @LiveOnly
     @ParameterizedTest
     @MethodSource("uploadDownloadBlockSizeSupplier")
     public void uploadDownloadBlockSize(Integer blockSize, int numChunks, int[] sizes) throws IOException {
         byte[] randomBytes = getRandomByteArray(6 * Constants.MB);
         fc.upload(new ByteArrayInputStream(randomBytes), randomBytes.length, true);
 
-        try (InputStream inputStream = fc.openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(blockSize))
-            .getInputStream()) {
+        try (InputStream inputStream
+            = fc.openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(blockSize)).getInputStream()) {
             int b;
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream(randomBytes.length);
 
@@ -111,9 +109,9 @@ public class FileInputStreamTests extends DataLakeTestBase {
     private static Stream<Arguments> uploadDownloadBlockSizeSupplier() {
         return Stream.of(
             // blockSize || numChunks | sizes
-            Arguments.of(null, 2, new int[]{4 * Constants.MB, 2 * Constants.MB}), // Default
-            Arguments.of(5 * Constants.MB, 2, new int[]{5 * Constants.MB, Constants.MB}), // Greater than default
-            Arguments.of(3 * Constants.MB, 2, new int[]{3 * Constants.MB, 3 * Constants.MB}) // Smaller than default
+            Arguments.of(null, 2, new int[] { 4 * Constants.MB, 2 * Constants.MB }), // Default
+            Arguments.of(5 * Constants.MB, 2, new int[] { 5 * Constants.MB, Constants.MB }), // Greater than default
+            Arguments.of(3 * Constants.MB, 2, new int[] { 3 * Constants.MB, 3 * Constants.MB }) // Smaller than default
         );
     }
 
@@ -125,8 +123,8 @@ public class FileInputStreamTests extends DataLakeTestBase {
 
         // Create the input stream and read from it.
         // Note: Setting block size to 1 is inefficient but helps demonstrate the purpose of this test.
-        try (InputStream inputStream = fc.openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(1))
-                .getInputStream()) {
+        try (InputStream inputStream
+            = fc.openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(1)).getInputStream()) {
             inputStream.read();
 
             // Modify the blob again.
@@ -146,8 +144,9 @@ public class FileInputStreamTests extends DataLakeTestBase {
 
         // Create the input stream and read from it.
         // Note: Setting block size to 1 is inefficient but helps demonstrate the purpose of this test.
-        try (InputStream inputStream = fc.openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(1)
-            .setConsistentReadControl(ConsistentReadControl.NONE)).getInputStream()) {
+        try (InputStream inputStream = fc.openInputStream(
+            new DataLakeFileInputStreamOptions().setBlockSize(1).setConsistentReadControl(ConsistentReadControl.NONE))
+            .getInputStream()) {
             inputStream.read();
 
             // Modify the blob again.
@@ -165,8 +164,9 @@ public class FileInputStreamTests extends DataLakeTestBase {
         fc.upload(new ByteArrayInputStream(randomBytes), randomBytes.length, true);
 
         // No eTag specified - client will lock on latest one.
-        try (InputStream inputStream = fc.openInputStream(new DataLakeFileInputStreamOptions()
-            .setConsistentReadControl(ConsistentReadControl.ETAG)).getInputStream()) {
+        try (InputStream inputStream = fc
+            .openInputStream(new DataLakeFileInputStreamOptions().setConsistentReadControl(ConsistentReadControl.ETAG))
+            .getInputStream()) {
             TestUtils.assertArraysEqual(randomBytes, convertInputStreamToByteArray(inputStream, randomBytes.length));
         }
     }
@@ -177,10 +177,10 @@ public class FileInputStreamTests extends DataLakeTestBase {
         fc.upload(new ByteArrayInputStream(randomBytes), randomBytes.length, true);
         PathProperties properties = fc.getProperties();
 
-        try (InputStream inputStream = fc.openInputStream(new DataLakeFileInputStreamOptions()
-            .setConsistentReadControl(ConsistentReadControl.ETAG)
-            // User provides eTag to use
-            .setRequestConditions(new DataLakeRequestConditions().setIfMatch(properties.getETag())))
+        try (InputStream inputStream = fc
+            .openInputStream(new DataLakeFileInputStreamOptions().setConsistentReadControl(ConsistentReadControl.ETAG)
+                // User provides eTag to use
+                .setRequestConditions(new DataLakeRequestConditions().setIfMatch(properties.getETag())))
             .getInputStream()) {
             TestUtils.assertArraysEqual(randomBytes, convertInputStreamToByteArray(inputStream, randomBytes.length));
         }
@@ -194,9 +194,10 @@ public class FileInputStreamTests extends DataLakeTestBase {
         fc.upload(new ByteArrayInputStream(randomBytes), randomBytes.length, true);
         PathProperties properties = fc.getProperties();
 
-        InputStream inputStream = fc.openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(1)
-            .setConsistentReadControl(ConsistentReadControl.ETAG)
-            .setRequestConditions(new DataLakeRequestConditions().setIfMatch(properties.getETag())))
+        InputStream inputStream = fc
+            .openInputStream(new DataLakeFileInputStreamOptions().setBlockSize(1)
+                .setConsistentReadControl(ConsistentReadControl.ETAG)
+                .setRequestConditions(new DataLakeRequestConditions().setIfMatch(properties.getETag())))
             .getInputStream();
 
         // Since eTag is the only form of consistentReadControl and the blob is modified, we will throw.

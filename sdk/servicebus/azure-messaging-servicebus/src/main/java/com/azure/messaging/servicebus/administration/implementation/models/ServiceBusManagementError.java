@@ -5,43 +5,55 @@
 package com.azure.messaging.servicebus.administration.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** The error response from Service Bus. */
-@JacksonXmlRootElement(localName = "ServiceBusManagementError")
+/**
+ * The error response from Service Bus.
+ */
 @Fluent
-public final class ServiceBusManagementError {
+public final class ServiceBusManagementError implements XmlSerializable<ServiceBusManagementError> {
     /*
      * The service error code.
      */
-    @JsonProperty(value = "Code")
+    @Generated
     private Integer code;
 
     /*
      * The service error message.
      */
-    @JsonProperty(value = "Detail")
+    @Generated
     private String detail;
 
-    /** Creates an instance of ServiceBusManagementError class. */
-    public ServiceBusManagementError() {}
+    /**
+     * Creates an instance of ServiceBusManagementError class.
+     */
+    @Generated
+    public ServiceBusManagementError() {
+    }
 
     /**
      * Get the code property: The service error code.
-     *
+     * 
      * @return the code value.
      */
+    @Generated
     public Integer getCode() {
         return this.code;
     }
 
     /**
      * Set the code property: The service error code.
-     *
+     * 
      * @param code the code value to set.
      * @return the ServiceBusManagementError object itself.
      */
+    @Generated
     public ServiceBusManagementError setCode(Integer code) {
         this.code = code;
         return this;
@@ -49,21 +61,84 @@ public final class ServiceBusManagementError {
 
     /**
      * Get the detail property: The service error message.
-     *
+     * 
      * @return the detail value.
      */
+    @Generated
     public String getDetail() {
         return this.detail;
     }
 
     /**
      * Set the detail property: The service error message.
-     *
+     * 
      * @param detail the detail value to set.
      * @return the ServiceBusManagementError object itself.
      */
+    @Generated
     public ServiceBusManagementError setDetail(String detail) {
         this.detail = detail;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "Error" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeNumberElement("Code", this.code);
+        xmlWriter.writeStringElement("Detail", this.detail);
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of ServiceBusManagementError from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of ServiceBusManagementError if the XmlReader was pointing to an instance of it, or null if
+     * it was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the ServiceBusManagementError.
+     */
+    @Generated
+    public static ServiceBusManagementError fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of ServiceBusManagementError from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of ServiceBusManagementError if the XmlReader was pointing to an instance of it, or null if
+     * it was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the ServiceBusManagementError.
+     */
+    @Generated
+    public static ServiceBusManagementError fromXml(XmlReader xmlReader, String rootElementName)
+        throws XMLStreamException {
+        String finalRootElementName = rootElementName == null || rootElementName.isEmpty() ? "Error" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            ServiceBusManagementError deserializedServiceBusManagementError = new ServiceBusManagementError();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Code".equals(elementName.getLocalPart())) {
+                    deserializedServiceBusManagementError.code = reader.getNullableElement(Integer::parseInt);
+                } else if ("Detail".equals(elementName.getLocalPart())) {
+                    deserializedServiceBusManagementError.detail = reader.getStringElement();
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedServiceBusManagementError;
+        });
     }
 }

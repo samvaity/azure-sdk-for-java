@@ -54,4 +54,46 @@ public class Exceptions {
         return Exceptions.isStatusCode(cosmosException, HttpConstants.StatusCodes.NOTFOUND) &&
             Exceptions.isSubStatusCode(cosmosException, HttpConstants.SubStatusCodes.PARTITION_KEY_MISMATCH);
     }
+
+    public static String getInternalServerErrorMessage(String prefix) {
+        return prefix + " - " + RMResources.InternalServerError;
+    }
+
+    public static boolean isStaledResourceException(int statusCode, int subStatusCode) {
+        return (statusCode == HttpConstants.StatusCodes.BADREQUEST
+                    && subStatusCode == HttpConstants.SubStatusCodes.INCORRECT_CONTAINER_RID_SUB_STATUS)
+            || (statusCode == HttpConstants.StatusCodes.GONE
+                    && subStatusCode == HttpConstants.SubStatusCodes.NAME_CACHE_IS_STALE);
+    }
+
+    public static boolean isAvoidQuorumSelectionException(CosmosException cosmosException) {
+        return Exceptions.isStatusCode(cosmosException, HttpConstants.StatusCodes.GONE)
+            && Exceptions.isSubStatusCode(cosmosException, HttpConstants.SubStatusCodes.LEASE_NOT_FOUND);
+    }
+
+    public static boolean isClientAssignedSubStatusCodeForInternalServerError(int statusCode, int subStatusCode) {
+        return statusCode == HttpConstants.StatusCodes.INTERNAL_SERVER_ERROR && (subStatusCode >= 20_000 && subStatusCode < 21_000);
+    }
+
+    public static boolean isCommonlyExpectedExceptionPossiblyCausingNoisyLogs(int statusCode, int subStatusCode) {
+        if (statusCode == HttpConstants.StatusCodes.TOO_MANY_REQUESTS
+            && subStatusCode == HttpConstants.SubStatusCodes.USER_REQUEST_RATE_TOO_LARGE) {
+            return true;
+        }
+
+        if (statusCode == HttpConstants.StatusCodes.NOTFOUND
+            && subStatusCode == HttpConstants.SubStatusCodes.UNKNOWN) {
+            return true;
+        }
+
+        if (statusCode == HttpConstants.StatusCodes.CONFLICT) {
+            return true;
+        }
+
+        if (statusCode == HttpConstants.StatusCodes.PRECONDITION_FAILED) {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -5,45 +5,72 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity Binary source. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("BinarySource")
+/**
+ * A copy activity Binary source.
+ */
 @Fluent
 public final class BinarySource extends CopySource {
     /*
+     * Copy source type.
+     */
+    @Generated
+    private String type = "BinarySource";
+
+    /*
      * Binary store settings.
      */
-    @JsonProperty(value = "storeSettings")
+    @Generated
     private StoreReadSettings storeSettings;
 
     /*
      * Binary format settings.
      */
-    @JsonProperty(value = "formatSettings")
+    @Generated
     private BinaryReadSettings formatSettings;
 
-    /** Creates an instance of BinarySource class. */
-    public BinarySource() {}
+    /**
+     * Creates an instance of BinarySource class.
+     */
+    @Generated
+    public BinarySource() {
+    }
+
+    /**
+     * Get the type property: Copy source type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the storeSettings property: Binary store settings.
-     *
+     * 
      * @return the storeSettings value.
      */
+    @Generated
     public StoreReadSettings getStoreSettings() {
         return this.storeSettings;
     }
 
     /**
      * Set the storeSettings property: Binary store settings.
-     *
+     * 
      * @param storeSettings the storeSettings value to set.
      * @return the BinarySource object itself.
      */
+    @Generated
     public BinarySource setStoreSettings(StoreReadSettings storeSettings) {
         this.storeSettings = storeSettings;
         return this;
@@ -51,42 +78,123 @@ public final class BinarySource extends CopySource {
 
     /**
      * Get the formatSettings property: Binary format settings.
-     *
+     * 
      * @return the formatSettings value.
      */
+    @Generated
     public BinaryReadSettings getFormatSettings() {
         return this.formatSettings;
     }
 
     /**
      * Set the formatSettings property: Binary format settings.
-     *
+     * 
      * @param formatSettings the formatSettings value to set.
      * @return the BinarySource object itself.
      */
+    @Generated
     public BinarySource setFormatSettings(BinaryReadSettings formatSettings) {
         this.formatSettings = formatSettings;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public BinarySource setSourceRetryCount(Object sourceRetryCount) {
         super.setSourceRetryCount(sourceRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public BinarySource setSourceRetryWait(Object sourceRetryWait) {
         super.setSourceRetryWait(sourceRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public BinarySource setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getSourceRetryCount() != null) {
+            jsonWriter.writeUntypedField("sourceRetryCount", getSourceRetryCount());
+        }
+        if (getSourceRetryWait() != null) {
+            jsonWriter.writeUntypedField("sourceRetryWait", getSourceRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        jsonWriter.writeJsonField("storeSettings", this.storeSettings);
+        jsonWriter.writeJsonField("formatSettings", this.formatSettings);
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of BinarySource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of BinarySource if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the BinarySource.
+     */
+    @Generated
+    public static BinarySource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            BinarySource deserializedBinarySource = new BinarySource();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sourceRetryCount".equals(fieldName)) {
+                    deserializedBinarySource.setSourceRetryCount(reader.readUntyped());
+                } else if ("sourceRetryWait".equals(fieldName)) {
+                    deserializedBinarySource.setSourceRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedBinarySource.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedBinarySource.type = reader.getString();
+                } else if ("storeSettings".equals(fieldName)) {
+                    deserializedBinarySource.storeSettings = StoreReadSettings.fromJson(reader);
+                } else if ("formatSettings".equals(fieldName)) {
+                    deserializedBinarySource.formatSettings = BinaryReadSettings.fromJson(reader);
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedBinarySource.setAdditionalProperties(additionalProperties);
+
+            return deserializedBinarySource;
+        });
     }
 }

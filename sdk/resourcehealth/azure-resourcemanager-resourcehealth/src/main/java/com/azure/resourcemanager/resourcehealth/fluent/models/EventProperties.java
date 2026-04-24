@@ -5,154 +5,146 @@
 package com.azure.resourcemanager.resourcehealth.fluent.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.azure.resourcemanager.resourcehealth.models.EventLevelValues;
 import com.azure.resourcemanager.resourcehealth.models.EventPropertiesAdditionalInformation;
 import com.azure.resourcemanager.resourcehealth.models.EventPropertiesArticle;
 import com.azure.resourcemanager.resourcehealth.models.EventPropertiesRecommendedActions;
 import com.azure.resourcemanager.resourcehealth.models.EventSourceValues;
 import com.azure.resourcemanager.resourcehealth.models.EventStatusValues;
+import com.azure.resourcemanager.resourcehealth.models.EventSubTypeValues;
 import com.azure.resourcemanager.resourcehealth.models.EventTypeValues;
 import com.azure.resourcemanager.resourcehealth.models.Faq;
 import com.azure.resourcemanager.resourcehealth.models.Impact;
 import com.azure.resourcemanager.resourcehealth.models.LevelValues;
 import com.azure.resourcemanager.resourcehealth.models.Link;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/** Properties of event. */
+/**
+ * Properties of event.
+ */
 @Fluent
-public final class EventProperties {
+public final class EventProperties implements JsonSerializable<EventProperties> {
     /*
      * Type of event.
      */
-    @JsonProperty(value = "eventType")
     private EventTypeValues eventType;
+
+    /*
+     * Sub type of the event. Currently used to determine retirement communications for health advisory events
+     */
+    private EventSubTypeValues eventSubType;
 
     /*
      * Source of event.
      */
-    @JsonProperty(value = "eventSource")
     private EventSourceValues eventSource;
 
     /*
      * Current status of event.
      */
-    @JsonProperty(value = "status")
     private EventStatusValues status;
 
     /*
      * Title text of event.
      */
-    @JsonProperty(value = "title")
     private String title;
 
     /*
      * Summary text of event.
      */
-    @JsonProperty(value = "summary")
     private String summary;
 
     /*
      * Header text of event.
      */
-    @JsonProperty(value = "header")
     private String headerProperty;
 
     /*
      * Level of insight.
      */
-    @JsonProperty(value = "level")
     private LevelValues level;
 
     /*
      * Level of event.
      */
-    @JsonProperty(value = "eventLevel")
     private EventLevelValues eventLevel;
 
     /*
      * The id of the Incident
      */
-    @JsonProperty(value = "externalIncidentId")
     private String externalIncidentId;
 
     /*
      * The reason for the Incident
      */
-    @JsonProperty(value = "reason")
     private String reason;
 
     /*
      * Article of event.
      */
-    @JsonProperty(value = "article")
     private EventPropertiesArticle article;
 
     /*
      * Useful links of event.
      */
-    @JsonProperty(value = "links")
     private List<Link> links;
 
     /*
      * It provides the Timestamp for when the health impacting event started.
      */
-    @JsonProperty(value = "impactStartTime")
     private OffsetDateTime impactStartTime;
 
     /*
      * It provides the Timestamp for when the health impacting event resolved.
      */
-    @JsonProperty(value = "impactMitigationTime")
     private OffsetDateTime impactMitigationTime;
 
     /*
      * List services impacted by the service health event.
      */
-    @JsonProperty(value = "impact")
     private List<Impact> impact;
 
     /*
      * Recommended actions of event.
      */
-    @JsonProperty(value = "recommendedActions")
     private EventPropertiesRecommendedActions recommendedActions;
 
     /*
      * Frequently asked questions for the service health event.
      */
-    @JsonProperty(value = "faqs")
     private List<Faq> faqs;
 
     /*
      * It provides information if the event is High incident rate event or not.
      */
-    @JsonProperty(value = "isHIR")
     private Boolean isHir;
 
     /*
      * Tells if we want to enable or disable Microsoft Support for this event.
      */
-    @JsonProperty(value = "enableMicrosoftSupport")
     private Boolean enableMicrosoftSupport;
 
     /*
      * Contains the communication message for the event, that could include summary, root cause and other details.
      */
-    @JsonProperty(value = "description")
     private String description;
 
     /*
      * Is true if the event is platform initiated.
      */
-    @JsonProperty(value = "platformInitiated")
     private Boolean platformInitiated;
 
     /*
      * Tells if we want to enable or disable Microsoft Support for this event.
      */
-    @JsonProperty(value = "enableChatWithUs")
     private Boolean enableChatWithUs;
 
     /*
@@ -160,46 +152,57 @@ public final class EventProperties {
      * priority followed by planned maintenance and health advisory. Critical events have higher priority followed by
      * error, warning and informational. Furthermore, active events have higher priority than resolved.
      */
-    @JsonProperty(value = "priority")
     private Integer priority;
 
     /*
      * It provides the Timestamp for when the health impacting event was last updated.
      */
-    @JsonProperty(value = "lastUpdateTime")
     private OffsetDateTime lastUpdateTime;
 
     /*
      * Stage for HIR Document
      */
-    @JsonProperty(value = "hirStage")
     private String hirStage;
 
     /*
      * Additional information
      */
-    @JsonProperty(value = "additionalInformation")
     private EventPropertiesAdditionalInformation additionalInformation;
 
     /*
      * duration in seconds
      */
-    @JsonProperty(value = "duration")
     private Integer duration;
 
     /*
      * The type of the impact
      */
-    @JsonProperty(value = "impactType")
     private String impactType;
 
-    /** Creates an instance of EventProperties class. */
+    /*
+     * Unique identifier for planned maintenance event.
+     */
+    private String maintenanceId;
+
+    /*
+     * The type of planned maintenance event.
+     */
+    private String maintenanceType;
+
+    /*
+     * Azure Resource Graph query to fetch the affected resources from their existing Azure Resource Graph locations.
+     */
+    private String argQuery;
+
+    /**
+     * Creates an instance of EventProperties class.
+     */
     public EventProperties() {
     }
 
     /**
      * Get the eventType property: Type of event.
-     *
+     * 
      * @return the eventType value.
      */
     public EventTypeValues eventType() {
@@ -208,7 +211,7 @@ public final class EventProperties {
 
     /**
      * Set the eventType property: Type of event.
-     *
+     * 
      * @param eventType the eventType value to set.
      * @return the EventProperties object itself.
      */
@@ -218,8 +221,30 @@ public final class EventProperties {
     }
 
     /**
+     * Get the eventSubType property: Sub type of the event. Currently used to determine retirement communications for
+     * health advisory events.
+     * 
+     * @return the eventSubType value.
+     */
+    public EventSubTypeValues eventSubType() {
+        return this.eventSubType;
+    }
+
+    /**
+     * Set the eventSubType property: Sub type of the event. Currently used to determine retirement communications for
+     * health advisory events.
+     * 
+     * @param eventSubType the eventSubType value to set.
+     * @return the EventProperties object itself.
+     */
+    public EventProperties withEventSubType(EventSubTypeValues eventSubType) {
+        this.eventSubType = eventSubType;
+        return this;
+    }
+
+    /**
      * Get the eventSource property: Source of event.
-     *
+     * 
      * @return the eventSource value.
      */
     public EventSourceValues eventSource() {
@@ -228,7 +253,7 @@ public final class EventProperties {
 
     /**
      * Set the eventSource property: Source of event.
-     *
+     * 
      * @param eventSource the eventSource value to set.
      * @return the EventProperties object itself.
      */
@@ -239,7 +264,7 @@ public final class EventProperties {
 
     /**
      * Get the status property: Current status of event.
-     *
+     * 
      * @return the status value.
      */
     public EventStatusValues status() {
@@ -248,7 +273,7 @@ public final class EventProperties {
 
     /**
      * Set the status property: Current status of event.
-     *
+     * 
      * @param status the status value to set.
      * @return the EventProperties object itself.
      */
@@ -259,7 +284,7 @@ public final class EventProperties {
 
     /**
      * Get the title property: Title text of event.
-     *
+     * 
      * @return the title value.
      */
     public String title() {
@@ -268,7 +293,7 @@ public final class EventProperties {
 
     /**
      * Set the title property: Title text of event.
-     *
+     * 
      * @param title the title value to set.
      * @return the EventProperties object itself.
      */
@@ -279,7 +304,7 @@ public final class EventProperties {
 
     /**
      * Get the summary property: Summary text of event.
-     *
+     * 
      * @return the summary value.
      */
     public String summary() {
@@ -288,7 +313,7 @@ public final class EventProperties {
 
     /**
      * Set the summary property: Summary text of event.
-     *
+     * 
      * @param summary the summary value to set.
      * @return the EventProperties object itself.
      */
@@ -299,7 +324,7 @@ public final class EventProperties {
 
     /**
      * Get the headerProperty property: Header text of event.
-     *
+     * 
      * @return the headerProperty value.
      */
     public String headerProperty() {
@@ -308,7 +333,7 @@ public final class EventProperties {
 
     /**
      * Set the headerProperty property: Header text of event.
-     *
+     * 
      * @param headerProperty the headerProperty value to set.
      * @return the EventProperties object itself.
      */
@@ -319,7 +344,7 @@ public final class EventProperties {
 
     /**
      * Get the level property: Level of insight.
-     *
+     * 
      * @return the level value.
      */
     public LevelValues level() {
@@ -328,7 +353,7 @@ public final class EventProperties {
 
     /**
      * Set the level property: Level of insight.
-     *
+     * 
      * @param level the level value to set.
      * @return the EventProperties object itself.
      */
@@ -339,7 +364,7 @@ public final class EventProperties {
 
     /**
      * Get the eventLevel property: Level of event.
-     *
+     * 
      * @return the eventLevel value.
      */
     public EventLevelValues eventLevel() {
@@ -348,7 +373,7 @@ public final class EventProperties {
 
     /**
      * Set the eventLevel property: Level of event.
-     *
+     * 
      * @param eventLevel the eventLevel value to set.
      * @return the EventProperties object itself.
      */
@@ -359,7 +384,7 @@ public final class EventProperties {
 
     /**
      * Get the externalIncidentId property: The id of the Incident.
-     *
+     * 
      * @return the externalIncidentId value.
      */
     public String externalIncidentId() {
@@ -368,7 +393,7 @@ public final class EventProperties {
 
     /**
      * Set the externalIncidentId property: The id of the Incident.
-     *
+     * 
      * @param externalIncidentId the externalIncidentId value to set.
      * @return the EventProperties object itself.
      */
@@ -379,7 +404,7 @@ public final class EventProperties {
 
     /**
      * Get the reason property: The reason for the Incident.
-     *
+     * 
      * @return the reason value.
      */
     public String reason() {
@@ -388,7 +413,7 @@ public final class EventProperties {
 
     /**
      * Set the reason property: The reason for the Incident.
-     *
+     * 
      * @param reason the reason value to set.
      * @return the EventProperties object itself.
      */
@@ -399,7 +424,7 @@ public final class EventProperties {
 
     /**
      * Get the article property: Article of event.
-     *
+     * 
      * @return the article value.
      */
     public EventPropertiesArticle article() {
@@ -408,7 +433,7 @@ public final class EventProperties {
 
     /**
      * Set the article property: Article of event.
-     *
+     * 
      * @param article the article value to set.
      * @return the EventProperties object itself.
      */
@@ -419,7 +444,7 @@ public final class EventProperties {
 
     /**
      * Get the links property: Useful links of event.
-     *
+     * 
      * @return the links value.
      */
     public List<Link> links() {
@@ -428,7 +453,7 @@ public final class EventProperties {
 
     /**
      * Set the links property: Useful links of event.
-     *
+     * 
      * @param links the links value to set.
      * @return the EventProperties object itself.
      */
@@ -439,7 +464,7 @@ public final class EventProperties {
 
     /**
      * Get the impactStartTime property: It provides the Timestamp for when the health impacting event started.
-     *
+     * 
      * @return the impactStartTime value.
      */
     public OffsetDateTime impactStartTime() {
@@ -448,7 +473,7 @@ public final class EventProperties {
 
     /**
      * Set the impactStartTime property: It provides the Timestamp for when the health impacting event started.
-     *
+     * 
      * @param impactStartTime the impactStartTime value to set.
      * @return the EventProperties object itself.
      */
@@ -459,7 +484,7 @@ public final class EventProperties {
 
     /**
      * Get the impactMitigationTime property: It provides the Timestamp for when the health impacting event resolved.
-     *
+     * 
      * @return the impactMitigationTime value.
      */
     public OffsetDateTime impactMitigationTime() {
@@ -468,7 +493,7 @@ public final class EventProperties {
 
     /**
      * Set the impactMitigationTime property: It provides the Timestamp for when the health impacting event resolved.
-     *
+     * 
      * @param impactMitigationTime the impactMitigationTime value to set.
      * @return the EventProperties object itself.
      */
@@ -479,7 +504,7 @@ public final class EventProperties {
 
     /**
      * Get the impact property: List services impacted by the service health event.
-     *
+     * 
      * @return the impact value.
      */
     public List<Impact> impact() {
@@ -488,7 +513,7 @@ public final class EventProperties {
 
     /**
      * Set the impact property: List services impacted by the service health event.
-     *
+     * 
      * @param impact the impact value to set.
      * @return the EventProperties object itself.
      */
@@ -499,7 +524,7 @@ public final class EventProperties {
 
     /**
      * Get the recommendedActions property: Recommended actions of event.
-     *
+     * 
      * @return the recommendedActions value.
      */
     public EventPropertiesRecommendedActions recommendedActions() {
@@ -508,7 +533,7 @@ public final class EventProperties {
 
     /**
      * Set the recommendedActions property: Recommended actions of event.
-     *
+     * 
      * @param recommendedActions the recommendedActions value to set.
      * @return the EventProperties object itself.
      */
@@ -519,7 +544,7 @@ public final class EventProperties {
 
     /**
      * Get the faqs property: Frequently asked questions for the service health event.
-     *
+     * 
      * @return the faqs value.
      */
     public List<Faq> faqs() {
@@ -528,7 +553,7 @@ public final class EventProperties {
 
     /**
      * Set the faqs property: Frequently asked questions for the service health event.
-     *
+     * 
      * @param faqs the faqs value to set.
      * @return the EventProperties object itself.
      */
@@ -539,7 +564,7 @@ public final class EventProperties {
 
     /**
      * Get the isHir property: It provides information if the event is High incident rate event or not.
-     *
+     * 
      * @return the isHir value.
      */
     public Boolean isHir() {
@@ -548,7 +573,7 @@ public final class EventProperties {
 
     /**
      * Set the isHir property: It provides information if the event is High incident rate event or not.
-     *
+     * 
      * @param isHir the isHir value to set.
      * @return the EventProperties object itself.
      */
@@ -559,7 +584,7 @@ public final class EventProperties {
 
     /**
      * Get the enableMicrosoftSupport property: Tells if we want to enable or disable Microsoft Support for this event.
-     *
+     * 
      * @return the enableMicrosoftSupport value.
      */
     public Boolean enableMicrosoftSupport() {
@@ -568,7 +593,7 @@ public final class EventProperties {
 
     /**
      * Set the enableMicrosoftSupport property: Tells if we want to enable or disable Microsoft Support for this event.
-     *
+     * 
      * @param enableMicrosoftSupport the enableMicrosoftSupport value to set.
      * @return the EventProperties object itself.
      */
@@ -580,7 +605,7 @@ public final class EventProperties {
     /**
      * Get the description property: Contains the communication message for the event, that could include summary, root
      * cause and other details.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -590,7 +615,7 @@ public final class EventProperties {
     /**
      * Set the description property: Contains the communication message for the event, that could include summary, root
      * cause and other details.
-     *
+     * 
      * @param description the description value to set.
      * @return the EventProperties object itself.
      */
@@ -601,7 +626,7 @@ public final class EventProperties {
 
     /**
      * Get the platformInitiated property: Is true if the event is platform initiated.
-     *
+     * 
      * @return the platformInitiated value.
      */
     public Boolean platformInitiated() {
@@ -610,7 +635,7 @@ public final class EventProperties {
 
     /**
      * Set the platformInitiated property: Is true if the event is platform initiated.
-     *
+     * 
      * @param platformInitiated the platformInitiated value to set.
      * @return the EventProperties object itself.
      */
@@ -621,7 +646,7 @@ public final class EventProperties {
 
     /**
      * Get the enableChatWithUs property: Tells if we want to enable or disable Microsoft Support for this event.
-     *
+     * 
      * @return the enableChatWithUs value.
      */
     public Boolean enableChatWithUs() {
@@ -630,7 +655,7 @@ public final class EventProperties {
 
     /**
      * Set the enableChatWithUs property: Tells if we want to enable or disable Microsoft Support for this event.
-     *
+     * 
      * @param enableChatWithUs the enableChatWithUs value to set.
      * @return the EventProperties object itself.
      */
@@ -644,7 +669,7 @@ public final class EventProperties {
      * Service issue events have higher priority followed by planned maintenance and health advisory. Critical events
      * have higher priority followed by error, warning and informational. Furthermore, active events have higher
      * priority than resolved.
-     *
+     * 
      * @return the priority value.
      */
     public Integer priority() {
@@ -656,7 +681,7 @@ public final class EventProperties {
      * Service issue events have higher priority followed by planned maintenance and health advisory. Critical events
      * have higher priority followed by error, warning and informational. Furthermore, active events have higher
      * priority than resolved.
-     *
+     * 
      * @param priority the priority value to set.
      * @return the EventProperties object itself.
      */
@@ -667,7 +692,7 @@ public final class EventProperties {
 
     /**
      * Get the lastUpdateTime property: It provides the Timestamp for when the health impacting event was last updated.
-     *
+     * 
      * @return the lastUpdateTime value.
      */
     public OffsetDateTime lastUpdateTime() {
@@ -676,7 +701,7 @@ public final class EventProperties {
 
     /**
      * Set the lastUpdateTime property: It provides the Timestamp for when the health impacting event was last updated.
-     *
+     * 
      * @param lastUpdateTime the lastUpdateTime value to set.
      * @return the EventProperties object itself.
      */
@@ -687,7 +712,7 @@ public final class EventProperties {
 
     /**
      * Get the hirStage property: Stage for HIR Document.
-     *
+     * 
      * @return the hirStage value.
      */
     public String hirStage() {
@@ -696,7 +721,7 @@ public final class EventProperties {
 
     /**
      * Set the hirStage property: Stage for HIR Document.
-     *
+     * 
      * @param hirStage the hirStage value to set.
      * @return the EventProperties object itself.
      */
@@ -707,7 +732,7 @@ public final class EventProperties {
 
     /**
      * Get the additionalInformation property: Additional information.
-     *
+     * 
      * @return the additionalInformation value.
      */
     public EventPropertiesAdditionalInformation additionalInformation() {
@@ -716,7 +741,7 @@ public final class EventProperties {
 
     /**
      * Set the additionalInformation property: Additional information.
-     *
+     * 
      * @param additionalInformation the additionalInformation value to set.
      * @return the EventProperties object itself.
      */
@@ -727,7 +752,7 @@ public final class EventProperties {
 
     /**
      * Get the duration property: duration in seconds.
-     *
+     * 
      * @return the duration value.
      */
     public Integer duration() {
@@ -736,7 +761,7 @@ public final class EventProperties {
 
     /**
      * Set the duration property: duration in seconds.
-     *
+     * 
      * @param duration the duration value to set.
      * @return the EventProperties object itself.
      */
@@ -747,7 +772,7 @@ public final class EventProperties {
 
     /**
      * Get the impactType property: The type of the impact.
-     *
+     * 
      * @return the impactType value.
      */
     public String impactType() {
@@ -756,7 +781,7 @@ public final class EventProperties {
 
     /**
      * Set the impactType property: The type of the impact.
-     *
+     * 
      * @param impactType the impactType value to set.
      * @return the EventProperties object itself.
      */
@@ -766,8 +791,70 @@ public final class EventProperties {
     }
 
     /**
+     * Get the maintenanceId property: Unique identifier for planned maintenance event.
+     * 
+     * @return the maintenanceId value.
+     */
+    public String maintenanceId() {
+        return this.maintenanceId;
+    }
+
+    /**
+     * Set the maintenanceId property: Unique identifier for planned maintenance event.
+     * 
+     * @param maintenanceId the maintenanceId value to set.
+     * @return the EventProperties object itself.
+     */
+    public EventProperties withMaintenanceId(String maintenanceId) {
+        this.maintenanceId = maintenanceId;
+        return this;
+    }
+
+    /**
+     * Get the maintenanceType property: The type of planned maintenance event.
+     * 
+     * @return the maintenanceType value.
+     */
+    public String maintenanceType() {
+        return this.maintenanceType;
+    }
+
+    /**
+     * Set the maintenanceType property: The type of planned maintenance event.
+     * 
+     * @param maintenanceType the maintenanceType value to set.
+     * @return the EventProperties object itself.
+     */
+    public EventProperties withMaintenanceType(String maintenanceType) {
+        this.maintenanceType = maintenanceType;
+        return this;
+    }
+
+    /**
+     * Get the argQuery property: Azure Resource Graph query to fetch the affected resources from their existing Azure
+     * Resource Graph locations.
+     * 
+     * @return the argQuery value.
+     */
+    public String argQuery() {
+        return this.argQuery;
+    }
+
+    /**
+     * Set the argQuery property: Azure Resource Graph query to fetch the affected resources from their existing Azure
+     * Resource Graph locations.
+     * 
+     * @param argQuery the argQuery value to set.
+     * @return the EventProperties object itself.
+     */
+    public EventProperties withArgQuery(String argQuery) {
+        this.argQuery = argQuery;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -789,5 +876,146 @@ public final class EventProperties {
         if (additionalInformation() != null) {
             additionalInformation().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("eventType", this.eventType == null ? null : this.eventType.toString());
+        jsonWriter.writeStringField("eventSubType", this.eventSubType == null ? null : this.eventSubType.toString());
+        jsonWriter.writeStringField("eventSource", this.eventSource == null ? null : this.eventSource.toString());
+        jsonWriter.writeStringField("status", this.status == null ? null : this.status.toString());
+        jsonWriter.writeStringField("title", this.title);
+        jsonWriter.writeStringField("summary", this.summary);
+        jsonWriter.writeStringField("header", this.headerProperty);
+        jsonWriter.writeStringField("level", this.level == null ? null : this.level.toString());
+        jsonWriter.writeStringField("eventLevel", this.eventLevel == null ? null : this.eventLevel.toString());
+        jsonWriter.writeStringField("externalIncidentId", this.externalIncidentId);
+        jsonWriter.writeStringField("reason", this.reason);
+        jsonWriter.writeJsonField("article", this.article);
+        jsonWriter.writeArrayField("links", this.links, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("impactStartTime",
+            this.impactStartTime == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.impactStartTime));
+        jsonWriter.writeStringField("impactMitigationTime",
+            this.impactMitigationTime == null
+                ? null
+                : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.impactMitigationTime));
+        jsonWriter.writeArrayField("impact", this.impact, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("recommendedActions", this.recommendedActions);
+        jsonWriter.writeArrayField("faqs", this.faqs, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeBooleanField("isHIR", this.isHir);
+        jsonWriter.writeBooleanField("enableMicrosoftSupport", this.enableMicrosoftSupport);
+        jsonWriter.writeStringField("description", this.description);
+        jsonWriter.writeBooleanField("platformInitiated", this.platformInitiated);
+        jsonWriter.writeBooleanField("enableChatWithUs", this.enableChatWithUs);
+        jsonWriter.writeNumberField("priority", this.priority);
+        jsonWriter.writeStringField("lastUpdateTime",
+            this.lastUpdateTime == null ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.lastUpdateTime));
+        jsonWriter.writeStringField("hirStage", this.hirStage);
+        jsonWriter.writeJsonField("additionalInformation", this.additionalInformation);
+        jsonWriter.writeNumberField("duration", this.duration);
+        jsonWriter.writeStringField("impactType", this.impactType);
+        jsonWriter.writeStringField("maintenanceId", this.maintenanceId);
+        jsonWriter.writeStringField("maintenanceType", this.maintenanceType);
+        jsonWriter.writeStringField("argQuery", this.argQuery);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of EventProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of EventProperties if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the EventProperties.
+     */
+    public static EventProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            EventProperties deserializedEventProperties = new EventProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("eventType".equals(fieldName)) {
+                    deserializedEventProperties.eventType = EventTypeValues.fromString(reader.getString());
+                } else if ("eventSubType".equals(fieldName)) {
+                    deserializedEventProperties.eventSubType = EventSubTypeValues.fromString(reader.getString());
+                } else if ("eventSource".equals(fieldName)) {
+                    deserializedEventProperties.eventSource = EventSourceValues.fromString(reader.getString());
+                } else if ("status".equals(fieldName)) {
+                    deserializedEventProperties.status = EventStatusValues.fromString(reader.getString());
+                } else if ("title".equals(fieldName)) {
+                    deserializedEventProperties.title = reader.getString();
+                } else if ("summary".equals(fieldName)) {
+                    deserializedEventProperties.summary = reader.getString();
+                } else if ("header".equals(fieldName)) {
+                    deserializedEventProperties.headerProperty = reader.getString();
+                } else if ("level".equals(fieldName)) {
+                    deserializedEventProperties.level = LevelValues.fromString(reader.getString());
+                } else if ("eventLevel".equals(fieldName)) {
+                    deserializedEventProperties.eventLevel = EventLevelValues.fromString(reader.getString());
+                } else if ("externalIncidentId".equals(fieldName)) {
+                    deserializedEventProperties.externalIncidentId = reader.getString();
+                } else if ("reason".equals(fieldName)) {
+                    deserializedEventProperties.reason = reader.getString();
+                } else if ("article".equals(fieldName)) {
+                    deserializedEventProperties.article = EventPropertiesArticle.fromJson(reader);
+                } else if ("links".equals(fieldName)) {
+                    List<Link> links = reader.readArray(reader1 -> Link.fromJson(reader1));
+                    deserializedEventProperties.links = links;
+                } else if ("impactStartTime".equals(fieldName)) {
+                    deserializedEventProperties.impactStartTime = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("impactMitigationTime".equals(fieldName)) {
+                    deserializedEventProperties.impactMitigationTime = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("impact".equals(fieldName)) {
+                    List<Impact> impact = reader.readArray(reader1 -> Impact.fromJson(reader1));
+                    deserializedEventProperties.impact = impact;
+                } else if ("recommendedActions".equals(fieldName)) {
+                    deserializedEventProperties.recommendedActions = EventPropertiesRecommendedActions.fromJson(reader);
+                } else if ("faqs".equals(fieldName)) {
+                    List<Faq> faqs = reader.readArray(reader1 -> Faq.fromJson(reader1));
+                    deserializedEventProperties.faqs = faqs;
+                } else if ("isHIR".equals(fieldName)) {
+                    deserializedEventProperties.isHir = reader.getNullable(JsonReader::getBoolean);
+                } else if ("enableMicrosoftSupport".equals(fieldName)) {
+                    deserializedEventProperties.enableMicrosoftSupport = reader.getNullable(JsonReader::getBoolean);
+                } else if ("description".equals(fieldName)) {
+                    deserializedEventProperties.description = reader.getString();
+                } else if ("platformInitiated".equals(fieldName)) {
+                    deserializedEventProperties.platformInitiated = reader.getNullable(JsonReader::getBoolean);
+                } else if ("enableChatWithUs".equals(fieldName)) {
+                    deserializedEventProperties.enableChatWithUs = reader.getNullable(JsonReader::getBoolean);
+                } else if ("priority".equals(fieldName)) {
+                    deserializedEventProperties.priority = reader.getNullable(JsonReader::getInt);
+                } else if ("lastUpdateTime".equals(fieldName)) {
+                    deserializedEventProperties.lastUpdateTime = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("hirStage".equals(fieldName)) {
+                    deserializedEventProperties.hirStage = reader.getString();
+                } else if ("additionalInformation".equals(fieldName)) {
+                    deserializedEventProperties.additionalInformation
+                        = EventPropertiesAdditionalInformation.fromJson(reader);
+                } else if ("duration".equals(fieldName)) {
+                    deserializedEventProperties.duration = reader.getNullable(JsonReader::getInt);
+                } else if ("impactType".equals(fieldName)) {
+                    deserializedEventProperties.impactType = reader.getString();
+                } else if ("maintenanceId".equals(fieldName)) {
+                    deserializedEventProperties.maintenanceId = reader.getString();
+                } else if ("maintenanceType".equals(fieldName)) {
+                    deserializedEventProperties.maintenanceType = reader.getString();
+                } else if ("argQuery".equals(fieldName)) {
+                    deserializedEventProperties.argQuery = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedEventProperties;
+        });
     }
 }

@@ -5,24 +5,38 @@
 package com.azure.security.attestation.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The result of a call to retrieve policy certificates. */
+/**
+ * The result of a call to retrieve policy certificates.
+ */
 @Fluent
-public final class PolicyCertificatesResult {
+public final class PolicyCertificatesResult implements JsonSerializable<PolicyCertificatesResult> {
     /*
-     * SHA256 Hash of the binary representation certificate which was added or
-     * removed
+     * SHA256 Hash of the binary representation certificate which was added or removed
      */
-    @JsonProperty(value = "x-ms-policy-certificates")
+    @Generated
     private JsonWebKeySet policyCertificates;
+
+    /**
+     * Creates an instance of PolicyCertificatesResult class.
+     */
+    @Generated
+    public PolicyCertificatesResult() {
+    }
 
     /**
      * Get the policyCertificates property: SHA256 Hash of the binary representation certificate which was added or
      * removed.
-     *
+     * 
      * @return the policyCertificates value.
      */
+    @Generated
     public JsonWebKeySet getPolicyCertificates() {
         return this.policyCertificates;
     }
@@ -30,10 +44,11 @@ public final class PolicyCertificatesResult {
     /**
      * Set the policyCertificates property: SHA256 Hash of the binary representation certificate which was added or
      * removed.
-     *
+     * 
      * @param policyCertificates the policyCertificates value to set.
      * @return the PolicyCertificatesResult object itself.
      */
+    @Generated
     public PolicyCertificatesResult setPolicyCertificates(JsonWebKeySet policyCertificates) {
         this.policyCertificates = policyCertificates;
         return this;
@@ -41,12 +56,50 @@ public final class PolicyCertificatesResult {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (getPolicyCertificates() != null) {
             getPolicyCertificates().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("x-ms-policy-certificates", this.policyCertificates);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PolicyCertificatesResult from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PolicyCertificatesResult if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the PolicyCertificatesResult.
+     */
+    @Generated
+    public static PolicyCertificatesResult fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PolicyCertificatesResult deserializedPolicyCertificatesResult = new PolicyCertificatesResult();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("x-ms-policy-certificates".equals(fieldName)) {
+                    deserializedPolicyCertificatesResult.policyCertificates = JsonWebKeySet.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPolicyCertificatesResult;
+        });
     }
 }

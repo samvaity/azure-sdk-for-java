@@ -8,13 +8,16 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of RedisEnterprises. */
+/**
+ * Resource collection API of RedisEnterprises.
+ */
 public interface RedisEnterprises {
     /**
-     * Deletes a RedisEnterprise cache cluster.
-     *
+     * Deletes a Redis Enterprise cache cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param clusterName The name of the RedisEnterprise cluster.
+     * @param clusterName The name of the Redis Enterprise cluster. Name must be 1-60 characters long. Allowed
+     * characters(A-Z, a-z, 0-9) and hyphen(-). There can be no leading nor trailing nor consecutive hyphens.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -22,10 +25,11 @@ public interface RedisEnterprises {
     void deleteByResourceGroup(String resourceGroupName, String clusterName);
 
     /**
-     * Deletes a RedisEnterprise cache cluster.
-     *
+     * Deletes a Redis Enterprise cache cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param clusterName The name of the RedisEnterprise cluster.
+     * @param clusterName The name of the Redis Enterprise cluster. Name must be 1-60 characters long. Allowed
+     * characters(A-Z, a-z, 0-9) and hyphen(-). There can be no leading nor trailing nor consecutive hyphens.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -34,33 +38,35 @@ public interface RedisEnterprises {
     void delete(String resourceGroupName, String clusterName, Context context);
 
     /**
-     * Gets information about a RedisEnterprise cluster.
-     *
+     * Gets information about a Redis Enterprise cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param clusterName The name of the RedisEnterprise cluster.
+     * @param clusterName The name of the Redis Enterprise cluster. Name must be 1-60 characters long. Allowed
+     * characters(A-Z, a-z, 0-9) and hyphen(-). There can be no leading nor trailing nor consecutive hyphens.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return information about a RedisEnterprise cluster along with {@link Response}.
+     * @return information about a Redis Enterprise cluster along with {@link Response}.
      */
     Response<Cluster> getByResourceGroupWithResponse(String resourceGroupName, String clusterName, Context context);
 
     /**
-     * Gets information about a RedisEnterprise cluster.
-     *
+     * Gets information about a Redis Enterprise cluster.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param clusterName The name of the RedisEnterprise cluster.
+     * @param clusterName The name of the Redis Enterprise cluster. Name must be 1-60 characters long. Allowed
+     * characters(A-Z, a-z, 0-9) and hyphen(-). There can be no leading nor trailing nor consecutive hyphens.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return information about a RedisEnterprise cluster.
+     * @return information about a Redis Enterprise cluster.
      */
     Cluster getByResourceGroup(String resourceGroupName, String clusterName);
 
     /**
-     * Lists all RedisEnterprise clusters in a resource group.
-     *
+     * Lists all Redis Enterprise clusters in a resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -70,8 +76,8 @@ public interface RedisEnterprises {
     PagedIterable<Cluster> listByResourceGroup(String resourceGroupName);
 
     /**
-     * Lists all RedisEnterprise clusters in a resource group.
-     *
+     * Lists all Redis Enterprise clusters in a resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -82,53 +88,79 @@ public interface RedisEnterprises {
     PagedIterable<Cluster> listByResourceGroup(String resourceGroupName, Context context);
 
     /**
-     * Gets all RedisEnterprise clusters in the specified subscription.
-     *
+     * Lists all Redis Enterprise clusters in the specified subscription.
+     * 
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all RedisEnterprise clusters in the specified subscription as paginated response with {@link
-     *     PagedIterable}.
+     * @return the response of a list-all operation as paginated response with {@link PagedIterable}.
      */
     PagedIterable<Cluster> list();
 
     /**
-     * Gets all RedisEnterprise clusters in the specified subscription.
-     *
+     * Lists all Redis Enterprise clusters in the specified subscription.
+     * 
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all RedisEnterprise clusters in the specified subscription as paginated response with {@link
-     *     PagedIterable}.
+     * @return the response of a list-all operation as paginated response with {@link PagedIterable}.
      */
     PagedIterable<Cluster> list(Context context);
 
     /**
-     * Gets information about a RedisEnterprise cluster.
-     *
+     * Lists the available SKUs for scaling the Redis Enterprise cluster.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param clusterName The name of the Redis Enterprise cluster. Name must be 1-60 characters long. Allowed
+     * characters(A-Z, a-z, 0-9) and hyphen(-). There can be no leading nor trailing nor consecutive hyphens.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response of a listSkusForScaling operation along with {@link Response}.
+     */
+    Response<SkuDetailsList> listSkusForScalingWithResponse(String resourceGroupName, String clusterName,
+        Context context);
+
+    /**
+     * Lists the available SKUs for scaling the Redis Enterprise cluster.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param clusterName The name of the Redis Enterprise cluster. Name must be 1-60 characters long. Allowed
+     * characters(A-Z, a-z, 0-9) and hyphen(-). There can be no leading nor trailing nor consecutive hyphens.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response of a listSkusForScaling operation.
+     */
+    SkuDetailsList listSkusForScaling(String resourceGroupName, String clusterName);
+
+    /**
+     * Gets information about a Redis Enterprise cluster.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return information about a RedisEnterprise cluster along with {@link Response}.
+     * @return information about a Redis Enterprise cluster along with {@link Response}.
      */
     Cluster getById(String id);
 
     /**
-     * Gets information about a RedisEnterprise cluster.
-     *
+     * Gets information about a Redis Enterprise cluster.
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return information about a RedisEnterprise cluster along with {@link Response}.
+     * @return information about a Redis Enterprise cluster along with {@link Response}.
      */
     Response<Cluster> getByIdWithResponse(String id, Context context);
 
     /**
-     * Deletes a RedisEnterprise cache cluster.
-     *
+     * Deletes a Redis Enterprise cache cluster.
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -137,8 +169,8 @@ public interface RedisEnterprises {
     void deleteById(String id);
 
     /**
-     * Deletes a RedisEnterprise cache cluster.
-     *
+     * Deletes a Redis Enterprise cache cluster.
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -149,7 +181,7 @@ public interface RedisEnterprises {
 
     /**
      * Begins definition for a new Cluster resource.
-     *
+     * 
      * @param name resource name.
      * @return the first stage of the new Cluster definition.
      */

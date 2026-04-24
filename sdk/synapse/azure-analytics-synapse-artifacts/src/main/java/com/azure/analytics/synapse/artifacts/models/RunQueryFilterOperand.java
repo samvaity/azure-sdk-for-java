@@ -4,8 +4,8 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
 /**
@@ -14,66 +14,105 @@ import java.util.Collection;
  * to query trigger runs are TriggerName, TriggerRunTimestamp and Status.
  */
 public final class RunQueryFilterOperand extends ExpandableStringEnum<RunQueryFilterOperand> {
-    /** Static value PipelineName for RunQueryFilterOperand. */
+    /**
+     * Static value PipelineName for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand PIPELINE_NAME = fromString("PipelineName");
 
-    /** Static value Status for RunQueryFilterOperand. */
+    /**
+     * Static value Status for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand STATUS = fromString("Status");
 
-    /** Static value RunStart for RunQueryFilterOperand. */
+    /**
+     * Static value RunStart for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand RUN_START = fromString("RunStart");
 
-    /** Static value RunEnd for RunQueryFilterOperand. */
+    /**
+     * Static value RunEnd for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand RUN_END = fromString("RunEnd");
 
-    /** Static value ActivityName for RunQueryFilterOperand. */
+    /**
+     * Static value ActivityName for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand ACTIVITY_NAME = fromString("ActivityName");
 
-    /** Static value ActivityRunStart for RunQueryFilterOperand. */
+    /**
+     * Static value ActivityRunStart for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand ACTIVITY_RUN_START = fromString("ActivityRunStart");
 
-    /** Static value ActivityRunEnd for RunQueryFilterOperand. */
+    /**
+     * Static value ActivityRunEnd for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand ACTIVITY_RUN_END = fromString("ActivityRunEnd");
 
-    /** Static value ActivityType for RunQueryFilterOperand. */
+    /**
+     * Static value ActivityType for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand ACTIVITY_TYPE = fromString("ActivityType");
 
-    /** Static value TriggerName for RunQueryFilterOperand. */
+    /**
+     * Static value TriggerName for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand TRIGGER_NAME = fromString("TriggerName");
 
-    /** Static value TriggerRunTimestamp for RunQueryFilterOperand. */
+    /**
+     * Static value TriggerRunTimestamp for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand TRIGGER_RUN_TIMESTAMP = fromString("TriggerRunTimestamp");
 
-    /** Static value RunGroupId for RunQueryFilterOperand. */
+    /**
+     * Static value RunGroupId for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand RUN_GROUP_ID = fromString("RunGroupId");
 
-    /** Static value LatestOnly for RunQueryFilterOperand. */
+    /**
+     * Static value LatestOnly for RunQueryFilterOperand.
+     */
+    @Generated
     public static final RunQueryFilterOperand LATEST_ONLY = fromString("LatestOnly");
 
     /**
      * Creates a new instance of RunQueryFilterOperand value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public RunQueryFilterOperand() {}
+    public RunQueryFilterOperand() {
+    }
 
     /**
      * Creates or finds a RunQueryFilterOperand from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding RunQueryFilterOperand.
      */
-    @JsonCreator
+    @Generated
     public static RunQueryFilterOperand fromString(String name) {
         return fromString(name, RunQueryFilterOperand.class);
     }
 
     /**
      * Gets known RunQueryFilterOperand values.
-     *
+     * 
      * @return known RunQueryFilterOperand values.
      */
+    @Generated
     public static Collection<RunQueryFilterOperand> values() {
         return values(RunQueryFilterOperand.class);
     }

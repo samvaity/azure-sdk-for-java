@@ -13,21 +13,19 @@ import org.junit.jupiter.api.Assertions;
 public final class MigrateSqlServerSqlDbSyncTaskOutputDatabaseErrorTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlDbSyncTaskOutputDatabaseError model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"DatabaseLevelErrorOutput\",\"errorMessage\":\"rddh\",\"events\":[{\"timestampString\":\"izzronasxiftozqy\",\"eventTypeString\":\"f\",\"eventText\":\"esgogc\"}],\"id\":\"onnxkrlgnyhm\"}")
-                .toObject(MigrateSqlServerSqlDbSyncTaskOutputDatabaseError.class);
-        Assertions.assertEquals("rddh", model.errorMessage());
+        MigrateSqlServerSqlDbSyncTaskOutputDatabaseError model = BinaryData.fromString(
+            "{\"resultType\":\"DatabaseLevelErrorOutput\",\"errorMessage\":\"gbwidqlvh\",\"events\":[{\"timestampString\":\"eofiz\",\"eventTypeString\":\"jfnmjmvlwyz\",\"eventText\":\"blkujrllfojuidjp\"},{\"timestampString\":\"yjucejikzoeo\",\"eventTypeString\":\"tzejetjklnt\",\"eventText\":\"yjuzkdb\"},{\"timestampString\":\"o\",\"eventTypeString\":\"rzvh\",\"eventText\":\"wtrhtgv\"},{\"timestampString\":\"pcrrk\",\"eventTypeString\":\"awjmjsmw\",\"eventText\":\"kcdxfzzzw\"}],\"id\":\"afitlhguynuchlg\"}")
+            .toObject(MigrateSqlServerSqlDbSyncTaskOutputDatabaseError.class);
+        Assertions.assertEquals("gbwidqlvh", model.errorMessage());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        MigrateSqlServerSqlDbSyncTaskOutputDatabaseError model =
-            new MigrateSqlServerSqlDbSyncTaskOutputDatabaseError()
-                .withErrorMessage("rddh")
-                .withEvents(Arrays.asList(new SyncMigrationDatabaseErrorEvent()));
+        MigrateSqlServerSqlDbSyncTaskOutputDatabaseError model
+            = new MigrateSqlServerSqlDbSyncTaskOutputDatabaseError().withErrorMessage("gbwidqlvh")
+                .withEvents(Arrays.asList(new SyncMigrationDatabaseErrorEvent(), new SyncMigrationDatabaseErrorEvent(),
+                    new SyncMigrationDatabaseErrorEvent(), new SyncMigrationDatabaseErrorEvent()));
         model = BinaryData.fromObject(model).toObject(MigrateSqlServerSqlDbSyncTaskOutputDatabaseError.class);
-        Assertions.assertEquals("rddh", model.errorMessage());
+        Assertions.assertEquals("gbwidqlvh", model.errorMessage());
     }
 }

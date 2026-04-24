@@ -5,43 +5,53 @@
 package com.azure.storage.file.share.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlWriter;
+import javax.xml.stream.XMLStreamException;
 
-/** The StringEncoded model. */
-@JacksonXmlRootElement(localName = "StringEncoded")
+/**
+ * The StringEncoded model.
+ */
 @Fluent
-public final class StringEncoded {
+public final class StringEncoded implements XmlSerializable<StringEncoded> {
     /*
      * The Encoded property.
      */
-    @JacksonXmlProperty(localName = "Encoded", isAttribute = true)
+    @Generated
     private Boolean encoded;
 
     /*
      * The content property.
      */
-    @JacksonXmlText private String content;
+    @Generated
+    private String content;
 
-    /** Creates an instance of StringEncoded class. */
-    public StringEncoded() {}
+    /**
+     * Creates an instance of StringEncoded class.
+     */
+    @Generated
+    public StringEncoded() {
+    }
 
     /**
      * Get the encoded property: The Encoded property.
-     *
+     * 
      * @return the encoded value.
      */
+    @Generated
     public Boolean isEncoded() {
         return this.encoded;
     }
 
     /**
      * Set the encoded property: The Encoded property.
-     *
+     * 
      * @param encoded the encoded value to set.
      * @return the StringEncoded object itself.
      */
+    @Generated
     public StringEncoded setEncoded(Boolean encoded) {
         this.encoded = encoded;
         return this;
@@ -49,21 +59,75 @@ public final class StringEncoded {
 
     /**
      * Get the content property: The content property.
-     *
+     * 
      * @return the content value.
      */
+    @Generated
     public String getContent() {
         return this.content;
     }
 
     /**
      * Set the content property: The content property.
-     *
+     * 
      * @param content the content value to set.
      * @return the StringEncoded object itself.
      */
+    @Generated
     public StringEncoded setContent(String content) {
         this.content = content;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "StringEncoded" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeBooleanAttribute("Encoded", this.encoded);
+        xmlWriter.writeString(this.content);
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of StringEncoded from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of StringEncoded if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the StringEncoded.
+     */
+    @Generated
+    public static StringEncoded fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of StringEncoded from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of StringEncoded if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the StringEncoded.
+     */
+    @Generated
+    public static StringEncoded fromXml(XmlReader xmlReader, String rootElementName) throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "StringEncoded" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            StringEncoded deserializedStringEncoded = new StringEncoded();
+            deserializedStringEncoded.encoded = reader.getNullableAttribute(null, "Encoded", Boolean::parseBoolean);
+            deserializedStringEncoded.content = reader.getStringElement();
+
+            return deserializedStringEncoded;
+        });
     }
 }

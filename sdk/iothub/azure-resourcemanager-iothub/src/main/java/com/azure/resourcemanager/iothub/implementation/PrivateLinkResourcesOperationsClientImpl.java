@@ -20,32 +20,35 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.resourcemanager.iothub.fluent.PrivateLinkResourcesOperationsClient;
 import com.azure.resourcemanager.iothub.fluent.models.GroupIdInformationInner;
 import com.azure.resourcemanager.iothub.fluent.models.PrivateLinkResourcesInner;
 import com.azure.resourcemanager.iothub.models.ErrorDetailsException;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in PrivateLinkResourcesOperationsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in PrivateLinkResourcesOperationsClient.
+ */
 public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLinkResourcesOperationsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final PrivateLinkResourcesOperationsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final IotHubClientImpl client;
 
     /**
      * Initializes an instance of PrivateLinkResourcesOperationsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     PrivateLinkResourcesOperationsClientImpl(IotHubClientImpl client) {
-        this.service =
-            RestProxy
-                .create(
-                    PrivateLinkResourcesOperationsService.class,
-                    client.getHttpPipeline(),
-                    client.getSerializerAdapter());
+        this.service = RestProxy.create(PrivateLinkResourcesOperationsService.class, client.getHttpPipeline(),
+            client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -54,65 +57,68 @@ public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLi
      * service to perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "IotHubClientPrivateL")
+    @ServiceInterface(name = "IotHubClientPrivateLinkResourcesOperations")
     public interface PrivateLinkResourcesOperationsService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Devices/iotHubs/{resourceName}/privateLinkResources")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Devices/iotHubs/{resourceName}/privateLinkResources")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ErrorDetailsException.class)
-        Mono<Response<PrivateLinkResourcesInner>> list(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("resourceName") String resourceName,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<PrivateLinkResourcesInner>> list(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("resourceName") String resourceName,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Devices/iotHubs/{resourceName}/privateLinkResources/{groupId}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Devices/iotHubs/{resourceName}/privateLinkResources")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ErrorDetailsException.class)
-        Mono<Response<GroupIdInformationInner>> get(
-            @HostParam("$host") String endpoint,
-            @QueryParam("api-version") String apiVersion,
-            @PathParam("subscriptionId") String subscriptionId,
-            @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("resourceName") String resourceName,
-            @PathParam("groupId") String groupId,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Response<PrivateLinkResourcesInner> listSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("resourceName") String resourceName,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Devices/iotHubs/{resourceName}/privateLinkResources/{groupId}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ErrorDetailsException.class)
+        Mono<Response<GroupIdInformationInner>> get(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("resourceName") String resourceName,
+            @PathParam("groupId") String groupId, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Devices/iotHubs/{resourceName}/privateLinkResources/{groupId}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ErrorDetailsException.class)
+        Response<GroupIdInformationInner> getSync(@HostParam("$host") String endpoint,
+            @QueryParam("api-version") String apiVersion, @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName, @PathParam("resourceName") String resourceName,
+            @PathParam("groupId") String groupId, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * List private link resources
-     *
-     * <p>List private link resources for the given IotHub.
-     *
+     * 
+     * List private link resources for the given IotHub.
+     * 
      * @param resourceGroupName The name of the resource group that contains the IoT hub.
      * @param resourceName The name of the IoT hub.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorDetailsException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the available private link resources for an IotHub along with {@link Response} on successful completion
-     *     of {@link Mono}.
+     * of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PrivateLinkResourcesInner>> listWithResponseAsync(
-        String resourceGroupName, String resourceName) {
+    private Mono<Response<PrivateLinkResourcesInner>> listWithResponseAsync(String resourceGroupName,
+        String resourceName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -123,74 +129,16 @@ public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLi
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            resourceName,
-                            accept,
-                            context))
+            .withContext(context -> service.list(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, resourceName, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * List private link resources
-     *
-     * <p>List private link resources for the given IotHub.
-     *
-     * @param resourceGroupName The name of the resource group that contains the IoT hub.
-     * @param resourceName The name of the IoT hub.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorDetailsException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the available private link resources for an IotHub along with {@link Response} on successful completion
-     *     of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PrivateLinkResourcesInner>> listWithResponseAsync(
-        String resourceGroupName, String resourceName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .list(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                resourceName,
-                accept,
-                context);
-    }
-
-    /**
-     * List private link resources
-     *
-     * <p>List private link resources for the given IotHub.
-     *
+     * 
+     * List private link resources for the given IotHub.
+     * 
      * @param resourceGroupName The name of the resource group that contains the IoT hub.
      * @param resourceName The name of the IoT hub.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -205,9 +153,9 @@ public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLi
 
     /**
      * List private link resources
-     *
-     * <p>List private link resources for the given IotHub.
-     *
+     * 
+     * List private link resources for the given IotHub.
+     * 
      * @param resourceGroupName The name of the resource group that contains the IoT hub.
      * @param resourceName The name of the IoT hub.
      * @param context The context to associate with this operation.
@@ -217,16 +165,36 @@ public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLi
      * @return the available private link resources for an IotHub along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PrivateLinkResourcesInner> listWithResponse(
-        String resourceGroupName, String resourceName, Context context) {
-        return listWithResponseAsync(resourceGroupName, resourceName, context).block();
+    public Response<PrivateLinkResourcesInner> listWithResponse(String resourceGroupName, String resourceName,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (resourceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.listSync(this.client.getEndpoint(), this.client.getApiVersion(), this.client.getSubscriptionId(),
+            resourceGroupName, resourceName, accept, context);
     }
 
     /**
      * List private link resources
-     *
-     * <p>List private link resources for the given IotHub.
-     *
+     * 
+     * List private link resources for the given IotHub.
+     * 
      * @param resourceGroupName The name of the resource group that contains the IoT hub.
      * @param resourceName The name of the IoT hub.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -241,9 +209,9 @@ public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLi
 
     /**
      * Get the specified private link resource
-     *
-     * <p>Get the specified private link resource for the given IotHub.
-     *
+     * 
+     * Get the specified private link resource for the given IotHub.
+     * 
      * @param resourceGroupName The name of the resource group that contains the IoT hub.
      * @param resourceName The name of the IoT hub.
      * @param groupId The name of the private link resource.
@@ -251,22 +219,18 @@ public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLi
      * @throws ErrorDetailsException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the specified private link resource for the given IotHub along with {@link Response} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<GroupIdInformationInner>> getWithResponseAsync(
-        String resourceGroupName, String resourceName, String groupId) {
+    private Mono<Response<GroupIdInformationInner>> getWithResponseAsync(String resourceGroupName, String resourceName,
+        String groupId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -280,80 +244,16 @@ public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLi
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getApiVersion(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            resourceName,
-                            groupId,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), this.client.getApiVersion(),
+                this.client.getSubscriptionId(), resourceGroupName, resourceName, groupId, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the specified private link resource
-     *
-     * <p>Get the specified private link resource for the given IotHub.
-     *
-     * @param resourceGroupName The name of the resource group that contains the IoT hub.
-     * @param resourceName The name of the IoT hub.
-     * @param groupId The name of the private link resource.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ErrorDetailsException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the specified private link resource for the given IotHub along with {@link Response} on successful
-     *     completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<GroupIdInformationInner>> getWithResponseAsync(
-        String resourceGroupName, String resourceName, String groupId, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (resourceName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
-        }
-        if (groupId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter groupId is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getApiVersion(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                resourceName,
-                groupId,
-                accept,
-                context);
-    }
-
-    /**
-     * Get the specified private link resource
-     *
-     * <p>Get the specified private link resource for the given IotHub.
-     *
+     * 
+     * Get the specified private link resource for the given IotHub.
+     * 
      * @param resourceGroupName The name of the resource group that contains the IoT hub.
      * @param resourceName The name of the IoT hub.
      * @param groupId The name of the private link resource.
@@ -370,9 +270,9 @@ public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLi
 
     /**
      * Get the specified private link resource
-     *
-     * <p>Get the specified private link resource for the given IotHub.
-     *
+     * 
+     * Get the specified private link resource for the given IotHub.
+     * 
      * @param resourceGroupName The name of the resource group that contains the IoT hub.
      * @param resourceName The name of the IoT hub.
      * @param groupId The name of the private link resource.
@@ -383,16 +283,40 @@ public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLi
      * @return the specified private link resource for the given IotHub along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<GroupIdInformationInner> getWithResponse(
-        String resourceGroupName, String resourceName, String groupId, Context context) {
-        return getWithResponseAsync(resourceGroupName, resourceName, groupId, context).block();
+    public Response<GroupIdInformationInner> getWithResponse(String resourceGroupName, String resourceName,
+        String groupId, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (resourceName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceName is required and cannot be null."));
+        }
+        if (groupId == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter groupId is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getSync(this.client.getEndpoint(), this.client.getApiVersion(), this.client.getSubscriptionId(),
+            resourceGroupName, resourceName, groupId, accept, context);
     }
 
     /**
      * Get the specified private link resource
-     *
-     * <p>Get the specified private link resource for the given IotHub.
-     *
+     * 
+     * Get the specified private link resource for the given IotHub.
+     * 
      * @param resourceGroupName The name of the resource group that contains the IoT hub.
      * @param resourceName The name of the IoT hub.
      * @param groupId The name of the private link resource.
@@ -405,4 +329,6 @@ public final class PrivateLinkResourcesOperationsClientImpl implements PrivateLi
     public GroupIdInformationInner get(String resourceGroupName, String resourceName, String groupId) {
         return getWithResponse(resourceGroupName, resourceName, groupId, Context.NONE).getValue();
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(PrivateLinkResourcesOperationsClientImpl.class);
 }

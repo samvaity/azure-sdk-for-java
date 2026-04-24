@@ -4,53 +4,74 @@
 
 package com.azure.communication.phonenumbers.implementation.models;
 
-import com.azure.communication.phonenumbers.CodeCoverageAnnotation.Generated;
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.http.HttpHeaderName;
+import com.azure.core.http.HttpHeaders;
 
-/** The PhoneNumbersSearchAvailablePhoneNumbersHeaders model. */
+/**
+ * The PhoneNumbersSearchAvailablePhoneNumbersHeaders model.
+ */
 @Fluent
-@Generated
 public final class PhoneNumbersSearchAvailablePhoneNumbersHeaders {
     /*
      * The operation-id property.
      */
-    @JsonProperty(value = "operation-id")
+    @Generated
     private String operationId;
 
     /*
      * The search-id property.
      */
-    @JsonProperty(value = "search-id")
+    @Generated
     private String searchId;
 
     /*
      * The Operation-Location property.
      */
-    @JsonProperty(value = "Operation-Location")
+    @Generated
     private String operationLocation;
 
     /*
      * The Location property.
      */
-    @JsonProperty(value = "Location")
+    @Generated
     private String location;
+
+    private static final HttpHeaderName OPERATION_ID = HttpHeaderName.fromString("operation-id");
+
+    private static final HttpHeaderName SEARCH_ID = HttpHeaderName.fromString("search-id");
+
+    // HttpHeaders containing the raw property values.
+    /**
+     * Creates an instance of PhoneNumbersSearchAvailablePhoneNumbersHeaders class.
+     * 
+     * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
+     */
+    public PhoneNumbersSearchAvailablePhoneNumbersHeaders(HttpHeaders rawHeaders) {
+        this.operationId = rawHeaders.getValue(OPERATION_ID);
+        this.searchId = rawHeaders.getValue(SEARCH_ID);
+        this.operationLocation = rawHeaders.getValue(HttpHeaderName.OPERATION_LOCATION);
+        this.location = rawHeaders.getValue(HttpHeaderName.LOCATION);
+    }
 
     /**
      * Get the operationId property: The operation-id property.
-     *
+     * 
      * @return the operationId value.
      */
+    @Generated
     public String getOperationId() {
         return this.operationId;
     }
 
     /**
      * Set the operationId property: The operation-id property.
-     *
+     * 
      * @param operationId the operationId value to set.
      * @return the PhoneNumbersSearchAvailablePhoneNumbersHeaders object itself.
      */
+    @Generated
     public PhoneNumbersSearchAvailablePhoneNumbersHeaders setOperationId(String operationId) {
         this.operationId = operationId;
         return this;
@@ -58,19 +79,21 @@ public final class PhoneNumbersSearchAvailablePhoneNumbersHeaders {
 
     /**
      * Get the searchId property: The search-id property.
-     *
+     * 
      * @return the searchId value.
      */
+    @Generated
     public String getSearchId() {
         return this.searchId;
     }
 
     /**
      * Set the searchId property: The search-id property.
-     *
+     * 
      * @param searchId the searchId value to set.
      * @return the PhoneNumbersSearchAvailablePhoneNumbersHeaders object itself.
      */
+    @Generated
     public PhoneNumbersSearchAvailablePhoneNumbersHeaders setSearchId(String searchId) {
         this.searchId = searchId;
         return this;
@@ -78,19 +101,21 @@ public final class PhoneNumbersSearchAvailablePhoneNumbersHeaders {
 
     /**
      * Get the operationLocation property: The Operation-Location property.
-     *
+     * 
      * @return the operationLocation value.
      */
+    @Generated
     public String getOperationLocation() {
         return this.operationLocation;
     }
 
     /**
      * Set the operationLocation property: The Operation-Location property.
-     *
+     * 
      * @param operationLocation the operationLocation value to set.
      * @return the PhoneNumbersSearchAvailablePhoneNumbersHeaders object itself.
      */
+    @Generated
     public PhoneNumbersSearchAvailablePhoneNumbersHeaders setOperationLocation(String operationLocation) {
         this.operationLocation = operationLocation;
         return this;
@@ -98,19 +123,21 @@ public final class PhoneNumbersSearchAvailablePhoneNumbersHeaders {
 
     /**
      * Get the location property: The Location property.
-     *
+     * 
      * @return the location value.
      */
+    @Generated
     public String getLocation() {
         return this.location;
     }
 
     /**
      * Set the location property: The Location property.
-     *
+     * 
      * @param location the location value to set.
      * @return the PhoneNumbersSearchAvailablePhoneNumbersHeaders object itself.
      */
+    @Generated
     public PhoneNumbersSearchAvailablePhoneNumbersHeaders setLocation(String location) {
         this.location = location;
         return this;

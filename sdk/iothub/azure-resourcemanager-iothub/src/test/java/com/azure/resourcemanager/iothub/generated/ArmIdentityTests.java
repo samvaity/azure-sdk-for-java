@@ -15,34 +15,21 @@ import org.junit.jupiter.api.Assertions;
 public final class ArmIdentityTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ArmIdentity model =
-            BinaryData
-                .fromString(
-                    "{\"principalId\":\"ec\",\"tenantId\":\"odebfqkkrbmpu\",\"type\":\"SystemAssigned,"
-                        + " UserAssigned\",\"userAssignedIdentities\":{\"y\":{\"principalId\":\"lzlfbxzpuz\",\"clientId\":\"ispnqzahmgkbrp\"},\"buynhijggm\":{\"principalId\":\"ibnuqqkpik\",\"clientId\":\"rgvtqag\"},\"jrunmpxtt\":{\"principalId\":\"fsiarbutr\",\"clientId\":\"pnazzm\"},\"qidybyx\":{\"principalId\":\"hrbnlankxmyskpbh\",\"clientId\":\"btkcxywnytnrsyn\"}}}")
-                .toObject(ArmIdentity.class);
+        ArmIdentity model = BinaryData.fromString(
+            "{\"principalId\":\"kjz\",\"tenantId\":\"es\",\"type\":\"SystemAssigned, UserAssigned\",\"userAssignedIdentities\":{\"edeojnabc\":{\"principalId\":\"wiyighxpkdw\",\"clientId\":\"aiuebbaumnyqu\"}}}")
+            .toObject(ArmIdentity.class);
         Assertions.assertEquals(ResourceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED, model.type());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ArmIdentity model =
-            new ArmIdentity()
-                .withType(ResourceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED)
-                .withUserAssignedIdentities(
-                    mapOf(
-                        "y",
-                        new ArmUserIdentity(),
-                        "buynhijggm",
-                        new ArmUserIdentity(),
-                        "jrunmpxtt",
-                        new ArmUserIdentity(),
-                        "qidybyx",
-                        new ArmUserIdentity()));
+        ArmIdentity model = new ArmIdentity().withType(ResourceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED)
+            .withUserAssignedIdentities(mapOf("edeojnabc", new ArmUserIdentity()));
         model = BinaryData.fromObject(model).toObject(ArmIdentity.class);
         Assertions.assertEquals(ResourceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED, model.type());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

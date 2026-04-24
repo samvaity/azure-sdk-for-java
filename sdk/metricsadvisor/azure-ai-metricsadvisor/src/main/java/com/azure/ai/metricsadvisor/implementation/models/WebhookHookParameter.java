@@ -5,66 +5,79 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.Map;
 
-/** The WebhookHookParameter model. */
+/**
+ * The WebhookHookParameter model.
+ */
 @Fluent
-public final class WebhookHookParameter {
+public final class WebhookHookParameter implements JsonSerializable<WebhookHookParameter> {
     /*
      * API address, will be called when alert is triggered, only support POST method via SSL
      */
-    @JsonProperty(value = "endpoint", required = true)
+    @Generated
     private String endpoint;
 
     /*
      * (Deprecated) The username, if using basic authentication
      */
-    @JsonProperty(value = "username")
+    @Generated
     private String username;
 
     /*
      * (Deprecated) The password, if using basic authentication
      */
-    @JsonProperty(value = "password")
+    @Generated
     private String password;
 
     /*
      * custom headers in api call
      */
-    @JsonProperty(value = "headers")
+    @Generated
     private Map<String, String> headers;
 
     /*
      * The certificate key/URL, if using client certificate, please read documents for more informations.
      */
-    @JsonProperty(value = "certificateKey")
+    @Generated
     private String certificateKey;
 
     /*
      * The certificate password, if using client certificate, please read documents for more informations.
      */
-    @JsonProperty(value = "certificatePassword")
+    @Generated
     private String certificatePassword;
 
-    /** Creates an instance of WebhookHookParameter class. */
-    public WebhookHookParameter() {}
+    /**
+     * Creates an instance of WebhookHookParameter class.
+     */
+    @Generated
+    public WebhookHookParameter() {
+    }
 
     /**
      * Get the endpoint property: API address, will be called when alert is triggered, only support POST method via SSL.
-     *
+     * 
      * @return the endpoint value.
      */
+    @Generated
     public String getEndpoint() {
         return this.endpoint;
     }
 
     /**
      * Set the endpoint property: API address, will be called when alert is triggered, only support POST method via SSL.
-     *
+     * 
      * @param endpoint the endpoint value to set.
      * @return the WebhookHookParameter object itself.
      */
+    @Generated
     public WebhookHookParameter setEndpoint(String endpoint) {
         this.endpoint = endpoint;
         return this;
@@ -72,19 +85,21 @@ public final class WebhookHookParameter {
 
     /**
      * Get the username property: (Deprecated) The username, if using basic authentication.
-     *
+     * 
      * @return the username value.
      */
+    @Generated
     public String getUsername() {
         return this.username;
     }
 
     /**
      * Set the username property: (Deprecated) The username, if using basic authentication.
-     *
+     * 
      * @param username the username value to set.
      * @return the WebhookHookParameter object itself.
      */
+    @Generated
     public WebhookHookParameter setUsername(String username) {
         this.username = username;
         return this;
@@ -92,19 +107,21 @@ public final class WebhookHookParameter {
 
     /**
      * Get the password property: (Deprecated) The password, if using basic authentication.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public String getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: (Deprecated) The password, if using basic authentication.
-     *
+     * 
      * @param password the password value to set.
      * @return the WebhookHookParameter object itself.
      */
+    @Generated
     public WebhookHookParameter setPassword(String password) {
         this.password = password;
         return this;
@@ -112,19 +129,21 @@ public final class WebhookHookParameter {
 
     /**
      * Get the headers property: custom headers in api call.
-     *
+     * 
      * @return the headers value.
      */
+    @Generated
     public Map<String, String> getHeaders() {
         return this.headers;
     }
 
     /**
      * Set the headers property: custom headers in api call.
-     *
+     * 
      * @param headers the headers value to set.
      * @return the WebhookHookParameter object itself.
      */
+    @Generated
     public WebhookHookParameter setHeaders(Map<String, String> headers) {
         this.headers = headers;
         return this;
@@ -133,9 +152,10 @@ public final class WebhookHookParameter {
     /**
      * Get the certificateKey property: The certificate key/URL, if using client certificate, please read documents for
      * more informations.
-     *
+     * 
      * @return the certificateKey value.
      */
+    @Generated
     public String getCertificateKey() {
         return this.certificateKey;
     }
@@ -143,10 +163,11 @@ public final class WebhookHookParameter {
     /**
      * Set the certificateKey property: The certificate key/URL, if using client certificate, please read documents for
      * more informations.
-     *
+     * 
      * @param certificateKey the certificateKey value to set.
      * @return the WebhookHookParameter object itself.
      */
+    @Generated
     public WebhookHookParameter setCertificateKey(String certificateKey) {
         this.certificateKey = certificateKey;
         return this;
@@ -155,9 +176,10 @@ public final class WebhookHookParameter {
     /**
      * Get the certificatePassword property: The certificate password, if using client certificate, please read
      * documents for more informations.
-     *
+     * 
      * @return the certificatePassword value.
      */
+    @Generated
     public String getCertificatePassword() {
         return this.certificatePassword;
     }
@@ -165,12 +187,68 @@ public final class WebhookHookParameter {
     /**
      * Set the certificatePassword property: The certificate password, if using client certificate, please read
      * documents for more informations.
-     *
+     * 
      * @param certificatePassword the certificatePassword value to set.
      * @return the WebhookHookParameter object itself.
      */
+    @Generated
     public WebhookHookParameter setCertificatePassword(String certificatePassword) {
         this.certificatePassword = certificatePassword;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("endpoint", this.endpoint);
+        jsonWriter.writeStringField("username", this.username);
+        jsonWriter.writeStringField("password", this.password);
+        jsonWriter.writeMapField("headers", this.headers, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("certificateKey", this.certificateKey);
+        jsonWriter.writeStringField("certificatePassword", this.certificatePassword);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of WebhookHookParameter from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of WebhookHookParameter if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the WebhookHookParameter.
+     */
+    @Generated
+    public static WebhookHookParameter fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            WebhookHookParameter deserializedWebhookHookParameter = new WebhookHookParameter();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("endpoint".equals(fieldName)) {
+                    deserializedWebhookHookParameter.endpoint = reader.getString();
+                } else if ("username".equals(fieldName)) {
+                    deserializedWebhookHookParameter.username = reader.getString();
+                } else if ("password".equals(fieldName)) {
+                    deserializedWebhookHookParameter.password = reader.getString();
+                } else if ("headers".equals(fieldName)) {
+                    Map<String, String> headers = reader.readMap(reader1 -> reader1.getString());
+                    deserializedWebhookHookParameter.headers = headers;
+                } else if ("certificateKey".equals(fieldName)) {
+                    deserializedWebhookHookParameter.certificateKey = reader.getString();
+                } else if ("certificatePassword".equals(fieldName)) {
+                    deserializedWebhookHookParameter.certificatePassword = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedWebhookHookParameter;
+        });
     }
 }

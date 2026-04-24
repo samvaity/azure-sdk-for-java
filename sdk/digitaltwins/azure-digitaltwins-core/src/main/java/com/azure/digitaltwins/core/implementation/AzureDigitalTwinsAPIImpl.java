@@ -6,104 +6,153 @@ package com.azure.digitaltwins.core.implementation;
 
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
-import com.azure.core.http.policy.CookiePolicy;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 
-/** Initializes a new instance of the AzureDigitalTwinsAPI type. */
+/**
+ * Initializes a new instance of the AzureDigitalTwinsAPI type.
+ */
 public final class AzureDigitalTwinsAPIImpl {
-    /** server parameter. */
+    /**
+     * ID for the operation's status monitor. The ID is generated if header was not passed by the client.
+     */
+    private final String operationId;
+
+    /**
+     * Gets ID for the operation's status monitor. The ID is generated if header was not passed by the client.
+     * 
+     * @return the operationId value.
+     */
+    public String getOperationId() {
+        return this.operationId;
+    }
+
+    /**
+     * Desired timeout for the delete job. Once the specified timeout is reached, service will stop any delete
+     * operations triggered by the current delete job that are in progress, and go to a failed state. Please note that
+     * this will leave your instance in an unknown state as there won't be any rollback operation.
+     */
+    private final int timeoutInMinutes;
+
+    /**
+     * Gets Desired timeout for the delete job. Once the specified timeout is reached, service will stop any delete
+     * operations triggered by the current delete job that are in progress, and go to a failed state. Please note that
+     * this will leave your instance in an unknown state as there won't be any rollback operation.
+     * 
+     * @return the timeoutInMinutes value.
+     */
+    public int getTimeoutInMinutes() {
+        return this.timeoutInMinutes;
+    }
+
+    /**
+     * server parameter.
+     */
     private final String host;
 
     /**
      * Gets server parameter.
-     *
+     * 
      * @return the host value.
      */
     public String getHost() {
         return this.host;
     }
 
-    /** Api Version. */
+    /**
+     * Api Version.
+     */
     private final String apiVersion;
 
     /**
      * Gets Api Version.
-     *
+     * 
      * @return the apiVersion value.
      */
     public String getApiVersion() {
         return this.apiVersion;
     }
 
-    /** The HTTP pipeline to send requests through. */
+    /**
+     * The HTTP pipeline to send requests through.
+     */
     private final HttpPipeline httpPipeline;
 
     /**
      * Gets The HTTP pipeline to send requests through.
-     *
+     * 
      * @return the httpPipeline value.
      */
     public HttpPipeline getHttpPipeline() {
         return this.httpPipeline;
     }
 
-    /** The serializer to serialize an object into a string. */
+    /**
+     * The serializer to serialize an object into a string.
+     */
     private final SerializerAdapter serializerAdapter;
 
     /**
      * Gets The serializer to serialize an object into a string.
-     *
+     * 
      * @return the serializerAdapter value.
      */
     public SerializerAdapter getSerializerAdapter() {
         return this.serializerAdapter;
     }
 
-    /** The DigitalTwinModelsImpl object to access its operations. */
+    /**
+     * The DigitalTwinModelsImpl object to access its operations.
+     */
     private final DigitalTwinModelsImpl digitalTwinModels;
 
     /**
      * Gets the DigitalTwinModelsImpl object to access its operations.
-     *
+     * 
      * @return the DigitalTwinModelsImpl object.
      */
     public DigitalTwinModelsImpl getDigitalTwinModels() {
         return this.digitalTwinModels;
     }
 
-    /** The QueriesImpl object to access its operations. */
+    /**
+     * The QueriesImpl object to access its operations.
+     */
     private final QueriesImpl queries;
 
     /**
      * Gets the QueriesImpl object to access its operations.
-     *
+     * 
      * @return the QueriesImpl object.
      */
     public QueriesImpl getQueries() {
         return this.queries;
     }
 
-    /** The DigitalTwinsImpl object to access its operations. */
+    /**
+     * The DigitalTwinsImpl object to access its operations.
+     */
     private final DigitalTwinsImpl digitalTwins;
 
     /**
      * Gets the DigitalTwinsImpl object to access its operations.
-     *
+     * 
      * @return the DigitalTwinsImpl object.
      */
     public DigitalTwinsImpl getDigitalTwins() {
         return this.digitalTwins;
     }
 
-    /** The EventRoutesImpl object to access its operations. */
+    /**
+     * The EventRoutesImpl object to access its operations.
+     */
     private final EventRoutesImpl eventRoutes;
 
     /**
      * Gets the EventRoutesImpl object to access its operations.
-     *
+     * 
      * @return the EventRoutesImpl object.
      */
     public EventRoutesImpl getEventRoutes() {
@@ -111,44 +160,93 @@ public final class AzureDigitalTwinsAPIImpl {
     }
 
     /**
-     * Initializes an instance of AzureDigitalTwinsAPI client.
-     *
-     * @param host server parameter.
+     * The ImportJobsImpl object to access its operations.
      */
-    AzureDigitalTwinsAPIImpl(String host) {
-        this(
-                new HttpPipelineBuilder()
-                        .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
-                        .build(),
-                JacksonAdapter.createDefaultSerializerAdapter(),
-                host);
+    private final ImportJobsImpl importJobs;
+
+    /**
+     * Gets the ImportJobsImpl object to access its operations.
+     * 
+     * @return the ImportJobsImpl object.
+     */
+    public ImportJobsImpl getImportJobs() {
+        return this.importJobs;
+    }
+
+    /**
+     * The DeleteJobsImpl object to access its operations.
+     */
+    private final DeleteJobsImpl deleteJobs;
+
+    /**
+     * Gets the DeleteJobsImpl object to access its operations.
+     * 
+     * @return the DeleteJobsImpl object.
+     */
+    public DeleteJobsImpl getDeleteJobs() {
+        return this.deleteJobs;
     }
 
     /**
      * Initializes an instance of AzureDigitalTwinsAPI client.
-     *
+     * 
+     * @param operationId ID for the operation's status monitor. The ID is generated if header was not passed by the
+     * client.
+     * @param timeoutInMinutes Desired timeout for the delete job. Once the specified timeout is reached, service will
+     * stop any delete operations triggered by the current delete job that are in progress, and go to a failed state.
+     * Please note that this will leave your instance in an unknown state as there won't be any rollback operation.
+     * @param host server parameter.
+     * @param apiVersion Api Version.
+     */
+    AzureDigitalTwinsAPIImpl(String operationId, int timeoutInMinutes, String host, String apiVersion) {
+        this(new HttpPipelineBuilder().policies(new UserAgentPolicy(), new RetryPolicy()).build(),
+            JacksonAdapter.createDefaultSerializerAdapter(), operationId, timeoutInMinutes, host, apiVersion);
+    }
+
+    /**
+     * Initializes an instance of AzureDigitalTwinsAPI client.
+     * 
      * @param httpPipeline The HTTP pipeline to send requests through.
+     * @param operationId ID for the operation's status monitor. The ID is generated if header was not passed by the
+     * client.
+     * @param timeoutInMinutes Desired timeout for the delete job. Once the specified timeout is reached, service will
+     * stop any delete operations triggered by the current delete job that are in progress, and go to a failed state.
+     * Please note that this will leave your instance in an unknown state as there won't be any rollback operation.
      * @param host server parameter.
+     * @param apiVersion Api Version.
      */
-    AzureDigitalTwinsAPIImpl(HttpPipeline httpPipeline, String host) {
-        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), host);
+    AzureDigitalTwinsAPIImpl(HttpPipeline httpPipeline, String operationId, int timeoutInMinutes, String host,
+        String apiVersion) {
+        this(httpPipeline, JacksonAdapter.createDefaultSerializerAdapter(), operationId, timeoutInMinutes, host,
+            apiVersion);
     }
 
     /**
      * Initializes an instance of AzureDigitalTwinsAPI client.
-     *
+     * 
      * @param httpPipeline The HTTP pipeline to send requests through.
      * @param serializerAdapter The serializer to serialize an object into a string.
+     * @param operationId ID for the operation's status monitor. The ID is generated if header was not passed by the
+     * client.
+     * @param timeoutInMinutes Desired timeout for the delete job. Once the specified timeout is reached, service will
+     * stop any delete operations triggered by the current delete job that are in progress, and go to a failed state.
+     * Please note that this will leave your instance in an unknown state as there won't be any rollback operation.
      * @param host server parameter.
+     * @param apiVersion Api Version.
      */
-    AzureDigitalTwinsAPIImpl(HttpPipeline httpPipeline, SerializerAdapter serializerAdapter, String host) {
+    AzureDigitalTwinsAPIImpl(HttpPipeline httpPipeline, SerializerAdapter serializerAdapter, String operationId,
+        int timeoutInMinutes, String host, String apiVersion) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
+        this.operationId = operationId;
+        this.timeoutInMinutes = timeoutInMinutes;
         this.host = host;
-        this.apiVersion = "2022-05-31";
+        this.apiVersion = apiVersion;
         this.digitalTwinModels = new DigitalTwinModelsImpl(this);
         this.queries = new QueriesImpl(this);
         this.digitalTwins = new DigitalTwinsImpl(this);
         this.eventRoutes = new EventRoutesImpl(this);
+        this.importJobs = new ImportJobsImpl(this);
+        this.deleteJobs = new DeleteJobsImpl(this);
     }
 }

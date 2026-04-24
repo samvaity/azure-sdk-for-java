@@ -4,36 +4,65 @@
 
 package com.azure.analytics.synapse.spark.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for SparkBatchJobResultType. */
+/**
+ * The Spark batch job result.
+ */
 public final class SparkBatchJobResultType extends ExpandableStringEnum<SparkBatchJobResultType> {
-    /** Static value Uncertain for SparkBatchJobResultType. */
+    /**
+     * Static value Uncertain for SparkBatchJobResultType.
+     */
+    @Generated
     public static final SparkBatchJobResultType UNCERTAIN = fromString("Uncertain");
 
-    /** Static value Succeeded for SparkBatchJobResultType. */
+    /**
+     * Static value Succeeded for SparkBatchJobResultType.
+     */
+    @Generated
     public static final SparkBatchJobResultType SUCCEEDED = fromString("Succeeded");
 
-    /** Static value Failed for SparkBatchJobResultType. */
+    /**
+     * Static value Failed for SparkBatchJobResultType.
+     */
+    @Generated
     public static final SparkBatchJobResultType FAILED = fromString("Failed");
 
-    /** Static value Cancelled for SparkBatchJobResultType. */
+    /**
+     * Static value Cancelled for SparkBatchJobResultType.
+     */
+    @Generated
     public static final SparkBatchJobResultType CANCELLED = fromString("Cancelled");
 
     /**
+     * Creates a new instance of SparkBatchJobResultType value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public SparkBatchJobResultType() {
+    }
+
+    /**
      * Creates or finds a SparkBatchJobResultType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding SparkBatchJobResultType.
      */
-    @JsonCreator
+    @Generated
     public static SparkBatchJobResultType fromString(String name) {
         return fromString(name, SparkBatchJobResultType.class);
     }
 
-    /** @return known SparkBatchJobResultType values. */
+    /**
+     * Gets known SparkBatchJobResultType values.
+     * 
+     * @return known SparkBatchJobResultType values.
+     */
+    @Generated
     public static Collection<SparkBatchJobResultType> values() {
         return values(SparkBatchJobResultType.class);
     }

@@ -26,6 +26,7 @@ import java.time.Duration;
 // BEGIN: readme-sample-AppConfiguration
 @Configuration
 @EnableCosmosRepositories
+@SuppressWarnings("deprecation")
 public class AppConfiguration extends AbstractCosmosConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AppConfiguration.class);
@@ -44,6 +45,9 @@ public class AppConfiguration extends AbstractCosmosConfiguration {
 
     @Value("${azure.cosmos.queryMetricsEnabled}")
     private boolean queryMetricsEnabled;
+
+    @Value("${azure.cosmos.indexMetricsEnabled}")
+    private boolean indexMetricsEnabled;
 
     @Value("${azure.cosmos.maxDegreeOfParallelism}")
     private int maxDegreeOfParallelism;
@@ -94,6 +98,7 @@ public class AppConfiguration extends AbstractCosmosConfiguration {
     public CosmosConfig cosmosConfig() {
         return CosmosConfig.builder()
                            .enableQueryMetrics(queryMetricsEnabled)
+                           .enableIndexMetrics(indexMetricsEnabled)
                            .maxDegreeOfParallelism(maxDegreeOfParallelism)
                            .maxBufferedItemCount(maxBufferedItemCount)
                            .responseContinuationTokenLimitInKb(responseContinuationTokenLimitInKb)

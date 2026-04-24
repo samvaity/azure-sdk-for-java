@@ -11,18 +11,31 @@ import org.junit.jupiter.api.Assertions;
 public final class ReportableExceptionTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ReportableException model =
-            BinaryData
-                .fromString(
-                    "{\"message\":\"dobpxjmflbvvn\",\"actionableMessage\":\"rkcciwwzjuqk\",\"filePath\":\"sa\",\"lineNumber\":\"wkuofoskghsauu\",\"hResult\":1525008184,\"stackTrace\":\"vxieduugidyj\"}")
-                .toObject(ReportableException.class);
-        Assertions.assertEquals("rkcciwwzjuqk", model.actionableMessage());
+        ReportableException model = BinaryData.fromString(
+            "{\"message\":\"ejwcwwqiok\",\"actionableMessage\":\"sx\",\"filePath\":\"jmsvpkjp\",\"lineNumber\":\"kwcf\",\"hResult\":497380476,\"stackTrace\":\"yxgtczh\"}")
+            .toObject(ReportableException.class);
+        Assertions.assertEquals("ejwcwwqiok", model.message());
+        Assertions.assertEquals("sx", model.actionableMessage());
+        Assertions.assertEquals("jmsvpkjp", model.filePath());
+        Assertions.assertEquals("kwcf", model.lineNumber());
+        Assertions.assertEquals(497380476, model.hResult());
+        Assertions.assertEquals("yxgtczh", model.stackTrace());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ReportableException model = new ReportableException().withActionableMessage("rkcciwwzjuqk");
+        ReportableException model = new ReportableException().withMessage("ejwcwwqiok")
+            .withActionableMessage("sx")
+            .withFilePath("jmsvpkjp")
+            .withLineNumber("kwcf")
+            .withHResult(497380476)
+            .withStackTrace("yxgtczh");
         model = BinaryData.fromObject(model).toObject(ReportableException.class);
-        Assertions.assertEquals("rkcciwwzjuqk", model.actionableMessage());
+        Assertions.assertEquals("ejwcwwqiok", model.message());
+        Assertions.assertEquals("sx", model.actionableMessage());
+        Assertions.assertEquals("jmsvpkjp", model.filePath());
+        Assertions.assertEquals("kwcf", model.lineNumber());
+        Assertions.assertEquals(497380476, model.hResult());
+        Assertions.assertEquals("yxgtczh", model.stackTrace());
     }
 }

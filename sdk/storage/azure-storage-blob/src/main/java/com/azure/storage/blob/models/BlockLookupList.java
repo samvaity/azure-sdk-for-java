@@ -5,51 +5,63 @@
 package com.azure.storage.blob.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** The BlockLookupList model. */
-@JacksonXmlRootElement(localName = "BlockList")
+/**
+ * The BlockLookupList model.
+ */
 @Fluent
-public final class BlockLookupList {
+public final class BlockLookupList implements XmlSerializable<BlockLookupList> {
     /*
      * The Committed property.
      */
-    @JsonProperty("Committed")
+    @Generated
     private List<String> committed = new ArrayList<>();
 
     /*
      * The Uncommitted property.
      */
-    @JsonProperty("Uncommitted")
+    @Generated
     private List<String> uncommitted = new ArrayList<>();
 
     /*
      * The Latest property.
      */
-    @JsonProperty("Latest")
+    @Generated
     private List<String> latest = new ArrayList<>();
 
-    /** Creates an instance of BlockLookupList class. */
-    public BlockLookupList() {}
+    /**
+     * Creates an instance of BlockLookupList class.
+     */
+    @Generated
+    public BlockLookupList() {
+    }
 
     /**
      * Get the committed property: The Committed property.
-     *
+     * 
      * @return the committed value.
      */
+    @Generated
     public List<String> getCommitted() {
         return this.committed;
     }
 
     /**
      * Set the committed property: The Committed property.
-     *
+     * 
      * @param committed the committed value to set.
      * @return the BlockLookupList object itself.
      */
+    @Generated
     public BlockLookupList setCommitted(List<String> committed) {
         this.committed = committed;
         return this;
@@ -57,19 +69,21 @@ public final class BlockLookupList {
 
     /**
      * Get the uncommitted property: The Uncommitted property.
-     *
+     * 
      * @return the uncommitted value.
      */
+    @Generated
     public List<String> getUncommitted() {
         return this.uncommitted;
     }
 
     /**
      * Set the uncommitted property: The Uncommitted property.
-     *
+     * 
      * @param uncommitted the uncommitted value to set.
      * @return the BlockLookupList object itself.
      */
+    @Generated
     public BlockLookupList setUncommitted(List<String> uncommitted) {
         this.uncommitted = uncommitted;
         return this;
@@ -77,21 +91,99 @@ public final class BlockLookupList {
 
     /**
      * Get the latest property: The Latest property.
-     *
+     * 
      * @return the latest value.
      */
+    @Generated
     public List<String> getLatest() {
         return this.latest;
     }
 
     /**
      * Set the latest property: The Latest property.
-     *
+     * 
      * @param latest the latest value to set.
      * @return the BlockLookupList object itself.
      */
+    @Generated
     public BlockLookupList setLatest(List<String> latest) {
         this.latest = latest;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "BlockList" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        if (this.committed != null) {
+            for (String element : this.committed) {
+                xmlWriter.writeStringElement("Committed", element);
+            }
+        }
+        if (this.uncommitted != null) {
+            for (String element : this.uncommitted) {
+                xmlWriter.writeStringElement("Uncommitted", element);
+            }
+        }
+        if (this.latest != null) {
+            for (String element : this.latest) {
+                xmlWriter.writeStringElement("Latest", element);
+            }
+        }
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of BlockLookupList from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of BlockLookupList if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the BlockLookupList.
+     */
+    @Generated
+    public static BlockLookupList fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of BlockLookupList from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of BlockLookupList if the XmlReader was pointing to an instance of it, or null if it was
+     * pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the BlockLookupList.
+     */
+    @Generated
+    public static BlockLookupList fromXml(XmlReader xmlReader, String rootElementName) throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "BlockList" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            BlockLookupList deserializedBlockLookupList = new BlockLookupList();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Committed".equals(elementName.getLocalPart())) {
+                    deserializedBlockLookupList.committed.add(reader.getStringElement());
+                } else if ("Uncommitted".equals(elementName.getLocalPart())) {
+                    deserializedBlockLookupList.uncommitted.add(reader.getStringElement());
+                } else if ("Latest".equals(elementName.getLocalPart())) {
+                    deserializedBlockLookupList.latest.add(reader.getStringElement());
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedBlockLookupList;
+        });
     }
 }

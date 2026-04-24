@@ -22,10 +22,13 @@
   -->
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="fast">
+  <listeners>
+    <listener class-name="com.azure.cosmos.CosmosNettyLeakDetectorFactory"/>
+  </listeners>
   <test name="fast" group-by-instances="true">
     <groups>
       <run>
-        <include name="simple"/>
+        <include name="fast"/>
       </run>
     </groups>
     <packages>

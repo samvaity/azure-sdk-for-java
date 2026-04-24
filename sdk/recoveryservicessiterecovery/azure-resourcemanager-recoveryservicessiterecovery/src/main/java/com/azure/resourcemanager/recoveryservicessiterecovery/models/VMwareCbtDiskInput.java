@@ -6,54 +6,61 @@ package com.azure.resourcemanager.recoveryservicessiterecovery.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** VMwareCbt disk input. */
+/**
+ * VMwareCbt disk input.
+ */
 @Fluent
-public final class VMwareCbtDiskInput {
+public final class VMwareCbtDiskInput implements JsonSerializable<VMwareCbtDiskInput> {
     /*
      * The disk Id.
      */
-    @JsonProperty(value = "diskId", required = true)
     private String diskId;
 
     /*
      * The disk type.
      */
-    @JsonProperty(value = "diskType")
     private DiskAccountType diskType;
 
     /*
      * A value indicating whether the disk is the OS disk.
      */
-    @JsonProperty(value = "isOSDisk", required = true)
     private String isOSDisk;
 
     /*
      * The log storage account ARM Id.
      */
-    @JsonProperty(value = "logStorageAccountId", required = true)
     private String logStorageAccountId;
 
     /*
      * The key vault secret name of the log storage account.
      */
-    @JsonProperty(value = "logStorageAccountSasSecretName", required = true)
     private String logStorageAccountSasSecretName;
 
     /*
      * The DiskEncryptionSet ARM Id.
      */
-    @JsonProperty(value = "diskEncryptionSetId")
     private String diskEncryptionSetId;
 
-    /** Creates an instance of VMwareCbtDiskInput class. */
+    /*
+     * The logical sector size (in bytes), 512 by default.
+     */
+    private Integer sectorSizeInBytes;
+
+    /**
+     * Creates an instance of VMwareCbtDiskInput class.
+     */
     public VMwareCbtDiskInput() {
     }
 
     /**
      * Get the diskId property: The disk Id.
-     *
+     * 
      * @return the diskId value.
      */
     public String diskId() {
@@ -62,7 +69,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Set the diskId property: The disk Id.
-     *
+     * 
      * @param diskId the diskId value to set.
      * @return the VMwareCbtDiskInput object itself.
      */
@@ -73,7 +80,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Get the diskType property: The disk type.
-     *
+     * 
      * @return the diskType value.
      */
     public DiskAccountType diskType() {
@@ -82,7 +89,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Set the diskType property: The disk type.
-     *
+     * 
      * @param diskType the diskType value to set.
      * @return the VMwareCbtDiskInput object itself.
      */
@@ -93,7 +100,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Get the isOSDisk property: A value indicating whether the disk is the OS disk.
-     *
+     * 
      * @return the isOSDisk value.
      */
     public String isOSDisk() {
@@ -102,7 +109,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Set the isOSDisk property: A value indicating whether the disk is the OS disk.
-     *
+     * 
      * @param isOSDisk the isOSDisk value to set.
      * @return the VMwareCbtDiskInput object itself.
      */
@@ -113,7 +120,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Get the logStorageAccountId property: The log storage account ARM Id.
-     *
+     * 
      * @return the logStorageAccountId value.
      */
     public String logStorageAccountId() {
@@ -122,7 +129,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Set the logStorageAccountId property: The log storage account ARM Id.
-     *
+     * 
      * @param logStorageAccountId the logStorageAccountId value to set.
      * @return the VMwareCbtDiskInput object itself.
      */
@@ -133,7 +140,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Get the logStorageAccountSasSecretName property: The key vault secret name of the log storage account.
-     *
+     * 
      * @return the logStorageAccountSasSecretName value.
      */
     public String logStorageAccountSasSecretName() {
@@ -142,7 +149,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Set the logStorageAccountSasSecretName property: The key vault secret name of the log storage account.
-     *
+     * 
      * @param logStorageAccountSasSecretName the logStorageAccountSasSecretName value to set.
      * @return the VMwareCbtDiskInput object itself.
      */
@@ -153,7 +160,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Get the diskEncryptionSetId property: The DiskEncryptionSet ARM Id.
-     *
+     * 
      * @return the diskEncryptionSetId value.
      */
     public String diskEncryptionSetId() {
@@ -162,7 +169,7 @@ public final class VMwareCbtDiskInput {
 
     /**
      * Set the diskEncryptionSetId property: The DiskEncryptionSet ARM Id.
-     *
+     * 
      * @param diskEncryptionSetId the diskEncryptionSetId value to set.
      * @return the VMwareCbtDiskInput object itself.
      */
@@ -172,34 +179,105 @@ public final class VMwareCbtDiskInput {
     }
 
     /**
+     * Get the sectorSizeInBytes property: The logical sector size (in bytes), 512 by default.
+     * 
+     * @return the sectorSizeInBytes value.
+     */
+    public Integer sectorSizeInBytes() {
+        return this.sectorSizeInBytes;
+    }
+
+    /**
+     * Set the sectorSizeInBytes property: The logical sector size (in bytes), 512 by default.
+     * 
+     * @param sectorSizeInBytes the sectorSizeInBytes value to set.
+     * @return the VMwareCbtDiskInput object itself.
+     */
+    public VMwareCbtDiskInput withSectorSizeInBytes(Integer sectorSizeInBytes) {
+        this.sectorSizeInBytes = sectorSizeInBytes;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (diskId() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property diskId in model VMwareCbtDiskInput"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Missing required property diskId in model VMwareCbtDiskInput"));
         }
         if (isOSDisk() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException("Missing required property isOSDisk in model VMwareCbtDiskInput"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Missing required property isOSDisk in model VMwareCbtDiskInput"));
         }
         if (logStorageAccountId() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property logStorageAccountId in model VMwareCbtDiskInput"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property logStorageAccountId in model VMwareCbtDiskInput"));
         }
         if (logStorageAccountSasSecretName() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property logStorageAccountSasSecretName in model VMwareCbtDiskInput"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property logStorageAccountSasSecretName in model VMwareCbtDiskInput"));
         }
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(VMwareCbtDiskInput.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("diskId", this.diskId);
+        jsonWriter.writeStringField("isOSDisk", this.isOSDisk);
+        jsonWriter.writeStringField("logStorageAccountId", this.logStorageAccountId);
+        jsonWriter.writeStringField("logStorageAccountSasSecretName", this.logStorageAccountSasSecretName);
+        jsonWriter.writeStringField("diskType", this.diskType == null ? null : this.diskType.toString());
+        jsonWriter.writeStringField("diskEncryptionSetId", this.diskEncryptionSetId);
+        jsonWriter.writeNumberField("sectorSizeInBytes", this.sectorSizeInBytes);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of VMwareCbtDiskInput from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of VMwareCbtDiskInput if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the VMwareCbtDiskInput.
+     */
+    public static VMwareCbtDiskInput fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            VMwareCbtDiskInput deserializedVMwareCbtDiskInput = new VMwareCbtDiskInput();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("diskId".equals(fieldName)) {
+                    deserializedVMwareCbtDiskInput.diskId = reader.getString();
+                } else if ("isOSDisk".equals(fieldName)) {
+                    deserializedVMwareCbtDiskInput.isOSDisk = reader.getString();
+                } else if ("logStorageAccountId".equals(fieldName)) {
+                    deserializedVMwareCbtDiskInput.logStorageAccountId = reader.getString();
+                } else if ("logStorageAccountSasSecretName".equals(fieldName)) {
+                    deserializedVMwareCbtDiskInput.logStorageAccountSasSecretName = reader.getString();
+                } else if ("diskType".equals(fieldName)) {
+                    deserializedVMwareCbtDiskInput.diskType = DiskAccountType.fromString(reader.getString());
+                } else if ("diskEncryptionSetId".equals(fieldName)) {
+                    deserializedVMwareCbtDiskInput.diskEncryptionSetId = reader.getString();
+                } else if ("sectorSizeInBytes".equals(fieldName)) {
+                    deserializedVMwareCbtDiskInput.sectorSizeInBytes = reader.getNullable(JsonReader::getInt);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedVMwareCbtDiskInput;
+        });
+    }
 }

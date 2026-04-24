@@ -13,23 +13,20 @@ import org.junit.jupiter.api.Assertions;
 public final class LocalDiagnosticsAccessConfigurationTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        LocalDiagnosticsAccessConfiguration model =
-            BinaryData
-                .fromString(
-                    "{\"authenticationType\":\"AAD\",\"httpsServerCertificate\":{\"certificateUrl\":\"nxdhbt\",\"provisioning\":{\"state\":\"Provisioned\",\"reason\":\"wpn\"}}}")
-                .toObject(LocalDiagnosticsAccessConfiguration.class);
-        Assertions.assertEquals(AuthenticationType.AAD, model.authenticationType());
-        Assertions.assertEquals("nxdhbt", model.httpsServerCertificate().certificateUrl());
+        LocalDiagnosticsAccessConfiguration model = BinaryData.fromString(
+            "{\"authenticationType\":\"Password\",\"httpsServerCertificate\":{\"certificateUrl\":\"bvmeuecivy\",\"provisioning\":{\"state\":\"NotProvisioned\",\"reason\":\"ojgjrwjueiotwmc\"}}}")
+            .toObject(LocalDiagnosticsAccessConfiguration.class);
+        Assertions.assertEquals(AuthenticationType.PASSWORD, model.authenticationType());
+        Assertions.assertEquals("bvmeuecivy", model.httpsServerCertificate().certificateUrl());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        LocalDiagnosticsAccessConfiguration model =
-            new LocalDiagnosticsAccessConfiguration()
-                .withAuthenticationType(AuthenticationType.AAD)
-                .withHttpsServerCertificate(new HttpsServerCertificate().withCertificateUrl("nxdhbt"));
+        LocalDiagnosticsAccessConfiguration model
+            = new LocalDiagnosticsAccessConfiguration().withAuthenticationType(AuthenticationType.PASSWORD)
+                .withHttpsServerCertificate(new HttpsServerCertificate().withCertificateUrl("bvmeuecivy"));
         model = BinaryData.fromObject(model).toObject(LocalDiagnosticsAccessConfiguration.class);
-        Assertions.assertEquals(AuthenticationType.AAD, model.authenticationType());
-        Assertions.assertEquals("nxdhbt", model.httpsServerCertificate().certificateUrl());
+        Assertions.assertEquals(AuthenticationType.PASSWORD, model.authenticationType());
+        Assertions.assertEquals("bvmeuecivy", model.httpsServerCertificate().certificateUrl());
     }
 }

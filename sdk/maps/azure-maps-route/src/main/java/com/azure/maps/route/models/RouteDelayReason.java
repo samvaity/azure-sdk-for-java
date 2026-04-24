@@ -4,40 +4,65 @@
 
 package com.azure.maps.route.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for SimpleCategory. */
+/**
+ * Type of the incident. Can currently be JAM, ROAD_WORK, ROAD_CLOSURE, or OTHER. See "tec" for detailed information.
+ */
 public final class RouteDelayReason extends ExpandableStringEnum<RouteDelayReason> {
-    /** Static value JAM for SimpleCategory. */
+    /**
+     * Traffic jam.
+     */
+    @Generated
     public static final RouteDelayReason JAM = fromString("JAM");
 
-    /** Static value ROAD_WORK for SimpleCategory. */
+    /**
+     * Road work.
+     */
+    @Generated
     public static final RouteDelayReason ROAD_WORK = fromString("ROAD_WORK");
 
-    /** Static value ROAD_CLOSURE for SimpleCategory. */
+    /**
+     * Road closure.
+     */
+    @Generated
     public static final RouteDelayReason ROAD_CLOSURE = fromString("ROAD_CLOSURE");
 
-    /** Static value OTHER for SimpleCategory. */
+    /**
+     * Other.
+     */
+    @Generated
     public static final RouteDelayReason OTHER = fromString("OTHER");
 
     /**
-     * Creates or finds a SimpleCategory from its string representation.
-     *
-     * @param name a name to look for.
-     * @return the corresponding SimpleCategory.
+     * Creates a new instance of RouteDelayReason value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
      */
-    @JsonCreator
+    @Generated
+    @Deprecated
+    public RouteDelayReason() {
+    }
+
+    /**
+     * Creates or finds a RouteDelayReason from its string representation.
+     * 
+     * @param name a name to look for.
+     * @return the corresponding RouteDelayReason.
+     */
+    @Generated
     public static RouteDelayReason fromString(String name) {
         return fromString(name, RouteDelayReason.class);
     }
 
     /**
-     * Gets known SimpleCategory values.
-     *
-     * @return known SimpleCategory values.
+     * Gets known RouteDelayReason values.
+     * 
+     * @return known RouteDelayReason values.
      */
+    @Generated
     public static Collection<RouteDelayReason> values() {
         return values(RouteDelayReason.class);
     }

@@ -4,45 +4,65 @@
 
 package com.azure.storage.file.share.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for ShareAccessTier. */
+/**
+ * Defines values for ShareAccessTier.
+ */
 public final class ShareAccessTier extends ExpandableStringEnum<ShareAccessTier> {
-    /** Static value TransactionOptimized for ShareAccessTier. */
+    /**
+     * Static value TransactionOptimized for ShareAccessTier.
+     */
+    @Generated
     public static final ShareAccessTier TRANSACTION_OPTIMIZED = fromString("TransactionOptimized");
 
-    /** Static value Hot for ShareAccessTier. */
+    /**
+     * Static value Hot for ShareAccessTier.
+     */
+    @Generated
     public static final ShareAccessTier HOT = fromString("Hot");
 
-    /** Static value Cool for ShareAccessTier. */
+    /**
+     * Static value Cool for ShareAccessTier.
+     */
+    @Generated
     public static final ShareAccessTier COOL = fromString("Cool");
 
     /**
+     * Static value Premium for ShareAccessTier.
+     */
+    @Generated
+    public static final ShareAccessTier PREMIUM = fromString("Premium");
+
+    /**
      * Creates a new instance of ShareAccessTier value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public ShareAccessTier() {}
+    public ShareAccessTier() {
+    }
 
     /**
      * Creates or finds a ShareAccessTier from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ShareAccessTier.
      */
-    @JsonCreator
+    @Generated
     public static ShareAccessTier fromString(String name) {
         return fromString(name, ShareAccessTier.class);
     }
 
     /**
      * Gets known ShareAccessTier values.
-     *
+     * 
      * @return known ShareAccessTier values.
      */
+    @Generated
     public static Collection<ShareAccessTier> values() {
         return values(ShareAccessTier.class);
     }

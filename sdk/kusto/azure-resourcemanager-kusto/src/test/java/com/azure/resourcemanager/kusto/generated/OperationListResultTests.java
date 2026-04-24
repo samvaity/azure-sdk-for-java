@@ -14,55 +14,50 @@ import org.junit.jupiter.api.Assertions;
 public final class OperationListResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        OperationListResult model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"name\":\"fdlwg\",\"display\":{\"provider\":\"sb\",\"operation\":\"ovvtgseinqfiu\",\"resource\":\"qknp\",\"description\":\"gnepttwqmsni\"},\"origin\":\"cdm\",\"properties\":\"datar\"},{\"name\":\"lpijnkrxfrd\",\"display\":{\"provider\":\"ratiz\",\"operation\":\"onasxifto\",\"resource\":\"yzhftwesgogczh\",\"description\":\"nxkrlgnyhmossxkk\"},\"origin\":\"h\",\"properties\":\"datagh\"}],\"nextLink\":\"bdhqxvcxgf\"}")
-                .toObject(OperationListResult.class);
-        Assertions.assertEquals("fdlwg", model.value().get(0).name());
-        Assertions.assertEquals("sb", model.value().get(0).display().provider());
-        Assertions.assertEquals("ovvtgseinqfiu", model.value().get(0).display().operation());
-        Assertions.assertEquals("qknp", model.value().get(0).display().resource());
-        Assertions.assertEquals("gnepttwqmsni", model.value().get(0).display().description());
-        Assertions.assertEquals("cdm", model.value().get(0).origin());
-        Assertions.assertEquals("bdhqxvcxgf", model.nextLink());
+        OperationListResult model = BinaryData.fromString(
+            "{\"value\":[{\"name\":\"cyyysfgdot\",\"display\":{\"provider\":\"iipuipwoqonm\",\"operation\":\"jeknizshq\",\"resource\":\"impevf\",\"description\":\"b\"},\"origin\":\"rilbywdx\",\"properties\":\"dataicc\"},{\"name\":\"wfscjfn\",\"display\":{\"provider\":\"zqujizdvoqytiby\",\"operation\":\"bblgyavut\",\"resource\":\"hjoxo\",\"description\":\"msksbp\"},\"origin\":\"lqol\",\"properties\":\"datakcgxxlxsffgcvi\"},{\"name\":\"zdwlvwlyoupfgfb\",\"display\":{\"provider\":\"bdyhgkfminsgowz\",\"operation\":\"tsttktlahbq\",\"resource\":\"tx\",\"description\":\"zukxitmmqtgqq\"},\"origin\":\"hrnxrxc\",\"properties\":\"datauisavokq\"}],\"nextLink\":\"fvazivjlfrqttba\"}")
+            .toObject(OperationListResult.class);
+        Assertions.assertEquals("cyyysfgdot", model.value().get(0).name());
+        Assertions.assertEquals("iipuipwoqonm", model.value().get(0).display().provider());
+        Assertions.assertEquals("jeknizshq", model.value().get(0).display().operation());
+        Assertions.assertEquals("impevf", model.value().get(0).display().resource());
+        Assertions.assertEquals("b", model.value().get(0).display().description());
+        Assertions.assertEquals("rilbywdx", model.value().get(0).origin());
+        Assertions.assertEquals("fvazivjlfrqttba", model.nextLink());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        OperationListResult model =
-            new OperationListResult()
-                .withValue(
-                    Arrays
-                        .asList(
-                            new OperationInner()
-                                .withName("fdlwg")
-                                .withDisplay(
-                                    new OperationDisplay()
-                                        .withProvider("sb")
-                                        .withOperation("ovvtgseinqfiu")
-                                        .withResource("qknp")
-                                        .withDescription("gnepttwqmsni"))
-                                .withOrigin("cdm")
-                                .withProperties("datar"),
-                            new OperationInner()
-                                .withName("lpijnkrxfrd")
-                                .withDisplay(
-                                    new OperationDisplay()
-                                        .withProvider("ratiz")
-                                        .withOperation("onasxifto")
-                                        .withResource("yzhftwesgogczh")
-                                        .withDescription("nxkrlgnyhmossxkk"))
-                                .withOrigin("h")
-                                .withProperties("datagh")))
-                .withNextLink("bdhqxvcxgf");
+        OperationListResult model = new OperationListResult().withValue(Arrays.asList(
+            new OperationInner().withName("cyyysfgdot")
+                .withDisplay(new OperationDisplay().withProvider("iipuipwoqonm")
+                    .withOperation("jeknizshq")
+                    .withResource("impevf")
+                    .withDescription("b"))
+                .withOrigin("rilbywdx")
+                .withProperties("dataicc"),
+            new OperationInner().withName("wfscjfn")
+                .withDisplay(new OperationDisplay().withProvider("zqujizdvoqytiby")
+                    .withOperation("bblgyavut")
+                    .withResource("hjoxo")
+                    .withDescription("msksbp"))
+                .withOrigin("lqol")
+                .withProperties("datakcgxxlxsffgcvi"),
+            new OperationInner().withName("zdwlvwlyoupfgfb")
+                .withDisplay(new OperationDisplay().withProvider("bdyhgkfminsgowz")
+                    .withOperation("tsttktlahbq")
+                    .withResource("tx")
+                    .withDescription("zukxitmmqtgqq"))
+                .withOrigin("hrnxrxc")
+                .withProperties("datauisavokq")))
+            .withNextLink("fvazivjlfrqttba");
         model = BinaryData.fromObject(model).toObject(OperationListResult.class);
-        Assertions.assertEquals("fdlwg", model.value().get(0).name());
-        Assertions.assertEquals("sb", model.value().get(0).display().provider());
-        Assertions.assertEquals("ovvtgseinqfiu", model.value().get(0).display().operation());
-        Assertions.assertEquals("qknp", model.value().get(0).display().resource());
-        Assertions.assertEquals("gnepttwqmsni", model.value().get(0).display().description());
-        Assertions.assertEquals("cdm", model.value().get(0).origin());
-        Assertions.assertEquals("bdhqxvcxgf", model.nextLink());
+        Assertions.assertEquals("cyyysfgdot", model.value().get(0).name());
+        Assertions.assertEquals("iipuipwoqonm", model.value().get(0).display().provider());
+        Assertions.assertEquals("jeknizshq", model.value().get(0).display().operation());
+        Assertions.assertEquals("impevf", model.value().get(0).display().resource());
+        Assertions.assertEquals("b", model.value().get(0).display().description());
+        Assertions.assertEquals("rilbywdx", model.value().get(0).origin());
+        Assertions.assertEquals("fvazivjlfrqttba", model.nextLink());
     }
 }

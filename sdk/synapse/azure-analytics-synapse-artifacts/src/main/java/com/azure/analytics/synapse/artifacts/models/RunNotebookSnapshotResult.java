@@ -5,71 +5,84 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Run notebook snapshot result. */
+/**
+ * Run notebook snapshot result.
+ */
 @Fluent
-public final class RunNotebookSnapshotResult {
+public final class RunNotebookSnapshotResult implements JsonSerializable<RunNotebookSnapshotResult> {
     /*
      * Run notebook snapshot.
      */
-    @JsonProperty(value = "snapshot", required = true)
+    @Generated
     private RunNotebookSnapshot snapshot;
 
     /*
      * Run notebook error.
      */
-    @JsonProperty(value = "error")
+    @Generated
     private RunNotebookError error;
 
     /*
      * Run id.
      */
-    @JsonProperty(value = "runId", required = true)
+    @Generated
     private String runId;
 
     /*
      * Status of the run notebook.
      */
-    @JsonProperty(value = "runStatus", required = true)
+    @Generated
     private String runStatus;
 
     /*
      * Timestamp of last update.
      */
-    @JsonProperty(value = "lastCheckedOn")
+    @Generated
     private String lastCheckedOn;
 
     /*
      * Livy session id.
      */
-    @JsonProperty(value = "sessionId")
-    private Long sessionId;
+    @Generated
+    private String sessionId;
 
     /*
      * SparkPool name.
      */
-    @JsonProperty(value = "sparkPool")
+    @Generated
     private String sparkPool;
 
-    /** Creates an instance of RunNotebookSnapshotResult class. */
-    public RunNotebookSnapshotResult() {}
+    /**
+     * Creates an instance of RunNotebookSnapshotResult class.
+     */
+    @Generated
+    public RunNotebookSnapshotResult() {
+    }
 
     /**
      * Get the snapshot property: Run notebook snapshot.
-     *
+     * 
      * @return the snapshot value.
      */
+    @Generated
     public RunNotebookSnapshot getSnapshot() {
         return this.snapshot;
     }
 
     /**
      * Set the snapshot property: Run notebook snapshot.
-     *
+     * 
      * @param snapshot the snapshot value to set.
      * @return the RunNotebookSnapshotResult object itself.
      */
+    @Generated
     public RunNotebookSnapshotResult setSnapshot(RunNotebookSnapshot snapshot) {
         this.snapshot = snapshot;
         return this;
@@ -77,19 +90,21 @@ public final class RunNotebookSnapshotResult {
 
     /**
      * Get the error property: Run notebook error.
-     *
+     * 
      * @return the error value.
      */
+    @Generated
     public RunNotebookError getError() {
         return this.error;
     }
 
     /**
      * Set the error property: Run notebook error.
-     *
+     * 
      * @param error the error value to set.
      * @return the RunNotebookSnapshotResult object itself.
      */
+    @Generated
     public RunNotebookSnapshotResult setError(RunNotebookError error) {
         this.error = error;
         return this;
@@ -97,19 +112,21 @@ public final class RunNotebookSnapshotResult {
 
     /**
      * Get the runId property: Run id.
-     *
+     * 
      * @return the runId value.
      */
+    @Generated
     public String getRunId() {
         return this.runId;
     }
 
     /**
      * Set the runId property: Run id.
-     *
+     * 
      * @param runId the runId value to set.
      * @return the RunNotebookSnapshotResult object itself.
      */
+    @Generated
     public RunNotebookSnapshotResult setRunId(String runId) {
         this.runId = runId;
         return this;
@@ -117,19 +134,21 @@ public final class RunNotebookSnapshotResult {
 
     /**
      * Get the runStatus property: Status of the run notebook.
-     *
+     * 
      * @return the runStatus value.
      */
+    @Generated
     public String getRunStatus() {
         return this.runStatus;
     }
 
     /**
      * Set the runStatus property: Status of the run notebook.
-     *
+     * 
      * @param runStatus the runStatus value to set.
      * @return the RunNotebookSnapshotResult object itself.
      */
+    @Generated
     public RunNotebookSnapshotResult setRunStatus(String runStatus) {
         this.runStatus = runStatus;
         return this;
@@ -137,19 +156,21 @@ public final class RunNotebookSnapshotResult {
 
     /**
      * Get the lastCheckedOn property: Timestamp of last update.
-     *
+     * 
      * @return the lastCheckedOn value.
      */
+    @Generated
     public String getLastCheckedOn() {
         return this.lastCheckedOn;
     }
 
     /**
      * Set the lastCheckedOn property: Timestamp of last update.
-     *
+     * 
      * @param lastCheckedOn the lastCheckedOn value to set.
      * @return the RunNotebookSnapshotResult object itself.
      */
+    @Generated
     public RunNotebookSnapshotResult setLastCheckedOn(String lastCheckedOn) {
         this.lastCheckedOn = lastCheckedOn;
         return this;
@@ -157,41 +178,102 @@ public final class RunNotebookSnapshotResult {
 
     /**
      * Get the sessionId property: Livy session id.
-     *
+     * 
      * @return the sessionId value.
      */
-    public Long getSessionId() {
+    @Generated
+    public String getSessionId() {
         return this.sessionId;
     }
 
     /**
      * Set the sessionId property: Livy session id.
-     *
+     * 
      * @param sessionId the sessionId value to set.
      * @return the RunNotebookSnapshotResult object itself.
      */
-    public RunNotebookSnapshotResult setSessionId(Long sessionId) {
+    @Generated
+    public RunNotebookSnapshotResult setSessionId(String sessionId) {
         this.sessionId = sessionId;
         return this;
     }
 
     /**
      * Get the sparkPool property: SparkPool name.
-     *
+     * 
      * @return the sparkPool value.
      */
+    @Generated
     public String getSparkPool() {
         return this.sparkPool;
     }
 
     /**
      * Set the sparkPool property: SparkPool name.
-     *
+     * 
      * @param sparkPool the sparkPool value to set.
      * @return the RunNotebookSnapshotResult object itself.
      */
+    @Generated
     public RunNotebookSnapshotResult setSparkPool(String sparkPool) {
         this.sparkPool = sparkPool;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("snapshot", this.snapshot);
+        jsonWriter.writeStringField("runId", this.runId);
+        jsonWriter.writeStringField("runStatus", this.runStatus);
+        jsonWriter.writeJsonField("error", this.error);
+        jsonWriter.writeStringField("lastCheckedOn", this.lastCheckedOn);
+        jsonWriter.writeStringField("sessionId", this.sessionId);
+        jsonWriter.writeStringField("sparkPool", this.sparkPool);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RunNotebookSnapshotResult from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RunNotebookSnapshotResult if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the RunNotebookSnapshotResult.
+     */
+    @Generated
+    public static RunNotebookSnapshotResult fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RunNotebookSnapshotResult deserializedRunNotebookSnapshotResult = new RunNotebookSnapshotResult();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("snapshot".equals(fieldName)) {
+                    deserializedRunNotebookSnapshotResult.snapshot = RunNotebookSnapshot.fromJson(reader);
+                } else if ("runId".equals(fieldName)) {
+                    deserializedRunNotebookSnapshotResult.runId = reader.getString();
+                } else if ("runStatus".equals(fieldName)) {
+                    deserializedRunNotebookSnapshotResult.runStatus = reader.getString();
+                } else if ("error".equals(fieldName)) {
+                    deserializedRunNotebookSnapshotResult.error = RunNotebookError.fromJson(reader);
+                } else if ("lastCheckedOn".equals(fieldName)) {
+                    deserializedRunNotebookSnapshotResult.lastCheckedOn = reader.getString();
+                } else if ("sessionId".equals(fieldName)) {
+                    deserializedRunNotebookSnapshotResult.sessionId = reader.getString();
+                } else if ("sparkPool".equals(fieldName)) {
+                    deserializedRunNotebookSnapshotResult.sparkPool = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRunNotebookSnapshotResult;
+        });
     }
 }

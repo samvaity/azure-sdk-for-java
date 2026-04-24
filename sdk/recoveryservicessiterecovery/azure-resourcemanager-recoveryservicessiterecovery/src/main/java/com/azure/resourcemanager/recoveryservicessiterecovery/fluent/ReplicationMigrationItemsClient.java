@@ -21,34 +21,36 @@ import com.azure.resourcemanager.recoveryservicessiterecovery.models.TestMigrate
 import com.azure.resourcemanager.recoveryservicessiterecovery.models.TestMigrateInput;
 import com.azure.resourcemanager.recoveryservicessiterecovery.models.UpdateMigrationItemInput;
 
-/** An instance of this class provides access to all the operations defined in ReplicationMigrationItemsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ReplicationMigrationItemsClient.
+ */
 public interface ReplicationMigrationItemsClient {
     /**
      * Gets the list of migration items in the protection container.
-     *
-     * <p>Gets the list of ASR migration items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR migration items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR migration items in the protection container as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR migration items in the protection container as paginated response with
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<MigrationItemInner> listByReplicationProtectionContainers(
-        String resourceName, String resourceGroupName, String fabricName, String protectionContainerName);
+    PagedIterable<MigrationItemInner> listByReplicationProtectionContainers(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName);
 
     /**
      * Gets the list of migration items in the protection container.
-     *
-     * <p>Gets the list of ASR migration items in the protection container.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the list of ASR migration items in the protection container.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param skipToken The pagination token.
@@ -58,25 +60,19 @@ public interface ReplicationMigrationItemsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the list of ASR migration items in the protection container as paginated response with {@link
-     *     PagedIterable}.
+     * @return the list of ASR migration items in the protection container as paginated response with
+     * {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<MigrationItemInner> listByReplicationProtectionContainers(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String skipToken,
-        String takeToken,
-        String filter,
-        Context context);
+    PagedIterable<MigrationItemInner> listByReplicationProtectionContainers(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String skipToken, String takeToken,
+        String filter, Context context);
 
     /**
      * Gets the details of a migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -87,19 +83,14 @@ public interface ReplicationMigrationItemsClient {
      * @return the details of a migration item along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<MigrationItemInner> getWithResponse(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        Context context);
+    Response<MigrationItemInner> getWithResponse(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, Context context);
 
     /**
      * Gets the details of a migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric unique name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -109,20 +100,16 @@ public interface ReplicationMigrationItemsClient {
      * @return the details of a migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner get(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName);
+    MigrationItemInner get(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName);
 
     /**
      * Enables migration.
-     *
-     * <p>The operation to create an ASR migration item (enable migration).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR migration item (enable migration).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -133,21 +120,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginCreate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginCreate(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
         EnableMigrationInput input);
 
     /**
      * Enables migration.
-     *
-     * <p>The operation to create an ASR migration item (enable migration).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR migration item (enable migration).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -159,22 +142,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginCreate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        EnableMigrationInput input,
-        Context context);
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginCreate(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
+        EnableMigrationInput input, Context context);
 
     /**
      * Enables migration.
-     *
-     * <p>The operation to create an ASR migration item (enable migration).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR migration item (enable migration).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -185,21 +163,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner create(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        EnableMigrationInput input);
+    MigrationItemInner create(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, EnableMigrationInput input);
 
     /**
      * Enables migration.
-     *
-     * <p>The operation to create an ASR migration item (enable migration).
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create an ASR migration item (enable migration).
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -211,22 +184,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner create(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        EnableMigrationInput input,
-        Context context);
+    MigrationItemInner create(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, EnableMigrationInput input, Context context);
 
     /**
      * Delete the migration item.
-     *
-     * <p>The operation to delete an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -236,20 +203,16 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName);
+    SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName);
 
     /**
      * Delete the migration item.
-     *
-     * <p>The operation to delete an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -261,22 +224,16 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        String deleteOption,
-        Context context);
+    SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, String deleteOption, Context context);
 
     /**
      * Delete the migration item.
-     *
-     * <p>The operation to delete an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -285,20 +242,16 @@ public interface ReplicationMigrationItemsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
+    void delete(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
         String migrationItemName);
 
     /**
      * Delete the migration item.
-     *
-     * <p>The operation to delete an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -309,22 +262,16 @@ public interface ReplicationMigrationItemsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        String deleteOption,
-        Context context);
+    void delete(String resourceGroupName, String resourceName, String fabricName, String protectionContainerName,
+        String migrationItemName, String deleteOption, Context context);
 
     /**
      * Updates migration item.
-     *
-     * <p>The operation to update the recovery settings of an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -335,21 +282,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginUpdate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginUpdate(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
         UpdateMigrationItemInput input);
 
     /**
      * Updates migration item.
-     *
-     * <p>The operation to update the recovery settings of an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -361,22 +304,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginUpdate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        UpdateMigrationItemInput input,
-        Context context);
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginUpdate(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
+        UpdateMigrationItemInput input, Context context);
 
     /**
      * Updates migration item.
-     *
-     * <p>The operation to update the recovery settings of an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -387,21 +325,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner update(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        UpdateMigrationItemInput input);
+    MigrationItemInner update(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, UpdateMigrationItemInput input);
 
     /**
      * Updates migration item.
-     *
-     * <p>The operation to update the recovery settings of an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to update the recovery settings of an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -413,22 +346,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner update(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        UpdateMigrationItemInput input,
-        Context context);
+    MigrationItemInner update(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, UpdateMigrationItemInput input, Context context);
 
     /**
      * Migrate item.
-     *
-     * <p>The operation to initiate migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -439,21 +366,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginMigrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginMigrate(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
         MigrateInput migrateInput);
 
     /**
      * Migrate item.
-     *
-     * <p>The operation to initiate migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -465,22 +388,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginMigrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        MigrateInput migrateInput,
-        Context context);
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginMigrate(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
+        MigrateInput migrateInput, Context context);
 
     /**
      * Migrate item.
-     *
-     * <p>The operation to initiate migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -491,21 +409,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner migrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        MigrateInput migrateInput);
+    MigrationItemInner migrate(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, MigrateInput migrateInput);
 
     /**
      * Migrate item.
-     *
-     * <p>The operation to initiate migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -517,22 +430,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner migrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        MigrateInput migrateInput,
-        Context context);
+    MigrationItemInner migrate(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, MigrateInput migrateInput, Context context);
 
     /**
      * Pause replication.
-     *
-     * <p>The operation to initiate pause replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate pause replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -543,21 +450,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginPauseReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginPauseReplication(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
         PauseReplicationInput pauseReplicationInput);
 
     /**
      * Pause replication.
-     *
-     * <p>The operation to initiate pause replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate pause replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -569,22 +472,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginPauseReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        PauseReplicationInput pauseReplicationInput,
-        Context context);
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginPauseReplication(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
+        PauseReplicationInput pauseReplicationInput, Context context);
 
     /**
      * Pause replication.
-     *
-     * <p>The operation to initiate pause replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate pause replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -595,21 +493,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner pauseReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        PauseReplicationInput pauseReplicationInput);
+    MigrationItemInner pauseReplication(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, PauseReplicationInput pauseReplicationInput);
 
     /**
      * Pause replication.
-     *
-     * <p>The operation to initiate pause replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate pause replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -621,22 +514,17 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner pauseReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        PauseReplicationInput pauseReplicationInput,
+    MigrationItemInner pauseReplication(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, PauseReplicationInput pauseReplicationInput,
         Context context);
 
     /**
      * Resume replication.
-     *
-     * <p>The operation to initiate resume replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate resume replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -647,21 +535,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginResumeReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginResumeReplication(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
         ResumeReplicationInput resumeReplicationInput);
 
     /**
      * Resume replication.
-     *
-     * <p>The operation to initiate resume replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate resume replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -673,22 +557,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginResumeReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        ResumeReplicationInput resumeReplicationInput,
-        Context context);
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginResumeReplication(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
+        ResumeReplicationInput resumeReplicationInput, Context context);
 
     /**
      * Resume replication.
-     *
-     * <p>The operation to initiate resume replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate resume replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -699,21 +578,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner resumeReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        ResumeReplicationInput resumeReplicationInput);
+    MigrationItemInner resumeReplication(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, ResumeReplicationInput resumeReplicationInput);
 
     /**
      * Resume replication.
-     *
-     * <p>The operation to initiate resume replication of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate resume replication of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -725,22 +599,17 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner resumeReplication(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        ResumeReplicationInput resumeReplicationInput,
+    MigrationItemInner resumeReplication(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, ResumeReplicationInput resumeReplicationInput,
         Context context);
 
     /**
      * Resynchronizes replication.
-     *
-     * <p>The operation to resynchronize replication of an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resynchronize replication of an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -751,21 +620,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginResync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginResync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
         ResyncInput input);
 
     /**
      * Resynchronizes replication.
-     *
-     * <p>The operation to resynchronize replication of an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resynchronize replication of an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -777,22 +642,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginResync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        ResyncInput input,
-        Context context);
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginResync(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
+        ResyncInput input, Context context);
 
     /**
      * Resynchronizes replication.
-     *
-     * <p>The operation to resynchronize replication of an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resynchronize replication of an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -803,21 +663,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner resync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        ResyncInput input);
+    MigrationItemInner resync(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, ResyncInput input);
 
     /**
      * Resynchronizes replication.
-     *
-     * <p>The operation to resynchronize replication of an ASR migration item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to resynchronize replication of an ASR migration item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -829,22 +684,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner resync(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        ResyncInput input,
-        Context context);
+    MigrationItemInner resync(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, ResyncInput input, Context context);
 
     /**
      * Test migrate item.
-     *
-     * <p>The operation to initiate test migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -855,21 +704,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginTestMigrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginTestMigrate(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
         TestMigrateInput testMigrateInput);
 
     /**
      * Test migrate item.
-     *
-     * <p>The operation to initiate test migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -881,22 +726,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginTestMigrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        TestMigrateInput testMigrateInput,
-        Context context);
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginTestMigrate(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
+        TestMigrateInput testMigrateInput, Context context);
 
     /**
      * Test migrate item.
-     *
-     * <p>The operation to initiate test migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -907,21 +747,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner testMigrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        TestMigrateInput testMigrateInput);
+    MigrationItemInner testMigrate(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, TestMigrateInput testMigrateInput);
 
     /**
      * Test migrate item.
-     *
-     * <p>The operation to initiate test migration of the item.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migration of the item.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -933,22 +768,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner testMigrate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        TestMigrateInput testMigrateInput,
-        Context context);
+    MigrationItemInner testMigrate(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, TestMigrateInput testMigrateInput, Context context);
 
     /**
      * Test migrate cleanup.
-     *
-     * <p>The operation to initiate test migrate cleanup.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migrate cleanup.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -959,21 +788,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginTestMigrateCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginTestMigrateCleanup(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
         TestMigrateCleanupInput testMigrateCleanupInput);
 
     /**
      * Test migrate cleanup.
-     *
-     * <p>The operation to initiate test migrate cleanup.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migrate cleanup.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -985,22 +810,17 @@ public interface ReplicationMigrationItemsClient {
      * @return the {@link SyncPoller} for polling of migration item.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginTestMigrateCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        TestMigrateCleanupInput testMigrateCleanupInput,
-        Context context);
+    SyncPoller<PollResult<MigrationItemInner>, MigrationItemInner> beginTestMigrateCleanup(String resourceGroupName,
+        String resourceName, String fabricName, String protectionContainerName, String migrationItemName,
+        TestMigrateCleanupInput testMigrateCleanupInput, Context context);
 
     /**
      * Test migrate cleanup.
-     *
-     * <p>The operation to initiate test migrate cleanup.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migrate cleanup.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -1011,21 +831,16 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner testMigrateCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        TestMigrateCleanupInput testMigrateCleanupInput);
+    MigrationItemInner testMigrateCleanup(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, TestMigrateCleanupInput testMigrateCleanupInput);
 
     /**
      * Test migrate cleanup.
-     *
-     * <p>The operation to initiate test migrate cleanup.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to initiate test migrate cleanup.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param protectionContainerName Protection container name.
      * @param migrationItemName Migration item name.
@@ -1037,33 +852,28 @@ public interface ReplicationMigrationItemsClient {
      * @return migration item.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    MigrationItemInner testMigrateCleanup(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String protectionContainerName,
-        String migrationItemName,
-        TestMigrateCleanupInput testMigrateCleanupInput,
+    MigrationItemInner testMigrateCleanup(String resourceGroupName, String resourceName, String fabricName,
+        String protectionContainerName, String migrationItemName, TestMigrateCleanupInput testMigrateCleanupInput,
         Context context);
 
     /**
      * Gets the list of migration items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the list of migration items in the vault as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<MigrationItemInner> list(String resourceName, String resourceGroupName);
+    PagedIterable<MigrationItemInner> list(String resourceGroupName, String resourceName);
 
     /**
      * Gets the list of migration items in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param skipToken The pagination token.
      * @param takeToken The page size.
      * @param filter OData filter options.
@@ -1074,11 +884,6 @@ public interface ReplicationMigrationItemsClient {
      * @return the list of migration items in the vault as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<MigrationItemInner> list(
-        String resourceName,
-        String resourceGroupName,
-        String skipToken,
-        String takeToken,
-        String filter,
-        Context context);
+    PagedIterable<MigrationItemInner> list(String resourceGroupName, String resourceName, String skipToken,
+        String takeToken, String filter, Context context);
 }

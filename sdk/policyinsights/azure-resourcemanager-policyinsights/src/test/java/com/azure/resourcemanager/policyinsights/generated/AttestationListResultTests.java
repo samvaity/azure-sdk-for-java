@@ -6,20 +6,17 @@ package com.azure.resourcemanager.policyinsights.generated;
 
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.policyinsights.models.AttestationListResult;
-import org.junit.jupiter.api.Test;
 
 public final class AttestationListResultTests {
-    @Test
-    public void testDeserialize() {
-        AttestationListResult model =
-            BinaryData
-                .fromString(
-                    "{\"value\":[{\"properties\":{\"policyAssignmentId\":\"sfraoyzko\",\"policyDefinitionReferenceId\":\"tlmngu\",\"complianceState\":\"Compliant\",\"expiresOn\":\"2021-09-07T06:52:28Z\",\"owner\":\"dsyuuximerqfob\",\"comments\":\"znkbykutwpfhpagm\",\"evidence\":[],\"provisioningState\":\"kdsnfdsdoakgtdl\",\"lastComplianceStateChangeAt\":\"2021-10-23T18:05:06Z\",\"assessmentDate\":\"2021-06-21T09:18:55Z\"},\"id\":\"l\",\"name\":\"ewpusdsttwvogvb\",\"type\":\"ejdcngqqmoakuf\"},{\"properties\":{\"policyAssignmentId\":\"m\",\"policyDefinitionReferenceId\":\"rwr\",\"complianceState\":\"Compliant\",\"expiresOn\":\"2020-12-27T08:20:19Z\",\"owner\":\"enuuzkopbm\",\"comments\":\"rfdwoyu\",\"evidence\":[],\"provisioningState\":\"iuiefozbhdmsm\",\"lastComplianceStateChangeAt\":\"2021-11-06T13:19:36Z\",\"assessmentDate\":\"2021-05-05T09:05:40Z\"},\"id\":\"trmaequiahxicslf\",\"name\":\"oqzpiyylha\",\"type\":\"nswhcc\"},{\"properties\":{\"policyAssignmentId\":\"ph\",\"policyDefinitionReferenceId\":\"ivwitqscywugg\",\"complianceState\":\"Compliant\",\"expiresOn\":\"2021-06-28T10:10:54Z\",\"owner\":\"zbwemh\",\"comments\":\"rsbrgzdwm\",\"evidence\":[],\"provisioningState\":\"ypqwdxggiccc\",\"lastComplianceStateChangeAt\":\"2021-07-21T16:23:57Z\",\"assessmentDate\":\"2021-08-27T14:08:45Z\"},\"id\":\"mkttlstvlzywem\",\"name\":\"zrncsdt\",\"type\":\"lusiy\"}],\"nextLink\":\"sfgytguslfead\"}")
-                .toObject(AttestationListResult.class);
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        AttestationListResult model = BinaryData.fromString(
+            "{\"value\":[{\"properties\":{\"policyAssignmentId\":\"yefoyzbamwineo\",\"policyDefinitionReferenceId\":\"fkak\",\"complianceState\":\"Unknown\",\"expiresOn\":\"2021-08-04T17:27:35Z\",\"owner\":\"evboclzhzjknyuxg\",\"comments\":\"txpnrupza\",\"evidence\":[{\"description\":\"i\",\"sourceUri\":\"rekidswysk\"},{\"description\":\"uffgllukkutvlx\",\"sourceUri\":\"pqhvmblcouqehbhb\"}],\"provisioningState\":\"sziryrandoyp\",\"lastComplianceStateChangeAt\":\"2021-11-06T16:20:01Z\",\"assessmentDate\":\"2021-02-08T17:37:53Z\",\"metadata\":\"datarmkfqlwxldykals\"},\"id\":\"aolnjpnnbmjk\",\"name\":\"ibjgsjjxxahm\",\"type\":\"nadzyq\"},{\"properties\":{\"policyAssignmentId\":\"gxyivpinbmh\",\"policyDefinitionReferenceId\":\"jijkgqxnhmbke\",\"complianceState\":\"Compliant\",\"expiresOn\":\"2021-01-19T01:40:56Z\",\"owner\":\"vaannggiycwkd\",\"comments\":\"awxwfek\",\"evidence\":[{\"description\":\"rq\",\"sourceUri\":\"zmqkratbnxwbjs\"},{\"description\":\"birkfpksokdg\",\"sourceUri\":\"ewijymrhbguz\"},{\"description\":\"kyewnfnzhhhqo\",\"sourceUri\":\"ffjkutycyarnroo\"},{\"description\":\"uabzoghkt\",\"sourceUri\":\"yczhco\"}],\"provisioningState\":\"cnhz\",\"lastComplianceStateChangeAt\":\"2021-11-29T19:08:33Z\",\"assessmentDate\":\"2021-11-05T08:34:41Z\",\"metadata\":\"datazcfyjzptwrl\"},\"id\":\"apqinf\",\"name\":\"zpyglqdhmrj\",\"type\":\"ralcxpjbyypsj\"},{\"properties\":{\"policyAssignmentId\":\"qcjenkyhf\",\"policyDefinitionReferenceId\":\"vsqxfxjelgcmpzqj\",\"complianceState\":\"Unknown\",\"expiresOn\":\"2021-02-22T05:17:56Z\",\"owner\":\"w\",\"comments\":\"cacoyvivbsiz\",\"evidence\":[{\"description\":\"zlbscmnlziji\",\"sourceUri\":\"ehgmvflnwyv\"},{\"description\":\"xrerlniylylyf\",\"sourceUri\":\"zutgqztwhghmupg\"}],\"provisioningState\":\"jtcdxabbujftaben\",\"lastComplianceStateChangeAt\":\"2021-01-12T16:08:29Z\",\"assessmentDate\":\"2021-04-04T06:33:35Z\",\"metadata\":\"dataxzu\"},\"id\":\"feddwwnlza\",\"name\":\"wxudgn\",\"type\":\"gookrtalvnb\"},{\"properties\":{\"policyAssignmentId\":\"gpbemeluclvdjju\",\"policyDefinitionReferenceId\":\"rdnqodxahhxhqf\",\"complianceState\":\"Compliant\",\"expiresOn\":\"2021-09-08T05:38:07Z\",\"owner\":\"qgyi\",\"comments\":\"mchgavsczuej\",\"evidence\":[{\"description\":\"tlghwzhomew\",\"sourceUri\":\"s\"},{\"description\":\"iuh\",\"sourceUri\":\"wmoaiancznvodrrs\"},{\"description\":\"lxydkxrxv\",\"sourceUri\":\"xiwkgfbql\"}],\"provisioningState\":\"qkhychocok\",\"lastComplianceStateChangeAt\":\"2021-10-18T00:50:01Z\",\"assessmentDate\":\"2021-10-15T17:00:57Z\",\"metadata\":\"dataqlrqffaweyurk\"},\"id\":\"y\",\"name\":\"dxravj\",\"type\":\"qdbrxmrgc\"}],\"nextLink\":\"apx\"}")
+            .toObject(AttestationListResult.class);
     }
 
-    @Test
-    public void testSerialize() {
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
         AttestationListResult model = new AttestationListResult();
         model = BinaryData.fromObject(model).toObject(AttestationListResult.class);
     }

@@ -42,6 +42,14 @@ import java.util.Objects;
 final class AzureResource {
     private static final ClientLogger LOGGER = new ClientLogger(AzureResource.class);
 
+    /**
+     * Metadata key used to mark virtual directories in Azure Blob Storage.
+     *
+     * <p>When this metadata key is set to "true" on a zero-length blob without extension,
+     * it represents a virtual directory in the blob hierarchy.
+     *
+     * @see Constants.HeaderConstants#DIRECTORY_METADATA_KEY
+     */
     static final String DIR_METADATA_MARKER = Constants.HeaderConstants.DIRECTORY_METADATA_KEY;
 
     private final AzurePath path;
@@ -65,7 +73,7 @@ final class AzureResource {
      * If the parent is a root (container), it will be assumed to exist, so it must be validated elsewhere that the
      * container is a legitimate root within this file system.
      */
-    boolean checkParentDirectoryExists() throws IOException {
+    boolean parentDirectoryExists() throws IOException {
         /*
         If the parent is just the root (or null, which means the parent is implicitly the default directory which is a
         root), that means we are checking a container, which is always considered to exist. Otherwise, perform normal
@@ -80,24 +88,44 @@ final class AzureResource {
      * Checks whether a directory exists by either being empty or having children.
      */
     boolean checkDirectoryExists() throws IOException {
-        DirectoryStatus dirStatus = this.checkDirStatus();
+        DirectoryStatus dirStatus = this.getDirectoryStatus();
         return dirStatus.equals(DirectoryStatus.EMPTY) || dirStatus.equals(DirectoryStatus.NOT_EMPTY);
     }
 
-    /*
-    This method will check specifically whether there is a virtual directory at this location. It must be known before
-    that there is no file present at the destination.
+    /**
+     * Checks whether the resource is a virtual directory.
+     *
+     * <p>A virtual directory is defined as an empty, extensionless file with the
+     * {@link #DIR_METADATA_MARKER} metadata set to "true".
+     *
+     * <p>This method assumes no file exists at the destination.
+     *
+     * @return true if a virtual directory exists at this location
+     * @throws IOException if an I/O error occurs
      */
-    boolean checkVirtualDirectoryExists() throws IOException {
-        DirectoryStatus dirStatus = this.checkDirStatus(false);
+    boolean isVirtualDirectory() throws IOException {
+        DirectoryStatus dirStatus = this.getDirectoryStatus(false);
         return dirStatus.equals(DirectoryStatus.NOT_EMPTY); // Virtual directories cannot be empty
     }
 
     /**
-     * This method will check if a directory is extant and/or empty and accommodates virtual directories. This method
-     * will not check the status of root directories.
+     * Determines the status of a directory in Azure Blob Storage.
+     *
+     * <p>This method checks if a directory exists at the current path and whether it contains
+     * any items. It properly handles virtual directories, which are represented by zero-length
+     * blobs with the {@link #DIR_METADATA_MARKER} metadata set to "true".
+     *
+     * <p>This method will not check the status of root directories as they are backed by
+     * containers and have different behavior than regular directories.
+     *
+     * @return a {@link DirectoryStatus} enum value indicating:
+     *         {@link DirectoryStatus#EMPTY} if the directory exists but has no items,
+     *         {@link DirectoryStatus#NOT_EMPTY} if the directory exists and has items,
+     *         {@link DirectoryStatus#DOES_NOT_EXIST} if no directory exists at this path, or
+     *         {@link DirectoryStatus#NOT_A_DIRECTORY} if the path refers to a file
+     * @throws IOException if an I/O error occurs while communicating with the Azure service
      */
-    DirectoryStatus checkDirStatus() throws IOException {
+    DirectoryStatus getDirectoryStatus() throws IOException {
         if (this.blobClient == null) {
             throw LoggingUtility.logError(LOGGER, new IllegalArgumentException("The blob client was null."));
         }
@@ -107,10 +135,10 @@ final class AzureResource {
          * virtual or doesn't exist.
          */
         BlobProperties props = null;
-        boolean exists = false;
+        boolean blobExists = false;
         try {
             props = this.getBlobClient().getProperties();
-            exists = true;
+            blobExists = true;
         } catch (BlobStorageException e) {
             if (e.getStatusCode() != 404) {
                 throw LoggingUtility.logError(LOGGER, new IOException(e));
@@ -118,18 +146,24 @@ final class AzureResource {
         }
 
         // Check if the resource is a file or directory before listing
-        if (exists && !props.getMetadata().containsKey(AzureResource.DIR_METADATA_MARKER)) {
+        if (blobExists && isNonDirectoryBlob(props)) {
             return DirectoryStatus.NOT_A_DIRECTORY;
         }
 
-        return checkDirStatus(exists);
+        return getDirectoryStatus(blobExists);
     }
 
-    /*
-    This method will determine the status of the directory given it is already known whether or not there is an object
-    at the target.
+    /**
+     * Checks the status of a directory (concrete or virtual) at this location.
+     *
+     * <p>This method determines if the directory is not empty, empty, does not exist, or is not a directory,
+     * based on whether a blob exists at the location and the results of listing blobs under the directory path.
+     *
+     * @param exists {@code true} if a blob exists at this location; {@code false} otherwise.
+     * @return the {@link DirectoryStatus} representing the status of the directory at this location
+     * @throws IOException if an I/O error occurs
      */
-    DirectoryStatus checkDirStatus(boolean exists) throws IOException {
+    DirectoryStatus getDirectoryStatus(boolean blobExists) throws IOException {
         BlobContainerClient containerClient = this.getContainerClient();
 
         // List on the directory name + '/' so that we only get things under the directory if any
@@ -142,11 +176,11 @@ final class AzureResource {
          * empty Else it does not exist
          */
         try {
-            Iterator<BlobItem> blobIterator = containerClient.listBlobsByHierarchy(AzureFileSystem.PATH_SEPARATOR,
-                listOptions, null).iterator();
+            Iterator<BlobItem> blobIterator
+                = containerClient.listBlobsByHierarchy(AzureFileSystem.PATH_SEPARATOR, listOptions, null).iterator();
             if (blobIterator.hasNext()) {
                 return DirectoryStatus.NOT_EMPTY;
-            } else if (exists) {
+            } else if (blobExists) {
                 return DirectoryStatus.EMPTY;
             } else {
                 return DirectoryStatus.DOES_NOT_EXIST;
@@ -164,8 +198,9 @@ final class AzureResource {
      * @param requestConditions Any necessary request conditions to pass when creating the directory blob.
      */
     void putDirectoryBlob(BlobRequestConditions requestConditions) {
-        this.blobClient.getBlockBlobClient().commitBlockListWithResponse(Collections.emptyList(), this.blobHeaders,
-            this.prepareMetadataForDirectory(), null, requestConditions, null, null);
+        this.blobClient.getBlockBlobClient()
+            .commitBlockListWithResponse(Collections.emptyList(), this.blobHeaders, this.prepareMetadataForDirectory(),
+                null, requestConditions, null, null);
     }
 
     /*
@@ -180,15 +215,19 @@ final class AzureResource {
                 case AzureFileSystemProvider.CONTENT_TYPE:
                     headers.setContentType(attr.value().toString());
                     break;
+
                 case AzureFileSystemProvider.CONTENT_LANGUAGE:
                     headers.setContentLanguage(attr.value().toString());
                     break;
+
                 case AzureFileSystemProvider.CONTENT_DISPOSITION:
                     headers.setContentDisposition(attr.value().toString());
                     break;
+
                 case AzureFileSystemProvider.CONTENT_ENCODING:
                     headers.setContentEncoding(attr.value().toString());
                     break;
+
                 case AzureFileSystemProvider.CONTENT_MD5:
                     if ((attr.value() instanceof byte[])) {
                         headers.setContentMd5((byte[]) attr.value());
@@ -197,9 +236,11 @@ final class AzureResource {
                             new UnsupportedOperationException("Content-MD5 attribute must be a byte[]"));
                     }
                     break;
+
                 case AzureFileSystemProvider.CACHE_CONTROL:
                     headers.setCacheControl(attr.value().toString());
                     break;
+
                 default:
                     propertyFound = false;
                     break;
@@ -230,15 +271,15 @@ final class AzureResource {
 
     private void validateNotRoot() {
         if (this.path.isRoot()) {
-            throw LoggingUtility.logError(LOGGER, new IllegalArgumentException(
-                "Root directory not supported. Path: " + this.path));
+            throw LoggingUtility.logError(LOGGER,
+                new IllegalArgumentException("Root directory not supported. Path: " + this.path));
         }
     }
 
     private AzurePath validatePathInstanceType(Path path) {
         if (!(path instanceof AzurePath)) {
-            throw LoggingUtility.logError(LOGGER, new IllegalArgumentException("This provider cannot operate on "
-                + "subtypes of Path other than AzurePath"));
+            throw LoggingUtility.logError(LOGGER, new IllegalArgumentException(
+                "This provider cannot operate on " + "subtypes of Path other than AzurePath"));
         }
         return (AzurePath) path;
     }
@@ -266,8 +307,7 @@ final class AzureResource {
     }
 
     BlobOutputStream getBlobOutputStream(ParallelTransferOptions pto, BlobRequestConditions rq) {
-        BlockBlobOutputStreamOptions options = new BlockBlobOutputStreamOptions()
-            .setHeaders(this.blobHeaders)
+        BlockBlobOutputStreamOptions options = new BlockBlobOutputStreamOptions().setHeaders(this.blobHeaders)
             .setMetadata(this.blobMetadata)
             .setParallelTransferOptions(pto)
             .setRequestConditions(rq);
@@ -280,5 +320,9 @@ final class AzureResource {
         }
         this.blobMetadata.put(DIR_METADATA_MARKER, "true");
         return this.blobMetadata;
+    }
+
+    private static boolean isNonDirectoryBlob(BlobProperties props) {
+        return !props.getMetadata().containsKey(AzureResource.DIR_METADATA_MARKER);
     }
 }

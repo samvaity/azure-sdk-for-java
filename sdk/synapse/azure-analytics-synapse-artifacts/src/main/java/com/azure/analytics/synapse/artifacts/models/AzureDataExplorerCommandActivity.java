@@ -5,41 +5,65 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-/** Azure Data Explorer command activity. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("AzureDataExplorerCommand")
-@JsonFlatten
+/**
+ * Azure Data Explorer command activity.
+ */
 @Fluent
 public class AzureDataExplorerCommandActivity extends ExecutionActivity {
+    /*
+     * Type of activity.
+     */
+    @Generated
+    private String type = "AzureDataExplorerCommand";
+
     /*
      * A control command, according to the Azure Data Explorer command syntax. Type: string (or Expression with
      * resultType string).
      */
-    @JsonProperty(value = "typeProperties.command", required = true)
+    @Generated
     private Object command;
 
     /*
      * Control command timeout. Type: string (or Expression with resultType string), pattern:
      * ((\d+)\.)?(\d\d):(60|([0-5][0-9])):(60|([0-5][0-9]))..)
      */
-    @JsonProperty(value = "typeProperties.commandTimeout")
+    @Generated
     private Object commandTimeout;
 
-    /** Creates an instance of AzureDataExplorerCommandActivity class. */
-    public AzureDataExplorerCommandActivity() {}
+    /**
+     * Creates an instance of AzureDataExplorerCommandActivity class.
+     */
+    @Generated
+    public AzureDataExplorerCommandActivity() {
+    }
+
+    /**
+     * Get the type property: Type of activity.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the command property: A control command, according to the Azure Data Explorer command syntax. Type: string
      * (or Expression with resultType string).
-     *
+     * 
      * @return the command value.
      */
+    @Generated
     public Object getCommand() {
         return this.command;
     }
@@ -47,10 +71,11 @@ public class AzureDataExplorerCommandActivity extends ExecutionActivity {
     /**
      * Set the command property: A control command, according to the Azure Data Explorer command syntax. Type: string
      * (or Expression with resultType string).
-     *
+     * 
      * @param command the command value to set.
      * @return the AzureDataExplorerCommandActivity object itself.
      */
+    @Generated
     public AzureDataExplorerCommandActivity setCommand(Object command) {
         this.command = command;
         return this;
@@ -59,9 +84,10 @@ public class AzureDataExplorerCommandActivity extends ExecutionActivity {
     /**
      * Get the commandTimeout property: Control command timeout. Type: string (or Expression with resultType string),
      * pattern: ((\d+)\.)?(\d\d):(60|([0-5][0-9])):(60|([0-5][0-9]))..).
-     *
+     * 
      * @return the commandTimeout value.
      */
+    @Generated
     public Object getCommandTimeout() {
         return this.commandTimeout;
     }
@@ -69,68 +95,196 @@ public class AzureDataExplorerCommandActivity extends ExecutionActivity {
     /**
      * Set the commandTimeout property: Control command timeout. Type: string (or Expression with resultType string),
      * pattern: ((\d+)\.)?(\d\d):(60|([0-5][0-9])):(60|([0-5][0-9]))..).
-     *
+     * 
      * @param commandTimeout the commandTimeout value to set.
      * @return the AzureDataExplorerCommandActivity object itself.
      */
+    @Generated
     public AzureDataExplorerCommandActivity setCommandTimeout(Object commandTimeout) {
         this.commandTimeout = commandTimeout;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerCommandActivity setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         super.setLinkedServiceName(linkedServiceName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerCommandActivity setPolicy(ActivityPolicy policy) {
         super.setPolicy(policy);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerCommandActivity setName(String name) {
         super.setName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerCommandActivity setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerCommandActivity setState(ActivityState state) {
         super.setState(state);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerCommandActivity setOnInactiveMarkAs(ActivityOnInactiveMarkAs onInactiveMarkAs) {
         super.setOnInactiveMarkAs(onInactiveMarkAs);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerCommandActivity setDependsOn(List<ActivityDependency> dependsOn) {
         super.setDependsOn(dependsOn);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AzureDataExplorerCommandActivity setUserProperties(List<UserProperty> userProperties) {
         super.setUserProperties(userProperties);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", getName());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeStringField("state", getState() == null ? null : getState().toString());
+        jsonWriter.writeStringField("onInactiveMarkAs",
+            getOnInactiveMarkAs() == null ? null : getOnInactiveMarkAs().toString());
+        jsonWriter.writeArrayField("dependsOn", getDependsOn(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("userProperties", getUserProperties(),
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("linkedServiceName", getLinkedServiceName());
+        jsonWriter.writeJsonField("policy", getPolicy());
+        jsonWriter.writeStringField("type", this.type);
+        if (command != null || commandTimeout != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("command", this.command);
+            if (this.commandTimeout != null) {
+                jsonWriter.writeUntypedField("commandTimeout", this.commandTimeout);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureDataExplorerCommandActivity from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureDataExplorerCommandActivity if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AzureDataExplorerCommandActivity.
+     */
+    @Generated
+    public static AzureDataExplorerCommandActivity fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureDataExplorerCommandActivity deserializedAzureDataExplorerCommandActivity
+                = new AzureDataExplorerCommandActivity();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedAzureDataExplorerCommandActivity.setName(reader.getString());
+                } else if ("description".equals(fieldName)) {
+                    deserializedAzureDataExplorerCommandActivity.setDescription(reader.getString());
+                } else if ("state".equals(fieldName)) {
+                    deserializedAzureDataExplorerCommandActivity.setState(ActivityState.fromString(reader.getString()));
+                } else if ("onInactiveMarkAs".equals(fieldName)) {
+                    deserializedAzureDataExplorerCommandActivity
+                        .setOnInactiveMarkAs(ActivityOnInactiveMarkAs.fromString(reader.getString()));
+                } else if ("dependsOn".equals(fieldName)) {
+                    List<ActivityDependency> dependsOn
+                        = reader.readArray(reader1 -> ActivityDependency.fromJson(reader1));
+                    deserializedAzureDataExplorerCommandActivity.setDependsOn(dependsOn);
+                } else if ("userProperties".equals(fieldName)) {
+                    List<UserProperty> userProperties = reader.readArray(reader1 -> UserProperty.fromJson(reader1));
+                    deserializedAzureDataExplorerCommandActivity.setUserProperties(userProperties);
+                } else if ("linkedServiceName".equals(fieldName)) {
+                    deserializedAzureDataExplorerCommandActivity
+                        .setLinkedServiceName(LinkedServiceReference.fromJson(reader));
+                } else if ("policy".equals(fieldName)) {
+                    deserializedAzureDataExplorerCommandActivity.setPolicy(ActivityPolicy.fromJson(reader));
+                } else if ("type".equals(fieldName)) {
+                    deserializedAzureDataExplorerCommandActivity.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("command".equals(fieldName)) {
+                            deserializedAzureDataExplorerCommandActivity.command = reader.readUntyped();
+                        } else if ("commandTimeout".equals(fieldName)) {
+                            deserializedAzureDataExplorerCommandActivity.commandTimeout = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAzureDataExplorerCommandActivity.setAdditionalProperties(additionalProperties);
+
+            return deserializedAzureDataExplorerCommandActivity;
+        });
     }
 }

@@ -1,10 +1,13 @@
 parameters:
   ArtifactLocation: 'not-specified'
   PackageRepository: 'not-specified'
+  PackageFilter: ''
   ReleaseSha: 'not-specified'
   RepoId: $(Build.Repository.Name)
   WorkingDirectory: ''
   ScriptDirectory: eng/common/scripts
+  NpmConfigUserConfig: ''
+  NpmConfigRegistry: ''
 
 steps:
 - task: PowerShell@2
@@ -14,6 +17,7 @@ steps:
     arguments: >
       -artifactLocation ${{ parameters.ArtifactLocation }}
       -packageRepository ${{ parameters.PackageRepository }}
+      -packageFilter "${{ parameters.PackageFilter }}"
       -releaseSha ${{ parameters.ReleaseSha }}
       -repoId ${{ parameters.RepoId }}
       -workingDirectory '${{ parameters.WorkingDirectory }}'
@@ -21,3 +25,8 @@ steps:
   timeoutInMinutes: 5
   env:
     GH_TOKEN: $(azuresdk-github-pat)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    ${{ if ne(parameters.NpmConfigUserConfig, '') }}:
+      NPM_CONFIG_USERCONFIG: ${{ parameters.NpmConfigUserConfig }}
+    ${{ if ne(parameters.NpmConfigRegistry, '') }}:
+      NPM_CONFIG_REGISTRY: ${{ parameters.NpmConfigRegistry }}

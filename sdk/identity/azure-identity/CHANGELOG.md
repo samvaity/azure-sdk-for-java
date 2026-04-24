@@ -1,6 +1,6 @@
 # Release History
 
-## 1.10.0-beta.2 (Unreleased)
+## 1.19.0-beta.3 (Unreleased)
 
 ### Features Added
 
@@ -8,7 +8,509 @@
 
 ### Bugs Fixed
 
+- Disabled MSAL's internal retry for Confidential Client, Managed Identity and Public Client Applications.
+
 ### Other Changes
+
+- Improved `AzureDeveloperCliCredential` error handling to extract meaningful messages from `azd auth token` JSON output, providing cleaner error messages to users.
+
+## 1.19.0-beta.2 (2026-02-25)
+
+### Breaking Changes
+
+- Renamed `enableAzureTokenProxy()` method in `WorkloadIdentityCredentialBuilder` to `enableAzureProxy()`. These changes only affect code written against beta version 1.19.0-beta.1.
+
+### Bugs Fixed
+
+- Fixed `NullPointerException` in `IdentityClientOptions` when running in GraalVM native images (e.g., Quarkus applications). Replaced reflection-dependent `AzureIdentityEnvVars` enum usage with direct string literal to ensure compatibility with native compilation.
+- Fixed logging for token authentication errors to include full stack traces with inner exceptions. Previously, error logs referenced "inner exceptions" but only logged the error message, making debugging difficult.
+
+## 1.18.2 (2026-01-20)
+
+### Other Changes
+
+- Removed unused jetty, redisson, and lettuce-core dependencies.
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.57.0` to version `1.57.1`.
+- Upgraded `azure-core-http-netty` from `1.16.2` to version `1.16.3`.
+- Upgraded `azure-json` from `1.5.0` to version `1.5.1`.
+
+## 1.19.0-beta.1 (2025-11-14)
+
+### Features Added
+
+- Added `enableAzureTokenProxy()` method to `WorkloadIdentityCredentialBuilder` to enable custom token proxy support for Azure Kubernetes clusters. When enabled, the credential attempts to use a custom token proxy configured through environment variables (`AZURE_KUBERNETES_TOKEN_PROXY`, `AZURE_KUBERNETES_CA_FILE`, `AZURE_KUBERNETES_CA_DATA`, `AZURE_KUBERNETES_SNI_NAME`).
+
+### Other Changes
+
+- Ported the authentication flow of WorkloadIdentityCredential to use Msal4j.
+
+## 1.18.1 (2025-10-13)
+
+### Features Added
+
+- Fixed `DefaultAzureCredential` behavior when `AZURE_TOKEN_CREDENTIALS` environment variable is explicitly set to `ManagedIdentityCredential`. The credential now skips unnecessary probe requests and enables retry logic with exponential backoff for improved resiliency in environments where the managed identity endpoint may be temporarily unavailable.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.1` to version `1.57.0`.
+- Upgraded `azure-core-http-netty` from `1.16.1` to version `1.16.2`.
+
+## 1.18.0 (2025-09-16)
+
+### Features Added
+
+- Added claims challenge support to `AzureDeveloperCliCredential`. Claims provided in `TokenRequestContext` are now passed to Azure Developer CLI via the `--claims` parameter, requiring azd CLI 1.18.1 or higher. Also enhanced error handling to extract user-friendly messages from JSON output and provide clear version compatibility warnings when the `--claims` flag is unsupported.
+- Added claims challenge handling support to `AzureCliCredential`. When a token request includes claims, the credential will now throw a `CredentialUnavailableException` with instructions to use Azure PowerShell directly with the appropriate `-ClaimsChallenge` parameter.
+- Added claims challenge handling support to `AzurePowerShellCredential`. When a token request includes claims, the credential will now throw a `CredentialUnavailableException` with instructions to use Azure PowerShell directly with the appropriate `-ClaimsChallenge` parameter.
+- Added `AzureIdentityEnvVars` expandable string enum for type-safe environment variable names used in Azure Identity credentials.
+- Added `requireEnvVars(AzureIdentityEnvVars... envVars)` method to `DefaultAzureCredentialBuilder` to enforce the presence of specific environment variables at build time. When configured, the credential will throw an `IllegalStateException` during `build()` if any of the specified environment variables are missing or empty.
+
+### Bugs Fixed
+- Fixed `AzurePowerShellCredential` handling of XML header responses and `/Date(epochTime)/` time format parsing that previously caused `JsonParsingException`. [#46572](https://github.com/Azure/azure-sdk-for-java/pull/46572)
+- Fixed `AzureDeveloperCliCredential` hanging when `AZD_DEBUG` environment variable is set by adding `--no-prompt` flag to the `azd auth token` command.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.0` to version `1.56.1`.
+- Upgraded `azure-core-http-netty` from `1.16.0` to version `1.16.1`.
+- Upgraded `com.microsoft.azure:msal4j` from version `1.22.0` to version `1.23.1`.
+
+## 1.17.0 (2025-08-08)
+
+### Features Added
+- GA release of beta features
+
+### Bugs Fixed
+
+- Handles the scenario to gracefully handle unavailability of Key Ring on Linux platforms. [#46333](https://github.com/Azure/azure-sdk-for-java/pull/46333)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.5` to version `1.56.0`.
+- Upgraded `azure-core-http-netty` from `1.15.13` to version `1.16.0`.
+
+## 1.17.0-beta.1 (2025-07-18)
+
+### Features Added
+
+- `VisualStudioCodeCredential` has been restored and now supports **broker authentication** using the Azure account signed in via Visual Studio Code. [#45715](https://github.com/Azure/azure-sdk-for-java/pull/45715)
+- `DefaultAzureCredential` can be configured to use a specific credential type by setting the `AZURE_TOKEN_CREDENTIALS` environment variable. When set, it will only attempt authentication using the specified credential type. For example, setting `AZURE_TOKEN_CREDENTIALS=WorkloadIdentityCredential` will restrict authentication to workload identity only.
+- Enhanced `AzurePowerShellCredential` token retrieval with tenantId support, cross-version SecureString handling, and improved compatibility and robustness. [#45851](https://github.com/Azure/azure-sdk-for-java/pull/45851)
+- `DefaultAzureCredential` now supports authentication with the currently signed-in Windows account, provided the azure-identity-broker package is installed. This auth mechanism is added at the end of the DefaultAzureCredential credential chain. [#45891](https://github.com/Azure/azure-sdk-for-java/pull/45891)
+
+### Breaking Changes
+
+#### Behavioral Breaking Changes
+
+- Removed `SharedTokenCacheCredential` from the `DefaultAzureCredential` authentication chain. [#45795](https://github.com/Azure/azure-sdk-for-java/pull/45795)
+
+### Other Changes
+
+- Deprecated `SharedTokenCacheCredential` and `SharedTokenCacheCredentialBuilder`. [#45795](https://github.com/Azure/azure-sdk-for-java/pull/45795)
+
+#### Dependency Updates
+
+- Upgraded `com.microsoft.azure:msal4j` from version `1.21.0` to version `1.22.0`. 
+
+## 1.16.3 (2025-07-18)
+
+### Features Added
+
+- Enhanced `AzurePowerShellCredential` token retrieval with tenantId support, cross-version SecureString handling, and improved compatibility and robustness. [#45851](https://github.com/Azure/azure-sdk-for-java/pull/45851)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `com.microsoft.azure:msal4j` from version `1.21.0` to version `1.22.0`. 
+
+## 1.16.2 (2025-06-09)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.3` to version `1.55.4`.
+- Upgraded `azure-core-http-netty` from `1.15.11` to version `1.15.12`.
+- Updated `msal4j` from `1.20.1` to version `1.21.0`.
+
+
+## 1.16.1 (2025-05-14)
+
+### Features Added
+- Added `AZURE_TOKEN_CREDENTIALS` environment variable to `DefaultAzureCredential` to allow for choosing groups of credentials.
+  - `prod` for `EnvironmentCredential`, `WorkloadIdentityCredential`, and `ManagedIdentityCredential`.
+  - `dev` for `SharedTokenCredential`, `IntelliJCredential`, `AzureCliCredential`, `AzurePowershellCredential`, and `AzureDeveloperCliCredential`.
+
+## 1.16.0 (2025-05-06)
+
+### Other Changes
+- Marked `VisualStudioCodeCredential` and `VisualStudioCodeCredentialBuilder` as deprecated.[#44527](https://github.com/Azure/azure-sdk-for-java/issues/44527)
+- Added deprecation message to `EnvironmentCredential` when a username/password is used. [#45185](https://github.com/Azure/azure-sdk-for-java/pull/45185) 
+
+#### Dependency Updates
+
+- Updated `msal4j` from `1.20.0` to version `1.20.1`.
+
+## 1.16.0-beta.1 (2025-03-13)
+
+### Features Added
+- Added support to specify `subscription` ID or name on `AzureCliCredentialBuilder`. [#44123](https://github.com/Azure/azure-sdk-for-java/pull/44123)
+- Log the client, object, or resource ID of the user-assigned managed identity. [#44305](https://github.com/Azure/azure-sdk-for-java/pull/44305)
+
+### Other Changes
+
+- Marked `UsernamePasswordCredential` and `UsernamePasswordCredentialBuilder` as deprecated. See https://aka.ms/azsdk/identity/mfa for details about MFA enforcement and migration guidance. [#44381](https://github.com/Azure/azure-sdk-for-java/pull/44381)  
+
+## 1.15.4 (2025-03-11)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.2` to version `1.55.3`.
+- Upgraded `azure-core-http-netty` from `1.15.10` to version `1.15.11`.
+- Upgraded `azure-json` from `1.4.0` to version `1.5.0`.
+- Upgraded `msal4j` from `1.19.0` to version `1.19.1`.
+
+## 1.15.3 (2025-02-20)
+
+### Other Changes
+
+## Dependency Updates
+
+- Upgraded `azure-core` from `1.55.1` to version `1.55.2`.
+- Upgraded `azure-core-http-netty` from `1.15.9` to version `1.15.10`.
+
+## 1.15.2 (2025-02-13)
+
+### Other Changes
+
+- Upgraded `azure-core` from `1.55.0` to version `1.55.1`.
+- Upgraded `azure-core-http-netty` from `1.15.8` to version `1.15.9`.
+
+## 1.15.1 (2025-02-07)
+
+### Bugs Fixed
+
+- Fixed an issue preventing scopes with underscores from working properly. [#44040](https://github.com/Azure/azure-sdk-for-java/pull/44040)
+
+### Other Changes
+
+- Upgraded `azure-core` from `1.54.1` to version `1.55.0`.
+- Upgraded `azure-core-http-netty` from `1.15.7` to version `1.15.8`.
+- Upgraded `msal4j` from `1.17.1` to version `1.19.0`.
+
+## 1.15.0 (2025-01-10)
+
+### Features Added
+- Added missing `executorService` API to `ManagedIdentityCredentialBuilder`, cleaned up comments in other types for this method.
+
+### Other Changes
+- `@Deprecated` methods `DefaultAzureCredential.setIntelliJKeePassDatabasePath` and `IntelliJCredentialBuilder.keePassDatabasePath`. [#42437](https://github.com/Azure/azure-sdk-for-java/pull/42437)
+- Changed Identity credentials to use `SharedExecutorService` threadpool instead of `ForkJoin`'s common pool by default. [#42468](https://github.com/Azure/azure-sdk-for-java/pull/42468)
+
+## 1.14.2 (2024-11-15)
+
+### Bugs Fixed
+- Fixed issue in Managed Identity scopes [#42934](https://github.com/Azure/azure-sdk-for-java/pull/42934)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.0` to version `1.54.1`.
+- Upgraded `azure-core-http-netty` from `1.15.6` to version `1.15.7`.
+- Upgraded `jna-platform` from `5.6.0` to version `5.13.0`.
+
+## 1.14.1 (2024-11-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.53.0` to version `1.54.0`.
+- Upgraded `azure-core-http-netty` from `1.15.5` to version `1.15.6`.
+
+## 1.14.0 (2024-10-03)
+
+### Features Added
+- Features now generally available from previous betas:
+  - Added object id support in `ManagedIdentityCredential`. It can be configured via `ManagedIdentityCredentialBuilder`.
+  - Added support for a client assertion in `OnBehalfOfCredential` [#40552](https://github.com/Azure/azure-sdk-for-java/pull/40552/files)
+
+### Breaking Changes
+- Breaking changes generally available from previous betas:
+  - Removed support in `IntelliJCredential` for legacy Azure Toolkit for IntelliJ versions. Please upgrade to latest if you are using 3.52 or below.
+
+### Bugs Fixed
+- Fixed the request sent in `AzurePipelinesCredential` so it doesn't result in a redirect response when an invalid system access token is provided. 
+
+### Other Changes
+- Allow certain response headers to be logged in `AzurePipelinesCredential` for diagnostics and include them in the exception message.
+- Mark `AzureAuthorityHosts.AZURE_GERMANY` deprecated as the Germany cloud closed in 2021. [#42148](https://github.com/Azure/azure-sdk-for-java/issues/42148)
+- Using msal4j's managed identity implementation is now on by default. (Added in 1.13.0-beta.1) 
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.52.0` to version `1.53.0`.
+- Upgraded `azure-core-http-netty` from `1.15.4` to version `1.15.5`.
+- Upgraded `msal4j` from `1.17.1` to version `1.17.2`.
+
+## 1.14.0-beta.2 (2024-09-20)
+
+### Features Added
+- Added object id support in `ManagedIdentityCredential`. It can be configured via `ManagedIdentityCredentialBuilder`.
+
+### Breaking Changes
+- Removed support in `IntelliJCredential` for legacy Azure Toolkit for IntelliJ versions. Please upgrade to latest if you are using 3.52 or below.
+
+### Bugs Fixed
+Fixed issue in `IntelliJCredential` blocking sign in [#39799](https://github.com/Azure/azure-sdk-for-java/issues/39799)
+
+## 1.13.3 (2024-09-13)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.51.0` to version `1.52.0`.
+- Upgraded `azure-core-http-netty` from `1.15.3` to version `1.15.4`.
+- Upgraded `azure-json` from `1.2.0` to version `1.3.0`.
+- Upgraded `msal4j` from `1.16.2` to version `1.17.1`.
+
+## 1.13.2 (2024-08-02)
+
+### Bugs Fixed
+- Fixed bugs in `AzurePowerShellCredential` - Fixed break on Windows related to ordering of parameters, and fixed [#41234](https://github.com/Azure/azure-sdk-for-java/issues/41234) (previously shipped in beta)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.50.0` to version `1.51.0`.
+- Upgraded `azure-core-http-netty` from `1.15.2` to version `1.15.3`.
+- Upgraded `azure-json` from `1.1.0` to version `1.2.0`.
+- Upgraded `msal4j` from `1.16.1` to version `1.16.2`.
+
+## 1.14.0-beta.1 (2024-07-24)
+
+### Bugs Fixed
+- Fixed bugs in `AzurePowerShellCredential` - Fixed break on Windows related to ordering of parameters, and fixed [#41234](https://github.com/Azure/azure-sdk-for-java/issues/41234)
+
+## 1.13.1 (2024-07-16)
+
+### Features Added
+- Added support in `EnvironmentCredential` (and thus `DefaultAzureCredential` when it chooses `EnvironmentCredential`) for using subject name / issuer authentication with client certificates by setting `AZURE_CLIENT_SEND_CERTIFICATE_CHAIN` to `1` or `true`. [#40013](https://github.com/Azure/azure-sdk-for-java/issues/40013)
+### Bugs Fixed
+- Fixed certificate type detection, which fixes using a PFX certificate without a password. [#37210](https://github.com/Azure/azure-sdk-for-java/issues/37210)
+- Fix `PowershellCredential` issue when user had a profile [#41030](https://github.com/Azure/azure-sdk-for-java/pull/41030)
+#### Dependency Updates
+- Upgraded `azure-core` from `1.49.1` to `1.50.0`
+- Upgraded `azure-core-http-netty` from `1.15.1` to `1.15.2`
+- Upgraded `msal4j` from `1.16.0` to `1.16.1`
+
+## 1.13.0 (2024-06-20)
+
+### Features Added
+- GA for `AzurePipelinesCredential`
+
+### Bugs Fixed
+- Fixed an issue which may block `AzurePowershellCredential` from functioning correctly. [#40552](https://github.com/Azure/azure-sdk-for-java/pull/40552/files)
+
+## 1.13.0-beta.2 (2024-06-10)
+
+### Features Added
+- Added support for a client assertion in `OnBehalfOfCredential` [#40552](https://github.com/Azure/azure-sdk-for-java/pull/40552/files)
+
+### Bugs Fixed
+- Fixed an issue which may block `AzurePowershellCredential` from functioning correctly. [#40552](https://github.com/Azure/azure-sdk-for-java/pull/40552/files) 
+
+## 1.12.2 (2024-06-10)
+
+### Bugs Fixed
+- Managed identity bug fixes
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.0` to version `1.49.1`.
+- Upgraded `azure-core-http-netty` from `1.15.0` to version `1.15.1`.
+- Upgraded `msal4j` from `1.15.0` to version `1.15.1`.
+
+## 1.13.0-beta.1 (2024-05-23)
+
+### Features Added
+- Added `AzurePipelinesCredential` to support [Microsoft Entra Workload ID](https://learn.microsoft.com/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml) in Azure Pipelines service connections.
+
+### Other Changes
+- Migrated Managed Identity authentication flow to utilize Msal4j MI implementation. 
+
+## 1.12.1 (2024-05-02)
+
+### Other Changes
+
+#### Dependency Updates
+- Upgraded `azure-core` from `1.48.0` to version `1.49.0`.
+- Upgraded `azure-core-http-netty` from `1.14.2` to version `1.15.0`.
+
+## 1.12.0 (2024-04-08)
+
+### Features Added
+- Added default sign-in experience for brokered authentication. See the documentation in the `azure-identity-broker` package for more information. [#39284](https://github.com/Azure/azure-sdk-for-java/pull/39284) 
+
+### Breaking Changes
+#### Behavioral Breaking Changes
+- The timeout interval for IMDS probing has been adjusted from 0.5 seconds to 1 second. This update is designed to enhance the system's reliability without affecting user applications. [#38345](https://github.com/Azure/azure-sdk-for-java/issues/38345)
+- The default retry logic of Managed Identity has been updated to retry 5 times, the retry delay increases exponentially, starting at 800 milliseconds and doubling with each subsequent retry, up to 5 retries. This change is designed to optimize the retry mechanism, reducing the likelihood of congestion and improving the overall stability of service connections under varying network conditions. [#38345](https://github.com/Azure/azure-sdk-for-java/issues/38345)
+- The `DefaultAzureCredential` caches the last working credential by default and tries it directly on subsequent attempts. This change is designed to improve the performance of the `DefaultAzureCredential` by reducing the number of attempts required to acquire a token. [#36867](https://github.com/Azure/azure-sdk-for-java/issues/36867)
+
+### Bugs Fixed
+- Changed log level of an informational message in token acquisition. [#39063](https://github.com/Azure/azure-sdk-for-java/issues/39063)
+
+### Other Changes
+
+#### Dependency Updates
+- Upgraded `azure-core` from `1.47.0` to version `1.48.0`.
+- Upgraded `azure-core-http-netty` from `1.14.1` to version `1.14.2`.
+- Upgraded `msal4j` from `1.14.3` to version `1.15.0`.
+- Upgraded `msal4j-persistence-extension` from `1.2.0` to version `1.3.0`.
+
+## 1.11.4 (2024-03-14)
+
+### Other Changes
+
+#### Dependency Updates
+- Upgraded `msal4j` from `1.14.0` to version `1.14.3`.
+
+## 1.11.3 (2024-03-01)
+
+### Bugs fixed
+- Fixed an issue where the broker dependency library was being probed for when it shouldn't be, resulting in an erronous error message. [#39002](https://github.com/Azure/azure-sdk-for-java/pull/39002)
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.46.0` to version `1.47.0`.
+- Upgraded `azure-core-http-netty` from `1.14.0` to version `1.14.1`.
+
+
+## 1.12.0-beta.1 (2024-02-12)
+
+### Features Added
+- Added expires_on parsing support to `AzureCliCredential`.([#38406](https://github.com/Azure/azure-sdk-for-java/pull/38406))
+- Added caching support for working credential in `DefaultAzureCredential`. ([#38404](https://github.com/Azure/azure-sdk-for-java/pull/38404))
+
+## 1.11.2 (2024-02-05)
+
+### Bugs Fixed
+
+- Lowered logging level of token cache misses from `ERROR` to `DEBUG`. ([#38502](https://github.com/Azure/azure-sdk-for-java/pull/38502))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.45.1` to version `1.46.0`
+- Upgraded `azure-core-http-netty` from `1.13.11` to version `1.14.0`
+
+## 1.11.1 (2023-12-01)
+
+### Bugs Fixed
+- Fixed Azure Arc Managed Identity token retrieval issue.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.45.0` to version `1.45.1`
+- Upgraded `azure-core-http-netty` from `1.13.10` to version `1.13.11`
+
+## 1.11.0 (2023-11-07)
+
+### Features added
+- GA release of Web Account Manager (WAM) support for Azure Identity.
+
+### Bugs fixed
+- Cache streams used for client certificates [#37502](https://github.com/Azure/azure-sdk-for-java/pull/37502)
+- Fix incorrect use of organizations tenant for sync calls on `AzureCliCredential` and `AzureDeveloperCliCredential` [#37457](https://github.com/Azure/azure-sdk-for-java/pull/37457)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.1` to version `1.45.0`.
+- Upgraded `azure-core-http-netty` from `1.13.9` to version `1.13.10`
+
+## 1.11.0-beta.2 (2023-10-27)
+
+### Features Added
+- Initial release of Web Account Manager (WAM) support for Azure Identity. This is a Windows-only auithentication broker.
+
+### Other Changes
+- Upgraded 'msal4j' from '1.13.9' to version '1.14.0'.
+
+## 1.10.4 (2023-10-18)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.0` to version `1.44.1`.
+- Upgraded `azure-core-http-netty` from `1.13.8` to version `1.13.9`.
+
+## 1.10.3 (2023-10-10)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.43.0` to version `1.44.0`.
+- Upgraded `azure-core-http-netty` from `1.13.7` to version `1.13.8`.
+
+## 1.10.2 (2023-10-10)
+
+### Bugs Fixed
+- Bug fixes for developer credentials
+
+## 1.11.0-beta.1 (2023-09-20)
+
+### Features Added
+- Added support for passing an InputStream containing a client cerfificate [#36747](https://github.com/Azure/azure-sdk-for-java/pull/36747)
+
+### Bugs fixed
+- Fixed flowing `HttpClientOptions` through credentials [#36382](https://github.com/Azure/azure-sdk-for-java/pull/36382)
+- Fixed edge case in Docker where 403s erronously caused CredentialUnavailableExceptions [#36747](https://github.com/Azure/azure-sdk-for-java/pull/36747)
+
+## 1.10.1 (2023-09-10)
+
+### Other Changes
+#### Dependency Updates
+- Upgraded `azure-core` from `1.42.0` to version `1.43.0`.
+- Upgraded `azure-core-http-netty` from `1.13.6` to version `1.13.7`.
+
+## 1.10.0 (2023-08-09)
+
+### Features Added
+- Added `BrowserCustomizationOptions` to `InteractiveBrowserCredentialBuilder` to allow for customization of the browser window.
+
+### Other Changes
+- Renamed `enableSupportLogging` to `enableUnsafeSupportLogging`. This is a breaking change from 1.10.0-beta.1.
+- `DefaultAzureCredential` will try all developer credentials. Previously if a developer credential attempted to acquire a token and failed, it would stop the chain. Deployed credentials are unaffected.
+
+#### Dependency Updates
+- Upgraded `azure-core` from `1.41.0` to version `1.42.0`.
+- Upgraded `azure-core-http-netty` from `1.13.5` to version `1.13.6`.
+
 
 ## 1.10.0-beta.1 (2023-07-24)
 
@@ -78,9 +580,9 @@
 
 - Fixed a bug in managed identity not properly URLEncoding a value. [#34375](https://github.com/Azure/azure-sdk-for-java/pull/34375)
 
-### Other Changes	### Other Changes
+### Other Changes
 
-#### Dependency Updates	#### Dependency Updates
+#### Dependency Updates
 - Upgraded `azure-core` from `1.37.0` to version `1.38.0`.
 - Upgraded `azure-core-http-netty` from `1.13.1` to version `1.13.2`.
 - Upgraded `msal4j` from `1.13.5` to version `1.13.7`.
@@ -107,7 +609,7 @@
 
 ### Features Added
 - [[#32527]](https://github.com/Azure/azure-sdk-for-java/pull/32527) Added Azure Developer CLI Credential.
-- Added support to disable instance discovery on AAD credentials.
+- Added support to disable instance discovery on Microsoft Entra ID credentials.
 - `WorkloadIdentityCredential` and `DefaultAzureCredential` support Workload Identity Federation on Kubernetes. `DefaultAzureCredential` support requires environment variable configuration as set by the Workload Identity webhook.
 
 ## 1.8.0 (2023-02-03)
@@ -128,7 +630,7 @@
 
 ### Features Added
 - Added support to configure `clientOptions`, `httpLogOptions`, `retryPolicy`, `retryOptions` and `addPolicy` on Identity credentials.
-- Added support to disable instance discovery on AAD credentials.
+- Added support to disable instance discovery on Microsoft Entra ID credentials.
 
 ## 1.7.3 (2023-01-06)
 
@@ -631,7 +1133,7 @@ The `getToken(String... scopes)` methods on all the credentials are changed to `
 ## 1.0.0-preview.3 (2019-09-09)
 **New features**
 
-A new credential `SharedTokenCacheCredential` is added. It's currently only supported on Windows. This credential is capable of authenticating to Azure Active Directory if you are logged in in Visual Studio 2019.
+A new credential `SharedTokenCacheCredential` is added. It's currently only supported on Windows. This credential is capable of authenticating to Microsoft Entra ID if you are logged in in Visual Studio 2019.
 
 ## 1.0.0-preview.2 (2019-08-05)
 **Breaking changes**
@@ -666,7 +1168,7 @@ No feature was deprecated or removed.
 ## 1.0.0-preview.1 (2019-06-28)
 Version 1.0.0-preview.1 is a preview of our efforts in creating an authentication API for Azure SDK client libraries that is developer-friendly, idiomatic
 to the Java ecosystem, and as consistent across different languages and platforms as possible. The principles that guide
-our efforts can be found in the [Azure SDK Design Guidelines for Java](https://azuresdkspecs.z5.web.core.windows.net/JavaSpec.html).
+our efforts can be found in the [Azure SDK Design Guidelines for Java](https://aka.ms/azsdk/guide/java).
 
 For details on the Azure SDK for Java (July 2019 Preview) release, you can refer to the [release announcement](https://aka.ms/azure-sdk-preview1-java).
 
@@ -675,5 +1177,5 @@ See the [documentation](https://github.com/Azure/azure-sdk-for-java/blob/main/sd
 for more details. User authentication will be added in an upcoming preview
 release.
 
-This release supports only global Azure Active Directory tenants, i.e. those
+This release supports only global Microsoft Entra tenants, i.e. those
 using the https://login.microsoftonline.com authentication endpoint.

@@ -6,79 +6,113 @@ package com.azure.resourcemanager.managedapplications.fluent.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
-import com.azure.resourcemanager.managedapplications.models.ApplicationArtifact;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import com.azure.resourcemanager.managedapplications.models.ApplicationAuthorization;
+import com.azure.resourcemanager.managedapplications.models.ApplicationDefinitionArtifact;
+import com.azure.resourcemanager.managedapplications.models.ApplicationDeploymentPolicy;
 import com.azure.resourcemanager.managedapplications.models.ApplicationLockLevel;
-import com.azure.resourcemanager.managedapplications.models.ApplicationProviderAuthorization;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.resourcemanager.managedapplications.models.ApplicationManagementPolicy;
+import com.azure.resourcemanager.managedapplications.models.ApplicationNotificationPolicy;
+import com.azure.resourcemanager.managedapplications.models.ApplicationPackageLockingPolicyDefinition;
+import com.azure.resourcemanager.managedapplications.models.ApplicationPolicy;
+import java.io.IOException;
 import java.util.List;
 
-/** The managed application definition properties. */
+/**
+ * The managed application definition properties.
+ */
 @Fluent
-public final class ApplicationDefinitionProperties {
+public final class ApplicationDefinitionProperties implements JsonSerializable<ApplicationDefinitionProperties> {
     /*
      * The managed application lock level.
      */
-    @JsonProperty(value = "lockLevel", required = true)
     private ApplicationLockLevel lockLevel;
 
     /*
      * The managed application definition display name.
      */
-    @JsonProperty(value = "displayName")
     private String displayName;
 
     /*
      * A value indicating whether the package is enabled or not.
      */
-    @JsonProperty(value = "isEnabled")
-    private String isEnabled;
+    private Boolean isEnabled;
 
     /*
      * The managed application provider authorizations.
      */
-    @JsonProperty(value = "authorizations", required = true)
-    private List<ApplicationProviderAuthorization> authorizations;
+    private List<ApplicationAuthorization> authorizations;
 
     /*
      * The collection of managed application artifacts. The portal will use the files specified as artifacts to
      * construct the user experience of creating a managed application from a managed application definition.
      */
-    @JsonProperty(value = "artifacts")
-    private List<ApplicationArtifact> artifacts;
+    private List<ApplicationDefinitionArtifact> artifacts;
 
     /*
      * The managed application definition description.
      */
-    @JsonProperty(value = "description")
     private String description;
 
     /*
      * The managed application definition package file Uri. Use this element
      */
-    @JsonProperty(value = "packageFileUri")
     private String packageFileUri;
+
+    /*
+     * The storage account id for bring your own storage scenario.
+     */
+    private String storageAccountId;
 
     /*
      * The inline main template json which has resources to be provisioned. It can be a JObject or well-formed JSON
      * string.
      */
-    @JsonProperty(value = "mainTemplate")
     private Object mainTemplate;
 
     /*
      * The createUiDefinition json for the backing template with Microsoft.Solutions/applications resource. It can be a
      * JObject or well-formed JSON string.
      */
-    @JsonProperty(value = "createUiDefinition")
     private Object createUiDefinition;
 
-    /** Creates an instance of ApplicationDefinitionProperties class. */
+    /*
+     * The managed application notification policy.
+     */
+    private ApplicationNotificationPolicy notificationPolicy;
+
+    /*
+     * The managed application locking policy.
+     */
+    private ApplicationPackageLockingPolicyDefinition lockingPolicy;
+
+    /*
+     * The managed application deployment policy.
+     */
+    private ApplicationDeploymentPolicy deploymentPolicy;
+
+    /*
+     * The managed application management policy that determines publisher's access to the managed resource group.
+     */
+    private ApplicationManagementPolicy managementPolicy;
+
+    /*
+     * The managed application provider policies.
+     */
+    private List<ApplicationPolicy> policies;
+
+    /**
+     * Creates an instance of ApplicationDefinitionProperties class.
+     */
     public ApplicationDefinitionProperties() {
     }
 
     /**
      * Get the lockLevel property: The managed application lock level.
-     *
+     * 
      * @return the lockLevel value.
      */
     public ApplicationLockLevel lockLevel() {
@@ -87,7 +121,7 @@ public final class ApplicationDefinitionProperties {
 
     /**
      * Set the lockLevel property: The managed application lock level.
-     *
+     * 
      * @param lockLevel the lockLevel value to set.
      * @return the ApplicationDefinitionProperties object itself.
      */
@@ -98,7 +132,7 @@ public final class ApplicationDefinitionProperties {
 
     /**
      * Get the displayName property: The managed application definition display name.
-     *
+     * 
      * @return the displayName value.
      */
     public String displayName() {
@@ -107,7 +141,7 @@ public final class ApplicationDefinitionProperties {
 
     /**
      * Set the displayName property: The managed application definition display name.
-     *
+     * 
      * @param displayName the displayName value to set.
      * @return the ApplicationDefinitionProperties object itself.
      */
@@ -118,40 +152,40 @@ public final class ApplicationDefinitionProperties {
 
     /**
      * Get the isEnabled property: A value indicating whether the package is enabled or not.
-     *
+     * 
      * @return the isEnabled value.
      */
-    public String isEnabled() {
+    public Boolean isEnabled() {
         return this.isEnabled;
     }
 
     /**
      * Set the isEnabled property: A value indicating whether the package is enabled or not.
-     *
+     * 
      * @param isEnabled the isEnabled value to set.
      * @return the ApplicationDefinitionProperties object itself.
      */
-    public ApplicationDefinitionProperties withIsEnabled(String isEnabled) {
+    public ApplicationDefinitionProperties withIsEnabled(Boolean isEnabled) {
         this.isEnabled = isEnabled;
         return this;
     }
 
     /**
      * Get the authorizations property: The managed application provider authorizations.
-     *
+     * 
      * @return the authorizations value.
      */
-    public List<ApplicationProviderAuthorization> authorizations() {
+    public List<ApplicationAuthorization> authorizations() {
         return this.authorizations;
     }
 
     /**
      * Set the authorizations property: The managed application provider authorizations.
-     *
+     * 
      * @param authorizations the authorizations value to set.
      * @return the ApplicationDefinitionProperties object itself.
      */
-    public ApplicationDefinitionProperties withAuthorizations(List<ApplicationProviderAuthorization> authorizations) {
+    public ApplicationDefinitionProperties withAuthorizations(List<ApplicationAuthorization> authorizations) {
         this.authorizations = authorizations;
         return this;
     }
@@ -160,10 +194,10 @@ public final class ApplicationDefinitionProperties {
      * Get the artifacts property: The collection of managed application artifacts. The portal will use the files
      * specified as artifacts to construct the user experience of creating a managed application from a managed
      * application definition.
-     *
+     * 
      * @return the artifacts value.
      */
-    public List<ApplicationArtifact> artifacts() {
+    public List<ApplicationDefinitionArtifact> artifacts() {
         return this.artifacts;
     }
 
@@ -171,18 +205,18 @@ public final class ApplicationDefinitionProperties {
      * Set the artifacts property: The collection of managed application artifacts. The portal will use the files
      * specified as artifacts to construct the user experience of creating a managed application from a managed
      * application definition.
-     *
+     * 
      * @param artifacts the artifacts value to set.
      * @return the ApplicationDefinitionProperties object itself.
      */
-    public ApplicationDefinitionProperties withArtifacts(List<ApplicationArtifact> artifacts) {
+    public ApplicationDefinitionProperties withArtifacts(List<ApplicationDefinitionArtifact> artifacts) {
         this.artifacts = artifacts;
         return this;
     }
 
     /**
      * Get the description property: The managed application definition description.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -191,7 +225,7 @@ public final class ApplicationDefinitionProperties {
 
     /**
      * Set the description property: The managed application definition description.
-     *
+     * 
      * @param description the description value to set.
      * @return the ApplicationDefinitionProperties object itself.
      */
@@ -202,7 +236,7 @@ public final class ApplicationDefinitionProperties {
 
     /**
      * Get the packageFileUri property: The managed application definition package file Uri. Use this element.
-     *
+     * 
      * @return the packageFileUri value.
      */
     public String packageFileUri() {
@@ -211,7 +245,7 @@ public final class ApplicationDefinitionProperties {
 
     /**
      * Set the packageFileUri property: The managed application definition package file Uri. Use this element.
-     *
+     * 
      * @param packageFileUri the packageFileUri value to set.
      * @return the ApplicationDefinitionProperties object itself.
      */
@@ -221,9 +255,29 @@ public final class ApplicationDefinitionProperties {
     }
 
     /**
+     * Get the storageAccountId property: The storage account id for bring your own storage scenario.
+     * 
+     * @return the storageAccountId value.
+     */
+    public String storageAccountId() {
+        return this.storageAccountId;
+    }
+
+    /**
+     * Set the storageAccountId property: The storage account id for bring your own storage scenario.
+     * 
+     * @param storageAccountId the storageAccountId value to set.
+     * @return the ApplicationDefinitionProperties object itself.
+     */
+    public ApplicationDefinitionProperties withStorageAccountId(String storageAccountId) {
+        this.storageAccountId = storageAccountId;
+        return this;
+    }
+
+    /**
      * Get the mainTemplate property: The inline main template json which has resources to be provisioned. It can be a
      * JObject or well-formed JSON string.
-     *
+     * 
      * @return the mainTemplate value.
      */
     public Object mainTemplate() {
@@ -233,7 +287,7 @@ public final class ApplicationDefinitionProperties {
     /**
      * Set the mainTemplate property: The inline main template json which has resources to be provisioned. It can be a
      * JObject or well-formed JSON string.
-     *
+     * 
      * @param mainTemplate the mainTemplate value to set.
      * @return the ApplicationDefinitionProperties object itself.
      */
@@ -245,7 +299,7 @@ public final class ApplicationDefinitionProperties {
     /**
      * Get the createUiDefinition property: The createUiDefinition json for the backing template with
      * Microsoft.Solutions/applications resource. It can be a JObject or well-formed JSON string.
-     *
+     * 
      * @return the createUiDefinition value.
      */
     public Object createUiDefinition() {
@@ -255,7 +309,7 @@ public final class ApplicationDefinitionProperties {
     /**
      * Set the createUiDefinition property: The createUiDefinition json for the backing template with
      * Microsoft.Solutions/applications resource. It can be a JObject or well-formed JSON string.
-     *
+     * 
      * @param createUiDefinition the createUiDefinition value to set.
      * @return the ApplicationDefinitionProperties object itself.
      */
@@ -265,29 +319,231 @@ public final class ApplicationDefinitionProperties {
     }
 
     /**
+     * Get the notificationPolicy property: The managed application notification policy.
+     * 
+     * @return the notificationPolicy value.
+     */
+    public ApplicationNotificationPolicy notificationPolicy() {
+        return this.notificationPolicy;
+    }
+
+    /**
+     * Set the notificationPolicy property: The managed application notification policy.
+     * 
+     * @param notificationPolicy the notificationPolicy value to set.
+     * @return the ApplicationDefinitionProperties object itself.
+     */
+    public ApplicationDefinitionProperties withNotificationPolicy(ApplicationNotificationPolicy notificationPolicy) {
+        this.notificationPolicy = notificationPolicy;
+        return this;
+    }
+
+    /**
+     * Get the lockingPolicy property: The managed application locking policy.
+     * 
+     * @return the lockingPolicy value.
+     */
+    public ApplicationPackageLockingPolicyDefinition lockingPolicy() {
+        return this.lockingPolicy;
+    }
+
+    /**
+     * Set the lockingPolicy property: The managed application locking policy.
+     * 
+     * @param lockingPolicy the lockingPolicy value to set.
+     * @return the ApplicationDefinitionProperties object itself.
+     */
+    public ApplicationDefinitionProperties withLockingPolicy(ApplicationPackageLockingPolicyDefinition lockingPolicy) {
+        this.lockingPolicy = lockingPolicy;
+        return this;
+    }
+
+    /**
+     * Get the deploymentPolicy property: The managed application deployment policy.
+     * 
+     * @return the deploymentPolicy value.
+     */
+    public ApplicationDeploymentPolicy deploymentPolicy() {
+        return this.deploymentPolicy;
+    }
+
+    /**
+     * Set the deploymentPolicy property: The managed application deployment policy.
+     * 
+     * @param deploymentPolicy the deploymentPolicy value to set.
+     * @return the ApplicationDefinitionProperties object itself.
+     */
+    public ApplicationDefinitionProperties withDeploymentPolicy(ApplicationDeploymentPolicy deploymentPolicy) {
+        this.deploymentPolicy = deploymentPolicy;
+        return this;
+    }
+
+    /**
+     * Get the managementPolicy property: The managed application management policy that determines publisher's access
+     * to the managed resource group.
+     * 
+     * @return the managementPolicy value.
+     */
+    public ApplicationManagementPolicy managementPolicy() {
+        return this.managementPolicy;
+    }
+
+    /**
+     * Set the managementPolicy property: The managed application management policy that determines publisher's access
+     * to the managed resource group.
+     * 
+     * @param managementPolicy the managementPolicy value to set.
+     * @return the ApplicationDefinitionProperties object itself.
+     */
+    public ApplicationDefinitionProperties withManagementPolicy(ApplicationManagementPolicy managementPolicy) {
+        this.managementPolicy = managementPolicy;
+        return this;
+    }
+
+    /**
+     * Get the policies property: The managed application provider policies.
+     * 
+     * @return the policies value.
+     */
+    public List<ApplicationPolicy> policies() {
+        return this.policies;
+    }
+
+    /**
+     * Set the policies property: The managed application provider policies.
+     * 
+     * @param policies the policies value to set.
+     * @return the ApplicationDefinitionProperties object itself.
+     */
+    public ApplicationDefinitionProperties withPolicies(List<ApplicationPolicy> policies) {
+        this.policies = policies;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (lockLevel() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property lockLevel in model ApplicationDefinitionProperties"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property lockLevel in model ApplicationDefinitionProperties"));
         }
-        if (authorizations() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property authorizations in model ApplicationDefinitionProperties"));
-        } else {
+        if (authorizations() != null) {
             authorizations().forEach(e -> e.validate());
         }
         if (artifacts() != null) {
             artifacts().forEach(e -> e.validate());
         }
+        if (notificationPolicy() != null) {
+            notificationPolicy().validate();
+        }
+        if (lockingPolicy() != null) {
+            lockingPolicy().validate();
+        }
+        if (deploymentPolicy() != null) {
+            deploymentPolicy().validate();
+        }
+        if (managementPolicy() != null) {
+            managementPolicy().validate();
+        }
+        if (policies() != null) {
+            policies().forEach(e -> e.validate());
+        }
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(ApplicationDefinitionProperties.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("lockLevel", this.lockLevel == null ? null : this.lockLevel.toString());
+        jsonWriter.writeStringField("displayName", this.displayName);
+        jsonWriter.writeBooleanField("isEnabled", this.isEnabled);
+        jsonWriter.writeArrayField("authorizations", this.authorizations,
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("artifacts", this.artifacts, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("description", this.description);
+        jsonWriter.writeStringField("packageFileUri", this.packageFileUri);
+        jsonWriter.writeStringField("storageAccountId", this.storageAccountId);
+        jsonWriter.writeUntypedField("mainTemplate", this.mainTemplate);
+        jsonWriter.writeUntypedField("createUiDefinition", this.createUiDefinition);
+        jsonWriter.writeJsonField("notificationPolicy", this.notificationPolicy);
+        jsonWriter.writeJsonField("lockingPolicy", this.lockingPolicy);
+        jsonWriter.writeJsonField("deploymentPolicy", this.deploymentPolicy);
+        jsonWriter.writeJsonField("managementPolicy", this.managementPolicy);
+        jsonWriter.writeArrayField("policies", this.policies, (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ApplicationDefinitionProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ApplicationDefinitionProperties if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ApplicationDefinitionProperties.
+     */
+    public static ApplicationDefinitionProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ApplicationDefinitionProperties deserializedApplicationDefinitionProperties
+                = new ApplicationDefinitionProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("lockLevel".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.lockLevel
+                        = ApplicationLockLevel.fromString(reader.getString());
+                } else if ("displayName".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.displayName = reader.getString();
+                } else if ("isEnabled".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.isEnabled = reader.getNullable(JsonReader::getBoolean);
+                } else if ("authorizations".equals(fieldName)) {
+                    List<ApplicationAuthorization> authorizations
+                        = reader.readArray(reader1 -> ApplicationAuthorization.fromJson(reader1));
+                    deserializedApplicationDefinitionProperties.authorizations = authorizations;
+                } else if ("artifacts".equals(fieldName)) {
+                    List<ApplicationDefinitionArtifact> artifacts
+                        = reader.readArray(reader1 -> ApplicationDefinitionArtifact.fromJson(reader1));
+                    deserializedApplicationDefinitionProperties.artifacts = artifacts;
+                } else if ("description".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.description = reader.getString();
+                } else if ("packageFileUri".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.packageFileUri = reader.getString();
+                } else if ("storageAccountId".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.storageAccountId = reader.getString();
+                } else if ("mainTemplate".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.mainTemplate = reader.readUntyped();
+                } else if ("createUiDefinition".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.createUiDefinition = reader.readUntyped();
+                } else if ("notificationPolicy".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.notificationPolicy
+                        = ApplicationNotificationPolicy.fromJson(reader);
+                } else if ("lockingPolicy".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.lockingPolicy
+                        = ApplicationPackageLockingPolicyDefinition.fromJson(reader);
+                } else if ("deploymentPolicy".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.deploymentPolicy
+                        = ApplicationDeploymentPolicy.fromJson(reader);
+                } else if ("managementPolicy".equals(fieldName)) {
+                    deserializedApplicationDefinitionProperties.managementPolicy
+                        = ApplicationManagementPolicy.fromJson(reader);
+                } else if ("policies".equals(fieldName)) {
+                    List<ApplicationPolicy> policies = reader.readArray(reader1 -> ApplicationPolicy.fromJson(reader1));
+                    deserializedApplicationDefinitionProperties.policies = policies;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedApplicationDefinitionProperties;
+        });
+    }
 }

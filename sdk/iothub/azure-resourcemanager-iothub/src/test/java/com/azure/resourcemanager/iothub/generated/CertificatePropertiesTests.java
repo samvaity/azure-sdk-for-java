@@ -11,24 +11,22 @@ import org.junit.jupiter.api.Assertions;
 public final class CertificatePropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CertificateProperties model =
-            BinaryData
-                .fromString(
-                    "{\"subject\":\"dckcbc\",\"expiry\":\"Thu, 29 Jul 2021 04:12:00"
-                        + " GMT\",\"thumbprint\":\"jxgciqibrh\",\"isVerified\":true,\"created\":\"Tue, 01 Jun 2021"
-                        + " 12:21:20 GMT\",\"updated\":\"Thu, 04 Feb 2021 15:03:28"
-                        + " GMT\",\"certificate\":\"zoymibmrqyibahw\"}")
-                .toObject(CertificateProperties.class);
-        Assertions.assertEquals(true, model.isVerified());
-        Assertions.assertEquals("zoymibmrqyibahw", model.certificate());
+        CertificateProperties model = BinaryData.fromString(
+            "{\"subject\":\"mqg\",\"expiry\":\"Sun, 23 May 2021 12:54:12 GMT\",\"thumbprint\":\"ezikywggxkal\",\"isVerified\":false,\"created\":\"Thu, 13 May 2021 13:09:28 GMT\",\"updated\":\"Sun, 17 Oct 2021 13:51:53 GMT\",\"certificate\":\"ipicc\",\"policyResourceId\":\"kzivgvvcnayrh\"}")
+            .toObject(CertificateProperties.class);
+        Assertions.assertFalse(model.isVerified());
+        Assertions.assertEquals("ipicc", model.certificate());
+        Assertions.assertEquals("kzivgvvcnayrh", model.policyResourceId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CertificateProperties model =
-            new CertificateProperties().withIsVerified(true).withCertificate("zoymibmrqyibahw");
+        CertificateProperties model = new CertificateProperties().withIsVerified(false)
+            .withCertificate("ipicc")
+            .withPolicyResourceId("kzivgvvcnayrh");
         model = BinaryData.fromObject(model).toObject(CertificateProperties.class);
-        Assertions.assertEquals(true, model.isVerified());
-        Assertions.assertEquals("zoymibmrqyibahw", model.certificate());
+        Assertions.assertFalse(model.isVerified());
+        Assertions.assertEquals("ipicc", model.certificate());
+        Assertions.assertEquals("kzivgvvcnayrh", model.policyResourceId());
     }
 }

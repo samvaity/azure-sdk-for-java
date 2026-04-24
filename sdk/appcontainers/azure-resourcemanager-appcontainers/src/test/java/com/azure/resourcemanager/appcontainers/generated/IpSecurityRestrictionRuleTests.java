@@ -12,29 +12,25 @@ import org.junit.jupiter.api.Assertions;
 public final class IpSecurityRestrictionRuleTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        IpSecurityRestrictionRule model =
-            BinaryData
-                .fromString(
-                    "{\"name\":\"zvqtmnubexkp\",\"description\":\"smond\",\"ipAddressRange\":\"mquxvypo\",\"action\":\"Deny\"}")
-                .toObject(IpSecurityRestrictionRule.class);
-        Assertions.assertEquals("zvqtmnubexkp", model.name());
-        Assertions.assertEquals("smond", model.description());
-        Assertions.assertEquals("mquxvypo", model.ipAddressRange());
+        IpSecurityRestrictionRule model = BinaryData
+            .fromString("{\"name\":\"eli\",\"description\":\"nr\",\"ipAddressRange\":\"tfolhbnx\",\"action\":\"Deny\"}")
+            .toObject(IpSecurityRestrictionRule.class);
+        Assertions.assertEquals("eli", model.name());
+        Assertions.assertEquals("nr", model.description());
+        Assertions.assertEquals("tfolhbnx", model.ipAddressRange());
         Assertions.assertEquals(Action.DENY, model.action());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        IpSecurityRestrictionRule model =
-            new IpSecurityRestrictionRule()
-                .withName("zvqtmnubexkp")
-                .withDescription("smond")
-                .withIpAddressRange("mquxvypo")
-                .withAction(Action.DENY);
+        IpSecurityRestrictionRule model = new IpSecurityRestrictionRule().withName("eli")
+            .withDescription("nr")
+            .withIpAddressRange("tfolhbnx")
+            .withAction(Action.DENY);
         model = BinaryData.fromObject(model).toObject(IpSecurityRestrictionRule.class);
-        Assertions.assertEquals("zvqtmnubexkp", model.name());
-        Assertions.assertEquals("smond", model.description());
-        Assertions.assertEquals("mquxvypo", model.ipAddressRange());
+        Assertions.assertEquals("eli", model.name());
+        Assertions.assertEquals("nr", model.description());
+        Assertions.assertEquals("tfolhbnx", model.ipAddressRange());
         Assertions.assertEquals(Action.DENY, model.action());
     }
 }

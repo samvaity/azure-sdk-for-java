@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter xmlns="https://github.com/spotbugs/filter/3.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+  <Match>
+    <Bug pattern="EI_EXPOSE_STATIC_REP2" />
+    <Or>
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.AnomalyAlertConfigurationHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.AnomalyDetectionConfigurationHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.AnomalyHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.DataFeedHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.DataFeedIngestionProgressHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.DataFeedIngestionStatusHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.DataFeedMetricAccessor" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.DataSourceDataLakeGen2SharedKeyAccessor" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.DataSourceServicePrincipalAccessor" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.DataSourceServicePrincipalInKeyVaultAccessor" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.DataSourceSqlServerConnectionStringAccessor" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.HookHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.IncidentHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.IncidentRootCauseHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.MetricAnomalyFeedbackHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.MetricBoundaryConditionHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.MetricEnrichedSeriesDataHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.MetricFeedbackHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.MetricSeriesDataHelper" />
+      <Class name="com.azure.ai.metricsadvisor.implementation.util.MetricSeriesDefinitionHelper" />
+    </Or>
+  </Match>
+</FindBugsFilter>

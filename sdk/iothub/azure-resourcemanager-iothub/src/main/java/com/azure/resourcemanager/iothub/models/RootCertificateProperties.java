@@ -5,32 +5,39 @@
 package com.azure.resourcemanager.iothub.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
 
-/** This property store root certificate related information. */
+/**
+ * This property store root certificate related information.
+ */
 @Fluent
-public final class RootCertificateProperties {
+public final class RootCertificateProperties implements JsonSerializable<RootCertificateProperties> {
     /*
      * This property when set to true, hub will use G2 cert; while it's set to false, hub uses Baltimore Cert.
      */
-    @JsonProperty(value = "enableRootCertificateV2")
     private Boolean enableRootCertificateV2;
 
     /*
      * the last update time to root certificate flag.
      */
-    @JsonProperty(value = "lastUpdatedTimeUtc", access = JsonProperty.Access.WRITE_ONLY)
     private OffsetDateTime lastUpdatedTimeUtc;
 
-    /** Creates an instance of RootCertificateProperties class. */
+    /**
+     * Creates an instance of RootCertificateProperties class.
+     */
     public RootCertificateProperties() {
     }
 
     /**
      * Get the enableRootCertificateV2 property: This property when set to true, hub will use G2 cert; while it's set to
      * false, hub uses Baltimore Cert.
-     *
+     * 
      * @return the enableRootCertificateV2 value.
      */
     public Boolean enableRootCertificateV2() {
@@ -40,7 +47,7 @@ public final class RootCertificateProperties {
     /**
      * Set the enableRootCertificateV2 property: This property when set to true, hub will use G2 cert; while it's set to
      * false, hub uses Baltimore Cert.
-     *
+     * 
      * @param enableRootCertificateV2 the enableRootCertificateV2 value to set.
      * @return the RootCertificateProperties object itself.
      */
@@ -51,7 +58,7 @@ public final class RootCertificateProperties {
 
     /**
      * Get the lastUpdatedTimeUtc property: the last update time to root certificate flag.
-     *
+     * 
      * @return the lastUpdatedTimeUtc value.
      */
     public OffsetDateTime lastUpdatedTimeUtc() {
@@ -60,9 +67,49 @@ public final class RootCertificateProperties {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeBooleanField("enableRootCertificateV2", this.enableRootCertificateV2);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RootCertificateProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RootCertificateProperties if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the RootCertificateProperties.
+     */
+    public static RootCertificateProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RootCertificateProperties deserializedRootCertificateProperties = new RootCertificateProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("enableRootCertificateV2".equals(fieldName)) {
+                    deserializedRootCertificateProperties.enableRootCertificateV2
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("lastUpdatedTimeUtc".equals(fieldName)) {
+                    deserializedRootCertificateProperties.lastUpdatedTimeUtc = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRootCertificateProperties;
+        });
     }
 }

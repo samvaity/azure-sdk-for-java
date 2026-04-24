@@ -17,7 +17,7 @@ Now, we'll break down on how to control these pool size to meet your need.
 ## Prerequisites
 * [Azure Resource Manager](https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/resourcemanager#getting-started) to get start with Azure client
 * [Azure Core Netty HTTP client](https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/core/azure-core-http-netty) for Reactor Netty implementation of [Azure Core](https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/core) HttpClient
-* [Azure Identity](https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/identity/azure-identity) for Azure Active Directory token authentication support across the Azure SDK
+* [Azure Identity](https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/identity/azure-identity) for Microsoft Entra ID token authentication support across the Azure SDK
 * Basic concepts of [Project Reactor](https://projectreactor.io/)
 
 ## Code Example
@@ -50,7 +50,7 @@ singletonHttpClientBuilder
             .evictInBackground(Duration.ofSeconds(120)) // Every two minutes, the connection pool is regularly checked for connections that are applicable for removal.
             .build());
 ```
-Reference: [Reactor Netty Connection Pool](https://projectreactor.io/docs/netty/release/reference/#_connection_pool_2)
+Reference: [Reactor Netty Connection Pool](https://projectreactor.io/docs/netty/release/reference/http-client.html#_connection_pool)
 
 ### Configure thread pool for the singleton HttpClient:
 By default the Reactor Netty HttpClient uses an "Event Loop Group", where the number of the worker threads equals the number of processors available to the runtime on initialization (but with a minimum value of 4). When you need a different configuration, you can use one of the LoopResource#create methods.
@@ -66,19 +66,23 @@ singletonHttpClientBuilder
         .onClient(false))
     .build();
 ```
-Reference: [Reactor Netty Event Loop Group](https://projectreactor.io/docs/netty/release/reference/#client-tcp-level-configurations-event-loop-group)
+Reference: [Reactor Netty Event Loop Group](https://projectreactor.io/docs/netty/release/reference/http-client.html#_event_loop_group)
 
 ### Configure Azure Identity client to use the singleton HttpClient (DefaultAzureCredential for example):
 By default, Azure Identity uses `ForkJoinPool.commonPool()` for token acquisition. The pool size equals the number of processors available to the runtime on initialization minus 1 (with a minimum of 1). 
 
-A static commonPool() is available and appropriate for most applications. The common pool is used by any ForkJoinTask that is not explicitly submitted to a specified pool. Using the common pool normally reduces resource usage (its threads are slowly reclaimed during periods of non-use, and reinstated upon subsequent use).
+There are known issues with this approach:
+ - [[BUG] ClientSecretCredential.getToken().block() will hang when parallelism is high](https://github.com/Azure/azure-sdk-for-java/issues/39676)
+ - [[FAQ] My app uses Java's Security Manager and I have granted it all Permissions, yet it tells me it doesn't have the permission to do something](https://github.com/Azure/azure-sdk-for-java/wiki/Frequently-Asked-Questions#my-app-uses-javas-security-manager-and-i-have-granted-it-all-permissions-yet-it-tells-me-it-doesnt-have-the-permission-to-do-something)
+
+Simplest solution for above issues is to use a dedicated `ExecutorService` for the `TokenCredential` e.g. `Executors.newCachedThreadPool()`:
 ```java readme-sample-azureIdentityThreadpool
-// Use the singleton httpClient for Azure Identity
+// Use the singleton httpClient and a dedicated ExecutorService for Azure Identity
 final AzureProfile profile = new AzureProfile(AzureEnvironment.AZURE);
 final TokenCredential credential = new DefaultAzureCredentialBuilder()
     .authorityHost(profile.getEnvironment().getActiveDirectoryEndpoint())
-    .executorService(ForkJoinPool.commonPool()) // thread pool for executing token acquisition, usually we leave it default
-    .httpClient(singletonHttpClient)
+    .executorService(Executors.newCachedThreadPool()) // use a dedicated `ExecutorService` for the `TokenCredential`
+    .httpClient(singletonHttpClient) // use the singleton HttpClient
     .build();
 ```
 Reference: 
@@ -112,5 +116,5 @@ Reference:
 * [DEFAULT_POOL_SIZE for Schedulers.parallel()](https://github.com/reactor/reactor-core/blob/3.4.x/reactor-core/src/main/java/reactor/core/scheduler/Schedulers.java#L72-L81)
 
 ## Other JVM thread configurations you might be interested:
-* [Compiler threads for JIT compiler](https://docs.oracle.com/en/java/javase/17/docs/specs/man/java.html#advanced-jit-compiler-options-for-java)
-* [GC threads](https://docs.oracle.com/en/java/javase/17/docs/specs/man/java.html#advanced-garbage-collection-options-for-java)
+* [Compiler threads for JIT compiler](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html#advanced-jit-compiler-options-for-java)
+* [GC threads](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html#advanced-garbage-collection-options-for-java)

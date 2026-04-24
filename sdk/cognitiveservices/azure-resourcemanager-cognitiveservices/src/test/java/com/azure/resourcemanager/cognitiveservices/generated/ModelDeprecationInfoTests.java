@@ -5,25 +5,29 @@
 package com.azure.resourcemanager.cognitiveservices.generated;
 
 import com.azure.core.util.BinaryData;
+import com.azure.resourcemanager.cognitiveservices.models.DeprecationStatus;
 import com.azure.resourcemanager.cognitiveservices.models.ModelDeprecationInfo;
 import org.junit.jupiter.api.Assertions;
 
 public final class ModelDeprecationInfoTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ModelDeprecationInfo model =
-            BinaryData
-                .fromString("{\"fineTune\":\"yoxgvcltbgsnc\",\"inference\":\"kjeszz\"}")
-                .toObject(ModelDeprecationInfo.class);
-        Assertions.assertEquals("yoxgvcltbgsnc", model.fineTune());
-        Assertions.assertEquals("kjeszz", model.inference());
+        ModelDeprecationInfo model = BinaryData
+            .fromString("{\"fineTune\":\"zfcl\",\"inference\":\"axdbabph\",\"deprecationStatus\":\"Tentative\"}")
+            .toObject(ModelDeprecationInfo.class);
+        Assertions.assertEquals("zfcl", model.fineTune());
+        Assertions.assertEquals("axdbabph", model.inference());
+        Assertions.assertEquals(DeprecationStatus.TENTATIVE, model.deprecationStatus());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ModelDeprecationInfo model = new ModelDeprecationInfo().withFineTune("yoxgvcltbgsnc").withInference("kjeszz");
+        ModelDeprecationInfo model = new ModelDeprecationInfo().withFineTune("zfcl")
+            .withInference("axdbabph")
+            .withDeprecationStatus(DeprecationStatus.TENTATIVE);
         model = BinaryData.fromObject(model).toObject(ModelDeprecationInfo.class);
-        Assertions.assertEquals("yoxgvcltbgsnc", model.fineTune());
-        Assertions.assertEquals("kjeszz", model.inference());
+        Assertions.assertEquals("zfcl", model.fineTune());
+        Assertions.assertEquals("axdbabph", model.inference());
+        Assertions.assertEquals(DeprecationStatus.TENTATIVE, model.deprecationStatus());
     }
 }

@@ -8,7 +8,6 @@ import com.azure.core.credential.TokenCredential;
 import com.azure.core.credential.TokenRequestContext;
 import com.azure.cosmos.implementation.AsyncDocumentClient;
 import com.azure.cosmos.implementation.AuthorizationTokenType;
-import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import com.azure.cosmos.implementation.clienttelemetry.ClientTelemetry;
 import com.azure.cosmos.models.CosmosClientTelemetryConfig;
 import com.azure.cosmos.implementation.Configs;
@@ -21,7 +20,6 @@ import com.azure.cosmos.implementation.RxDocumentClientImpl;
 import com.azure.cosmos.implementation.RxDocumentServiceRequest;
 import com.azure.cosmos.implementation.TestConfigurations;
 import com.azure.cosmos.implementation.Utils;
-import com.azure.cosmos.implementation.clienttelemetry.TagName;
 import com.azure.cosmos.implementation.routing.PartitionKeyRangeIdentity;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -29,10 +27,8 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.EnumSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -170,6 +166,7 @@ public class BarrierRequestHelperTest {
                 null,
                 null,
                 null,
+                null,
                 new Configs(),
                 null,
                 null,
@@ -182,7 +179,12 @@ public class BarrierRequestHelperTest {
                 new CosmosClientTelemetryConfig().sendClientTelemetryToService(false),
                 null,
                 null,
-                null);
+                null,
+                null,
+                null,
+                false,
+                null,
+                false);
 
         ResourceType resourceType = ResourceType.DocumentCollection;
         OperationType operationType = OperationType.Read;

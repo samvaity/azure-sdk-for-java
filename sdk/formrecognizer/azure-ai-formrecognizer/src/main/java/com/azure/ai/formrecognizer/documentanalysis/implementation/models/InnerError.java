@@ -4,65 +4,153 @@
 
 package com.azure.ai.formrecognizer.documentanalysis.implementation.models;
 
-import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Detailed error. */
-@Immutable
-public final class InnerError {
+/**
+ * Detailed error.
+ */
+@Fluent
+public final class InnerError implements JsonSerializable<InnerError> {
     /*
      * Error code.
      */
-    @JsonProperty(value = "code", required = true)
-    private String code;
+    @Generated
+    private final String code;
 
     /*
      * Error message.
      */
-    @JsonProperty(value = "message")
+    @Generated
     private String message;
 
     /*
      * Detailed error.
      */
-    @JsonProperty(value = "innererror")
+    @Generated
     private InnerError innererror;
 
     /**
      * Creates an instance of InnerError class.
-     *
+     * 
      * @param code the code value to set.
      */
-    @JsonCreator
-    private InnerError(@JsonProperty(value = "code", required = true) String code) {
+    @Generated
+    public InnerError(String code) {
         this.code = code;
     }
 
     /**
      * Get the code property: Error code.
-     *
+     * 
      * @return the code value.
      */
+    @Generated
     public String getCode() {
         return this.code;
     }
 
     /**
      * Get the message property: Error message.
-     *
+     * 
      * @return the message value.
      */
+    @Generated
     public String getMessage() {
         return this.message;
     }
 
     /**
+     * Set the message property: Error message.
+     * 
+     * @param message the message value to set.
+     * @return the InnerError object itself.
+     */
+    @Generated
+    public InnerError setMessage(String message) {
+        this.message = message;
+        return this;
+    }
+
+    /**
      * Get the innererror property: Detailed error.
-     *
+     * 
      * @return the innererror value.
      */
+    @Generated
     public InnerError getInnererror() {
         return this.innererror;
+    }
+
+    /**
+     * Set the innererror property: Detailed error.
+     * 
+     * @param innererror the innererror value to set.
+     * @return the InnerError object itself.
+     */
+    @Generated
+    public InnerError setInnererror(InnerError innererror) {
+        this.innererror = innererror;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("code", this.code);
+        jsonWriter.writeStringField("message", this.message);
+        jsonWriter.writeJsonField("innererror", this.innererror);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of InnerError from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of InnerError if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the InnerError.
+     */
+    @Generated
+    public static InnerError fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            boolean codeFound = false;
+            String code = null;
+            String message = null;
+            InnerError innererror = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("code".equals(fieldName)) {
+                    code = reader.getString();
+                    codeFound = true;
+                } else if ("message".equals(fieldName)) {
+                    message = reader.getString();
+                } else if ("innererror".equals(fieldName)) {
+                    innererror = InnerError.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (codeFound) {
+                InnerError deserializedInnerError = new InnerError(code);
+                deserializedInnerError.message = message;
+                deserializedInnerError.innererror = innererror;
+
+                return deserializedInnerError;
+            }
+            throw new IllegalStateException("Missing required property: code");
+        });
     }
 }

@@ -5,55 +5,62 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** A linked service for an SSH File Transfer Protocol (SFTP) server. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("Sftp")
-@JsonFlatten
+/**
+ * A linked service for an SSH File Transfer Protocol (SFTP) server.
+ */
 @Fluent
 public class SftpServerLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "Sftp";
+
+    /*
      * The SFTP server host name. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.host", required = true)
+    @Generated
     private Object host;
 
     /*
      * The TCP port number that the SFTP server uses to listen for client connections. Default value is 22. Type:
      * integer (or Expression with resultType integer), minimum: 0.
      */
-    @JsonProperty(value = "typeProperties.port")
+    @Generated
     private Object port;
 
     /*
      * The authentication type to be used to connect to the FTP server.
      */
-    @JsonProperty(value = "typeProperties.authenticationType")
+    @Generated
     private SftpAuthenticationType authenticationType;
 
     /*
      * The username used to log on to the SFTP server. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.userName")
+    @Generated
     private Object userName;
 
     /*
      * Password to logon the SFTP server for Basic authentication.
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private SecretBase password;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
     /*
@@ -61,55 +68,72 @@ public class SftpServerLinkedService extends LinkedService {
      * copy with SshPublicKey authentication, either PrivateKeyPath or PrivateKeyContent should be specified. SSH
      * private key should be OpenSSH format. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.privateKeyPath")
+    @Generated
     private Object privateKeyPath;
 
     /*
      * Base64 encoded SSH private key content for SshPublicKey authentication. For on-premises copy with SshPublicKey
-     * authentication, either PrivateKeyPath or PrivateKeyContent should be specified. SSH private key should be
-     * OpenSSH format.
+     * authentication, either PrivateKeyPath or PrivateKeyContent should be specified. SSH private key should be OpenSSH
+     * format.
      */
-    @JsonProperty(value = "typeProperties.privateKeyContent")
+    @Generated
     private SecretBase privateKeyContent;
 
     /*
      * The password to decrypt the SSH private key if the SSH private key is encrypted.
      */
-    @JsonProperty(value = "typeProperties.passPhrase")
+    @Generated
     private SecretBase passPhrase;
 
     /*
      * If true, skip the SSH host key validation. Default value is false. Type: boolean (or Expression with resultType
      * boolean).
      */
-    @JsonProperty(value = "typeProperties.skipHostKeyValidation")
+    @Generated
     private Object skipHostKeyValidation;
 
     /*
      * The host key finger-print of the SFTP server. When SkipHostKeyValidation is false, HostKeyFingerprint should be
      * specified. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.hostKeyFingerprint")
+    @Generated
     private Object hostKeyFingerprint;
 
-    /** Creates an instance of SftpServerLinkedService class. */
-    public SftpServerLinkedService() {}
+    /**
+     * Creates an instance of SftpServerLinkedService class.
+     */
+    @Generated
+    public SftpServerLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the host property: The SFTP server host name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the host value.
      */
+    @Generated
     public Object getHost() {
         return this.host;
     }
 
     /**
      * Set the host property: The SFTP server host name. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param host the host value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setHost(Object host) {
         this.host = host;
         return this;
@@ -118,9 +142,10 @@ public class SftpServerLinkedService extends LinkedService {
     /**
      * Get the port property: The TCP port number that the SFTP server uses to listen for client connections. Default
      * value is 22. Type: integer (or Expression with resultType integer), minimum: 0.
-     *
+     * 
      * @return the port value.
      */
+    @Generated
     public Object getPort() {
         return this.port;
     }
@@ -128,10 +153,11 @@ public class SftpServerLinkedService extends LinkedService {
     /**
      * Set the port property: The TCP port number that the SFTP server uses to listen for client connections. Default
      * value is 22. Type: integer (or Expression with resultType integer), minimum: 0.
-     *
+     * 
      * @param port the port value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setPort(Object port) {
         this.port = port;
         return this;
@@ -139,19 +165,21 @@ public class SftpServerLinkedService extends LinkedService {
 
     /**
      * Get the authenticationType property: The authentication type to be used to connect to the FTP server.
-     *
+     * 
      * @return the authenticationType value.
      */
+    @Generated
     public SftpAuthenticationType getAuthenticationType() {
         return this.authenticationType;
     }
 
     /**
      * Set the authenticationType property: The authentication type to be used to connect to the FTP server.
-     *
+     * 
      * @param authenticationType the authenticationType value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setAuthenticationType(SftpAuthenticationType authenticationType) {
         this.authenticationType = authenticationType;
         return this;
@@ -160,9 +188,10 @@ public class SftpServerLinkedService extends LinkedService {
     /**
      * Get the userName property: The username used to log on to the SFTP server. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the userName value.
      */
+    @Generated
     public Object getUserName() {
         return this.userName;
     }
@@ -170,10 +199,11 @@ public class SftpServerLinkedService extends LinkedService {
     /**
      * Set the userName property: The username used to log on to the SFTP server. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param userName the userName value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setUserName(Object userName) {
         this.userName = userName;
         return this;
@@ -181,19 +211,21 @@ public class SftpServerLinkedService extends LinkedService {
 
     /**
      * Get the password property: Password to logon the SFTP server for Basic authentication.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: Password to logon the SFTP server for Basic authentication.
-     *
+     * 
      * @param password the password value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -202,9 +234,10 @@ public class SftpServerLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -212,10 +245,11 @@ public class SftpServerLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
@@ -226,9 +260,10 @@ public class SftpServerLinkedService extends LinkedService {
      * on-premises copy. For on-premises copy with SshPublicKey authentication, either PrivateKeyPath or
      * PrivateKeyContent should be specified. SSH private key should be OpenSSH format. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the privateKeyPath value.
      */
+    @Generated
     public Object getPrivateKeyPath() {
         return this.privateKeyPath;
     }
@@ -238,10 +273,11 @@ public class SftpServerLinkedService extends LinkedService {
      * on-premises copy. For on-premises copy with SshPublicKey authentication, either PrivateKeyPath or
      * PrivateKeyContent should be specified. SSH private key should be OpenSSH format. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param privateKeyPath the privateKeyPath value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setPrivateKeyPath(Object privateKeyPath) {
         this.privateKeyPath = privateKeyPath;
         return this;
@@ -251,9 +287,10 @@ public class SftpServerLinkedService extends LinkedService {
      * Get the privateKeyContent property: Base64 encoded SSH private key content for SshPublicKey authentication. For
      * on-premises copy with SshPublicKey authentication, either PrivateKeyPath or PrivateKeyContent should be
      * specified. SSH private key should be OpenSSH format.
-     *
+     * 
      * @return the privateKeyContent value.
      */
+    @Generated
     public SecretBase getPrivateKeyContent() {
         return this.privateKeyContent;
     }
@@ -262,10 +299,11 @@ public class SftpServerLinkedService extends LinkedService {
      * Set the privateKeyContent property: Base64 encoded SSH private key content for SshPublicKey authentication. For
      * on-premises copy with SshPublicKey authentication, either PrivateKeyPath or PrivateKeyContent should be
      * specified. SSH private key should be OpenSSH format.
-     *
+     * 
      * @param privateKeyContent the privateKeyContent value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setPrivateKeyContent(SecretBase privateKeyContent) {
         this.privateKeyContent = privateKeyContent;
         return this;
@@ -273,19 +311,21 @@ public class SftpServerLinkedService extends LinkedService {
 
     /**
      * Get the passPhrase property: The password to decrypt the SSH private key if the SSH private key is encrypted.
-     *
+     * 
      * @return the passPhrase value.
      */
+    @Generated
     public SecretBase getPassPhrase() {
         return this.passPhrase;
     }
 
     /**
      * Set the passPhrase property: The password to decrypt the SSH private key if the SSH private key is encrypted.
-     *
+     * 
      * @param passPhrase the passPhrase value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setPassPhrase(SecretBase passPhrase) {
         this.passPhrase = passPhrase;
         return this;
@@ -294,9 +334,10 @@ public class SftpServerLinkedService extends LinkedService {
     /**
      * Get the skipHostKeyValidation property: If true, skip the SSH host key validation. Default value is false. Type:
      * boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the skipHostKeyValidation value.
      */
+    @Generated
     public Object getSkipHostKeyValidation() {
         return this.skipHostKeyValidation;
     }
@@ -304,10 +345,11 @@ public class SftpServerLinkedService extends LinkedService {
     /**
      * Set the skipHostKeyValidation property: If true, skip the SSH host key validation. Default value is false. Type:
      * boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param skipHostKeyValidation the skipHostKeyValidation value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setSkipHostKeyValidation(Object skipHostKeyValidation) {
         this.skipHostKeyValidation = skipHostKeyValidation;
         return this;
@@ -316,9 +358,10 @@ public class SftpServerLinkedService extends LinkedService {
     /**
      * Get the hostKeyFingerprint property: The host key finger-print of the SFTP server. When SkipHostKeyValidation is
      * false, HostKeyFingerprint should be specified. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the hostKeyFingerprint value.
      */
+    @Generated
     public Object getHostKeyFingerprint() {
         return this.hostKeyFingerprint;
     }
@@ -326,40 +369,201 @@ public class SftpServerLinkedService extends LinkedService {
     /**
      * Set the hostKeyFingerprint property: The host key finger-print of the SFTP server. When SkipHostKeyValidation is
      * false, HostKeyFingerprint should be specified. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param hostKeyFingerprint the hostKeyFingerprint value to set.
      * @return the SftpServerLinkedService object itself.
      */
+    @Generated
     public SftpServerLinkedService setHostKeyFingerprint(Object hostKeyFingerprint) {
         this.hostKeyFingerprint = hostKeyFingerprint;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public SftpServerLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SftpServerLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SftpServerLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SftpServerLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SftpServerLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (host != null
+            || port != null
+            || authenticationType != null
+            || userName != null
+            || password != null
+            || encryptedCredential != null
+            || privateKeyPath != null
+            || privateKeyContent != null
+            || passPhrase != null
+            || skipHostKeyValidation != null
+            || hostKeyFingerprint != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("host", this.host);
+            if (this.port != null) {
+                jsonWriter.writeUntypedField("port", this.port);
+            }
+            jsonWriter.writeStringField("authenticationType",
+                this.authenticationType == null ? null : this.authenticationType.toString());
+            if (this.userName != null) {
+                jsonWriter.writeUntypedField("userName", this.userName);
+            }
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            if (this.privateKeyPath != null) {
+                jsonWriter.writeUntypedField("privateKeyPath", this.privateKeyPath);
+            }
+            jsonWriter.writeJsonField("privateKeyContent", this.privateKeyContent);
+            jsonWriter.writeJsonField("passPhrase", this.passPhrase);
+            if (this.skipHostKeyValidation != null) {
+                jsonWriter.writeUntypedField("skipHostKeyValidation", this.skipHostKeyValidation);
+            }
+            if (this.hostKeyFingerprint != null) {
+                jsonWriter.writeUntypedField("hostKeyFingerprint", this.hostKeyFingerprint);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SftpServerLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SftpServerLinkedService if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SftpServerLinkedService.
+     */
+    @Generated
+    public static SftpServerLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SftpServerLinkedService deserializedSftpServerLinkedService = new SftpServerLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedSftpServerLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedSftpServerLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedSftpServerLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedSftpServerLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedSftpServerLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedSftpServerLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("host".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.host = reader.readUntyped();
+                        } else if ("port".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.port = reader.readUntyped();
+                        } else if ("authenticationType".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.authenticationType
+                                = SftpAuthenticationType.fromString(reader.getString());
+                        } else if ("userName".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.userName = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.encryptedCredential = reader.readUntyped();
+                        } else if ("privateKeyPath".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.privateKeyPath = reader.readUntyped();
+                        } else if ("privateKeyContent".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.privateKeyContent = SecretBase.fromJson(reader);
+                        } else if ("passPhrase".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.passPhrase = SecretBase.fromJson(reader);
+                        } else if ("skipHostKeyValidation".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.skipHostKeyValidation = reader.readUntyped();
+                        } else if ("hostKeyFingerprint".equals(fieldName)) {
+                            deserializedSftpServerLinkedService.hostKeyFingerprint = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedSftpServerLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedSftpServerLinkedService;
+        });
     }
 }

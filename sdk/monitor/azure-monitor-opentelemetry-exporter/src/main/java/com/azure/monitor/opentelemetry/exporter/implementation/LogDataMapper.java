@@ -4,7 +4,9 @@
 package com.azure.monitor.opentelemetry.exporter.implementation;
 
 import com.azure.core.util.logging.ClientLogger;
-import com.azure.monitor.opentelemetry.exporter.implementation.builders.*;
+import com.azure.monitor.opentelemetry.exporter.implementation.builders.AbstractTelemetryBuilder;
+import com.azure.monitor.opentelemetry.exporter.implementation.builders.ExceptionTelemetryBuilder;
+import com.azure.monitor.opentelemetry.exporter.implementation.builders.MessageTelemetryBuilder;
 import com.azure.monitor.opentelemetry.exporter.implementation.models.ContextTagKeys;
 import com.azure.monitor.opentelemetry.exporter.implementation.models.SeverityLevel;
 import com.azure.monitor.opentelemetry.exporter.implementation.models.TelemetryItem;
@@ -20,6 +22,7 @@ import reactor.util.annotation.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.azure.monitor.opentelemetry.exporter.implementation.MappingsBuilder.MappingType.LOG;
 import static io.opentelemetry.api.common.AttributeKey.stringArrayKey;
 import static io.opentelemetry.api.common.AttributeKey.stringKey;
 
@@ -40,38 +43,18 @@ public class LogDataMapper {
     private static final Mappings MAPPINGS;
 
     static {
-        MappingsBuilder mappingsBuilder =
-            new MappingsBuilder()
-                .prefix(
-                    LOG4J_MDC_PREFIX,
-                    (telemetryBuilder, key, value) -> {
-                        telemetryBuilder.addProperty(
-                            key.substring(LOG4J_MDC_PREFIX.length()), String.valueOf(value));
-                    })
-                .prefix(
-                    LOG4J_CONTEXT_DATA_PREFIX,
-                    (telemetryBuilder, key, value) -> {
-                        telemetryBuilder.addProperty(
-                            key.substring(LOG4J_CONTEXT_DATA_PREFIX.length()), String.valueOf(value));
-                    })
-                .prefix(
-                    LOGBACK_MDC_PREFIX,
-                    (telemetryBuilder, key, value) -> {
-                        telemetryBuilder.addProperty(
-                            key.substring(LOGBACK_MDC_PREFIX.length()), String.valueOf(value));
-                    })
-                .prefix(
-                    JBOSS_LOGGING_MDC_PREFIX,
-                    (telemetryBuilder, key, value) -> {
-                        telemetryBuilder.addProperty(
-                            key.substring(JBOSS_LOGGING_MDC_PREFIX.length()), String.valueOf(value));
-                    })
-                .prefix(
-                    LOG4J_MAP_MESSAGE_PREFIX,
-                    (telemetryBuilder, key, value) -> {
-                        telemetryBuilder.addProperty(
-                            key.substring(LOG4J_MAP_MESSAGE_PREFIX.length()), String.valueOf(value));
-                    })
+        MappingsBuilder mappingsBuilder
+            = new MappingsBuilder(LOG).prefix(LOG4J_MDC_PREFIX, (telemetryBuilder, key, value) -> {
+                telemetryBuilder.addProperty(key.substring(LOG4J_MDC_PREFIX.length()), String.valueOf(value));
+            }).prefix(LOG4J_CONTEXT_DATA_PREFIX, (telemetryBuilder, key, value) -> {
+                telemetryBuilder.addProperty(key.substring(LOG4J_CONTEXT_DATA_PREFIX.length()), String.valueOf(value));
+            }).prefix(LOGBACK_MDC_PREFIX, (telemetryBuilder, key, value) -> {
+                telemetryBuilder.addProperty(key.substring(LOGBACK_MDC_PREFIX.length()), String.valueOf(value));
+            }).prefix(JBOSS_LOGGING_MDC_PREFIX, (telemetryBuilder, key, value) -> {
+                telemetryBuilder.addProperty(key.substring(JBOSS_LOGGING_MDC_PREFIX.length()), String.valueOf(value));
+            }).prefix(LOG4J_MAP_MESSAGE_PREFIX, (telemetryBuilder, key, value) -> {
+                telemetryBuilder.addProperty(key.substring(LOG4J_MAP_MESSAGE_PREFIX.length()), String.valueOf(value));
+            })
                 .exactString(SemanticAttributes.CODE_FILEPATH, "FileName")
                 .exactString(SemanticAttributes.CODE_NAMESPACE, "ClassName")
                 .exactString(SemanticAttributes.CODE_FUNCTION, "MethodName")
@@ -88,9 +71,7 @@ public class LogDataMapper {
     private final boolean captureAzureFunctionsAttributes;
     private final BiConsumer<AbstractTelemetryBuilder, Resource> telemetryInitializer;
 
-    public LogDataMapper(
-        boolean captureLoggingLevelAsCustomDimension,
-        boolean captureAzureFunctionsAttributes,
+    public LogDataMapper(boolean captureLoggingLevelAsCustomDimension, boolean captureAzureFunctionsAttributes,
         BiConsumer<AbstractTelemetryBuilder, Resource> telemetryInitializer) {
 
         this.captureLoggingLevelAsCustomDimension = captureLoggingLevelAsCustomDimension;
@@ -98,22 +79,25 @@ public class LogDataMapper {
         this.telemetryInitializer = telemetryInitializer;
     }
 
-    public TelemetryItem map(LogRecordData log, @Nullable String stack, @Nullable Long itemCount) {
+    public TelemetryItem map(LogRecordData log, @Nullable String stack, @Nullable Double sampleRate) {
+        if (sampleRate == null) {
+            sampleRate = getSampleRate(log);
+        }
         if (stack == null) {
-            return createMessageTelemetryItem(log, itemCount);
+            return createMessageTelemetryItem(log, sampleRate);
         } else {
-            return createExceptionTelemetryItem(log, stack, itemCount);
+            return createExceptionTelemetryItem(log, stack, sampleRate);
         }
     }
 
-    private TelemetryItem createMessageTelemetryItem(LogRecordData log, @Nullable Long itemCount) {
+    private TelemetryItem createMessageTelemetryItem(LogRecordData log, @Nullable Double sampleRate) {
         MessageTelemetryBuilder telemetryBuilder = MessageTelemetryBuilder.create();
         telemetryInitializer.accept(telemetryBuilder, log.getResource());
 
         // set standard properties
         setOperationTags(telemetryBuilder, log);
-        setTime(telemetryBuilder, log.getTimestampEpochNanos());
-        setItemCount(telemetryBuilder, log, itemCount);
+        setTime(telemetryBuilder, log);
+        setSampleRate(telemetryBuilder, sampleRate);
 
         // update tags
         Attributes attributes = log.getAttributes();
@@ -126,48 +110,31 @@ public class LogDataMapper {
         telemetryBuilder.setMessage(log.getBody().asString());
 
         // set message-specific properties
-        setLoggerProperties(
-            telemetryBuilder,
-            log.getInstrumentationScopeInfo().getName(),
-            attributes.get(SemanticAttributes.THREAD_NAME),
-            log.getSeverity());
+        setLoggerProperties(telemetryBuilder, log.getInstrumentationScopeInfo().getName(),
+            attributes.get(SemanticAttributes.THREAD_NAME), log.getSeverity());
 
         return telemetryBuilder.build();
     }
 
-    private TelemetryItem createExceptionTelemetryItem(
-        LogRecordData log, String stack, @Nullable Long itemCount) {
+    private TelemetryItem createExceptionTelemetryItem(LogRecordData log, String stack, @Nullable Double sampleRate) {
         ExceptionTelemetryBuilder telemetryBuilder = ExceptionTelemetryBuilder.create();
         telemetryInitializer.accept(telemetryBuilder, log.getResource());
 
         // set standard properties
         setOperationTags(telemetryBuilder, log);
-        setTime(telemetryBuilder, log.getTimestampEpochNanos());
-        setItemCount(telemetryBuilder, log, itemCount);
+        setTime(telemetryBuilder, log);
+        setSampleRate(telemetryBuilder, sampleRate);
 
         // update tags
         Attributes attributes = log.getAttributes();
         MAPPINGS.map(attributes, telemetryBuilder);
 
-        List<ExceptionDetailBuilder> builders = Exceptions.minimalParse(stack);
-        ExceptionDetailBuilder exceptionDetailBuilder = builders.get(0);
-        String type = log.getAttributes().get(SemanticAttributes.EXCEPTION_TYPE);
-        if (type != null && !type.isEmpty()) {
-            exceptionDetailBuilder.setTypeName(type);
-        }
-        String message = log.getAttributes().get(SemanticAttributes.EXCEPTION_MESSAGE);
-        if (message != null && !message.isEmpty()) {
-            exceptionDetailBuilder.setMessage(message);
-        }
-        telemetryBuilder.setExceptions(builders);
+        SpanDataMapper.setExceptions(stack, log.getAttributes(), telemetryBuilder);
         telemetryBuilder.setSeverityLevel(toSeverityLevel(log.getSeverity()));
 
         // set exception-specific properties
-        setLoggerProperties(
-            telemetryBuilder,
-            log.getInstrumentationScopeInfo().getName(),
-            attributes.get(SemanticAttributes.THREAD_NAME),
-            log.getSeverity());
+        setLoggerProperties(telemetryBuilder, log.getInstrumentationScopeInfo().getName(),
+            attributes.get(SemanticAttributes.THREAD_NAME), log.getSeverity());
 
         if (log.getBody() != null) {
             telemetryBuilder.addProperty("Logger Message", log.getBody().asString());
@@ -176,41 +143,47 @@ public class LogDataMapper {
         return telemetryBuilder.build();
     }
 
-    private static void setOperationTags(
-        AbstractTelemetryBuilder telemetryBuilder, LogRecordData log) {
+    private static void setOperationTags(AbstractTelemetryBuilder telemetryBuilder, LogRecordData log) {
         SpanContext spanContext = log.getSpanContext();
         if (spanContext.isValid()) {
             telemetryBuilder.addTag(ContextTagKeys.AI_OPERATION_ID.toString(), spanContext.getTraceId());
-            telemetryBuilder.addTag(
-                ContextTagKeys.AI_OPERATION_PARENT_ID.toString(), spanContext.getSpanId());
+            telemetryBuilder.addTag(ContextTagKeys.AI_OPERATION_PARENT_ID.toString(), spanContext.getSpanId());
         }
         setOperationName(telemetryBuilder, log.getAttributes());
     }
 
-    private static void setOperationName(
-        AbstractTelemetryBuilder telemetryBuilder, Attributes attributes) {
+    private static void setOperationName(AbstractTelemetryBuilder telemetryBuilder, Attributes attributes) {
         String operationName = attributes.get(AiSemanticAttributes.OPERATION_NAME);
         if (operationName != null) {
             telemetryBuilder.addTag(ContextTagKeys.AI_OPERATION_NAME.toString(), operationName);
         }
     }
 
-    private static void setTime(AbstractTelemetryBuilder telemetryBuilder, long epochNanos) {
-        telemetryBuilder.setTime(FormattedTime.offSetDateTimeFromEpochNanos(epochNanos));
+    private static void setTime(AbstractTelemetryBuilder telemetryBuilder, LogRecordData log) {
+        telemetryBuilder.setTime(FormattedTime.offSetDateTimeFromEpochNanos(getTimestampEpochNanosWithFallback(log)));
     }
 
-    private static void setItemCount(
-        AbstractTelemetryBuilder telemetryBuilder, LogRecordData log, @Nullable Long itemCount) {
-        if (itemCount == null) {
-            itemCount = log.getAttributes().get(AiSemanticAttributes.ITEM_COUNT);
+    private static long getTimestampEpochNanosWithFallback(LogRecordData log) {
+        long timestamp = log.getTimestampEpochNanos();
+        if (timestamp != 0) {
+            return timestamp;
         }
-        if (itemCount != null && itemCount != 1) {
-            telemetryBuilder.setSampleRate(100.0f / itemCount);
+        return log.getObservedTimestampEpochNanos();
+    }
+
+    private static void setSampleRate(AbstractTelemetryBuilder telemetryBuilder, @Nullable Double sampleRate) {
+        if (sampleRate != null) {
+            telemetryBuilder.setSampleRate(sampleRate.floatValue());
         }
     }
 
-    private static void setFunctionExtraTraceAttributes(
-        AbstractTelemetryBuilder telemetryBuilder, Attributes attributes) {
+    @Nullable
+    private static Double getSampleRate(LogRecordData log) {
+        return log.getAttributes().get(AiSemanticAttributes.SAMPLE_RATE);
+    }
+
+    private static void setFunctionExtraTraceAttributes(AbstractTelemetryBuilder telemetryBuilder,
+        Attributes attributes) {
         String invocationId = attributes.get(AiSemanticAttributes.AZ_FN_INVOCATION_ID);
         if (invocationId != null) {
             telemetryBuilder.addProperty("InvocationId", invocationId);
@@ -237,11 +210,8 @@ public class LogDataMapper {
         }
     }
 
-    private void setLoggerProperties(
-        AbstractTelemetryBuilder telemetryBuilder,
-        @Nullable String loggerName,
-        @Nullable String threadName,
-        Severity severity) {
+    private void setLoggerProperties(AbstractTelemetryBuilder telemetryBuilder, @Nullable String loggerName,
+        @Nullable String threadName, Severity severity) {
 
         telemetryBuilder.addProperty("SourceType", "Logger");
 
@@ -274,21 +244,25 @@ public class LogDataMapper {
             case DEBUG3:
             case DEBUG4:
                 return SeverityLevel.VERBOSE;
+
             case INFO:
             case INFO2:
             case INFO3:
             case INFO4:
                 return SeverityLevel.INFORMATION;
+
             case WARN:
             case WARN2:
             case WARN3:
             case WARN4:
                 return SeverityLevel.WARNING;
+
             case ERROR:
             case ERROR2:
             case ERROR3:
             case ERROR4:
                 return SeverityLevel.ERROR;
+
             case FATAL:
             case FATAL2:
             case FATAL3:
@@ -306,36 +280,43 @@ public class LogDataMapper {
         switch (severity) {
             case UNDEFINED_SEVERITY_NUMBER:
                 return null;
+
             case FATAL:
             case FATAL2:
             case FATAL3:
             case FATAL4:
                 return "FATAL";
+
             case ERROR:
             case ERROR2:
             case ERROR3:
             case ERROR4:
                 return "ERROR";
+
             case WARN:
             case WARN2:
             case WARN3:
             case WARN4:
                 return "WARN";
+
             case INFO:
             case INFO2:
             case INFO3:
             case INFO4:
                 return "INFO";
+
             case DEBUG:
             case DEBUG2:
             case DEBUG3:
             case DEBUG4:
                 return "DEBUG";
+
             case TRACE:
             case TRACE2:
             case TRACE3:
             case TRACE4:
                 return "TRACE";
+
             default:
                 logger.error("Unexpected severity {}", severity);
                 return null;

@@ -5,44 +5,54 @@
 package com.azure.communication.callautomation.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The request payload for redirecting the call. */
+/**
+ * The request payload for redirecting the call.
+ */
 @Fluent
-public final class RedirectCallRequestInternal {
+public final class RedirectCallRequestInternal implements JsonSerializable<RedirectCallRequestInternal> {
     /*
      * The context associated with the call.
      */
-    @JsonProperty(value = "incomingCallContext", required = true)
+    @Generated
     private String incomingCallContext;
 
     /*
      * The target identity to redirect the call to.
      */
-    @JsonProperty(value = "target", required = true)
+    @Generated
     private CommunicationIdentifierModel target;
 
-    /*
-     * Used by customer to send custom context to targets
+    /**
+     * Creates an instance of RedirectCallRequestInternal class.
      */
-    @JsonProperty(value = "customContext")
-    private CustomContext customContext;
+    @Generated
+    public RedirectCallRequestInternal() {
+    }
 
     /**
      * Get the incomingCallContext property: The context associated with the call.
-     *
+     * 
      * @return the incomingCallContext value.
      */
+    @Generated
     public String getIncomingCallContext() {
         return this.incomingCallContext;
     }
 
     /**
      * Set the incomingCallContext property: The context associated with the call.
-     *
+     * 
      * @param incomingCallContext the incomingCallContext value to set.
      * @return the RedirectCallRequestInternal object itself.
      */
+    @Generated
     public RedirectCallRequestInternal setIncomingCallContext(String incomingCallContext) {
         this.incomingCallContext = incomingCallContext;
         return this;
@@ -50,41 +60,65 @@ public final class RedirectCallRequestInternal {
 
     /**
      * Get the target property: The target identity to redirect the call to.
-     *
+     * 
      * @return the target value.
      */
+    @Generated
     public CommunicationIdentifierModel getTarget() {
         return this.target;
     }
 
     /**
      * Set the target property: The target identity to redirect the call to.
-     *
+     * 
      * @param target the target value to set.
      * @return the RedirectCallRequestInternal object itself.
      */
+    @Generated
     public RedirectCallRequestInternal setTarget(CommunicationIdentifierModel target) {
         this.target = target;
         return this;
     }
 
     /**
-     * Get the customContext property: Used by customer to send custom context to targets.
-     *
-     * @return the customContext value.
+     * {@inheritDoc}
      */
-    public CustomContext getCustomContext() {
-        return this.customContext;
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("incomingCallContext", this.incomingCallContext);
+        jsonWriter.writeJsonField("target", this.target);
+        return jsonWriter.writeEndObject();
     }
 
     /**
-     * Set the customContext property: Used by customer to send custom context to targets.
-     *
-     * @param customContext the customContext value to set.
-     * @return the RedirectCallRequestInternal object itself.
+     * Reads an instance of RedirectCallRequestInternal from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RedirectCallRequestInternal if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the RedirectCallRequestInternal.
      */
-    public RedirectCallRequestInternal setCustomContext(CustomContext customContext) {
-        this.customContext = customContext;
-        return this;
+    @Generated
+    public static RedirectCallRequestInternal fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RedirectCallRequestInternal deserializedRedirectCallRequestInternal = new RedirectCallRequestInternal();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("incomingCallContext".equals(fieldName)) {
+                    deserializedRedirectCallRequestInternal.incomingCallContext = reader.getString();
+                } else if ("target".equals(fieldName)) {
+                    deserializedRedirectCallRequestInternal.target = CommunicationIdentifierModel.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRedirectCallRequestInternal;
+        });
     }
 }

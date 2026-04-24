@@ -6,78 +6,71 @@ package com.azure.resourcemanager.subscription.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.subscription.SubscriptionManager;
 import com.azure.resourcemanager.subscription.models.ProvisioningState;
 import com.azure.resourcemanager.subscription.models.PutAliasRequest;
+import com.azure.resourcemanager.subscription.models.PutAliasRequestAdditionalProperties;
 import com.azure.resourcemanager.subscription.models.PutAliasRequestProperties;
-import com.azure.resourcemanager.subscription.models.PutAliasResponse;
+import com.azure.resourcemanager.subscription.models.SubscriptionAliasResponse;
 import com.azure.resourcemanager.subscription.models.Workload;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class AliasCreateMockTests {
     @Test
     public void testCreate() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"properties\":{\"subscriptionId\":\"hfiqscjeypvhe\",\"displayName\":\"kgqhcjrefovg\",\"provisioningState\":\"Succeeded\",\"acceptOwnershipUrl\":\"leyyvx\",\"acceptOwnershipState\":\"Expired\",\"billingScope\":\"k\",\"workload\":\"Production\",\"resellerId\":\"pngjcrcczsqpjhvm\",\"subscriptionOwnerId\":\"jvnysounqe\",\"managementGroupId\":\"noae\",\"createdTime\":\"fhyhltrpmopjmcma\",\"tags\":{\"aodsfcpkv\":\"kthfui\"}},\"id\":\"dpuozmyz\",\"name\":\"dagfuaxbezyiuok\",\"type\":\"twhrdxwzywqsm\"}";
 
-        String responseStr =
-            "{\"properties\":{\"subscriptionId\":\"ltyfsop\",\"provisioningState\":\"Succeeded\"},\"id\":\"uesnzwdejbavo\",\"name\":\"xzdmohctb\",\"type\":\"vudwx\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        SubscriptionManager manager = SubscriptionManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        SubscriptionAliasResponse response = manager.alias()
+            .create("dejbavo",
+                new PutAliasRequest().withProperties(new PutAliasRequestProperties().withDisplayName("dmoh")
+                    .withWorkload(Workload.DEV_TEST)
+                    .withBillingScope("vudwx")
+                    .withSubscriptionId("dnvowg")
+                    .withResellerId("jugwdkcglhsl")
+                    .withAdditionalProperties(
+                        new PutAliasRequestAdditionalProperties().withManagementGroupId("dyggdtjixhbku")
+                            .withSubscriptionTenantId("qweykhmenev")
+                            .withSubscriptionOwnerId("exfwhy")
+                            .withTags(mapOf("naamde", "bvyvdcsity")))),
+                com.azure.core.util.Context.NONE);
 
-        SubscriptionManager manager =
-            SubscriptionManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PutAliasResponse response =
-            manager
-                .alias()
-                .create(
-                    "e",
-                    new PutAliasRequest()
-                        .withProperties(
-                            new PutAliasRequestProperties()
-                                .withDisplayName("alhbx")
-                                .withWorkload(Workload.PRODUCTION)
-                                .withBillingScope("jzzvdud")
-                                .withSubscriptionId("dslfhotwmcy")
-                                .withResellerId("wlbjnpgacftade")),
-                    com.azure.core.util.Context.NONE);
-
+        Assertions.assertEquals("kgqhcjrefovg", response.properties().displayName());
         Assertions.assertEquals(ProvisioningState.SUCCEEDED, response.properties().provisioningState());
+        Assertions.assertEquals("k", response.properties().billingScope());
+        Assertions.assertEquals(Workload.PRODUCTION, response.properties().workload());
+        Assertions.assertEquals("pngjcrcczsqpjhvm", response.properties().resellerId());
+        Assertions.assertEquals("jvnysounqe", response.properties().subscriptionOwnerId());
+        Assertions.assertEquals("noae", response.properties().managementGroupId());
+        Assertions.assertEquals("fhyhltrpmopjmcma", response.properties().createdTime());
+        Assertions.assertEquals("kthfui", response.properties().tags().get("aodsfcpkv"));
+    }
+
+    // Use "Map.of" if available
+    @SuppressWarnings("unchecked")
+    private static <T> Map<String, T> mapOf(Object... inputs) {
+        Map<String, T> map = new HashMap<>();
+        for (int i = 0; i < inputs.length; i += 2) {
+            String key = (String) inputs[i];
+            T value = (T) inputs[i + 1];
+            map.put(key, value);
+        }
+        return map;
     }
 }

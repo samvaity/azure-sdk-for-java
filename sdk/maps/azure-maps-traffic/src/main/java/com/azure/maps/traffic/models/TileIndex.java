@@ -5,42 +5,48 @@
 package com.azure.maps.traffic.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
 
-/** Parameter group. */
+/**
+ * Parameter group.
+ */
 @Fluent
 public final class TileIndex {
     /*
-     * X coordinate of the tile on zoom grid. Value must be in the range [0,
-     * 2<sup>`zoom`</sup> -1].
-     *
+     * X coordinate of the tile on zoom grid. Value must be in the range [0, 2<sup>`zoom`</sup> -1].
+     * 
      * Please see [Zoom Levels and Tile
-     * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid)
-     * for details.
+     * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid) for details.
      */
-    @JsonProperty(value = "x", required = true)
+    @Generated
     private int x;
 
     /*
-     * Y coordinate of the tile on zoom grid. Value must be in the range [0,
-     * 2<sup>`zoom`</sup> -1].
-     *
+     * Y coordinate of the tile on zoom grid. Value must be in the range [0, 2<sup>`zoom`</sup> -1].
+     * 
      * Please see [Zoom Levels and Tile
-     * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid)
-     * for details.
+     * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid) for details.
      */
-    @JsonProperty(value = "y", required = true)
+    @Generated
     private int y;
+
+    /**
+     * Creates an instance of TileIndex class.
+     */
+    @Generated
+    public TileIndex() {
+    }
 
     /**
      * Get the x property: X coordinate of the tile on zoom grid. Value must be in the range [0,
      * 2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *
-     * <p>Please see [Zoom Levels and Tile
+     * 
+     * Please see [Zoom Levels and Tile
      * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     *
+     * 
      * @return the x value.
      */
+    @Generated
     public int getX() {
         return this.x;
     }
@@ -48,13 +54,14 @@ public final class TileIndex {
     /**
      * Set the x property: X coordinate of the tile on zoom grid. Value must be in the range [0,
      * 2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *
-     * <p>Please see [Zoom Levels and Tile
+     * 
+     * Please see [Zoom Levels and Tile
      * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     *
+     * 
      * @param x the x value to set.
      * @return the TileIndex object itself.
      */
+    @Generated
     public TileIndex setX(int x) {
         this.x = x;
         return this;
@@ -63,12 +70,13 @@ public final class TileIndex {
     /**
      * Get the y property: Y coordinate of the tile on zoom grid. Value must be in the range [0,
      * 2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *
-     * <p>Please see [Zoom Levels and Tile
+     * 
+     * Please see [Zoom Levels and Tile
      * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     *
+     * 
      * @return the y value.
      */
+    @Generated
     public int getY() {
         return this.y;
     }
@@ -76,13 +84,14 @@ public final class TileIndex {
     /**
      * Set the y property: Y coordinate of the tile on zoom grid. Value must be in the range [0,
      * 2&lt;sup&gt;`zoom`&lt;/sup&gt; -1].
-     *
-     * <p>Please see [Zoom Levels and Tile
+     * 
+     * Please see [Zoom Levels and Tile
      * Grid](https://docs.microsoft.com/azure/location-based-services/zoom-levels-and-tile-grid) for details.
-     *
+     * 
      * @param y the y value to set.
      * @return the TileIndex object itself.
      */
+    @Generated
     public TileIndex setY(int y) {
         this.y = y;
         return this;

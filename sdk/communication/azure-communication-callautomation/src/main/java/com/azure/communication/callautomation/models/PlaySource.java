@@ -4,24 +4,20 @@
 package com.azure.communication.callautomation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonSerializable;
 
 /** The PlaySource model. */
 @Fluent
-public abstract class PlaySource {
+public abstract class PlaySource implements JsonSerializable<PlaySource> {
     /*
      * Defines the identifier to be used for caching related media
      */
-    @JsonProperty(value = "playSourceId")
-    private String playSourceId;
+    private String playSourceCacheId;
 
     /**
-     * Get the playSourceId property: Defines the identifier to be used for caching related media.
-     *
-     * @return the playSourceId value.
+     * Creates an instance of {@link PlaySource}.
      */
-    public String getPlaySourceId() {
-        return this.playSourceId;
+    public PlaySource() {
     }
 
     /**
@@ -30,18 +26,7 @@ public abstract class PlaySource {
      * @return the playSourceCacheId value.
      */
     public String getPlaySourceCacheId() {
-        return this.playSourceId;
-    }
-
-    /**
-     * Set the playSourceId property: Defines the identifier to be used for caching related media.
-     *
-     * @param playSourceId the playSourceId value to set.
-     * @return the PlaySourceInternal object itself.
-     */
-    public PlaySource setPlaySourceId(String playSourceId) {
-        this.playSourceId = playSourceId;
-        return this;
+        return this.playSourceCacheId;
     }
 
     /**
@@ -51,6 +36,7 @@ public abstract class PlaySource {
      * @return the PlaySourceInternal object itself.
      */
     public PlaySource setPlaySourceCacheId(String playSourceCacheId) {
-        return setPlaySourceId(playSourceCacheId);
+        this.playSourceCacheId = playSourceCacheId;
+        return this;
     }
 }

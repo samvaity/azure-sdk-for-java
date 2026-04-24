@@ -1,6 +1,6 @@
 # Release History
 
-## 1.0.0-beta.8 (Unreleased)
+## 1.3.0-beta.1 (Unreleased)
 
 ### Features Added
 
@@ -9,6 +9,223 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 1.2.0 (2025-01-24)
+
+- Azure Resource Manager Kusto client library for Java. This package contains Microsoft Azure SDK for Kusto Management SDK. The Azure Kusto management API provides a RESTful set of web services that interact with Azure Kusto services to manage your clusters and databases. The API enables you to create, update, and delete clusters and databases. Package tag package-2024-04. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Features Added
+
+* `models.FollowerDatabaseDefinitionGet` was added
+
+* `models.FollowerDatabaseListResultGet` was added
+
+* `models.ScriptLevel` was added
+
+* `models.ZoneStatus` was added
+
+* `models.CalloutType` was added
+
+* `models.CalloutPolicyToRemove` was added
+
+* `models.PrincipalPermissionsAction` was added
+
+* `models.CalloutPoliciesList` was added
+
+* `models.OutboundAccess` was added
+
+* `models.CalloutPolicy` was added
+
+#### `models.Clusters` was modified
+
+* `listCalloutPolicies(java.lang.String,java.lang.String)` was added
+* `listFollowerDatabasesGet(java.lang.String,java.lang.String)` was added
+* `addCalloutPolicies(java.lang.String,java.lang.String,models.CalloutPoliciesList,com.azure.core.util.Context)` was added
+* `addCalloutPolicies(java.lang.String,java.lang.String,models.CalloutPoliciesList)` was added
+* `listFollowerDatabasesGet(java.lang.String,java.lang.String,com.azure.core.util.Context)` was added
+* `removeCalloutPolicy(java.lang.String,java.lang.String,models.CalloutPolicyToRemove)` was added
+* `removeCalloutPolicy(java.lang.String,java.lang.String,models.CalloutPolicyToRemove,com.azure.core.util.Context)` was added
+* `listCalloutPolicies(java.lang.String,java.lang.String,com.azure.core.util.Context)` was added
+
+#### `models.Script$Definition` was modified
+
+* `withScriptLevel(models.ScriptLevel)` was added
+* `withPrincipalPermissionsAction(models.PrincipalPermissionsAction)` was added
+
+#### `models.SandboxCustomImage$Definition` was modified
+
+* `withBaseImageName(java.lang.String)` was added
+
+#### `models.Cluster` was modified
+
+* `calloutPolicies()` was added
+* `listCalloutPolicies()` was added
+* `zoneStatus()` was added
+* `removeCalloutPolicy(models.CalloutPolicyToRemove)` was added
+* `addCalloutPolicies(models.CalloutPoliciesList,com.azure.core.util.Context)` was added
+* `removeCalloutPolicy(models.CalloutPolicyToRemove,com.azure.core.util.Context)` was added
+* `addCalloutPolicies(models.CalloutPoliciesList)` was added
+* `listCalloutPolicies(com.azure.core.util.Context)` was added
+
+#### `models.SandboxCustomImage` was modified
+
+* `baseImageName()` was added
+
+#### `models.Cluster$Definition` was modified
+
+* `withCalloutPolicies(java.util.List)` was added
+
+#### `models.Script` was modified
+
+* `scriptLevel()` was added
+* `principalPermissionsAction()` was added
+
+#### `models.ClusterUpdate` was modified
+
+* `withCalloutPolicies(java.util.List)` was added
+* `zoneStatus()` was added
+* `calloutPolicies()` was added
+
+#### `models.SandboxCustomImage$Update` was modified
+
+* `withBaseImageName(java.lang.String)` was added
+
+#### `models.Cluster$Update` was modified
+
+* `withCalloutPolicies(java.util.List)` was added
+
+#### `models.Script$Update` was modified
+
+* `withScriptLevel(models.ScriptLevel)` was added
+* `withPrincipalPermissionsAction(models.PrincipalPermissionsAction)` was added
+
+## 1.1.0 (2024-12-11)
+
+- Azure Resource Manager Kusto client library for Java. This package contains Microsoft Azure SDK for Kusto Management SDK. The Azure Kusto management API provides a RESTful set of web services that interact with Azure Kusto services to manage your clusters and databases. The API enables you to create, update, and delete clusters and databases. Package tag package-2023-08. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Breaking Changes
+
+#### Serialization/Deserialization change
+
+- `Jackson` is removed from dependency and no longer supported.
+
+##### Migration Guide
+
+If you are using `Jackson`/`ObjectMapper` for manual serialization/deserialization, configure your `ObjectMapper` for backward compatibility:
+```java
+objectMapper.registerModule(com.azure.core.serializer.json.jackson.JacksonJsonProvider.getJsonSerializableDatabindModule());
+```
+
+### Features Added
+
+#### `models.DataConnection` was modified
+
+* `kind()` was added
+
+#### `models.IotHubDataConnection` was modified
+
+* `id()` was added
+* `type()` was added
+* `kind()` was added
+* `name()` was added
+
+#### `models.EventHubDataConnection` was modified
+
+* `name()` was added
+* `id()` was added
+* `kind()` was added
+* `type()` was added
+
+#### `models.EventGridDataConnection` was modified
+
+* `type()` was added
+* `name()` was added
+* `kind()` was added
+* `id()` was added
+
+#### `models.ReadOnlyFollowingDatabase` was modified
+
+* `type()` was added
+* `kind()` was added
+* `id()` was added
+* `name()` was added
+
+#### `models.ClusterUpdate` was modified
+
+* `name()` was added
+* `type()` was added
+* `id()` was added
+
+#### `models.ReadWriteDatabase` was modified
+
+* `kind()` was added
+* `id()` was added
+* `type()` was added
+* `name()` was added
+
+#### `models.CosmosDbDataConnection` was modified
+
+* `id()` was added
+* `name()` was added
+* `type()` was added
+* `kind()` was added
+
+#### `models.Database` was modified
+
+* `kind()` was added
+
+## 1.0.0 (2023-10-20)
+
+- Azure Resource Manager Kusto client library for Java. This package contains Microsoft Azure SDK for Kusto Management SDK. The Azure Kusto management API provides a RESTful set of web services that interact with Azure Kusto services to manage your clusters and databases. The API enables you to create, update, and delete clusters and databases. Package tag package-2023-08. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Features Added
+
+* `models.SandboxCustomImages` was added
+
+* `models.SandboxCustomImagesListResult` was added
+
+* `models.SandboxCustomImage$DefinitionStages` was added
+
+* `models.SandboxCustomImage$UpdateStages` was added
+
+* `models.SandboxCustomImage$Definition` was added
+
+* `models.SandboxCustomImage` was added
+
+* `models.Language` was added
+
+* `models.SandboxCustomImagesCheckNameRequest` was added
+
+* `models.SandboxCustomImage$Update` was added
+
+* `models.VnetState` was added
+
+#### `models.VirtualNetworkConfiguration` was modified
+
+* `state()` was added
+* `withState(models.VnetState)` was added
+
+#### `KustoManager` was modified
+
+* `sandboxCustomImages()` was added
+
+#### `models.LanguageExtension` was modified
+
+* `languageExtensionCustomImageName()` was added
+
+#### `models.EndpointDetail` was modified
+
+* `withIpAddress(java.lang.String)` was added
+* `ipAddress()` was added
+
+#### `models.ClusterUpdate` was modified
+
+* `withZones(java.util.List)` was added
+* `zones()` was added
+
+#### `models.Cluster$Update` was modified
+
+* `withZones(java.util.List)` was added
 
 ## 1.0.0-beta.7 (2023-07-19)
 

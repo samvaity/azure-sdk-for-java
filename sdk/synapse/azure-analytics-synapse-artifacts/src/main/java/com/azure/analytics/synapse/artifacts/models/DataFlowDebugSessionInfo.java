@@ -5,93 +5,104 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.HashMap;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** Data flow debug session info. */
+/**
+ * Data flow debug session info.
+ */
 @Fluent
-public final class DataFlowDebugSessionInfo {
+public final class DataFlowDebugSessionInfo implements JsonSerializable<DataFlowDebugSessionInfo> {
     /*
      * The name of the data flow.
      */
-    @JsonProperty(value = "dataFlowName")
+    @Generated
     private String dataFlowName;
 
     /*
      * Compute type of the cluster.
      */
-    @JsonProperty(value = "computeType")
+    @Generated
     private String computeType;
 
     /*
      * Core count of the cluster.
      */
-    @JsonProperty(value = "coreCount")
+    @Generated
     private Integer coreCount;
 
     /*
      * Node count of the cluster. (deprecated property)
      */
-    @JsonProperty(value = "nodeCount")
+    @Generated
     private Integer nodeCount;
 
     /*
      * Attached integration runtime name of data flow debug session.
      */
-    @JsonProperty(value = "integrationRuntimeName")
+    @Generated
     private String integrationRuntimeName;
 
     /*
      * The ID of data flow debug session.
      */
-    @JsonProperty(value = "sessionId")
+    @Generated
     private String sessionId;
 
     /*
      * Start time of data flow debug session.
      */
-    @JsonProperty(value = "startTime")
+    @Generated
     private String startTime;
 
     /*
      * Compute type of the cluster.
      */
-    @JsonProperty(value = "timeToLiveInMinutes")
+    @Generated
     private Integer timeToLiveInMinutes;
 
     /*
      * Last activity time of data flow debug session.
      */
-    @JsonProperty(value = "lastActivityTime")
+    @Generated
     private String lastActivityTime;
 
     /*
      * Data flow debug session info.
      */
-    @JsonIgnore private Map<String, Object> additionalProperties;
+    @Generated
+    private Map<String, Object> additionalProperties;
 
-    /** Creates an instance of DataFlowDebugSessionInfo class. */
-    public DataFlowDebugSessionInfo() {}
+    /**
+     * Creates an instance of DataFlowDebugSessionInfo class.
+     */
+    @Generated
+    public DataFlowDebugSessionInfo() {
+    }
 
     /**
      * Get the dataFlowName property: The name of the data flow.
-     *
+     * 
      * @return the dataFlowName value.
      */
+    @Generated
     public String getDataFlowName() {
         return this.dataFlowName;
     }
 
     /**
      * Set the dataFlowName property: The name of the data flow.
-     *
+     * 
      * @param dataFlowName the dataFlowName value to set.
      * @return the DataFlowDebugSessionInfo object itself.
      */
+    @Generated
     public DataFlowDebugSessionInfo setDataFlowName(String dataFlowName) {
         this.dataFlowName = dataFlowName;
         return this;
@@ -99,19 +110,21 @@ public final class DataFlowDebugSessionInfo {
 
     /**
      * Get the computeType property: Compute type of the cluster.
-     *
+     * 
      * @return the computeType value.
      */
+    @Generated
     public String getComputeType() {
         return this.computeType;
     }
 
     /**
      * Set the computeType property: Compute type of the cluster.
-     *
+     * 
      * @param computeType the computeType value to set.
      * @return the DataFlowDebugSessionInfo object itself.
      */
+    @Generated
     public DataFlowDebugSessionInfo setComputeType(String computeType) {
         this.computeType = computeType;
         return this;
@@ -119,19 +132,21 @@ public final class DataFlowDebugSessionInfo {
 
     /**
      * Get the coreCount property: Core count of the cluster.
-     *
+     * 
      * @return the coreCount value.
      */
+    @Generated
     public Integer getCoreCount() {
         return this.coreCount;
     }
 
     /**
      * Set the coreCount property: Core count of the cluster.
-     *
+     * 
      * @param coreCount the coreCount value to set.
      * @return the DataFlowDebugSessionInfo object itself.
      */
+    @Generated
     public DataFlowDebugSessionInfo setCoreCount(Integer coreCount) {
         this.coreCount = coreCount;
         return this;
@@ -139,19 +154,21 @@ public final class DataFlowDebugSessionInfo {
 
     /**
      * Get the nodeCount property: Node count of the cluster. (deprecated property).
-     *
+     * 
      * @return the nodeCount value.
      */
+    @Generated
     public Integer getNodeCount() {
         return this.nodeCount;
     }
 
     /**
      * Set the nodeCount property: Node count of the cluster. (deprecated property).
-     *
+     * 
      * @param nodeCount the nodeCount value to set.
      * @return the DataFlowDebugSessionInfo object itself.
      */
+    @Generated
     public DataFlowDebugSessionInfo setNodeCount(Integer nodeCount) {
         this.nodeCount = nodeCount;
         return this;
@@ -159,19 +176,21 @@ public final class DataFlowDebugSessionInfo {
 
     /**
      * Get the integrationRuntimeName property: Attached integration runtime name of data flow debug session.
-     *
+     * 
      * @return the integrationRuntimeName value.
      */
+    @Generated
     public String getIntegrationRuntimeName() {
         return this.integrationRuntimeName;
     }
 
     /**
      * Set the integrationRuntimeName property: Attached integration runtime name of data flow debug session.
-     *
+     * 
      * @param integrationRuntimeName the integrationRuntimeName value to set.
      * @return the DataFlowDebugSessionInfo object itself.
      */
+    @Generated
     public DataFlowDebugSessionInfo setIntegrationRuntimeName(String integrationRuntimeName) {
         this.integrationRuntimeName = integrationRuntimeName;
         return this;
@@ -179,19 +198,21 @@ public final class DataFlowDebugSessionInfo {
 
     /**
      * Get the sessionId property: The ID of data flow debug session.
-     *
+     * 
      * @return the sessionId value.
      */
+    @Generated
     public String getSessionId() {
         return this.sessionId;
     }
 
     /**
      * Set the sessionId property: The ID of data flow debug session.
-     *
+     * 
      * @param sessionId the sessionId value to set.
      * @return the DataFlowDebugSessionInfo object itself.
      */
+    @Generated
     public DataFlowDebugSessionInfo setSessionId(String sessionId) {
         this.sessionId = sessionId;
         return this;
@@ -199,19 +220,21 @@ public final class DataFlowDebugSessionInfo {
 
     /**
      * Get the startTime property: Start time of data flow debug session.
-     *
+     * 
      * @return the startTime value.
      */
+    @Generated
     public String getStartTime() {
         return this.startTime;
     }
 
     /**
      * Set the startTime property: Start time of data flow debug session.
-     *
+     * 
      * @param startTime the startTime value to set.
      * @return the DataFlowDebugSessionInfo object itself.
      */
+    @Generated
     public DataFlowDebugSessionInfo setStartTime(String startTime) {
         this.startTime = startTime;
         return this;
@@ -219,19 +242,21 @@ public final class DataFlowDebugSessionInfo {
 
     /**
      * Get the timeToLiveInMinutes property: Compute type of the cluster.
-     *
+     * 
      * @return the timeToLiveInMinutes value.
      */
+    @Generated
     public Integer getTimeToLiveInMinutes() {
         return this.timeToLiveInMinutes;
     }
 
     /**
      * Set the timeToLiveInMinutes property: Compute type of the cluster.
-     *
+     * 
      * @param timeToLiveInMinutes the timeToLiveInMinutes value to set.
      * @return the DataFlowDebugSessionInfo object itself.
      */
+    @Generated
     public DataFlowDebugSessionInfo setTimeToLiveInMinutes(Integer timeToLiveInMinutes) {
         this.timeToLiveInMinutes = timeToLiveInMinutes;
         return this;
@@ -239,19 +264,21 @@ public final class DataFlowDebugSessionInfo {
 
     /**
      * Get the lastActivityTime property: Last activity time of data flow debug session.
-     *
+     * 
      * @return the lastActivityTime value.
      */
+    @Generated
     public String getLastActivityTime() {
         return this.lastActivityTime;
     }
 
     /**
      * Set the lastActivityTime property: Last activity time of data flow debug session.
-     *
+     * 
      * @param lastActivityTime the lastActivityTime value to set.
      * @return the DataFlowDebugSessionInfo object itself.
      */
+    @Generated
     public DataFlowDebugSessionInfo setLastActivityTime(String lastActivityTime) {
         this.lastActivityTime = lastActivityTime;
         return this;
@@ -259,30 +286,96 @@ public final class DataFlowDebugSessionInfo {
 
     /**
      * Get the additionalProperties property: Data flow debug session info.
-     *
+     * 
      * @return the additionalProperties value.
      */
-    @JsonAnyGetter
+    @Generated
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     /**
      * Set the additionalProperties property: Data flow debug session info.
-     *
+     * 
      * @param additionalProperties the additionalProperties value to set.
      * @return the DataFlowDebugSessionInfo object itself.
      */
+    @Generated
     public DataFlowDebugSessionInfo setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
         return this;
     }
 
-    @JsonAnySetter
-    void setAdditionalProperties(String key, Object value) {
-        if (additionalProperties == null) {
-            additionalProperties = new HashMap<>();
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("dataFlowName", this.dataFlowName);
+        jsonWriter.writeStringField("computeType", this.computeType);
+        jsonWriter.writeNumberField("coreCount", this.coreCount);
+        jsonWriter.writeNumberField("nodeCount", this.nodeCount);
+        jsonWriter.writeStringField("integrationRuntimeName", this.integrationRuntimeName);
+        jsonWriter.writeStringField("sessionId", this.sessionId);
+        jsonWriter.writeStringField("startTime", this.startTime);
+        jsonWriter.writeNumberField("timeToLiveInMinutes", this.timeToLiveInMinutes);
+        jsonWriter.writeStringField("lastActivityTime", this.lastActivityTime);
+        if (additionalProperties != null) {
+            for (Map.Entry<String, Object> additionalProperty : additionalProperties.entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
         }
-        additionalProperties.put(key, value);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DataFlowDebugSessionInfo from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DataFlowDebugSessionInfo if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the DataFlowDebugSessionInfo.
+     */
+    @Generated
+    public static DataFlowDebugSessionInfo fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DataFlowDebugSessionInfo deserializedDataFlowDebugSessionInfo = new DataFlowDebugSessionInfo();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("dataFlowName".equals(fieldName)) {
+                    deserializedDataFlowDebugSessionInfo.dataFlowName = reader.getString();
+                } else if ("computeType".equals(fieldName)) {
+                    deserializedDataFlowDebugSessionInfo.computeType = reader.getString();
+                } else if ("coreCount".equals(fieldName)) {
+                    deserializedDataFlowDebugSessionInfo.coreCount = reader.getNullable(JsonReader::getInt);
+                } else if ("nodeCount".equals(fieldName)) {
+                    deserializedDataFlowDebugSessionInfo.nodeCount = reader.getNullable(JsonReader::getInt);
+                } else if ("integrationRuntimeName".equals(fieldName)) {
+                    deserializedDataFlowDebugSessionInfo.integrationRuntimeName = reader.getString();
+                } else if ("sessionId".equals(fieldName)) {
+                    deserializedDataFlowDebugSessionInfo.sessionId = reader.getString();
+                } else if ("startTime".equals(fieldName)) {
+                    deserializedDataFlowDebugSessionInfo.startTime = reader.getString();
+                } else if ("timeToLiveInMinutes".equals(fieldName)) {
+                    deserializedDataFlowDebugSessionInfo.timeToLiveInMinutes = reader.getNullable(JsonReader::getInt);
+                } else if ("lastActivityTime".equals(fieldName)) {
+                    deserializedDataFlowDebugSessionInfo.lastActivityTime = reader.getString();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedDataFlowDebugSessionInfo.additionalProperties = additionalProperties;
+
+            return deserializedDataFlowDebugSessionInfo;
+        });
     }
 }

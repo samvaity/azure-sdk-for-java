@@ -5,8 +5,8 @@ package com.azure.spring.messaging.eventhubs.implementation.core.config;
 
 import com.azure.spring.messaging.eventhubs.implementation.core.listener.adapter.BatchMessagingMessageListenerAdapter;
 import com.azure.spring.messaging.eventhubs.implementation.core.listener.adapter.RecordMessagingMessageListenerAdapter;
-import com.azure.spring.messaging.eventhubs.support.converter.EventHubsBatchMessageConverter;
-import com.azure.spring.messaging.eventhubs.support.converter.EventHubsMessageConverter;
+import com.azure.spring.messaging.eventhubs.implementation.support.converter.EventHubsBatchMessageConverter;
+import com.azure.spring.messaging.eventhubs.implementation.support.converter.EventHubsMessageConverter;
 import com.azure.spring.messaging.implementation.config.AzureListenerEndpoint;
 import com.azure.spring.messaging.implementation.config.MethodAzureListenerEndpoint;
 import com.azure.spring.messaging.converter.AzureMessageConverter;
@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
  * an incoming message for this endpoint.
  *
  */
+@SuppressWarnings("deprecation")
 public class MethodEventHubsListenerEndpoint extends AbstractEventHubsListenerEndpoint
     implements MethodAzureListenerEndpoint {
 

@@ -28,6 +28,12 @@ public final class DataFeedIngestionStatus {
     private String message;
 
     /**
+     * Construct DataFeedIngestionStatus object.
+     */
+    public DataFeedIngestionStatus() {
+    }
+
+    /**
      * Get the timestamp property: data slice timestamp.
      *
      * @return the timestamp value.
@@ -55,23 +61,23 @@ public final class DataFeedIngestionStatus {
     }
 
     static {
-        DataFeedIngestionStatusHelper
-            .setAccessor(new DataFeedIngestionStatusHelper.DataFeedIngestionStatusAccessor() {
-                @Override
-                public void setTimestamp(DataFeedIngestionStatus ingestionStatus, OffsetDateTime offsetDateTime) {
-                    ingestionStatus.setTimestamp(offsetDateTime);
-                }
+        DataFeedIngestionStatusHelper.setAccessor(new DataFeedIngestionStatusHelper.DataFeedIngestionStatusAccessor() {
+            @Override
+            public void setTimestamp(DataFeedIngestionStatus ingestionStatus, OffsetDateTime offsetDateTime) {
+                ingestionStatus.setTimestamp(offsetDateTime);
+            }
 
-                @Override
-                public void setIngestionStatusType(DataFeedIngestionStatus ingestionStatus, IngestionStatusType statusType) {
-                    ingestionStatus.setStatus(statusType);
-                }
+            @Override
+            public void setIngestionStatusType(DataFeedIngestionStatus ingestionStatus,
+                IngestionStatusType statusType) {
+                ingestionStatus.setStatus(statusType);
+            }
 
-                @Override
-                public void setMessage(DataFeedIngestionStatus ingestionStatus, String message) {
-                    ingestionStatus.setMessage(message);
-                }
-            });
+            @Override
+            public void setMessage(DataFeedIngestionStatus ingestionStatus, String message) {
+                ingestionStatus.setMessage(message);
+            }
+        });
     }
 
     void setTimestamp(OffsetDateTime timestamp) {
@@ -81,6 +87,7 @@ public final class DataFeedIngestionStatus {
     void setStatus(IngestionStatusType ingestionStatusType) {
         this.status = ingestionStatusType;
     }
+
     void setMessage(String message) {
         this.message = message;
     }

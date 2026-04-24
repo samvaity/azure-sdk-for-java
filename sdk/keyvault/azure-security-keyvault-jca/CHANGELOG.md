@@ -1,6 +1,6 @@
 # Release History
 
-## 2.8.0-beta.1 (Unreleased)
+## 2.12.0-beta.1 (Unreleased)
 
 ### Features Added
 
@@ -9,6 +9,88 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 2.11.0 (2026-02-28)
+
+### Features Added
+- Added support for Azure Workload Identity authentication for Azure Kubernetes Service (AKS) workloads.
+  - Automatically detects and uses federated token authentication when `AZURE_FEDERATED_TOKEN_FILE`, `AZURE_CLIENT_ID`, and `AZURE_TENANT_ID` are set (via environment variables or system properties `azure.keyvault.client-id` and `azure.keyvault.tenant-id`).
+  - Provides credential-free authentication for AKS pods configured with Workload Identity-enabled service accounts.
+- Added support for bearer token authentication via the `azure.keyvault.access-token` system property. This allows users to provide a pre-obtained access token for authentication, enabling multi-factor authentication scenarios without requiring client ID and client secret. Authentication priority order is: Managed Identity > Access Token > Client Credentials.
+
+### Bugs Fixed
+- Fixed the NPE where the token object was not returned when the credential information was incorrect.
+- Fixed an issue where release-specific classes from BouncyCastle were not properly shaded for Java 9 and above, leading to potential class loading issues in multi-release JARs. ([#47127](https://github.com/Azure/azure-sdk-for-java/pull/47127))
+
+## 2.10.1 (2025-05-12)
+
+### Bugs Fixed
+- Fixed bug: Missing logging for abnormal http status codes when processing HTTP responses. [#42859](https://github.com/Azure/azure-sdk-for-java/issues/42859).
+
+### Other Changes
+
+#### Dependency Updates
+
+- Replaced `org.apache.httpcomponents:httpclient:4.5.14` with `org.apache.httpcomponents.client5:httpclient5:5.4.3`.
+- Updated `com.azure:azure-json:1.3.0` to `com.azure:azure-json:1.5.0`.
+
+## 2.10.0 (2024-11-26)
+
+### Bugs Fixed
+- Fixed bug: Intermediate certificate not loaded. [#39715](https://github.com/Azure/azure-sdk-for-java/issues/39715).
+- Fixed bug: Failed to get cert name when key vault name include "certificates". [#42162](https://github.com/Azure/azure-sdk-for-java/issues/42162).
+- Fixed bug: `JsonParseException` and `ServiceConfigurationError` exceptions when acquiring access token. [#42860](https://github.com/Azure/azure-sdk-for-java/pull/42860).
+
+## 2.9.0 (2024-10-15)
+
+### Features Added
+- Added the new system property `azure.keyvault.disable-challenge-resource-verification`, which can be set to `true` to disable challenge resource verification when authenticating against the Azure Key Vault service. For more information, please refer to [this link](https://devblogs.microsoft.com/azure-sdk/guidance-for-applications-using-the-key-vault-libraries/). ([#40560](https://github.com/Azure/azure-sdk-for-java/pull/40560))
+- Added support for obtaining a Managed Identity access token on a Container App, which is achieved by setting the system properties `IDENTITY_ENDPOINT` and `IDENTITY_HEADER`. For more information, [see here](https://learn.microsoft.com/azure/container-apps/managed-identity?tabs=portal%2Chttp#rest-endpoint-reference). ([#42024](https://github.com/Azure/azure-sdk-for-java/pull/42024)).
+
+### Bugs Fixed
+- Fix bug: `AccessTokenUtil` does not URL-encode its parameters when getting an access token. ([#40616](https://github.com/Azure/azure-sdk-for-java/issues/40616))
+- Changed the authentication mechanism to allow for discovering the login URI for a given Azure Key Vault instance by requesting an authentication challenge from the service, as opposed to using a hard-coded list of URIs to choose from depending on a vault's URI. This should add support for customers using Azure Stack instances, for example.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `conscrypt-openjdk-uber` from `2.2.1` to version `2.5.2`.
+- Upgraded `jackson-databind` from `2.13.5` to version `2.17.2`.
+
+## 2.9.0-beta.2 (2024-07-09)
+
+### Features Added
+- Added the new system property `azure.keyvault.disable-challenge-resource-verification`, which can be set to `true` to disable challenge resource verification when authenticating against the Azure Key Vault service. For more information, please refer to [this link](https://devblogs.microsoft.com/azure-sdk/guidance-for-applications-using-the-key-vault-libraries/).
+
+### Breaking Changes
+- Removed support for providing a custom login URI to get access tokens from via the system property `azure.login.uri`.
+
+### Bugs Fixed
+- Fix bug: AccessTokenUtil does not urlencode its parameters when getting an access token. ([#40616](https://github.com/Azure/azure-sdk-for-java/issues/40616))
+- Changed the authentication mechanism to allow for discovering the login URI for a given Azure Key Vault instance by requesting an authentication challenge from the service, as opposed to using a hard-coded list of URIs to choose from depending on a vault's URI. This should add support for customers using Azure Stack instances, for example.
+
+## 2.9.0-beta.1 (2024-05-15)
+
+### Features Added
+- Added support for providing a custom login URI to get access tokens from via the system property `azure.login.uri`.
+
+### Other Changes
+
+#### Dependency Updates
+- Upgraded `conscrypt-openjdk-uber` from `2.2.1` to version `2.5.2`.
+
+## 2.8.1 (2023-12-04)
+
+### Other Changes
+
+#### Dependency Updates
+Regular updates for dependency versions.
+
+## 2.8.0 (2023-09-28)
+
+### Features Added
+- Support key type of `RSA-HSM` and `EC-HSM` in JCA [#36648](https://github.com/Azure/azure-sdk-for-java/pull/36648).
 
 ## 2.7.1 (2023-03-01)
 

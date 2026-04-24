@@ -4,37 +4,60 @@
 
 package com.azure.maps.route.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for RouteRepresentationForBestOrder. */
+/**
+ * Defines values for RouteRepresentationForBestOrder.
+ */
 public final class RouteRepresentationForBestOrder extends ExpandableStringEnum<RouteRepresentationForBestOrder> {
-    /** Static value polyline for RouteRepresentationForBestOrder. */
+    /**
+     * Includes route geometry in the response.
+     */
+    @Generated
     public static final RouteRepresentationForBestOrder POLYLINE = fromString("polyline");
 
-    /** Static value summaryOnly for RouteRepresentationForBestOrder. */
+    /**
+     * Summary as per polyline but excluding the point geometry elements for the routes in the response.
+     */
+    @Generated
     public static final RouteRepresentationForBestOrder SUMMARY_ONLY = fromString("summaryOnly");
 
-    /** Static value none for RouteRepresentationForBestOrder. */
+    /**
+     * Includes only the optimized waypoint indices but does not include the route geometry in the response. This
+     * parameter value can only be used in conjunction with computeBestOrder=true.
+     */
+    @Generated
     public static final RouteRepresentationForBestOrder NONE = fromString("none");
 
     /**
+     * Creates a new instance of RouteRepresentationForBestOrder value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public RouteRepresentationForBestOrder() {
+    }
+
+    /**
      * Creates or finds a RouteRepresentationForBestOrder from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding RouteRepresentationForBestOrder.
      */
-    @JsonCreator
+    @Generated
     public static RouteRepresentationForBestOrder fromString(String name) {
         return fromString(name, RouteRepresentationForBestOrder.class);
     }
 
     /**
      * Gets known RouteRepresentationForBestOrder values.
-     *
+     * 
      * @return known RouteRepresentationForBestOrder values.
      */
+    @Generated
     public static Collection<RouteRepresentationForBestOrder> values() {
         return values(RouteRepresentationForBestOrder.class);
     }

@@ -4,40 +4,69 @@
 
 package com.azure.maps.traffic.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for TrafficFlowTileStyle. */
+/**
+ * Defines values for TrafficFlowTileStyle.
+ */
 public final class TrafficFlowTileStyle extends ExpandableStringEnum<TrafficFlowTileStyle> {
-    /** Static value absolute for TrafficFlowTileStyle. */
+    /**
+     * Colors will reflect the absolute speed measured. Absolute speed is the capability to access the full speed.
+     */
+    @Generated
     public static final TrafficFlowTileStyle ABSOLUTE = fromString("absolute");
 
-    /** Static value relative for TrafficFlowTileStyle. */
+    /**
+     * This is the speed relative to free-flow, highlighting areas of congestion visualizing the traffic flow. Free-flow
+     * refers to conditions where there is no congestion and traffic can follow the speed limits. The most used option
+     * to visualize traffic flow on a map.
+     */
+    @Generated
     public static final TrafficFlowTileStyle RELATIVE = fromString("relative");
 
-    /** Static value relative-delay for TrafficFlowTileStyle. */
+    /**
+     * Displays relative colors only where they are different from the free-flow speeds. This option will only
+     * highlights areas of congestion.
+     */
+    @Generated
     public static final TrafficFlowTileStyle RELATIVE_DELAY = fromString("relative-delay");
 
-    /** Static value reduced-sensitivity for TrafficFlowTileStyle. */
+    /**
+     * Displays relative colors but a larger difference from freeflow is required for segments to change the color. This
+     * mode only valid when format is png.
+     */
+    @Generated
     public static final TrafficFlowTileStyle REDUCED_SENSITIVITY = fromString("reduced-sensitivity");
 
     /**
+     * Creates a new instance of TrafficFlowTileStyle value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public TrafficFlowTileStyle() {
+    }
+
+    /**
      * Creates or finds a TrafficFlowTileStyle from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding TrafficFlowTileStyle.
      */
-    @JsonCreator
+    @Generated
     public static TrafficFlowTileStyle fromString(String name) {
         return fromString(name, TrafficFlowTileStyle.class);
     }
 
     /**
      * Gets known TrafficFlowTileStyle values.
-     *
+     * 
      * @return known TrafficFlowTileStyle values.
      */
+    @Generated
     public static Collection<TrafficFlowTileStyle> values() {
         return values(TrafficFlowTileStyle.class);
     }

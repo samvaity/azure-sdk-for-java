@@ -5,7 +5,12 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
 /**
  * The Amazon S3 settings needed for the interim Amazon S3 when copying from Amazon Redshift with unload. With this,
@@ -13,12 +18,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * interim S3.
  */
 @Fluent
-public final class RedshiftUnloadSettings {
+public final class RedshiftUnloadSettings implements JsonSerializable<RedshiftUnloadSettings> {
     /*
-     * The name of the Amazon S3 linked service which will be used for the unload operation when copying from the
-     * Amazon Redshift source.
+     * The name of the Amazon S3 linked service which will be used for the unload operation when copying from the Amazon
+     * Redshift source.
      */
-    @JsonProperty(value = "s3LinkedServiceName", required = true)
+    @Generated
     private LinkedServiceReference s3LinkedServiceName;
 
     /*
@@ -26,18 +31,23 @@ public final class RedshiftUnloadSettings {
      * The bucket must be in the same region as the Amazon Redshift source. Type: string (or Expression with resultType
      * string).
      */
-    @JsonProperty(value = "bucketName", required = true)
+    @Generated
     private Object bucketName;
 
-    /** Creates an instance of RedshiftUnloadSettings class. */
-    public RedshiftUnloadSettings() {}
+    /**
+     * Creates an instance of RedshiftUnloadSettings class.
+     */
+    @Generated
+    public RedshiftUnloadSettings() {
+    }
 
     /**
      * Get the s3LinkedServiceName property: The name of the Amazon S3 linked service which will be used for the unload
      * operation when copying from the Amazon Redshift source.
-     *
+     * 
      * @return the s3LinkedServiceName value.
      */
+    @Generated
     public LinkedServiceReference getS3LinkedServiceName() {
         return this.s3LinkedServiceName;
     }
@@ -45,10 +55,11 @@ public final class RedshiftUnloadSettings {
     /**
      * Set the s3LinkedServiceName property: The name of the Amazon S3 linked service which will be used for the unload
      * operation when copying from the Amazon Redshift source.
-     *
+     * 
      * @param s3LinkedServiceName the s3LinkedServiceName value to set.
      * @return the RedshiftUnloadSettings object itself.
      */
+    @Generated
     public RedshiftUnloadSettings setS3LinkedServiceName(LinkedServiceReference s3LinkedServiceName) {
         this.s3LinkedServiceName = s3LinkedServiceName;
         return this;
@@ -58,9 +69,10 @@ public final class RedshiftUnloadSettings {
      * Get the bucketName property: The bucket of the interim Amazon S3 which will be used to store the unloaded data
      * from Amazon Redshift source. The bucket must be in the same region as the Amazon Redshift source. Type: string
      * (or Expression with resultType string).
-     *
+     * 
      * @return the bucketName value.
      */
+    @Generated
     public Object getBucketName() {
         return this.bucketName;
     }
@@ -69,12 +81,55 @@ public final class RedshiftUnloadSettings {
      * Set the bucketName property: The bucket of the interim Amazon S3 which will be used to store the unloaded data
      * from Amazon Redshift source. The bucket must be in the same region as the Amazon Redshift source. Type: string
      * (or Expression with resultType string).
-     *
+     * 
      * @param bucketName the bucketName value to set.
      * @return the RedshiftUnloadSettings object itself.
      */
+    @Generated
     public RedshiftUnloadSettings setBucketName(Object bucketName) {
         this.bucketName = bucketName;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("s3LinkedServiceName", this.s3LinkedServiceName);
+        jsonWriter.writeUntypedField("bucketName", this.bucketName);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RedshiftUnloadSettings from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RedshiftUnloadSettings if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the RedshiftUnloadSettings.
+     */
+    @Generated
+    public static RedshiftUnloadSettings fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RedshiftUnloadSettings deserializedRedshiftUnloadSettings = new RedshiftUnloadSettings();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("s3LinkedServiceName".equals(fieldName)) {
+                    deserializedRedshiftUnloadSettings.s3LinkedServiceName = LinkedServiceReference.fromJson(reader);
+                } else if ("bucketName".equals(fieldName)) {
+                    deserializedRedshiftUnloadSettings.bucketName = reader.readUntyped();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRedshiftUnloadSettings;
+        });
     }
 }

@@ -4,45 +4,65 @@
 
 package com.azure.communication.rooms.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The role of a room participant. The default value is Attendee. */
+/**
+ * The role of a room participant. The default value is Attendee.
+ */
 public final class ParticipantRole extends ExpandableStringEnum<ParticipantRole> {
-    /** Static value Presenter for ParticipantRole. */
+    /**
+     * Static value Presenter for ParticipantRole.
+     */
+    @Generated
     public static final ParticipantRole PRESENTER = fromString("Presenter");
 
-    /** Static value Attendee for ParticipantRole. */
+    /**
+     * Static value Attendee for ParticipantRole.
+     */
+    @Generated
     public static final ParticipantRole ATTENDEE = fromString("Attendee");
 
-    /** Static value Consumer for ParticipantRole. */
+    /**
+     * Static value Consumer for ParticipantRole.
+     */
+    @Generated
     public static final ParticipantRole CONSUMER = fromString("Consumer");
 
     /**
+     * Static value Collaborator for ParticipantRole.
+     */
+    @Generated
+    public static final ParticipantRole COLLABORATOR = fromString("Collaborator");
+
+    /**
      * Creates a new instance of ParticipantRole value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public ParticipantRole() {}
+    public ParticipantRole() {
+    }
 
     /**
      * Creates or finds a ParticipantRole from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ParticipantRole.
      */
-    @JsonCreator
+    @Generated
     public static ParticipantRole fromString(String name) {
         return fromString(name, ParticipantRole.class);
     }
 
     /**
      * Gets known ParticipantRole values.
-     *
+     * 
      * @return known ParticipantRole values.
      */
+    @Generated
     public static Collection<ParticipantRole> values() {
         return values(ParticipantRole.class);
     }

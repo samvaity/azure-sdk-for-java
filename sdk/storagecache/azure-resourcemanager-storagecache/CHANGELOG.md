@@ -1,6 +1,6 @@
 # Release History
 
-## 1.0.0-beta.10 (Unreleased)
+## 1.2.0-beta.1 (Unreleased)
 
 ### Features Added
 
@@ -9,6 +9,197 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 1.1.0 (2025-09-25)
+
+- Azure Resource Manager StorageCache client library for Java. This package contains Microsoft Azure SDK for StorageCache Management SDK. Azure Managed Lustre provides a fully managed Lustre® file system, integrated with Blob storage, for use on demand. These operations create and manage Azure Managed Lustre file systems. Package tag package-2025-07-01. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Features Added
+
+* `models.AutoImportJobUpdatePropertiesAdminStatus` was added
+
+* `models.AutoExportJob$Update` was added
+
+* `models.AutoExportJobUpdate` was added
+
+* `models.AutoImportJobPropertiesProvisioningState` was added
+
+* `models.AutoImportJob$Definition` was added
+
+* `models.AutoImportJobPropertiesAdminStatus` was added
+
+* `models.AutoImportJobState` was added
+
+* `models.AutoExportStatusType` was added
+
+* `models.AutoExportJob$UpdateStages` was added
+
+* `models.ImportJobAdminStatus` was added
+
+* `models.AutoExportJob$Definition` was added
+
+* `models.AutoImportJob$UpdateStages` was added
+
+* `models.AutoExportJob` was added
+
+* `models.AutoImportJob$DefinitionStages` was added
+
+* `models.AutoExportJobAdminStatus` was added
+
+* `models.AutoImportJobs` was added
+
+* `models.AutoImportJobUpdate` was added
+
+* `models.AutoExportJobProvisioningStateType` was added
+
+* `models.AutoExportJob$DefinitionStages` was added
+
+* `models.AutoImportJobPropertiesStatusBlobSyncEvents` was added
+
+* `models.AutoExportJobs` was added
+
+* `models.AutoImportJob$Update` was added
+
+* `models.AutoImportJobsListResult` was added
+
+* `models.AutoExportJobsListResult` was added
+
+* `models.AutoImportJob` was added
+
+#### `models.ImportJob$Update` was modified
+
+* `withAdminStatus(models.ImportJobAdminStatus)` was added
+
+#### `models.ImportJobUpdate` was modified
+
+* `adminStatus()` was added
+* `withAdminStatus(models.ImportJobAdminStatus)` was added
+
+#### `models.ImportJob` was modified
+
+* `importedDirectories()` was added
+* `importedSymlinks()` was added
+* `importedFiles()` was added
+* `preexistingDirectories()` was added
+* `preexistingFiles()` was added
+* `adminStatus()` was added
+* `preexistingSymlinks()` was added
+
+#### `models.ImportJob$Definition` was modified
+
+* `withAdminStatus(models.ImportJobAdminStatus)` was added
+
+#### `StorageCacheManager` was modified
+
+* `autoImportJobs()` was added
+* `autoExportJobs()` was added
+
+## 1.0.0 (2024-12-23)
+
+- Azure Resource Manager StorageCache client library for Java. This package contains Microsoft Azure SDK for StorageCache Management SDK. Azure Managed Lustre provides a fully managed Lustre® file system, integrated with Blob storage, for use on demand. These operations create and manage Azure Managed Lustre file systems. Package tag package-2024-03. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Other Changes
+
+- Release Azure Resource Manager StorageCache client library for Java.
+
+## 1.0.0-beta.12 (2024-12-04)
+
+- Azure Resource Manager StorageCache client library for Java. This package contains Microsoft Azure SDK for StorageCache Management SDK. Azure Managed Lustre provides a fully managed Lustre® file system, integrated with Blob storage, for use on demand. These operations create and manage Azure Managed Lustre file systems. Package tag package-2024-03. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Breaking Changes
+
+#### Serialization/Deserialization change
+
+- `Jackson` is removed from dependency and no longer supported.
+
+##### Migration Guide
+
+If you are using `Jackson`/`ObjectMapper` for manual serialization/deserialization, configure your `ObjectMapper` for backward compatibility:
+```java
+objectMapper.registerModule(com.azure.core.serializer.json.jackson.JacksonJsonProvider.getJsonSerializableDatabindModule());
+```
+
+### Features Added
+
+#### `models.StorageTargetResource` was modified
+
+* `type()` was added
+* `name()` was added
+* `id()` was added
+
+## 1.0.0-beta.11 (2024-05-20)
+
+- Azure Resource Manager StorageCache client library for Java. This package contains Microsoft Azure SDK for StorageCache Management SDK. Azure Managed Lustre provides a fully managed Lustre® file system, integrated with Blob storage, for use on demand. These operations create and manage Azure Managed Lustre file systems. Package tag package-2024-03. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Breaking Changes
+
+* `models.ErrorResponse` was removed
+
+#### `models.AscOperation` was modified
+
+* `models.ErrorResponse error()` -> `models.AscOperationErrorResponse error()`
+
+### Features Added
+
+* `models.ConflictResolutionMode` was added
+
+* `models.ImportJobs` was added
+
+* `models.ImportJob$Update` was added
+
+* `models.ImportJobUpdate` was added
+
+* `models.ImportJob$UpdateStages` was added
+
+* `models.ImportJob` was added
+
+* `models.ImportJobProvisioningStateType` was added
+
+* `models.ImportJobsListResult` was added
+
+* `models.ImportJob$Definition` was added
+
+* `models.AscOperationErrorResponse` was added
+
+* `models.ImportJob$DefinitionStages` was added
+
+* `models.ImportStatusType` was added
+
+#### `models.AmlFilesystemHsmSettings` was modified
+
+* `withImportPrefixesInitial(java.util.List)` was added
+* `importPrefixesInitial()` was added
+
+#### `StorageCacheManager` was modified
+
+* `importJobs()` was added
+
+## 1.0.0-beta.10 (2024-02-27)
+
+- Azure Resource Manager StorageCache client library for Java. This package contains Microsoft Azure SDK for StorageCache Management SDK. Azure Managed Lustre provides a fully managed Lustre® file system, integrated with Blob storage, for use on demand. These operations create and manage Azure Managed Lustre file systems. Package tag package-preview-2023-11. For documentation on how to use this package, please see [Azure Management Libraries for Java](https://aka.ms/azsdk/java/mgmt).
+
+### Features Added
+
+* `models.AmlFilesystemSquashMode` was added
+
+* `models.AmlFilesystemRootSquashSettings` was added
+
+#### `models.AmlFilesystem$Definition` was modified
+
+* `withRootSquashSettings(models.AmlFilesystemRootSquashSettings)` was added
+
+#### `models.AmlFilesystemUpdate` was modified
+
+* `rootSquashSettings()` was added
+* `withRootSquashSettings(models.AmlFilesystemRootSquashSettings)` was added
+
+#### `models.AmlFilesystem` was modified
+
+* `rootSquashSettings()` was added
+
+#### `models.AmlFilesystem$Update` was modified
+
+* `withRootSquashSettings(models.AmlFilesystemRootSquashSettings)` was added
 
 ## 1.0.0-beta.9 (2023-06-20)
 

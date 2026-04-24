@@ -16,31 +16,31 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for Clusters Update. */
+/**
+ * Samples for Clusters Update.
+ */
 public final class ClustersUpdateSamples {
     /*
-     * x-ms-original-file: specification/servicefabric/resource-manager/Microsoft.ServiceFabric/stable/2021-06-01/examples/ClusterPatchOperation_example.json
+     * x-ms-original-file:
+     * specification/servicefabric/resource-manager/Microsoft.ServiceFabric/stable/2021-06-01/examples/
+     * ClusterPatchOperation_example.json
      */
     /**
      * Sample code: Patch a cluster.
-     *
+     * 
      * @param manager Entry point to ServiceFabricManager.
      */
     public static void patchACluster(com.azure.resourcemanager.servicefabric.ServiceFabricManager manager) {
-        Cluster resource =
-            manager
-                .clusters()
-                .getByResourceGroupWithResponse("resRg", "myCluster", com.azure.core.util.Context.NONE)
-                .getValue();
-        resource
-            .update()
+        Cluster resource = manager.clusters()
+            .getByResourceGroupWithResponse("resRg", "myCluster", com.azure.core.util.Context.NONE)
+            .getValue();
+        resource.update()
             .withTags(mapOf("a", "b"))
             .withEventStoreServiceEnabled(true)
             .withNodeTypes(
                 Arrays
                     .asList(
-                        new NodeTypeDescription()
-                            .withName("nt1vm")
+                        new NodeTypeDescription().withName("nt1vm")
                             .withClientConnectionEndpointPort(19000)
                             .withHttpGatewayEndpointPort(19007)
                             .withDurabilityLevel(DurabilityLevel.BRONZE)
@@ -49,8 +49,7 @@ public final class ClustersUpdateSamples {
                             .withEphemeralPorts(new EndpointRangeDescription().withStartPort(49000).withEndPort(64000))
                             .withIsPrimary(true)
                             .withVmInstanceCount(5),
-                        new NodeTypeDescription()
-                            .withName("testnt1")
+                        new NodeTypeDescription().withName("testnt1")
                             .withClientConnectionEndpointPort(0)
                             .withHttpGatewayEndpointPort(0)
                             .withDurabilityLevel(DurabilityLevel.BRONZE)
@@ -66,6 +65,7 @@ public final class ClustersUpdateSamples {
             .apply();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

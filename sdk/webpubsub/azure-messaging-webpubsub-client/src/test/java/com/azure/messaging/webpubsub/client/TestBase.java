@@ -3,38 +3,40 @@
 
 package com.azure.messaging.webpubsub.client;
 
+import com.azure.core.test.TestMode;
+import com.azure.core.test.TestProxyTestBase;
 import com.azure.core.util.Configuration;
-import com.azure.messaging.webpubsub.WebPubSubServiceAsyncClient;
+import com.azure.messaging.webpubsub.WebPubSubServiceClient;
 import com.azure.messaging.webpubsub.WebPubSubServiceClientBuilder;
 import com.azure.messaging.webpubsub.client.implementation.WebPubSubClientState;
 import com.azure.messaging.webpubsub.client.models.WebPubSubClientCredential;
 import com.azure.messaging.webpubsub.models.GetClientAccessTokenOptions;
-import com.azure.messaging.webpubsub.models.WebPubSubClientAccessToken;
 import org.junit.jupiter.api.Assertions;
-import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
-public class TestBase extends com.azure.core.test.TestBase {
+/**
+ * Required environment variable for LIVE test:
+ * - WEB_PUB_SUB_ENDPOINT: endpoint of the Web PubSub Service
+ */
+public class TestBase extends TestProxyTestBase {
 
     protected static WebPubSubClientBuilder getClientBuilder() {
         return getClientBuilder("user1");
     }
 
     protected static WebPubSubClientBuilder getClientBuilder(String userId) {
-        WebPubSubServiceAsyncClient client = new WebPubSubServiceClientBuilder()
-            .connectionString(Configuration.getGlobalConfiguration().get("CONNECTION_STRING"))
+        WebPubSubServiceClient client = new WebPubSubServiceClientBuilder()
+            .endpoint(Configuration.getGlobalConfiguration().get("WEB_PUB_SUB_ENDPOINT"))
+            .credential(TestUtils.getIdentityTestCredential(TestMode.LIVE))
             .hub("hub1")
-            .buildAsyncClient();
-
-        Mono<WebPubSubClientAccessToken> accessToken = client.getClientAccessToken(new GetClientAccessTokenOptions()
-            .setUserId(userId)
-            .addRole("webpubsub.joinLeaveGroup")
-            .addRole("webpubsub.sendToGroup"));
+            .buildClient();
 
         // client builder
-        return new WebPubSubClientBuilder()
-            .credential(new WebPubSubClientCredential(Mono.defer(() -> accessToken.map(WebPubSubClientAccessToken::getUrl))));
+        return new WebPubSubClientBuilder().credential(new WebPubSubClientCredential(
+            () -> client.getClientAccessToken(new GetClientAccessTokenOptions().setUserId(userId)
+                .addRole("webpubsub.joinLeaveGroup")
+                .addRole("webpubsub.sendToGroup")).getUrl()));
     }
 
     protected static WebPubSubClient getClient() {

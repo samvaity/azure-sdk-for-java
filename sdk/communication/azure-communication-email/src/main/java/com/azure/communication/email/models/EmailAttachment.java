@@ -22,12 +22,17 @@ public final class EmailAttachment {
      */
     private final BinaryData content;
 
+    /*
+     * Unique identifier (CID) to reference an inline attachment.
+     */
+    private String contentId;
+
     /**
      * Creates an instance of EmailAttachment class.
      *
      * @param name the name value to set.
      * @param contentType the contentType value to set.
-     * @param content the content value to set.
+     * @param content the contentInBase64 value to set.
      */
     public EmailAttachment(String name, String contentType, BinaryData content) {
         this.name = name;
@@ -54,11 +59,31 @@ public final class EmailAttachment {
     }
 
     /**
-     * Get the content property: Contents of the attachment.
+     * Returns the content of the attachment.
      *
-     * @return the content value.
+     * @return The content of the attachment as BinaryData.
      */
     public BinaryData getContent() {
         return this.content;
+    }
+
+    /**
+     * Get the contentId property: Unique identifier (CID) to reference an inline attachment.
+     *
+     * @return the contentId value.
+     */
+    public String getContentId() {
+        return this.contentId;
+    }
+
+    /**
+     * Set the contentId property: Unique identifier (CID) to reference an inline attachment.
+     *
+     * @param contentId the contentId value to set.
+     * @return the EmailAttachment object itself.
+     */
+    public EmailAttachment setContentId(String contentId) {
+        this.contentId = contentId;
+        return this;
     }
 }

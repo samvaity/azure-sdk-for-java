@@ -6,6 +6,7 @@ package com.azure.cosmos.implementation;
 import com.azure.cosmos.BridgeInternal;
 import com.azure.cosmos.CosmosException;
 import com.azure.cosmos.implementation.directconnectivity.WebExceptionUtility;
+import com.azure.cosmos.implementation.routing.RegionalRoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
@@ -26,6 +27,7 @@ public class MetadataRequestRetryPolicy implements IRetryPolicy {
     public void onBeforeSendRequest(RxDocumentServiceRequest request) {
         this.request = request;
         this.webExceptionRetryPolicy = new WebExceptionRetryPolicy(BridgeInternal.getRetryContext(request.requestContext.cosmosDiagnostics));
+        this.webExceptionRetryPolicy.onBeforeSendRequest(request);
     }
 
     private boolean shouldMarkRegionAsUnavailable(CosmosException exception) {
@@ -45,10 +47,15 @@ public class MetadataRequestRetryPolicy implements IRetryPolicy {
     @Override
     public Mono<ShouldRetryResult> shouldRetry(Exception e) {
 
+        if (webExceptionRetryPolicy == null || request == null) {
+            logger.error("onBeforeSendRequest has not been invoked with the MetadataRequestRetryPolicy...");
+            return Mono.just(ShouldRetryResult.error(e));
+        }
+
         return webExceptionRetryPolicy.shouldRetry(e).flatMap(shouldRetryResult -> {
 
             if (!shouldRetryResult.shouldRetry) {
-                if (this.request == null || this.webExceptionRetryPolicy == null) {
+                if (this.request == null) {
                     logger.error("onBeforeSendRequest has not been invoked with the MetadataRequestRetryPolicy...");
                     return Mono.just(ShouldRetryResult.error(e));
                 }
@@ -62,12 +69,19 @@ public class MetadataRequestRetryPolicy implements IRetryPolicy {
                 CosmosException cosmosException = Utils.as(e, CosmosException.class);
 
                 if (shouldMarkRegionAsUnavailable(cosmosException)) {
-                    URI locationEndpointToRoute = request.requestContext.locationEndpointToRoute;
 
-                    if (request.isReadOnlyRequest()) {
-                        this.globalEndpointManager.markEndpointUnavailableForRead(locationEndpointToRoute);
-                    } else {
-                        this.globalEndpointManager.markEndpointUnavailableForWrite(locationEndpointToRoute);
+                    if (request.requestContext != null && request.requestContext.regionalRoutingContextToRoute != null) {
+
+                        RegionalRoutingContext regionalRoutingContext = request.requestContext.regionalRoutingContextToRoute;
+                        URI locationEndpointToRoute = regionalRoutingContext.getGatewayRegionalEndpoint();
+
+                        if (request.isReadOnlyRequest()) {
+                            logger.warn("Marking the endpoint : {} as unavailable for read.", locationEndpointToRoute);
+                            this.globalEndpointManager.markEndpointUnavailableForRead(locationEndpointToRoute);
+                        } else {
+                            logger.warn("Marking the endpoint : {} as unavailable for write.", locationEndpointToRoute);
+                            this.globalEndpointManager.markEndpointUnavailableForWrite(locationEndpointToRoute);
+                        }
                     }
                 }
 

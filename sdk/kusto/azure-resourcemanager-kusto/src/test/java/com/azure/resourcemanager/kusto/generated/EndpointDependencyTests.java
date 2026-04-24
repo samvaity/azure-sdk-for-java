@@ -13,22 +13,24 @@ import org.junit.jupiter.api.Assertions;
 public final class EndpointDependencyTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        EndpointDependency model =
-            BinaryData
-                .fromString("{\"domainName\":\"kfzbeyvpnqicvi\",\"endpointDetails\":[{\"port\":273661642}]}")
-                .toObject(EndpointDependency.class);
-        Assertions.assertEquals("kfzbeyvpnqicvi", model.domainName());
-        Assertions.assertEquals(273661642, model.endpointDetails().get(0).port());
+        EndpointDependency model = BinaryData.fromString(
+            "{\"domainName\":\"l\",\"endpointDetails\":[{\"port\":1262930280,\"ipAddress\":\"vgbmhr\"},{\"port\":283160638,\"ipAddress\":\"myijejvegr\"},{\"port\":662218702,\"ipAddress\":\"aixexccbdreaxh\"},{\"port\":1486564388,\"ipAddress\":\"rrvqa\"}]}")
+            .toObject(EndpointDependency.class);
+        Assertions.assertEquals("l", model.domainName());
+        Assertions.assertEquals(1262930280, model.endpointDetails().get(0).port());
+        Assertions.assertEquals("vgbmhr", model.endpointDetails().get(0).ipAddress());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        EndpointDependency model =
-            new EndpointDependency()
-                .withDomainName("kfzbeyvpnqicvi")
-                .withEndpointDetails(Arrays.asList(new EndpointDetail().withPort(273661642)));
+        EndpointDependency model = new EndpointDependency().withDomainName("l")
+            .withEndpointDetails(Arrays.asList(new EndpointDetail().withPort(1262930280).withIpAddress("vgbmhr"),
+                new EndpointDetail().withPort(283160638).withIpAddress("myijejvegr"),
+                new EndpointDetail().withPort(662218702).withIpAddress("aixexccbdreaxh"),
+                new EndpointDetail().withPort(1486564388).withIpAddress("rrvqa")));
         model = BinaryData.fromObject(model).toObject(EndpointDependency.class);
-        Assertions.assertEquals("kfzbeyvpnqicvi", model.domainName());
-        Assertions.assertEquals(273661642, model.endpointDetails().get(0).port());
+        Assertions.assertEquals("l", model.domainName());
+        Assertions.assertEquals(1262930280, model.endpointDetails().get(0).port());
+        Assertions.assertEquals("vgbmhr", model.endpointDetails().get(0).ipAddress());
     }
 }

@@ -5,42 +5,55 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.Map;
 
-/** Parameters for updating a workspace resource. */
+/**
+ * Parameters for updating a workspace resource.
+ */
 @Fluent
-public final class WorkspaceUpdateParameters {
+public final class WorkspaceUpdateParameters implements JsonSerializable<WorkspaceUpdateParameters> {
     /*
      * The resource tags.
      */
-    @JsonProperty(value = "tags")
+    @Generated
     private Map<String, String> tags;
 
     /*
      * Managed service identity of the workspace.
      */
-    @JsonProperty(value = "identity")
+    @Generated
     private WorkspaceIdentity identity;
 
-    /** Creates an instance of WorkspaceUpdateParameters class. */
-    public WorkspaceUpdateParameters() {}
+    /**
+     * Creates an instance of WorkspaceUpdateParameters class.
+     */
+    @Generated
+    public WorkspaceUpdateParameters() {
+    }
 
     /**
      * Get the tags property: The resource tags.
-     *
+     * 
      * @return the tags value.
      */
+    @Generated
     public Map<String, String> getTags() {
         return this.tags;
     }
 
     /**
      * Set the tags property: The resource tags.
-     *
+     * 
      * @param tags the tags value to set.
      * @return the WorkspaceUpdateParameters object itself.
      */
+    @Generated
     public WorkspaceUpdateParameters setTags(Map<String, String> tags) {
         this.tags = tags;
         return this;
@@ -48,21 +61,65 @@ public final class WorkspaceUpdateParameters {
 
     /**
      * Get the identity property: Managed service identity of the workspace.
-     *
+     * 
      * @return the identity value.
      */
+    @Generated
     public WorkspaceIdentity getIdentity() {
         return this.identity;
     }
 
     /**
      * Set the identity property: Managed service identity of the workspace.
-     *
+     * 
      * @param identity the identity value to set.
      * @return the WorkspaceUpdateParameters object itself.
      */
+    @Generated
     public WorkspaceUpdateParameters setIdentity(WorkspaceIdentity identity) {
         this.identity = identity;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeMapField("tags", this.tags, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeJsonField("identity", this.identity);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of WorkspaceUpdateParameters from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of WorkspaceUpdateParameters if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the WorkspaceUpdateParameters.
+     */
+    @Generated
+    public static WorkspaceUpdateParameters fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            WorkspaceUpdateParameters deserializedWorkspaceUpdateParameters = new WorkspaceUpdateParameters();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("tags".equals(fieldName)) {
+                    Map<String, String> tags = reader.readMap(reader1 -> reader1.getString());
+                    deserializedWorkspaceUpdateParameters.tags = tags;
+                } else if ("identity".equals(fieldName)) {
+                    deserializedWorkspaceUpdateParameters.identity = WorkspaceIdentity.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedWorkspaceUpdateParameters;
+        });
     }
 }

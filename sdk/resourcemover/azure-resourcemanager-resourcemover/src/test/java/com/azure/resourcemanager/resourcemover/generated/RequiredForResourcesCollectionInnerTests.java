@@ -12,16 +12,16 @@ import org.junit.jupiter.api.Assertions;
 public final class RequiredForResourcesCollectionInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        RequiredForResourcesCollectionInner model =
-            BinaryData.fromString("{\"sourceIds\":[\"aos\"]}").toObject(RequiredForResourcesCollectionInner.class);
-        Assertions.assertEquals("aos", model.sourceIds().get(0));
+        RequiredForResourcesCollectionInner model = BinaryData.fromString("{\"sourceIds\":[\"oenkouknvudwti\"]}")
+            .toObject(RequiredForResourcesCollectionInner.class);
+        Assertions.assertEquals("oenkouknvudwti", model.sourceIds().get(0));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        RequiredForResourcesCollectionInner model =
-            new RequiredForResourcesCollectionInner().withSourceIds(Arrays.asList("aos"));
+        RequiredForResourcesCollectionInner model
+            = new RequiredForResourcesCollectionInner().withSourceIds(Arrays.asList("oenkouknvudwti"));
         model = BinaryData.fromObject(model).toObject(RequiredForResourcesCollectionInner.class);
-        Assertions.assertEquals("aos", model.sourceIds().get(0));
+        Assertions.assertEquals("oenkouknvudwti", model.sourceIds().get(0));
     }
 }

@@ -6,83 +6,45 @@ package com.azure.resourcemanager.devtestlabs.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.devtestlabs.DevTestLabsManager;
 import com.azure.resourcemanager.devtestlabs.models.Disk;
 import com.azure.resourcemanager.devtestlabs.models.StorageType;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class DisksListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"properties\":{\"diskType\":\"Premium\",\"diskSizeGiB\":1260726662,\"leasedByLabVmId\":\"ufgjblcdr\",\"diskBlobName\":\"fcemftzgyyky\",\"diskUri\":\"ugekdfqn\",\"storageAccountId\":\"twd\",\"createdDate\":\"2021-03-20T12:14:12Z\",\"hostCaching\":\"zfjjnnuxxrkk\",\"managedDiskId\":\"mnulwe\",\"provisioningState\":\"dcifrhjulrsulwz\",\"uniqueIdentifier\":\"lusnawmhhgzotfr\"},\"location\":\"yrgkoekv\",\"tags\":{\"pcqydeykvsk\":\"xyxhighctxbxmo\",\"frjeizikgqaboohx\":\"cz\",\"rmdvewuyqaeohpj\":\"msgycqs\",\"aurghooxa\":\"gejkbvhh\"},\"id\":\"xb\",\"name\":\"hxjxjoezlqxrkdkn\",\"type\":\"obektmbozo\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"properties\":{\"diskType\":\"Premium\",\"diskSizeGiB\":1660132426,\"leasedByLabVmId\":\"thhzagjfw\",\"diskBlobName\":\"rlhgenuze\",\"diskUri\":\"vkvebaqsz\",\"storageAccountId\":\"rzl\",\"createdDate\":\"2021-06-08T21:13:26Z\",\"hostCaching\":\"qgmihzpimcqrhnxt\",\"managedDiskId\":\"nklogxsvtzarhzv\",\"provisioningState\":\"sqktcmbjwz\",\"uniqueIdentifier\":\"slpkybtg\"},\"location\":\"wkzpga\",\"tags\":{\"z\":\"jcemqbmfuvqar\",\"fgtdmbvx\":\"uqrebluimmbwx\",\"budbt\":\"kraokq\"},\"id\":\"aokbavlyttaaknwf\",\"name\":\"ke\",\"type\":\"sm\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        DevTestLabsManager manager = DevTestLabsManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureEnvironment.AZURE));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<Disk> response = manager.disks()
+            .list("q", "onswae", "kzfzqxjosho", "totryegpkhxrme", "znlw", 2084690732, "fokxk",
+                com.azure.core.util.Context.NONE);
 
-        DevTestLabsManager manager =
-            DevTestLabsManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<Disk> response =
-            manager
-                .disks()
-                .list(
-                    "knrzdajlskzpt",
-                    "xulweucyrthxqle",
-                    "mcgcjeinue",
-                    "oka",
-                    "vfejvqnttmbqda",
-                    2120944830,
-                    "fiv",
-                    com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("wkzpga", response.iterator().next().location());
-        Assertions.assertEquals("jcemqbmfuvqar", response.iterator().next().tags().get("z"));
+        Assertions.assertEquals("yrgkoekv", response.iterator().next().location());
+        Assertions.assertEquals("xyxhighctxbxmo", response.iterator().next().tags().get("pcqydeykvsk"));
         Assertions.assertEquals(StorageType.PREMIUM, response.iterator().next().diskType());
-        Assertions.assertEquals(1660132426, response.iterator().next().diskSizeGiB());
-        Assertions.assertEquals("thhzagjfw", response.iterator().next().leasedByLabVmId());
-        Assertions.assertEquals("rlhgenuze", response.iterator().next().diskBlobName());
-        Assertions.assertEquals("vkvebaqsz", response.iterator().next().diskUri());
-        Assertions.assertEquals("rzl", response.iterator().next().storageAccountId());
-        Assertions.assertEquals("qgmihzpimcqrhnxt", response.iterator().next().hostCaching());
-        Assertions.assertEquals("nklogxsvtzarhzv", response.iterator().next().managedDiskId());
+        Assertions.assertEquals(1260726662, response.iterator().next().diskSizeGiB());
+        Assertions.assertEquals("ufgjblcdr", response.iterator().next().leasedByLabVmId());
+        Assertions.assertEquals("fcemftzgyyky", response.iterator().next().diskBlobName());
+        Assertions.assertEquals("ugekdfqn", response.iterator().next().diskUri());
+        Assertions.assertEquals("twd", response.iterator().next().storageAccountId());
+        Assertions.assertEquals("zfjjnnuxxrkk", response.iterator().next().hostCaching());
+        Assertions.assertEquals("mnulwe", response.iterator().next().managedDiskId());
     }
 }

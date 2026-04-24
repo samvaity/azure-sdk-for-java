@@ -5,31 +5,37 @@
 package com.azure.resourcemanager.iothub.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The encryption properties for the IoT hub. */
+/**
+ * The encryption properties for the IoT hub.
+ */
 @Fluent
-public final class EncryptionPropertiesDescription {
+public final class EncryptionPropertiesDescription implements JsonSerializable<EncryptionPropertiesDescription> {
     /*
      * The source of the key.
      */
-    @JsonProperty(value = "keySource")
     private String keySource;
 
     /*
      * The properties of the KeyVault key.
      */
-    @JsonProperty(value = "keyVaultProperties")
     private List<KeyVaultKeyProperties> keyVaultProperties;
 
-    /** Creates an instance of EncryptionPropertiesDescription class. */
+    /**
+     * Creates an instance of EncryptionPropertiesDescription class.
+     */
     public EncryptionPropertiesDescription() {
     }
 
     /**
      * Get the keySource property: The source of the key.
-     *
+     * 
      * @return the keySource value.
      */
     public String keySource() {
@@ -38,7 +44,7 @@ public final class EncryptionPropertiesDescription {
 
     /**
      * Set the keySource property: The source of the key.
-     *
+     * 
      * @param keySource the keySource value to set.
      * @return the EncryptionPropertiesDescription object itself.
      */
@@ -49,7 +55,7 @@ public final class EncryptionPropertiesDescription {
 
     /**
      * Get the keyVaultProperties property: The properties of the KeyVault key.
-     *
+     * 
      * @return the keyVaultProperties value.
      */
     public List<KeyVaultKeyProperties> keyVaultProperties() {
@@ -58,7 +64,7 @@ public final class EncryptionPropertiesDescription {
 
     /**
      * Set the keyVaultProperties property: The properties of the KeyVault key.
-     *
+     * 
      * @param keyVaultProperties the keyVaultProperties value to set.
      * @return the EncryptionPropertiesDescription object itself.
      */
@@ -69,12 +75,55 @@ public final class EncryptionPropertiesDescription {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (keyVaultProperties() != null) {
             keyVaultProperties().forEach(e -> e.validate());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("keySource", this.keySource);
+        jsonWriter.writeArrayField("keyVaultProperties", this.keyVaultProperties,
+            (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of EncryptionPropertiesDescription from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of EncryptionPropertiesDescription if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the EncryptionPropertiesDescription.
+     */
+    public static EncryptionPropertiesDescription fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            EncryptionPropertiesDescription deserializedEncryptionPropertiesDescription
+                = new EncryptionPropertiesDescription();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("keySource".equals(fieldName)) {
+                    deserializedEncryptionPropertiesDescription.keySource = reader.getString();
+                } else if ("keyVaultProperties".equals(fieldName)) {
+                    List<KeyVaultKeyProperties> keyVaultProperties
+                        = reader.readArray(reader1 -> KeyVaultKeyProperties.fromJson(reader1));
+                    deserializedEncryptionPropertiesDescription.keyVaultProperties = keyVaultProperties;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedEncryptionPropertiesDescription;
+        });
     }
 }

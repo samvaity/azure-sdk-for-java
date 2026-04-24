@@ -5,36 +5,62 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** The location of Google Cloud Storage dataset. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("GoogleCloudStorageLocation")
+/**
+ * The location of Google Cloud Storage dataset.
+ */
 @Fluent
 public final class GoogleCloudStorageLocation extends DatasetLocation {
     /*
+     * Type of dataset storage location.
+     */
+    @Generated
+    private String type = "GoogleCloudStorageLocation";
+
+    /*
      * Specify the bucketName of Google Cloud Storage. Type: string (or Expression with resultType string)
      */
-    @JsonProperty(value = "bucketName")
+    @Generated
     private Object bucketName;
 
     /*
      * Specify the version of Google Cloud Storage. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "version")
+    @Generated
     private Object version;
 
-    /** Creates an instance of GoogleCloudStorageLocation class. */
-    public GoogleCloudStorageLocation() {}
+    /**
+     * Creates an instance of GoogleCloudStorageLocation class.
+     */
+    @Generated
+    public GoogleCloudStorageLocation() {
+    }
+
+    /**
+     * Get the type property: Type of dataset storage location.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the bucketName property: Specify the bucketName of Google Cloud Storage. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the bucketName value.
      */
+    @Generated
     public Object getBucketName() {
         return this.bucketName;
     }
@@ -42,10 +68,11 @@ public final class GoogleCloudStorageLocation extends DatasetLocation {
     /**
      * Set the bucketName property: Specify the bucketName of Google Cloud Storage. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param bucketName the bucketName value to set.
      * @return the GoogleCloudStorageLocation object itself.
      */
+    @Generated
     public GoogleCloudStorageLocation setBucketName(Object bucketName) {
         this.bucketName = bucketName;
         return this;
@@ -54,9 +81,10 @@ public final class GoogleCloudStorageLocation extends DatasetLocation {
     /**
      * Get the version property: Specify the version of Google Cloud Storage. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the version value.
      */
+    @Generated
     public Object getVersion() {
         return this.version;
     }
@@ -64,26 +92,102 @@ public final class GoogleCloudStorageLocation extends DatasetLocation {
     /**
      * Set the version property: Specify the version of Google Cloud Storage. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param version the version value to set.
      * @return the GoogleCloudStorageLocation object itself.
      */
+    @Generated
     public GoogleCloudStorageLocation setVersion(Object version) {
         this.version = version;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GoogleCloudStorageLocation setFolderPath(Object folderPath) {
         super.setFolderPath(folderPath);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public GoogleCloudStorageLocation setFileName(Object fileName) {
         super.setFileName(fileName);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getFolderPath() != null) {
+            jsonWriter.writeUntypedField("folderPath", getFolderPath());
+        }
+        if (getFileName() != null) {
+            jsonWriter.writeUntypedField("fileName", getFileName());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.bucketName != null) {
+            jsonWriter.writeUntypedField("bucketName", this.bucketName);
+        }
+        if (this.version != null) {
+            jsonWriter.writeUntypedField("version", this.version);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of GoogleCloudStorageLocation from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of GoogleCloudStorageLocation if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the GoogleCloudStorageLocation.
+     */
+    @Generated
+    public static GoogleCloudStorageLocation fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            GoogleCloudStorageLocation deserializedGoogleCloudStorageLocation = new GoogleCloudStorageLocation();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("folderPath".equals(fieldName)) {
+                    deserializedGoogleCloudStorageLocation.setFolderPath(reader.readUntyped());
+                } else if ("fileName".equals(fieldName)) {
+                    deserializedGoogleCloudStorageLocation.setFileName(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedGoogleCloudStorageLocation.type = reader.getString();
+                } else if ("bucketName".equals(fieldName)) {
+                    deserializedGoogleCloudStorageLocation.bucketName = reader.readUntyped();
+                } else if ("version".equals(fieldName)) {
+                    deserializedGoogleCloudStorageLocation.version = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedGoogleCloudStorageLocation.setAdditionalProperties(additionalProperties);
+
+            return deserializedGoogleCloudStorageLocation;
+        });
     }
 }

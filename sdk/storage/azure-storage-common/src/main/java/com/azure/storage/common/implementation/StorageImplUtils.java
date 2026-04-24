@@ -7,6 +7,7 @@ import com.azure.core.http.HttpMethod;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.util.Context;
 import com.azure.core.util.CoreUtils;
+import com.azure.core.util.SharedExecutorService;
 import com.azure.core.util.UrlBuilder;
 import com.azure.core.util.logging.ClientLogger;
 import reactor.core.publisher.Mono;
@@ -30,16 +31,17 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import static com.azure.storage.common.Utility.urlDecode;
-import static com.azure.storage.common.implementation.Constants.HeaderConstants.ERROR_CODE;
+import static com.azure.storage.common.implementation.Constants.HeaderConstants.ERROR_CODE_HEADER_NAME;
 
 /**
  * Utility class which is used internally.
@@ -47,15 +49,15 @@ import static com.azure.storage.common.implementation.Constants.HeaderConstants.
 public class StorageImplUtils {
     private static final ClientLogger LOGGER = new ClientLogger(StorageImplUtils.class);
 
-    private static final String ARGUMENT_NULL_OR_EMPTY =
-        "The argument must not be null or an empty string. Argument name: %s.";
+    private static final String ARGUMENT_NULL_OR_EMPTY
+        = "The argument must not be null or an empty string. Argument name: %s.";
 
     private static final String PARAMETER_NOT_IN_RANGE = "The value of the parameter '%s' should be between %s and %s.";
 
     private static final String STRING_TO_SIGN_LOG_INFO_MESSAGE = "The string to sign computed by the SDK is: {}{}";
 
-    private static final String STRING_TO_SIGN_LOG_WARNING_MESSAGE = "Please remember to disable '{}' before going "
-        + "to production as this string can potentially contain PII.";
+    private static final String STRING_TO_SIGN_LOG_WARNING_MESSAGE
+        = "Please remember to disable '{}' before going " + "to production as this string can potentially contain PII.";
 
     private static final String STORAGE_EXCEPTION_LOG_STRING_TO_SIGN_MESSAGE = String.format(
         "If you are using a StorageSharedKeyCredential, and the server returned an "
@@ -71,8 +73,11 @@ public class StorageImplUtils {
         Constants.STORAGE_LOG_STRING_TO_SIGN, Constants.STORAGE_LOG_STRING_TO_SIGN,
         Constants.STORAGE_LOG_STRING_TO_SIGN);
 
-    private static final String INVALID_BASE64_KEY =
-        "'base64Key' was not a valid Base64 scheme. Ensure the Storage account key or SAS key is properly formatted.";
+    public static final String INVALID_VERSION_HEADER_MESSAGE
+        = "The provided service version is not enabled on this storage account.  Please see https://learn.microsoft.com/rest/api/storageservices/versioning-for-the-azure-storage-services for additional information.\n";
+
+    private static final String INVALID_BASE64_KEY
+        = "'base64Key' was not a valid Base64 scheme. Ensure the Storage account key or SAS key is properly formatted.";
 
     private static final String INVALID_DATE_STRING = "Invalid Date String: %s.";
 
@@ -82,22 +87,18 @@ public class StorageImplUtils {
 
     // Use constant DateTimeFormatters as 'ofPattern' requires the passed pattern to be parsed each time, significantly
     // increasing the overhead of using DateTimeFormatter.
-    private static final DateTimeFormatter MAX_PRECISION_FORMATTER =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
-            .withLocale(Locale.ROOT);
+    private static final DateTimeFormatter MAX_PRECISION_FORMATTER
+        = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS").withLocale(Locale.ROOT);
 
-    private static final DateTimeFormatter ISO8601_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .withLocale(Locale.ROOT);
+    private static final DateTimeFormatter ISO8601_FORMATTER
+        = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withLocale(Locale.ROOT);
 
-    private static final DateTimeFormatter NO_SECONDS_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'")
-        .withLocale(Locale.ROOT);
+    private static final DateTimeFormatter NO_SECONDS_FORMATTER
+        = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'").withLocale(Locale.ROOT);
 
-    private static final DateTimeFormatter NO_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        .withLocale(Locale.ROOT);
-
-    public static final ExecutorService THREAD_POOL = getThreadPoolWithShutdownHook();
-    private static final long THREADPOOL_SHUTDOWN_HOOK_TIMEOUT_SECONDS = 30;
-
+    private static final DateTimeFormatter NO_TIME_FORMATTER
+        = DateTimeFormatter.ofPattern("yyyy-MM-dd").withLocale(Locale.ROOT);
+    private static final String ENCRYPTION_DATA_KEY = "encryptiondata";
 
     /**
      * Parses the query string into a key-value pair map that maintains key, query parameter key, order. The value is
@@ -158,9 +159,7 @@ public class StorageImplUtils {
      * @return Mono with an applied timeout, if any.
      */
     public static <T> Mono<T> applyOptionalTimeout(Mono<T> publisher, Duration timeout) {
-        return timeout == null
-            ? publisher
-            : publisher.timeout(timeout);
+        return timeout == null ? publisher : publisher.timeout(timeout);
     }
 
     /**
@@ -188,8 +187,8 @@ public class StorageImplUtils {
      */
     public static void assertInBounds(final String param, final long value, final long min, final long max) {
         if (value < min || value > max) {
-            throw LOGGER.logExceptionAsError(new IllegalArgumentException(String.format(Locale.ROOT,
-                PARAMETER_NOT_IN_RANGE, param, min, max)));
+            throw LOGGER.logExceptionAsError(
+                new IllegalArgumentException(String.format(Locale.ROOT, PARAMETER_NOT_IN_RANGE, param, min, max)));
         }
     }
 
@@ -254,7 +253,7 @@ public class StorageImplUtils {
      */
     public static String getAccountName(URL url) {
         UrlBuilder builder = UrlBuilder.parse(url);
-        String accountName =  null;
+        String accountName = null;
         String host = builder.getHost();
         //Parse host to get account name
         // host will look like this : <accountname>.blob.core.windows.net
@@ -269,6 +268,58 @@ public class StorageImplUtils {
             }
         }
         return accountName;
+    }
+
+    public static String getAccountName(URL url, String serviceSubDomain) {
+        String host = url.getHost();
+        return getAccountNameFromHost(host, serviceSubDomain);
+    }
+
+    /**
+     * Gets the account name from a host string, stripping IPv6, dualstack, and secondary suffixes.
+     * <p>
+     * For IPv6/dualstack endpoints, hosts look like {@code accountname-ipv6.blob.core.windows.net} or
+     * {@code accountname-secondary-dualstack.blob.core.windows.net}. This method extracts the base account name
+     * by verifying the service subdomain is present, then stripping known suffixes.
+     * <p>
+     * Suffixes are stripped in order: first {@code -ipv6} or {@code -dualstack}, then {@code -secondary},
+     * to handle compound cases like {@code accountname-secondary-ipv6}.
+     *
+     * @param host The host string from a URL.
+     * @param serviceSubDomain The service subdomain (e.g., "blob", "file", "queue", "dfs").
+     * @return The account name, or {@code null} if it cannot be parsed.
+     */
+    public static String getAccountNameFromHost(String host, String serviceSubDomain) {
+        if (CoreUtils.isNullOrEmpty(host)) {
+            return null;
+        }
+
+        int accountEndIndex = host.indexOf('.');
+        if (accountEndIndex >= 0) {
+            int serviceStartIndex = host.indexOf(serviceSubDomain, accountEndIndex);
+            if (serviceStartIndex > -1) {
+                String accountName = host.substring(0, accountEndIndex);
+
+                // Note: The suffixes are specifically checked/trimmed in this order to
+                // take into account of cases with both "-secondary" and "-ipv6"/"-dualstack"
+                // ie. "accountname-secondary-ipv6"
+
+                // Remove "-ipv6" or "-dualstack" from end if present
+                if (accountName.endsWith("-ipv6")) {
+                    accountName = accountName.substring(0, accountName.length() - "-ipv6".length());
+                } else if (accountName.endsWith("-dualstack")) {
+                    accountName = accountName.substring(0, accountName.length() - "-dualstack".length());
+                }
+
+                // Remove "-secondary" from end if present
+                if (accountName.endsWith("-secondary")) {
+                    accountName = accountName.substring(0, accountName.length() - "-secondary".length());
+                }
+
+                return accountName;
+            }
+        }
+        return null;
     }
 
     /** Returns an empty string if value is {@code null}, otherwise returns value
@@ -287,7 +338,8 @@ public class StorageImplUtils {
      * @param context Additional context to determine if the string to sign should be logged.
      */
     public static void logStringToSign(ClientLogger logger, String stringToSign, Context context) {
-        if (context != null && Boolean.TRUE.equals(context.getData(Constants.STORAGE_LOG_STRING_TO_SIGN).orElse(false))) {
+        if (context != null
+            && Boolean.TRUE.equals(context.getData(Constants.STORAGE_LOG_STRING_TO_SIGN).orElse(false))) {
             logger.info(STRING_TO_SIGN_LOG_INFO_MESSAGE, stringToSign, System.lineSeparator());
             logger.warning(STRING_TO_SIGN_LOG_WARNING_MESSAGE, Constants.STORAGE_LOG_STRING_TO_SIGN);
         }
@@ -301,19 +353,45 @@ public class StorageImplUtils {
      * @return The converted storage exception message.
      */
     public static String convertStorageExceptionMessage(String message, HttpResponse response) {
+        return convertStorageExceptionMessage(message, response, null, null);
+    }
+
+    /**
+     * Converts the storage exception message.
+     *
+     * @param message The storage exception message
+     * @param response The storage service response.
+     * @param errorCode The error code from the response.
+     * @param headerName The header name from the response.
+     * @return The converted storage exception message.
+     */
+    public static String convertStorageExceptionMessage(String message, HttpResponse response, String errorCode,
+        String headerName) {
         if (response != null) {
+            // Handle 403 Forbidden responses by appending detailed logging instructions for signature mismatches.
             if (response.getStatusCode() == 403) {
                 return STORAGE_EXCEPTION_LOG_STRING_TO_SIGN_MESSAGE + message;
             }
-            if (response.getRequest() != null && response.getRequest().getHttpMethod() != null
+
+            // Handle HEAD requests specifically by inserting the error code into the message if the body is empty.
+            if (response.getRequest() != null
+                && response.getRequest().getHttpMethod() != null
                 && response.getRequest().getHttpMethod().equals(HttpMethod.HEAD)
-                && response.getHeaders().getValue(ERROR_CODE) != null) {
+                && response.getHeaders().getValue(ERROR_CODE_HEADER_NAME) != null) {
                 int indexOfEmptyBody = message.indexOf("(empty body)");
                 if (indexOfEmptyBody >= 0) {
                     return message.substring(0, indexOfEmptyBody)
-                        + response.getHeaders().getValue(ERROR_CODE)
+                        + response.getHeaders().getValue(ERROR_CODE_HEADER_NAME)
                         + message.substring(indexOfEmptyBody + 12);
                 }
+            }
+
+            /*
+             * Provide meaningful error message for x-ms-version mismatch issues.
+             */
+            if (Constants.HeaderConstants.INVALID_HEADER_VALUE.equals(errorCode)
+                && Constants.HeaderConstants.VERSION.equalsIgnoreCase(headerName)) {
+                return INVALID_VERSION_HEADER_MESSAGE;
             }
         }
         return message;
@@ -337,27 +415,33 @@ public class StorageImplUtils {
             case 24: // "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"-> [2012-01-04T23:21:59.123Z] length = 24
                 dateString = dateString.substring(0, MAX_PRECISION_DATESTRING_LENGTH);
                 break;
+
             case 23: // "yyyy-MM-dd'T'HH:mm:ss.SS'Z'"-> [2012-01-04T23:21:59.12Z] length = 23
                 // SS is assumed to be milliseconds, so a trailing 0 is necessary
                 if (dateString.endsWith("Z")) {
                     dateString = dateString.substring(0, 22) + "0";
                 }
                 break;
+
             case 22: // "yyyy-MM-dd'T'HH:mm:ss.S'Z'"-> [2012-01-04T23:21:59.1Z] length = 22
                 // S is assumed to be milliseconds, so trailing 0's are necessary
                 if (dateString.endsWith("Z")) {
                     dateString = dateString.substring(0, 21) + "00";
                 }
                 break;
+
             case 20: // "yyyy-MM-dd'T'HH:mm:ss'Z'"-> [2012-01-04T23:21:59Z] length = 20
                 formatter = ISO8601_FORMATTER;
                 break;
+
             case 17: // "yyyy-MM-dd'T'HH:mm'Z'"-> [2012-01-04T23:21Z] length = 17
                 formatter = NO_SECONDS_FORMATTER;
                 break;
+
             case 10: // "yyyy-MM-dd"-> [2012-01-04] length = 10
                 return new TimeAndFormat(LocalDate.parse(dateString).atStartOfDay(ZoneOffset.UTC).toOffsetDateTime(),
                     NO_TIME_FORMATTER);
+
             default:
                 throw new IllegalArgumentException(String.format(Locale.ROOT, INVALID_DATE_STRING, dateString));
         }
@@ -457,34 +541,82 @@ public class StorageImplUtils {
     public static <T> T submitThreadPool(Supplier<T> operation, ClientLogger logger, Duration timeout) {
         try {
             return timeout != null
-                ? THREAD_POOL.submit(operation::get).get(timeout.toMillis(), TimeUnit.MILLISECONDS) : operation.get();
-        }  catch (InterruptedException | ExecutionException | TimeoutException e) {
+                ? SharedExecutorService.getInstance()
+                    .submit(operation::get)
+                    .get(timeout.toMillis(), TimeUnit.MILLISECONDS)
+                : operation.get();
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw logger.logExceptionAsError(new RuntimeException(e));
         } catch (RuntimeException e) {
             throw LOGGER.logExceptionAsError(e);
         }
     }
 
-    public static ExecutorService getThreadPoolWithShutdownHook() {
-        ExecutorService threadPool = Executors.newCachedThreadPool();
-        registerShutdownHook(threadPool);
-        return threadPool;
+    public static String getEncryptionDataKey(Map<String, String> metadata) {
+        if (CoreUtils.isNullOrEmpty(metadata)) {
+            return null;
+        }
+        for (Map.Entry<String, String> entry : metadata.entrySet()) {
+            if (entry.getKey().length() != ENCRYPTION_DATA_KEY.length()) {
+                continue;
+            }
+            if (ENCRYPTION_DATA_KEY.regionMatches(true, 0, entry.getKey(), 0, ENCRYPTION_DATA_KEY.length())) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
-    public static void registerShutdownHook(ExecutorService threadPool) {
-        long halfTimeout = TimeUnit.SECONDS.toNanos(THREADPOOL_SHUTDOWN_HOOK_TIMEOUT_SECONDS) / 2;
-        Thread hook = new Thread(() -> {
-            try {
-                threadPool.shutdown();
-                if (!threadPool.awaitTermination(halfTimeout, TimeUnit.NANOSECONDS)) {
-                    threadPool.shutdownNow();
-                    threadPool.awaitTermination(halfTimeout, TimeUnit.NANOSECONDS);
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                threadPool.shutdown();
+    public static <T> T sendRequest(Callable<T> operation, Duration timeout,
+        Class<? extends RuntimeException> exceptionType) {
+        try {
+            if (timeout == null) {
+                return operation.call();
             }
-        });
-        Runtime.getRuntime().addShutdownHook(hook);
+            Future<T> future = SharedExecutorService.getInstance().submit(operation);
+            return getResultWithTimeout(future, timeout.toMillis(), exceptionType);
+        } catch (Exception e) {
+            Throwable cause = e.getCause();
+            if (exceptionType.isInstance(e)) {
+                // Safe to cast since we checked with isInstance
+                throw exceptionType.cast(e);
+            } else if (cause instanceof RuntimeException) {
+                // Throw as is if it's already a RuntimeException
+                throw (RuntimeException) cause;
+            } else if (cause instanceof Error) {
+                // Propagate if it's an Error
+                throw (Error) cause;
+            } else {
+                // Wrap in RuntimeException if it's neither Error nor RuntimeException
+                throw LOGGER.logExceptionAsError(new RuntimeException(cause != null ? cause : e));
+            }
+        }
+    }
+
+    public static <T> T getResultWithTimeout(Future<T> future, long timeoutInMillis,
+        Class<? extends RuntimeException> exceptionType)
+        throws InterruptedException, ExecutionException, TimeoutException {
+        Objects.requireNonNull(future, "'future' cannot be null.");
+
+        try {
+            if (timeoutInMillis <= 0) {
+                return future.get();
+            }
+            return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            future.cancel(true); // Cancel the operation as it's no longer needed
+            throw e;
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof Error) {
+                throw (Error) cause; // Rethrow if it's an Error
+            } else if (exceptionType.isInstance(cause)) {
+                throw e;
+            } else if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause; // Rethrow if it's another kind of RuntimeException
+            } else {
+                throw new RuntimeException(cause);
+            }
+        }
     }
 }

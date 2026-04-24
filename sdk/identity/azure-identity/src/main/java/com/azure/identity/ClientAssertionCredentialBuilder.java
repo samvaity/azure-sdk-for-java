@@ -18,12 +18,12 @@ import java.util.function.Supplier;
  * In this authentication method, the client application creates a JSON Web Token (JWT) that includes information about
  * the service principal (such as its client ID and tenant ID) and signs it using a client secret. The client then
  * sends this token to
- * <a href="https://learn.microsoft.com/azure/active-directory/fundamentals/">Azure Active Directory (Azure AD)
- * </a> as proof of its identity. Azure AD verifies the token signature and checks that the service principal has
+ * <a href="https://learn.microsoft.com/entra/fundamentals/">Microsoft Entra ID</a> as proof of its
+ * identity. Microsoft Entra ID verifies the token signature and checks that the service principal has
  * the necessary permissions to access the requested Azure resource. If the token is valid and the service principal is
- * authorized, Azure AD issues an access token that the client application can use to access the requested resource.
+ * authorized, Microsoft Entra ID issues an access token that the client application can use to access the requested resource.
  * The {@link ClientAssertionCredential} acquires an access token with a client client assertion for a
- * service principal/registered AAD application. The tenantId, clientId and clientAssertion of the service principal
+ * service principal/registered Microsoft Entra application. The tenantId, clientId and clientAssertion of the service principal
  * are required for this credential to acquire an access token. It can be used both in Azure hosted and local
  * development environments for authentication.</p>
  *
@@ -37,8 +37,7 @@ import java.util.function.Supplier;
  *
  * <!-- src_embed com.azure.identity.credential.clientassertioncredential.construct -->
  * <pre>
- * TokenCredential clientAssertionCredential = new ClientAssertionCredentialBuilder&#40;&#41;
- *     .tenantId&#40;tenantId&#41;
+ * TokenCredential clientAssertionCredential = new ClientAssertionCredentialBuilder&#40;&#41;.tenantId&#40;tenantId&#41;
  *     .clientId&#40;clientId&#41;
  *     .clientAssertion&#40;&#40;&#41; -&gt; &quot;&lt;Client-Assertion&gt;&quot;&#41;
  *     .build&#40;&#41;;
@@ -56,8 +55,7 @@ import java.util.function.Supplier;
  *
  * <!-- src_embed com.azure.identity.credential.clientassertioncredential.constructwithproxy -->
  * <pre>
- * TokenCredential assertionCredential = new ClientAssertionCredentialBuilder&#40;&#41;
- *     .tenantId&#40;tenantId&#41;
+ * TokenCredential assertionCredential = new ClientAssertionCredentialBuilder&#40;&#41;.tenantId&#40;tenantId&#41;
  *     .clientId&#40;clientId&#41;
  *     .clientAssertion&#40;&#40;&#41; -&gt; &quot;&lt;Client-Assertion&gt;&quot;&#41;
  *     .proxyOptions&#40;new ProxyOptions&#40;Type.HTTP, new InetSocketAddress&#40;&quot;10.21.32.43&quot;, 5465&#41;&#41;&#41;
@@ -72,6 +70,13 @@ public class ClientAssertionCredentialBuilder extends AadCredentialBuilderBase<C
     private static final String CLASS_NAME = ClientAssertionCredentialBuilder.class.getSimpleName();
 
     private Supplier<String> clientAssertionSupplier;
+
+    /**
+     * Constructs an instance of ClientAssertionCredentialBuilder.
+     */
+    public ClientAssertionCredentialBuilder() {
+        super();
+    }
 
     /**
      * Sets the supplier containing the logic to supply the client assertion when invoked.
@@ -92,8 +97,8 @@ public class ClientAssertionCredentialBuilder extends AadCredentialBuilderBase<C
      * @param tokenCachePersistenceOptions the token cache configuration options
      * @return An updated instance of this builder with the token cache options configured.
      */
-    public ClientAssertionCredentialBuilder tokenCachePersistenceOptions(TokenCachePersistenceOptions
-                                                                          tokenCachePersistenceOptions) {
+    public ClientAssertionCredentialBuilder
+        tokenCachePersistenceOptions(TokenCachePersistenceOptions tokenCachePersistenceOptions) {
         this.identityClientOptions.setTokenCacheOptions(tokenCachePersistenceOptions);
         return this;
     }
@@ -105,8 +110,8 @@ public class ClientAssertionCredentialBuilder extends AadCredentialBuilderBase<C
      * @throws IllegalArgumentException if either of clientId, tenantId or clientAssertion is not present.
      */
     public ClientAssertionCredential build() {
-        ValidationUtil.validate(CLASS_NAME, LOGGER, "clientId", clientId, "tenantId", tenantId,
-            "clientAssertion", clientAssertionSupplier);
+        ValidationUtil.validate(CLASS_NAME, LOGGER, "clientId", clientId, "tenantId", tenantId, "clientAssertion",
+            clientAssertionSupplier);
 
         return new ClientAssertionCredential(clientId, tenantId, clientAssertionSupplier, identityClientOptions);
     }

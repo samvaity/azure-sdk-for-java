@@ -13,26 +13,22 @@ import org.junit.jupiter.api.Assertions;
 public final class ResourceMoveRequestTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ResourceMoveRequest model =
-            BinaryData
-                .fromString(
-                    "{\"validateOnly\":false,\"moveResources\":[\"gvfcj\",\"wzo\",\"xjtfelluwfzit\"],\"moveResourceInputType\":\"MoveResourceSourceId\"}")
-                .toObject(ResourceMoveRequest.class);
+        ResourceMoveRequest model = BinaryData.fromString(
+            "{\"validateOnly\":false,\"moveResources\":[\"guhmuouqfpr\",\"zw\"],\"moveResourceInputType\":\"MoveResourceId\"}")
+            .toObject(ResourceMoveRequest.class);
         Assertions.assertEquals(false, model.validateOnly());
-        Assertions.assertEquals("gvfcj", model.moveResources().get(0));
-        Assertions.assertEquals(MoveResourceInputType.MOVE_RESOURCE_SOURCE_ID, model.moveResourceInputType());
+        Assertions.assertEquals("guhmuouqfpr", model.moveResources().get(0));
+        Assertions.assertEquals(MoveResourceInputType.MOVE_RESOURCE_ID, model.moveResourceInputType());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ResourceMoveRequest model =
-            new ResourceMoveRequest()
-                .withValidateOnly(false)
-                .withMoveResources(Arrays.asList("gvfcj", "wzo", "xjtfelluwfzit"))
-                .withMoveResourceInputType(MoveResourceInputType.MOVE_RESOURCE_SOURCE_ID);
+        ResourceMoveRequest model = new ResourceMoveRequest().withValidateOnly(false)
+            .withMoveResources(Arrays.asList("guhmuouqfpr", "zw"))
+            .withMoveResourceInputType(MoveResourceInputType.MOVE_RESOURCE_ID);
         model = BinaryData.fromObject(model).toObject(ResourceMoveRequest.class);
         Assertions.assertEquals(false, model.validateOnly());
-        Assertions.assertEquals("gvfcj", model.moveResources().get(0));
-        Assertions.assertEquals(MoveResourceInputType.MOVE_RESOURCE_SOURCE_ID, model.moveResourceInputType());
+        Assertions.assertEquals("guhmuouqfpr", model.moveResources().get(0));
+        Assertions.assertEquals(MoveResourceInputType.MOVE_RESOURCE_ID, model.moveResourceInputType());
     }
 }

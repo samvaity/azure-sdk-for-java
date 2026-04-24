@@ -7,7 +7,10 @@ package com.azure.resourcemanager.networkcloud.generated;
 import com.azure.core.util.BinaryData;
 import com.azure.resourcemanager.networkcloud.models.CloudServicesNetworkEnableDefaultEgressEndpoints;
 import com.azure.resourcemanager.networkcloud.models.CloudServicesNetworkPatchParameters;
+import com.azure.resourcemanager.networkcloud.models.CloudServicesNetworkStorageMode;
+import com.azure.resourcemanager.networkcloud.models.CloudServicesNetworkStorageOptionsPatch;
 import com.azure.resourcemanager.networkcloud.models.EgressEndpoint;
+import com.azure.resourcemanager.networkcloud.models.EndpointDependency;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,35 +19,47 @@ import org.junit.jupiter.api.Assertions;
 public final class CloudServicesNetworkPatchParametersTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CloudServicesNetworkPatchParameters model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"additionalEgressEndpoints\":[{\"category\":\"esvecuijpx\",\"endpoints\":[]},{\"category\":\"xs\",\"endpoints\":[]}],\"enableDefaultEgressEndpoints\":\"False\"},\"tags\":{\"itvtzeexavo\":\"ujwsawddjibabxvi\",\"dmdqb\":\"tfgle\",\"cbslhhx\":\"pypqtgsfj\"}}")
-                .toObject(CloudServicesNetworkPatchParameters.class);
-        Assertions.assertEquals("ujwsawddjibabxvi", model.tags().get("itvtzeexavo"));
-        Assertions.assertEquals("esvecuijpx", model.additionalEgressEndpoints().get(0).category());
-        Assertions
-            .assertEquals(CloudServicesNetworkEnableDefaultEgressEndpoints.FALSE, model.enableDefaultEgressEndpoints());
+        CloudServicesNetworkPatchParameters model = BinaryData.fromString(
+            "{\"properties\":{\"additionalEgressEndpoints\":[{\"category\":\"zhzdtxetlgydlhqv\",\"endpoints\":[{\"domainName\":\"npxybafiq\",\"port\":963093637527470244}]}],\"enableDefaultEgressEndpoints\":\"True\",\"storageOptions\":{\"mode\":\"None\",\"sizeMiB\":4818628415741720464,\"storageApplianceId\":\"lbyulidwcwvmze\"}},\"tags\":{\"kspzhzmtksjcit\":\"nfhjirwgdnqzbr\"}}")
+            .toObject(CloudServicesNetworkPatchParameters.class);
+        Assertions.assertEquals("nfhjirwgdnqzbr", model.tags().get("kspzhzmtksjcit"));
+        Assertions.assertEquals("zhzdtxetlgydlhqv", model.additionalEgressEndpoints().get(0).category());
+        Assertions.assertEquals("npxybafiq", model.additionalEgressEndpoints().get(0).endpoints().get(0).domainName());
+        Assertions.assertEquals(963093637527470244L,
+            model.additionalEgressEndpoints().get(0).endpoints().get(0).port());
+        Assertions.assertEquals(CloudServicesNetworkEnableDefaultEgressEndpoints.TRUE,
+            model.enableDefaultEgressEndpoints());
+        Assertions.assertEquals(CloudServicesNetworkStorageMode.NONE, model.storageOptions().mode());
+        Assertions.assertEquals(4818628415741720464L, model.storageOptions().sizeMiB());
+        Assertions.assertEquals("lbyulidwcwvmze", model.storageOptions().storageApplianceId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CloudServicesNetworkPatchParameters model =
-            new CloudServicesNetworkPatchParameters()
-                .withTags(mapOf("itvtzeexavo", "ujwsawddjibabxvi", "dmdqb", "tfgle", "cbslhhx", "pypqtgsfj"))
-                .withAdditionalEgressEndpoints(
-                    Arrays
-                        .asList(
-                            new EgressEndpoint().withCategory("esvecuijpx").withEndpoints(Arrays.asList()),
-                            new EgressEndpoint().withCategory("xs").withEndpoints(Arrays.asList())))
-                .withEnableDefaultEgressEndpoints(CloudServicesNetworkEnableDefaultEgressEndpoints.FALSE);
+        CloudServicesNetworkPatchParameters model
+            = new CloudServicesNetworkPatchParameters().withTags(mapOf("kspzhzmtksjcit", "nfhjirwgdnqzbr"))
+                .withAdditionalEgressEndpoints(Arrays.asList(new EgressEndpoint().withCategory("zhzdtxetlgydlhqv")
+                    .withEndpoints(Arrays
+                        .asList(new EndpointDependency().withDomainName("npxybafiq").withPort(963093637527470244L)))))
+                .withEnableDefaultEgressEndpoints(CloudServicesNetworkEnableDefaultEgressEndpoints.TRUE)
+                .withStorageOptions(
+                    new CloudServicesNetworkStorageOptionsPatch().withMode(CloudServicesNetworkStorageMode.NONE)
+                        .withSizeMiB(4818628415741720464L)
+                        .withStorageApplianceId("lbyulidwcwvmze"));
         model = BinaryData.fromObject(model).toObject(CloudServicesNetworkPatchParameters.class);
-        Assertions.assertEquals("ujwsawddjibabxvi", model.tags().get("itvtzeexavo"));
-        Assertions.assertEquals("esvecuijpx", model.additionalEgressEndpoints().get(0).category());
-        Assertions
-            .assertEquals(CloudServicesNetworkEnableDefaultEgressEndpoints.FALSE, model.enableDefaultEgressEndpoints());
+        Assertions.assertEquals("nfhjirwgdnqzbr", model.tags().get("kspzhzmtksjcit"));
+        Assertions.assertEquals("zhzdtxetlgydlhqv", model.additionalEgressEndpoints().get(0).category());
+        Assertions.assertEquals("npxybafiq", model.additionalEgressEndpoints().get(0).endpoints().get(0).domainName());
+        Assertions.assertEquals(963093637527470244L,
+            model.additionalEgressEndpoints().get(0).endpoints().get(0).port());
+        Assertions.assertEquals(CloudServicesNetworkEnableDefaultEgressEndpoints.TRUE,
+            model.enableDefaultEgressEndpoints());
+        Assertions.assertEquals(CloudServicesNetworkStorageMode.NONE, model.storageOptions().mode());
+        Assertions.assertEquals(4818628415741720464L, model.storageOptions().sizeMiB());
+        Assertions.assertEquals("lbyulidwcwvmze", model.storageOptions().storageApplianceId());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

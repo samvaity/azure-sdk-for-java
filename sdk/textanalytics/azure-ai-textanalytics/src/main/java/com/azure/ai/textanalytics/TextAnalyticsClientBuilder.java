@@ -53,15 +53,13 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * This class provides a fluent builder API to help instantiation of {@link TextAnalyticsClient TextAnalyticsClients}
- * and {@link TextAnalyticsAsyncClient TextAnalyticsAsyncClients}, call {@link #buildClient()} buildClient} and {@link
+ * This class provides a fluent builder API to help instantiation of {@link TextAnalyticsClient TextAnalyticsClient}
+ * and {@link TextAnalyticsAsyncClient TextAnalyticsAsyncClient}, call {@link #buildClient()} buildClient} and {@link
  * #buildAsyncClient() buildAsyncClient} respectively to construct an instance of the desired client.
  *
- * <p>
- * The client needs the service endpoint of the Azure Text Analytics to access the resource service. {@link
+ * <p>The client needs the service endpoint of the Azure Text Analytics to access the resource service. {@link
  * #credential(AzureKeyCredential)} or {@link #credential(TokenCredential) credential(TokenCredential)} give the builder
- * access credential.
- * </p>
+ * access credential.</p>
  *
  * <p><strong>Instantiating an asynchronous Text Analytics Client</strong></p>
  *
@@ -85,12 +83,10 @@ import java.util.Objects;
  * </pre>
  * <!-- end com.azure.ai.textanalytics.TextAnalyticsClient.instantiation -->
  *
- * <p>
- * Another way to construct the client is using a {@link HttpPipeline}. The pipeline gives the client an authenticated
+ * <p>Another way to construct the client is using a {@link HttpPipeline}. The pipeline gives the client an authenticated
  * way to communicate with the service. Set the pipeline with {@link #pipeline(HttpPipeline) this} and set the service
  * endpoint with {@link #endpoint(String) this}. Using a pipeline requires additional setup but allows for finer control
- * on how the {@link TextAnalyticsClient} and {@link TextAnalyticsAsyncClient} is built.
- * </p>
+ * on how the {@link TextAnalyticsClient} and {@link TextAnalyticsAsyncClient} is built.</p>
  *
  * <!-- src_embed com.azure.ai.textanalytics.TextAnalyticsClient.pipeline.instantiation -->
  * <pre>
@@ -109,13 +105,10 @@ import java.util.Objects;
  * @see TextAnalyticsAsyncClient
  * @see TextAnalyticsClient
  */
-@ServiceClientBuilder(serviceClients = {TextAnalyticsAsyncClient.class, TextAnalyticsClient.class})
-public final class TextAnalyticsClientBuilder implements
-    AzureKeyCredentialTrait<TextAnalyticsClientBuilder>,
-    ConfigurationTrait<TextAnalyticsClientBuilder>,
-    EndpointTrait<TextAnalyticsClientBuilder>,
-    HttpTrait<TextAnalyticsClientBuilder>,
-    TokenCredentialTrait<TextAnalyticsClientBuilder> {
+@ServiceClientBuilder(serviceClients = { TextAnalyticsAsyncClient.class, TextAnalyticsClient.class })
+public final class TextAnalyticsClientBuilder implements AzureKeyCredentialTrait<TextAnalyticsClientBuilder>,
+    ConfigurationTrait<TextAnalyticsClientBuilder>, EndpointTrait<TextAnalyticsClientBuilder>,
+    HttpTrait<TextAnalyticsClientBuilder>, TokenCredentialTrait<TextAnalyticsClientBuilder> {
     private static final String DEFAULT_SCOPE = "https://cognitiveservices.azure.com/.default";
     private static final String NAME = "name";
     private static final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
@@ -152,6 +145,13 @@ public final class TextAnalyticsClientBuilder implements
         Map<String, String> properties = CoreUtils.getProperties(TEXT_ANALYTICS_PROPERTIES);
         CLIENT_NAME = properties.getOrDefault(NAME, "UnknownName");
         CLIENT_VERSION = properties.getOrDefault(VERSION, "UnknownVersion");
+    }
+
+    /**
+     * Construct a {@link TextAnalyticsClientBuilder} object.
+     */
+    public TextAnalyticsClientBuilder() {
+
     }
 
     /**
@@ -192,11 +192,11 @@ public final class TextAnalyticsClientBuilder implements
      */
     public TextAnalyticsAsyncClient buildAsyncClient() {
         // Global Env configuration store
-        final Configuration buildConfiguration = (configuration == null)
-            ? Configuration.getGlobalConfiguration().clone() : configuration;
+        final Configuration buildConfiguration
+            = (configuration == null) ? Configuration.getGlobalConfiguration().clone() : configuration;
         // Service Version
-        final TextAnalyticsServiceVersion serviceVersion =
-            version != null ? version : TextAnalyticsServiceVersion.getLatest();
+        final TextAnalyticsServiceVersion serviceVersion
+            = version != null ? version : TextAnalyticsServiceVersion.getLatest();
 
         // Endpoint cannot be null, which is required in request authentication
         Objects.requireNonNull(endpoint, "'Endpoint' is required and can not be null.");
@@ -253,12 +253,11 @@ public final class TextAnalyticsClientBuilder implements
             if (clientOptions != null) {
                 tracingOptions = clientOptions.getTracingOptions();
             }
-            
+
             Tracer tracer = TracerProvider.getDefaultProvider()
                 .createTracer(CLIENT_NAME, CLIENT_VERSION, COGNITIVE_TRACING_NAMESPACE_VALUE, tracingOptions);
 
-            pipeline = new HttpPipelineBuilder()
-                .clientOptions(buildClientOptions)
+            pipeline = new HttpPipelineBuilder().clientOptions(buildClientOptions)
                 .httpClient(httpClient)
                 .policies(policies.toArray(new HttpPipelinePolicy[0]))
                 .tracer(tracer)
@@ -266,23 +265,21 @@ public final class TextAnalyticsClientBuilder implements
         }
 
         if (!isConsolidatedServiceVersion(version)) {
-            final TextAnalyticsClientImpl textAnalyticsAPI = new TextAnalyticsClientImplBuilder()
-                                                                 .endpoint(endpoint)
-                                                                 .apiVersion(serviceVersion.getVersion())
-                                                                 .pipeline(pipeline)
-                                                                 .buildClient();
+            final TextAnalyticsClientImpl textAnalyticsAPI = new TextAnalyticsClientImplBuilder().endpoint(endpoint)
+                .apiVersion(serviceVersion.getVersion())
+                .pipeline(pipeline)
+                .buildClient();
 
             return new TextAnalyticsAsyncClient(textAnalyticsAPI, serviceVersion, defaultCountryHint, defaultLanguage);
         } else {
-            final MicrosoftCognitiveLanguageServiceTextAnalysisImpl batchApiTextAnalyticsClient =
-                new MicrosoftCognitiveLanguageServiceTextAnalysisImplBuilder()
-                    .endpoint(endpoint)
+            final MicrosoftCognitiveLanguageServiceTextAnalysisImpl batchApiTextAnalyticsClient
+                = new MicrosoftCognitiveLanguageServiceTextAnalysisImplBuilder().endpoint(endpoint)
                     .apiVersion(serviceVersion.getVersion())
                     .pipeline(pipeline)
                     .buildClient();
 
-            return new TextAnalyticsAsyncClient(batchApiTextAnalyticsClient, serviceVersion,
-                defaultCountryHint, defaultLanguage);
+            return new TextAnalyticsAsyncClient(batchApiTextAnalyticsClient, serviceVersion, defaultCountryHint,
+                defaultLanguage);
         }
     }
 
@@ -567,6 +564,6 @@ public final class TextAnalyticsClientBuilder implements
             serviceVersion = TextAnalyticsServiceVersion.V2022_05_01;
         }
         return !(TextAnalyticsServiceVersion.V3_0 == serviceVersion
-                     || TextAnalyticsServiceVersion.V3_1 == serviceVersion);
+            || TextAnalyticsServiceVersion.V3_1 == serviceVersion);
     }
 }

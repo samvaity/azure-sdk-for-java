@@ -72,7 +72,7 @@ class PartitionSynchronizerImpl implements PartitionSynchronizer {
 
     @Override
     public Mono<Void> createMissingLeases() {
-        return this.documentClient.getOverlappingRanges(PartitionKeyInternalHelper.FullRange)
+        return this.documentClient.getOverlappingRanges(PartitionKeyInternalHelper.FullRange, true)
                 .flatMap(pkRangeList -> this.createLeases(pkRangeList).then())
                 .onErrorResume(throwable -> {
                     logger.error("Create lease failed", throwable);
@@ -82,9 +82,27 @@ class PartitionSynchronizerImpl implements PartitionSynchronizer {
 
     @Override
     public Mono<Void> createMissingLeases(List<Lease> pkRangeIdVersionLeases) {
-        return this.documentClient.getOverlappingRanges(PartitionKeyInternalHelper.FullRange)
-            .flatMap(pkRangeList -> this.createLeases(pkRangeList, pkRangeIdVersionLeases).then())
-            .doOnError(throwable -> logger.error("Create missing leases from pkRangeIdVersion leases failed", throwable));
+        return this.documentClient.getOverlappingRanges(PartitionKeyInternalHelper.FullRange, true)
+            .flatMap(pkRangeList -> {
+                if (logger.isInfoEnabled()) {
+                    StringBuilder sb = new StringBuilder();
+                    for (PartitionKeyRange pkr : pkRangeList) {
+                        if (sb.length() > 0) {
+                            sb.append(", ");
+                        }
+
+                        sb.append(pkr.getId() + ":" + pkr.getMinInclusive() + "-" + pkr.getMaxExclusive());
+                    }
+                    logger.info(
+                        "Checking whether leases for any partition is missing - partitions - {}",
+                        sb);
+                }
+                return this.createLeases(pkRangeList, pkRangeIdVersionLeases).then();
+            })
+            .onErrorResume( throwable -> {
+                logger.error("Create missing leases from pkRangeIdVersion leases failed", throwable);
+                return Mono.error(throwable);
+            });
     }
 
     @Override
@@ -98,7 +116,7 @@ class PartitionSynchronizerImpl implements PartitionSynchronizer {
                 leaseToken,
                 lastContinuationToken);
 
-        return this.documentClient.getOverlappingRanges(((FeedRangeEpkImpl)lease.getFeedRange()).getRange())
+        return this.documentClient.getOverlappingRanges(((FeedRangeEpkImpl)lease.getFeedRange()).getRange(), true)
                 .flatMap(pkRangeList -> {
                     if (pkRangeList.size() == 0) {
                         logger.error("Lease with token {} is gone but we failed to find at least one child range", leaseToken);
@@ -158,8 +176,12 @@ class PartitionSynchronizerImpl implements PartitionSynchronizer {
                                return Mono.empty();
                            }).flatMap(pkRange -> {
                                 FeedRangeEpkImpl feedRangeEpk = new FeedRangeEpkImpl(pkRange.toRange());
+                                logger.debug("Adding a new lease document for feed range {}", feedRangeEpk);
                                 //  We are creating the lease for the whole pkRange.
-                                return leaseManager.createLeaseIfNotExist(feedRangeEpk, null);
+                                return leaseManager.createLeaseIfNotExist(feedRangeEpk, null)
+                                    .doOnSuccess((lease) -> {
+                                        logger.info("Added new lease document for feed range {}", lease.getLeaseToken());
+                                    });
                                 }, this.degreeOfParallelism);
             });
     }
@@ -235,7 +257,7 @@ class PartitionSynchronizerImpl implements PartitionSynchronizer {
             this.collectionSelfLink,
             feedRangeEpk,
             feedRangeEpk.getRange());
-        feedRangeContinuation.replaceContinuation(etag);
+        feedRangeContinuation.replaceContinuation(etag, true);
 
         ChangeFeedState changeFeedState =  new ChangeFeedStateV1(
             this.collectionSelfLink,

@@ -23,40 +23,36 @@ public final class ReplicationFabricsImpl implements ReplicationFabrics {
 
     private final com.azure.resourcemanager.recoveryservicessiterecovery.SiteRecoveryManager serviceManager;
 
-    public ReplicationFabricsImpl(
-        ReplicationFabricsClient innerClient,
+    public ReplicationFabricsImpl(ReplicationFabricsClient innerClient,
         com.azure.resourcemanager.recoveryservicessiterecovery.SiteRecoveryManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
     }
 
-    public PagedIterable<Fabric> list(String resourceName, String resourceGroupName) {
-        PagedIterable<FabricInner> inner = this.serviceClient().list(resourceName, resourceGroupName);
-        return Utils.mapPage(inner, inner1 -> new FabricImpl(inner1, this.manager()));
+    public PagedIterable<Fabric> list(String resourceGroupName, String resourceName) {
+        PagedIterable<FabricInner> inner = this.serviceClient().list(resourceGroupName, resourceName);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new FabricImpl(inner1, this.manager()));
     }
 
-    public PagedIterable<Fabric> list(String resourceName, String resourceGroupName, Context context) {
-        PagedIterable<FabricInner> inner = this.serviceClient().list(resourceName, resourceGroupName, context);
-        return Utils.mapPage(inner, inner1 -> new FabricImpl(inner1, this.manager()));
+    public PagedIterable<Fabric> list(String resourceGroupName, String resourceName, Context context) {
+        PagedIterable<FabricInner> inner = this.serviceClient().list(resourceGroupName, resourceName, context);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new FabricImpl(inner1, this.manager()));
     }
 
-    public Response<Fabric> getWithResponse(
-        String resourceName, String resourceGroupName, String fabricName, String filter, Context context) {
-        Response<FabricInner> inner =
-            this.serviceClient().getWithResponse(resourceName, resourceGroupName, fabricName, filter, context);
+    public Response<Fabric> getWithResponse(String resourceGroupName, String resourceName, String fabricName,
+        String filter, Context context) {
+        Response<FabricInner> inner
+            = this.serviceClient().getWithResponse(resourceGroupName, resourceName, fabricName, filter, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new FabricImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public Fabric get(String resourceName, String resourceGroupName, String fabricName) {
-        FabricInner inner = this.serviceClient().get(resourceName, resourceGroupName, fabricName);
+    public Fabric get(String resourceGroupName, String resourceName, String fabricName) {
+        FabricInner inner = this.serviceClient().get(resourceGroupName, resourceName, fabricName);
         if (inner != null) {
             return new FabricImpl(inner, this.manager());
         } else {
@@ -64,16 +60,16 @@ public final class ReplicationFabricsImpl implements ReplicationFabrics {
         }
     }
 
-    public void purge(String resourceName, String resourceGroupName, String fabricName) {
-        this.serviceClient().purge(resourceName, resourceGroupName, fabricName);
+    public void purge(String resourceGroupName, String resourceName, String fabricName) {
+        this.serviceClient().purge(resourceGroupName, resourceName, fabricName);
     }
 
-    public void purge(String resourceName, String resourceGroupName, String fabricName, Context context) {
-        this.serviceClient().purge(resourceName, resourceGroupName, fabricName, context);
+    public void purge(String resourceGroupName, String resourceName, String fabricName, Context context) {
+        this.serviceClient().purge(resourceGroupName, resourceName, fabricName, context);
     }
 
-    public Fabric checkConsistency(String resourceName, String resourceGroupName, String fabricName) {
-        FabricInner inner = this.serviceClient().checkConsistency(resourceName, resourceGroupName, fabricName);
+    public Fabric checkConsistency(String resourceGroupName, String resourceName, String fabricName) {
+        FabricInner inner = this.serviceClient().checkConsistency(resourceGroupName, resourceName, fabricName);
         if (inner != null) {
             return new FabricImpl(inner, this.manager());
         } else {
@@ -81,8 +77,8 @@ public final class ReplicationFabricsImpl implements ReplicationFabrics {
         }
     }
 
-    public Fabric checkConsistency(String resourceName, String resourceGroupName, String fabricName, Context context) {
-        FabricInner inner = this.serviceClient().checkConsistency(resourceName, resourceGroupName, fabricName, context);
+    public Fabric checkConsistency(String resourceGroupName, String resourceName, String fabricName, Context context) {
+        FabricInner inner = this.serviceClient().checkConsistency(resourceGroupName, resourceName, fabricName, context);
         if (inner != null) {
             return new FabricImpl(inner, this.manager());
         } else {
@@ -90,23 +86,18 @@ public final class ReplicationFabricsImpl implements ReplicationFabrics {
         }
     }
 
-    public void migrateToAad(String resourceName, String resourceGroupName, String fabricName) {
-        this.serviceClient().migrateToAad(resourceName, resourceGroupName, fabricName);
+    public void migrateToAad(String resourceGroupName, String resourceName, String fabricName) {
+        this.serviceClient().migrateToAad(resourceGroupName, resourceName, fabricName);
     }
 
-    public void migrateToAad(String resourceName, String resourceGroupName, String fabricName, Context context) {
-        this.serviceClient().migrateToAad(resourceName, resourceGroupName, fabricName, context);
+    public void migrateToAad(String resourceGroupName, String resourceName, String fabricName, Context context) {
+        this.serviceClient().migrateToAad(resourceGroupName, resourceName, fabricName, context);
     }
 
-    public Fabric reassociateGateway(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
+    public Fabric reassociateGateway(String resourceGroupName, String resourceName, String fabricName,
         FailoverProcessServerRequest failoverProcessServerRequest) {
-        FabricInner inner =
-            this
-                .serviceClient()
-                .reassociateGateway(resourceName, resourceGroupName, fabricName, failoverProcessServerRequest);
+        FabricInner inner = this.serviceClient()
+            .reassociateGateway(resourceGroupName, resourceName, fabricName, failoverProcessServerRequest);
         if (inner != null) {
             return new FabricImpl(inner, this.manager());
         } else {
@@ -114,16 +105,10 @@ public final class ReplicationFabricsImpl implements ReplicationFabrics {
         }
     }
 
-    public Fabric reassociateGateway(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        FailoverProcessServerRequest failoverProcessServerRequest,
-        Context context) {
-        FabricInner inner =
-            this
-                .serviceClient()
-                .reassociateGateway(resourceName, resourceGroupName, fabricName, failoverProcessServerRequest, context);
+    public Fabric reassociateGateway(String resourceGroupName, String resourceName, String fabricName,
+        FailoverProcessServerRequest failoverProcessServerRequest, Context context) {
+        FabricInner inner = this.serviceClient()
+            .reassociateGateway(resourceGroupName, resourceName, fabricName, failoverProcessServerRequest, context);
         if (inner != null) {
             return new FabricImpl(inner, this.manager());
         } else {
@@ -131,18 +116,18 @@ public final class ReplicationFabricsImpl implements ReplicationFabrics {
         }
     }
 
-    public void delete(String resourceName, String resourceGroupName, String fabricName) {
-        this.serviceClient().delete(resourceName, resourceGroupName, fabricName);
+    public void delete(String resourceGroupName, String resourceName, String fabricName) {
+        this.serviceClient().delete(resourceGroupName, resourceName, fabricName);
     }
 
-    public void delete(String resourceName, String resourceGroupName, String fabricName, Context context) {
-        this.serviceClient().delete(resourceName, resourceGroupName, fabricName, context);
+    public void delete(String resourceGroupName, String resourceName, String fabricName, Context context) {
+        this.serviceClient().delete(resourceGroupName, resourceName, fabricName, context);
     }
 
-    public Fabric renewCertificate(
-        String resourceName, String resourceGroupName, String fabricName, RenewCertificateInput renewCertificate) {
-        FabricInner inner =
-            this.serviceClient().renewCertificate(resourceName, resourceGroupName, fabricName, renewCertificate);
+    public Fabric renewCertificate(String resourceGroupName, String resourceName, String fabricName,
+        RenewCertificateInput renewCertificate) {
+        FabricInner inner
+            = this.serviceClient().renewCertificate(resourceGroupName, resourceName, fabricName, renewCertificate);
         if (inner != null) {
             return new FabricImpl(inner, this.manager());
         } else {
@@ -150,78 +135,62 @@ public final class ReplicationFabricsImpl implements ReplicationFabrics {
         }
     }
 
-    public Fabric renewCertificate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        RenewCertificateInput renewCertificate,
-        Context context) {
-        FabricInner inner =
-            this
-                .serviceClient()
-                .renewCertificate(resourceName, resourceGroupName, fabricName, renewCertificate, context);
+    public Fabric renewCertificate(String resourceGroupName, String resourceName, String fabricName,
+        RenewCertificateInput renewCertificate, Context context) {
+        FabricInner inner = this.serviceClient()
+            .renewCertificate(resourceGroupName, resourceName, fabricName, renewCertificate, context);
         if (inner != null) {
             return new FabricImpl(inner, this.manager());
         } else {
             return null;
         }
+    }
+
+    public void removeInfra(String resourceGroupName, String resourceName, String fabricName) {
+        this.serviceClient().removeInfra(resourceGroupName, resourceName, fabricName);
+    }
+
+    public void removeInfra(String resourceGroupName, String resourceName, String fabricName, Context context) {
+        this.serviceClient().removeInfra(resourceGroupName, resourceName, fabricName, context);
     }
 
     public Fabric getById(String id) {
-        String resourceName = Utils.getValueFromIdByName(id, "vaults");
-        if (resourceName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String.format("The resource ID '%s' is not valid. Missing path segment 'vaults'.", id)));
-        }
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String fabricName = Utils.getValueFromIdByName(id, "replicationFabrics");
+        String resourceName = ResourceManagerUtils.getValueFromIdByName(id, "vaults");
+        if (resourceName == null) {
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'vaults'.", id)));
+        }
+        String fabricName = ResourceManagerUtils.getValueFromIdByName(id, "replicationFabrics");
         if (fabricName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'replicationFabrics'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'replicationFabrics'.", id)));
         }
         String localFilter = null;
-        return this.getWithResponse(resourceName, resourceGroupName, fabricName, localFilter, Context.NONE).getValue();
+        return this.getWithResponse(resourceGroupName, resourceName, fabricName, localFilter, Context.NONE).getValue();
     }
 
     public Response<Fabric> getByIdWithResponse(String id, String filter, Context context) {
-        String resourceName = Utils.getValueFromIdByName(id, "vaults");
-        if (resourceName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String.format("The resource ID '%s' is not valid. Missing path segment 'vaults'.", id)));
-        }
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String fabricName = Utils.getValueFromIdByName(id, "replicationFabrics");
+        String resourceName = ResourceManagerUtils.getValueFromIdByName(id, "vaults");
+        if (resourceName == null) {
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'vaults'.", id)));
+        }
+        String fabricName = ResourceManagerUtils.getValueFromIdByName(id, "replicationFabrics");
         if (fabricName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'replicationFabrics'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'replicationFabrics'.", id)));
         }
-        return this.getWithResponse(resourceName, resourceGroupName, fabricName, filter, context);
+        return this.getWithResponse(resourceGroupName, resourceName, fabricName, filter, context);
     }
 
     private ReplicationFabricsClient serviceClient() {

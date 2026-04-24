@@ -7,6 +7,8 @@ package com.azure.resourcemanager.apimanagement.implementation;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.apimanagement.fluent.models.BackendContractInner;
+import com.azure.resourcemanager.apimanagement.models.BackendBaseParametersPool;
+import com.azure.resourcemanager.apimanagement.models.BackendCircuitBreaker;
 import com.azure.resourcemanager.apimanagement.models.BackendContract;
 import com.azure.resourcemanager.apimanagement.models.BackendCredentialsContract;
 import com.azure.resourcemanager.apimanagement.models.BackendProperties;
@@ -14,6 +16,7 @@ import com.azure.resourcemanager.apimanagement.models.BackendProtocol;
 import com.azure.resourcemanager.apimanagement.models.BackendProxyContract;
 import com.azure.resourcemanager.apimanagement.models.BackendReconnectContract;
 import com.azure.resourcemanager.apimanagement.models.BackendTlsProperties;
+import com.azure.resourcemanager.apimanagement.models.BackendType;
 import com.azure.resourcemanager.apimanagement.models.BackendUpdateParameters;
 
 public final class BackendContractImpl implements BackendContract, BackendContract.Definition, BackendContract.Update {
@@ -69,6 +72,22 @@ public final class BackendContractImpl implements BackendContract, BackendContra
         return this.innerModel().tls();
     }
 
+    public BackendCircuitBreaker circuitBreaker() {
+        return this.innerModel().circuitBreaker();
+    }
+
+    public BackendBaseParametersPool pool() {
+        return this.innerModel().pool();
+    }
+
+    public BackendType typePropertiesType() {
+        return this.innerModel().typePropertiesType();
+    }
+
+    public String resourceGroupName() {
+        return resourceGroupName;
+    }
+
     public BackendContractInner innerModel() {
         return this.innerObject;
     }
@@ -96,24 +115,20 @@ public final class BackendContractImpl implements BackendContract, BackendContra
     }
 
     public BackendContract create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBackends()
-                .createOrUpdateWithResponse(
-                    resourceGroupName, serviceName, backendId, this.innerModel(), createIfMatch, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getBackends()
+            .createOrUpdateWithResponse(resourceGroupName, serviceName, backendId, this.innerModel(), createIfMatch,
+                Context.NONE)
+            .getValue();
         return this;
     }
 
     public BackendContract create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBackends()
-                .createOrUpdateWithResponse(
-                    resourceGroupName, serviceName, backendId, this.innerModel(), createIfMatch, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getBackends()
+            .createOrUpdateWithResponse(resourceGroupName, serviceName, backendId, this.innerModel(), createIfMatch,
+                context)
+            .getValue();
         return this;
     }
 
@@ -131,63 +146,54 @@ public final class BackendContractImpl implements BackendContract, BackendContra
     }
 
     public BackendContract apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBackends()
-                .updateWithResponse(
-                    resourceGroupName, serviceName, backendId, updateIfMatch, updateParameters, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getBackends()
+            .updateWithResponse(resourceGroupName, serviceName, backendId, updateIfMatch, updateParameters,
+                Context.NONE)
+            .getValue();
         return this;
     }
 
     public BackendContract apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBackends()
-                .updateWithResponse(resourceGroupName, serviceName, backendId, updateIfMatch, updateParameters, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getBackends()
+            .updateWithResponse(resourceGroupName, serviceName, backendId, updateIfMatch, updateParameters, context)
+            .getValue();
         return this;
     }
 
-    BackendContractImpl(
-        BackendContractInner innerObject, com.azure.resourcemanager.apimanagement.ApiManagementManager serviceManager) {
+    BackendContractImpl(BackendContractInner innerObject,
+        com.azure.resourcemanager.apimanagement.ApiManagementManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.serviceName = Utils.getValueFromIdByName(innerObject.id(), "service");
-        this.backendId = Utils.getValueFromIdByName(innerObject.id(), "backends");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.serviceName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "service");
+        this.backendId = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "backends");
     }
 
     public BackendContract refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBackends()
-                .getWithResponse(resourceGroupName, serviceName, backendId, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getBackends()
+            .getWithResponse(resourceGroupName, serviceName, backendId, Context.NONE)
+            .getValue();
         return this;
     }
 
     public BackendContract refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getBackends()
-                .getWithResponse(resourceGroupName, serviceName, backendId, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getBackends()
+            .getWithResponse(resourceGroupName, serviceName, backendId, context)
+            .getValue();
         return this;
+    }
+
+    public Response<Void> reconnectWithResponse(BackendReconnectContract parameters, Context context) {
+        return serviceManager.backends()
+            .reconnectWithResponse(resourceGroupName, serviceName, backendId, parameters, context);
     }
 
     public void reconnect() {
         serviceManager.backends().reconnect(resourceGroupName, serviceName, backendId);
-    }
-
-    public Response<Void> reconnectWithResponse(BackendReconnectContract parameters, Context context) {
-        return serviceManager
-            .backends()
-            .reconnectWithResponse(resourceGroupName, serviceName, backendId, parameters, context);
     }
 
     public BackendContractImpl withUrl(String url) {
@@ -280,6 +286,31 @@ public final class BackendContractImpl implements BackendContract, BackendContra
         }
     }
 
+    public BackendContractImpl withCircuitBreaker(BackendCircuitBreaker circuitBreaker) {
+        if (isInCreateMode()) {
+            this.innerModel().withCircuitBreaker(circuitBreaker);
+            return this;
+        } else {
+            this.updateParameters.withCircuitBreaker(circuitBreaker);
+            return this;
+        }
+    }
+
+    public BackendContractImpl withPool(BackendBaseParametersPool pool) {
+        if (isInCreateMode()) {
+            this.innerModel().withPool(pool);
+            return this;
+        } else {
+            this.updateParameters.withPool(pool);
+            return this;
+        }
+    }
+
+    public BackendContractImpl withTypePropertiesType(BackendType typePropertiesType) {
+        this.innerModel().withTypePropertiesType(typePropertiesType);
+        return this;
+    }
+
     public BackendContractImpl withIfMatch(String ifMatch) {
         if (isInCreateMode()) {
             this.createIfMatch = ifMatch;
@@ -288,6 +319,11 @@ public final class BackendContractImpl implements BackendContract, BackendContra
             this.updateIfMatch = ifMatch;
             return this;
         }
+    }
+
+    public BackendContractImpl withType(BackendType type) {
+        this.updateParameters.withType(type);
+        return this;
     }
 
     private boolean isInCreateMode() {

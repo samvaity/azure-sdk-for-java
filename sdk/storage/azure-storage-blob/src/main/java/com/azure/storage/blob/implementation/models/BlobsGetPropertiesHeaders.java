@@ -5,8 +5,7 @@
 package com.azure.storage.blob.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.HeaderCollection;
-import com.azure.core.http.HttpHeader;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.util.CoreUtils;
@@ -17,1144 +16,599 @@ import com.azure.storage.blob.models.CopyStatusType;
 import com.azure.storage.blob.models.LeaseDurationType;
 import com.azure.storage.blob.models.LeaseStateType;
 import com.azure.storage.blob.models.LeaseStatusType;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.time.OffsetDateTime;
 import java.util.Base64;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** The BlobsGetPropertiesHeaders model. */
-@JacksonXmlRootElement(localName = "null")
+/**
+ * The BlobsGetPropertiesHeaders model.
+ */
 @Fluent
 public final class BlobsGetPropertiesHeaders {
     /*
-     * The x-ms-is-current-version property.
+     * The Last-Modified property.
      */
-    @JsonProperty(value = "x-ms-is-current-version")
-    private Boolean xMsIsCurrentVersion;
-
-    /*
-     * The x-ms-lease-status property.
-     */
-    @JsonProperty(value = "x-ms-lease-status")
-    private LeaseStatusType xMsLeaseStatus;
-
-    /*
-     * The x-ms-copy-destination-snapshot property.
-     */
-    @JsonProperty(value = "x-ms-copy-destination-snapshot")
-    private String xMsCopyDestinationSnapshot;
-
-    /*
-     * The x-ms-lease-state property.
-     */
-    @JsonProperty(value = "x-ms-lease-state")
-    private LeaseStateType xMsLeaseState;
-
-    /*
-     * The x-ms-blob-sealed property.
-     */
-    @JsonProperty(value = "x-ms-blob-sealed")
-    private Boolean xMsBlobSealed;
-
-    /*
-     * The x-ms-version-id property.
-     */
-    @JsonProperty(value = "x-ms-version-id")
-    private String xMsVersionId;
-
-    /*
-     * The x-ms-encryption-key-sha256 property.
-     */
-    @JsonProperty(value = "x-ms-encryption-key-sha256")
-    private String xMsEncryptionKeySha256;
-
-    /*
-     * The x-ms-access-tier-change-time property.
-     */
-    @JsonProperty(value = "x-ms-access-tier-change-time")
-    private DateTimeRfc1123 xMsAccessTierChangeTime;
-
-    /*
-     * The x-ms-blob-type property.
-     */
-    @JsonProperty(value = "x-ms-blob-type")
-    private BlobType xMsBlobType;
-
-    /*
-     * The Content-Encoding property.
-     */
-    @JsonProperty(value = "Content-Encoding")
-    private String contentEncoding;
+    @Generated
+    private DateTimeRfc1123 lastModified;
 
     /*
      * The x-ms-creation-time property.
      */
-    @JsonProperty(value = "x-ms-creation-time")
+    @Generated
     private DateTimeRfc1123 xMsCreationTime;
 
     /*
-     * The x-ms-incremental-copy property.
+     * The x-ms-meta- property.
      */
-    @JsonProperty(value = "x-ms-incremental-copy")
-    private Boolean xMsIncrementalCopy;
-
-    /*
-     * The x-ms-lease-duration property.
-     */
-    @JsonProperty(value = "x-ms-lease-duration")
-    private LeaseDurationType xMsLeaseDuration;
-
-    /*
-     * The x-ms-version property.
-     */
-    @JsonProperty(value = "x-ms-version")
-    private String xMsVersion;
-
-    /*
-     * The x-ms-copy-id property.
-     */
-    @JsonProperty(value = "x-ms-copy-id")
-    private String xMsCopyId;
-
-    /*
-     * The x-ms-immutability-policy-until-date property.
-     */
-    @JsonProperty(value = "x-ms-immutability-policy-until-date")
-    private DateTimeRfc1123 xMsImmutabilityPolicyUntilDate;
-
-    /*
-     * The x-ms-blob-sequence-number property.
-     */
-    @JsonProperty(value = "x-ms-blob-sequence-number")
-    private Long xMsBlobSequenceNumber;
-
-    /*
-     * The x-ms-blob-committed-block-count property.
-     */
-    @JsonProperty(value = "x-ms-blob-committed-block-count")
-    private Integer xMsBlobCommittedBlockCount;
-
-    /*
-     * The x-ms-legal-hold property.
-     */
-    @JsonProperty(value = "x-ms-legal-hold")
-    private Boolean xMsLegalHold;
-
-    /*
-     * The Content-MD5 property.
-     */
-    @JsonProperty(value = "Content-MD5")
-    private byte[] contentMD5;
+    @Generated
+    private Map<String, String> xMsMeta;
 
     /*
      * The x-ms-or-policy-id property.
      */
-    @JsonProperty(value = "x-ms-or-policy-id")
+    @Generated
     private String xMsOrPolicyId;
 
     /*
-     * The Cache-Control property.
+     * The x-ms-or- property.
      */
-    @JsonProperty(value = "Cache-Control")
-    private String cacheControl;
+    @Generated
+    private Map<String, String> xMsOr;
+
+    /*
+     * The x-ms-blob-type property.
+     */
+    @Generated
+    private BlobType xMsBlobType;
+
+    /*
+     * The x-ms-copy-completion-time property.
+     */
+    @Generated
+    private DateTimeRfc1123 xMsCopyCompletionTime;
+
+    /*
+     * The x-ms-copy-status-description property.
+     */
+    @Generated
+    private String xMsCopyStatusDescription;
+
+    /*
+     * The x-ms-copy-id property.
+     */
+    @Generated
+    private String xMsCopyId;
+
+    /*
+     * The x-ms-copy-progress property.
+     */
+    @Generated
+    private String xMsCopyProgress;
+
+    /*
+     * The x-ms-copy-source property.
+     */
+    @Generated
+    private String xMsCopySource;
+
+    /*
+     * The x-ms-copy-status property.
+     */
+    @Generated
+    private CopyStatusType xMsCopyStatus;
+
+    /*
+     * The x-ms-incremental-copy property.
+     */
+    @Generated
+    private Boolean xMsIncrementalCopy;
+
+    /*
+     * The x-ms-copy-destination-snapshot property.
+     */
+    @Generated
+    private String xMsCopyDestinationSnapshot;
+
+    /*
+     * The x-ms-lease-duration property.
+     */
+    @Generated
+    private LeaseDurationType xMsLeaseDuration;
+
+    /*
+     * The x-ms-lease-state property.
+     */
+    @Generated
+    private LeaseStateType xMsLeaseState;
+
+    /*
+     * The x-ms-lease-status property.
+     */
+    @Generated
+    private LeaseStatusType xMsLeaseStatus;
+
+    /*
+     * The Content-Length property.
+     */
+    @Generated
+    private Long contentLength;
+
+    /*
+     * The Content-Type property.
+     */
+    @Generated
+    private String contentType;
 
     /*
      * The ETag property.
      */
-    @JsonProperty(value = "ETag")
+    @Generated
     private String eTag;
+
+    /*
+     * The Content-MD5 property.
+     */
+    @Generated
+    private byte[] contentMD5;
+
+    /*
+     * The Content-Encoding property.
+     */
+    @Generated
+    private String contentEncoding;
 
     /*
      * The Content-Disposition property.
      */
-    @JsonProperty(value = "Content-Disposition")
+    @Generated
     private String contentDisposition;
 
     /*
      * The Content-Language property.
      */
-    @JsonProperty(value = "Content-Language")
+    @Generated
     private String contentLanguage;
+
+    /*
+     * The Cache-Control property.
+     */
+    @Generated
+    private String cacheControl;
+
+    /*
+     * The x-ms-blob-sequence-number property.
+     */
+    @Generated
+    private Long xMsBlobSequenceNumber;
 
     /*
      * The x-ms-client-request-id property.
      */
-    @JsonProperty(value = "x-ms-client-request-id")
+    @Generated
     private String xMsClientRequestId;
-
-    /*
-     * The x-ms-or- property.
-     */
-    @HeaderCollection("x-ms-or-")
-    private Map<String, String> xMsOr;
-
-    /*
-     * The x-ms-encryption-scope property.
-     */
-    @JsonProperty(value = "x-ms-encryption-scope")
-    private String xMsEncryptionScope;
-
-    /*
-     * The x-ms-tag-count property.
-     */
-    @JsonProperty(value = "x-ms-tag-count")
-    private Long xMsTagCount;
-
-    /*
-     * The Last-Modified property.
-     */
-    @JsonProperty(value = "Last-Modified")
-    private DateTimeRfc1123 lastModified;
-
-    /*
-     * The x-ms-access-tier-inferred property.
-     */
-    @JsonProperty(value = "x-ms-access-tier-inferred")
-    private Boolean xMsAccessTierInferred;
-
-    /*
-     * The x-ms-immutability-policy-mode property.
-     */
-    @JsonProperty(value = "x-ms-immutability-policy-mode")
-    private BlobImmutabilityPolicyMode xMsImmutabilityPolicyMode;
-
-    /*
-     * The x-ms-access-tier property.
-     */
-    @JsonProperty(value = "x-ms-access-tier")
-    private String xMsAccessTier;
-
-    /*
-     * The x-ms-copy-status-description property.
-     */
-    @JsonProperty(value = "x-ms-copy-status-description")
-    private String xMsCopyStatusDescription;
-
-    /*
-     * The Content-Length property.
-     */
-    @JsonProperty(value = "Content-Length")
-    private Long contentLength;
 
     /*
      * The x-ms-request-id property.
      */
-    @JsonProperty(value = "x-ms-request-id")
+    @Generated
     private String xMsRequestId;
 
     /*
-     * The Content-Type property.
+     * The x-ms-version property.
      */
-    @JsonProperty(value = "Content-Type")
-    private String contentType;
-
-    /*
-     * The x-ms-last-access-time property.
-     */
-    @JsonProperty(value = "x-ms-last-access-time")
-    private DateTimeRfc1123 xMsLastAccessTime;
-
-    /*
-     * The x-ms-copy-source property.
-     */
-    @JsonProperty(value = "x-ms-copy-source")
-    private String xMsCopySource;
-
-    /*
-     * The x-ms-copy-progress property.
-     */
-    @JsonProperty(value = "x-ms-copy-progress")
-    private String xMsCopyProgress;
-
-    /*
-     * The x-ms-meta- property.
-     */
-    @HeaderCollection("x-ms-meta-")
-    private Map<String, String> xMsMeta;
+    @Generated
+    private String xMsVersion;
 
     /*
      * The Date property.
      */
-    @JsonProperty(value = "Date")
+    @Generated
     private DateTimeRfc1123 date;
-
-    /*
-     * The x-ms-expiry-time property.
-     */
-    @JsonProperty(value = "x-ms-expiry-time")
-    private DateTimeRfc1123 xMsExpiryTime;
-
-    /*
-     * The x-ms-copy-completion-time property.
-     */
-    @JsonProperty(value = "x-ms-copy-completion-time")
-    private DateTimeRfc1123 xMsCopyCompletionTime;
 
     /*
      * The Accept-Ranges property.
      */
-    @JsonProperty(value = "Accept-Ranges")
+    @Generated
     private String acceptRanges;
+
+    /*
+     * The x-ms-blob-committed-block-count property.
+     */
+    @Generated
+    private Integer xMsBlobCommittedBlockCount;
 
     /*
      * The x-ms-server-encrypted property.
      */
-    @JsonProperty(value = "x-ms-server-encrypted")
+    @Generated
     private Boolean xMsServerEncrypted;
 
     /*
-     * The x-ms-rehydrate-priority property.
+     * The x-ms-encryption-key-sha256 property.
      */
-    @JsonProperty(value = "x-ms-rehydrate-priority")
-    private String xMsRehydratePriority;
+    @Generated
+    private String xMsEncryptionKeySha256;
 
     /*
-     * The x-ms-copy-status property.
+     * The x-ms-encryption-scope property.
      */
-    @JsonProperty(value = "x-ms-copy-status")
-    private CopyStatusType xMsCopyStatus;
+    @Generated
+    private String xMsEncryptionScope;
+
+    /*
+     * The x-ms-access-tier property.
+     */
+    @Generated
+    private String xMsAccessTier;
+
+    /*
+     * The x-ms-access-tier-inferred property.
+     */
+    @Generated
+    private Boolean xMsAccessTierInferred;
 
     /*
      * The x-ms-archive-status property.
      */
-    @JsonProperty(value = "x-ms-archive-status")
+    @Generated
     private String xMsArchiveStatus;
 
-    private static final HttpHeaderName X_MS_IS_CURRENT_VERSION = HttpHeaderName.fromString("x-ms-is-current-version");
+    /*
+     * The x-ms-access-tier-change-time property.
+     */
+    @Generated
+    private DateTimeRfc1123 xMsAccessTierChangeTime;
 
-    private static final HttpHeaderName X_MS_LEASE_STATUS = HttpHeaderName.fromString("x-ms-lease-status");
+    /*
+     * The x-ms-smart-access-tier property.
+     */
+    @Generated
+    private String xMsSmartAccessTier;
 
-    private static final HttpHeaderName X_MS_COPY_DESTINATION_SNAPSHOT =
-            HttpHeaderName.fromString("x-ms-copy-destination-snapshot");
+    /*
+     * The x-ms-version-id property.
+     */
+    @Generated
+    private String xMsVersionId;
 
-    private static final HttpHeaderName X_MS_LEASE_STATE = HttpHeaderName.fromString("x-ms-lease-state");
+    /*
+     * The x-ms-is-current-version property.
+     */
+    @Generated
+    private Boolean xMsIsCurrentVersion;
 
-    private static final HttpHeaderName X_MS_BLOB_SEALED = HttpHeaderName.fromString("x-ms-blob-sealed");
+    /*
+     * The x-ms-tag-count property.
+     */
+    @Generated
+    private Long xMsTagCount;
 
-    private static final HttpHeaderName X_MS_VERSION_ID = HttpHeaderName.fromString("x-ms-version-id");
+    /*
+     * The x-ms-expiry-time property.
+     */
+    @Generated
+    private DateTimeRfc1123 xMsExpiryTime;
 
-    private static final HttpHeaderName X_MS_ENCRYPTION_KEY_SHA256 =
-            HttpHeaderName.fromString("x-ms-encryption-key-sha256");
+    /*
+     * The x-ms-blob-sealed property.
+     */
+    @Generated
+    private Boolean xMsBlobSealed;
 
-    private static final HttpHeaderName X_MS_ACCESS_TIER_CHANGE_TIME =
-            HttpHeaderName.fromString("x-ms-access-tier-change-time");
+    /*
+     * The x-ms-rehydrate-priority property.
+     */
+    @Generated
+    private String xMsRehydratePriority;
 
-    private static final HttpHeaderName X_MS_BLOB_TYPE = HttpHeaderName.fromString("x-ms-blob-type");
+    /*
+     * The x-ms-last-access-time property.
+     */
+    @Generated
+    private DateTimeRfc1123 xMsLastAccessTime;
+
+    /*
+     * The x-ms-immutability-policy-until-date property.
+     */
+    @Generated
+    private DateTimeRfc1123 xMsImmutabilityPolicyUntilDate;
+
+    /*
+     * The x-ms-immutability-policy-mode property.
+     */
+    @Generated
+    private BlobImmutabilityPolicyMode xMsImmutabilityPolicyMode;
+
+    /*
+     * The x-ms-legal-hold property.
+     */
+    @Generated
+    private Boolean xMsLegalHold;
 
     private static final HttpHeaderName X_MS_CREATION_TIME = HttpHeaderName.fromString("x-ms-creation-time");
 
-    private static final HttpHeaderName X_MS_INCREMENTAL_COPY = HttpHeaderName.fromString("x-ms-incremental-copy");
+    private static final HttpHeaderName X_MS_OR_POLICY_ID = HttpHeaderName.fromString("x-ms-or-policy-id");
 
-    private static final HttpHeaderName X_MS_LEASE_DURATION = HttpHeaderName.fromString("x-ms-lease-duration");
+    private static final HttpHeaderName X_MS_BLOB_TYPE = HttpHeaderName.fromString("x-ms-blob-type");
 
-    private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
+    private static final HttpHeaderName X_MS_COPY_COMPLETION_TIME
+        = HttpHeaderName.fromString("x-ms-copy-completion-time");
+
+    private static final HttpHeaderName X_MS_COPY_STATUS_DESCRIPTION
+        = HttpHeaderName.fromString("x-ms-copy-status-description");
 
     private static final HttpHeaderName X_MS_COPY_ID = HttpHeaderName.fromString("x-ms-copy-id");
 
-    private static final HttpHeaderName X_MS_IMMUTABILITY_POLICY_UNTIL_DATE =
-            HttpHeaderName.fromString("x-ms-immutability-policy-until-date");
-
-    private static final HttpHeaderName X_MS_BLOB_SEQUENCE_NUMBER =
-            HttpHeaderName.fromString("x-ms-blob-sequence-number");
-
-    private static final HttpHeaderName X_MS_BLOB_COMMITTED_BLOCK_COUNT =
-            HttpHeaderName.fromString("x-ms-blob-committed-block-count");
-
-    private static final HttpHeaderName X_MS_LEGAL_HOLD = HttpHeaderName.fromString("x-ms-legal-hold");
-
-    private static final HttpHeaderName X_MS_OR_POLICY_ID = HttpHeaderName.fromString("x-ms-or-policy-id");
-
-    private static final HttpHeaderName X_MS_ENCRYPTION_SCOPE = HttpHeaderName.fromString("x-ms-encryption-scope");
-
-    private static final HttpHeaderName X_MS_TAG_COUNT = HttpHeaderName.fromString("x-ms-tag-count");
-
-    private static final HttpHeaderName X_MS_ACCESS_TIER_INFERRED =
-            HttpHeaderName.fromString("x-ms-access-tier-inferred");
-
-    private static final HttpHeaderName X_MS_IMMUTABILITY_POLICY_MODE =
-            HttpHeaderName.fromString("x-ms-immutability-policy-mode");
-
-    private static final HttpHeaderName X_MS_ACCESS_TIER = HttpHeaderName.fromString("x-ms-access-tier");
-
-    private static final HttpHeaderName X_MS_COPY_STATUS_DESCRIPTION =
-            HttpHeaderName.fromString("x-ms-copy-status-description");
-
-    private static final HttpHeaderName X_MS_REQUEST_ID = HttpHeaderName.fromString("x-ms-request-id");
-
-    private static final HttpHeaderName X_MS_LAST_ACCESS_TIME = HttpHeaderName.fromString("x-ms-last-access-time");
+    private static final HttpHeaderName X_MS_COPY_PROGRESS = HttpHeaderName.fromString("x-ms-copy-progress");
 
     private static final HttpHeaderName X_MS_COPY_SOURCE = HttpHeaderName.fromString("x-ms-copy-source");
 
-    private static final HttpHeaderName X_MS_COPY_PROGRESS = HttpHeaderName.fromString("x-ms-copy-progress");
+    private static final HttpHeaderName X_MS_COPY_STATUS = HttpHeaderName.fromString("x-ms-copy-status");
 
-    private static final HttpHeaderName X_MS_EXPIRY_TIME = HttpHeaderName.fromString("x-ms-expiry-time");
+    private static final HttpHeaderName X_MS_INCREMENTAL_COPY = HttpHeaderName.fromString("x-ms-incremental-copy");
 
-    private static final HttpHeaderName X_MS_COPY_COMPLETION_TIME =
-            HttpHeaderName.fromString("x-ms-copy-completion-time");
+    private static final HttpHeaderName X_MS_COPY_DESTINATION_SNAPSHOT
+        = HttpHeaderName.fromString("x-ms-copy-destination-snapshot");
+
+    private static final HttpHeaderName X_MS_LEASE_DURATION = HttpHeaderName.fromString("x-ms-lease-duration");
+
+    private static final HttpHeaderName X_MS_LEASE_STATE = HttpHeaderName.fromString("x-ms-lease-state");
+
+    private static final HttpHeaderName X_MS_LEASE_STATUS = HttpHeaderName.fromString("x-ms-lease-status");
+
+    private static final HttpHeaderName X_MS_BLOB_SEQUENCE_NUMBER
+        = HttpHeaderName.fromString("x-ms-blob-sequence-number");
+
+    private static final HttpHeaderName X_MS_VERSION = HttpHeaderName.fromString("x-ms-version");
+
+    private static final HttpHeaderName X_MS_BLOB_COMMITTED_BLOCK_COUNT
+        = HttpHeaderName.fromString("x-ms-blob-committed-block-count");
 
     private static final HttpHeaderName X_MS_SERVER_ENCRYPTED = HttpHeaderName.fromString("x-ms-server-encrypted");
 
-    private static final HttpHeaderName X_MS_REHYDRATE_PRIORITY = HttpHeaderName.fromString("x-ms-rehydrate-priority");
+    private static final HttpHeaderName X_MS_ENCRYPTION_KEY_SHA256
+        = HttpHeaderName.fromString("x-ms-encryption-key-sha256");
 
-    private static final HttpHeaderName X_MS_COPY_STATUS = HttpHeaderName.fromString("x-ms-copy-status");
+    private static final HttpHeaderName X_MS_ENCRYPTION_SCOPE = HttpHeaderName.fromString("x-ms-encryption-scope");
+
+    private static final HttpHeaderName X_MS_ACCESS_TIER = HttpHeaderName.fromString("x-ms-access-tier");
+
+    private static final HttpHeaderName X_MS_ACCESS_TIER_INFERRED
+        = HttpHeaderName.fromString("x-ms-access-tier-inferred");
 
     private static final HttpHeaderName X_MS_ARCHIVE_STATUS = HttpHeaderName.fromString("x-ms-archive-status");
+
+    private static final HttpHeaderName X_MS_ACCESS_TIER_CHANGE_TIME
+        = HttpHeaderName.fromString("x-ms-access-tier-change-time");
+
+    private static final HttpHeaderName X_MS_SMART_ACCESS_TIER = HttpHeaderName.fromString("x-ms-smart-access-tier");
+
+    private static final HttpHeaderName X_MS_VERSION_ID = HttpHeaderName.fromString("x-ms-version-id");
+
+    private static final HttpHeaderName X_MS_IS_CURRENT_VERSION = HttpHeaderName.fromString("x-ms-is-current-version");
+
+    private static final HttpHeaderName X_MS_TAG_COUNT = HttpHeaderName.fromString("x-ms-tag-count");
+
+    private static final HttpHeaderName X_MS_EXPIRY_TIME = HttpHeaderName.fromString("x-ms-expiry-time");
+
+    private static final HttpHeaderName X_MS_BLOB_SEALED = HttpHeaderName.fromString("x-ms-blob-sealed");
+
+    private static final HttpHeaderName X_MS_REHYDRATE_PRIORITY = HttpHeaderName.fromString("x-ms-rehydrate-priority");
+
+    private static final HttpHeaderName X_MS_LAST_ACCESS_TIME = HttpHeaderName.fromString("x-ms-last-access-time");
+
+    private static final HttpHeaderName X_MS_IMMUTABILITY_POLICY_UNTIL_DATE
+        = HttpHeaderName.fromString("x-ms-immutability-policy-until-date");
+
+    private static final HttpHeaderName X_MS_IMMUTABILITY_POLICY_MODE
+        = HttpHeaderName.fromString("x-ms-immutability-policy-mode");
+
+    private static final HttpHeaderName X_MS_LEGAL_HOLD = HttpHeaderName.fromString("x-ms-legal-hold");
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of BlobsGetPropertiesHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public BlobsGetPropertiesHeaders(HttpHeaders rawHeaders) {
-        String xMsIsCurrentVersion = rawHeaders.getValue(X_MS_IS_CURRENT_VERSION);
-        if (xMsIsCurrentVersion != null) {
-            this.xMsIsCurrentVersion = Boolean.parseBoolean(xMsIsCurrentVersion);
-        }
-        String xMsLeaseStatus = rawHeaders.getValue(X_MS_LEASE_STATUS);
-        if (xMsLeaseStatus != null) {
-            this.xMsLeaseStatus = LeaseStatusType.fromString(xMsLeaseStatus);
-        }
-        this.xMsCopyDestinationSnapshot = rawHeaders.getValue(X_MS_COPY_DESTINATION_SNAPSHOT);
-        String xMsLeaseState = rawHeaders.getValue(X_MS_LEASE_STATE);
-        if (xMsLeaseState != null) {
-            this.xMsLeaseState = LeaseStateType.fromString(xMsLeaseState);
-        }
-        String xMsBlobSealed = rawHeaders.getValue(X_MS_BLOB_SEALED);
-        if (xMsBlobSealed != null) {
-            this.xMsBlobSealed = Boolean.parseBoolean(xMsBlobSealed);
-        }
-        this.xMsVersionId = rawHeaders.getValue(X_MS_VERSION_ID);
-        this.xMsEncryptionKeySha256 = rawHeaders.getValue(X_MS_ENCRYPTION_KEY_SHA256);
-        String xMsAccessTierChangeTime = rawHeaders.getValue(X_MS_ACCESS_TIER_CHANGE_TIME);
-        if (xMsAccessTierChangeTime != null) {
-            this.xMsAccessTierChangeTime = new DateTimeRfc1123(xMsAccessTierChangeTime);
-        }
-        String xMsBlobType = rawHeaders.getValue(X_MS_BLOB_TYPE);
-        if (xMsBlobType != null) {
-            this.xMsBlobType = BlobType.fromString(xMsBlobType);
-        }
-        this.contentEncoding = rawHeaders.getValue(HttpHeaderName.CONTENT_ENCODING);
-        String xMsCreationTime = rawHeaders.getValue(X_MS_CREATION_TIME);
-        if (xMsCreationTime != null) {
-            this.xMsCreationTime = new DateTimeRfc1123(xMsCreationTime);
-        }
-        String xMsIncrementalCopy = rawHeaders.getValue(X_MS_INCREMENTAL_COPY);
-        if (xMsIncrementalCopy != null) {
-            this.xMsIncrementalCopy = Boolean.parseBoolean(xMsIncrementalCopy);
-        }
-        String xMsLeaseDuration = rawHeaders.getValue(X_MS_LEASE_DURATION);
-        if (xMsLeaseDuration != null) {
-            this.xMsLeaseDuration = LeaseDurationType.fromString(xMsLeaseDuration);
-        }
-        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
-        this.xMsCopyId = rawHeaders.getValue(X_MS_COPY_ID);
-        String xMsImmutabilityPolicyUntilDate = rawHeaders.getValue(X_MS_IMMUTABILITY_POLICY_UNTIL_DATE);
-        if (xMsImmutabilityPolicyUntilDate != null) {
-            this.xMsImmutabilityPolicyUntilDate = new DateTimeRfc1123(xMsImmutabilityPolicyUntilDate);
-        }
-        String xMsBlobSequenceNumber = rawHeaders.getValue(X_MS_BLOB_SEQUENCE_NUMBER);
-        if (xMsBlobSequenceNumber != null) {
-            this.xMsBlobSequenceNumber = Long.parseLong(xMsBlobSequenceNumber);
-        }
-        String xMsBlobCommittedBlockCount = rawHeaders.getValue(X_MS_BLOB_COMMITTED_BLOCK_COUNT);
-        if (xMsBlobCommittedBlockCount != null) {
-            this.xMsBlobCommittedBlockCount = Integer.parseInt(xMsBlobCommittedBlockCount);
-        }
-        String xMsLegalHold = rawHeaders.getValue(X_MS_LEGAL_HOLD);
-        if (xMsLegalHold != null) {
-            this.xMsLegalHold = Boolean.parseBoolean(xMsLegalHold);
-        }
-        String contentMD5 = rawHeaders.getValue(HttpHeaderName.CONTENT_MD5);
-        if (contentMD5 != null) {
-            this.contentMD5 = Base64.getDecoder().decode(contentMD5);
-        }
-        this.xMsOrPolicyId = rawHeaders.getValue(X_MS_OR_POLICY_ID);
-        this.cacheControl = rawHeaders.getValue(HttpHeaderName.CACHE_CONTROL);
-        this.eTag = rawHeaders.getValue(HttpHeaderName.ETAG);
-        this.contentDisposition = rawHeaders.getValue(HttpHeaderName.CONTENT_DISPOSITION);
-        this.contentLanguage = rawHeaders.getValue(HttpHeaderName.CONTENT_LANGUAGE);
-        this.xMsClientRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_CLIENT_REQUEST_ID);
-        this.xMsEncryptionScope = rawHeaders.getValue(X_MS_ENCRYPTION_SCOPE);
-        String xMsTagCount = rawHeaders.getValue(X_MS_TAG_COUNT);
-        if (xMsTagCount != null) {
-            this.xMsTagCount = Long.parseLong(xMsTagCount);
-        }
         String lastModified = rawHeaders.getValue(HttpHeaderName.LAST_MODIFIED);
         if (lastModified != null) {
             this.lastModified = new DateTimeRfc1123(lastModified);
+        } else {
+            this.lastModified = null;
         }
-        String xMsAccessTierInferred = rawHeaders.getValue(X_MS_ACCESS_TIER_INFERRED);
-        if (xMsAccessTierInferred != null) {
-            this.xMsAccessTierInferred = Boolean.parseBoolean(xMsAccessTierInferred);
+        String xMsCreationTime = rawHeaders.getValue(X_MS_CREATION_TIME);
+        if (xMsCreationTime != null) {
+            this.xMsCreationTime = new DateTimeRfc1123(xMsCreationTime);
+        } else {
+            this.xMsCreationTime = null;
         }
-        String xMsImmutabilityPolicyMode = rawHeaders.getValue(X_MS_IMMUTABILITY_POLICY_MODE);
-        if (xMsImmutabilityPolicyMode != null) {
-            this.xMsImmutabilityPolicyMode = BlobImmutabilityPolicyMode.fromString(xMsImmutabilityPolicyMode);
-        }
-        this.xMsAccessTier = rawHeaders.getValue(X_MS_ACCESS_TIER);
-        this.xMsCopyStatusDescription = rawHeaders.getValue(X_MS_COPY_STATUS_DESCRIPTION);
-        String contentLength = rawHeaders.getValue(HttpHeaderName.CONTENT_LENGTH);
-        if (contentLength != null) {
-            this.contentLength = Long.parseLong(contentLength);
-        }
-        this.xMsRequestId = rawHeaders.getValue(X_MS_REQUEST_ID);
-        this.contentType = rawHeaders.getValue(HttpHeaderName.CONTENT_TYPE);
-        String xMsLastAccessTime = rawHeaders.getValue(X_MS_LAST_ACCESS_TIME);
-        if (xMsLastAccessTime != null) {
-            this.xMsLastAccessTime = new DateTimeRfc1123(xMsLastAccessTime);
-        }
-        this.xMsCopySource = rawHeaders.getValue(X_MS_COPY_SOURCE);
-        this.xMsCopyProgress = rawHeaders.getValue(X_MS_COPY_PROGRESS);
-        String date = rawHeaders.getValue(HttpHeaderName.DATE);
-        if (date != null) {
-            this.date = new DateTimeRfc1123(date);
-        }
-        String xMsExpiryTime = rawHeaders.getValue(X_MS_EXPIRY_TIME);
-        if (xMsExpiryTime != null) {
-            this.xMsExpiryTime = new DateTimeRfc1123(xMsExpiryTime);
+        this.xMsOrPolicyId = rawHeaders.getValue(X_MS_OR_POLICY_ID);
+        String xMsBlobType = rawHeaders.getValue(X_MS_BLOB_TYPE);
+        if (xMsBlobType != null) {
+            this.xMsBlobType = BlobType.fromString(xMsBlobType);
+        } else {
+            this.xMsBlobType = null;
         }
         String xMsCopyCompletionTime = rawHeaders.getValue(X_MS_COPY_COMPLETION_TIME);
         if (xMsCopyCompletionTime != null) {
             this.xMsCopyCompletionTime = new DateTimeRfc1123(xMsCopyCompletionTime);
+        } else {
+            this.xMsCopyCompletionTime = null;
         }
-        this.acceptRanges = rawHeaders.getValue(HttpHeaderName.ACCEPT_RANGES);
-        String xMsServerEncrypted = rawHeaders.getValue(X_MS_SERVER_ENCRYPTED);
-        if (xMsServerEncrypted != null) {
-            this.xMsServerEncrypted = Boolean.parseBoolean(xMsServerEncrypted);
-        }
-        this.xMsRehydratePriority = rawHeaders.getValue(X_MS_REHYDRATE_PRIORITY);
+        this.xMsCopyStatusDescription = rawHeaders.getValue(X_MS_COPY_STATUS_DESCRIPTION);
+        this.xMsCopyId = rawHeaders.getValue(X_MS_COPY_ID);
+        this.xMsCopyProgress = rawHeaders.getValue(X_MS_COPY_PROGRESS);
+        this.xMsCopySource = rawHeaders.getValue(X_MS_COPY_SOURCE);
         String xMsCopyStatus = rawHeaders.getValue(X_MS_COPY_STATUS);
         if (xMsCopyStatus != null) {
             this.xMsCopyStatus = CopyStatusType.fromString(xMsCopyStatus);
+        } else {
+            this.xMsCopyStatus = null;
+        }
+        String xMsIncrementalCopy = rawHeaders.getValue(X_MS_INCREMENTAL_COPY);
+        if (xMsIncrementalCopy != null) {
+            this.xMsIncrementalCopy = Boolean.parseBoolean(xMsIncrementalCopy);
+        } else {
+            this.xMsIncrementalCopy = null;
+        }
+        this.xMsCopyDestinationSnapshot = rawHeaders.getValue(X_MS_COPY_DESTINATION_SNAPSHOT);
+        String xMsLeaseDuration = rawHeaders.getValue(X_MS_LEASE_DURATION);
+        if (xMsLeaseDuration != null) {
+            this.xMsLeaseDuration = LeaseDurationType.fromString(xMsLeaseDuration);
+        } else {
+            this.xMsLeaseDuration = null;
+        }
+        String xMsLeaseState = rawHeaders.getValue(X_MS_LEASE_STATE);
+        if (xMsLeaseState != null) {
+            this.xMsLeaseState = LeaseStateType.fromString(xMsLeaseState);
+        } else {
+            this.xMsLeaseState = null;
+        }
+        String xMsLeaseStatus = rawHeaders.getValue(X_MS_LEASE_STATUS);
+        if (xMsLeaseStatus != null) {
+            this.xMsLeaseStatus = LeaseStatusType.fromString(xMsLeaseStatus);
+        } else {
+            this.xMsLeaseStatus = null;
+        }
+        String contentLength = rawHeaders.getValue(HttpHeaderName.CONTENT_LENGTH);
+        if (contentLength != null) {
+            this.contentLength = Long.parseLong(contentLength);
+        } else {
+            this.contentLength = null;
+        }
+        this.contentType = rawHeaders.getValue(HttpHeaderName.CONTENT_TYPE);
+        this.eTag = rawHeaders.getValue(HttpHeaderName.ETAG);
+        String contentMD5 = rawHeaders.getValue(HttpHeaderName.CONTENT_MD5);
+        if (contentMD5 != null) {
+            this.contentMD5 = Base64.getDecoder().decode(contentMD5);
+        } else {
+            this.contentMD5 = null;
+        }
+        this.contentEncoding = rawHeaders.getValue(HttpHeaderName.CONTENT_ENCODING);
+        this.contentDisposition = rawHeaders.getValue(HttpHeaderName.CONTENT_DISPOSITION);
+        this.contentLanguage = rawHeaders.getValue(HttpHeaderName.CONTENT_LANGUAGE);
+        this.cacheControl = rawHeaders.getValue(HttpHeaderName.CACHE_CONTROL);
+        String xMsBlobSequenceNumber = rawHeaders.getValue(X_MS_BLOB_SEQUENCE_NUMBER);
+        if (xMsBlobSequenceNumber != null) {
+            this.xMsBlobSequenceNumber = Long.parseLong(xMsBlobSequenceNumber);
+        } else {
+            this.xMsBlobSequenceNumber = null;
+        }
+        this.xMsClientRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_CLIENT_REQUEST_ID);
+        this.xMsRequestId = rawHeaders.getValue(HttpHeaderName.X_MS_REQUEST_ID);
+        this.xMsVersion = rawHeaders.getValue(X_MS_VERSION);
+        String date = rawHeaders.getValue(HttpHeaderName.DATE);
+        if (date != null) {
+            this.date = new DateTimeRfc1123(date);
+        } else {
+            this.date = null;
+        }
+        this.acceptRanges = rawHeaders.getValue(HttpHeaderName.ACCEPT_RANGES);
+        String xMsBlobCommittedBlockCount = rawHeaders.getValue(X_MS_BLOB_COMMITTED_BLOCK_COUNT);
+        if (xMsBlobCommittedBlockCount != null) {
+            this.xMsBlobCommittedBlockCount = Integer.parseInt(xMsBlobCommittedBlockCount);
+        } else {
+            this.xMsBlobCommittedBlockCount = null;
+        }
+        String xMsServerEncrypted = rawHeaders.getValue(X_MS_SERVER_ENCRYPTED);
+        if (xMsServerEncrypted != null) {
+            this.xMsServerEncrypted = Boolean.parseBoolean(xMsServerEncrypted);
+        } else {
+            this.xMsServerEncrypted = null;
+        }
+        this.xMsEncryptionKeySha256 = rawHeaders.getValue(X_MS_ENCRYPTION_KEY_SHA256);
+        this.xMsEncryptionScope = rawHeaders.getValue(X_MS_ENCRYPTION_SCOPE);
+        this.xMsAccessTier = rawHeaders.getValue(X_MS_ACCESS_TIER);
+        String xMsAccessTierInferred = rawHeaders.getValue(X_MS_ACCESS_TIER_INFERRED);
+        if (xMsAccessTierInferred != null) {
+            this.xMsAccessTierInferred = Boolean.parseBoolean(xMsAccessTierInferred);
+        } else {
+            this.xMsAccessTierInferred = null;
         }
         this.xMsArchiveStatus = rawHeaders.getValue(X_MS_ARCHIVE_STATUS);
-        Map<String, String> xMsOrHeaderCollection = new HashMap<>();
-        Map<String, String> xMsMetaHeaderCollection = new HashMap<>();
+        String xMsAccessTierChangeTime = rawHeaders.getValue(X_MS_ACCESS_TIER_CHANGE_TIME);
+        if (xMsAccessTierChangeTime != null) {
+            this.xMsAccessTierChangeTime = new DateTimeRfc1123(xMsAccessTierChangeTime);
+        } else {
+            this.xMsAccessTierChangeTime = null;
+        }
+        this.xMsSmartAccessTier = rawHeaders.getValue(X_MS_SMART_ACCESS_TIER);
+        this.xMsVersionId = rawHeaders.getValue(X_MS_VERSION_ID);
+        String xMsIsCurrentVersion = rawHeaders.getValue(X_MS_IS_CURRENT_VERSION);
+        if (xMsIsCurrentVersion != null) {
+            this.xMsIsCurrentVersion = Boolean.parseBoolean(xMsIsCurrentVersion);
+        } else {
+            this.xMsIsCurrentVersion = null;
+        }
+        String xMsTagCount = rawHeaders.getValue(X_MS_TAG_COUNT);
+        if (xMsTagCount != null) {
+            this.xMsTagCount = Long.parseLong(xMsTagCount);
+        } else {
+            this.xMsTagCount = null;
+        }
+        String xMsExpiryTime = rawHeaders.getValue(X_MS_EXPIRY_TIME);
+        if (xMsExpiryTime != null) {
+            this.xMsExpiryTime = new DateTimeRfc1123(xMsExpiryTime);
+        } else {
+            this.xMsExpiryTime = null;
+        }
+        String xMsBlobSealed = rawHeaders.getValue(X_MS_BLOB_SEALED);
+        if (xMsBlobSealed != null) {
+            this.xMsBlobSealed = Boolean.parseBoolean(xMsBlobSealed);
+        } else {
+            this.xMsBlobSealed = null;
+        }
+        this.xMsRehydratePriority = rawHeaders.getValue(X_MS_REHYDRATE_PRIORITY);
+        String xMsLastAccessTime = rawHeaders.getValue(X_MS_LAST_ACCESS_TIME);
+        if (xMsLastAccessTime != null) {
+            this.xMsLastAccessTime = new DateTimeRfc1123(xMsLastAccessTime);
+        } else {
+            this.xMsLastAccessTime = null;
+        }
+        String xMsImmutabilityPolicyUntilDate = rawHeaders.getValue(X_MS_IMMUTABILITY_POLICY_UNTIL_DATE);
+        if (xMsImmutabilityPolicyUntilDate != null) {
+            this.xMsImmutabilityPolicyUntilDate = new DateTimeRfc1123(xMsImmutabilityPolicyUntilDate);
+        } else {
+            this.xMsImmutabilityPolicyUntilDate = null;
+        }
+        String xMsImmutabilityPolicyMode = rawHeaders.getValue(X_MS_IMMUTABILITY_POLICY_MODE);
+        if (xMsImmutabilityPolicyMode != null) {
+            this.xMsImmutabilityPolicyMode = BlobImmutabilityPolicyMode.fromString(xMsImmutabilityPolicyMode);
+        } else {
+            this.xMsImmutabilityPolicyMode = null;
+        }
+        String xMsLegalHold = rawHeaders.getValue(X_MS_LEGAL_HOLD);
+        if (xMsLegalHold != null) {
+            this.xMsLegalHold = Boolean.parseBoolean(xMsLegalHold);
+        } else {
+            this.xMsLegalHold = null;
+        }
+        Map<String, String> xMsMetaHeaderCollection = new LinkedHashMap<>();
+        Map<String, String> xMsOrHeaderCollection = new LinkedHashMap<>();
 
-        for (HttpHeader header : rawHeaders) {
+        rawHeaders.stream().forEach(header -> {
             String headerName = header.getName();
-            if (headerName.startsWith("x-ms-or-")) {
-                xMsOrHeaderCollection.put(headerName.substring(8), header.getValue());
-                continue;
-            }
             if (headerName.startsWith("x-ms-meta-")) {
                 xMsMetaHeaderCollection.put(headerName.substring(10), header.getValue());
+                return;
             }
-        }
-
-        this.xMsOr = xMsOrHeaderCollection;
+            if (headerName.startsWith("x-ms-or-")) {
+                xMsOrHeaderCollection.put(headerName.substring(8), header.getValue());
+            }
+        });
         this.xMsMeta = xMsMetaHeaderCollection;
-    }
-
-    /**
-     * Get the xMsIsCurrentVersion property: The x-ms-is-current-version property.
-     *
-     * @return the xMsIsCurrentVersion value.
-     */
-    public Boolean isXMsIsCurrentVersion() {
-        return this.xMsIsCurrentVersion;
-    }
-
-    /**
-     * Set the xMsIsCurrentVersion property: The x-ms-is-current-version property.
-     *
-     * @param xMsIsCurrentVersion the xMsIsCurrentVersion value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsIsCurrentVersion(Boolean xMsIsCurrentVersion) {
-        this.xMsIsCurrentVersion = xMsIsCurrentVersion;
-        return this;
-    }
-
-    /**
-     * Get the xMsLeaseStatus property: The x-ms-lease-status property.
-     *
-     * @return the xMsLeaseStatus value.
-     */
-    public LeaseStatusType getXMsLeaseStatus() {
-        return this.xMsLeaseStatus;
-    }
-
-    /**
-     * Set the xMsLeaseStatus property: The x-ms-lease-status property.
-     *
-     * @param xMsLeaseStatus the xMsLeaseStatus value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsLeaseStatus(LeaseStatusType xMsLeaseStatus) {
-        this.xMsLeaseStatus = xMsLeaseStatus;
-        return this;
-    }
-
-    /**
-     * Get the xMsCopyDestinationSnapshot property: The x-ms-copy-destination-snapshot property.
-     *
-     * @return the xMsCopyDestinationSnapshot value.
-     */
-    public String getXMsCopyDestinationSnapshot() {
-        return this.xMsCopyDestinationSnapshot;
-    }
-
-    /**
-     * Set the xMsCopyDestinationSnapshot property: The x-ms-copy-destination-snapshot property.
-     *
-     * @param xMsCopyDestinationSnapshot the xMsCopyDestinationSnapshot value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsCopyDestinationSnapshot(String xMsCopyDestinationSnapshot) {
-        this.xMsCopyDestinationSnapshot = xMsCopyDestinationSnapshot;
-        return this;
-    }
-
-    /**
-     * Get the xMsLeaseState property: The x-ms-lease-state property.
-     *
-     * @return the xMsLeaseState value.
-     */
-    public LeaseStateType getXMsLeaseState() {
-        return this.xMsLeaseState;
-    }
-
-    /**
-     * Set the xMsLeaseState property: The x-ms-lease-state property.
-     *
-     * @param xMsLeaseState the xMsLeaseState value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsLeaseState(LeaseStateType xMsLeaseState) {
-        this.xMsLeaseState = xMsLeaseState;
-        return this;
-    }
-
-    /**
-     * Get the xMsBlobSealed property: The x-ms-blob-sealed property.
-     *
-     * @return the xMsBlobSealed value.
-     */
-    public Boolean isXMsBlobSealed() {
-        return this.xMsBlobSealed;
-    }
-
-    /**
-     * Set the xMsBlobSealed property: The x-ms-blob-sealed property.
-     *
-     * @param xMsBlobSealed the xMsBlobSealed value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsBlobSealed(Boolean xMsBlobSealed) {
-        this.xMsBlobSealed = xMsBlobSealed;
-        return this;
-    }
-
-    /**
-     * Get the xMsVersionId property: The x-ms-version-id property.
-     *
-     * @return the xMsVersionId value.
-     */
-    public String getXMsVersionId() {
-        return this.xMsVersionId;
-    }
-
-    /**
-     * Set the xMsVersionId property: The x-ms-version-id property.
-     *
-     * @param xMsVersionId the xMsVersionId value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsVersionId(String xMsVersionId) {
-        this.xMsVersionId = xMsVersionId;
-        return this;
-    }
-
-    /**
-     * Get the xMsEncryptionKeySha256 property: The x-ms-encryption-key-sha256 property.
-     *
-     * @return the xMsEncryptionKeySha256 value.
-     */
-    public String getXMsEncryptionKeySha256() {
-        return this.xMsEncryptionKeySha256;
-    }
-
-    /**
-     * Set the xMsEncryptionKeySha256 property: The x-ms-encryption-key-sha256 property.
-     *
-     * @param xMsEncryptionKeySha256 the xMsEncryptionKeySha256 value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsEncryptionKeySha256(String xMsEncryptionKeySha256) {
-        this.xMsEncryptionKeySha256 = xMsEncryptionKeySha256;
-        return this;
-    }
-
-    /**
-     * Get the xMsAccessTierChangeTime property: The x-ms-access-tier-change-time property.
-     *
-     * @return the xMsAccessTierChangeTime value.
-     */
-    public OffsetDateTime getXMsAccessTierChangeTime() {
-        if (this.xMsAccessTierChangeTime == null) {
-            return null;
-        }
-        return this.xMsAccessTierChangeTime.getDateTime();
-    }
-
-    /**
-     * Set the xMsAccessTierChangeTime property: The x-ms-access-tier-change-time property.
-     *
-     * @param xMsAccessTierChangeTime the xMsAccessTierChangeTime value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsAccessTierChangeTime(OffsetDateTime xMsAccessTierChangeTime) {
-        if (xMsAccessTierChangeTime == null) {
-            this.xMsAccessTierChangeTime = null;
-        } else {
-            this.xMsAccessTierChangeTime = new DateTimeRfc1123(xMsAccessTierChangeTime);
-        }
-        return this;
-    }
-
-    /**
-     * Get the xMsBlobType property: The x-ms-blob-type property.
-     *
-     * @return the xMsBlobType value.
-     */
-    public BlobType getXMsBlobType() {
-        return this.xMsBlobType;
-    }
-
-    /**
-     * Set the xMsBlobType property: The x-ms-blob-type property.
-     *
-     * @param xMsBlobType the xMsBlobType value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsBlobType(BlobType xMsBlobType) {
-        this.xMsBlobType = xMsBlobType;
-        return this;
-    }
-
-    /**
-     * Get the contentEncoding property: The Content-Encoding property.
-     *
-     * @return the contentEncoding value.
-     */
-    public String getContentEncoding() {
-        return this.contentEncoding;
-    }
-
-    /**
-     * Set the contentEncoding property: The Content-Encoding property.
-     *
-     * @param contentEncoding the contentEncoding value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setContentEncoding(String contentEncoding) {
-        this.contentEncoding = contentEncoding;
-        return this;
-    }
-
-    /**
-     * Get the xMsCreationTime property: The x-ms-creation-time property.
-     *
-     * @return the xMsCreationTime value.
-     */
-    public OffsetDateTime getXMsCreationTime() {
-        if (this.xMsCreationTime == null) {
-            return null;
-        }
-        return this.xMsCreationTime.getDateTime();
-    }
-
-    /**
-     * Set the xMsCreationTime property: The x-ms-creation-time property.
-     *
-     * @param xMsCreationTime the xMsCreationTime value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsCreationTime(OffsetDateTime xMsCreationTime) {
-        if (xMsCreationTime == null) {
-            this.xMsCreationTime = null;
-        } else {
-            this.xMsCreationTime = new DateTimeRfc1123(xMsCreationTime);
-        }
-        return this;
-    }
-
-    /**
-     * Get the xMsIncrementalCopy property: The x-ms-incremental-copy property.
-     *
-     * @return the xMsIncrementalCopy value.
-     */
-    public Boolean isXMsIncrementalCopy() {
-        return this.xMsIncrementalCopy;
-    }
-
-    /**
-     * Set the xMsIncrementalCopy property: The x-ms-incremental-copy property.
-     *
-     * @param xMsIncrementalCopy the xMsIncrementalCopy value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsIncrementalCopy(Boolean xMsIncrementalCopy) {
-        this.xMsIncrementalCopy = xMsIncrementalCopy;
-        return this;
-    }
-
-    /**
-     * Get the xMsLeaseDuration property: The x-ms-lease-duration property.
-     *
-     * @return the xMsLeaseDuration value.
-     */
-    public LeaseDurationType getXMsLeaseDuration() {
-        return this.xMsLeaseDuration;
-    }
-
-    /**
-     * Set the xMsLeaseDuration property: The x-ms-lease-duration property.
-     *
-     * @param xMsLeaseDuration the xMsLeaseDuration value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsLeaseDuration(LeaseDurationType xMsLeaseDuration) {
-        this.xMsLeaseDuration = xMsLeaseDuration;
-        return this;
-    }
-
-    /**
-     * Get the xMsVersion property: The x-ms-version property.
-     *
-     * @return the xMsVersion value.
-     */
-    public String getXMsVersion() {
-        return this.xMsVersion;
-    }
-
-    /**
-     * Set the xMsVersion property: The x-ms-version property.
-     *
-     * @param xMsVersion the xMsVersion value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsVersion(String xMsVersion) {
-        this.xMsVersion = xMsVersion;
-        return this;
-    }
-
-    /**
-     * Get the xMsCopyId property: The x-ms-copy-id property.
-     *
-     * @return the xMsCopyId value.
-     */
-    public String getXMsCopyId() {
-        return this.xMsCopyId;
-    }
-
-    /**
-     * Set the xMsCopyId property: The x-ms-copy-id property.
-     *
-     * @param xMsCopyId the xMsCopyId value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsCopyId(String xMsCopyId) {
-        this.xMsCopyId = xMsCopyId;
-        return this;
-    }
-
-    /**
-     * Get the xMsImmutabilityPolicyUntilDate property: The x-ms-immutability-policy-until-date property.
-     *
-     * @return the xMsImmutabilityPolicyUntilDate value.
-     */
-    public OffsetDateTime getXMsImmutabilityPolicyUntilDate() {
-        if (this.xMsImmutabilityPolicyUntilDate == null) {
-            return null;
-        }
-        return this.xMsImmutabilityPolicyUntilDate.getDateTime();
-    }
-
-    /**
-     * Set the xMsImmutabilityPolicyUntilDate property: The x-ms-immutability-policy-until-date property.
-     *
-     * @param xMsImmutabilityPolicyUntilDate the xMsImmutabilityPolicyUntilDate value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsImmutabilityPolicyUntilDate(OffsetDateTime xMsImmutabilityPolicyUntilDate) {
-        if (xMsImmutabilityPolicyUntilDate == null) {
-            this.xMsImmutabilityPolicyUntilDate = null;
-        } else {
-            this.xMsImmutabilityPolicyUntilDate = new DateTimeRfc1123(xMsImmutabilityPolicyUntilDate);
-        }
-        return this;
-    }
-
-    /**
-     * Get the xMsBlobSequenceNumber property: The x-ms-blob-sequence-number property.
-     *
-     * @return the xMsBlobSequenceNumber value.
-     */
-    public Long getXMsBlobSequenceNumber() {
-        return this.xMsBlobSequenceNumber;
-    }
-
-    /**
-     * Set the xMsBlobSequenceNumber property: The x-ms-blob-sequence-number property.
-     *
-     * @param xMsBlobSequenceNumber the xMsBlobSequenceNumber value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsBlobSequenceNumber(Long xMsBlobSequenceNumber) {
-        this.xMsBlobSequenceNumber = xMsBlobSequenceNumber;
-        return this;
-    }
-
-    /**
-     * Get the xMsBlobCommittedBlockCount property: The x-ms-blob-committed-block-count property.
-     *
-     * @return the xMsBlobCommittedBlockCount value.
-     */
-    public Integer getXMsBlobCommittedBlockCount() {
-        return this.xMsBlobCommittedBlockCount;
-    }
-
-    /**
-     * Set the xMsBlobCommittedBlockCount property: The x-ms-blob-committed-block-count property.
-     *
-     * @param xMsBlobCommittedBlockCount the xMsBlobCommittedBlockCount value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsBlobCommittedBlockCount(Integer xMsBlobCommittedBlockCount) {
-        this.xMsBlobCommittedBlockCount = xMsBlobCommittedBlockCount;
-        return this;
-    }
-
-    /**
-     * Get the xMsLegalHold property: The x-ms-legal-hold property.
-     *
-     * @return the xMsLegalHold value.
-     */
-    public Boolean isXMsLegalHold() {
-        return this.xMsLegalHold;
-    }
-
-    /**
-     * Set the xMsLegalHold property: The x-ms-legal-hold property.
-     *
-     * @param xMsLegalHold the xMsLegalHold value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsLegalHold(Boolean xMsLegalHold) {
-        this.xMsLegalHold = xMsLegalHold;
-        return this;
-    }
-
-    /**
-     * Get the contentMD5 property: The Content-MD5 property.
-     *
-     * @return the contentMD5 value.
-     */
-    public byte[] getContentMD5() {
-        return CoreUtils.clone(this.contentMD5);
-    }
-
-    /**
-     * Set the contentMD5 property: The Content-MD5 property.
-     *
-     * @param contentMD5 the contentMD5 value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setContentMD5(byte[] contentMD5) {
-        this.contentMD5 = CoreUtils.clone(contentMD5);
-        return this;
-    }
-
-    /**
-     * Get the xMsOrPolicyId property: The x-ms-or-policy-id property.
-     *
-     * @return the xMsOrPolicyId value.
-     */
-    public String getXMsOrPolicyId() {
-        return this.xMsOrPolicyId;
-    }
-
-    /**
-     * Set the xMsOrPolicyId property: The x-ms-or-policy-id property.
-     *
-     * @param xMsOrPolicyId the xMsOrPolicyId value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsOrPolicyId(String xMsOrPolicyId) {
-        this.xMsOrPolicyId = xMsOrPolicyId;
-        return this;
-    }
-
-    /**
-     * Get the cacheControl property: The Cache-Control property.
-     *
-     * @return the cacheControl value.
-     */
-    public String getCacheControl() {
-        return this.cacheControl;
-    }
-
-    /**
-     * Set the cacheControl property: The Cache-Control property.
-     *
-     * @param cacheControl the cacheControl value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setCacheControl(String cacheControl) {
-        this.cacheControl = cacheControl;
-        return this;
-    }
-
-    /**
-     * Get the eTag property: The ETag property.
-     *
-     * @return the eTag value.
-     */
-    public String getETag() {
-        return this.eTag;
-    }
-
-    /**
-     * Set the eTag property: The ETag property.
-     *
-     * @param eTag the eTag value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setETag(String eTag) {
-        this.eTag = eTag;
-        return this;
-    }
-
-    /**
-     * Get the contentDisposition property: The Content-Disposition property.
-     *
-     * @return the contentDisposition value.
-     */
-    public String getContentDisposition() {
-        return this.contentDisposition;
-    }
-
-    /**
-     * Set the contentDisposition property: The Content-Disposition property.
-     *
-     * @param contentDisposition the contentDisposition value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setContentDisposition(String contentDisposition) {
-        this.contentDisposition = contentDisposition;
-        return this;
-    }
-
-    /**
-     * Get the contentLanguage property: The Content-Language property.
-     *
-     * @return the contentLanguage value.
-     */
-    public String getContentLanguage() {
-        return this.contentLanguage;
-    }
-
-    /**
-     * Set the contentLanguage property: The Content-Language property.
-     *
-     * @param contentLanguage the contentLanguage value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setContentLanguage(String contentLanguage) {
-        this.contentLanguage = contentLanguage;
-        return this;
-    }
-
-    /**
-     * Get the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
-     * @return the xMsClientRequestId value.
-     */
-    public String getXMsClientRequestId() {
-        return this.xMsClientRequestId;
-    }
-
-    /**
-     * Set the xMsClientRequestId property: The x-ms-client-request-id property.
-     *
-     * @param xMsClientRequestId the xMsClientRequestId value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsClientRequestId(String xMsClientRequestId) {
-        this.xMsClientRequestId = xMsClientRequestId;
-        return this;
-    }
-
-    /**
-     * Get the xMsOr property: The x-ms-or- property.
-     *
-     * @return the xMsOr value.
-     */
-    public Map<String, String> getXMsOr() {
-        return this.xMsOr;
-    }
-
-    /**
-     * Set the xMsOr property: The x-ms-or- property.
-     *
-     * @param xMsOr the xMsOr value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsOr(Map<String, String> xMsOr) {
-        this.xMsOr = xMsOr;
-        return this;
-    }
-
-    /**
-     * Get the xMsEncryptionScope property: The x-ms-encryption-scope property.
-     *
-     * @return the xMsEncryptionScope value.
-     */
-    public String getXMsEncryptionScope() {
-        return this.xMsEncryptionScope;
-    }
-
-    /**
-     * Set the xMsEncryptionScope property: The x-ms-encryption-scope property.
-     *
-     * @param xMsEncryptionScope the xMsEncryptionScope value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsEncryptionScope(String xMsEncryptionScope) {
-        this.xMsEncryptionScope = xMsEncryptionScope;
-        return this;
-    }
-
-    /**
-     * Get the xMsTagCount property: The x-ms-tag-count property.
-     *
-     * @return the xMsTagCount value.
-     */
-    public Long getXMsTagCount() {
-        return this.xMsTagCount;
-    }
-
-    /**
-     * Set the xMsTagCount property: The x-ms-tag-count property.
-     *
-     * @param xMsTagCount the xMsTagCount value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsTagCount(Long xMsTagCount) {
-        this.xMsTagCount = xMsTagCount;
-        return this;
+        this.xMsOr = xMsOrHeaderCollection;
     }
 
     /**
      * Get the lastModified property: The Last-Modified property.
-     *
+     * 
      * @return the lastModified value.
      */
+    @Generated
     public OffsetDateTime getLastModified() {
         if (this.lastModified == null) {
             return null;
@@ -1164,10 +618,11 @@ public final class BlobsGetPropertiesHeaders {
 
     /**
      * Set the lastModified property: The Last-Modified property.
-     *
+     * 
      * @param lastModified the lastModified value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
+    @Generated
     public BlobsGetPropertiesHeaders setLastModified(OffsetDateTime lastModified) {
         if (lastModified == null) {
             this.lastModified = null;
@@ -1178,292 +633,128 @@ public final class BlobsGetPropertiesHeaders {
     }
 
     /**
-     * Get the xMsAccessTierInferred property: The x-ms-access-tier-inferred property.
-     *
-     * @return the xMsAccessTierInferred value.
+     * Get the xMsCreationTime property: The x-ms-creation-time property.
+     * 
+     * @return the xMsCreationTime value.
      */
-    public Boolean isXMsAccessTierInferred() {
-        return this.xMsAccessTierInferred;
-    }
-
-    /**
-     * Set the xMsAccessTierInferred property: The x-ms-access-tier-inferred property.
-     *
-     * @param xMsAccessTierInferred the xMsAccessTierInferred value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsAccessTierInferred(Boolean xMsAccessTierInferred) {
-        this.xMsAccessTierInferred = xMsAccessTierInferred;
-        return this;
-    }
-
-    /**
-     * Get the xMsImmutabilityPolicyMode property: The x-ms-immutability-policy-mode property.
-     *
-     * @return the xMsImmutabilityPolicyMode value.
-     */
-    public BlobImmutabilityPolicyMode getXMsImmutabilityPolicyMode() {
-        return this.xMsImmutabilityPolicyMode;
-    }
-
-    /**
-     * Set the xMsImmutabilityPolicyMode property: The x-ms-immutability-policy-mode property.
-     *
-     * @param xMsImmutabilityPolicyMode the xMsImmutabilityPolicyMode value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsImmutabilityPolicyMode(
-            BlobImmutabilityPolicyMode xMsImmutabilityPolicyMode) {
-        this.xMsImmutabilityPolicyMode = xMsImmutabilityPolicyMode;
-        return this;
-    }
-
-    /**
-     * Get the xMsAccessTier property: The x-ms-access-tier property.
-     *
-     * @return the xMsAccessTier value.
-     */
-    public String getXMsAccessTier() {
-        return this.xMsAccessTier;
-    }
-
-    /**
-     * Set the xMsAccessTier property: The x-ms-access-tier property.
-     *
-     * @param xMsAccessTier the xMsAccessTier value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsAccessTier(String xMsAccessTier) {
-        this.xMsAccessTier = xMsAccessTier;
-        return this;
-    }
-
-    /**
-     * Get the xMsCopyStatusDescription property: The x-ms-copy-status-description property.
-     *
-     * @return the xMsCopyStatusDescription value.
-     */
-    public String getXMsCopyStatusDescription() {
-        return this.xMsCopyStatusDescription;
-    }
-
-    /**
-     * Set the xMsCopyStatusDescription property: The x-ms-copy-status-description property.
-     *
-     * @param xMsCopyStatusDescription the xMsCopyStatusDescription value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsCopyStatusDescription(String xMsCopyStatusDescription) {
-        this.xMsCopyStatusDescription = xMsCopyStatusDescription;
-        return this;
-    }
-
-    /**
-     * Get the contentLength property: The Content-Length property.
-     *
-     * @return the contentLength value.
-     */
-    public Long getContentLength() {
-        return this.contentLength;
-    }
-
-    /**
-     * Set the contentLength property: The Content-Length property.
-     *
-     * @param contentLength the contentLength value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setContentLength(Long contentLength) {
-        this.contentLength = contentLength;
-        return this;
-    }
-
-    /**
-     * Get the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @return the xMsRequestId value.
-     */
-    public String getXMsRequestId() {
-        return this.xMsRequestId;
-    }
-
-    /**
-     * Set the xMsRequestId property: The x-ms-request-id property.
-     *
-     * @param xMsRequestId the xMsRequestId value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsRequestId(String xMsRequestId) {
-        this.xMsRequestId = xMsRequestId;
-        return this;
-    }
-
-    /**
-     * Get the contentType property: The Content-Type property.
-     *
-     * @return the contentType value.
-     */
-    public String getContentType() {
-        return this.contentType;
-    }
-
-    /**
-     * Set the contentType property: The Content-Type property.
-     *
-     * @param contentType the contentType value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setContentType(String contentType) {
-        this.contentType = contentType;
-        return this;
-    }
-
-    /**
-     * Get the xMsLastAccessTime property: The x-ms-last-access-time property.
-     *
-     * @return the xMsLastAccessTime value.
-     */
-    public OffsetDateTime getXMsLastAccessTime() {
-        if (this.xMsLastAccessTime == null) {
+    @Generated
+    public OffsetDateTime getXMsCreationTime() {
+        if (this.xMsCreationTime == null) {
             return null;
         }
-        return this.xMsLastAccessTime.getDateTime();
+        return this.xMsCreationTime.getDateTime();
     }
 
     /**
-     * Set the xMsLastAccessTime property: The x-ms-last-access-time property.
-     *
-     * @param xMsLastAccessTime the xMsLastAccessTime value to set.
+     * Set the xMsCreationTime property: The x-ms-creation-time property.
+     * 
+     * @param xMsCreationTime the xMsCreationTime value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
-    public BlobsGetPropertiesHeaders setXMsLastAccessTime(OffsetDateTime xMsLastAccessTime) {
-        if (xMsLastAccessTime == null) {
-            this.xMsLastAccessTime = null;
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsCreationTime(OffsetDateTime xMsCreationTime) {
+        if (xMsCreationTime == null) {
+            this.xMsCreationTime = null;
         } else {
-            this.xMsLastAccessTime = new DateTimeRfc1123(xMsLastAccessTime);
+            this.xMsCreationTime = new DateTimeRfc1123(xMsCreationTime);
         }
-        return this;
-    }
-
-    /**
-     * Get the xMsCopySource property: The x-ms-copy-source property.
-     *
-     * @return the xMsCopySource value.
-     */
-    public String getXMsCopySource() {
-        return this.xMsCopySource;
-    }
-
-    /**
-     * Set the xMsCopySource property: The x-ms-copy-source property.
-     *
-     * @param xMsCopySource the xMsCopySource value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsCopySource(String xMsCopySource) {
-        this.xMsCopySource = xMsCopySource;
-        return this;
-    }
-
-    /**
-     * Get the xMsCopyProgress property: The x-ms-copy-progress property.
-     *
-     * @return the xMsCopyProgress value.
-     */
-    public String getXMsCopyProgress() {
-        return this.xMsCopyProgress;
-    }
-
-    /**
-     * Set the xMsCopyProgress property: The x-ms-copy-progress property.
-     *
-     * @param xMsCopyProgress the xMsCopyProgress value to set.
-     * @return the BlobsGetPropertiesHeaders object itself.
-     */
-    public BlobsGetPropertiesHeaders setXMsCopyProgress(String xMsCopyProgress) {
-        this.xMsCopyProgress = xMsCopyProgress;
         return this;
     }
 
     /**
      * Get the xMsMeta property: The x-ms-meta- property.
-     *
+     * 
      * @return the xMsMeta value.
      */
+    @Generated
     public Map<String, String> getXMsMeta() {
         return this.xMsMeta;
     }
 
     /**
      * Set the xMsMeta property: The x-ms-meta- property.
-     *
+     * 
      * @param xMsMeta the xMsMeta value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
+    @Generated
     public BlobsGetPropertiesHeaders setXMsMeta(Map<String, String> xMsMeta) {
         this.xMsMeta = xMsMeta;
         return this;
     }
 
     /**
-     * Get the date property: The Date property.
-     *
-     * @return the date value.
+     * Get the xMsOrPolicyId property: The x-ms-or-policy-id property.
+     * 
+     * @return the xMsOrPolicyId value.
      */
-    public OffsetDateTime getDate() {
-        if (this.date == null) {
-            return null;
-        }
-        return this.date.getDateTime();
+    @Generated
+    public String getXMsOrPolicyId() {
+        return this.xMsOrPolicyId;
     }
 
     /**
-     * Set the date property: The Date property.
-     *
-     * @param date the date value to set.
+     * Set the xMsOrPolicyId property: The x-ms-or-policy-id property.
+     * 
+     * @param xMsOrPolicyId the xMsOrPolicyId value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
-    public BlobsGetPropertiesHeaders setDate(OffsetDateTime date) {
-        if (date == null) {
-            this.date = null;
-        } else {
-            this.date = new DateTimeRfc1123(date);
-        }
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsOrPolicyId(String xMsOrPolicyId) {
+        this.xMsOrPolicyId = xMsOrPolicyId;
         return this;
     }
 
     /**
-     * Get the xMsExpiryTime property: The x-ms-expiry-time property.
-     *
-     * @return the xMsExpiryTime value.
+     * Get the xMsOr property: The x-ms-or- property.
+     * 
+     * @return the xMsOr value.
      */
-    public OffsetDateTime getXMsExpiryTime() {
-        if (this.xMsExpiryTime == null) {
-            return null;
-        }
-        return this.xMsExpiryTime.getDateTime();
+    @Generated
+    public Map<String, String> getXMsOr() {
+        return this.xMsOr;
     }
 
     /**
-     * Set the xMsExpiryTime property: The x-ms-expiry-time property.
-     *
-     * @param xMsExpiryTime the xMsExpiryTime value to set.
+     * Set the xMsOr property: The x-ms-or- property.
+     * 
+     * @param xMsOr the xMsOr value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
-    public BlobsGetPropertiesHeaders setXMsExpiryTime(OffsetDateTime xMsExpiryTime) {
-        if (xMsExpiryTime == null) {
-            this.xMsExpiryTime = null;
-        } else {
-            this.xMsExpiryTime = new DateTimeRfc1123(xMsExpiryTime);
-        }
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsOr(Map<String, String> xMsOr) {
+        this.xMsOr = xMsOr;
+        return this;
+    }
+
+    /**
+     * Get the xMsBlobType property: The x-ms-blob-type property.
+     * 
+     * @return the xMsBlobType value.
+     */
+    @Generated
+    public BlobType getXMsBlobType() {
+        return this.xMsBlobType;
+    }
+
+    /**
+     * Set the xMsBlobType property: The x-ms-blob-type property.
+     * 
+     * @param xMsBlobType the xMsBlobType value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsBlobType(BlobType xMsBlobType) {
+        this.xMsBlobType = xMsBlobType;
         return this;
     }
 
     /**
      * Get the xMsCopyCompletionTime property: The x-ms-copy-completion-time property.
-     *
+     * 
      * @return the xMsCopyCompletionTime value.
      */
+    @Generated
     public OffsetDateTime getXMsCopyCompletionTime() {
         if (this.xMsCopyCompletionTime == null) {
             return null;
@@ -1473,10 +764,11 @@ public final class BlobsGetPropertiesHeaders {
 
     /**
      * Set the xMsCopyCompletionTime property: The x-ms-copy-completion-time property.
-     *
+     * 
      * @param xMsCopyCompletionTime the xMsCopyCompletionTime value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
+    @Generated
     public BlobsGetPropertiesHeaders setXMsCopyCompletionTime(OffsetDateTime xMsCopyCompletionTime) {
         if (xMsCopyCompletionTime == null) {
             this.xMsCopyCompletionTime = null;
@@ -1487,102 +779,984 @@ public final class BlobsGetPropertiesHeaders {
     }
 
     /**
-     * Get the acceptRanges property: The Accept-Ranges property.
-     *
-     * @return the acceptRanges value.
+     * Get the xMsCopyStatusDescription property: The x-ms-copy-status-description property.
+     * 
+     * @return the xMsCopyStatusDescription value.
      */
-    public String getAcceptRanges() {
-        return this.acceptRanges;
+    @Generated
+    public String getXMsCopyStatusDescription() {
+        return this.xMsCopyStatusDescription;
     }
 
     /**
-     * Set the acceptRanges property: The Accept-Ranges property.
-     *
-     * @param acceptRanges the acceptRanges value to set.
+     * Set the xMsCopyStatusDescription property: The x-ms-copy-status-description property.
+     * 
+     * @param xMsCopyStatusDescription the xMsCopyStatusDescription value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
-    public BlobsGetPropertiesHeaders setAcceptRanges(String acceptRanges) {
-        this.acceptRanges = acceptRanges;
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsCopyStatusDescription(String xMsCopyStatusDescription) {
+        this.xMsCopyStatusDescription = xMsCopyStatusDescription;
         return this;
     }
 
     /**
-     * Get the xMsServerEncrypted property: The x-ms-server-encrypted property.
-     *
-     * @return the xMsServerEncrypted value.
+     * Get the xMsCopyId property: The x-ms-copy-id property.
+     * 
+     * @return the xMsCopyId value.
      */
-    public Boolean isXMsServerEncrypted() {
-        return this.xMsServerEncrypted;
+    @Generated
+    public String getXMsCopyId() {
+        return this.xMsCopyId;
     }
 
     /**
-     * Set the xMsServerEncrypted property: The x-ms-server-encrypted property.
-     *
-     * @param xMsServerEncrypted the xMsServerEncrypted value to set.
+     * Set the xMsCopyId property: The x-ms-copy-id property.
+     * 
+     * @param xMsCopyId the xMsCopyId value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
-    public BlobsGetPropertiesHeaders setXMsServerEncrypted(Boolean xMsServerEncrypted) {
-        this.xMsServerEncrypted = xMsServerEncrypted;
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsCopyId(String xMsCopyId) {
+        this.xMsCopyId = xMsCopyId;
         return this;
     }
 
     /**
-     * Get the xMsRehydratePriority property: The x-ms-rehydrate-priority property.
-     *
-     * @return the xMsRehydratePriority value.
+     * Get the xMsCopyProgress property: The x-ms-copy-progress property.
+     * 
+     * @return the xMsCopyProgress value.
      */
-    public String getXMsRehydratePriority() {
-        return this.xMsRehydratePriority;
+    @Generated
+    public String getXMsCopyProgress() {
+        return this.xMsCopyProgress;
     }
 
     /**
-     * Set the xMsRehydratePriority property: The x-ms-rehydrate-priority property.
-     *
-     * @param xMsRehydratePriority the xMsRehydratePriority value to set.
+     * Set the xMsCopyProgress property: The x-ms-copy-progress property.
+     * 
+     * @param xMsCopyProgress the xMsCopyProgress value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
-    public BlobsGetPropertiesHeaders setXMsRehydratePriority(String xMsRehydratePriority) {
-        this.xMsRehydratePriority = xMsRehydratePriority;
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsCopyProgress(String xMsCopyProgress) {
+        this.xMsCopyProgress = xMsCopyProgress;
+        return this;
+    }
+
+    /**
+     * Get the xMsCopySource property: The x-ms-copy-source property.
+     * 
+     * @return the xMsCopySource value.
+     */
+    @Generated
+    public String getXMsCopySource() {
+        return this.xMsCopySource;
+    }
+
+    /**
+     * Set the xMsCopySource property: The x-ms-copy-source property.
+     * 
+     * @param xMsCopySource the xMsCopySource value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsCopySource(String xMsCopySource) {
+        this.xMsCopySource = xMsCopySource;
         return this;
     }
 
     /**
      * Get the xMsCopyStatus property: The x-ms-copy-status property.
-     *
+     * 
      * @return the xMsCopyStatus value.
      */
+    @Generated
     public CopyStatusType getXMsCopyStatus() {
         return this.xMsCopyStatus;
     }
 
     /**
      * Set the xMsCopyStatus property: The x-ms-copy-status property.
-     *
+     * 
      * @param xMsCopyStatus the xMsCopyStatus value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
+    @Generated
     public BlobsGetPropertiesHeaders setXMsCopyStatus(CopyStatusType xMsCopyStatus) {
         this.xMsCopyStatus = xMsCopyStatus;
         return this;
     }
 
     /**
+     * Get the xMsIncrementalCopy property: The x-ms-incremental-copy property.
+     * 
+     * @return the xMsIncrementalCopy value.
+     */
+    @Generated
+    public Boolean isXMsIncrementalCopy() {
+        return this.xMsIncrementalCopy;
+    }
+
+    /**
+     * Set the xMsIncrementalCopy property: The x-ms-incremental-copy property.
+     * 
+     * @param xMsIncrementalCopy the xMsIncrementalCopy value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsIncrementalCopy(Boolean xMsIncrementalCopy) {
+        this.xMsIncrementalCopy = xMsIncrementalCopy;
+        return this;
+    }
+
+    /**
+     * Get the xMsCopyDestinationSnapshot property: The x-ms-copy-destination-snapshot property.
+     * 
+     * @return the xMsCopyDestinationSnapshot value.
+     */
+    @Generated
+    public String getXMsCopyDestinationSnapshot() {
+        return this.xMsCopyDestinationSnapshot;
+    }
+
+    /**
+     * Set the xMsCopyDestinationSnapshot property: The x-ms-copy-destination-snapshot property.
+     * 
+     * @param xMsCopyDestinationSnapshot the xMsCopyDestinationSnapshot value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsCopyDestinationSnapshot(String xMsCopyDestinationSnapshot) {
+        this.xMsCopyDestinationSnapshot = xMsCopyDestinationSnapshot;
+        return this;
+    }
+
+    /**
+     * Get the xMsLeaseDuration property: The x-ms-lease-duration property.
+     * 
+     * @return the xMsLeaseDuration value.
+     */
+    @Generated
+    public LeaseDurationType getXMsLeaseDuration() {
+        return this.xMsLeaseDuration;
+    }
+
+    /**
+     * Set the xMsLeaseDuration property: The x-ms-lease-duration property.
+     * 
+     * @param xMsLeaseDuration the xMsLeaseDuration value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsLeaseDuration(LeaseDurationType xMsLeaseDuration) {
+        this.xMsLeaseDuration = xMsLeaseDuration;
+        return this;
+    }
+
+    /**
+     * Get the xMsLeaseState property: The x-ms-lease-state property.
+     * 
+     * @return the xMsLeaseState value.
+     */
+    @Generated
+    public LeaseStateType getXMsLeaseState() {
+        return this.xMsLeaseState;
+    }
+
+    /**
+     * Set the xMsLeaseState property: The x-ms-lease-state property.
+     * 
+     * @param xMsLeaseState the xMsLeaseState value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsLeaseState(LeaseStateType xMsLeaseState) {
+        this.xMsLeaseState = xMsLeaseState;
+        return this;
+    }
+
+    /**
+     * Get the xMsLeaseStatus property: The x-ms-lease-status property.
+     * 
+     * @return the xMsLeaseStatus value.
+     */
+    @Generated
+    public LeaseStatusType getXMsLeaseStatus() {
+        return this.xMsLeaseStatus;
+    }
+
+    /**
+     * Set the xMsLeaseStatus property: The x-ms-lease-status property.
+     * 
+     * @param xMsLeaseStatus the xMsLeaseStatus value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsLeaseStatus(LeaseStatusType xMsLeaseStatus) {
+        this.xMsLeaseStatus = xMsLeaseStatus;
+        return this;
+    }
+
+    /**
+     * Get the contentLength property: The Content-Length property.
+     * 
+     * @return the contentLength value.
+     */
+    @Generated
+    public Long getContentLength() {
+        return this.contentLength;
+    }
+
+    /**
+     * Set the contentLength property: The Content-Length property.
+     * 
+     * @param contentLength the contentLength value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setContentLength(Long contentLength) {
+        this.contentLength = contentLength;
+        return this;
+    }
+
+    /**
+     * Get the contentType property: The Content-Type property.
+     * 
+     * @return the contentType value.
+     */
+    @Generated
+    public String getContentType() {
+        return this.contentType;
+    }
+
+    /**
+     * Set the contentType property: The Content-Type property.
+     * 
+     * @param contentType the contentType value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setContentType(String contentType) {
+        this.contentType = contentType;
+        return this;
+    }
+
+    /**
+     * Get the eTag property: The ETag property.
+     * 
+     * @return the eTag value.
+     */
+    @Generated
+    public String getETag() {
+        return this.eTag;
+    }
+
+    /**
+     * Set the eTag property: The ETag property.
+     * 
+     * @param eTag the eTag value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setETag(String eTag) {
+        this.eTag = eTag;
+        return this;
+    }
+
+    /**
+     * Get the contentMD5 property: The Content-MD5 property.
+     * 
+     * @return the contentMD5 value.
+     */
+    @Generated
+    public byte[] getContentMD5() {
+        return CoreUtils.clone(this.contentMD5);
+    }
+
+    /**
+     * Set the contentMD5 property: The Content-MD5 property.
+     * 
+     * @param contentMD5 the contentMD5 value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setContentMD5(byte[] contentMD5) {
+        this.contentMD5 = CoreUtils.clone(contentMD5);
+        return this;
+    }
+
+    /**
+     * Get the contentEncoding property: The Content-Encoding property.
+     * 
+     * @return the contentEncoding value.
+     */
+    @Generated
+    public String getContentEncoding() {
+        return this.contentEncoding;
+    }
+
+    /**
+     * Set the contentEncoding property: The Content-Encoding property.
+     * 
+     * @param contentEncoding the contentEncoding value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setContentEncoding(String contentEncoding) {
+        this.contentEncoding = contentEncoding;
+        return this;
+    }
+
+    /**
+     * Get the contentDisposition property: The Content-Disposition property.
+     * 
+     * @return the contentDisposition value.
+     */
+    @Generated
+    public String getContentDisposition() {
+        return this.contentDisposition;
+    }
+
+    /**
+     * Set the contentDisposition property: The Content-Disposition property.
+     * 
+     * @param contentDisposition the contentDisposition value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setContentDisposition(String contentDisposition) {
+        this.contentDisposition = contentDisposition;
+        return this;
+    }
+
+    /**
+     * Get the contentLanguage property: The Content-Language property.
+     * 
+     * @return the contentLanguage value.
+     */
+    @Generated
+    public String getContentLanguage() {
+        return this.contentLanguage;
+    }
+
+    /**
+     * Set the contentLanguage property: The Content-Language property.
+     * 
+     * @param contentLanguage the contentLanguage value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setContentLanguage(String contentLanguage) {
+        this.contentLanguage = contentLanguage;
+        return this;
+    }
+
+    /**
+     * Get the cacheControl property: The Cache-Control property.
+     * 
+     * @return the cacheControl value.
+     */
+    @Generated
+    public String getCacheControl() {
+        return this.cacheControl;
+    }
+
+    /**
+     * Set the cacheControl property: The Cache-Control property.
+     * 
+     * @param cacheControl the cacheControl value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setCacheControl(String cacheControl) {
+        this.cacheControl = cacheControl;
+        return this;
+    }
+
+    /**
+     * Get the xMsBlobSequenceNumber property: The x-ms-blob-sequence-number property.
+     * 
+     * @return the xMsBlobSequenceNumber value.
+     */
+    @Generated
+    public Long getXMsBlobSequenceNumber() {
+        return this.xMsBlobSequenceNumber;
+    }
+
+    /**
+     * Set the xMsBlobSequenceNumber property: The x-ms-blob-sequence-number property.
+     * 
+     * @param xMsBlobSequenceNumber the xMsBlobSequenceNumber value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsBlobSequenceNumber(Long xMsBlobSequenceNumber) {
+        this.xMsBlobSequenceNumber = xMsBlobSequenceNumber;
+        return this;
+    }
+
+    /**
+     * Get the xMsClientRequestId property: The x-ms-client-request-id property.
+     * 
+     * @return the xMsClientRequestId value.
+     */
+    @Generated
+    public String getXMsClientRequestId() {
+        return this.xMsClientRequestId;
+    }
+
+    /**
+     * Set the xMsClientRequestId property: The x-ms-client-request-id property.
+     * 
+     * @param xMsClientRequestId the xMsClientRequestId value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsClientRequestId(String xMsClientRequestId) {
+        this.xMsClientRequestId = xMsClientRequestId;
+        return this;
+    }
+
+    /**
+     * Get the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @return the xMsRequestId value.
+     */
+    @Generated
+    public String getXMsRequestId() {
+        return this.xMsRequestId;
+    }
+
+    /**
+     * Set the xMsRequestId property: The x-ms-request-id property.
+     * 
+     * @param xMsRequestId the xMsRequestId value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsRequestId(String xMsRequestId) {
+        this.xMsRequestId = xMsRequestId;
+        return this;
+    }
+
+    /**
+     * Get the xMsVersion property: The x-ms-version property.
+     * 
+     * @return the xMsVersion value.
+     */
+    @Generated
+    public String getXMsVersion() {
+        return this.xMsVersion;
+    }
+
+    /**
+     * Set the xMsVersion property: The x-ms-version property.
+     * 
+     * @param xMsVersion the xMsVersion value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsVersion(String xMsVersion) {
+        this.xMsVersion = xMsVersion;
+        return this;
+    }
+
+    /**
+     * Get the date property: The Date property.
+     * 
+     * @return the date value.
+     */
+    @Generated
+    public OffsetDateTime getDate() {
+        if (this.date == null) {
+            return null;
+        }
+        return this.date.getDateTime();
+    }
+
+    /**
+     * Set the date property: The Date property.
+     * 
+     * @param date the date value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setDate(OffsetDateTime date) {
+        if (date == null) {
+            this.date = null;
+        } else {
+            this.date = new DateTimeRfc1123(date);
+        }
+        return this;
+    }
+
+    /**
+     * Get the acceptRanges property: The Accept-Ranges property.
+     * 
+     * @return the acceptRanges value.
+     */
+    @Generated
+    public String getAcceptRanges() {
+        return this.acceptRanges;
+    }
+
+    /**
+     * Set the acceptRanges property: The Accept-Ranges property.
+     * 
+     * @param acceptRanges the acceptRanges value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setAcceptRanges(String acceptRanges) {
+        this.acceptRanges = acceptRanges;
+        return this;
+    }
+
+    /**
+     * Get the xMsBlobCommittedBlockCount property: The x-ms-blob-committed-block-count property.
+     * 
+     * @return the xMsBlobCommittedBlockCount value.
+     */
+    @Generated
+    public Integer getXMsBlobCommittedBlockCount() {
+        return this.xMsBlobCommittedBlockCount;
+    }
+
+    /**
+     * Set the xMsBlobCommittedBlockCount property: The x-ms-blob-committed-block-count property.
+     * 
+     * @param xMsBlobCommittedBlockCount the xMsBlobCommittedBlockCount value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsBlobCommittedBlockCount(Integer xMsBlobCommittedBlockCount) {
+        this.xMsBlobCommittedBlockCount = xMsBlobCommittedBlockCount;
+        return this;
+    }
+
+    /**
+     * Get the xMsServerEncrypted property: The x-ms-server-encrypted property.
+     * 
+     * @return the xMsServerEncrypted value.
+     */
+    @Generated
+    public Boolean isXMsServerEncrypted() {
+        return this.xMsServerEncrypted;
+    }
+
+    /**
+     * Set the xMsServerEncrypted property: The x-ms-server-encrypted property.
+     * 
+     * @param xMsServerEncrypted the xMsServerEncrypted value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsServerEncrypted(Boolean xMsServerEncrypted) {
+        this.xMsServerEncrypted = xMsServerEncrypted;
+        return this;
+    }
+
+    /**
+     * Get the xMsEncryptionKeySha256 property: The x-ms-encryption-key-sha256 property.
+     * 
+     * @return the xMsEncryptionKeySha256 value.
+     */
+    @Generated
+    public String getXMsEncryptionKeySha256() {
+        return this.xMsEncryptionKeySha256;
+    }
+
+    /**
+     * Set the xMsEncryptionKeySha256 property: The x-ms-encryption-key-sha256 property.
+     * 
+     * @param xMsEncryptionKeySha256 the xMsEncryptionKeySha256 value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsEncryptionKeySha256(String xMsEncryptionKeySha256) {
+        this.xMsEncryptionKeySha256 = xMsEncryptionKeySha256;
+        return this;
+    }
+
+    /**
+     * Get the xMsEncryptionScope property: The x-ms-encryption-scope property.
+     * 
+     * @return the xMsEncryptionScope value.
+     */
+    @Generated
+    public String getXMsEncryptionScope() {
+        return this.xMsEncryptionScope;
+    }
+
+    /**
+     * Set the xMsEncryptionScope property: The x-ms-encryption-scope property.
+     * 
+     * @param xMsEncryptionScope the xMsEncryptionScope value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsEncryptionScope(String xMsEncryptionScope) {
+        this.xMsEncryptionScope = xMsEncryptionScope;
+        return this;
+    }
+
+    /**
+     * Get the xMsAccessTier property: The x-ms-access-tier property.
+     * 
+     * @return the xMsAccessTier value.
+     */
+    @Generated
+    public String getXMsAccessTier() {
+        return this.xMsAccessTier;
+    }
+
+    /**
+     * Set the xMsAccessTier property: The x-ms-access-tier property.
+     * 
+     * @param xMsAccessTier the xMsAccessTier value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsAccessTier(String xMsAccessTier) {
+        this.xMsAccessTier = xMsAccessTier;
+        return this;
+    }
+
+    /**
+     * Get the xMsAccessTierInferred property: The x-ms-access-tier-inferred property.
+     * 
+     * @return the xMsAccessTierInferred value.
+     */
+    @Generated
+    public Boolean isXMsAccessTierInferred() {
+        return this.xMsAccessTierInferred;
+    }
+
+    /**
+     * Set the xMsAccessTierInferred property: The x-ms-access-tier-inferred property.
+     * 
+     * @param xMsAccessTierInferred the xMsAccessTierInferred value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsAccessTierInferred(Boolean xMsAccessTierInferred) {
+        this.xMsAccessTierInferred = xMsAccessTierInferred;
+        return this;
+    }
+
+    /**
      * Get the xMsArchiveStatus property: The x-ms-archive-status property.
-     *
+     * 
      * @return the xMsArchiveStatus value.
      */
+    @Generated
     public String getXMsArchiveStatus() {
         return this.xMsArchiveStatus;
     }
 
     /**
      * Set the xMsArchiveStatus property: The x-ms-archive-status property.
-     *
+     * 
      * @param xMsArchiveStatus the xMsArchiveStatus value to set.
      * @return the BlobsGetPropertiesHeaders object itself.
      */
+    @Generated
     public BlobsGetPropertiesHeaders setXMsArchiveStatus(String xMsArchiveStatus) {
         this.xMsArchiveStatus = xMsArchiveStatus;
+        return this;
+    }
+
+    /**
+     * Get the xMsAccessTierChangeTime property: The x-ms-access-tier-change-time property.
+     * 
+     * @return the xMsAccessTierChangeTime value.
+     */
+    @Generated
+    public OffsetDateTime getXMsAccessTierChangeTime() {
+        if (this.xMsAccessTierChangeTime == null) {
+            return null;
+        }
+        return this.xMsAccessTierChangeTime.getDateTime();
+    }
+
+    /**
+     * Set the xMsAccessTierChangeTime property: The x-ms-access-tier-change-time property.
+     * 
+     * @param xMsAccessTierChangeTime the xMsAccessTierChangeTime value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsAccessTierChangeTime(OffsetDateTime xMsAccessTierChangeTime) {
+        if (xMsAccessTierChangeTime == null) {
+            this.xMsAccessTierChangeTime = null;
+        } else {
+            this.xMsAccessTierChangeTime = new DateTimeRfc1123(xMsAccessTierChangeTime);
+        }
+        return this;
+    }
+
+    /**
+     * Get the xMsSmartAccessTier property: The x-ms-smart-access-tier property.
+     * 
+     * @return the xMsSmartAccessTier value.
+     */
+    @Generated
+    public String getXMsSmartAccessTier() {
+        return this.xMsSmartAccessTier;
+    }
+
+    /**
+     * Set the xMsSmartAccessTier property: The x-ms-smart-access-tier property.
+     * 
+     * @param xMsSmartAccessTier the xMsSmartAccessTier value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsSmartAccessTier(String xMsSmartAccessTier) {
+        this.xMsSmartAccessTier = xMsSmartAccessTier;
+        return this;
+    }
+
+    /**
+     * Get the xMsVersionId property: The x-ms-version-id property.
+     * 
+     * @return the xMsVersionId value.
+     */
+    @Generated
+    public String getXMsVersionId() {
+        return this.xMsVersionId;
+    }
+
+    /**
+     * Set the xMsVersionId property: The x-ms-version-id property.
+     * 
+     * @param xMsVersionId the xMsVersionId value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsVersionId(String xMsVersionId) {
+        this.xMsVersionId = xMsVersionId;
+        return this;
+    }
+
+    /**
+     * Get the xMsIsCurrentVersion property: The x-ms-is-current-version property.
+     * 
+     * @return the xMsIsCurrentVersion value.
+     */
+    @Generated
+    public Boolean isXMsIsCurrentVersion() {
+        return this.xMsIsCurrentVersion;
+    }
+
+    /**
+     * Set the xMsIsCurrentVersion property: The x-ms-is-current-version property.
+     * 
+     * @param xMsIsCurrentVersion the xMsIsCurrentVersion value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsIsCurrentVersion(Boolean xMsIsCurrentVersion) {
+        this.xMsIsCurrentVersion = xMsIsCurrentVersion;
+        return this;
+    }
+
+    /**
+     * Get the xMsTagCount property: The x-ms-tag-count property.
+     * 
+     * @return the xMsTagCount value.
+     */
+    @Generated
+    public Long getXMsTagCount() {
+        return this.xMsTagCount;
+    }
+
+    /**
+     * Set the xMsTagCount property: The x-ms-tag-count property.
+     * 
+     * @param xMsTagCount the xMsTagCount value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsTagCount(Long xMsTagCount) {
+        this.xMsTagCount = xMsTagCount;
+        return this;
+    }
+
+    /**
+     * Get the xMsExpiryTime property: The x-ms-expiry-time property.
+     * 
+     * @return the xMsExpiryTime value.
+     */
+    @Generated
+    public OffsetDateTime getXMsExpiryTime() {
+        if (this.xMsExpiryTime == null) {
+            return null;
+        }
+        return this.xMsExpiryTime.getDateTime();
+    }
+
+    /**
+     * Set the xMsExpiryTime property: The x-ms-expiry-time property.
+     * 
+     * @param xMsExpiryTime the xMsExpiryTime value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsExpiryTime(OffsetDateTime xMsExpiryTime) {
+        if (xMsExpiryTime == null) {
+            this.xMsExpiryTime = null;
+        } else {
+            this.xMsExpiryTime = new DateTimeRfc1123(xMsExpiryTime);
+        }
+        return this;
+    }
+
+    /**
+     * Get the xMsBlobSealed property: The x-ms-blob-sealed property.
+     * 
+     * @return the xMsBlobSealed value.
+     */
+    @Generated
+    public Boolean isXMsBlobSealed() {
+        return this.xMsBlobSealed;
+    }
+
+    /**
+     * Set the xMsBlobSealed property: The x-ms-blob-sealed property.
+     * 
+     * @param xMsBlobSealed the xMsBlobSealed value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsBlobSealed(Boolean xMsBlobSealed) {
+        this.xMsBlobSealed = xMsBlobSealed;
+        return this;
+    }
+
+    /**
+     * Get the xMsRehydratePriority property: The x-ms-rehydrate-priority property.
+     * 
+     * @return the xMsRehydratePriority value.
+     */
+    @Generated
+    public String getXMsRehydratePriority() {
+        return this.xMsRehydratePriority;
+    }
+
+    /**
+     * Set the xMsRehydratePriority property: The x-ms-rehydrate-priority property.
+     * 
+     * @param xMsRehydratePriority the xMsRehydratePriority value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsRehydratePriority(String xMsRehydratePriority) {
+        this.xMsRehydratePriority = xMsRehydratePriority;
+        return this;
+    }
+
+    /**
+     * Get the xMsLastAccessTime property: The x-ms-last-access-time property.
+     * 
+     * @return the xMsLastAccessTime value.
+     */
+    @Generated
+    public OffsetDateTime getXMsLastAccessTime() {
+        if (this.xMsLastAccessTime == null) {
+            return null;
+        }
+        return this.xMsLastAccessTime.getDateTime();
+    }
+
+    /**
+     * Set the xMsLastAccessTime property: The x-ms-last-access-time property.
+     * 
+     * @param xMsLastAccessTime the xMsLastAccessTime value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsLastAccessTime(OffsetDateTime xMsLastAccessTime) {
+        if (xMsLastAccessTime == null) {
+            this.xMsLastAccessTime = null;
+        } else {
+            this.xMsLastAccessTime = new DateTimeRfc1123(xMsLastAccessTime);
+        }
+        return this;
+    }
+
+    /**
+     * Get the xMsImmutabilityPolicyUntilDate property: The x-ms-immutability-policy-until-date property.
+     * 
+     * @return the xMsImmutabilityPolicyUntilDate value.
+     */
+    @Generated
+    public OffsetDateTime getXMsImmutabilityPolicyUntilDate() {
+        if (this.xMsImmutabilityPolicyUntilDate == null) {
+            return null;
+        }
+        return this.xMsImmutabilityPolicyUntilDate.getDateTime();
+    }
+
+    /**
+     * Set the xMsImmutabilityPolicyUntilDate property: The x-ms-immutability-policy-until-date property.
+     * 
+     * @param xMsImmutabilityPolicyUntilDate the xMsImmutabilityPolicyUntilDate value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsImmutabilityPolicyUntilDate(OffsetDateTime xMsImmutabilityPolicyUntilDate) {
+        if (xMsImmutabilityPolicyUntilDate == null) {
+            this.xMsImmutabilityPolicyUntilDate = null;
+        } else {
+            this.xMsImmutabilityPolicyUntilDate = new DateTimeRfc1123(xMsImmutabilityPolicyUntilDate);
+        }
+        return this;
+    }
+
+    /**
+     * Get the xMsImmutabilityPolicyMode property: The x-ms-immutability-policy-mode property.
+     * 
+     * @return the xMsImmutabilityPolicyMode value.
+     */
+    @Generated
+    public BlobImmutabilityPolicyMode getXMsImmutabilityPolicyMode() {
+        return this.xMsImmutabilityPolicyMode;
+    }
+
+    /**
+     * Set the xMsImmutabilityPolicyMode property: The x-ms-immutability-policy-mode property.
+     * 
+     * @param xMsImmutabilityPolicyMode the xMsImmutabilityPolicyMode value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders
+        setXMsImmutabilityPolicyMode(BlobImmutabilityPolicyMode xMsImmutabilityPolicyMode) {
+        this.xMsImmutabilityPolicyMode = xMsImmutabilityPolicyMode;
+        return this;
+    }
+
+    /**
+     * Get the xMsLegalHold property: The x-ms-legal-hold property.
+     * 
+     * @return the xMsLegalHold value.
+     */
+    @Generated
+    public Boolean isXMsLegalHold() {
+        return this.xMsLegalHold;
+    }
+
+    /**
+     * Set the xMsLegalHold property: The x-ms-legal-hold property.
+     * 
+     * @param xMsLegalHold the xMsLegalHold value to set.
+     * @return the BlobsGetPropertiesHeaders object itself.
+     */
+    @Generated
+    public BlobsGetPropertiesHeaders setXMsLegalHold(Boolean xMsLegalHold) {
+        this.xMsLegalHold = xMsLegalHold;
         return this;
     }
 }

@@ -4,24 +4,27 @@
 
 package com.azure.resourcemanager.apimanagement.generated;
 
-/** Samples for ApiRelease CreateOrUpdate. */
+/**
+ * Samples for ApiRelease CreateOrUpdate.
+ */
 public final class ApiReleaseCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/apimanagement/resource-manager/Microsoft.ApiManagement/stable/2021-08-01/examples/ApiManagementCreateApiRelease.json
+     * x-ms-original-file:
+     * specification/apimanagement/resource-manager/Microsoft.ApiManagement/stable/2024-05-01/examples/
+     * ApiManagementCreateApiRelease.json
      */
     /**
      * Sample code: ApiManagementCreateApiRelease.
-     *
+     * 
      * @param manager Entry point to ApiManagementManager.
      */
-    public static void apiManagementCreateApiRelease(
-        com.azure.resourcemanager.apimanagement.ApiManagementManager manager) {
-        manager
-            .apiReleases()
+    public static void
+        apiManagementCreateApiRelease(com.azure.resourcemanager.apimanagement.ApiManagementManager manager) {
+        manager.apiReleases()
             .define("testrev")
             .withExistingApi("rg1", "apimService1", "a1")
             .withApiId(
-                "/subscriptions/subid/resourceGroups/rg1/providers/Microsoft.ApiManagement/service/apimService1/apis/a1")
+                "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.ApiManagement/service/apimService1/apis/a1")
             .withNotes("yahooagain")
             .create();
     }

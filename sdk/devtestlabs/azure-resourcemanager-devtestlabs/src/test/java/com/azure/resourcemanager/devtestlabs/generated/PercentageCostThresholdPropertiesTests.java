@@ -11,18 +11,16 @@ import org.junit.jupiter.api.Assertions;
 public final class PercentageCostThresholdPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        PercentageCostThresholdProperties model =
-            BinaryData
-                .fromString("{\"thresholdValue\":45.434549028444295}")
-                .toObject(PercentageCostThresholdProperties.class);
-        Assertions.assertEquals(45.434549028444295D, model.thresholdValue());
+        PercentageCostThresholdProperties model = BinaryData.fromString("{\"thresholdValue\":11.603259080593842}")
+            .toObject(PercentageCostThresholdProperties.class);
+        Assertions.assertEquals(11.603259080593842D, model.thresholdValue());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        PercentageCostThresholdProperties model =
-            new PercentageCostThresholdProperties().withThresholdValue(45.434549028444295D);
+        PercentageCostThresholdProperties model
+            = new PercentageCostThresholdProperties().withThresholdValue(11.603259080593842D);
         model = BinaryData.fromObject(model).toObject(PercentageCostThresholdProperties.class);
-        Assertions.assertEquals(45.434549028444295D, model.thresholdValue());
+        Assertions.assertEquals(11.603259080593842D, model.thresholdValue());
     }
 }

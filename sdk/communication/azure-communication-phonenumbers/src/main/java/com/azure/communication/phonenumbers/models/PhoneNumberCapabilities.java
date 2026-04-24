@@ -5,38 +5,54 @@
 package com.azure.communication.phonenumbers.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The PhoneNumberCapabilities model. */
+/**
+ * Capabilities of a phone number.
+ */
 @Fluent
-public final class PhoneNumberCapabilities {
+public final class PhoneNumberCapabilities implements JsonSerializable<PhoneNumberCapabilities> {
     /*
      * Capability value for calling.
      */
-    @JsonProperty(value = "calling", required = true)
+    @Generated
     private PhoneNumberCapabilityType calling;
 
     /*
      * Capability value for SMS.
      */
-    @JsonProperty(value = "sms", required = true)
+    @Generated
     private PhoneNumberCapabilityType sms;
 
     /**
+     * Creates an instance of PhoneNumberCapabilities class.
+     */
+    @Generated
+    public PhoneNumberCapabilities() {
+    }
+
+    /**
      * Get the calling property: Capability value for calling.
-     *
+     * 
      * @return the calling value.
      */
+    @Generated
     public PhoneNumberCapabilityType getCalling() {
         return this.calling;
     }
 
     /**
      * Set the calling property: Capability value for calling.
-     *
+     * 
      * @param calling the calling value to set.
      * @return the PhoneNumberCapabilities object itself.
      */
+    @Generated
     public PhoneNumberCapabilities setCalling(PhoneNumberCapabilityType calling) {
         this.calling = calling;
         return this;
@@ -44,21 +60,66 @@ public final class PhoneNumberCapabilities {
 
     /**
      * Get the sms property: Capability value for SMS.
-     *
+     * 
      * @return the sms value.
      */
+    @Generated
     public PhoneNumberCapabilityType getSms() {
         return this.sms;
     }
 
     /**
      * Set the sms property: Capability value for SMS.
-     *
+     * 
      * @param sms the sms value to set.
      * @return the PhoneNumberCapabilities object itself.
      */
+    @Generated
     public PhoneNumberCapabilities setSms(PhoneNumberCapabilityType sms) {
         this.sms = sms;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("calling", this.calling == null ? null : this.calling.toString());
+        jsonWriter.writeStringField("sms", this.sms == null ? null : this.sms.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PhoneNumberCapabilities from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PhoneNumberCapabilities if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the PhoneNumberCapabilities.
+     */
+    @Generated
+    public static PhoneNumberCapabilities fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PhoneNumberCapabilities deserializedPhoneNumberCapabilities = new PhoneNumberCapabilities();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("calling".equals(fieldName)) {
+                    deserializedPhoneNumberCapabilities.calling
+                        = PhoneNumberCapabilityType.fromString(reader.getString());
+                } else if ("sms".equals(fieldName)) {
+                    deserializedPhoneNumberCapabilities.sms = PhoneNumberCapabilityType.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPhoneNumberCapabilities;
+        });
     }
 }

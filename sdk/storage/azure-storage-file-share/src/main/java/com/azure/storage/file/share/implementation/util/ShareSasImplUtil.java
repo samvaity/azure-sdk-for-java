@@ -14,19 +14,21 @@ import com.azure.storage.common.implementation.TimeAndFormat;
 import com.azure.storage.common.sas.SasIpRange;
 import com.azure.storage.common.sas.SasProtocol;
 import com.azure.storage.file.share.ShareServiceVersion;
+import com.azure.storage.file.share.models.UserDelegationKey;
 import com.azure.storage.file.share.sas.ShareFileSasPermission;
 import com.azure.storage.file.share.sas.ShareSasPermission;
 import com.azure.storage.file.share.sas.ShareServiceSasSignatureValues;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static com.azure.storage.common.implementation.SasImplUtils.formatQueryParameterDate;
 import static com.azure.storage.common.implementation.SasImplUtils.tryAppendQueryParameter;
 
 /**
  * This class provides helper methods for common file service sas patterns.
- *
+ * <p>
  * RESERVED FOR INTERNAL USE.
  */
 public class ShareSasImplUtil {
@@ -46,32 +48,20 @@ public class ShareSasImplUtil {
         .get(Constants.PROPERTY_AZURE_STORAGE_SAS_SERVICE_VERSION, ShareServiceVersion.getLatest().getVersion());
 
     private SasProtocol protocol;
-
     private OffsetDateTime startTime;
-
     private OffsetDateTime expiryTime;
-
     private String permissions;
-
     private SasIpRange sasIpRange;
-
     private String shareName;
-
     private String filePath;
-
     private String resource;
-
     private String identifier;
-
     private String cacheControl;
-
     private String contentDisposition;
-
     private String contentEncoding;
-
     private String contentLanguage;
-
     private String contentType;
+    private String delegatedUserObjectId;
 
     /**
      * Creates a new {@link ShareSasImplUtil} with the specified parameters
@@ -105,6 +95,7 @@ public class ShareSasImplUtil {
         this.contentEncoding = sasValues.getContentEncoding();
         this.contentLanguage = sasValues.getContentLanguage();
         this.contentType = sasValues.getContentType();
+        this.delegatedUserObjectId = sasValues.getDelegatedUserObjectId();
     }
 
     /**
@@ -115,6 +106,20 @@ public class ShareSasImplUtil {
      * @return A String representing the Sas
      */
     public String generateSas(StorageSharedKeyCredential storageSharedKeyCredentials, Context context) {
+        return generateSas(storageSharedKeyCredentials, null, context);
+    }
+
+    /**
+     * Generates a Sas signed with a {@link StorageSharedKeyCredential}
+     *
+     * @param storageSharedKeyCredentials {@link StorageSharedKeyCredential}
+     * @param stringToSignHandler For debugging purposes only. Returns the string to sign that was used to generate the
+     * signature.
+     * @param context Additional context that is passed through the code when generating a SAS.
+     * @return A String representing the Sas
+     */
+    public String generateSas(StorageSharedKeyCredential storageSharedKeyCredentials,
+        Consumer<String> stringToSignHandler, Context context) {
         StorageImplUtils.assertNotNull("storageSharedKeyCredentials", storageSharedKeyCredentials);
 
         ensureState();
@@ -125,15 +130,50 @@ public class ShareSasImplUtil {
         StorageImplUtils.logStringToSign(LOGGER, stringToSign, context);
         final String signature = storageSharedKeyCredentials.computeHmac256(stringToSign);
 
-        return encode(signature);
+        if (stringToSignHandler != null) {
+            stringToSignHandler.accept(stringToSign);
+        }
+
+        return encode(null /* userDelegationKey */, signature);
+    }
+
+    /**
+     * Generates a Sas signed with a {@link UserDelegationKey}
+     *
+     * @param delegationKey {@link UserDelegationKey}
+     * @param accountName The account name
+     * @param stringToSignHandler For debugging purposes only. Returns the string to sign that was used to generate the
+     * signature.
+     * @param context Additional context that is passed through the code when generating a SAS.
+     * @return A String representing the Sas
+     */
+    public String generateUserDelegationSas(UserDelegationKey delegationKey, String accountName,
+        Consumer<String> stringToSignHandler, Context context) {
+        StorageImplUtils.assertNotNull("delegationKey", delegationKey);
+        StorageImplUtils.assertNotNull("accountName", accountName);
+
+        ensureState();
+
+        // Signature is generated on the un-url-encoded values.
+        final String canonicalName = getCanonicalName(accountName);
+        final String stringToSign = stringToSign(delegationKey, canonicalName);
+        StorageImplUtils.logStringToSign(LOGGER, stringToSign, context);
+        String signature = StorageImplUtils.computeHMac256(delegationKey.getValue(), stringToSign);
+
+        if (stringToSignHandler != null) {
+            stringToSignHandler.accept(stringToSign);
+        }
+
+        return encode(delegationKey, signature);
     }
 
     /**
      * Encodes a Sas from the values in this type.
+     * @param userDelegationKey The user delegation key, if available.
      * @param signature The signature of the Sas.
      * @return A String representing the Sas.
      */
-    private String encode(String signature) {
+    private String encode(UserDelegationKey userDelegationKey, String signature) {
         /*
          We should be url-encoding each key and each value, but because we know all the keys and values will encode to
          themselves, we cheat except for the signature value.
@@ -142,12 +182,30 @@ public class ShareSasImplUtil {
 
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SERVICE_VERSION, VERSION);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_PROTOCOL, this.protocol);
-        tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_START_TIME, formatQueryParameterDate(
-            new TimeAndFormat(this.startTime, null)));
-        tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_EXPIRY_TIME, formatQueryParameterDate(
-            new TimeAndFormat(this.expiryTime, null)));
+        tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_START_TIME,
+            formatQueryParameterDate(new TimeAndFormat(this.startTime, null)));
+        tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_EXPIRY_TIME,
+            formatQueryParameterDate(new TimeAndFormat(this.expiryTime, null)));
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_IP_RANGE, this.sasIpRange);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_IDENTIFIER, this.identifier);
+        if (userDelegationKey != null) {
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_OBJECT_ID,
+                userDelegationKey.getSignedObjectId());
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_TENANT_ID,
+                userDelegationKey.getSignedTenantId());
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_KEY_START,
+                formatQueryParameterDate(new TimeAndFormat(userDelegationKey.getSignedStart(), null)));
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_KEY_EXPIRY,
+                formatQueryParameterDate(new TimeAndFormat(userDelegationKey.getSignedExpiry(), null)));
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_KEY_SERVICE,
+                userDelegationKey.getSignedService());
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_KEY_VERSION,
+                userDelegationKey.getSignedVersion());
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_KEY_DELEGATED_USER_TENANT_ID,
+                userDelegationKey.getSignedDelegatedUserTenantId());
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_DELEGATED_USER_OBJECT_ID,
+                this.delegatedUserObjectId);
+        }
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_RESOURCE, this.resource);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_PERMISSIONS, this.permissions);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNATURE, signature);
@@ -163,7 +221,6 @@ public class ShareSasImplUtil {
 
     /**
      * Ensures that the builder's properties are in a consistent state.
-
      * 1. If there is no version, use latest.
      * 2. If there is no identifier set, ensure expiryTime and permissions are set.
      * 3. Resource name is chosen by:
@@ -174,8 +231,8 @@ public class ShareSasImplUtil {
     private void ensureState() {
         if (identifier == null) {
             if (expiryTime == null || permissions == null) {
-                throw LOGGER.logExceptionAsError(new IllegalStateException("If identifier is not set, expiry time "
-                    + "and permissions must be set"));
+                throw LOGGER.logExceptionAsError(new IllegalStateException(
+                    "If identifier is not set, expiry time " + "and permissions must be set"));
             }
         }
 
@@ -190,9 +247,11 @@ public class ShareSasImplUtil {
                 case SAS_FILE_CONSTANT:
                     permissions = ShareFileSasPermission.parse(permissions).toString();
                     break;
+
                 case SAS_SHARE_CONSTANT:
                     permissions = ShareSasPermission.parse(permissions).toString();
                     break;
+
                 default:
                     // We won't reparse the permissions if we don't know the type.
                     LOGGER.info("Not re-parsing permissions. Resource type '{}' is unknown.", resource);
@@ -217,20 +276,34 @@ public class ShareSasImplUtil {
     }
 
     private String stringToSign(String canonicalName) {
-        return String.join("\n",
-            this.permissions == null ? "" : this.permissions,
+        return String.join("\n", this.permissions == null ? "" : this.permissions,
             this.startTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.startTime),
-            this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime),
-            canonicalName,
-            this.identifier == null ? "" : this.identifier,
-            this.sasIpRange == null ? "" : this.sasIpRange.toString(),
-            this.protocol == null ? "" : this.protocol.toString(),
-            VERSION == null ? "" : VERSION,
+            this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime), canonicalName,
+            this.identifier == null ? "" : this.identifier, this.sasIpRange == null ? "" : this.sasIpRange.toString(),
+            this.protocol == null ? "" : this.protocol.toString(), VERSION == null ? "" : VERSION,
             this.cacheControl == null ? "" : this.cacheControl,
             this.contentDisposition == null ? "" : this.contentDisposition,
             this.contentEncoding == null ? "" : this.contentEncoding,
-            this.contentLanguage == null ? "" : this.contentLanguage,
-            this.contentType == null ? "" : this.contentType
-        );
+            this.contentLanguage == null ? "" : this.contentLanguage, this.contentType == null ? "" : this.contentType);
+    }
+
+    private String stringToSign(final UserDelegationKey key, String canonicalName) {
+        return String.join("\n", this.permissions == null ? "" : this.permissions,
+            this.startTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.startTime),
+            this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime), canonicalName,
+            key.getSignedObjectId() == null ? "" : key.getSignedObjectId(),
+            key.getSignedTenantId() == null ? "" : key.getSignedTenantId(),
+            key.getSignedStart() == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedStart()),
+            key.getSignedExpiry() == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedExpiry()),
+            key.getSignedService() == null ? "" : key.getSignedService(),
+            key.getSignedVersion() == null ? "" : key.getSignedVersion(),
+            key.getSignedDelegatedUserTenantId() == null ? "" : key.getSignedDelegatedUserTenantId(),
+            this.delegatedUserObjectId == null ? "" : this.delegatedUserObjectId,
+            this.sasIpRange == null ? "" : this.sasIpRange.toString(),
+            this.protocol == null ? "" : this.protocol.toString(), VERSION == null ? "" : VERSION,
+            this.cacheControl == null ? "" : this.cacheControl,
+            this.contentDisposition == null ? "" : this.contentDisposition,
+            this.contentEncoding == null ? "" : this.contentEncoding,
+            this.contentLanguage == null ? "" : this.contentLanguage, this.contentType == null ? "" : this.contentType);
     }
 }

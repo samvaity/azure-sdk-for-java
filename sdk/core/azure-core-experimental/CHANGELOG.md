@@ -1,6 +1,6 @@
 # Release History
 
-## 1.0.0-beta.42 (Unreleased)
+## 1.0.0-beta.67 (Unreleased)
 
 ### Features Added
 
@@ -9,6 +9,217 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 1.0.0-beta.66 (2026-01-15)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.57.0` to `1.57.1`.
+- Upgraded Reactor from `3.7.11` to `3.7.14`. ([#47611](https://github.com/Azure/azure-sdk-for-java/pull/47611))
+
+## 1.0.0-beta.65 (2025-10-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.1` to `1.57.0`.
+- Upgraded Reactor from `3.7.9` to `3.7.11`. ([#46894](https://github.com/Azure/azure-sdk-for-java/pull/46894))
+
+## 1.0.0-beta.64 (2025-09-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.0` to `1.56.1`.
+
+## 1.0.0-beta.63 (2025-08-07)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.5` to `1.56.0`.
+- Upgraded Reactor from `3.4.41` to `3.7.8`. ([#46207](https://github.com/Azure/azure-sdk-for-java/pull/46207))
+
+## 1.0.0-beta.62 (2025-06-26)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.4` to `1.55.5`.
+
+## 1.0.0-beta.61 (2025-06-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.3` to `1.55.4`.
+
+## 1.0.0-beta.60 (2025-03-10)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.2` to `1.55.3`.
+
+## 1.0.0-beta.59 (2025-02-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.1` to `1.55.2`.
+
+## 1.0.0-beta.58 (2025-02-12)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.0` to `1.55.1`.
+
+## 1.0.0-beta.57 (2025-02-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.1` to `1.55.0`.
+
+## 1.0.0-beta.56 (2024-11-14)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.0` to `1.54.1`.
+
+## 1.0.0-beta.55 (2024-11-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.53.0` to `1.54.0`.
+
+## 1.0.0-beta.54 (2024-10-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.52.0` to `1.53.0`.
+
+## 1.0.0-beta.53 (2024-09-12)
+
+### Features Added
+
+- Added support for SHR PoP. ([#41554](https://github.com/Azure/azure-sdk-for-java/pull/41554))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.51.0` to `1.52.0`.
+
+## 1.0.0-beta.52 (2024-07-31)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.1` to `1.51.0`.
+
+## 1.0.0-beta.51 (2024-06-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.0` to `1.49.1`.
+
+## 1.0.0-beta.50 (2024-05-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.48.0` to `1.49.0`.
+
+## 1.0.0-beta.49 (2024-04-05)
+
+### Breaking Changes
+
+- Removed dependency on Jackson Dataformat XML.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.47.0` to `1.48.0`.
+
+## 1.0.0-beta.48 (2024-03-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.46.0` to `1.47.0`.
+
+## 1.0.0-beta.47 (2024-02-02)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.45.1` to `1.46.0`.
+
+## 1.0.0-beta.46 (2023-11-03)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.1` to `1.45.0`.
+
+## 1.0.0-beta.45 (2023-10-17)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.0` to `1.44.1`.
+
+## 1.0.0-beta.44 (2023-10-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.43.0` to `1.44.0`.
+
+## 1.0.0-beta.43 (2023-09-07)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.42.0` to `1.43.0`.
+
+## 1.0.0-beta.42 (2023-08-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.41.0` to `1.42.0`.
 
 ## 1.0.0-beta.41 (2023-07-06)
 
@@ -203,7 +414,7 @@
 
 ### Breaking Changes
 
-- Removed `TokenRequestContenxtExperimental` class that allows to configure TenantId Challenges.
+- Removed `TokenRequestContextExperimental` class that allows to configure TenantId Challenges.
 - Removed `TimeInterval` as it is no longer being developed.
 - Moved `HttpResponseError` to `azure-core` as `ResponseError`.
 
@@ -233,7 +444,7 @@
 
 ### Features Added
 
-- Added `TokenRequestContenxtExperimental` class that allows to configure TenantId Challenges.
+- Added `TokenRequestContextExperimental` class that allows to configure TenantId Challenges.
 
 ## 1.0.0-beta.16 (2021-08-06)
 

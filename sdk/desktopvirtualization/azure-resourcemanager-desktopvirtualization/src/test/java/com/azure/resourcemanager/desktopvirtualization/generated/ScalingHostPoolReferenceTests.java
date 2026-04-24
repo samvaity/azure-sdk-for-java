@@ -11,20 +11,19 @@ import org.junit.jupiter.api.Assertions;
 public final class ScalingHostPoolReferenceTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ScalingHostPoolReference model =
-            BinaryData
-                .fromString("{\"hostPoolArmPath\":\"pusuesn\",\"scalingPlanEnabled\":false}")
+        ScalingHostPoolReference model
+            = BinaryData.fromString("{\"hostPoolArmPath\":\"czfc\",\"scalingPlanEnabled\":true}")
                 .toObject(ScalingHostPoolReference.class);
-        Assertions.assertEquals("pusuesn", model.hostPoolArmPath());
-        Assertions.assertEquals(false, model.scalingPlanEnabled());
+        Assertions.assertEquals("czfc", model.hostPoolArmPath());
+        Assertions.assertEquals(true, model.scalingPlanEnabled());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ScalingHostPoolReference model =
-            new ScalingHostPoolReference().withHostPoolArmPath("pusuesn").withScalingPlanEnabled(false);
+        ScalingHostPoolReference model
+            = new ScalingHostPoolReference().withHostPoolArmPath("czfc").withScalingPlanEnabled(true);
         model = BinaryData.fromObject(model).toObject(ScalingHostPoolReference.class);
-        Assertions.assertEquals("pusuesn", model.hostPoolArmPath());
-        Assertions.assertEquals(false, model.scalingPlanEnabled());
+        Assertions.assertEquals("czfc", model.hostPoolArmPath());
+        Assertions.assertEquals(true, model.scalingPlanEnabled());
     }
 }

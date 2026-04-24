@@ -14,22 +14,25 @@
 ### AzureBareMetalInstances_GetByResourceGroup
 
 ```java
-/** Samples for AzureBareMetalInstances GetByResourceGroup. */
+/**
+ * Samples for AzureBareMetalInstances GetByResourceGroup.
+ */
 public final class AzureBareMetalInstancesGetByResourceGroupSamples {
     /*
-     * x-ms-original-file: specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/examples/AzureBareMetalInstances_Get.json
+     * x-ms-original-file:
+     * specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/
+     * examples/AzureBareMetalInstances_Get.json
      */
     /**
      * Sample code: Get an AzureBareMetal instance.
-     *
+     * 
      * @param manager Entry point to BareMetalInfrastructureManager.
      */
     public static void getAnAzureBareMetalInstance(
         com.azure.resourcemanager.baremetalinfrastructure.BareMetalInfrastructureManager manager) {
-        manager
-            .azureBareMetalInstances()
-            .getByResourceGroupWithResponse(
-                "myResourceGroup", "myAzureBareMetalInstance", com.azure.core.util.Context.NONE);
+        manager.azureBareMetalInstances()
+            .getByResourceGroupWithResponse("myResourceGroup", "myAzureBareMetalInstance",
+                com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -37,14 +40,18 @@ public final class AzureBareMetalInstancesGetByResourceGroupSamples {
 ### AzureBareMetalInstances_List
 
 ```java
-/** Samples for AzureBareMetalInstances List. */
+/**
+ * Samples for AzureBareMetalInstances List.
+ */
 public final class AzureBareMetalInstancesListSamples {
     /*
-     * x-ms-original-file: specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/examples/AzureBareMetalInstances_ListBySubscription.json
+     * x-ms-original-file:
+     * specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/
+     * examples/AzureBareMetalInstances_ListBySubscription.json
      */
     /**
      * Sample code: List all AzureBareMetal instances in a subscription.
-     *
+     * 
      * @param manager Entry point to BareMetalInfrastructureManager.
      */
     public static void listAllAzureBareMetalInstancesInASubscription(
@@ -57,14 +64,18 @@ public final class AzureBareMetalInstancesListSamples {
 ### AzureBareMetalInstances_ListByResourceGroup
 
 ```java
-/** Samples for AzureBareMetalInstances ListByResourceGroup. */
+/**
+ * Samples for AzureBareMetalInstances ListByResourceGroup.
+ */
 public final class AzureBareMetalInstancesListByResourceGroupSamples {
     /*
-     * x-ms-original-file: specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/examples/AzureBareMetalInstances_ListByResourceGroup.json
+     * x-ms-original-file:
+     * specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/
+     * examples/AzureBareMetalInstances_ListByResourceGroup.json
      */
     /**
      * Sample code: List all AzureBareMetal instances in a resource group.
-     *
+     * 
      * @param manager Entry point to BareMetalInfrastructureManager.
      */
     public static void listAllAzureBareMetalInstancesInAResourceGroup(
@@ -81,43 +92,45 @@ import com.azure.resourcemanager.baremetalinfrastructure.models.Tags;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for AzureBareMetalInstances Update. */
+/**
+ * Samples for AzureBareMetalInstances Update.
+ */
 public final class AzureBareMetalInstancesUpdateSamples {
     /*
-     * x-ms-original-file: specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/examples/AzureBareMetalInstances_PatchTags.json
+     * x-ms-original-file:
+     * specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/
+     * examples/AzureBareMetalInstances_PatchTags.json
      */
     /**
      * Sample code: Update Tags field of an AzureBareMetal instance.
-     *
+     * 
      * @param manager Entry point to BareMetalInfrastructureManager.
      */
     public static void updateTagsFieldOfAnAzureBareMetalInstance(
         com.azure.resourcemanager.baremetalinfrastructure.BareMetalInfrastructureManager manager) {
-        manager
-            .azureBareMetalInstances()
-            .updateWithResponse(
-                "myResourceGroup",
-                "myABMInstance",
-                new Tags().withTags(mapOf("testkey", "testvalue")),
-                com.azure.core.util.Context.NONE);
+        manager.azureBareMetalInstances()
+            .updateWithResponse("myResourceGroup", "myABMInstance",
+                new Tags().withTags(mapOf("testkey", "fakeTokenPlaceholder")), com.azure.core.util.Context.NONE);
     }
 
     /*
-     * x-ms-original-file: specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/examples/AzureBareMetalInstances_PatchTags_Delete.json
+     * x-ms-original-file:
+     * specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/
+     * examples/AzureBareMetalInstances_PatchTags_Delete.json
      */
     /**
      * Sample code: Delete Tags field of an AzureBareMetal instance.
-     *
+     * 
      * @param manager Entry point to BareMetalInfrastructureManager.
      */
     public static void deleteTagsFieldOfAnAzureBareMetalInstance(
         com.azure.resourcemanager.baremetalinfrastructure.BareMetalInfrastructureManager manager) {
-        manager
-            .azureBareMetalInstances()
-            .updateWithResponse(
-                "myResourceGroup", "myABMInstance", new Tags().withTags(mapOf()), com.azure.core.util.Context.NONE);
+        manager.azureBareMetalInstances()
+            .updateWithResponse("myResourceGroup", "myABMInstance", new Tags().withTags(mapOf()),
+                com.azure.core.util.Context.NONE);
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();
@@ -134,14 +147,18 @@ public final class AzureBareMetalInstancesUpdateSamples {
 ### Operations_List
 
 ```java
-/** Samples for Operations List. */
+/**
+ * Samples for Operations List.
+ */
 public final class OperationsListSamples {
     /*
-     * x-ms-original-file: specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/examples/AzureBareMetalOperations_List.json
+     * x-ms-original-file:
+     * specification/baremetalinfrastructure/resource-manager/Microsoft.BareMetalInfrastructure/stable/2021-08-09/
+     * examples/AzureBareMetalOperations_List.json
      */
     /**
      * Sample code: List all management operations supported by the AzureBareMetal RP.
-     *
+     * 
      * @param manager Entry point to BareMetalInfrastructureManager.
      */
     public static void listAllManagementOperationsSupportedByTheAzureBareMetalRP(

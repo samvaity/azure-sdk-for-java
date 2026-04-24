@@ -5,51 +5,62 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.HashMap;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** Kernel information. */
+/**
+ * Kernel information.
+ */
 @Fluent
-public final class NotebookKernelSpec {
+public final class NotebookKernelSpec implements JsonSerializable<NotebookKernelSpec> {
     /*
      * Name of the kernel specification.
      */
-    @JsonProperty(value = "name", required = true)
+    @Generated
     private String name;
 
     /*
      * Name to display in UI.
      */
-    @JsonProperty(value = "display_name", required = true)
+    @Generated
     private String displayName;
 
     /*
      * Kernel information.
      */
-    @JsonIgnore private Map<String, Object> additionalProperties;
+    @Generated
+    private Map<String, Object> additionalProperties;
 
-    /** Creates an instance of NotebookKernelSpec class. */
-    public NotebookKernelSpec() {}
+    /**
+     * Creates an instance of NotebookKernelSpec class.
+     */
+    @Generated
+    public NotebookKernelSpec() {
+    }
 
     /**
      * Get the name property: Name of the kernel specification.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: Name of the kernel specification.
-     *
+     * 
      * @param name the name value to set.
      * @return the NotebookKernelSpec object itself.
      */
+    @Generated
     public NotebookKernelSpec setName(String name) {
         this.name = name;
         return this;
@@ -57,19 +68,21 @@ public final class NotebookKernelSpec {
 
     /**
      * Get the displayName property: Name to display in UI.
-     *
+     * 
      * @return the displayName value.
      */
+    @Generated
     public String getDisplayName() {
         return this.displayName;
     }
 
     /**
      * Set the displayName property: Name to display in UI.
-     *
+     * 
      * @param displayName the displayName value to set.
      * @return the NotebookKernelSpec object itself.
      */
+    @Generated
     public NotebookKernelSpec setDisplayName(String displayName) {
         this.displayName = displayName;
         return this;
@@ -77,30 +90,76 @@ public final class NotebookKernelSpec {
 
     /**
      * Get the additionalProperties property: Kernel information.
-     *
+     * 
      * @return the additionalProperties value.
      */
-    @JsonAnyGetter
+    @Generated
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     /**
      * Set the additionalProperties property: Kernel information.
-     *
+     * 
      * @param additionalProperties the additionalProperties value to set.
      * @return the NotebookKernelSpec object itself.
      */
+    @Generated
     public NotebookKernelSpec setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
         return this;
     }
 
-    @JsonAnySetter
-    void setAdditionalProperties(String key, Object value) {
-        if (additionalProperties == null) {
-            additionalProperties = new HashMap<>();
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeStringField("display_name", this.displayName);
+        if (additionalProperties != null) {
+            for (Map.Entry<String, Object> additionalProperty : additionalProperties.entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
         }
-        additionalProperties.put(key, value);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of NotebookKernelSpec from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of NotebookKernelSpec if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the NotebookKernelSpec.
+     */
+    @Generated
+    public static NotebookKernelSpec fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            NotebookKernelSpec deserializedNotebookKernelSpec = new NotebookKernelSpec();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedNotebookKernelSpec.name = reader.getString();
+                } else if ("display_name".equals(fieldName)) {
+                    deserializedNotebookKernelSpec.displayName = reader.getString();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedNotebookKernelSpec.additionalProperties = additionalProperties;
+
+            return deserializedNotebookKernelSpec;
+        });
     }
 }

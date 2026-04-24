@@ -5,62 +5,85 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** A Rest service dataset. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("RestResource")
-@JsonFlatten
+/**
+ * A Rest service dataset.
+ */
 @Fluent
 public class RestResourceDataset extends Dataset {
+    /*
+     * Type of dataset.
+     */
+    @Generated
+    private String type = "RestResource";
+
     /*
      * The relative URL to the resource that the RESTful API provides. Type: string (or Expression with resultType
      * string).
      */
-    @JsonProperty(value = "typeProperties.relativeUrl")
+    @Generated
     private Object relativeUrl;
 
     /*
      * The HTTP method used to call the RESTful API. The default is GET. Type: string (or Expression with resultType
      * string).
      */
-    @JsonProperty(value = "typeProperties.requestMethod")
+    @Generated
     private Object requestMethod;
 
     /*
      * The HTTP request body to the RESTful API if requestMethod is POST. Type: string (or Expression with resultType
      * string).
      */
-    @JsonProperty(value = "typeProperties.requestBody")
+    @Generated
     private Object requestBody;
 
     /*
      * The additional HTTP headers in the request to the RESTful API. Type: string (or Expression with resultType
      * string).
      */
-    @JsonProperty(value = "typeProperties.additionalHeaders")
+    @Generated
     private Object additionalHeaders;
 
     /*
      * The pagination rules to compose next page requests. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.paginationRules")
+    @Generated
     private Object paginationRules;
 
-    /** Creates an instance of RestResourceDataset class. */
-    public RestResourceDataset() {}
+    /**
+     * Creates an instance of RestResourceDataset class.
+     */
+    @Generated
+    public RestResourceDataset() {
+    }
+
+    /**
+     * Get the type property: Type of dataset.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the relativeUrl property: The relative URL to the resource that the RESTful API provides. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @return the relativeUrl value.
      */
+    @Generated
     public Object getRelativeUrl() {
         return this.relativeUrl;
     }
@@ -68,10 +91,11 @@ public class RestResourceDataset extends Dataset {
     /**
      * Set the relativeUrl property: The relative URL to the resource that the RESTful API provides. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @param relativeUrl the relativeUrl value to set.
      * @return the RestResourceDataset object itself.
      */
+    @Generated
     public RestResourceDataset setRelativeUrl(Object relativeUrl) {
         this.relativeUrl = relativeUrl;
         return this;
@@ -80,9 +104,10 @@ public class RestResourceDataset extends Dataset {
     /**
      * Get the requestMethod property: The HTTP method used to call the RESTful API. The default is GET. Type: string
      * (or Expression with resultType string).
-     *
+     * 
      * @return the requestMethod value.
      */
+    @Generated
     public Object getRequestMethod() {
         return this.requestMethod;
     }
@@ -90,10 +115,11 @@ public class RestResourceDataset extends Dataset {
     /**
      * Set the requestMethod property: The HTTP method used to call the RESTful API. The default is GET. Type: string
      * (or Expression with resultType string).
-     *
+     * 
      * @param requestMethod the requestMethod value to set.
      * @return the RestResourceDataset object itself.
      */
+    @Generated
     public RestResourceDataset setRequestMethod(Object requestMethod) {
         this.requestMethod = requestMethod;
         return this;
@@ -102,9 +128,10 @@ public class RestResourceDataset extends Dataset {
     /**
      * Get the requestBody property: The HTTP request body to the RESTful API if requestMethod is POST. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @return the requestBody value.
      */
+    @Generated
     public Object getRequestBody() {
         return this.requestBody;
     }
@@ -112,10 +139,11 @@ public class RestResourceDataset extends Dataset {
     /**
      * Set the requestBody property: The HTTP request body to the RESTful API if requestMethod is POST. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @param requestBody the requestBody value to set.
      * @return the RestResourceDataset object itself.
      */
+    @Generated
     public RestResourceDataset setRequestBody(Object requestBody) {
         this.requestBody = requestBody;
         return this;
@@ -124,9 +152,10 @@ public class RestResourceDataset extends Dataset {
     /**
      * Get the additionalHeaders property: The additional HTTP headers in the request to the RESTful API. Type: string
      * (or Expression with resultType string).
-     *
+     * 
      * @return the additionalHeaders value.
      */
+    @Generated
     public Object getAdditionalHeaders() {
         return this.additionalHeaders;
     }
@@ -134,10 +163,11 @@ public class RestResourceDataset extends Dataset {
     /**
      * Set the additionalHeaders property: The additional HTTP headers in the request to the RESTful API. Type: string
      * (or Expression with resultType string).
-     *
+     * 
      * @param additionalHeaders the additionalHeaders value to set.
      * @return the RestResourceDataset object itself.
      */
+    @Generated
     public RestResourceDataset setAdditionalHeaders(Object additionalHeaders) {
         this.additionalHeaders = additionalHeaders;
         return this;
@@ -146,9 +176,10 @@ public class RestResourceDataset extends Dataset {
     /**
      * Get the paginationRules property: The pagination rules to compose next page requests. Type: string (or Expression
      * with resultType string).
-     *
+     * 
      * @return the paginationRules value.
      */
+    @Generated
     public Object getPaginationRules() {
         return this.paginationRules;
     }
@@ -156,61 +187,203 @@ public class RestResourceDataset extends Dataset {
     /**
      * Set the paginationRules property: The pagination rules to compose next page requests. Type: string (or Expression
      * with resultType string).
-     *
+     * 
      * @param paginationRules the paginationRules value to set.
      * @return the RestResourceDataset object itself.
      */
+    @Generated
     public RestResourceDataset setPaginationRules(Object paginationRules) {
         this.paginationRules = paginationRules;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public RestResourceDataset setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public RestResourceDataset setStructure(Object structure) {
         super.setStructure(structure);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public RestResourceDataset setSchema(Object schema) {
         super.setSchema(schema);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public RestResourceDataset setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         super.setLinkedServiceName(linkedServiceName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public RestResourceDataset setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public RestResourceDataset setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public RestResourceDataset setFolder(DatasetFolder folder) {
         super.setFolder(folder);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("linkedServiceName", getLinkedServiceName());
+        jsonWriter.writeStringField("description", getDescription());
+        if (getStructure() != null) {
+            jsonWriter.writeUntypedField("structure", getStructure());
+        }
+        if (getSchema() != null) {
+            jsonWriter.writeUntypedField("schema", getSchema());
+        }
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeJsonField("folder", getFolder());
+        jsonWriter.writeStringField("type", this.type);
+        if (relativeUrl != null
+            || requestMethod != null
+            || requestBody != null
+            || additionalHeaders != null
+            || paginationRules != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            if (this.relativeUrl != null) {
+                jsonWriter.writeUntypedField("relativeUrl", this.relativeUrl);
+            }
+            if (this.requestMethod != null) {
+                jsonWriter.writeUntypedField("requestMethod", this.requestMethod);
+            }
+            if (this.requestBody != null) {
+                jsonWriter.writeUntypedField("requestBody", this.requestBody);
+            }
+            if (this.additionalHeaders != null) {
+                jsonWriter.writeUntypedField("additionalHeaders", this.additionalHeaders);
+            }
+            if (this.paginationRules != null) {
+                jsonWriter.writeUntypedField("paginationRules", this.paginationRules);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RestResourceDataset from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RestResourceDataset if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the RestResourceDataset.
+     */
+    @Generated
+    public static RestResourceDataset fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RestResourceDataset deserializedRestResourceDataset = new RestResourceDataset();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("linkedServiceName".equals(fieldName)) {
+                    deserializedRestResourceDataset.setLinkedServiceName(LinkedServiceReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedRestResourceDataset.setDescription(reader.getString());
+                } else if ("structure".equals(fieldName)) {
+                    deserializedRestResourceDataset.setStructure(reader.readUntyped());
+                } else if ("schema".equals(fieldName)) {
+                    deserializedRestResourceDataset.setSchema(reader.readUntyped());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedRestResourceDataset.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedRestResourceDataset.setAnnotations(annotations);
+                } else if ("folder".equals(fieldName)) {
+                    deserializedRestResourceDataset.setFolder(DatasetFolder.fromJson(reader));
+                } else if ("type".equals(fieldName)) {
+                    deserializedRestResourceDataset.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("relativeUrl".equals(fieldName)) {
+                            deserializedRestResourceDataset.relativeUrl = reader.readUntyped();
+                        } else if ("requestMethod".equals(fieldName)) {
+                            deserializedRestResourceDataset.requestMethod = reader.readUntyped();
+                        } else if ("requestBody".equals(fieldName)) {
+                            deserializedRestResourceDataset.requestBody = reader.readUntyped();
+                        } else if ("additionalHeaders".equals(fieldName)) {
+                            deserializedRestResourceDataset.additionalHeaders = reader.readUntyped();
+                        } else if ("paginationRules".equals(fieldName)) {
+                            deserializedRestResourceDataset.paginationRules = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedRestResourceDataset.setAdditionalProperties(additionalProperties);
+
+            return deserializedRestResourceDataset;
+        });
     }
 }

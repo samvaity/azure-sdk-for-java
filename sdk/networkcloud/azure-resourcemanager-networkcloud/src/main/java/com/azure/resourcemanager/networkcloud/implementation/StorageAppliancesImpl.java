@@ -10,7 +10,9 @@ import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.util.Context;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.resourcemanager.networkcloud.fluent.StorageAppliancesClient;
+import com.azure.resourcemanager.networkcloud.fluent.models.OperationStatusResultInner;
 import com.azure.resourcemanager.networkcloud.fluent.models.StorageApplianceInner;
+import com.azure.resourcemanager.networkcloud.models.OperationStatusResult;
 import com.azure.resourcemanager.networkcloud.models.StorageAppliance;
 import com.azure.resourcemanager.networkcloud.models.StorageApplianceEnableRemoteVendorManagementParameters;
 import com.azure.resourcemanager.networkcloud.models.StorageApplianceRunReadCommandsParameters;
@@ -23,8 +25,7 @@ public final class StorageAppliancesImpl implements StorageAppliances {
 
     private final com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager;
 
-    public StorageAppliancesImpl(
-        StorageAppliancesClient innerClient,
+    public StorageAppliancesImpl(StorageAppliancesClient innerClient,
         com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
@@ -32,34 +33,32 @@ public final class StorageAppliancesImpl implements StorageAppliances {
 
     public PagedIterable<StorageAppliance> list() {
         PagedIterable<StorageApplianceInner> inner = this.serviceClient().list();
-        return Utils.mapPage(inner, inner1 -> new StorageApplianceImpl(inner1, this.manager()));
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new StorageApplianceImpl(inner1, this.manager()));
     }
 
-    public PagedIterable<StorageAppliance> list(Context context) {
-        PagedIterable<StorageApplianceInner> inner = this.serviceClient().list(context);
-        return Utils.mapPage(inner, inner1 -> new StorageApplianceImpl(inner1, this.manager()));
+    public PagedIterable<StorageAppliance> list(Integer top, String skipToken, Context context) {
+        PagedIterable<StorageApplianceInner> inner = this.serviceClient().list(top, skipToken, context);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new StorageApplianceImpl(inner1, this.manager()));
     }
 
     public PagedIterable<StorageAppliance> listByResourceGroup(String resourceGroupName) {
         PagedIterable<StorageApplianceInner> inner = this.serviceClient().listByResourceGroup(resourceGroupName);
-        return Utils.mapPage(inner, inner1 -> new StorageApplianceImpl(inner1, this.manager()));
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new StorageApplianceImpl(inner1, this.manager()));
     }
 
-    public PagedIterable<StorageAppliance> listByResourceGroup(String resourceGroupName, Context context) {
-        PagedIterable<StorageApplianceInner> inner =
-            this.serviceClient().listByResourceGroup(resourceGroupName, context);
-        return Utils.mapPage(inner, inner1 -> new StorageApplianceImpl(inner1, this.manager()));
+    public PagedIterable<StorageAppliance> listByResourceGroup(String resourceGroupName, Integer top, String skipToken,
+        Context context) {
+        PagedIterable<StorageApplianceInner> inner
+            = this.serviceClient().listByResourceGroup(resourceGroupName, top, skipToken, context);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new StorageApplianceImpl(inner1, this.manager()));
     }
 
-    public Response<StorageAppliance> getByResourceGroupWithResponse(
-        String resourceGroupName, String storageApplianceName, Context context) {
-        Response<StorageApplianceInner> inner =
-            this.serviceClient().getByResourceGroupWithResponse(resourceGroupName, storageApplianceName, context);
+    public Response<StorageAppliance> getByResourceGroupWithResponse(String resourceGroupName,
+        String storageApplianceName, Context context) {
+        Response<StorageApplianceInner> inner
+            = this.serviceClient().getByResourceGroupWithResponse(resourceGroupName, storageApplianceName, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new StorageApplianceImpl(inner.getValue(), this.manager()));
         } else {
             return null;
@@ -75,142 +74,150 @@ public final class StorageAppliancesImpl implements StorageAppliances {
         }
     }
 
-    public void deleteByResourceGroup(String resourceGroupName, String storageApplianceName) {
-        this.serviceClient().delete(resourceGroupName, storageApplianceName);
+    public OperationStatusResult deleteByResourceGroup(String resourceGroupName, String storageApplianceName) {
+        OperationStatusResultInner inner = this.serviceClient().delete(resourceGroupName, storageApplianceName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void delete(String resourceGroupName, String storageApplianceName, Context context) {
-        this.serviceClient().delete(resourceGroupName, storageApplianceName, context);
+    public OperationStatusResult delete(String resourceGroupName, String storageApplianceName, String ifMatch,
+        String ifNoneMatch, Context context) {
+        OperationStatusResultInner inner
+            = this.serviceClient().delete(resourceGroupName, storageApplianceName, ifMatch, ifNoneMatch, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void disableRemoteVendorManagement(String resourceGroupName, String storageApplianceName) {
-        this.serviceClient().disableRemoteVendorManagement(resourceGroupName, storageApplianceName);
+    public OperationStatusResult disableRemoteVendorManagement(String resourceGroupName, String storageApplianceName) {
+        OperationStatusResultInner inner
+            = this.serviceClient().disableRemoteVendorManagement(resourceGroupName, storageApplianceName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void disableRemoteVendorManagement(String resourceGroupName, String storageApplianceName, Context context) {
-        this.serviceClient().disableRemoteVendorManagement(resourceGroupName, storageApplianceName, context);
+    public OperationStatusResult disableRemoteVendorManagement(String resourceGroupName, String storageApplianceName,
+        Context context) {
+        OperationStatusResultInner inner
+            = this.serviceClient().disableRemoteVendorManagement(resourceGroupName, storageApplianceName, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void enableRemoteVendorManagement(String resourceGroupName, String storageApplianceName) {
-        this.serviceClient().enableRemoteVendorManagement(resourceGroupName, storageApplianceName);
+    public OperationStatusResult enableRemoteVendorManagement(String resourceGroupName, String storageApplianceName) {
+        OperationStatusResultInner inner
+            = this.serviceClient().enableRemoteVendorManagement(resourceGroupName, storageApplianceName);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void enableRemoteVendorManagement(
-        String resourceGroupName,
-        String storageApplianceName,
+    public OperationStatusResult enableRemoteVendorManagement(String resourceGroupName, String storageApplianceName,
         StorageApplianceEnableRemoteVendorManagementParameters storageApplianceEnableRemoteVendorManagementParameters,
         Context context) {
-        this
-            .serviceClient()
-            .enableRemoteVendorManagement(
-                resourceGroupName,
-                storageApplianceName,
-                storageApplianceEnableRemoteVendorManagementParameters,
-                context);
+        OperationStatusResultInner inner = this.serviceClient()
+            .enableRemoteVendorManagement(resourceGroupName, storageApplianceName,
+                storageApplianceEnableRemoteVendorManagementParameters, context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void runReadCommands(
-        String resourceGroupName,
-        String storageApplianceName,
+    public OperationStatusResult runReadCommands(String resourceGroupName, String storageApplianceName,
         StorageApplianceRunReadCommandsParameters storageApplianceRunReadCommandsParameters) {
-        this
-            .serviceClient()
+        OperationStatusResultInner inner = this.serviceClient()
             .runReadCommands(resourceGroupName, storageApplianceName, storageApplianceRunReadCommandsParameters);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
-    public void runReadCommands(
-        String resourceGroupName,
-        String storageApplianceName,
-        StorageApplianceRunReadCommandsParameters storageApplianceRunReadCommandsParameters,
-        Context context) {
-        this
-            .serviceClient()
-            .runReadCommands(
-                resourceGroupName, storageApplianceName, storageApplianceRunReadCommandsParameters, context);
+    public OperationStatusResult runReadCommands(String resourceGroupName, String storageApplianceName,
+        StorageApplianceRunReadCommandsParameters storageApplianceRunReadCommandsParameters, Context context) {
+        OperationStatusResultInner inner = this.serviceClient()
+            .runReadCommands(resourceGroupName, storageApplianceName, storageApplianceRunReadCommandsParameters,
+                context);
+        if (inner != null) {
+            return new OperationStatusResultImpl(inner, this.manager());
+        } else {
+            return null;
+        }
     }
 
     public StorageAppliance getById(String id) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String storageApplianceName = Utils.getValueFromIdByName(id, "storageAppliances");
+        String storageApplianceName = ResourceManagerUtils.getValueFromIdByName(id, "storageAppliances");
         if (storageApplianceName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'storageAppliances'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'storageAppliances'.", id)));
         }
         return this.getByResourceGroupWithResponse(resourceGroupName, storageApplianceName, Context.NONE).getValue();
     }
 
     public Response<StorageAppliance> getByIdWithResponse(String id, Context context) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String storageApplianceName = Utils.getValueFromIdByName(id, "storageAppliances");
+        String storageApplianceName = ResourceManagerUtils.getValueFromIdByName(id, "storageAppliances");
         if (storageApplianceName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'storageAppliances'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'storageAppliances'.", id)));
         }
         return this.getByResourceGroupWithResponse(resourceGroupName, storageApplianceName, context);
     }
 
-    public void deleteById(String id) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+    public OperationStatusResult deleteById(String id) {
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String storageApplianceName = Utils.getValueFromIdByName(id, "storageAppliances");
+        String storageApplianceName = ResourceManagerUtils.getValueFromIdByName(id, "storageAppliances");
         if (storageApplianceName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'storageAppliances'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'storageAppliances'.", id)));
         }
-        this.delete(resourceGroupName, storageApplianceName, Context.NONE);
+        String localIfMatch = null;
+        String localIfNoneMatch = null;
+        return this.delete(resourceGroupName, storageApplianceName, localIfMatch, localIfNoneMatch, Context.NONE);
     }
 
-    public void deleteByIdWithResponse(String id, Context context) {
-        String resourceGroupName = Utils.getValueFromIdByName(id, "resourceGroups");
+    public OperationStatusResult deleteByIdWithResponse(String id, String ifMatch, String ifNoneMatch,
+        Context context) {
+        String resourceGroupName = ResourceManagerUtils.getValueFromIdByName(id, "resourceGroups");
         if (resourceGroupName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'resourceGroups'.", id)));
         }
-        String storageApplianceName = Utils.getValueFromIdByName(id, "storageAppliances");
+        String storageApplianceName = ResourceManagerUtils.getValueFromIdByName(id, "storageAppliances");
         if (storageApplianceName == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        String
-                            .format(
-                                "The resource ID '%s' is not valid. Missing path segment 'storageAppliances'.", id)));
+            throw LOGGER.logExceptionAsError(new IllegalArgumentException(
+                String.format("The resource ID '%s' is not valid. Missing path segment 'storageAppliances'.", id)));
         }
-        this.delete(resourceGroupName, storageApplianceName, context);
+        return this.delete(resourceGroupName, storageApplianceName, ifMatch, ifNoneMatch, context);
     }
 
     private StorageAppliancesClient serviceClient() {

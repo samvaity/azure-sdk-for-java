@@ -5,53 +5,66 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Custom script action to run on HDI ondemand cluster once it's up. */
+/**
+ * Custom script action to run on HDI ondemand cluster once it's up.
+ */
 @Fluent
-public final class ScriptAction {
+public final class ScriptAction implements JsonSerializable<ScriptAction> {
     /*
      * The user provided name of the script action.
      */
-    @JsonProperty(value = "name", required = true)
+    @Generated
     private String name;
 
     /*
      * The URI for the script action.
      */
-    @JsonProperty(value = "uri", required = true)
+    @Generated
     private String uri;
 
     /*
      * The node types on which the script action should be executed.
      */
-    @JsonProperty(value = "roles", required = true)
+    @Generated
     private Object roles;
 
     /*
      * The parameters for the script action.
      */
-    @JsonProperty(value = "parameters")
+    @Generated
     private String parameters;
 
-    /** Creates an instance of ScriptAction class. */
-    public ScriptAction() {}
+    /**
+     * Creates an instance of ScriptAction class.
+     */
+    @Generated
+    public ScriptAction() {
+    }
 
     /**
      * Get the name property: The user provided name of the script action.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The user provided name of the script action.
-     *
+     * 
      * @param name the name value to set.
      * @return the ScriptAction object itself.
      */
+    @Generated
     public ScriptAction setName(String name) {
         this.name = name;
         return this;
@@ -59,19 +72,21 @@ public final class ScriptAction {
 
     /**
      * Get the uri property: The URI for the script action.
-     *
+     * 
      * @return the uri value.
      */
+    @Generated
     public String getUri() {
         return this.uri;
     }
 
     /**
      * Set the uri property: The URI for the script action.
-     *
+     * 
      * @param uri the uri value to set.
      * @return the ScriptAction object itself.
      */
+    @Generated
     public ScriptAction setUri(String uri) {
         this.uri = uri;
         return this;
@@ -79,19 +94,21 @@ public final class ScriptAction {
 
     /**
      * Get the roles property: The node types on which the script action should be executed.
-     *
+     * 
      * @return the roles value.
      */
+    @Generated
     public Object getRoles() {
         return this.roles;
     }
 
     /**
      * Set the roles property: The node types on which the script action should be executed.
-     *
+     * 
      * @param roles the roles value to set.
      * @return the ScriptAction object itself.
      */
+    @Generated
     public ScriptAction setRoles(Object roles) {
         this.roles = roles;
         return this;
@@ -99,21 +116,71 @@ public final class ScriptAction {
 
     /**
      * Get the parameters property: The parameters for the script action.
-     *
+     * 
      * @return the parameters value.
      */
+    @Generated
     public String getParameters() {
         return this.parameters;
     }
 
     /**
      * Set the parameters property: The parameters for the script action.
-     *
+     * 
      * @param parameters the parameters value to set.
      * @return the ScriptAction object itself.
      */
+    @Generated
     public ScriptAction setParameters(String parameters) {
         this.parameters = parameters;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", this.name);
+        jsonWriter.writeStringField("uri", this.uri);
+        jsonWriter.writeUntypedField("roles", this.roles);
+        jsonWriter.writeStringField("parameters", this.parameters);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ScriptAction from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ScriptAction if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ScriptAction.
+     */
+    @Generated
+    public static ScriptAction fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ScriptAction deserializedScriptAction = new ScriptAction();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedScriptAction.name = reader.getString();
+                } else if ("uri".equals(fieldName)) {
+                    deserializedScriptAction.uri = reader.getString();
+                } else if ("roles".equals(fieldName)) {
+                    deserializedScriptAction.roles = reader.readUntyped();
+                } else if ("parameters".equals(fieldName)) {
+                    deserializedScriptAction.parameters = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedScriptAction;
+        });
     }
 }

@@ -11,18 +11,19 @@ import org.junit.jupiter.api.Assertions;
 public final class VolumePropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        VolumeProperties model =
-            BinaryData
-                .fromString(
-                    "{\"attachedTo\":[\"tutnwlduycvuzhyr\",\"ewipm\",\"ekdxuku\"],\"detailedStatus\":\"Active\",\"detailedStatusMessage\":\"jxundxgketwzh\",\"provisioningState\":\"Succeeded\",\"serialNumber\":\"f\",\"sizeMiB\":2708101359604263797}")
-                .toObject(VolumeProperties.class);
-        Assertions.assertEquals(2708101359604263797L, model.sizeMiB());
+        VolumeProperties model = BinaryData.fromString(
+            "{\"allocatedSizeMiB\":2352862867370650267,\"attachedTo\":[\"wndyqleallk\",\"mtkhlowkxxpvbr\",\"fjmzsyzfho\"],\"detailedStatus\":\"Provisioning\",\"detailedStatusMessage\":\"k\",\"provisioningState\":\"Provisioning\",\"serialNumber\":\"h\",\"sizeMiB\":1655044742724101731,\"storageApplianceId\":\"lpjrtwsz\"}")
+            .toObject(VolumeProperties.class);
+        Assertions.assertEquals(1655044742724101731L, model.sizeMiB());
+        Assertions.assertEquals("lpjrtwsz", model.storageApplianceId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        VolumeProperties model = new VolumeProperties().withSizeMiB(2708101359604263797L);
+        VolumeProperties model
+            = new VolumeProperties().withSizeMiB(1655044742724101731L).withStorageApplianceId("lpjrtwsz");
         model = BinaryData.fromObject(model).toObject(VolumeProperties.class);
-        Assertions.assertEquals(2708101359604263797L, model.sizeMiB());
+        Assertions.assertEquals(1655044742724101731L, model.sizeMiB());
+        Assertions.assertEquals("lpjrtwsz", model.storageApplianceId());
     }
 }

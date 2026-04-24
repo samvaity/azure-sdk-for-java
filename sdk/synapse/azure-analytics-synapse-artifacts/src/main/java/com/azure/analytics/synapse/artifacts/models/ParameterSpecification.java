@@ -5,41 +5,54 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Definition of a single parameter for an entity. */
+/**
+ * Definition of a single parameter for an entity.
+ */
 @Fluent
-public final class ParameterSpecification {
+public final class ParameterSpecification implements JsonSerializable<ParameterSpecification> {
     /*
      * Parameter type.
      */
-    @JsonProperty(value = "type", required = true)
+    @Generated
     private ParameterType type;
 
     /*
      * Default value of parameter.
      */
-    @JsonProperty(value = "defaultValue")
+    @Generated
     private Object defaultValue;
 
-    /** Creates an instance of ParameterSpecification class. */
-    public ParameterSpecification() {}
+    /**
+     * Creates an instance of ParameterSpecification class.
+     */
+    @Generated
+    public ParameterSpecification() {
+    }
 
     /**
      * Get the type property: Parameter type.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public ParameterType getType() {
         return this.type;
     }
 
     /**
      * Set the type property: Parameter type.
-     *
+     * 
      * @param type the type value to set.
      * @return the ParameterSpecification object itself.
      */
+    @Generated
     public ParameterSpecification setType(ParameterType type) {
         this.type = type;
         return this;
@@ -47,21 +60,67 @@ public final class ParameterSpecification {
 
     /**
      * Get the defaultValue property: Default value of parameter.
-     *
+     * 
      * @return the defaultValue value.
      */
+    @Generated
     public Object getDefaultValue() {
         return this.defaultValue;
     }
 
     /**
      * Set the defaultValue property: Default value of parameter.
-     *
+     * 
      * @param defaultValue the defaultValue value to set.
      * @return the ParameterSpecification object itself.
      */
+    @Generated
     public ParameterSpecification setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("type", this.type == null ? null : this.type.toString());
+        if (this.defaultValue != null) {
+            jsonWriter.writeUntypedField("defaultValue", this.defaultValue);
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ParameterSpecification from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ParameterSpecification if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ParameterSpecification.
+     */
+    @Generated
+    public static ParameterSpecification fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ParameterSpecification deserializedParameterSpecification = new ParameterSpecification();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("type".equals(fieldName)) {
+                    deserializedParameterSpecification.type = ParameterType.fromString(reader.getString());
+                } else if ("defaultValue".equals(fieldName)) {
+                    deserializedParameterSpecification.defaultValue = reader.readUntyped();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedParameterSpecification;
+        });
     }
 }

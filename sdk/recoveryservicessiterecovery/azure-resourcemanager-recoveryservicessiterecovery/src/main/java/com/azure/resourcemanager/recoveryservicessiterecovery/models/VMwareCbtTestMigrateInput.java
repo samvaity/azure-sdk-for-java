@@ -6,41 +6,66 @@ package com.azure.resourcemanager.recoveryservicessiterecovery.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** VMwareCbt specific test migrate input. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "instanceType")
-@JsonTypeName("VMwareCbt")
+/**
+ * VMwareCbt specific test migrate input.
+ */
 @Fluent
 public final class VMwareCbtTestMigrateInput extends TestMigrateProviderSpecificInput {
     /*
+     * The class type.
+     */
+    private String instanceType = "VMwareCbt";
+
+    /*
      * The recovery point Id.
      */
-    @JsonProperty(value = "recoveryPointId", required = true)
     private String recoveryPointId;
 
     /*
      * The test network Id.
      */
-    @JsonProperty(value = "networkId", required = true)
     private String networkId;
 
     /*
      * The list of NIC details.
      */
-    @JsonProperty(value = "vmNics")
     private List<VMwareCbtNicInput> vmNics;
 
-    /** Creates an instance of VMwareCbtTestMigrateInput class. */
+    /*
+     * A value indicating the inplace OS Upgrade version.
+     */
+    private String osUpgradeVersion;
+
+    /*
+     * The managed run command script input.
+     */
+    private List<ManagedRunCommandScriptInput> postMigrationSteps;
+
+    /**
+     * Creates an instance of VMwareCbtTestMigrateInput class.
+     */
     public VMwareCbtTestMigrateInput() {
     }
 
     /**
+     * Get the instanceType property: The class type.
+     * 
+     * @return the instanceType value.
+     */
+    @Override
+    public String instanceType() {
+        return this.instanceType;
+    }
+
+    /**
      * Get the recoveryPointId property: The recovery point Id.
-     *
+     * 
      * @return the recoveryPointId value.
      */
     public String recoveryPointId() {
@@ -49,7 +74,7 @@ public final class VMwareCbtTestMigrateInput extends TestMigrateProviderSpecific
 
     /**
      * Set the recoveryPointId property: The recovery point Id.
-     *
+     * 
      * @param recoveryPointId the recoveryPointId value to set.
      * @return the VMwareCbtTestMigrateInput object itself.
      */
@@ -60,7 +85,7 @@ public final class VMwareCbtTestMigrateInput extends TestMigrateProviderSpecific
 
     /**
      * Get the networkId property: The test network Id.
-     *
+     * 
      * @return the networkId value.
      */
     public String networkId() {
@@ -69,7 +94,7 @@ public final class VMwareCbtTestMigrateInput extends TestMigrateProviderSpecific
 
     /**
      * Set the networkId property: The test network Id.
-     *
+     * 
      * @param networkId the networkId value to set.
      * @return the VMwareCbtTestMigrateInput object itself.
      */
@@ -80,7 +105,7 @@ public final class VMwareCbtTestMigrateInput extends TestMigrateProviderSpecific
 
     /**
      * Get the vmNics property: The list of NIC details.
-     *
+     * 
      * @return the vmNics value.
      */
     public List<VMwareCbtNicInput> vmNics() {
@@ -89,7 +114,7 @@ public final class VMwareCbtTestMigrateInput extends TestMigrateProviderSpecific
 
     /**
      * Set the vmNics property: The list of NIC details.
-     *
+     * 
      * @param vmNics the vmNics value to set.
      * @return the VMwareCbtTestMigrateInput object itself.
      */
@@ -99,29 +124,125 @@ public final class VMwareCbtTestMigrateInput extends TestMigrateProviderSpecific
     }
 
     /**
+     * Get the osUpgradeVersion property: A value indicating the inplace OS Upgrade version.
+     * 
+     * @return the osUpgradeVersion value.
+     */
+    public String osUpgradeVersion() {
+        return this.osUpgradeVersion;
+    }
+
+    /**
+     * Set the osUpgradeVersion property: A value indicating the inplace OS Upgrade version.
+     * 
+     * @param osUpgradeVersion the osUpgradeVersion value to set.
+     * @return the VMwareCbtTestMigrateInput object itself.
+     */
+    public VMwareCbtTestMigrateInput withOsUpgradeVersion(String osUpgradeVersion) {
+        this.osUpgradeVersion = osUpgradeVersion;
+        return this;
+    }
+
+    /**
+     * Get the postMigrationSteps property: The managed run command script input.
+     * 
+     * @return the postMigrationSteps value.
+     */
+    public List<ManagedRunCommandScriptInput> postMigrationSteps() {
+        return this.postMigrationSteps;
+    }
+
+    /**
+     * Set the postMigrationSteps property: The managed run command script input.
+     * 
+     * @param postMigrationSteps the postMigrationSteps value to set.
+     * @return the VMwareCbtTestMigrateInput object itself.
+     */
+    public VMwareCbtTestMigrateInput withPostMigrationSteps(List<ManagedRunCommandScriptInput> postMigrationSteps) {
+        this.postMigrationSteps = postMigrationSteps;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
     public void validate() {
-        super.validate();
         if (recoveryPointId() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property recoveryPointId in model VMwareCbtTestMigrateInput"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property recoveryPointId in model VMwareCbtTestMigrateInput"));
         }
         if (networkId() == null) {
-            throw LOGGER
-                .logExceptionAsError(
-                    new IllegalArgumentException(
-                        "Missing required property networkId in model VMwareCbtTestMigrateInput"));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Missing required property networkId in model VMwareCbtTestMigrateInput"));
         }
         if (vmNics() != null) {
             vmNics().forEach(e -> e.validate());
         }
+        if (postMigrationSteps() != null) {
+            postMigrationSteps().forEach(e -> e.validate());
+        }
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(VMwareCbtTestMigrateInput.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("recoveryPointId", this.recoveryPointId);
+        jsonWriter.writeStringField("networkId", this.networkId);
+        jsonWriter.writeStringField("instanceType", this.instanceType);
+        jsonWriter.writeArrayField("vmNics", this.vmNics, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("osUpgradeVersion", this.osUpgradeVersion);
+        jsonWriter.writeArrayField("postMigrationSteps", this.postMigrationSteps,
+            (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of VMwareCbtTestMigrateInput from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of VMwareCbtTestMigrateInput if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the VMwareCbtTestMigrateInput.
+     */
+    public static VMwareCbtTestMigrateInput fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            VMwareCbtTestMigrateInput deserializedVMwareCbtTestMigrateInput = new VMwareCbtTestMigrateInput();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("recoveryPointId".equals(fieldName)) {
+                    deserializedVMwareCbtTestMigrateInput.recoveryPointId = reader.getString();
+                } else if ("networkId".equals(fieldName)) {
+                    deserializedVMwareCbtTestMigrateInput.networkId = reader.getString();
+                } else if ("instanceType".equals(fieldName)) {
+                    deserializedVMwareCbtTestMigrateInput.instanceType = reader.getString();
+                } else if ("vmNics".equals(fieldName)) {
+                    List<VMwareCbtNicInput> vmNics = reader.readArray(reader1 -> VMwareCbtNicInput.fromJson(reader1));
+                    deserializedVMwareCbtTestMigrateInput.vmNics = vmNics;
+                } else if ("osUpgradeVersion".equals(fieldName)) {
+                    deserializedVMwareCbtTestMigrateInput.osUpgradeVersion = reader.getString();
+                } else if ("postMigrationSteps".equals(fieldName)) {
+                    List<ManagedRunCommandScriptInput> postMigrationSteps
+                        = reader.readArray(reader1 -> ManagedRunCommandScriptInput.fromJson(reader1));
+                    deserializedVMwareCbtTestMigrateInput.postMigrationSteps = postMigrationSteps;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedVMwareCbtTestMigrateInput;
+        });
+    }
 }

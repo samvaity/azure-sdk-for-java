@@ -22,21 +22,20 @@ public final class AbstractiveSummaryResultCollection extends IterableStream<Abs
         AbstractiveSummaryResultCollectionPropertiesHelper.setAccessor(
             new AbstractiveSummaryResultCollectionPropertiesHelper.AbstractiveSummaryResultCollectionAccessor() {
                 @Override
-                public void setModelVersion(AbstractiveSummaryResultCollection resultCollection,
-                                            String modelVersion) {
+                public void setModelVersion(AbstractiveSummaryResultCollection resultCollection, String modelVersion) {
                     resultCollection.setModelVersion(modelVersion);
                 }
 
                 @Override
                 public void setStatistics(AbstractiveSummaryResultCollection resultCollection,
-                                          TextDocumentBatchStatistics statistics) {
+                    TextDocumentBatchStatistics statistics) {
                     resultCollection.setStatistics(statistics);
                 }
             });
     }
 
     /**
-     * Create a {@link AbstractiveSummaryResultCollection} model that maintains a list of
+     * Create a {@code AbstractiveSummaryResultCollection} model that maintains a list of
      * {@link AbstractiveSummaryResult} along with model version and batch's statistics.
      *
      * @param documentResults A list of {@link AbstractiveSummaryResult}.

@@ -6,6 +6,7 @@ package com.azure.cosmos.implementation.directconnectivity;
 import com.azure.cosmos.BridgeInternal;
 import com.azure.cosmos.ConsistencyLevel;
 import com.azure.cosmos.CosmosException;
+import com.azure.cosmos.ReadConsistencyStrategy;
 import com.azure.cosmos.SessionRetryOptions;
 import com.azure.cosmos.implementation.BackoffRetryUtility;
 import com.azure.cosmos.implementation.CosmosSchedulers;
@@ -15,6 +16,7 @@ import com.azure.cosmos.implementation.HttpConstants;
 import com.azure.cosmos.implementation.IAuthorizationTokenProvider;
 import com.azure.cosmos.implementation.ISessionContainer;
 import com.azure.cosmos.implementation.Integers;
+import com.azure.cosmos.implementation.InternalServerErrorException;
 import com.azure.cosmos.implementation.OperationType;
 import com.azure.cosmos.implementation.RMResources;
 import com.azure.cosmos.implementation.RequestChargeTracker;
@@ -25,6 +27,7 @@ import com.azure.cosmos.implementation.SessionTokenMismatchRetryPolicy;
 import com.azure.cosmos.implementation.Strings;
 import com.azure.cosmos.implementation.Utils;
 import com.azure.cosmos.implementation.apachecommons.collections.ComparatorUtils;
+import com.azure.cosmos.implementation.apachecommons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.Exceptions;
@@ -37,11 +40,19 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
+import static com.azure.cosmos.implementation.Exceptions.isAvoidQuorumSelectionException;
 
 /*
  * ConsistencyWriter has two modes for writing - local quorum-acked write and globally strong write.
@@ -100,6 +111,40 @@ public class ConsistencyWriter {
         this.sessionRetryOptions = sessionRetryOptions;
     }
 
+    /**
+     * Constructor for ConsistencyWriter with StoreReader parameter for dependency injection in unit tests.
+     *
+     * @param diagnosticsClientContext the diagnostics client context used to capture diagnostics for requests.
+     * @param addressSelector the address selector used to resolve physical replica addresses for requests.
+     * @param sessionContainer the session container used for managing and maintaining session tokens.
+     * @param transportClient the transport client used to send requests to the backend replicas.
+     * @param authorizationTokenProvider the authorization token provider used to authenticate requests.
+     * @param serviceConfigReader the gateway service configuration reader providing service configuration settings.
+     * @param useMultipleWriteLocations flag indicating whether multiple write locations are enabled for the account.
+     * @param reader the StoreReader instance to use, injected for testing instead of creating a new StoreReader.
+     * @param sessionRetryOptions the session retry options used to handle session token mismatch retries.
+     */
+    public ConsistencyWriter(
+        DiagnosticsClientContext diagnosticsClientContext,
+        AddressSelector addressSelector,
+        ISessionContainer sessionContainer,
+        TransportClient transportClient,
+        IAuthorizationTokenProvider authorizationTokenProvider,
+        GatewayServiceConfigurationReader serviceConfigReader,
+        boolean useMultipleWriteLocations,
+        StoreReader reader,
+        SessionRetryOptions sessionRetryOptions) {
+        this.diagnosticsClientContext = diagnosticsClientContext;
+        this.transportClient = transportClient;
+        this.addressSelector = addressSelector;
+        this.sessionContainer = sessionContainer;
+        this.authorizationTokenProvider = authorizationTokenProvider;
+        this.useMultipleWriteLocations = useMultipleWriteLocations;
+        this.serviceConfigReader = serviceConfigReader;
+        this.storeReader = reader;
+        this.sessionRetryOptions = sessionRetryOptions;
+    }
+
     public Mono<StoreResponse> writeAsync(
         RxDocumentServiceRequest entity,
         TimeoutHelper timeout,
@@ -119,7 +164,9 @@ public class ConsistencyWriter {
         return  BackoffRetryUtility
             .executeRetry(
                 () -> this.writePrivateAsync(entity, timeout, forceRefresh),
-                new SessionTokenMismatchRetryPolicy(BridgeInternal.getRetryContext(entity.requestContext.cosmosDiagnostics), sessionRetryOptions))
+                new SessionTokenMismatchRetryPolicy(
+                    BridgeInternal.getRetryContext(entity.requestContext.cosmosDiagnostics),
+                    sessionRetryOptions))
             .doOnEach(
             arg -> {
                 try {
@@ -138,6 +185,8 @@ public class ConsistencyWriter {
         RxDocumentServiceRequest request,
         TimeoutHelper timeout,
         boolean forceRefresh) {
+
+        final AtomicReference<CosmosException> cosmosExceptionValueHolder = new AtomicReference<>(null);
 
         if (timeout.isElapsed() &&
             // skip throwing RequestTimeout on first retry because the first retry with
@@ -160,88 +209,107 @@ public class ConsistencyWriter {
 
         request.requestContext.forceRefreshAddressCache = forceRefresh;
 
-        if (request.requestContext.globalStrongWriteResponse == null) {
+        if (request.requestContext.cachedWriteResponse == null) {
 
             Mono<List<AddressInformation>> replicaAddressesObs = this.addressSelector.resolveAddressesAsync(request, forceRefresh);
             AtomicReference<Uri> primaryURI = new AtomicReference<>();
-            AtomicReference<List<String>> replicaStatusList = new AtomicReference<>();
+            Map<String, Set<String>> replicaStatusList = new ConcurrentHashMap<>();
+            Set<String> replicaStatuses = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
             return replicaAddressesObs.flatMap(replicaAddresses -> {
                 try {
                     List<URI> contactedReplicas = new ArrayList<>();
-                    replicaAddresses.forEach(replicaAddress -> contactedReplicas.add(replicaAddress.getPhysicalUri().getURI()));
+                    replicaAddresses.forEach(replicaAddress -> {
+                        Uri uri = replicaAddress.getPhysicalUri();
+                        contactedReplicas.add(uri.getURI());
+                        if (!uri.isPrimary()) {
+                            replicaStatuses.add(uri.getHealthStatusDiagnosticString());
+                        }
+                    });
                     BridgeInternal.setContactedReplicas(request.requestContext.cosmosDiagnostics, contactedReplicas);
                     return Mono.just(AddressSelector.getPrimaryUri(request, replicaAddresses));
                 } catch (GoneException e) {
-                    // RxJava1 doesn't allow throwing checked exception from Observable operators
+                    // Reactor doesn't allow throwing checked exception from flatMap operators
                     return Mono.error(e);
                 }
             }).flatMap(primaryUri -> {
                 try {
                     primaryURI.set(primaryUri);
                     if ((this.useMultipleWriteLocations || request.getOperationType() == OperationType.Batch) &&
-                        RequestHelper.getConsistencyLevelToUse(this.serviceConfigReader, request) == ConsistencyLevel.SESSION) {
+                        (RequestHelper.getReadConsistencyStrategyToUse(this.serviceConfigReader, request)
+                            == ReadConsistencyStrategy.SESSION)) {
                         // Set session token to ensure session consistency for write requests
                         // 1. when writes can be issued to multiple locations
                         // 2. When we have Batch requests, since it can have Reads in it.
                         SessionTokenHelper.setPartitionLocalSessionToken(request, this.sessionContainer);
                     } else {
                         // When writes can only go to single location, there is no reason
-                        // to session session token to the server.
+                        // to session token to the server.
                         SessionTokenHelper.validateAndRemoveSessionToken(request);
                     }
 
                 } catch (Exception e) {
                     return Mono.error(e);
                 }
+                replicaStatusList.put(Uri.IGNORING, replicaStatuses);
+                replicaStatusList.put(Uri.ATTEMPTING, new HashSet<>(Arrays.asList(primaryUri.getHealthStatusDiagnosticString())));
 
-                replicaStatusList.set(Arrays.asList(primaryUri.getHealthStatusDiagnosticString()));
+                return Mono.defer(() -> this.transportClient.invokeResourceOperationAsync(primaryUri, request)
+                        .doOnError(
+                            t -> {
+                                try {
+                                    Throwable unwrappedException = Exceptions.unwrap(t);
+                                    CosmosException ex = Utils.as(unwrappedException, CosmosException.class);
+                                    Exception rawException = null;
+                                    if (ex == null) {
+                                        rawException = Utils.as(unwrappedException, Exception.class);
 
-                return this.transportClient.invokeResourceOperationAsync(primaryUri, request)
-                                           .doOnError(
-                                               t -> {
-                                                   try {
-                                                       Throwable unwrappedException = Exceptions.unwrap(t);
-                                                       CosmosException ex = Utils.as(unwrappedException, CosmosException.class);
-                                                       Exception rawException = null;
-                                                       if (ex == null) {
-                                                           rawException = Utils.as(unwrappedException, Exception.class);
+                                        if (rawException == null) {
+                                            throw unwrappedException;
+                                        }
+                                    }
 
-                                                           if (rawException == null) {
-                                                               throw unwrappedException;
-                                                           }
-                                                       }
+                                    storeReader.createAndRecordStoreResult(
+                                        request,
+                                        null, ex != null ? ex : rawException,
+                                        false,
+                                        false,
+                                        primaryUri,
+                                        replicaStatusList);
+                                    String value = ex != null ?
+                                        ex.getResponseHeaders().get(HttpConstants.HttpHeaders.WRITE_REQUEST_TRIGGER_ADDRESS_REFRESH) : null;
+                                        if (!Strings.isNullOrWhiteSpace(value)) {
+                                            Integer result = Integers.tryParse(value);
+                                            if (result != null && result == 1) {
+                                                startBackgroundAddressRefresh(request);
+                                            }
+                                        }
+                                    } catch (Throwable throwable) {
+                                        if (throwable instanceof Error) {
+                                            logger.error("Unexpected failure in handling orig [{}] : new [{}]", t.getMessage(), throwable.getMessage(), throwable);
+                                            throw (Error) throwable;
+                                        } else {
+                                            // this happens before any retry policy - like for example GoneAndRetryRetryPolicy
+                                            // kicks in - no need to spam warn/error level logs yet
+                                            logger.info("Unexpected failure in handling orig [{}] : new [{}]", t.getMessage(), throwable.getMessage(), throwable);
+                                        }
+                                    }
+                                }
+                            ))
+                        .doOnError(throwable -> {
+                            CosmosException cosmosException = Utils.as(throwable, CosmosException.class);
 
-                                                       storeReader.createAndRecordStoreResult(
-                                                           request,
-                                                           null, ex != null ? ex: rawException,
-                                                           false,
-                                                           false,
-                                                           primaryUri,
-                                                           replicaStatusList.get());
-                                                       String value = ex != null ?
-                                                           ex
-                                                               .getResponseHeaders()
-                                                               .get(HttpConstants
-                                                                   .HttpHeaders
-                                                                   .WRITE_REQUEST_TRIGGER_ADDRESS_REFRESH) :
-                                                           null;
-                                                       if (!Strings.isNullOrWhiteSpace(value)) {
-                                                           Integer result = Integers.tryParse(value);
-                                                           if (result != null && result == 1) {
-                                                               startBackgroundAddressRefresh(request);
-                                                           }
-                                                       }
-                                                   } catch (Throwable throwable) {
-                                                       logger.error("Unexpected failure in handling orig [{}]", t.getMessage(), t);
-                                                       logger.error("Unexpected failure in handling orig [{}] : new [{}]", t.getMessage(), throwable.getMessage(), throwable);
-                                                       if (throwable instanceof Error) {
-                                                           throw (Error) throwable;
-                                                       }
-                                                   }
-                                               }
-                                           );
+                            if (cosmosException != null) {
+                                throw cosmosException;
+                            }
 
+                            String errorMessage = "Unexpected exception " + throwable.getMessage() + " received while reading from store.";
+
+                            throw new InternalServerErrorException(
+                                com.azure.cosmos.implementation.Exceptions.getInternalServerErrorMessage(errorMessage),
+                                (Exception) throwable,
+                                HttpConstants.SubStatusCodes.INVALID_RESULT);
+                        });
             }).flatMap(response -> {
                 storeReader.createAndRecordStoreResult(
                         request,
@@ -250,8 +318,8 @@ public class ConsistencyWriter {
                         false,
                         false,
                         primaryURI.get(),
-                        replicaStatusList.get());
-                return barrierForGlobalStrong(request, response);
+                        replicaStatusList);
+                return barrierForWriteRequests(request, response, cosmosExceptionValueHolder);
             })
             .doFinally(signalType -> {
                 if (signalType != SignalType.CANCEL) {
@@ -262,22 +330,26 @@ public class ConsistencyWriter {
                     request,
                     false,
                     false,
-                    replicaStatusList.get());
+                    replicaStatusList);
             });
         } else {
 
             Mono<RxDocumentServiceRequest> barrierRequestObs = BarrierRequestHelper.createAsync(this.diagnosticsClientContext, request, this.authorizationTokenProvider, null, request.requestContext.globalCommittedSelectedLSN);
-            return barrierRequestObs.flatMap(barrierRequest -> waitForWriteBarrierAsync(barrierRequest, request.requestContext.globalCommittedSelectedLSN)
+            return barrierRequestObs.flatMap(barrierRequest -> waitForWriteBarrierAsync(barrierRequest, request.requestContext.globalCommittedSelectedLSN, cosmosExceptionValueHolder, request.requestContext.getBarrierType())
                 .flatMap(v -> {
 
                     if (!v) {
-                        logger.warn("ConsistencyWriter: Write barrier has not been met for global strong request. SelectedGlobalCommittedLsn: {}", request.requestContext.globalCommittedSelectedLSN);
-                        return Mono.error(new GoneException(RMResources.GlobalStrongWriteBarrierNotMet,
-                            HttpConstants.SubStatusCodes.GLOBAL_STRONG_WRITE_BARRIER_NOT_MET));
+                        logger.warn(this.getErrorMessageForBarrierRequest(request));
+
+                        if (cosmosExceptionValueHolder.get() != null) {
+                            return Mono.error(cosmosExceptionValueHolder.get());
+                        }
+
+                        return Mono.error(getGoneExceptionForBarrierRequest(request));
                     }
 
                     return Mono.just(request);
-                })).map(req -> req.requestContext.globalStrongWriteResponse);
+                })).map(req -> req.requestContext.cachedWriteResponse);
         }
     }
 
@@ -295,27 +367,42 @@ public class ConsistencyWriter {
         return false;
     }
 
-    Mono<StoreResponse> barrierForGlobalStrong(RxDocumentServiceRequest request, StoreResponse response) {
+    Mono<StoreResponse> barrierForWriteRequests(
+        RxDocumentServiceRequest request,
+        StoreResponse response,
+        AtomicReference<CosmosException> cosmosExceptionValueHolder) {
+
         try {
-            if (ReplicatedResourceClient.isGlobalStrongEnabled() && this.isGlobalStrongRequest(request, response)) {
+            BarrierType barrierType = getBarrierRequestType(request, response);
+            request.requestContext.setBarrierType(barrierType);
+
+            if (barrierType == BarrierType.GLOBAL_STRONG_WRITE || barrierType == BarrierType.N_REGION_SYNCHRONOUS_COMMIT) {
                 Utils.ValueHolder<Long> lsn = Utils.ValueHolder.initialize(-1L);
                 Utils.ValueHolder<Long> globalCommittedLsn = Utils.ValueHolder.initialize(-1L);
 
-                getLsnAndGlobalCommittedLsn(response, lsn, globalCommittedLsn);
+                getLsnAndGlobalCommittedLsn(response, lsn, globalCommittedLsn, barrierType);
+
+                String errorMessage = "";
+                if (barrierType == BarrierType.GLOBAL_STRONG_WRITE) {
+                    logger.debug("ConsistencyWriter: globalCommittedLsn {}, lsn {}", globalCommittedLsn, lsn);
+                    errorMessage = "ConsistencyWriter: lsn {} or GlobalCommittedLsn {} is not set for global strong request";
+                } else {
+                    logger.debug("ConsistencyWriter: GlobalNRegionCommittedLsn {}, lsn {}", globalCommittedLsn, lsn);
+                    errorMessage = "ConsistencyWriter: lsn {} or GlobalNRegionCommittedLsn {} is not set for global strong request";
+                }
+
                 if (lsn.v == -1 || globalCommittedLsn.v == -1) {
-                    logger.error("ConsistencyWriter: lsn {} or GlobalCommittedLsn {} is not set for global strong request",
-                        lsn, globalCommittedLsn);
+                    logger.error(errorMessage, lsn, globalCommittedLsn);
                     // Service Generated because no lsn and glsn set by service
                     throw new GoneException(RMResources.Gone, HttpConstants.SubStatusCodes.SERVER_GENERATED_410);
                 }
 
-                request.requestContext.globalStrongWriteResponse = response;
+                request.requestContext.cachedWriteResponse = response;
                 request.requestContext.globalCommittedSelectedLSN = lsn.v;
 
                 //if necessary we would have already refreshed cache by now.
                 request.requestContext.forceRefreshAddressCache = false;
 
-                logger.debug("ConsistencyWriter: globalCommittedLsn {}, lsn {}", globalCommittedLsn, lsn);
                 //barrier only if necessary, i.e. when write region completes write, but read regions have not.
 
                 if (globalCommittedLsn.v < lsn.v) {
@@ -326,41 +413,110 @@ public class ConsistencyWriter {
                         request.requestContext.globalCommittedSelectedLSN);
 
                     return barrierRequestObs.flatMap(barrierRequest -> {
-                        Mono<Boolean> barrierWait = this.waitForWriteBarrierAsync(barrierRequest, request.requestContext.globalCommittedSelectedLSN);
+                        Mono<Boolean> barrierWait = this.waitForWriteBarrierAsync(barrierRequest, request.requestContext.globalCommittedSelectedLSN, cosmosExceptionValueHolder, request.requestContext.getBarrierType());
 
                         return barrierWait.flatMap(res -> {
                             if (!res) {
-                                logger.error("ConsistencyWriter: Write barrier has not been met for global strong request. SelectedGlobalCommittedLsn: {}",
-                                    request.requestContext.globalCommittedSelectedLSN);
-                                // RxJava1 doesn't allow throwing checked exception
-                                return Mono.error(new GoneException(RMResources.GlobalStrongWriteBarrierNotMet,
-                                    HttpConstants.SubStatusCodes.GLOBAL_STRONG_WRITE_BARRIER_NOT_MET));
+                                logger.error(getErrorMessageForBarrierRequest(request));
+
+                                if (cosmosExceptionValueHolder.get() != null) {
+                                    return Mono.error(cosmosExceptionValueHolder.get());
+                                }
+
+                                // Reactor doesn't allow throwing checked exception
+                                return Mono.error(getGoneExceptionForBarrierRequest(request));
                             }
 
-                            return Mono.just(request.requestContext.globalStrongWriteResponse);
+                            return Mono.just(request.requestContext.cachedWriteResponse);
                         });
 
                     });
 
                 } else {
-                    return Mono.just(request.requestContext.globalStrongWriteResponse);
+                    return Mono.just(request.requestContext.cachedWriteResponse);
                 }
             } else {
                 return Mono.just(response);
             }
 
         } catch (CosmosException e) {
-            // RxJava1 doesn't allow throwing checked exception from Observable operators
+            // Reactor doesn't allow throwing checked exception from flatMap operators
             return Mono.error(e);
         }
     }
 
-    private Mono<Boolean> waitForWriteBarrierAsync(RxDocumentServiceRequest barrierRequest, long selectedGlobalCommittedLsn) {
+    private String getErrorMessageForBarrierRequest(RxDocumentServiceRequest request) {
+        if (request.requestContext.getBarrierType() == BarrierType.N_REGION_SYNCHRONOUS_COMMIT) {
+            return String.format("ConsistencyWriter: Write barrier has not been met for n region synchronous commit request. SelectedGlobalCommittedLsn: %s",
+                request.requestContext.globalCommittedSelectedLSN);
+        }
+        return String.format("ConsistencyWriter: Write barrier has not been met for global strong request. SelectedGlobalCommittedLsn: %s",
+            request.requestContext.globalCommittedSelectedLSN);
+    }
+
+    private GoneException getGoneExceptionForBarrierRequest(RxDocumentServiceRequest request){
+        if (request.requestContext.getBarrierType() == BarrierType.N_REGION_SYNCHRONOUS_COMMIT) {
+            return new GoneException(RMResources.NRegionSyncCommitBarrierNotMet,
+                HttpConstants.SubStatusCodes.GLOBAL_N_REGION_COMMIT_WRITE_BARRIER_NOT_MET);
+        }
+        return new GoneException(RMResources.GlobalStrongWriteBarrierNotMet,
+            HttpConstants.SubStatusCodes.GLOBAL_STRONG_WRITE_BARRIER_NOT_MET);
+    }
+
+    BarrierType getBarrierRequestType(RxDocumentServiceRequest request, StoreResponse response) {
+        if (isGlobalStrongBarrierRequest(request, response)) {
+            return BarrierType.GLOBAL_STRONG_WRITE;
+        }
+        if (isNRegionSynchronousCommitBarrierRequest(request, response)) {
+            return BarrierType.N_REGION_SYNCHRONOUS_COMMIT;
+        }
+        return BarrierType.NONE;
+    }
+
+    /**
+     * Checks if the request is a Global Strong Write barrier request.
+     */
+    private boolean isGlobalStrongBarrierRequest(RxDocumentServiceRequest request, StoreResponse response) {
+        return ReplicatedResourceClient.isGlobalStrongEnabled() && this.isGlobalStrongRequest(request, response);
+    }
+
+    /**
+     * Checks if the request is a NRegion Synchronous Commit barrier request.
+     */
+    private boolean isNRegionSynchronousCommitBarrierRequest(RxDocumentServiceRequest request, StoreResponse response) {
+        String globalCommittedGlsnHeader =
+            response.getHeaderValue(WFConstants.BackendHeaders.GLOBAL_N_REGION_COMMITTED_GLSN);
+        if (!request.requestContext.getNRegionSynchronousCommitEnabled()
+            || this.useMultipleWriteLocations
+            || StringUtils.isEmpty(globalCommittedGlsnHeader)
+            || response.getNumberOfReadRegions() <= 0) {
+            return false;
+        }
+        try {
+            long globalCommittedGlsnValue = Long.parseLong(globalCommittedGlsnHeader);
+            return globalCommittedGlsnValue != -1;
+        } catch (NumberFormatException e) {
+            // Malformed header value: treating as no barrier instead of throwing.
+            return false;
+        }
+    }
+
+    // visibility set to package-private for testing
+    Mono<Boolean> waitForWriteBarrierAsync(
+        RxDocumentServiceRequest barrierRequest,
+        long selectedGlobalCommittedLsn,
+        AtomicReference<CosmosException> cosmosExceptionValueHolder,
+        BarrierType barrierType) {
+
         AtomicInteger writeBarrierRetryCount = new AtomicInteger(ConsistencyWriter.MAX_NUMBER_OF_WRITE_BARRIER_READ_RETRIES);
         AtomicLong maxGlobalCommittedLsnReceived = new AtomicLong(0);
         return Flux.defer(() -> {
             if (barrierRequest.requestContext.timeoutHelper.isElapsed()) {
                 return Flux.error(new RequestTimeoutException());
+            }
+
+            if (writeBarrierRetryCount.get() == 0) {
+                return Mono.just(false);
             }
 
             Mono<List<StoreResult>> storeResultListObs = this.storeReader.readMultipleReplicaAsync(
@@ -374,13 +530,41 @@ public class ConsistencyWriter {
                 false /*forceReadAll*/);
             return storeResultListObs.flatMap(
                 responses -> {
-                    if (responses != null && responses.stream().anyMatch(response -> response.globalCommittedLSN >= selectedGlobalCommittedLsn)) {
+
+                    boolean isAvoidQuorumSelectionStoreResult = false;
+                    CosmosException cosmosExceptionFromStoreResult = null;
+
+                    for (StoreResult storeResult : responses) {
+                        if (storeResult.isAvoidQuorumSelectionException) {
+                            isAvoidQuorumSelectionStoreResult = true;
+                            cosmosExceptionFromStoreResult = storeResult.getException();
+                            break;
+                        }
+                    }
+
+                    if (isAvoidQuorumSelectionStoreResult) {
+                        writeBarrierRetryCount.decrementAndGet();
+                        return this.isBarrierMeetPossibleInPresenceOfAvoidQuorumSelectionException(
+                            barrierRequest,
+                            selectedGlobalCommittedLsn,
+                            cosmosExceptionValueHolder,
+                            cosmosExceptionFromStoreResult);
+                    }
+
+                    if (responses != null && responses.stream().anyMatch(response -> {
+                        long lsnToCompare = barrierType == BarrierType.N_REGION_SYNCHRONOUS_COMMIT
+                            ? response.globalNRegionCommittedLSN
+                            : response.globalCommittedLSN;
+                        return lsnToCompare >= selectedGlobalCommittedLsn;
+                    })) {
                         return Mono.just(Boolean.TRUE);
                     }
 
                     //get max global committed lsn from current batch of responses, then update if greater than max of all batches.
                     long maxGlobalCommittedLsn = (responses != null) ?
-                        responses.stream().map(s -> s.globalCommittedLSN).max(ComparatorUtils.naturalComparator()).orElse(0L) :
+                        responses.stream().map(s -> barrierType == BarrierType.N_REGION_SYNCHRONOUS_COMMIT
+                            ? s.globalNRegionCommittedLSN
+                            : s.globalCommittedLSN).max(ComparatorUtils.naturalComparator()).orElse(0L) :
                         0L;
                     maxGlobalCommittedLsnReceived.set(Math.max(maxGlobalCommittedLsnReceived.get(), maxGlobalCommittedLsn));
 
@@ -415,7 +599,7 @@ public class ConsistencyWriter {
         ).take(1).single();
     }
 
-    static void getLsnAndGlobalCommittedLsn(StoreResponse response, Utils.ValueHolder<Long> lsn, Utils.ValueHolder<Long> globalCommittedLsn) {
+    static void getLsnAndGlobalCommittedLsn(StoreResponse response, Utils.ValueHolder<Long> lsn, Utils.ValueHolder<Long> globalCommittedLsn, BarrierType barrierType) {
         lsn.v = -1L;
         globalCommittedLsn.v = -1L;
 
@@ -425,9 +609,100 @@ public class ConsistencyWriter {
             lsn.v = Long.parseLong(headerValue);
         }
 
-        if ((headerValue = response.getHeaderValue(WFConstants.BackendHeaders.GLOBAL_COMMITTED_LSN)) != null) {
-            globalCommittedLsn.v = Long.parseLong(headerValue);
+        switch (barrierType) {
+            case NONE:
+                break;
+            case GLOBAL_STRONG_WRITE:
+                if ((headerValue = response.getHeaderValue(WFConstants.BackendHeaders.GLOBAL_COMMITTED_LSN)) != null) {
+                    globalCommittedLsn.v = Long.parseLong(headerValue);
+                }
+                break;
+            case N_REGION_SYNCHRONOUS_COMMIT:
+                if ((headerValue = response.getHeaderValue(WFConstants.BackendHeaders.GLOBAL_N_REGION_COMMITTED_GLSN)) != null) {
+                    globalCommittedLsn.v = Long.parseLong(headerValue);
+                }
+                break;
         }
+    }
+
+    private Mono<Boolean> isBarrierMeetPossibleInPresenceOfAvoidQuorumSelectionException(
+        RxDocumentServiceRequest barrierRequest,
+        long selectedGlobalCommittedLsn,
+        AtomicReference<CosmosException> cosmosExceptionValueHolder,
+        CosmosException cosmosExceptionInStoreResult) {
+
+        AtomicBoolean bailFromWriteBarrierLoop = new AtomicBoolean(false);
+
+        return performOptimisticBarrierOnPrimaryAndDetermineIfBarrierCanBeSatisfied(
+            barrierRequest,
+            selectedGlobalCommittedLsn,
+            cosmosExceptionValueHolder,
+            bailFromWriteBarrierLoop).flatMap(isBarrierFromPrimarySuccessful -> {
+
+            if (isBarrierFromPrimarySuccessful) {
+                bailFromWriteBarrierLoop.set(true);
+                cosmosExceptionValueHolder.set(null);
+
+                return Mono.just(true);
+            }
+
+            if (bailFromWriteBarrierLoop.get()) {
+                bailFromWriteBarrierLoop.set(true);
+                cosmosExceptionValueHolder.set(Utils.createCosmosException(
+                    HttpConstants.StatusCodes.REQUEST_TIMEOUT,
+                    cosmosExceptionInStoreResult.getSubStatusCode(),
+                    cosmosExceptionInStoreResult,
+                    null));
+                return Mono.just(false);
+            } else {
+                bailFromWriteBarrierLoop.set(false);
+                cosmosExceptionValueHolder.set(null);
+                return Mono.empty();
+            }
+        });
+    }
+
+    private Mono<Boolean> performOptimisticBarrierOnPrimaryAndDetermineIfBarrierCanBeSatisfied(
+        RxDocumentServiceRequest barrierRequest,
+        long selectedGlobalCommittedLSN,
+        AtomicReference<CosmosException> cosmosExceptionValueHolder,
+        AtomicBoolean bailFromWriteBarrierLoop) {
+
+        barrierRequest.requestContext.forceRefreshAddressCache = true;
+        Mono<StoreResult> storeResultObs = this.storeReader.readPrimaryAsync(
+            barrierRequest, true, false /*useSessionToken*/);
+
+        return storeResultObs.flatMap(storeResult -> {
+                if (!storeResult.isValid) {
+                    return Mono.just(false);
+                }
+
+                boolean hasRequiredGlobalCommittedLsn = storeResult.globalCommittedLSN >= selectedGlobalCommittedLSN;
+
+                barrierRequest.requestContext.forceRefreshAddressCache = false;
+                return Mono.just(hasRequiredGlobalCommittedLsn);
+            })
+            .onErrorResume(throwable -> {
+
+                barrierRequest.requestContext.forceRefreshAddressCache = false;
+
+                if (throwable instanceof CosmosException) {
+                    CosmosException cosmosException = Utils.as(throwable, CosmosException.class);
+
+                    if (isAvoidQuorumSelectionException(cosmosException)) {
+
+                        bailFromWriteBarrierLoop.set(true);
+                        cosmosExceptionValueHolder.set(cosmosException);
+                        return Mono.just(false);
+                    }
+
+                    bailFromWriteBarrierLoop.set(false);
+                    return Mono.just(false);
+                }
+
+                bailFromWriteBarrierLoop.set(false);
+                return Mono.just(false);
+            });
     }
 
     void startBackgroundAddressRefresh(RxDocumentServiceRequest request) {

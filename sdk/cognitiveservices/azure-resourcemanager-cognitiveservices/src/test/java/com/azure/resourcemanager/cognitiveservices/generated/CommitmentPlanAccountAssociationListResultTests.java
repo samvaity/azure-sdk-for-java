@@ -11,19 +11,17 @@ import org.junit.jupiter.api.Assertions;
 public final class CommitmentPlanAccountAssociationListResultTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        CommitmentPlanAccountAssociationListResult model =
-            BinaryData
-                .fromString(
-                    "{\"nextLink\":\"lwfffi\",\"value\":[{\"etag\":\"qqmtedltmmji\",\"properties\":{\"accountId\":\"ozphvwauyqncygu\"},\"id\":\"kvi\",\"name\":\"mdscwxqupev\",\"type\":\"hfstotxhojujbyp\"},{\"etag\":\"c\",\"properties\":{\"accountId\":\"ixbjx\"},\"id\":\"fw\",\"name\":\"yl\",\"type\":\"coolsttpkiwkkb\"},{\"etag\":\"rywvtylbfpn\",\"properties\":{\"accountId\":\"doiwi\"},\"id\":\"thtywub\",\"name\":\"cbihwqk\",\"type\":\"fdntwjchrdgoih\"},{\"etag\":\"wct\",\"properties\":{\"accountId\":\"zj\"},\"id\":\"uu\",\"name\":\"fdlwg\",\"type\":\"ytsbwtovv\"}]}")
-                .toObject(CommitmentPlanAccountAssociationListResult.class);
-        Assertions.assertEquals("lwfffi", model.nextLink());
+        CommitmentPlanAccountAssociationListResult model = BinaryData.fromString(
+            "{\"nextLink\":\"mxzrpoa\",\"value\":[{\"etag\":\"wiaaomylweaz\",\"tags\":{\"jhlfzswpchwahf\":\"sethwwn\"},\"properties\":{\"accountId\":\"snfepgfewetwlyx\"},\"id\":\"cxy\",\"name\":\"xhdjhl\",\"type\":\"mmbcxfhbcp\"},{\"etag\":\"xvxcjzhq\",\"tags\":{\"scjavftju\":\"fpxtg\",\"civmmg\":\"dqazkmtgguwpijra\",\"fiwrxgkn\":\"f\"},\"properties\":{\"accountId\":\"yinzqodfvpgs\"},\"id\":\"xgsg\",\"name\":\"p\",\"type\":\"gzdjtxvzf\"},{\"etag\":\"q\",\"tags\":{\"sdtutnwlduyc\":\"qvlgafcqusrdvetn\",\"kuqgsjjxundxgket\":\"uzhyrmewipmvekdx\",\"gpmuneqsxvmhfbuz\":\"zhhzjhfjmhvvmu\"},\"properties\":{\"accountId\":\"hsasbhu\"},\"id\":\"pohyuemslynsqyr\",\"name\":\"foobrlttyms\",\"type\":\"nygq\"}]}")
+            .toObject(CommitmentPlanAccountAssociationListResult.class);
+        Assertions.assertEquals("mxzrpoa", model.nextLink());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        CommitmentPlanAccountAssociationListResult model =
-            new CommitmentPlanAccountAssociationListResult().withNextLink("lwfffi");
+        CommitmentPlanAccountAssociationListResult model
+            = new CommitmentPlanAccountAssociationListResult().withNextLink("mxzrpoa");
         model = BinaryData.fromObject(model).toObject(CommitmentPlanAccountAssociationListResult.class);
-        Assertions.assertEquals("lwfffi", model.nextLink());
+        Assertions.assertEquals("mxzrpoa", model.nextLink());
     }
 }

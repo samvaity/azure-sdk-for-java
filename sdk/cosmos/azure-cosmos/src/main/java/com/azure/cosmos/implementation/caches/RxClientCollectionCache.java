@@ -70,14 +70,14 @@ public class RxClientCollectionCache extends RxCollectionCache {
     }
 
     protected Mono<DocumentCollection> getByRidAsync(MetadataDiagnosticsContext metaDataDiagnosticsContext, String collectionRid, Map<String, Object> properties) {
-        DocumentClientRetryPolicy retryPolicyInstance = new ClearingSessionContainerClientRetryPolicy(this.sessionContainer, this.retryPolicy.getRequestPolicy());
+        DocumentClientRetryPolicy retryPolicyInstance = new ClearingSessionContainerClientRetryPolicy(this.sessionContainer, this.retryPolicy.getRequestPolicy(null));
         return ObservableHelper.inlineIfPossible(
                 () -> this.readCollectionAsync(metaDataDiagnosticsContext, PathsHelper.generatePath(ResourceType.DocumentCollection, collectionRid, false), retryPolicyInstance, properties)
                 , retryPolicyInstance);
     }
 
     protected Mono<DocumentCollection> getByNameAsync(MetadataDiagnosticsContext metaDataDiagnosticsContext, String resourceAddress, Map<String, Object> properties) {
-        DocumentClientRetryPolicy retryPolicyInstance = new ClearingSessionContainerClientRetryPolicy(this.sessionContainer, this.retryPolicy.getRequestPolicy());
+        DocumentClientRetryPolicy retryPolicyInstance = new ClearingSessionContainerClientRetryPolicy(this.sessionContainer, this.retryPolicy.getRequestPolicy(null));
         return ObservableHelper.inlineIfPossible(
                 () -> this.readCollectionAsync(metaDataDiagnosticsContext, resourceAddress, retryPolicyInstance, properties),
                 retryPolicyInstance);
@@ -130,16 +130,22 @@ public class RxClientCollectionCache extends RxCollectionCache {
         }
 
         return responseObs.map(response -> {
+            DocumentCollection documentCollection =
+                BridgeInternal.toResourceResponse(response, DocumentCollection.class).getResource();
+
             if(metaDataDiagnosticsContext != null) {
                 Instant addressCallEndTime = Instant.now();
-                MetadataDiagnosticsContext.MetadataDiagnostics metaDataDiagnostic  = new MetadataDiagnosticsContext.MetadataDiagnostics(addressCallStartTime,
-                    addressCallEndTime,
-                    MetadataDiagnosticsContext.MetadataType.CONTAINER_LOOK_UP);
+                MetadataDiagnosticsContext.MetadataDiagnostics metaDataDiagnostic =
+                    new MetadataDiagnosticsContext.ContainerLookupMetadataDiagnostics(
+                        addressCallStartTime,
+                        addressCallEndTime,
+                        MetadataDiagnosticsContext.MetadataType.CONTAINER_LOOK_UP,
+                        request.getActivityId().toString(),
+                        documentCollection.getResourceId());
                 metaDataDiagnosticsContext.addMetaDataDiagnostic(metaDataDiagnostic);
             }
 
-            return BridgeInternal.toResourceResponse(response, DocumentCollection.class)
-                .getResource();
+            return documentCollection;
         }).single();
     }
 }

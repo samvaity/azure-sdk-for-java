@@ -5,37 +5,88 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The UpdateLandingZoneCredential model. */
+/**
+ * The UpdateLandingZoneCredential model.
+ */
 @Fluent
-public final class UpdateLandingZoneCredential {
+public final class UpdateLandingZoneCredential implements JsonSerializable<UpdateLandingZoneCredential> {
     /*
      * Landing zone's sas token
      */
-    @JsonProperty(value = "sasToken")
+    @Generated
     private SecureString sasToken;
 
-    /** Creates an instance of UpdateLandingZoneCredential class. */
-    public UpdateLandingZoneCredential() {}
+    /**
+     * Creates an instance of UpdateLandingZoneCredential class.
+     */
+    @Generated
+    public UpdateLandingZoneCredential() {
+    }
 
     /**
      * Get the sasToken property: Landing zone's sas token.
-     *
+     * 
      * @return the sasToken value.
      */
+    @Generated
     public SecureString getSasToken() {
         return this.sasToken;
     }
 
     /**
      * Set the sasToken property: Landing zone's sas token.
-     *
+     * 
      * @param sasToken the sasToken value to set.
      * @return the UpdateLandingZoneCredential object itself.
      */
+    @Generated
     public UpdateLandingZoneCredential setSasToken(SecureString sasToken) {
         this.sasToken = sasToken;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("sasToken", this.sasToken);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of UpdateLandingZoneCredential from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of UpdateLandingZoneCredential if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the UpdateLandingZoneCredential.
+     */
+    @Generated
+    public static UpdateLandingZoneCredential fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            UpdateLandingZoneCredential deserializedUpdateLandingZoneCredential = new UpdateLandingZoneCredential();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sasToken".equals(fieldName)) {
+                    deserializedUpdateLandingZoneCredential.sasToken = SecureString.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedUpdateLandingZoneCredential;
+        });
     }
 }

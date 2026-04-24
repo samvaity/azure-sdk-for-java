@@ -5,47 +5,60 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Pipeline reference type. */
+/**
+ * Pipeline reference type.
+ */
 @Fluent
-public final class PipelineReference {
+public final class PipelineReference implements JsonSerializable<PipelineReference> {
     /*
      * Pipeline reference type.
      */
-    @JsonProperty(value = "type", required = true)
+    @Generated
     private PipelineReferenceType type;
 
     /*
      * Reference pipeline name.
      */
-    @JsonProperty(value = "referenceName", required = true)
+    @Generated
     private String referenceName;
 
     /*
      * Reference name.
      */
-    @JsonProperty(value = "name")
+    @Generated
     private String name;
 
-    /** Creates an instance of PipelineReference class. */
-    public PipelineReference() {}
+    /**
+     * Creates an instance of PipelineReference class.
+     */
+    @Generated
+    public PipelineReference() {
+    }
 
     /**
      * Get the type property: Pipeline reference type.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public PipelineReferenceType getType() {
         return this.type;
     }
 
     /**
      * Set the type property: Pipeline reference type.
-     *
+     * 
      * @param type the type value to set.
      * @return the PipelineReference object itself.
      */
+    @Generated
     public PipelineReference setType(PipelineReferenceType type) {
         this.type = type;
         return this;
@@ -53,19 +66,21 @@ public final class PipelineReference {
 
     /**
      * Get the referenceName property: Reference pipeline name.
-     *
+     * 
      * @return the referenceName value.
      */
+    @Generated
     public String getReferenceName() {
         return this.referenceName;
     }
 
     /**
      * Set the referenceName property: Reference pipeline name.
-     *
+     * 
      * @param referenceName the referenceName value to set.
      * @return the PipelineReference object itself.
      */
+    @Generated
     public PipelineReference setReferenceName(String referenceName) {
         this.referenceName = referenceName;
         return this;
@@ -73,21 +88,68 @@ public final class PipelineReference {
 
     /**
      * Get the name property: Reference name.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: Reference name.
-     *
+     * 
      * @param name the name value to set.
      * @return the PipelineReference object itself.
      */
+    @Generated
     public PipelineReference setName(String name) {
         this.name = name;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("type", this.type == null ? null : this.type.toString());
+        jsonWriter.writeStringField("referenceName", this.referenceName);
+        jsonWriter.writeStringField("name", this.name);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PipelineReference from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PipelineReference if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the PipelineReference.
+     */
+    @Generated
+    public static PipelineReference fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PipelineReference deserializedPipelineReference = new PipelineReference();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("type".equals(fieldName)) {
+                    deserializedPipelineReference.type = PipelineReferenceType.fromString(reader.getString());
+                } else if ("referenceName".equals(fieldName)) {
+                    deserializedPipelineReference.referenceName = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedPipelineReference.name = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPipelineReference;
+        });
     }
 }

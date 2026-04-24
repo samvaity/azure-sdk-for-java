@@ -12,12 +12,18 @@ public class ChatOptionsProvider {
     public static CreateChatThreadOptions createThreadOptions(String userId1, String userId2) {
         CreateChatThreadOptions options = new CreateChatThreadOptions("Test");
 
-        options.addParticipant(generateParticipant(
-            userId1,
-            "Tester 1"));
-        options.addParticipant(generateParticipant(
-            userId2,
-            "Tester 2"));
+        options.addParticipant(generateParticipant(userId1, "Tester 1"));
+        options.addParticipant(generateParticipant(userId2, "Tester 2"));
+
+        return options;
+    }
+
+    public static CreateChatThreadOptions createThreadOptionsWithMemberMetadata(String userId1, String userId2,
+        Map<String, String> map) {
+        CreateChatThreadOptions options = new CreateChatThreadOptions("Test");
+
+        options.addParticipant(generateParticipant(userId1, "Tester 1").setMetadata(map));
+        options.addParticipant(generateParticipant(userId2, "Tester 2").setMetadata(map));
 
         return options;
     }
@@ -31,12 +37,8 @@ public class ChatOptionsProvider {
 
     public static Iterable<ChatParticipant> addParticipantsOptions(String userId1, String userId2) {
         List<ChatParticipant> participants = new ArrayList<ChatParticipant>();
-        participants.add(generateParticipant(
-            userId1,
-            "Added Tester 1"));
-        participants.add(generateParticipant(
-            userId2,
-            "Added Tester 2"));
+        participants.add(generateParticipant(userId1, "Added Tester 1"));
+        participants.add(generateParticipant(userId2, "Added Tester 2"));
 
         return participants;
     }

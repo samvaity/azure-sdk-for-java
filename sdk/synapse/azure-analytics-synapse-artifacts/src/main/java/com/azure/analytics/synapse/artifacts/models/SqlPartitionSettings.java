@@ -5,17 +5,24 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The settings that will be leveraged for Sql source partitioning. */
+/**
+ * The settings that will be leveraged for Sql source partitioning.
+ */
 @Fluent
-public final class SqlPartitionSettings {
+public final class SqlPartitionSettings implements JsonSerializable<SqlPartitionSettings> {
     /*
      * The name of the column in integer or datetime type that will be used for proceeding partitioning. If not
      * specified, the primary key of the table is auto-detected and used as the partition column. Type: string (or
      * Expression with resultType string).
      */
-    @JsonProperty(value = "partitionColumnName")
+    @Generated
     private Object partitionColumnName;
 
     /*
@@ -23,7 +30,7 @@ public final class SqlPartitionSettings {
      * partition stride, not for filtering the rows in table. All rows in the table or query result will be partitioned
      * and copied. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "partitionUpperBound")
+    @Generated
     private Object partitionUpperBound;
 
     /*
@@ -31,19 +38,24 @@ public final class SqlPartitionSettings {
      * partition stride, not for filtering the rows in table. All rows in the table or query result will be partitioned
      * and copied. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "partitionLowerBound")
+    @Generated
     private Object partitionLowerBound;
 
-    /** Creates an instance of SqlPartitionSettings class. */
-    public SqlPartitionSettings() {}
+    /**
+     * Creates an instance of SqlPartitionSettings class.
+     */
+    @Generated
+    public SqlPartitionSettings() {
+    }
 
     /**
      * Get the partitionColumnName property: The name of the column in integer or datetime type that will be used for
      * proceeding partitioning. If not specified, the primary key of the table is auto-detected and used as the
      * partition column. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the partitionColumnName value.
      */
+    @Generated
     public Object getPartitionColumnName() {
         return this.partitionColumnName;
     }
@@ -52,10 +64,11 @@ public final class SqlPartitionSettings {
      * Set the partitionColumnName property: The name of the column in integer or datetime type that will be used for
      * proceeding partitioning. If not specified, the primary key of the table is auto-detected and used as the
      * partition column. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param partitionColumnName the partitionColumnName value to set.
      * @return the SqlPartitionSettings object itself.
      */
+    @Generated
     public SqlPartitionSettings setPartitionColumnName(Object partitionColumnName) {
         this.partitionColumnName = partitionColumnName;
         return this;
@@ -65,9 +78,10 @@ public final class SqlPartitionSettings {
      * Get the partitionUpperBound property: The maximum value of the partition column for partition range splitting.
      * This value is used to decide the partition stride, not for filtering the rows in table. All rows in the table or
      * query result will be partitioned and copied. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the partitionUpperBound value.
      */
+    @Generated
     public Object getPartitionUpperBound() {
         return this.partitionUpperBound;
     }
@@ -76,10 +90,11 @@ public final class SqlPartitionSettings {
      * Set the partitionUpperBound property: The maximum value of the partition column for partition range splitting.
      * This value is used to decide the partition stride, not for filtering the rows in table. All rows in the table or
      * query result will be partitioned and copied. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param partitionUpperBound the partitionUpperBound value to set.
      * @return the SqlPartitionSettings object itself.
      */
+    @Generated
     public SqlPartitionSettings setPartitionUpperBound(Object partitionUpperBound) {
         this.partitionUpperBound = partitionUpperBound;
         return this;
@@ -89,9 +104,10 @@ public final class SqlPartitionSettings {
      * Get the partitionLowerBound property: The minimum value of the partition column for partition range splitting.
      * This value is used to decide the partition stride, not for filtering the rows in table. All rows in the table or
      * query result will be partitioned and copied. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the partitionLowerBound value.
      */
+    @Generated
     public Object getPartitionLowerBound() {
         return this.partitionLowerBound;
     }
@@ -100,12 +116,63 @@ public final class SqlPartitionSettings {
      * Set the partitionLowerBound property: The minimum value of the partition column for partition range splitting.
      * This value is used to decide the partition stride, not for filtering the rows in table. All rows in the table or
      * query result will be partitioned and copied. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param partitionLowerBound the partitionLowerBound value to set.
      * @return the SqlPartitionSettings object itself.
      */
+    @Generated
     public SqlPartitionSettings setPartitionLowerBound(Object partitionLowerBound) {
         this.partitionLowerBound = partitionLowerBound;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (this.partitionColumnName != null) {
+            jsonWriter.writeUntypedField("partitionColumnName", this.partitionColumnName);
+        }
+        if (this.partitionUpperBound != null) {
+            jsonWriter.writeUntypedField("partitionUpperBound", this.partitionUpperBound);
+        }
+        if (this.partitionLowerBound != null) {
+            jsonWriter.writeUntypedField("partitionLowerBound", this.partitionLowerBound);
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SqlPartitionSettings from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SqlPartitionSettings if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the SqlPartitionSettings.
+     */
+    @Generated
+    public static SqlPartitionSettings fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SqlPartitionSettings deserializedSqlPartitionSettings = new SqlPartitionSettings();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("partitionColumnName".equals(fieldName)) {
+                    deserializedSqlPartitionSettings.partitionColumnName = reader.readUntyped();
+                } else if ("partitionUpperBound".equals(fieldName)) {
+                    deserializedSqlPartitionSettings.partitionUpperBound = reader.readUntyped();
+                } else if ("partitionLowerBound".equals(fieldName)) {
+                    deserializedSqlPartitionSettings.partitionLowerBound = reader.readUntyped();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSqlPartitionSettings;
+        });
     }
 }

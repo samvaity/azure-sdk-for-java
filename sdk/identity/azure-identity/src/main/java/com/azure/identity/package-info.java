@@ -3,13 +3,13 @@
 
 /**
  * <p>The Azure Identity library provides
- * <a href="https://learn.microsoft.com/azure/active-directory/fundamentals/">Azure Active Directory (Azure AD)
- * </a> token authentication support across the
+ * <a href="https://learn.microsoft.com/entra/fundamentals/">Microsoft Entra ID</a> token
+ * authentication support across the
  * <a href="https://learn.microsoft.com/azure/developer/java/sdk/">Azure SDK</a>. The library focuses on
- * OAuth authentication with Azure AD, and it offers various credential classes capable of acquiring an Azure AD token
+ * OAuth authentication with Microsoft Entra ID, and it offers various credential classes capable of acquiring a Microsoft Entra token
  * to authenticate service requests. All the credential classes in this package are implementations of the
- * `TokenCredential` interface offered by azure-core, and any of them can be used to construct service clients capable
- * of authenticating with a `TokenCredential`.</p>
+ * TokenCredential interface offered by azure-core, and any of them can be used to construct service clients capable
+ * of authenticating with a TokenCredential.</p>
  *
  * <h2>Getting Started</h2>
  *
@@ -32,8 +32,7 @@
  *
  * <!-- src_embed com.azure.identity.credential.defaultazurecredential.construct -->
  * <pre>
- * TokenCredential defaultAzureCredential = new DefaultAzureCredentialBuilder&#40;&#41;
- *     .build&#40;&#41;;
+ * TokenCredential defaultAzureCredential = new DefaultAzureCredentialBuilder&#40;&#41;.build&#40;&#41;;
  * </pre>
  * <!-- end com.azure.identity.credential.defaultazurecredential.construct -->
  *
@@ -71,8 +70,7 @@
  *
  * <!-- src_embed com.azure.identity.credential.azureclicredential.construct -->
  * <pre>
- * TokenCredential azureCliCredential = new AzureCliCredentialBuilder&#40;&#41;
- *     .build&#40;&#41;;
+ * TokenCredential azureCliCredential = new AzureCliCredentialBuilder&#40;&#41;.build&#40;&#41;;
  * </pre>
  * <!-- end com.azure.identity.credential.azureclicredential.construct -->
  *
@@ -120,10 +118,10 @@
  *
  * <h2> Authenticating on Azure Hosted Platforms via Managed Identity</h2>
  *
- * <p><a href="https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/">Azure
+ * <p><a href="https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/">Azure
  * Managed Identity</a> is a feature in
- * <a href="https://learn.microsoft.com/azure/active-directory/fundamentals/">Azure Active Directory (Azure AD)
- * </a> that provides a way for applications running on Azure to authenticate themselves with Azure resources without
+ * <a href="https://learn.microsoft.com/entra/fundamentals/">Microsoft Entra ID</a>
+ * that provides a way for applications running on Azure to authenticate themselves with Azure resources without
  * needing to manage or store any secrets like passwords or keys.</p>
  *
  * <p>The {@link com.azure.identity.ManagedIdentityCredential} authenticates the configured managed identity
@@ -143,8 +141,7 @@
  *
  * <!-- src_embed com.azure.identity.credential.managedidentitycredential.construct -->
  * <pre>
- * TokenCredential managedIdentityCredential = new ManagedIdentityCredentialBuilder&#40;&#41;
- *     .build&#40;&#41;;
+ * TokenCredential managedIdentityCredential = new ManagedIdentityCredentialBuilder&#40;&#41;.build&#40;&#41;;
  * </pre>
  * <!-- end com.azure.identity.credential.managedidentitycredential.construct -->
  *
@@ -192,13 +189,13 @@
  * <h2>Authenticate with Service Principals</h2>
  *
  * <p>Service Principal authentication is a type of authentication in Azure that enables a non-interactive login to
- * <a href="https://learn.microsoft.com/azure/active-directory/fundamentals/">Azure Active Directory (Azure AD)
- * </a>, allowing an application or service to authenticate itself with Azure resources.
- * A Service Principal is essentially an identity created for an application in Azure AD that can be used to
+ * <a href="https://learn.microsoft.com/entra/fundamentals/">Microsoft Entra ID</a>, allowing an
+ * application or service to authenticate itself with Azure resources.
+ * A Service Principal is essentially an identity created for an application in Microsoft Entra ID that can be used to
  * authenticate with Azure resources. It's like a "user identity" for the application or service, and it provides
  * a way for the application to authenticate itself with Azure resources without needing to use a user's credentials.
- * <a href="https://learn.microsoft.com/azure/active-directory/fundamentals/">Azure Active Directory
- * (Azure AD)</a> allows users to register service principals which can be used as an identity for authentication.
+ * <a href="https://learn.microsoft.com/entra/fundamentals/">Microsoft Entra ID</a> allows users to
+ * register service principals which can be used as an identity for authentication.
  * A client secret and/or a client certificate associated with the registered service principal is used as the password
  * when authenticating the service principal.</p>
  *
@@ -218,8 +215,7 @@
  *
  * <!-- src_embed com.azure.identity.credential.clientsecretcredential.construct -->
  * <pre>
- * TokenCredential clientSecretCredential = new ClientSecretCredentialBuilder&#40;&#41;
- *     .tenantId&#40;tenantId&#41;
+ * TokenCredential clientSecretCredential = new ClientSecretCredentialBuilder&#40;&#41;.tenantId&#40;tenantId&#41;
  *     .clientId&#40;clientId&#41;
  *     .clientSecret&#40;clientSecret&#41;
  *     .build&#40;&#41;;
@@ -246,7 +242,7 @@
  *     <tr>
  *       <td>{@link com.azure.identity.ClientAssertionCredential}</td>
  *       <td>This credential authenticates a service principal using a signed client assertion.
- *       It allows clients to prove their identity to Azure Active Directory without requiring them to disclose their
+ *       It allows clients to prove their identity to Microsoft Entra ID without requiring them to disclose their
  *       credentials (such as a username and password). Further, it is recommended to read
  *       {@link com.azure.identity.ClientAssertionCredential ClientAssertionCredential JavaDocs} for more
  *       information about the credential usage.</td>
@@ -269,13 +265,10 @@
  *
  * <p>User credential authentication is a type of authentication in Azure that involves a user providing their
  * username and password to authenticate with Azure resources. In Azure, user credential authentication can be used to
- * authenticate with <a href="https://learn.microsoft.com/azure/active-directory/fundamentals/">Azure Active
- * Directory (Azure AD)</a>.</p>
+ * authenticate with <a href="https://learn.microsoft.com/entra/fundamentals/">Microsoft Entra ID</a>.</p>
  *
- * <p>The Azure Identity library supports user credentials based authentication via
- * {@link com.azure.identity.InteractiveBrowserCredential}, {@link com.azure.identity.DeviceCodeCredential} and
- * {@link com.azure.identity.UsernamePasswordCredential}. For more information refer to the
- * <a href="https://aka.ms/azsdk/java/identity/usercredential/docs">user credential authentication documentation</a>.
+ * <p>The Azure Identity library supports user credentials-based authentication via
+ * several credentials. For more information, see <a href="https://aka.ms/azsdk/java/identity/usercredential/docs">user credential authentication documentation</a>.
  * </p>
  *
  * <p><strong>Sample: Construct InteractiveBrowserCredential</strong></p>
@@ -287,9 +280,8 @@
  *
  * <!-- src_embed com.azure.identity.credential.interactivebrowsercredential.construct -->
  * <pre>
- * TokenCredential interactiveBrowserCredential = new InteractiveBrowserCredentialBuilder&#40;&#41;
- *     .redirectUrl&#40;&quot;http:&#47;&#47;localhost:8765&quot;&#41;
- *     .build&#40;&#41;;
+ * TokenCredential interactiveBrowserCredential = new InteractiveBrowserCredentialBuilder&#40;&#41;.redirectUrl&#40;
+ *     &quot;http:&#47;&#47;localhost:8765&quot;&#41;.build&#40;&#41;;
  * </pre>
  * <!-- end com.azure.identity.credential.interactivebrowsercredential.construct -->
  *
@@ -329,14 +321,6 @@
  *       {@link com.azure.identity.AuthorizationCodeCredential AuthorizationCodeCredential JavaDocs} for more
  *       information about the credential usage.</td>
  *     </tr>
- *     <tr>
- *       <td>{@link com.azure.identity.UsernamePasswordCredential}</td>
- *       <td>This credential authenticates a user with a username and password without multi-factored auth.
- *       This credential can be used on developer environment for user principals which do not require
- *       2FA/MFA (multi-facotred) authentication. Further, it is recommended to read
- *       {@link com.azure.identity.UsernamePasswordCredential UsernamePasswordCredential JavaDocs} for more
- *       information about the credential usage.</td>
- *     </tr>
  *   </tbody>
  * </table>
  *
@@ -349,7 +333,6 @@
  * @see com.azure.identity.ClientCertificateCredential
  * @see com.azure.identity.InteractiveBrowserCredential
  * @see com.azure.identity.DeviceCodeCredential
- * @see com.azure.identity.UsernamePasswordCredential
  * @see com.azure.identity.AzureCliCredential
  * @see com.azure.identity.IntelliJCredential
  */

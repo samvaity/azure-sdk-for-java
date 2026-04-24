@@ -1,16 +1,29 @@
-# Azure Traffic
+# Azure Maps Traffic for Java
 
 > see https://aka.ms/autorest
 
+This is the AutoRest configuration file for Maps Traffic.
+---
+## Getting Started
+
+To build the SDK for Maps Traffic, simply [Install AutoRest](https://aka.ms/autorest) and in this folder, run:
+
+> `autorest`
+
+To see additional help and options, run:
+
+> `autorest --help`
+
 ### Setup
-> see https://github.com/Azure/autorest.java
+```ps
+npm install -g autorest
+```
 
 ### Generation
-> see https://github.com/Azure/autorest.java/releases for the latest version of autorest
+
 ```ps
 cd <swagger-folder>
-mvn install
-autorest --java --use:@autorest/java@4.0.x
+autorest
 ```
 
 ### Code generation settings
@@ -25,19 +38,14 @@ directive:
   - from: swagger-document
     where: "$"
     transform: >
-        $["securityDefinitions"] = {};
-  - from: swagger-document
-    where: "$"
-    transform: >
-        $["security"] = [];
-  - rename-model:
-        from: TrafficIncidentViewportViewpResp
-        to: TrafficIncidentViewportResponse
+      $["securityDefinitions"] = {};
+      $["security"] = []; 
 
 title: TrafficClient
-input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/maps/data-plane/Traffic/preview/1.0/traffic.json
+input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/maps/data-plane/Traffic/stable/1.0/traffic.json
 namespace: com.azure.maps.traffic
 java: true
+use: '@autorest/java@4.1.62'
 output-folder: ../
 license-header: MICROSOFT_MIT_SMALL
 payload-flattening-threshold: 0
@@ -52,7 +60,31 @@ generate-sync-async-clients: false
 polling: {}
 models-subpackage: implementation.models
 custom-types-subpackage: models
-custom-types: TileFormat,TrafficFlowTileStyle,TileIndex,DelayMagnitude,IconCategory,IncidentDetailStyle,IncidentGeometryType,ProjectionStandard,SpeedUnit,TileFormat,TrafficFlowSegmentStyle,TrafficFlowTileStyle,TrafficIncidentTileStyle,TrafficIncidentPointOfInterest,TrafficFlowSegmentData,TrafficFlowSegmentDataFlowSegmentDataCoordinates,TrafficIncidentViewport,TrafficIncidentViewportViewpResp,TrafficState,MapsPoint,TrafficIncidentDetail
-customization-jar-path: target/azure-maps-traffic-customization-1.0.0-beta.1.jar
-customization-class: TrafficCustomization
+custom-types: TileFormat,TrafficFlowTileStyle,TileIndex,DelayMagnitude,IconCategory,IncidentDetailStyle,IncidentGeometryType,ProjectionStandard,SpeedUnit,TileFormat,TrafficFlowSegmentStyle,TrafficFlowTileStyle,TrafficIncidentTileStyle,TrafficIncidentPointOfInterest,TrafficFlowSegmentData,TrafficFlowSegmentDataPropertiesCoordinates,TrafficIncidentViewport,TrafficIncidentViewportResponse,TrafficState,MapsPoint,TrafficIncidentDetail
+customization-class: src/main/java/TrafficCustomization.java
+no-custom-headers: true
+```
+
+### Create definition TrafficFlowSegmentDataPropertiesCoordinates
+
+``` yaml
+directive:
+  - from: traffic.json
+    where: $.definitions
+    transform: >
+      $.TrafficFlowSegmentDataPropertiesCoordinates = $.TrafficFlowSegmentData.properties.flowSegmentData.properties.coordinates;
+      delete $.TrafficFlowSegmentData.properties.flowSegmentData.properties.coordinates;
+      $.TrafficFlowSegmentData.properties.flowSegmentData.properties.coordinates = { "$ref": "#/definitions/TrafficFlowSegmentDataPropertiesCoordinates" };
+```
+
+### Create definition TrafficIncidentViewportResponse
+
+``` yaml
+directive:
+  - from: traffic.json
+    where: $.definitions
+    transform: >
+      $.TrafficIncidentViewportResponse = $.TrafficIncidentViewport.properties.viewpResp;
+      delete $.TrafficIncidentViewport.properties.viewpResp;
+      $.TrafficIncidentViewport.properties.viewpResp = { "$ref": "#/definitions/TrafficIncidentViewportResponse" };
 ```

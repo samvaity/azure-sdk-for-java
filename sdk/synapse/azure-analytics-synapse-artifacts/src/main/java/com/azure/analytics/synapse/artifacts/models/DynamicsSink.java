@@ -5,53 +5,94 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity Dynamics sink. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("DynamicsSink")
+/**
+ * A copy activity Dynamics sink.
+ */
 @Fluent
 public final class DynamicsSink extends CopySink {
     /*
+     * Copy sink type.
+     */
+    @Generated
+    private String type = "DynamicsSink";
+
+    /*
      * The write behavior for the operation.
      */
-    @JsonProperty(value = "writeBehavior", required = true)
+    @Generated
     private DynamicsSinkWriteBehavior writeBehavior;
 
     /*
      * The flag indicating whether ignore null values from input dataset (except key fields) during write operation.
      * Default is false. Type: boolean (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "ignoreNullValues")
+    @Generated
     private Object ignoreNullValues;
 
     /*
-     * The logical name of the alternate key which will be used when upserting records. Type: string (or Expression
-     * with resultType string).
+     * The logical name of the alternate key which will be used when upserting records. Type: string (or Expression with
+     * resultType string).
      */
-    @JsonProperty(value = "alternateKeyName")
+    @Generated
     private Object alternateKeyName;
 
-    /** Creates an instance of DynamicsSink class. */
-    public DynamicsSink() {}
+    /*
+     * Controls the bypass of Dataverse custom business logic. Type: string (or Expression with resultType string).
+     * Type: string (or Expression with resultType string).
+     */
+    @Generated
+    private Object bypassBusinessLogicExecution;
+
+    /*
+     * Controls the bypass of Power Automate flows. Default is false. Type: boolean (or Expression with resultType
+     * boolean).
+     */
+    @Generated
+    private Object bypassPowerAutomateFlows;
+
+    /**
+     * Creates an instance of DynamicsSink class.
+     */
+    @Generated
+    public DynamicsSink() {
+    }
+
+    /**
+     * Get the type property: Copy sink type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the writeBehavior property: The write behavior for the operation.
-     *
+     * 
      * @return the writeBehavior value.
      */
+    @Generated
     public DynamicsSinkWriteBehavior getWriteBehavior() {
         return this.writeBehavior;
     }
 
     /**
      * Set the writeBehavior property: The write behavior for the operation.
-     *
+     * 
      * @param writeBehavior the writeBehavior value to set.
      * @return the DynamicsSink object itself.
      */
+    @Generated
     public DynamicsSink setWriteBehavior(DynamicsSinkWriteBehavior writeBehavior) {
         this.writeBehavior = writeBehavior;
         return this;
@@ -60,9 +101,10 @@ public final class DynamicsSink extends CopySink {
     /**
      * Get the ignoreNullValues property: The flag indicating whether ignore null values from input dataset (except key
      * fields) during write operation. Default is false. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the ignoreNullValues value.
      */
+    @Generated
     public Object getIgnoreNullValues() {
         return this.ignoreNullValues;
     }
@@ -70,10 +112,11 @@ public final class DynamicsSink extends CopySink {
     /**
      * Set the ignoreNullValues property: The flag indicating whether ignore null values from input dataset (except key
      * fields) during write operation. Default is false. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param ignoreNullValues the ignoreNullValues value to set.
      * @return the DynamicsSink object itself.
      */
+    @Generated
     public DynamicsSink setIgnoreNullValues(Object ignoreNullValues) {
         this.ignoreNullValues = ignoreNullValues;
         return this;
@@ -82,9 +125,10 @@ public final class DynamicsSink extends CopySink {
     /**
      * Get the alternateKeyName property: The logical name of the alternate key which will be used when upserting
      * records. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the alternateKeyName value.
      */
+    @Generated
     public Object getAlternateKeyName() {
         return this.alternateKeyName;
     }
@@ -92,47 +136,209 @@ public final class DynamicsSink extends CopySink {
     /**
      * Set the alternateKeyName property: The logical name of the alternate key which will be used when upserting
      * records. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param alternateKeyName the alternateKeyName value to set.
      * @return the DynamicsSink object itself.
      */
+    @Generated
     public DynamicsSink setAlternateKeyName(Object alternateKeyName) {
         this.alternateKeyName = alternateKeyName;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Get the bypassBusinessLogicExecution property: Controls the bypass of Dataverse custom business logic. Type:
+     * string (or Expression with resultType string). Type: string (or Expression with resultType string).
+     * 
+     * @return the bypassBusinessLogicExecution value.
+     */
+    @Generated
+    public Object getBypassBusinessLogicExecution() {
+        return this.bypassBusinessLogicExecution;
+    }
+
+    /**
+     * Set the bypassBusinessLogicExecution property: Controls the bypass of Dataverse custom business logic. Type:
+     * string (or Expression with resultType string). Type: string (or Expression with resultType string).
+     * 
+     * @param bypassBusinessLogicExecution the bypassBusinessLogicExecution value to set.
+     * @return the DynamicsSink object itself.
+     */
+    @Generated
+    public DynamicsSink setBypassBusinessLogicExecution(Object bypassBusinessLogicExecution) {
+        this.bypassBusinessLogicExecution = bypassBusinessLogicExecution;
+        return this;
+    }
+
+    /**
+     * Get the bypassPowerAutomateFlows property: Controls the bypass of Power Automate flows. Default is false. Type:
+     * boolean (or Expression with resultType boolean).
+     * 
+     * @return the bypassPowerAutomateFlows value.
+     */
+    @Generated
+    public Object getBypassPowerAutomateFlows() {
+        return this.bypassPowerAutomateFlows;
+    }
+
+    /**
+     * Set the bypassPowerAutomateFlows property: Controls the bypass of Power Automate flows. Default is false. Type:
+     * boolean (or Expression with resultType boolean).
+     * 
+     * @param bypassPowerAutomateFlows the bypassPowerAutomateFlows value to set.
+     * @return the DynamicsSink object itself.
+     */
+    @Generated
+    public DynamicsSink setBypassPowerAutomateFlows(Object bypassPowerAutomateFlows) {
+        this.bypassPowerAutomateFlows = bypassPowerAutomateFlows;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DynamicsSink setWriteBatchSize(Object writeBatchSize) {
         super.setWriteBatchSize(writeBatchSize);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DynamicsSink setWriteBatchTimeout(Object writeBatchTimeout) {
         super.setWriteBatchTimeout(writeBatchTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DynamicsSink setSinkRetryCount(Object sinkRetryCount) {
         super.setSinkRetryCount(sinkRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DynamicsSink setSinkRetryWait(Object sinkRetryWait) {
         super.setSinkRetryWait(sinkRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public DynamicsSink setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getWriteBatchSize() != null) {
+            jsonWriter.writeUntypedField("writeBatchSize", getWriteBatchSize());
+        }
+        if (getWriteBatchTimeout() != null) {
+            jsonWriter.writeUntypedField("writeBatchTimeout", getWriteBatchTimeout());
+        }
+        if (getSinkRetryCount() != null) {
+            jsonWriter.writeUntypedField("sinkRetryCount", getSinkRetryCount());
+        }
+        if (getSinkRetryWait() != null) {
+            jsonWriter.writeUntypedField("sinkRetryWait", getSinkRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        jsonWriter.writeStringField("writeBehavior", this.writeBehavior == null ? null : this.writeBehavior.toString());
+        jsonWriter.writeStringField("type", this.type);
+        if (this.ignoreNullValues != null) {
+            jsonWriter.writeUntypedField("ignoreNullValues", this.ignoreNullValues);
+        }
+        if (this.alternateKeyName != null) {
+            jsonWriter.writeUntypedField("alternateKeyName", this.alternateKeyName);
+        }
+        if (this.bypassBusinessLogicExecution != null) {
+            jsonWriter.writeUntypedField("bypassBusinessLogicExecution", this.bypassBusinessLogicExecution);
+        }
+        if (this.bypassPowerAutomateFlows != null) {
+            jsonWriter.writeUntypedField("bypassPowerAutomateFlows", this.bypassPowerAutomateFlows);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DynamicsSink from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DynamicsSink if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DynamicsSink.
+     */
+    @Generated
+    public static DynamicsSink fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            DynamicsSink deserializedDynamicsSink = new DynamicsSink();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("writeBatchSize".equals(fieldName)) {
+                    deserializedDynamicsSink.setWriteBatchSize(reader.readUntyped());
+                } else if ("writeBatchTimeout".equals(fieldName)) {
+                    deserializedDynamicsSink.setWriteBatchTimeout(reader.readUntyped());
+                } else if ("sinkRetryCount".equals(fieldName)) {
+                    deserializedDynamicsSink.setSinkRetryCount(reader.readUntyped());
+                } else if ("sinkRetryWait".equals(fieldName)) {
+                    deserializedDynamicsSink.setSinkRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedDynamicsSink.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("writeBehavior".equals(fieldName)) {
+                    deserializedDynamicsSink.writeBehavior = DynamicsSinkWriteBehavior.fromString(reader.getString());
+                } else if ("type".equals(fieldName)) {
+                    deserializedDynamicsSink.type = reader.getString();
+                } else if ("ignoreNullValues".equals(fieldName)) {
+                    deserializedDynamicsSink.ignoreNullValues = reader.readUntyped();
+                } else if ("alternateKeyName".equals(fieldName)) {
+                    deserializedDynamicsSink.alternateKeyName = reader.readUntyped();
+                } else if ("bypassBusinessLogicExecution".equals(fieldName)) {
+                    deserializedDynamicsSink.bypassBusinessLogicExecution = reader.readUntyped();
+                } else if ("bypassPowerAutomateFlows".equals(fieldName)) {
+                    deserializedDynamicsSink.bypassPowerAutomateFlows = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedDynamicsSink.setAdditionalProperties(additionalProperties);
+
+            return deserializedDynamicsSink;
+        });
     }
 }

@@ -5,61 +5,124 @@
 package com.azure.communication.callautomation.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The response payload for getting participants of the call. */
+/**
+ * The response payload for getting participants of the call.
+ */
 @Fluent
-public final class GetParticipantsResponseInternal {
+public final class GetParticipantsResponseInternal implements JsonSerializable<GetParticipantsResponseInternal> {
     /*
      * List of the current participants in the call.
      */
-    @JsonProperty(value = "values")
-    private List<CallParticipantInternal> values;
+    @Generated
+    private List<CallParticipantInternal> value;
 
     /*
      * Continue of the list of participants
      */
-    @JsonProperty(value = "nextLink")
+    @Generated
     private String nextLink;
 
     /**
-     * Get the values property: List of the current participants in the call.
-     *
-     * @return the values value.
+     * Creates an instance of GetParticipantsResponseInternal class.
      */
-    public List<CallParticipantInternal> getValues() {
-        return this.values;
+    @Generated
+    public GetParticipantsResponseInternal() {
     }
 
     /**
-     * Set the values property: List of the current participants in the call.
-     *
-     * @param values the values value to set.
+     * Get the value property: List of the current participants in the call.
+     * 
+     * @return the value value.
+     */
+    @Generated
+    public List<CallParticipantInternal> getValue() {
+        return this.value;
+    }
+
+    /**
+     * Set the value property: List of the current participants in the call.
+     * 
+     * @param value the value value to set.
      * @return the GetParticipantsResponseInternal object itself.
      */
-    public GetParticipantsResponseInternal setValues(List<CallParticipantInternal> values) {
-        this.values = values;
+    @Generated
+    public GetParticipantsResponseInternal setValue(List<CallParticipantInternal> value) {
+        this.value = value;
         return this;
     }
 
     /**
      * Get the nextLink property: Continue of the list of participants.
-     *
+     * 
      * @return the nextLink value.
      */
+    @Generated
     public String getNextLink() {
         return this.nextLink;
     }
 
     /**
      * Set the nextLink property: Continue of the list of participants.
-     *
+     * 
      * @param nextLink the nextLink value to set.
      * @return the GetParticipantsResponseInternal object itself.
      */
+    @Generated
     public GetParticipantsResponseInternal setNextLink(String nextLink) {
         this.nextLink = nextLink;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("value", this.value, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("nextLink", this.nextLink);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of GetParticipantsResponseInternal from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of GetParticipantsResponseInternal if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the GetParticipantsResponseInternal.
+     */
+    @Generated
+    public static GetParticipantsResponseInternal fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            GetParticipantsResponseInternal deserializedGetParticipantsResponseInternal
+                = new GetParticipantsResponseInternal();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("value".equals(fieldName)) {
+                    List<CallParticipantInternal> value
+                        = reader.readArray(reader1 -> CallParticipantInternal.fromJson(reader1));
+                    deserializedGetParticipantsResponseInternal.value = value;
+                } else if ("nextLink".equals(fieldName)) {
+                    deserializedGetParticipantsResponseInternal.nextLink = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedGetParticipantsResponseInternal;
+        });
     }
 }

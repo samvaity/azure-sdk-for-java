@@ -5,88 +5,112 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Jira Service linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("Jira")
-@JsonFlatten
+/**
+ * Jira Service linked service.
+ */
 @Fluent
 public class JiraLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "Jira";
+
+    /*
      * The IP address or host name of the Jira service. (e.g. jira.example.com)
      */
-    @JsonProperty(value = "typeProperties.host", required = true)
+    @Generated
     private Object host;
 
     /*
      * The TCP port that the Jira server uses to listen for client connections. The default value is 443 if connecting
      * through HTTPS, or 8080 if connecting through HTTP.
      */
-    @JsonProperty(value = "typeProperties.port")
+    @Generated
     private Object port;
 
     /*
      * The user name that you use to access Jira Service.
      */
-    @JsonProperty(value = "typeProperties.username", required = true)
+    @Generated
     private Object username;
 
     /*
      * The password corresponding to the user name that you provided in the username field.
      */
-    @JsonProperty(value = "typeProperties.password")
+    @Generated
     private SecretBase password;
 
     /*
      * Specifies whether the data source endpoints are encrypted using HTTPS. The default value is true.
      */
-    @JsonProperty(value = "typeProperties.useEncryptedEndpoints")
+    @Generated
     private Object useEncryptedEndpoints;
 
     /*
      * Specifies whether to require the host name in the server's certificate to match the host name of the server when
      * connecting over SSL. The default value is true.
      */
-    @JsonProperty(value = "typeProperties.useHostVerification")
+    @Generated
     private Object useHostVerification;
 
     /*
      * Specifies whether to verify the identity of the server when connecting over SSL. The default value is true.
      */
-    @JsonProperty(value = "typeProperties.usePeerVerification")
+    @Generated
     private Object usePeerVerification;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of JiraLinkedService class. */
-    public JiraLinkedService() {}
+    /**
+     * Creates an instance of JiraLinkedService class.
+     */
+    @Generated
+    public JiraLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the host property: The IP address or host name of the Jira service. (e.g. jira.example.com).
-     *
+     * 
      * @return the host value.
      */
+    @Generated
     public Object getHost() {
         return this.host;
     }
 
     /**
      * Set the host property: The IP address or host name of the Jira service. (e.g. jira.example.com).
-     *
+     * 
      * @param host the host value to set.
      * @return the JiraLinkedService object itself.
      */
+    @Generated
     public JiraLinkedService setHost(Object host) {
         this.host = host;
         return this;
@@ -95,9 +119,10 @@ public class JiraLinkedService extends LinkedService {
     /**
      * Get the port property: The TCP port that the Jira server uses to listen for client connections. The default value
      * is 443 if connecting through HTTPS, or 8080 if connecting through HTTP.
-     *
+     * 
      * @return the port value.
      */
+    @Generated
     public Object getPort() {
         return this.port;
     }
@@ -105,10 +130,11 @@ public class JiraLinkedService extends LinkedService {
     /**
      * Set the port property: The TCP port that the Jira server uses to listen for client connections. The default value
      * is 443 if connecting through HTTPS, or 8080 if connecting through HTTP.
-     *
+     * 
      * @param port the port value to set.
      * @return the JiraLinkedService object itself.
      */
+    @Generated
     public JiraLinkedService setPort(Object port) {
         this.port = port;
         return this;
@@ -116,19 +142,21 @@ public class JiraLinkedService extends LinkedService {
 
     /**
      * Get the username property: The user name that you use to access Jira Service.
-     *
+     * 
      * @return the username value.
      */
+    @Generated
     public Object getUsername() {
         return this.username;
     }
 
     /**
      * Set the username property: The user name that you use to access Jira Service.
-     *
+     * 
      * @param username the username value to set.
      * @return the JiraLinkedService object itself.
      */
+    @Generated
     public JiraLinkedService setUsername(Object username) {
         this.username = username;
         return this;
@@ -136,19 +164,21 @@ public class JiraLinkedService extends LinkedService {
 
     /**
      * Get the password property: The password corresponding to the user name that you provided in the username field.
-     *
+     * 
      * @return the password value.
      */
+    @Generated
     public SecretBase getPassword() {
         return this.password;
     }
 
     /**
      * Set the password property: The password corresponding to the user name that you provided in the username field.
-     *
+     * 
      * @param password the password value to set.
      * @return the JiraLinkedService object itself.
      */
+    @Generated
     public JiraLinkedService setPassword(SecretBase password) {
         this.password = password;
         return this;
@@ -157,9 +187,10 @@ public class JiraLinkedService extends LinkedService {
     /**
      * Get the useEncryptedEndpoints property: Specifies whether the data source endpoints are encrypted using HTTPS.
      * The default value is true.
-     *
+     * 
      * @return the useEncryptedEndpoints value.
      */
+    @Generated
     public Object getUseEncryptedEndpoints() {
         return this.useEncryptedEndpoints;
     }
@@ -167,10 +198,11 @@ public class JiraLinkedService extends LinkedService {
     /**
      * Set the useEncryptedEndpoints property: Specifies whether the data source endpoints are encrypted using HTTPS.
      * The default value is true.
-     *
+     * 
      * @param useEncryptedEndpoints the useEncryptedEndpoints value to set.
      * @return the JiraLinkedService object itself.
      */
+    @Generated
     public JiraLinkedService setUseEncryptedEndpoints(Object useEncryptedEndpoints) {
         this.useEncryptedEndpoints = useEncryptedEndpoints;
         return this;
@@ -179,9 +211,10 @@ public class JiraLinkedService extends LinkedService {
     /**
      * Get the useHostVerification property: Specifies whether to require the host name in the server's certificate to
      * match the host name of the server when connecting over SSL. The default value is true.
-     *
+     * 
      * @return the useHostVerification value.
      */
+    @Generated
     public Object getUseHostVerification() {
         return this.useHostVerification;
     }
@@ -189,10 +222,11 @@ public class JiraLinkedService extends LinkedService {
     /**
      * Set the useHostVerification property: Specifies whether to require the host name in the server's certificate to
      * match the host name of the server when connecting over SSL. The default value is true.
-     *
+     * 
      * @param useHostVerification the useHostVerification value to set.
      * @return the JiraLinkedService object itself.
      */
+    @Generated
     public JiraLinkedService setUseHostVerification(Object useHostVerification) {
         this.useHostVerification = useHostVerification;
         return this;
@@ -201,9 +235,10 @@ public class JiraLinkedService extends LinkedService {
     /**
      * Get the usePeerVerification property: Specifies whether to verify the identity of the server when connecting over
      * SSL. The default value is true.
-     *
+     * 
      * @return the usePeerVerification value.
      */
+    @Generated
     public Object getUsePeerVerification() {
         return this.usePeerVerification;
     }
@@ -211,10 +246,11 @@ public class JiraLinkedService extends LinkedService {
     /**
      * Set the usePeerVerification property: Specifies whether to verify the identity of the server when connecting over
      * SSL. The default value is true.
-     *
+     * 
      * @param usePeerVerification the usePeerVerification value to set.
      * @return the JiraLinkedService object itself.
      */
+    @Generated
     public JiraLinkedService setUsePeerVerification(Object usePeerVerification) {
         this.usePeerVerification = usePeerVerification;
         return this;
@@ -223,9 +259,10 @@ public class JiraLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -233,40 +270,185 @@ public class JiraLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the JiraLinkedService object itself.
      */
+    @Generated
     public JiraLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JiraLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public JiraLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public JiraLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public JiraLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public JiraLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (host != null
+            || port != null
+            || username != null
+            || password != null
+            || useEncryptedEndpoints != null
+            || useHostVerification != null
+            || usePeerVerification != null
+            || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("host", this.host);
+            if (this.port != null) {
+                jsonWriter.writeUntypedField("port", this.port);
+            }
+            jsonWriter.writeUntypedField("username", this.username);
+            jsonWriter.writeJsonField("password", this.password);
+            if (this.useEncryptedEndpoints != null) {
+                jsonWriter.writeUntypedField("useEncryptedEndpoints", this.useEncryptedEndpoints);
+            }
+            if (this.useHostVerification != null) {
+                jsonWriter.writeUntypedField("useHostVerification", this.useHostVerification);
+            }
+            if (this.usePeerVerification != null) {
+                jsonWriter.writeUntypedField("usePeerVerification", this.usePeerVerification);
+            }
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of JiraLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of JiraLinkedService if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the JiraLinkedService.
+     */
+    @Generated
+    public static JiraLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            JiraLinkedService deserializedJiraLinkedService = new JiraLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedJiraLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedJiraLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedJiraLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedJiraLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedJiraLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedJiraLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("host".equals(fieldName)) {
+                            deserializedJiraLinkedService.host = reader.readUntyped();
+                        } else if ("port".equals(fieldName)) {
+                            deserializedJiraLinkedService.port = reader.readUntyped();
+                        } else if ("username".equals(fieldName)) {
+                            deserializedJiraLinkedService.username = reader.readUntyped();
+                        } else if ("password".equals(fieldName)) {
+                            deserializedJiraLinkedService.password = SecretBase.fromJson(reader);
+                        } else if ("useEncryptedEndpoints".equals(fieldName)) {
+                            deserializedJiraLinkedService.useEncryptedEndpoints = reader.readUntyped();
+                        } else if ("useHostVerification".equals(fieldName)) {
+                            deserializedJiraLinkedService.useHostVerification = reader.readUntyped();
+                        } else if ("usePeerVerification".equals(fieldName)) {
+                            deserializedJiraLinkedService.usePeerVerification = reader.readUntyped();
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedJiraLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedJiraLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedJiraLinkedService;
+        });
     }
 }

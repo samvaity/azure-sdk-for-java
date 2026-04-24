@@ -13,33 +13,30 @@ import org.junit.jupiter.api.Assertions;
 public final class EvaluatePoliciesRequestTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        EvaluatePoliciesRequest model =
-            BinaryData
-                .fromString(
-                    "{\"policies\":[{\"factName\":\"vkffovjzhpjb\",\"factData\":\"gjmfxumvfcl\",\"valueOffset\":\"ovwxnbkfezzxsc\",\"userObjectId\":\"wzdgirujbzbo\"}]}")
-                .toObject(EvaluatePoliciesRequest.class);
-        Assertions.assertEquals("vkffovjzhpjb", model.policies().get(0).factName());
-        Assertions.assertEquals("gjmfxumvfcl", model.policies().get(0).factData());
-        Assertions.assertEquals("ovwxnbkfezzxsc", model.policies().get(0).valueOffset());
-        Assertions.assertEquals("wzdgirujbzbo", model.policies().get(0).userObjectId());
+        EvaluatePoliciesRequest model = BinaryData.fromString(
+            "{\"policies\":[{\"factName\":\"lmywwtkgkxnyed\",\"factData\":\"gyvudtjuewbc\",\"valueOffset\":\"xuuwhcj\",\"userObjectId\":\"ccybvp\"},{\"factName\":\"akkud\",\"factData\":\"xgwjplmagstcyoh\",\"valueOffset\":\"kyrk\",\"userObjectId\":\"dg\"}]}")
+            .toObject(EvaluatePoliciesRequest.class);
+        Assertions.assertEquals("lmywwtkgkxnyed", model.policies().get(0).factName());
+        Assertions.assertEquals("gyvudtjuewbc", model.policies().get(0).factData());
+        Assertions.assertEquals("xuuwhcj", model.policies().get(0).valueOffset());
+        Assertions.assertEquals("ccybvp", model.policies().get(0).userObjectId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        EvaluatePoliciesRequest model =
-            new EvaluatePoliciesRequest()
-                .withPolicies(
-                    Arrays
-                        .asList(
-                            new EvaluatePoliciesProperties()
-                                .withFactName("vkffovjzhpjb")
-                                .withFactData("gjmfxumvfcl")
-                                .withValueOffset("ovwxnbkfezzxsc")
-                                .withUserObjectId("wzdgirujbzbo")));
+        EvaluatePoliciesRequest model = new EvaluatePoliciesRequest().withPolicies(Arrays.asList(
+            new EvaluatePoliciesProperties().withFactName("lmywwtkgkxnyed")
+                .withFactData("gyvudtjuewbc")
+                .withValueOffset("xuuwhcj")
+                .withUserObjectId("ccybvp"),
+            new EvaluatePoliciesProperties().withFactName("akkud")
+                .withFactData("xgwjplmagstcyoh")
+                .withValueOffset("kyrk")
+                .withUserObjectId("dg")));
         model = BinaryData.fromObject(model).toObject(EvaluatePoliciesRequest.class);
-        Assertions.assertEquals("vkffovjzhpjb", model.policies().get(0).factName());
-        Assertions.assertEquals("gjmfxumvfcl", model.policies().get(0).factData());
-        Assertions.assertEquals("ovwxnbkfezzxsc", model.policies().get(0).valueOffset());
-        Assertions.assertEquals("wzdgirujbzbo", model.policies().get(0).userObjectId());
+        Assertions.assertEquals("lmywwtkgkxnyed", model.policies().get(0).factName());
+        Assertions.assertEquals("gyvudtjuewbc", model.policies().get(0).factData());
+        Assertions.assertEquals("xuuwhcj", model.policies().get(0).valueOffset());
+        Assertions.assertEquals("ccybvp", model.policies().get(0).userObjectId());
     }
 }

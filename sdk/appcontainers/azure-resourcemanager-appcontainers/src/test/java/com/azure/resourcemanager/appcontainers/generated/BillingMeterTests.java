@@ -12,31 +12,25 @@ import org.junit.jupiter.api.Assertions;
 public final class BillingMeterTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        BillingMeter model =
-            BinaryData
-                .fromString(
-                    "{\"location\":\"suesnzw\",\"properties\":{\"category\":\"bavo\",\"meterType\":\"zdmohctbqvu\",\"displayName\":\"xdn\"},\"id\":\"vo\",\"name\":\"gujjugwdkcglh\",\"type\":\"lazjdyggdtjixhbk\"}")
-                .toObject(BillingMeter.class);
-        Assertions.assertEquals("suesnzw", model.location());
-        Assertions.assertEquals("bavo", model.properties().category());
-        Assertions.assertEquals("zdmohctbqvu", model.properties().meterType());
-        Assertions.assertEquals("xdn", model.properties().displayName());
+        BillingMeter model = BinaryData.fromString(
+            "{\"location\":\"seiphe\",\"properties\":{\"category\":\"okeyyienj\",\"meterType\":\"lwtgrhpdj\",\"displayName\":\"umasxazjpq\"},\"id\":\"gual\",\"name\":\"b\",\"type\":\"xhejjzzvdud\"}")
+            .toObject(BillingMeter.class);
+        Assertions.assertEquals("seiphe", model.location());
+        Assertions.assertEquals("okeyyienj", model.properties().category());
+        Assertions.assertEquals("lwtgrhpdj", model.properties().meterType());
+        Assertions.assertEquals("umasxazjpq", model.properties().displayName());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        BillingMeter model =
-            new BillingMeter()
-                .withLocation("suesnzw")
-                .withProperties(
-                    new BillingMeterProperties()
-                        .withCategory("bavo")
-                        .withMeterType("zdmohctbqvu")
-                        .withDisplayName("xdn"));
+        BillingMeter model = new BillingMeter().withLocation("seiphe")
+            .withProperties(new BillingMeterProperties().withCategory("okeyyienj")
+                .withMeterType("lwtgrhpdj")
+                .withDisplayName("umasxazjpq"));
         model = BinaryData.fromObject(model).toObject(BillingMeter.class);
-        Assertions.assertEquals("suesnzw", model.location());
-        Assertions.assertEquals("bavo", model.properties().category());
-        Assertions.assertEquals("zdmohctbqvu", model.properties().meterType());
-        Assertions.assertEquals("xdn", model.properties().displayName());
+        Assertions.assertEquals("seiphe", model.location());
+        Assertions.assertEquals("okeyyienj", model.properties().category());
+        Assertions.assertEquals("lwtgrhpdj", model.properties().meterType());
+        Assertions.assertEquals("umasxazjpq", model.properties().displayName());
     }
 }

@@ -2,16 +2,10 @@
 // Licensed under the MIT License.
 package com.azure.cosmos.implementation.http;
 
-import com.azure.cosmos.implementation.Configs;
 import com.azure.cosmos.implementation.OperationType;
 import com.azure.cosmos.implementation.ResourceType;
 import com.azure.cosmos.implementation.RxDocumentServiceRequest;
-import com.azure.cosmos.implementation.RxDocumentServiceResponse;
-import io.netty.handler.codec.http.HttpMethod;
-import reactor.core.publisher.Mono;
 
-import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class HttpTimeoutPolicy {
@@ -26,14 +20,27 @@ public abstract class HttpTimeoutPolicy {
         if (OperationType.Read.equals(request.getOperationType()) && request.getResourceType() == ResourceType.DatabaseAccount) {
             return HttpTimeoutPolicyControlPlaneRead.INSTANCE;
         }
+        // Use Gateway V2 timeout policies when Thin Client mode is enabled.
+        // All Document operations route through GwV2 policy — no silent fallback to default.
+        if (request.useThinClientMode) {
+            OperationType operationType = request.getOperationType();
+            // Point read operations
+            if (OperationType.Read.equals(operationType)) {
+                return HttpTimeoutPolicyForGatewayV2.INSTANCE_FOR_POINT_READ;
+            }
+            // Query and Change Feed operations
+            if (OperationType.Query.equals(operationType) || request.isChangeFeedRequest()) {
+                return HttpTimeoutPolicyForGatewayV2.INSTANCE_FOR_QUERY_AND_CHANGE_FEED;
+            }
+            // All other thin client Document operations (Create, Replace, Delete, Patch, Batch, etc.)
+            return HttpTimeoutPolicyForGatewayV2.DEFAULT;
+        }
         return HttpTimeoutPolicyDefault.INSTANCE;
     }
 
     public int totalRetryCount() {
-        return timeoutAndDelaysList.size();
+        return timeoutAndDelaysList.size()-1;
     }
-
-    public long maximumRetryTimeLimit() { return Configs.getHttpResponseTimeoutInSeconds(); };
 
     public List<ResponseTimeoutAndDelays> getTimeoutAndDelaysList() {
         return timeoutAndDelaysList;

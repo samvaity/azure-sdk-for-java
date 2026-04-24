@@ -10,6 +10,7 @@ that you create in Log Analytics workspace. You can even extend the schema of bu
 
 ### Prerequisites
 - A [Java Development Kit (JDK)][jdk_link], version 8 or later.
+  - Here are details about [Java 8 client compatibility with Azure Certificate Authority](https://learn.microsoft.com/azure/security/fundamentals/azure-ca-details?tabs=root-and-subordinate-cas-list#client-compatibility-for-public-pkis).
 - [Azure Subscription][azure_subscription]
 - A [Data Collection Endpoint][data_collection_endpoint]
 - A [Data Collection Rule][data_collection_rule]
@@ -57,7 +58,7 @@ add the direct dependency to your project as follows.
 <dependency>
     <groupId>com.azure</groupId>
     <artifactId>azure-monitor-ingestion</artifactId>
-    <version>1.0.5</version>
+    <version>1.2.11</version>
 </dependency>
 ```
 [//]: # ({x-version-update-end})
@@ -69,6 +70,11 @@ the following examples use `DefaultAzureCredentialBuilder` from the [azure-ident
 
 #### Authenticating using Azure Active Directory
 You can authenticate with Azure Active Directory using the [Azure Identity library][azure_identity].
+
+After setup, you can choose which type of [credential][azure_identity_credential_type] from `azure-identity` to use.
+We recommend using [DefaultAzureCredential][identity_dac], configured through the `AZURE_TOKEN_CREDENTIALS` environment variable.
+Set this variable as described in the [Learn documentation][customize_defaultAzureCredential], which provides the most up-to-date guidance and examples.
+
 To use the [DefaultAzureCredential][DefaultAzureCredential] provider shown below, or other credential providers provided with the Azure SDK, please include the `azure-identity` package:
 
 [//]: # ({x-version-update-start;com.azure:azure-identity;dependency})
@@ -76,12 +82,10 @@ To use the [DefaultAzureCredential][DefaultAzureCredential] provider shown below
 <dependency>
     <groupId>com.azure</groupId>
     <artifactId>azure-identity</artifactId>
-    <version>1.9.1</version>
+    <version>1.18.2</version>
 </dependency>
 ```
 [//]: # ({x-version-update-end})
-
-Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_CLIENT_SECRET.
 
 #### Synchronous Logs Ingestion client
 
@@ -152,7 +156,7 @@ client library.
 DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
 
 LogsIngestionClient client = new LogsIngestionClientBuilder()
-        .endpoint("<data-collection-endpoint")
+        .endpoint("<data-collection-endpoint>")
         .credential(tokenCredential)
         .buildClient();
 
@@ -171,7 +175,7 @@ can be concurrently sent to the service as shown in the example below.
 DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
 
 LogsIngestionClient client = new LogsIngestionClientBuilder()
-        .endpoint("<data-collection-endpoint")
+        .endpoint("<data-collection-endpoint>")
         .credential(tokenCredential)
         .buildClient();
 
@@ -194,7 +198,7 @@ not provided, the upload method will throw an aggregate exception that includes 
 DefaultAzureCredential tokenCredential = new DefaultAzureCredentialBuilder().build();
 
 LogsIngestionClient client = new LogsIngestionClientBuilder()
-        .endpoint("<data-collection-endpoint")
+        .endpoint("<data-collection-endpoint>")
         .credential(tokenCredential)
         .buildClient();
 
@@ -249,4 +253,6 @@ For more information see the [Code of Conduct FAQ](https://opensource.microsoft.
 [log_analytics_workspace]: https://learn.microsoft.com//azure/azure-monitor/logs/log-analytics-workspace-overview
 [logging]: https://learn.microsoft.com//azure/developer/java/sdk/logging-overview
 [samples]: https://github.com/Azure/azure-sdk-for-java/blob/main/sdk/monitor/azure-monitor-ingestion/src/samples/java/com/azure/monitor/ingestion
-![Impressions](https://azure-sdk-impressions.azurewebsites.net/api/impressions/azure-sdk-for-java%2Fsdk%2Fmonitor%2Fazure-monitor-ingestion%2FREADME.png)
+[customize_defaultAzureCredential]: https://aka.ms/azsdk/java/identity/credential-chains#how-to-customize-defaultazurecredential
+[azure_identity_credential_type]: https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/identity/azure-identity#credentials
+[identity_dac]: https://aka.ms/azsdk/java/identity/credential-chains#defaultazurecredential-overview

@@ -7,6 +7,7 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.credential.AzureSasCredential;
+import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.PagedFlux;
 import com.azure.core.http.rest.PagedResponse;
@@ -19,11 +20,13 @@ import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.storage.common.StorageSharedKeyCredential;
 import com.azure.storage.common.implementation.AccountSasImplUtil;
+import com.azure.storage.common.implementation.Constants;
 import com.azure.storage.common.implementation.SasImplUtils;
 import com.azure.storage.common.implementation.StorageImplUtils;
 import com.azure.storage.common.sas.AccountSasSignatureValues;
 import com.azure.storage.file.share.implementation.AzureFileStorageImpl;
 import com.azure.storage.file.share.implementation.models.DeleteSnapshotsOptionType;
+import com.azure.storage.file.share.implementation.models.KeyInfo;
 import com.azure.storage.file.share.implementation.models.ListSharesIncludeType;
 import com.azure.storage.file.share.implementation.util.ModelHelper;
 import com.azure.storage.file.share.models.ListSharesOptions;
@@ -31,21 +34,24 @@ import com.azure.storage.file.share.models.ShareCorsRule;
 import com.azure.storage.file.share.models.ShareItem;
 import com.azure.storage.file.share.models.ShareServiceProperties;
 import com.azure.storage.file.share.models.ShareStorageException;
+import com.azure.storage.file.share.models.UserDelegationKey;
 import com.azure.storage.file.share.options.ShareCreateOptions;
+import com.azure.storage.file.share.options.ShareGetUserDelegationKeyOptions;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.azure.core.util.FluxUtil.monoError;
 import static com.azure.core.util.FluxUtil.pagedFluxError;
 import static com.azure.core.util.FluxUtil.withContext;
-
 
 /**
  * This class provides a azureFileStorageClient that contains all the operations for interacting with a file account in
@@ -249,24 +255,19 @@ public final class ShareServiceAsyncClient {
             }
         }
 
-        BiFunction<String, Integer, Mono<PagedResponse<ShareItem>>> retriever =
-            (nextMarker, pageSize) -> StorageImplUtils.applyOptionalTimeout(this.azureFileStorageClient.getServices()
-                    .listSharesSegmentSinglePageAsync(
-                        prefix, nextMarker, pageSize == null ? maxResultsPerPage : pageSize, include, null, context)
-                    .map(response -> {
-                        List<ShareItem> value = response.getValue() == null
-                            ? Collections.emptyList()
-                            : response.getValue().stream()
-                            .map(ModelHelper::populateShareItem)
-                            .collect(Collectors.toList());
+        BiFunction<String, Integer, Mono<PagedResponse<ShareItem>>> retriever = (nextMarker,
+            pageSize) -> StorageImplUtils.applyOptionalTimeout(this.azureFileStorageClient.getServices()
+                .listSharesSegmentSinglePageAsync(prefix, nextMarker, pageSize == null ? maxResultsPerPage : pageSize,
+                    include, null, context)
+                .map(response -> {
+                    List<ShareItem> value = response.getValue() == null
+                        ? Collections.emptyList()
+                        : response.getValue().stream().map(ModelHelper::populateShareItem).collect(Collectors.toList());
 
-                        return new PagedResponseBase<>(response.getRequest(),
-                            response.getStatusCode(),
-                            response.getHeaders(),
-                            value,
-                            response.getContinuationToken(),
-                            ModelHelper.transformListSharesHeaders(response.getHeaders()));
-                    }), timeout);
+                    return new PagedResponseBase<>(response.getRequest(), response.getStatusCode(),
+                        response.getHeaders(), value, response.getContinuationToken(),
+                        ModelHelper.transformListSharesHeaders(response.getHeaders()));
+                }), timeout);
         return new PagedFlux<>(pageSize -> retriever.apply(marker, pageSize), retriever);
     }
 
@@ -333,7 +334,8 @@ public final class ShareServiceAsyncClient {
 
     Mono<Response<ShareServiceProperties>> getPropertiesWithResponse(Context context) {
         context = context == null ? Context.NONE : context;
-        return azureFileStorageClient.getServices().getPropertiesWithResponseAsync(null, context)
+        return azureFileStorageClient.getServices()
+            .getPropertiesWithResponseAsync(null, context)
             .map(response -> new SimpleResponse<>(response, response.getValue()));
     }
 
@@ -341,8 +343,8 @@ public final class ShareServiceAsyncClient {
      * Sets the properties for the storage account's File service. The properties range from storage analytics and
      * metric to CORS (Cross-Origin Resource Sharing).
      *
-     * To maintain the CORS in the Queue service pass a {@code null} value for {@link ShareServiceProperties#getCors()
-     * CORS}. To disable all CORS in the Queue service pass an empty list for {@link ShareServiceProperties#getCors()
+     * To maintain the CORS in the Share service pass a {@code null} value for {@link ShareServiceProperties#getCors()
+     * CORS}. To disable all CORS in the Share service pass an empty list for {@link ShareServiceProperties#getCors()
      * CORS}.
      *
      * <p><strong>Code Sample</strong></p>
@@ -370,7 +372,7 @@ public final class ShareServiceAsyncClient {
      * @throws ShareStorageException When one of the following is true
      * <ul>
      * <li>A CORS rule is missing one of its fields</li>
-     * <li>More than five CORS rules will exist for the Queue service</li>
+     * <li>More than five CORS rules will exist for the Share service</li>
      * <li>Size of all CORS rules exceeds 2KB</li>
      * <li>
      * Length of {@link ShareCorsRule#getAllowedHeaders() allowed headers}, {@link ShareCorsRule#getExposedHeaders()
@@ -389,8 +391,8 @@ public final class ShareServiceAsyncClient {
      * Sets the properties for the storage account's File service. The properties range from storage analytics and
      * metric to CORS (Cross-Origin Resource Sharing).
      *
-     * To maintain the CORS in the Queue service pass a {@code null} value for {@link ShareServiceProperties#getCors()
-     * CORS}. To disable all CORS in the Queue service pass an empty list for {@link ShareServiceProperties#getCors()
+     * To maintain the CORS in the Share service pass a {@code null} value for {@link ShareServiceProperties#getCors()
+     * CORS}. To disable all CORS in the Share service pass an empty list for {@link ShareServiceProperties#getCors()
      * CORS}.
      *
      * <p><strong>Code Sample</strong></p>
@@ -433,7 +435,7 @@ public final class ShareServiceAsyncClient {
      * @throws ShareStorageException When one of the following is true
      * <ul>
      * <li>A CORS rule is missing one of its fields</li>
-     * <li>More than five CORS rules will exist for the Queue service</li>
+     * <li>More than five CORS rules will exist for the Share service</li>
      * <li>Size of all CORS rules exceeds 2KB</li>
      * <li>
      * Length of {@link ShareCorsRule#getAllowedHeaders() allowed headers}, {@link ShareCorsRule#getExposedHeaders()
@@ -454,8 +456,8 @@ public final class ShareServiceAsyncClient {
 
     Mono<Response<Void>> setPropertiesWithResponse(ShareServiceProperties properties, Context context) {
         context = context == null ? Context.NONE : context;
-        return azureFileStorageClient.getServices().setPropertiesWithResponseAsync(properties, null, context)
-            .map(response -> new SimpleResponse<>(response, null));
+        return azureFileStorageClient.getServices()
+            .setPropertiesNoCustomHeadersWithResponseAsync(properties, null, context);
     }
 
     /**
@@ -524,10 +526,13 @@ public final class ShareServiceAsyncClient {
      * <p>For more information, see the
      * <a href="https://docs.microsoft.com/rest/api/storageservices/create-share">Azure Docs</a>.</p>
      *
+     * <p>For more information on updated max file share size values, see the
+     * <a href="https://learn.microsoft.com/azure/storage/files/storage-files-scale-targets#azure-file-share-scale-targets">Azure Docs</a>.</p>
+     *
      * @param shareName Name of the share
      * @param metadata Optional metadata to associate with the share
-     * @param quotaInGB Optional maximum size the share is allowed to grow to in GB. This must be greater than 0 and
-     * less than or equal to 5120. The default value is 5120.
+     * @param quotaInGB Optional maximum size the share is allowed to grow to in GB.
+     * The default value is 5120. Refer to the Azure Docs for updated values.
      * @return A response containing the {@link ShareAsyncClient ShareAsyncClient} and the status of creating the share.
      * @throws ShareStorageException If a share with the same name already exists or {@code quotaInGB} is outside the
      * allowed range.
@@ -535,8 +540,8 @@ public final class ShareServiceAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ShareAsyncClient>> createShareWithResponse(String shareName, Map<String, String> metadata,
         Integer quotaInGB) {
-        return createShareWithResponse(shareName, new ShareCreateOptions().setMetadata(metadata)
-            .setQuotaInGb(quotaInGB));
+        return createShareWithResponse(shareName,
+            new ShareCreateOptions().setMetadata(metadata).setQuotaInGb(quotaInGB));
     }
 
     /**
@@ -578,11 +583,11 @@ public final class ShareServiceAsyncClient {
 
     Mono<Response<ShareAsyncClient>> createShareWithResponse(String shareName, ShareCreateOptions options,
         Context context) {
-        ShareAsyncClient shareAsyncClient = new ShareAsyncClient(azureFileStorageClient, shareName, null,
-            accountName, serviceVersion, sasToken);
+        ShareAsyncClient shareAsyncClient
+            = new ShareAsyncClient(azureFileStorageClient, shareName, null, accountName, serviceVersion, sasToken);
 
-        return shareAsyncClient.createWithResponse(options, context).map(response ->
-            new SimpleResponse<>(response, shareAsyncClient));
+        return shareAsyncClient.createWithResponse(options, context)
+            .map(response -> new SimpleResponse<>(response, shareAsyncClient));
     }
 
     /**
@@ -653,8 +658,7 @@ public final class ShareServiceAsyncClient {
         }
         context = context == null ? Context.NONE : context;
         return azureFileStorageClient.getShares()
-            .deleteWithResponseAsync(shareName, snapshot, null, deleteSnapshots, null, context)
-            .map(response -> new SimpleResponse<>(response, null));
+            .deleteNoCustomHeadersWithResponseAsync(shareName, snapshot, null, deleteSnapshots, null, context);
     }
 
     /**
@@ -737,8 +741,25 @@ public final class ShareServiceAsyncClient {
      * @return A {@code String} representing the SAS query parameters.
      */
     public String generateAccountSas(AccountSasSignatureValues accountSasSignatureValues, Context context) {
+        return generateAccountSas(accountSasSignatureValues, null, context);
+    }
+
+    /**
+     * Generates an account SAS for the Azure Storage account using the specified {@link AccountSasSignatureValues}.
+     * <p>Note : The client must be authenticated via {@link StorageSharedKeyCredential}
+     * <p>See {@link AccountSasSignatureValues} for more information on how to construct an account SAS.</p>
+     *
+     * @param accountSasSignatureValues {@link AccountSasSignatureValues}
+     * @param stringToSignHandler For debugging purposes only. Returns the string to sign that was used to generate the
+     * signature.
+     * @param context Additional context that is passed through the code when generating a SAS.
+     *
+     * @return A {@code String} representing the SAS query parameters.
+     */
+    public String generateAccountSas(AccountSasSignatureValues accountSasSignatureValues,
+        Consumer<String> stringToSignHandler, Context context) {
         return new AccountSasImplUtil(accountSasSignatureValues, null)
-            .generateSas(SasImplUtils.extractSharedKeyCredential(getHttpPipeline()), context);
+            .generateSas(SasImplUtils.extractSharedKeyCredential(getHttpPipeline()), stringToSignHandler, context);
     }
 
     /**
@@ -771,7 +792,7 @@ public final class ShareServiceAsyncClient {
      * <!-- end com.azure.storage.file.share.ShareServiceAsyncClient.undeleteShare#String-String -->
      *
      * <p>For more information, see the
-     * <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/restore-share">Azure Docs</a>.</p>
+     * <a href="https://docs.microsoft.com/rest/api/storageservices/restore-share">Azure Docs</a>.</p>
      *
      * @param deletedShareName The name of the previously deleted share.
      * @param deletedShareVersion The version of the previously deleted share.
@@ -813,7 +834,7 @@ public final class ShareServiceAsyncClient {
      * <!-- end com.azure.storage.file.share.ShareServiceAsyncClient.undeleteShareWithResponse#String-String -->
      *
      * <p>For more information, see the
-     * <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/restore-share">Azure Docs</a>.</p>
+     * <a href="https://docs.microsoft.com/rest/api/storageservices/restore-share">Azure Docs</a>.</p>
      *
      * @param deletedShareName The name of the previously deleted share.
      * @param deletedShareVersion The version of the previously deleted share.
@@ -830,10 +851,91 @@ public final class ShareServiceAsyncClient {
         }
     }
 
-    Mono<Response<ShareAsyncClient>> undeleteShareWithResponse(
-        String deletedShareName, String deletedShareVersion, Context context) {
-        return this.azureFileStorageClient.getShares().restoreWithResponseAsync(
-            deletedShareName, null, null, deletedShareName, deletedShareVersion, context)
-        .map(response -> new SimpleResponse<>(response, getShareAsyncClient(deletedShareName)));
+    Mono<Response<ShareAsyncClient>> undeleteShareWithResponse(String deletedShareName, String deletedShareVersion,
+        Context context) {
+        return this.azureFileStorageClient.getShares()
+            .restoreWithResponseAsync(deletedShareName, null, null, deletedShareName, deletedShareVersion, context)
+            .map(response -> new SimpleResponse<>(response, getShareAsyncClient(deletedShareName)));
+    }
+
+    /**
+     * Gets a user delegation key for use with this account's share. Note: This method call is only valid when
+     * using {@link TokenCredential} in this object's {@link HttpPipeline}.
+     *
+     * @param start Start time for the key's validity. Null indicates immediate start.
+     * @param expiry Expiration of the key's validity.
+     * @return A {@link Mono} containing the user delegation key.
+     * @throws IllegalArgumentException If {@code start} isn't null and is after {@code expiry}.
+     * @throws NullPointerException If {@code expiry} is null.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<UserDelegationKey> getUserDelegationKey(OffsetDateTime start, OffsetDateTime expiry) {
+        return getUserDelegationKeyWithResponse(start, expiry).flatMap(FluxUtil::toMono);
+    }
+
+    /**
+     * Gets a user delegation key for use with this account's share. Note: This method call is only valid when
+     * using {@link TokenCredential} in this object's {@link HttpPipeline}.
+     *
+     * @param start Start time for the key's validity. Null indicates immediate start.
+     * @param expiry Expiration of the key's validity.
+     * @return A {@link Mono} containing a {@link Response} whose {@link Response#getValue() value} containing the user
+     * delegation key.
+     * @throws IllegalArgumentException If {@code start} isn't null and is after {@code expiry}.
+     * @throws NullPointerException If {@code expiry} is null.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<UserDelegationKey>> getUserDelegationKeyWithResponse(OffsetDateTime start,
+        OffsetDateTime expiry) {
+        try {
+            return withContext(context -> getUserDelegationKeyWithResponse(start, expiry, context));
+        } catch (RuntimeException ex) {
+            return monoError(LOGGER, ex);
+        }
+    }
+
+    /**
+     * Gets a user delegation key for use with this account's share. Note: This method call is only valid when
+     * using {@link TokenCredential} in this object's {@link HttpPipeline}.
+     *
+     * @param options The {@link ShareGetUserDelegationKeyOptions options} to configure the request.
+     * @return A {@link Mono} containing a {@link Response} whose {@link Response#getValue() value} containing the user
+     * delegation key.
+     * @throws IllegalArgumentException If {@code options.getStartsOn()} isn't null and is after
+     * {@code options.getExpiresOn()}.
+     * @throws NullPointerException If {@code options.getExpiresOn()} is null.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<UserDelegationKey>>
+        getUserDelegationKeyWithResponse(ShareGetUserDelegationKeyOptions options) {
+        try {
+            StorageImplUtils.assertNotNull("options", options);
+            return withContext(context -> getUserDelegationKeyWithResponse(options.getStartsOn(),
+                options.getExpiresOn(), options.getDelegatedUserTenantId(), context));
+        } catch (RuntimeException ex) {
+            return monoError(LOGGER, ex);
+        }
+    }
+
+    Mono<Response<UserDelegationKey>> getUserDelegationKeyWithResponse(OffsetDateTime start, OffsetDateTime expiry,
+        Context context) {
+        return getUserDelegationKeyWithResponse(start, expiry, null, context);
+    }
+
+    Mono<Response<UserDelegationKey>> getUserDelegationKeyWithResponse(OffsetDateTime start, OffsetDateTime expiry,
+        String delegatedUserTenantId, Context context) {
+        context = context == null ? Context.NONE : context;
+        if (start != null && !start.isBefore(expiry)) {
+            throw LOGGER.logExceptionAsError(
+                new IllegalArgumentException("`start` must be null or a datetime before `expiry`."));
+        }
+
+        return this.azureFileStorageClient.getServices()
+            .getUserDelegationKeyWithResponseAsync(
+                new KeyInfo().setStart(start == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(start))
+                    .setExpiry(Constants.ISO_8601_UTC_DATE_FORMATTER.format(expiry))
+                    .setDelegatedUserTenantId(delegatedUserTenantId),
+                null, null, context)
+            .map(rb -> new SimpleResponse<>(rb, rb.getValue()));
     }
 }

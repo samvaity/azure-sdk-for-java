@@ -6,80 +6,37 @@ package com.azure.resourcemanager.appcontainers.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.appcontainers.ContainerAppsApiManager;
-import com.azure.resourcemanager.appcontainers.fluent.models.JobExecutionBaseInner;
 import com.azure.resourcemanager.appcontainers.models.ContainerAppJobExecutions;
-import com.azure.resourcemanager.appcontainers.models.JobExecutionNamesCollection;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class JobsStopMultipleExecutionsMockTests {
     @Test
     public void testStopMultipleExecutions() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"name\":\"owzafczu\",\"id\":\"ljcirvpefycdvei\",\"type\":\"tjnsx\",\"properties\":{\"status\":\"Running\",\"startTime\":\"2021-09-01T14:25:33Z\",\"endTime\":\"2021-10-08T22:15:33Z\",\"template\":{\"containers\":[{}],\"initContainers\":[{},{}]}}},{\"name\":\"bxqvmvuayt\",\"id\":\"dxk\",\"type\":\"qbwpntghyk\",\"properties\":{\"status\":\"Running\",\"startTime\":\"2021-07-12T18:58:47Z\",\"endTime\":\"2021-10-22T05:34:35Z\",\"template\":{\"containers\":[{}],\"initContainers\":[{},{},{},{}]}}}],\"nextLink\":\"ladltxkpbqhvfd\"}";
 
-        String responseStr =
-            "{\"value\":[{\"name\":\"bbnz\",\"id\":\"yknapqofyuicdh\",\"type\":\"dyb\",\"status\":\"Succeeded\",\"startTime\":\"2021-11-26T17:52:15Z\",\"endTime\":\"2021-10-10T21:16:01Z\"},{\"name\":\"dmhm\",\"id\":\"f\",\"type\":\"fmuvapckccr\",\"status\":\"Failed\",\"startTime\":\"2021-07-13T09:03:52Z\",\"endTime\":\"2021-12-04T19:48:14Z\"},{\"name\":\"yukphaimmoiroq\",\"id\":\"shbraga\",\"type\":\"yrmfsvbpav\",\"status\":\"Degraded\",\"startTime\":\"2021-06-03T07:36:41Z\",\"endTime\":\"2021-09-22T17:44:07Z\"}],\"nextLink\":\"nupgahxku\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        ContainerAppsApiManager manager = ContainerAppsApiManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        ContainerAppJobExecutions response = manager.jobs()
+            .stopMultipleExecutions("lkndrndpgfjodh", "aqotwfhipxwgsabv", com.azure.core.util.Context.NONE);
 
-        ContainerAppsApiManager manager =
-            ContainerAppsApiManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        ContainerAppJobExecutions response =
-            manager
-                .jobs()
-                .stopMultipleExecutions(
-                    "rxklobdxnazpmk",
-                    "lmv",
-                    new JobExecutionNamesCollection()
-                        .withValue(
-                            Arrays
-                                .asList(
-                                    new JobExecutionBaseInner().withName("xzopjhbzxl").withId("hrdd"),
-                                    new JobExecutionBaseInner().withName("fg").withId("ba"))),
-                    com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("bbnz", response.value().get(0).name());
-        Assertions.assertEquals("yknapqofyuicdh", response.value().get(0).id());
-        Assertions.assertEquals("dyb", response.value().get(0).type());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-11-26T17:52:15Z"), response.value().get(0).startTime());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-10-10T21:16:01Z"), response.value().get(0).endTime());
+        Assertions.assertEquals("owzafczu", response.value().get(0).name());
+        Assertions.assertEquals("ljcirvpefycdvei", response.value().get(0).id());
+        Assertions.assertEquals("tjnsx", response.value().get(0).type());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-09-01T14:25:33Z"), response.value().get(0).startTime());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-10-08T22:15:33Z"), response.value().get(0).endTime());
     }
 }

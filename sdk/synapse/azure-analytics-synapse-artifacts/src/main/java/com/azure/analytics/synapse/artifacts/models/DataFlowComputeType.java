@@ -4,45 +4,59 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Compute type of the cluster which will execute data flow job. */
+/**
+ * Compute type of the cluster which will execute data flow job.
+ */
 public final class DataFlowComputeType extends ExpandableStringEnum<DataFlowComputeType> {
-    /** Static value General for DataFlowComputeType. */
+    /**
+     * Static value General for DataFlowComputeType.
+     */
+    @Generated
     public static final DataFlowComputeType GENERAL = fromString("General");
 
-    /** Static value MemoryOptimized for DataFlowComputeType. */
+    /**
+     * Static value MemoryOptimized for DataFlowComputeType.
+     */
+    @Generated
     public static final DataFlowComputeType MEMORY_OPTIMIZED = fromString("MemoryOptimized");
 
-    /** Static value ComputeOptimized for DataFlowComputeType. */
+    /**
+     * Static value ComputeOptimized for DataFlowComputeType.
+     */
+    @Generated
     public static final DataFlowComputeType COMPUTE_OPTIMIZED = fromString("ComputeOptimized");
 
     /**
      * Creates a new instance of DataFlowComputeType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public DataFlowComputeType() {}
+    public DataFlowComputeType() {
+    }
 
     /**
      * Creates or finds a DataFlowComputeType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding DataFlowComputeType.
      */
-    @JsonCreator
+    @Generated
     public static DataFlowComputeType fromString(String name) {
         return fromString(name, DataFlowComputeType.class);
     }
 
     /**
      * Gets known DataFlowComputeType values.
-     *
+     * 
      * @return known DataFlowComputeType values.
      */
+    @Generated
     public static Collection<DataFlowComputeType> values() {
         return values(DataFlowComputeType.class);
     }

@@ -5,22 +5,25 @@
 package com.azure.resourcemanager.servicefabric.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
 /**
  * The notification channel indicates the type of receivers subscribed to the notification, either user or subscription.
  */
 public final class NotificationChannel extends ExpandableStringEnum<NotificationChannel> {
-    /** Static value EmailUser for NotificationChannel. */
+    /**
+     * Static value EmailUser for NotificationChannel.
+     */
     public static final NotificationChannel EMAIL_USER = fromString("EmailUser");
 
-    /** Static value EmailSubscription for NotificationChannel. */
+    /**
+     * Static value EmailSubscription for NotificationChannel.
+     */
     public static final NotificationChannel EMAIL_SUBSCRIPTION = fromString("EmailSubscription");
 
     /**
      * Creates a new instance of NotificationChannel value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -29,18 +32,17 @@ public final class NotificationChannel extends ExpandableStringEnum<Notification
 
     /**
      * Creates or finds a NotificationChannel from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding NotificationChannel.
      */
-    @JsonCreator
     public static NotificationChannel fromString(String name) {
         return fromString(name, NotificationChannel.class);
     }
 
     /**
      * Gets known NotificationChannel values.
-     *
+     * 
      * @return known NotificationChannel values.
      */
     public static Collection<NotificationChannel> values() {

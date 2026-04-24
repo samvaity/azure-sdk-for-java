@@ -13,26 +13,23 @@ import org.junit.jupiter.api.Assertions;
 public final class OsDiskTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        OsDisk model =
-            BinaryData
-                .fromString(
-                    "{\"createOption\":\"Ephemeral\",\"deleteOption\":\"Delete\",\"diskSizeGB\":9186423365086285286}")
-                .toObject(OsDisk.class);
-        Assertions.assertEquals(OsDiskCreateOption.EPHEMERAL, model.createOption());
+        OsDisk model = BinaryData
+            .fromString(
+                "{\"createOption\":\"Persistent\",\"deleteOption\":\"Delete\",\"diskSizeGB\":5164563630289510273}")
+            .toObject(OsDisk.class);
+        Assertions.assertEquals(OsDiskCreateOption.PERSISTENT, model.createOption());
         Assertions.assertEquals(OsDiskDeleteOption.DELETE, model.deleteOption());
-        Assertions.assertEquals(9186423365086285286L, model.diskSizeGB());
+        Assertions.assertEquals(5164563630289510273L, model.diskSizeGB());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        OsDisk model =
-            new OsDisk()
-                .withCreateOption(OsDiskCreateOption.EPHEMERAL)
-                .withDeleteOption(OsDiskDeleteOption.DELETE)
-                .withDiskSizeGB(9186423365086285286L);
+        OsDisk model = new OsDisk().withCreateOption(OsDiskCreateOption.PERSISTENT)
+            .withDeleteOption(OsDiskDeleteOption.DELETE)
+            .withDiskSizeGB(5164563630289510273L);
         model = BinaryData.fromObject(model).toObject(OsDisk.class);
-        Assertions.assertEquals(OsDiskCreateOption.EPHEMERAL, model.createOption());
+        Assertions.assertEquals(OsDiskCreateOption.PERSISTENT, model.createOption());
         Assertions.assertEquals(OsDiskDeleteOption.DELETE, model.deleteOption());
-        Assertions.assertEquals(9186423365086285286L, model.diskSizeGB());
+        Assertions.assertEquals(5164563630289510273L, model.diskSizeGB());
     }
 }

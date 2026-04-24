@@ -5,42 +5,55 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** A list of sql scripts resources. */
+/**
+ * A list of sql scripts resources.
+ */
 @Fluent
-public final class SqlScriptsListResponse {
+public final class SqlScriptsListResponse implements JsonSerializable<SqlScriptsListResponse> {
     /*
      * List of sql scripts.
      */
-    @JsonProperty(value = "value", required = true)
+    @Generated
     private List<SqlScriptResource> value;
 
     /*
      * The link to the next page of results, if any remaining results exist.
      */
-    @JsonProperty(value = "nextLink")
+    @Generated
     private String nextLink;
 
-    /** Creates an instance of SqlScriptsListResponse class. */
-    public SqlScriptsListResponse() {}
+    /**
+     * Creates an instance of SqlScriptsListResponse class.
+     */
+    @Generated
+    public SqlScriptsListResponse() {
+    }
 
     /**
      * Get the value property: List of sql scripts.
-     *
+     * 
      * @return the value value.
      */
+    @Generated
     public List<SqlScriptResource> getValue() {
         return this.value;
     }
 
     /**
      * Set the value property: List of sql scripts.
-     *
+     * 
      * @param value the value value to set.
      * @return the SqlScriptsListResponse object itself.
      */
+    @Generated
     public SqlScriptsListResponse setValue(List<SqlScriptResource> value) {
         this.value = value;
         return this;
@@ -48,21 +61,66 @@ public final class SqlScriptsListResponse {
 
     /**
      * Get the nextLink property: The link to the next page of results, if any remaining results exist.
-     *
+     * 
      * @return the nextLink value.
      */
+    @Generated
     public String getNextLink() {
         return this.nextLink;
     }
 
     /**
      * Set the nextLink property: The link to the next page of results, if any remaining results exist.
-     *
+     * 
      * @param nextLink the nextLink value to set.
      * @return the SqlScriptsListResponse object itself.
      */
+    @Generated
     public SqlScriptsListResponse setNextLink(String nextLink) {
         this.nextLink = nextLink;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("value", this.value, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("nextLink", this.nextLink);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SqlScriptsListResponse from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SqlScriptsListResponse if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SqlScriptsListResponse.
+     */
+    @Generated
+    public static SqlScriptsListResponse fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SqlScriptsListResponse deserializedSqlScriptsListResponse = new SqlScriptsListResponse();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("value".equals(fieldName)) {
+                    List<SqlScriptResource> value = reader.readArray(reader1 -> SqlScriptResource.fromJson(reader1));
+                    deserializedSqlScriptsListResponse.value = value;
+                } else if ("nextLink".equals(fieldName)) {
+                    deserializedSqlScriptsListResponse.nextLink = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSqlScriptsListResponse;
+        });
     }
 }

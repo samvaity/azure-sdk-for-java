@@ -13,25 +13,22 @@ import org.junit.jupiter.api.Assertions;
 public final class ValidationThresholdTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ValidationThreshold model =
-            BinaryData
-                .fromString("{\"grouping\":\"PerRack\",\"type\":\"CountSuccess\",\"value\":5284833703695885613}")
-                .toObject(ValidationThreshold.class);
-        Assertions.assertEquals(ValidationThresholdGrouping.PER_RACK, model.grouping());
-        Assertions.assertEquals(ValidationThresholdType.COUNT_SUCCESS, model.type());
-        Assertions.assertEquals(5284833703695885613L, model.value());
+        ValidationThreshold model = BinaryData
+            .fromString("{\"grouping\":\"PerCluster\",\"type\":\"PercentSuccess\",\"value\":162175660969635758}")
+            .toObject(ValidationThreshold.class);
+        Assertions.assertEquals(ValidationThresholdGrouping.PER_CLUSTER, model.grouping());
+        Assertions.assertEquals(ValidationThresholdType.PERCENT_SUCCESS, model.type());
+        Assertions.assertEquals(162175660969635758L, model.value());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ValidationThreshold model =
-            new ValidationThreshold()
-                .withGrouping(ValidationThresholdGrouping.PER_RACK)
-                .withType(ValidationThresholdType.COUNT_SUCCESS)
-                .withValue(5284833703695885613L);
+        ValidationThreshold model = new ValidationThreshold().withGrouping(ValidationThresholdGrouping.PER_CLUSTER)
+            .withType(ValidationThresholdType.PERCENT_SUCCESS)
+            .withValue(162175660969635758L);
         model = BinaryData.fromObject(model).toObject(ValidationThreshold.class);
-        Assertions.assertEquals(ValidationThresholdGrouping.PER_RACK, model.grouping());
-        Assertions.assertEquals(ValidationThresholdType.COUNT_SUCCESS, model.type());
-        Assertions.assertEquals(5284833703695885613L, model.value());
+        Assertions.assertEquals(ValidationThresholdGrouping.PER_CLUSTER, model.grouping());
+        Assertions.assertEquals(ValidationThresholdType.PERCENT_SUCCESS, model.type());
+        Assertions.assertEquals(162175660969635758L, model.value());
     }
 }

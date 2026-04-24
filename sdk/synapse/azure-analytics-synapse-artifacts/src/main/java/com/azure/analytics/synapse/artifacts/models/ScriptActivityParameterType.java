@@ -4,72 +4,113 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The type of the parameter. */
+/**
+ * The type of the parameter.
+ */
 public final class ScriptActivityParameterType extends ExpandableStringEnum<ScriptActivityParameterType> {
-    /** Static value Boolean for ScriptActivityParameterType. */
+    /**
+     * Static value Boolean for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType BOOLEAN = fromString("Boolean");
 
-    /** Static value DateTime for ScriptActivityParameterType. */
+    /**
+     * Static value DateTime for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType DATE_TIME = fromString("DateTime");
 
-    /** Static value DateTimeOffset for ScriptActivityParameterType. */
+    /**
+     * Static value DateTimeOffset for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType DATE_TIME_OFFSET = fromString("DateTimeOffset");
 
-    /** Static value Decimal for ScriptActivityParameterType. */
+    /**
+     * Static value Decimal for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType DECIMAL = fromString("Decimal");
 
-    /** Static value Double for ScriptActivityParameterType. */
+    /**
+     * Static value Double for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType DOUBLE = fromString("Double");
 
-    /** Static value Guid for ScriptActivityParameterType. */
+    /**
+     * Static value Guid for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType GUID = fromString("Guid");
 
-    /** Static value Int16 for ScriptActivityParameterType. */
+    /**
+     * Static value Int16 for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType INT16 = fromString("Int16");
 
-    /** Static value Int32 for ScriptActivityParameterType. */
+    /**
+     * Static value Int32 for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType INT32 = fromString("Int32");
 
-    /** Static value Int64 for ScriptActivityParameterType. */
+    /**
+     * Static value Int64 for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType INT64 = fromString("Int64");
 
-    /** Static value Single for ScriptActivityParameterType. */
+    /**
+     * Static value Single for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType SINGLE = fromString("Single");
 
-    /** Static value String for ScriptActivityParameterType. */
+    /**
+     * Static value String for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType STRING = fromString("String");
 
-    /** Static value Timespan for ScriptActivityParameterType. */
+    /**
+     * Static value Timespan for ScriptActivityParameterType.
+     */
+    @Generated
     public static final ScriptActivityParameterType TIMESPAN = fromString("Timespan");
 
     /**
      * Creates a new instance of ScriptActivityParameterType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public ScriptActivityParameterType() {}
+    public ScriptActivityParameterType() {
+    }
 
     /**
      * Creates or finds a ScriptActivityParameterType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ScriptActivityParameterType.
      */
-    @JsonCreator
+    @Generated
     public static ScriptActivityParameterType fromString(String name) {
         return fromString(name, ScriptActivityParameterType.class);
     }
 
     /**
      * Gets known ScriptActivityParameterType values.
-     *
+     * 
      * @return known ScriptActivityParameterType values.
      */
+    @Generated
     public static Collection<ScriptActivityParameterType> values() {
         return values(ScriptActivityParameterType.class);
     }

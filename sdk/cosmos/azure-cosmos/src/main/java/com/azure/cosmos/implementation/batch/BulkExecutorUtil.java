@@ -5,18 +5,20 @@ package com.azure.cosmos.implementation.batch;
 
 import com.azure.cosmos.BridgeInternal;
 import com.azure.cosmos.CosmosAsyncContainer;
-import com.azure.cosmos.CosmosException;
+import com.azure.cosmos.CosmosItemSerializer;
 import com.azure.cosmos.ThrottlingRetryOptions;
 import com.azure.cosmos.implementation.AsyncDocumentClient;
+import com.azure.cosmos.implementation.CollectionRoutingMapNotFoundException;
 import com.azure.cosmos.implementation.DocumentCollection;
 import com.azure.cosmos.implementation.HttpConstants;
 import com.azure.cosmos.implementation.ResourceThrottleRetryPolicy;
+import com.azure.cosmos.implementation.ResourceType;
 import com.azure.cosmos.implementation.Utils;
 import com.azure.cosmos.implementation.caches.RxClientCollectionCache;
-import com.azure.cosmos.implementation.directconnectivity.WFConstants;
 import com.azure.cosmos.implementation.routing.CollectionRoutingMap;
 import com.azure.cosmos.implementation.routing.PartitionKeyInternal;
 import com.azure.cosmos.models.CosmosBatchOperationResult;
+import com.azure.cosmos.models.CosmosBatchResponse;
 import com.azure.cosmos.models.CosmosItemOperation;
 import com.azure.cosmos.models.CosmosItemOperationType;
 import com.azure.cosmos.models.ModelBridgeInternal;
@@ -30,19 +32,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 import static com.azure.cosmos.implementation.guava25.base.Preconditions.checkNotNull;
 import static com.azure.cosmos.implementation.routing.PartitionKeyInternalHelper.getEffectivePartitionKeyString;
 
 final class BulkExecutorUtil {
 
-    static ServerOperationBatchRequest createBatchRequest(List<CosmosItemOperation> operations, String partitionKeyRangeId, int maxMicroBatchPayloadSizeInBytes) {
+    static ServerOperationBatchRequest createBatchRequest(
+        List<CosmosItemOperation> operations,
+        String partitionKeyRangeId,
+        int maxMicroBatchPayloadSizeInBytes,
+        CosmosItemSerializer clientItemSerializer) {
 
         return PartitionKeyRangeServerBatchRequest.createBatchRequest(
             partitionKeyRangeId,
             operations,
             maxMicroBatchPayloadSizeInBytes,
-            BatchRequestResponseConstants.MAX_OPERATIONS_IN_DIRECT_MODE_BATCH_REQUEST);
+            Math.min(operations.size(), BatchRequestResponseConstants.MAX_OPERATIONS_IN_DIRECT_MODE_BATCH_REQUEST),
+            clientItemSerializer);
     }
 
     static void setRetryPolicyForBulk(
@@ -57,7 +65,7 @@ final class BulkExecutorUtil {
             ResourceThrottleRetryPolicy resourceThrottleRetryPolicy = new ResourceThrottleRetryPolicy(
                 throttlingRetryOptions.getMaxRetryAttemptsOnThrottledRequests(),
                 throttlingRetryOptions.getMaxRetryWaitTime(),
-                true);
+                false);
 
             BulkOperationRetryPolicy bulkRetryPolicy = new BulkOperationRetryPolicy(
                 docClientWrapper.getCollectionCache(),
@@ -76,6 +84,19 @@ final class BulkExecutorUtil {
 
         headers.put(HttpConstants.HttpHeaders.SUB_STATUS, String.valueOf(result.getSubStatusCode()));
         headers.put(HttpConstants.HttpHeaders.E_TAG, result.getETag());
+        headers.put(HttpConstants.HttpHeaders.REQUEST_CHARGE, String.valueOf(result.getRequestCharge()));
+
+        if (result.getRetryAfterDuration() != null) {
+            headers.put(HttpConstants.HttpHeaders.RETRY_AFTER_IN_MILLISECONDS, String.valueOf(result.getRetryAfterDuration().toMillis()));
+        }
+
+        return headers;
+    }
+
+    static Map<String, String> getResponseHeadersFromBatchOperationResult(CosmosBatchResponse result) {
+        final Map<String, String> headers = new HashMap<>();
+
+        headers.put(HttpConstants.HttpHeaders.SUB_STATUS, String.valueOf(result.getSubStatusCode()));
         headers.put(HttpConstants.HttpHeaders.REQUEST_CHARGE, String.valueOf(result.getRequestCharge()));
 
         if (result.getRetryAfterDuration() != null) {
@@ -104,62 +125,77 @@ final class BulkExecutorUtil {
         if (operation instanceof ItemBulkOperation<?, ?>) {
             final ItemBulkOperation<?, ?> itemBulkOperation = (ItemBulkOperation<?, ?>) operation;
 
-            final Mono<String> pkRangeIdMono = Mono.defer(() ->
-                BulkExecutorUtil.getCollectionInfoAsync(docClientWrapper, container, collectionBeforeRecreation.get())
-                .flatMap(collection -> {
-                    final PartitionKeyDefinition definition = collection.getPartitionKey();
-                    final PartitionKeyInternal partitionKeyInternal = getPartitionKeyInternal(operation, definition);
-                    itemBulkOperation.setPartitionKeyJson(partitionKeyInternal.toJson());
+            return resolvePartitionKeyRangeId(
+                docClientWrapper,
+                container,
+                operation.getPartitionKeyValue(),
+                (partitionKeyInternal -> itemBulkOperation.setPartitionKeyJson(partitionKeyInternal.toJson())));
 
-                    return docClientWrapper.getPartitionKeyRangeCache()
-                        .tryLookupAsync(null, collection.getResourceId(), null, null)
-                        .map((Utils.ValueHolder<CollectionRoutingMap> routingMap) -> {
-
-                            if (routingMap.v == null) {
-                                collectionBeforeRecreation.set(collection);
-                                throw new CollectionRoutingMapNotFoundException(
-                                    String.format(
-                                        "No collection routing map found for container %s(%s) in database %s.",
-                                        container.getId(),
-                                        collection.getResourceId(),
-                                        container.getDatabase().getId())
-                                        );
-                            }
-
-                            return routingMap.v.getRangeByEffectivePartitionKey(
-                                getEffectivePartitionKeyString(
-                                    partitionKeyInternal,
-                                    definition)).getId();
-                        });
-                }))
-                .retryWhen(Retry
-                    .fixedDelay(
-                        BatchRequestResponseConstants.MAX_COLLECTION_RECREATION_RETRY_COUNT,
-                        Duration.ofSeconds(
-                            BatchRequestResponseConstants.MAX_COLLECTION_RECREATION_REFRESH_INTERVAL_IN_SECONDS))
-                    .filter(t -> t instanceof CollectionRoutingMapNotFoundException)
-                    .doBeforeRetry((retrySignal) -> docClientWrapper
-                        .getCollectionCache()
-                        .refresh(
-                            null,
-                            Utils.getCollectionName(BridgeInternal.getLink(container)),
-                            null)
-                    )
-                );
-
-            return pkRangeIdMono;
         } else {
             throw new UnsupportedOperationException("Unknown CosmosItemOperation.");
         }
     }
 
+    static Mono<String> resolvePartitionKeyRangeId(
+        AsyncDocumentClient docClientWrapper,
+        CosmosAsyncContainer container,
+        PartitionKey partitionKey,
+        Consumer<PartitionKeyInternal> partitionKeyInternalConsumer) {
+
+        AtomicReference<DocumentCollection> collectionBeforeRecreation = new AtomicReference<>(null);
+
+        return Mono.defer(() ->
+                       BulkExecutorUtil
+                           .getCollectionInfoAsync(docClientWrapper, container, collectionBeforeRecreation.get())
+                           .flatMap(collection -> {
+                               final PartitionKeyDefinition definition = collection.getPartitionKey();
+                               final PartitionKeyInternal partitionKeyInternal = getPartitionKeyInternal(partitionKey, definition);
+                               if (partitionKeyInternalConsumer != null) {
+                                   partitionKeyInternalConsumer.accept(partitionKeyInternal);
+                               }
+
+                               return docClientWrapper
+                                   .getPartitionKeyRangeCache()
+                                   .tryLookupAsync(null, collection.getResourceId(), null, null)
+                                   .map((Utils.ValueHolder<CollectionRoutingMap> routingMap) -> {
+
+                                       if (routingMap.v == null) {
+                                           collectionBeforeRecreation.set(collection);
+                                           throw new CollectionRoutingMapNotFoundException(
+                                               String.format(
+                                                  "No collection routing map found for container %s(%s) in database %s.",
+                                                  container.getId(),
+                                                  collection.getResourceId(),
+                                                  container.getDatabase().getId())
+                                           );
+                                       }
+
+                                       return routingMap.v.getRangeByEffectivePartitionKey(
+                                           getEffectivePartitionKeyString(
+                                               partitionKeyInternal,
+                                               definition)).getId();
+                                   });
+                           }))
+                   .retryWhen(
+                       Retry
+                           .fixedDelay(
+                               BatchRequestResponseConstants.MAX_COLLECTION_RECREATION_RETRY_COUNT,
+                               Duration.ofSeconds(BatchRequestResponseConstants.MAX_COLLECTION_RECREATION_REFRESH_INTERVAL_IN_SECONDS))
+                           .filter(t -> t instanceof CollectionRoutingMapNotFoundException)
+                           .doBeforeRetry((retrySignal) -> docClientWrapper
+                           .getCollectionCache()
+                           .refresh(
+                               null,
+                               Utils.getCollectionName(BridgeInternal.getLink(container)),
+                               null)
+                           )
+                   );
+    }
+
     private static PartitionKeyInternal getPartitionKeyInternal(
-        final CosmosItemOperation operation,
+        final PartitionKey partitionKey,
         final PartitionKeyDefinition partitionKeyDefinition) {
 
-        checkNotNull(operation, "expected non-null operation");
-
-        final PartitionKey partitionKey = operation.getPartitionKeyValue();
         if (partitionKey == null) {
             return ModelBridgeInternal.getNonePartitionKey(partitionKeyDefinition);
         } else {
@@ -186,7 +222,8 @@ final class BulkExecutorUtil {
                 null,
                 resourceAddress,
                 null,
-                obsoleteValue);
+                obsoleteValue,
+                ResourceType.Document);
     }
 
     static boolean isWriteOperation(CosmosItemOperationType cosmosItemOperationType) {
@@ -196,26 +233,4 @@ final class BulkExecutorUtil {
             cosmosItemOperationType == CosmosItemOperationType.DELETE ||
             cosmosItemOperationType == CosmosItemOperationType.PATCH;
     }
-
-    static class CollectionRoutingMapNotFoundException extends CosmosException {
-
-        private static final long serialVersionUID = 1L;
-
-        /**
-         * Instantiates a new Invalid partition exception.
-         *
-         * @param msg the msg
-         */
-        public CollectionRoutingMapNotFoundException(String msg) {
-            super(HttpConstants.StatusCodes.NOTFOUND, msg);
-            setSubStatus();
-        }
-
-        private void setSubStatus() {
-            this.getResponseHeaders().put(
-                WFConstants.BackendHeaders.SUB_STATUS,
-                Integer.toString(HttpConstants.SubStatusCodes.INCORRECT_CONTAINER_RID_SUB_STATUS));
-        }
-    }
-
 }

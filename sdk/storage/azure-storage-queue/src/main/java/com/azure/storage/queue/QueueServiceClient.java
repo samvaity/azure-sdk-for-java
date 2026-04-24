@@ -5,6 +5,7 @@ package com.azure.storage.queue;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.PagedResponse;
@@ -15,28 +16,38 @@ import com.azure.core.util.Context;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.storage.common.StorageSharedKeyCredential;
 import com.azure.storage.common.implementation.AccountSasImplUtil;
+import com.azure.storage.common.implementation.Constants;
 import com.azure.storage.common.implementation.SasImplUtils;
+import com.azure.storage.common.implementation.StorageImplUtils;
 import com.azure.storage.common.sas.AccountSasSignatureValues;
 import com.azure.storage.queue.implementation.AzureQueueStorageImpl;
+import com.azure.storage.queue.implementation.models.KeyInfo;
 import com.azure.storage.queue.implementation.models.ServicesGetStatisticsHeaders;
+import com.azure.storage.queue.implementation.models.ServicesGetUserDelegationKeyHeaders;
 import com.azure.storage.queue.models.QueueCorsRule;
+import com.azure.storage.queue.models.QueueGetUserDelegationKeyOptions;
 import com.azure.storage.queue.models.QueueItem;
 import com.azure.storage.queue.models.QueueMessageDecodingError;
 import com.azure.storage.queue.models.QueueServiceProperties;
 import com.azure.storage.queue.models.QueueServiceStatistics;
-import com.azure.storage.queue.models.QueuesSegmentOptions;
 import com.azure.storage.queue.models.QueueStorageException;
+import com.azure.storage.queue.models.QueuesSegmentOptions;
+import com.azure.storage.queue.models.UserDelegationKey;
 import reactor.core.publisher.Mono;
+
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static com.azure.storage.common.implementation.StorageImplUtils.sendRequest;
 import static com.azure.storage.common.implementation.StorageImplUtils.submitThreadPool;
 
 /**
@@ -83,8 +94,8 @@ public final class QueueServiceClient {
      * message is received or peaked from the queue but cannot be decoded.
      */
     QueueServiceClient(AzureQueueStorageImpl azureQueueStorage, String accountName, QueueServiceVersion serviceVersion,
-        QueueMessageEncoding messageEncoding, Function<QueueMessageDecodingError,
-        Mono<Void>> processMessageDecodingErrorAsyncHandler,
+        QueueMessageEncoding messageEncoding,
+        Function<QueueMessageDecodingError, Mono<Void>> processMessageDecodingErrorAsyncHandler,
         Consumer<QueueMessageDecodingError> processMessageDecodingErrorHandler) {
         this.azureQueueStorage = azureQueueStorage;
         this.accountName = accountName;
@@ -95,6 +106,8 @@ public final class QueueServiceClient {
     }
 
     /**
+     * Get the url of the storage queue.
+     *
      * @return the URL of the storage queue
      */
     public String getQueueServiceUrl() {
@@ -128,9 +141,9 @@ public final class QueueServiceClient {
      * @return QueueClient that interacts with the specified queue
      */
     public QueueClient getQueueClient(String queueName) {
-        QueueAsyncClient queueAsyncClient = new QueueAsyncClient(this.azureQueueStorage, queueName, accountName,
-            serviceVersion, messageEncoding, processMessageDecodingErrorAsyncHandler,
-            processMessageDecodingErrorHandler, null);
+        QueueAsyncClient queueAsyncClient
+            = new QueueAsyncClient(this.azureQueueStorage, queueName, accountName, serviceVersion, messageEncoding,
+                processMessageDecodingErrorAsyncHandler, processMessageDecodingErrorHandler, null);
         return new QueueClient(this.azureQueueStorage, queueName, accountName, serviceVersion, messageEncoding,
             processMessageDecodingErrorAsyncHandler, processMessageDecodingErrorHandler, queueAsyncClient);
     }
@@ -322,9 +335,9 @@ public final class QueueServiceClient {
             }
         }
         BiFunction<String, Integer, PagedResponse<QueueItem>> retriever = (nextMarker, pageSize) -> {
-            Supplier<PagedResponse<QueueItem>> operation = () ->
-                this.azureQueueStorage.getServices().listQueuesSegmentSinglePage(prefix, nextMarker,
-                    pageSize == null ? maxResultsPerPage : pageSize, include, null, null, finalContext);
+            Supplier<PagedResponse<QueueItem>> operation = () -> this.azureQueueStorage.getServices()
+                .listQueuesSegmentSinglePage(prefix, nextMarker, pageSize == null ? maxResultsPerPage : pageSize,
+                    include, null, null, finalContext);
 
             return submitThreadPool(operation, LOGGER, timeout);
 
@@ -390,8 +403,8 @@ public final class QueueServiceClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<QueueServiceProperties> getPropertiesWithResponse(Duration timeout, Context context) {
         Context finalContext = context == null ? Context.NONE : context;
-        Supplier<Response<QueueServiceProperties>> operation =
-            () -> this.azureQueueStorage.getServices().getPropertiesWithResponse(null, null, finalContext);
+        Supplier<Response<QueueServiceProperties>> operation
+            = () -> this.azureQueueStorage.getServices().getPropertiesWithResponse(null, null, finalContext);
 
         return submitThreadPool(operation, LOGGER, timeout);
     }
@@ -524,8 +537,8 @@ public final class QueueServiceClient {
     public Response<Void> setPropertiesWithResponse(QueueServiceProperties properties, Duration timeout,
         Context context) {
         Context finalContext = context == null ? Context.NONE : context;
-        Supplier<Response<Void>> operation = () ->
-            this.azureQueueStorage.getServices().setPropertiesWithResponse(properties, null, null, finalContext);
+        Supplier<Response<Void>> operation = () -> this.azureQueueStorage.getServices()
+            .setPropertiesNoCustomHeadersWithResponse(properties, null, null, finalContext);
 
         return submitThreadPool(operation, LOGGER, timeout);
     }
@@ -583,11 +596,10 @@ public final class QueueServiceClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<QueueServiceStatistics> getStatisticsWithResponse(Duration timeout, Context context) {
         Context finalContext = context == null ? Context.NONE : context;
-        Supplier<ResponseBase<ServicesGetStatisticsHeaders, QueueServiceStatistics>> operation = () ->
-            this.azureQueueStorage.getServices().getStatisticsWithResponse(null, null, finalContext);
+        Supplier<ResponseBase<ServicesGetStatisticsHeaders, QueueServiceStatistics>> operation
+            = () -> this.azureQueueStorage.getServices().getStatisticsWithResponse(null, null, finalContext);
         return submitThreadPool(operation, LOGGER, timeout);
     }
-
 
     /**
      * Get associated account name.
@@ -597,7 +609,6 @@ public final class QueueServiceClient {
     public String getAccountName() {
         return accountName;
     }
-
 
     /**
      * Gets the {@link HttpPipeline} powering this client.
@@ -672,7 +683,89 @@ public final class QueueServiceClient {
      * @return A {@code String} representing the SAS query parameters.
      */
     public String generateAccountSas(AccountSasSignatureValues accountSasSignatureValues, Context context) {
-        return new AccountSasImplUtil(accountSasSignatureValues, null)
-            .generateSas(SasImplUtils.extractSharedKeyCredential(getHttpPipeline()), context);
+        return generateAccountSas(accountSasSignatureValues, null, context);
     }
+
+    /**
+     * Generates an account SAS for the Azure Storage account using the specified {@link AccountSasSignatureValues}.
+     * <p>Note : The client must be authenticated via {@link StorageSharedKeyCredential}
+     * <p>See {@link AccountSasSignatureValues} for more information on how to construct an account SAS.</p>
+     *
+     * @param accountSasSignatureValues {@link AccountSasSignatureValues}
+     * @param stringToSignHandler For debugging purposes only. Returns the string to sign that was used to generate the
+     * signature.
+     * @param context Additional context that is passed through the code when generating a SAS.
+     *
+     * @return A {@code String} representing the SAS query parameters.
+     */
+    public String generateAccountSas(AccountSasSignatureValues accountSasSignatureValues,
+        Consumer<String> stringToSignHandler, Context context) {
+        return new AccountSasImplUtil(accountSasSignatureValues, null)
+            .generateSas(SasImplUtils.extractSharedKeyCredential(getHttpPipeline()), stringToSignHandler, context);
+    }
+
+    /**
+     * Gets a user delegation key for use with this account's queue storage. Note: This method call is only valid when
+     * using {@link TokenCredential} in this object's {@link HttpPipeline}.
+     *
+     * @param start Start time for the key's validity. Null indicates immediate start.
+     * @param expiry Expiration of the key's validity.
+     * @return The user delegation key.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public UserDelegationKey getUserDelegationKey(OffsetDateTime start, OffsetDateTime expiry) {
+        return getUserDelegationKeyWithResponse(new QueueGetUserDelegationKeyOptions(expiry).setStartsOn(start), null,
+            Context.NONE).getValue();
+    }
+
+    /**
+     * Gets a user delegation key for use with this account's queue storage. Note: This method call is only valid when
+     * using {@link TokenCredential} in this object's {@link HttpPipeline}.
+     *
+     * @param start Start time for the key's validity. Null indicates immediate start.
+     * @param expiry Expiration of the key's validity.
+     * @param timeout An optional timeout value beyond which a {@link RuntimeException} will be raised.
+     * @param context Additional context that is passed through the Http pipeline during the service call.
+     * @return A {@link Response} whose {@link Response#getValue() value} contains the user delegation key.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<UserDelegationKey> getUserDelegationKeyWithResponse(OffsetDateTime start, OffsetDateTime expiry,
+        Duration timeout, Context context) {
+        return getUserDelegationKeyWithResponse(new QueueGetUserDelegationKeyOptions(expiry).setStartsOn(start),
+            timeout, context);
+    }
+
+    /**
+     * Gets a user delegation key for use with this account's queue storage. Note: This method call is only valid when
+     * using {@link TokenCredential} in this object's {@link HttpPipeline}.
+     *
+     * @param options Options for getting the user delegation key.
+     * @param timeout An optional timeout value beyond which a {@link RuntimeException} will be raised.
+     * @param context Additional context that is passed through the Http pipeline during the service call.
+     * @return A {@link Response} whose {@link Response#getValue() value} contains the user delegation key.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<UserDelegationKey> getUserDelegationKeyWithResponse(QueueGetUserDelegationKeyOptions options,
+        Duration timeout, Context context) {
+        Context finalContext = context == null ? Context.NONE : context;
+        StorageImplUtils.assertNotNull("options", options);
+        if (options.getStartsOn() != null && !options.getStartsOn().isBefore(options.getExpiresOn())) {
+            throw LOGGER.logExceptionAsError(
+                new IllegalArgumentException("`start` must be null or a datetime before `expiry`."));
+        }
+
+        Callable<ResponseBase<ServicesGetUserDelegationKeyHeaders, UserDelegationKey>> operation
+            = () -> this.azureQueueStorage.getServices()
+                .getUserDelegationKeyWithResponse(new KeyInfo()
+                    .setStart(options.getStartsOn() == null
+                        ? ""
+                        : Constants.ISO_8601_UTC_DATE_FORMATTER.format(options.getStartsOn()))
+                    .setExpiry(Constants.ISO_8601_UTC_DATE_FORMATTER.format(options.getExpiresOn()))
+                    .setDelegatedUserTenantId(options.getDelegatedUserTenantId()), null, null, finalContext);
+
+        ResponseBase<ServicesGetUserDelegationKeyHeaders, UserDelegationKey> response
+            = sendRequest(operation, timeout, QueueStorageException.class);
+        return new SimpleResponse<>(response, response.getValue());
+    }
+
 }

@@ -3,7 +3,10 @@
 package com.azure.cosmos.implementation.changefeed.epkversion;
 
 import com.azure.cosmos.CosmosException;
+import com.azure.cosmos.ThroughputControlGroupConfig;
 import com.azure.cosmos.implementation.CosmosSchedulers;
+import com.azure.cosmos.implementation.Utils;
+import com.azure.cosmos.implementation.apachecommons.lang.StringUtils;
 import com.azure.cosmos.implementation.changefeed.CancellationToken;
 import com.azure.cosmos.implementation.changefeed.ChangeFeedContextClient;
 import com.azure.cosmos.implementation.changefeed.ChangeFeedObserver;
@@ -20,6 +23,7 @@ import com.azure.cosmos.implementation.changefeed.exceptions.FeedRangeGoneExcept
 import com.azure.cosmos.implementation.changefeed.exceptions.LeaseLostException;
 import com.azure.cosmos.implementation.changefeed.exceptions.PartitionNotFoundException;
 import com.azure.cosmos.implementation.changefeed.exceptions.TaskCancelledException;
+import com.azure.cosmos.implementation.feedranges.FeedRangeEpkImpl;
 import com.azure.cosmos.models.CosmosChangeFeedRequestOptions;
 import com.azure.cosmos.models.FeedResponse;
 import com.azure.cosmos.models.ModelBridgeInternal;
@@ -53,6 +57,9 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
 
     private volatile String lastServerContinuationToken;
     private volatile boolean hasMoreResults;
+    private volatile boolean hasServerContinuationTokenChange;
+    private final FeedRangeThroughputControlConfigManager feedRangeThroughputControlConfigManager;
+    private volatile Instant lastProcessedTime;
 
     public PartitionProcessorImpl(ChangeFeedObserver<T> observer,
                                   ChangeFeedContextClient documentClient,
@@ -60,7 +67,8 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
                                   PartitionCheckpointer checkpointer,
                                   Lease lease,
                                   Class<T> itemType,
-                                  ChangeFeedMode changeFeedMode) {
+                                  ChangeFeedMode changeFeedMode,
+                                  FeedRangeThroughputControlConfigManager feedRangeThroughputControlConfigManager) {
         this.observer = observer;
         this.documentClient = documentClient;
         this.settings = settings;
@@ -74,6 +82,8 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
                 settings.getStartState(),
                 settings.getMaxItemCount(),
                 this.changeFeedMode);
+        this.feedRangeThroughputControlConfigManager = feedRangeThroughputControlConfigManager;
+        this.lastProcessedTime = Instant.now();
     }
 
     @Override
@@ -81,6 +91,7 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
         logger.info("Lease with token {}: processing task started with owner {}.",
             this.lease.getLeaseToken(), this.lease.getOwner());
         this.hasMoreResults = true;
+        this.hasServerContinuationTokenChange = false;
         this.checkpointer.setCancellationToken(cancellationToken);
 
         return Flux.just(this)
@@ -104,10 +115,17 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
                     }).last();
 
             })
-            .flatMap(value ->
-                        this.documentClient.createDocumentChangeFeedQuery(this.settings.getCollectionSelfLink(), this.options, itemType)
-                        .limitRequest(1)
-            )
+            .flatMap(value -> this.tryGetThroughputControlConfigForFeedRange(this.lease))
+            .flatMap(configValueHolder -> {
+                if (configValueHolder.v != null) {
+                    this.options.setThroughputControlGroupName(configValueHolder.v.getGroupName());
+                }
+
+                return this.documentClient.createDocumentChangeFeedQuery(
+                        this.settings.getCollectionSelfLink(),
+                        this.options,
+                        itemType);
+            })
             .flatMap(documentFeedResponse -> {
                 if (cancellationToken.isCancellationRequested()) return Flux.error(new TaskCancelledException());
 
@@ -121,32 +139,49 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
                         .getContinuationTokenCount() == 1,
                     "For ChangeFeedProcessor the continuation state should always have one range/continuation");
 
+                this.hasServerContinuationTokenChange =
+                    !StringUtils.equals(this.lastServerContinuationToken, continuationToken)
+                        && StringUtils.isNotEmpty(continuationToken);
+
                 this.lastServerContinuationToken = continuationToken;
                 this.hasMoreResults = !ModelBridgeInternal.noChanges(documentFeedResponse);
 
+                lastProcessedTime = Instant.now();
                 if (documentFeedResponse.getResults() != null && documentFeedResponse.getResults().size() > 0) {
                     logger.info("Lease with token {}: processing {} feeds with owner {}.",
                         this.lease.getLeaseToken(), documentFeedResponse.getResults().size(), this.lease.getOwner());
                     return this.dispatchChanges(documentFeedResponse, continuationState)
-                        .doOnError(throwable -> logger.debug(
-                                "Lease with token {}: Exception was thrown from thread {}",
-                                this.lease.getLeaseToken(),
+                        .doOnError(throwable -> logger.warn(
+                            "Lease with token " + this.lease.getLeaseToken() + ": Exception was thrown from thread " +
                                 Thread.currentThread().getId(),
-                                throwable))
+                            throwable))
                         .doOnSuccess((Void) -> {
                             this.options = PartitionProcessorHelper.createForProcessingFromContinuation(continuationToken, this.changeFeedMode);
 
                             if (cancellationToken.isCancellationRequested()) throw new TaskCancelledException();
                         });
+                } else {
+                    // only skip checkpoint for 304 & noServerContinuationToken change
+                    boolean shouldSkipCheckpoint = !hasServerContinuationTokenChange && !hasMoreResults;
+                    return Mono.just(shouldSkipCheckpoint)
+                        .flatMap(skipCheckpoint -> {
+                            if (skipCheckpoint) {
+                                return Mono.empty();
+                            } else {
+                                return this.checkpointer.checkpointPartition(continuationState)
+                                    .doOnError(throwable -> {
+                                        logger.warn(
+                                            "Failed to checkpoint Lease with token " + this.lease.getLeaseToken() +
+                                                " from thread " + Thread.currentThread().getId(),
+                                            throwable);
+                                    });
+                            }
+                        })
+                        .doOnSuccess((Void) -> {
+                            this.options = PartitionProcessorHelper.createForProcessingFromContinuation(continuationToken, this.changeFeedMode);
+                            if (cancellationToken.isCancellationRequested()) throw new TaskCancelledException();
+                        });
                 }
-
-                this.options = PartitionProcessorHelper.createForProcessingFromContinuation(continuationToken, this.changeFeedMode);
-
-                if (cancellationToken.isCancellationRequested()) {
-                    return Flux.error(new TaskCancelledException());
-                }
-
-                return Flux.empty();
             })
             .doOnComplete(() -> {
                 if (this.options.getMaxItemCount() != this.settings.getMaxItemCount()) {
@@ -163,11 +198,9 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
 
                     CosmosException clientException = (CosmosException) throwable;
                     logger.warn(
-                            "Lease with token {}: CosmosException was thrown from thread {} for lease with owner {}",
-                            this.lease.getLeaseToken(),
-                            Thread.currentThread().getId(),
-                            this.lease.getOwner(),
-                            clientException);
+                        "Lease with token " + this.lease.getLeaseToken() + ": CosmosException was thrown from thread " +
+                            Thread.currentThread().getId() + " for lease with owner " + this.lease.getOwner(),
+                        clientException);
                     StatusCodeErrorType docDbError =
                         ExceptionClassifier.classifyClientException(clientException);
 
@@ -191,8 +224,8 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
                         case MAX_ITEM_COUNT_TOO_LARGE: {
                             if (this.options.getMaxItemCount() <= 1) {
                                 logger.error(
-                                    "Cannot reduce maxItemCount further as it's already at {}",
-                                    this.options.getMaxItemCount(),
+                                    "Cannot reduce maxItemCount further as it's already at " +
+                                        this.options.getMaxItemCount(),
                                     clientException);
                                 this.resultException = new RuntimeException(clientException);
                             }
@@ -206,10 +239,10 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
                             if (clientException.getRetryAfterDuration().toMillis() > 0) {
                                 Instant stopTimer = Instant.now().plus(clientException.getRetryAfterDuration().toMillis(), MILLIS);
                                 return Mono.just(clientException.getRetryAfterDuration().toMillis()) // set some seed value to be able to run
-                                           // the repeat loop
-                                           .delayElement(Duration.ofMillis(100), CosmosSchedulers.COSMOS_PARALLEL)
-                                           .repeat(() -> {
-                                               Instant currentTime = Instant.now();
+                                    // the repeat loop
+                                    .delayElement(Duration.ofMillis(100), CosmosSchedulers.COSMOS_PARALLEL)
+                                    .repeat(() -> {
+                                        Instant currentTime = Instant.now();
                                         return !cancellationToken.isCancellationRequested() && currentTime.isBefore(stopTimer);
                                     }).flatMap(values -> Flux.empty());
                             }
@@ -217,35 +250,30 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
                         break;
                         default: {
                             logger.error(
-                                    "Lease with token {}: Unrecognized Cosmos exception returned error code {}",
-                                    this.lease.getLeaseToken(),
-                                    docDbError,
-                                    clientException);
+                                "Lease with token " + this.lease.getLeaseToken() +
+                                    ": Unrecognized Cosmos exception returned error code " + docDbError,
+                                clientException);
                             this.resultException = new RuntimeException(clientException);
                         }
                     }
                 } else if (throwable instanceof LeaseLostException) {
                     logger.info(
-                            "Lease with token {}: LeaseLoseException was thrown from thread {} for lease with owner {}",
-                            this.lease.getLeaseToken(),
-                            Thread.currentThread().getId(),
-                            this.lease.getOwner());
+                        "Lease with token {}: LeaseLoseException was thrown from thread {} for lease with owner {}",
+                        this.lease.getLeaseToken(),
+                        Thread.currentThread().getId(),
+                        this.lease.getOwner());
                     this.resultException = (LeaseLostException) throwable;
                 } else if (throwable instanceof TaskCancelledException) {
                     logger.debug(
-                            "Lease with token {}: Task cancelled exception was thrown from thread {} for lease with owner {}",
-                            this.lease.getLeaseToken(),
-                            Thread.currentThread().getId(),
-                            this.lease.getOwner(),
-                            throwable);
+                        "Lease with token " + this.lease.getLeaseToken() + ": Task cancelled exception was thrown from thread " +
+                            Thread.currentThread().getId() + " for lease with owner " + this.lease.getOwner(),
+                        throwable);
                     this.resultException = (TaskCancelledException) throwable;
                 } else {
                     logger.warn(
-                            "Lease with token {}: Unexpected exception was thrown from thread {} for lease with owner {}",
-                            this.lease.getLeaseToken(),
-                            Thread.currentThread().getId(),
-                            this.lease.getOwner(),
-                            throwable);
+                        "Lease with token " + this.lease.getLeaseToken() + ": Unexpected exception was thrown from thread " +
+                            Thread.currentThread().getId() + " for lease with owner " + this.lease.getOwner(),
+                        throwable);
                     this.resultException = new RuntimeException(throwable);
                 }
                 return Flux.error(throwable);
@@ -268,15 +296,30 @@ class PartitionProcessorImpl<T> implements PartitionProcessor {
             .then()
             .doFinally( any -> {
                 logger.info(
-                        "Lease with token {}: processing task exited with owner {}.",
-                        this.lease.getLeaseToken(),
-                        this.lease.getOwner());
+                    "Lease with token {}: processing task exited with owner {}.",
+                    this.lease.getLeaseToken(),
+                    this.lease.getOwner());
             });
+    }
+
+    private Mono<Utils.ValueHolder<ThroughputControlGroupConfig>> tryGetThroughputControlConfigForFeedRange(Lease lease) {
+        if (this.feedRangeThroughputControlConfigManager == null) {
+            return Mono.just(new Utils.ValueHolder<>(null));
+        }
+
+        return this.feedRangeThroughputControlConfigManager
+            .getOrCreateThroughputControlConfigForFeedRange((FeedRangeEpkImpl) lease.getFeedRange())
+            .map(config -> new Utils.ValueHolder<>(config));
     }
 
     @Override
     public RuntimeException getResultException() {
         return this.resultException;
+    }
+
+    @Override
+    public Instant getLastProcessedTime() {
+        return this.lastProcessedTime;
     }
 
     private Mono<Void> dispatchChanges(

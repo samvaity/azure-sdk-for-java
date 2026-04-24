@@ -3,12 +3,12 @@
 
 package com.azure.communication.callautomation.models;
 
+import java.util.List;
+
 import com.azure.communication.common.CommunicationIdentifier;
 import com.azure.communication.common.PhoneNumberIdentifier;
+import com.azure.communication.common.MicrosoftTeamsAppIdentifier;
 import com.azure.core.annotation.Fluent;
-
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * The options for creating a group call.
@@ -25,11 +25,6 @@ public final class CreateGroupCallOptions {
      */
     private final String callbackUrl;
 
-    /*
-     * The endpoint URL of the Azure Cognitive Services resource attached
-     */
-    private String azureCognitiveServicesUrl;
-
     /**
      * A customer set value used to track the answering of a call.
      */
@@ -41,6 +36,11 @@ public final class CreateGroupCallOptions {
     private MediaStreamingOptions mediaStreamingOptions;
 
     /**
+     * Transcription Configuration.
+     */
+    private TranscriptionOptions transcriptionOptions;
+
+    /**
      * Display name for call source
      */
     private String sourceDisplayName;
@@ -50,13 +50,15 @@ public final class CreateGroupCallOptions {
      */
     private PhoneNumberIdentifier sourceCallIdNumber;
 
-    /**
-     * Custom Context
+    /*
+     * AI options for the call
      */
-    private final CustomContext customContext;
+    private CallIntelligenceOptions callIntelligenceOptions;
 
-
-
+    /*
+     * The identifier of the source for creating call with Teams resource account ID.
+     */
+    private MicrosoftTeamsAppIdentifier teamsAppSource;
 
     /**
      * Constructor
@@ -69,7 +71,6 @@ public final class CreateGroupCallOptions {
         this.callbackUrl = callbackUrl;
         this.sourceDisplayName = null;
         this.sourceCallIdNumber = null;
-        this.customContext = new CustomContext(new HashMap<String, String>(), new HashMap<String, String>());
     }
 
     /**
@@ -91,31 +92,12 @@ public final class CreateGroupCallOptions {
     }
 
     /**
-     * Get the azureCognitiveServicesEndpointUrl property: The endpoint URL of the Azure Cognitive Services resource
-     * attached.
-     *
-     * @return the azureCognitiveServicesEndpointUrl value.
-     */
-    public String getAzureCognitiveServicesUrl() {
-        return this.azureCognitiveServicesUrl;
-    }
-
-    /**
      * Get the operationContext: A customer set value used to track the answering of a call.
      *
      * @return the operationContext value.
      */
     public String getOperationContext() {
         return operationContext;
-    }
-
-    /**
-     * Get the Media Streaming configuration.
-     *
-     * @return the mediaStreamingConfiguration.
-     */
-    public MediaStreamingOptions getMediaStreamingConfiguration() {
-        return mediaStreamingOptions;
     }
 
     /**
@@ -135,14 +117,6 @@ public final class CreateGroupCallOptions {
     }
 
     /**
-     *  get custom context
-     * @return custom context
-     */
-    public CustomContext getCustomContext() {
-        return customContext;
-    }
-
-    /**
      * Set the operationContext: A customer set value used to track the answering of a call.
      *
      * @param operationContext A customer set value used to track the answering of a call.
@@ -156,23 +130,22 @@ public final class CreateGroupCallOptions {
     /**
      * Set the media streaming configuration.
      *
-     * @param mediaStreamingOptions The media streaming configuration.
-     * @return the CreateCallOptions object itself.
+     * @param mediaStreamingOptions The media streaming options.
+     * @return the CreateGroupCallOptions object itself.
      */
-    public CreateGroupCallOptions setMediaStreamingConfiguration(MediaStreamingOptions mediaStreamingOptions) {
+    public CreateGroupCallOptions setMediaStreamingOptions(MediaStreamingOptions mediaStreamingOptions) {
         this.mediaStreamingOptions = mediaStreamingOptions;
         return this;
     }
 
     /**
-     * Set the azureCognitiveServicesEndpointUrl property: The endpoint URL of the Azure Cognitive Services resource
-     * attached.
+     * Set the transcription configuration.
      *
-     * @param azureCognitiveServicesUrl the azureCognitiveServicesEndpointUrl value to set.
-     * @return the AnswerCallRequestInternal object itself.
+     * @param transcriptionOptions The transcription options.
+     * @return the CreateGroupCallOptions object itself.
      */
-    public CreateGroupCallOptions setAzureCognitiveServicesUrl(String azureCognitiveServicesUrl) {
-        this.azureCognitiveServicesUrl = azureCognitiveServicesUrl;
+    public CreateGroupCallOptions setTranscriptionOptions(TranscriptionOptions transcriptionOptions) {
+        this.transcriptionOptions = transcriptionOptions;
         return this;
     }
 
@@ -193,6 +166,64 @@ public final class CreateGroupCallOptions {
      */
     public CreateGroupCallOptions setSourceCallIdNumber(PhoneNumberIdentifier sourceCallIdNumber) {
         this.sourceCallIdNumber = sourceCallIdNumber;
+        return this;
+    }
+
+    /**
+     * Get the CallIntelligenceOptions property: AI options for the call such as cognitiveServicesEndpoint
+     *
+     * @return the callIntelligenceOptions value.
+     */
+    public CallIntelligenceOptions getCallIntelligenceOptions() {
+        return this.callIntelligenceOptions;
+    }
+
+    /**
+     * Set the CallIntelligenceOptions property: AI options for the call such as cognitiveServicesEndpoint
+     *
+     * @param callIntelligenceOptions the cognitiveServicesEndpoint value to set.
+     * @return the CreateGroupCallOptions object itself.
+     */
+    public CreateGroupCallOptions setCallIntelligenceOptions(CallIntelligenceOptions callIntelligenceOptions) {
+        this.callIntelligenceOptions = callIntelligenceOptions;
+        return this;
+    }
+
+    /**
+     * Get the Media Streaming Options.
+     *
+     * @return the mediaStreamingOptions.
+     */
+    public MediaStreamingOptions getMediaStreamingOptions() {
+        return mediaStreamingOptions;
+    }
+
+    /**
+     * Get the Transcription Options.
+     *
+     * @return the transcriptionOptions.
+     */
+    public TranscriptionOptions getTranscriptionOptions() {
+        return transcriptionOptions;
+    }
+
+    /**
+     * Get the teamsAppSource property: The identifier of the source for creating call with Teams resource account ID.
+     *
+     * @return the teamsAppSource value.
+     */
+    public MicrosoftTeamsAppIdentifier getTeamsAppSource() {
+        return this.teamsAppSource;
+    }
+
+    /**
+     * Set the teamsAppSource property: The identifier of the source for creating call with Teams resource account ID.
+     *
+     * @param teamsAppSource the teamsAppSource value to set.
+     * @return the CreateCallOptions object itself.
+     */
+    public CreateGroupCallOptions setTeamsAppSource(MicrosoftTeamsAppIdentifier teamsAppSource) {
+        this.teamsAppSource = teamsAppSource;
         return this;
     }
 }

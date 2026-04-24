@@ -5,63 +5,87 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-/** This activity verifies that an external resource exists. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("Validation")
-@JsonFlatten
+/**
+ * This activity verifies that an external resource exists.
+ */
 @Fluent
 public class ValidationActivity extends ControlActivity {
+    /*
+     * Type of activity.
+     */
+    @Generated
+    private String type = "Validation";
+
     /*
      * Specifies the timeout for the activity to run. If there is no value specified, it takes the value of
      * TimeSpan.FromDays(7) which is 1 week as default. Type: string (or Expression with resultType string), pattern:
      * ((\d+)\.)?(\d\d):(60|([0-5][0-9])):(60|([0-5][0-9])).
      */
-    @JsonProperty(value = "typeProperties.timeout")
+    @Generated
     private Object timeout;
 
     /*
-     * A delay in seconds between validation attempts. If no value is specified, 10 seconds will be used as the
-     * default. Type: integer (or Expression with resultType integer).
+     * A delay in seconds between validation attempts. If no value is specified, 10 seconds will be used as the default.
+     * Type: integer (or Expression with resultType integer).
      */
-    @JsonProperty(value = "typeProperties.sleep")
+    @Generated
     private Object sleep;
 
     /*
      * Can be used if dataset points to a file. The file must be greater than or equal in size to the value specified.
      * Type: integer (or Expression with resultType integer).
      */
-    @JsonProperty(value = "typeProperties.minimumSize")
+    @Generated
     private Object minimumSize;
 
     /*
      * Can be used if dataset points to a folder. If set to true, the folder must have at least one file. If set to
      * false, the folder must be empty. Type: boolean (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "typeProperties.childItems")
+    @Generated
     private Object childItems;
 
     /*
      * Validation activity dataset reference.
      */
-    @JsonProperty(value = "typeProperties.dataset", required = true)
+    @Generated
     private DatasetReference dataset;
 
-    /** Creates an instance of ValidationActivity class. */
-    public ValidationActivity() {}
+    /**
+     * Creates an instance of ValidationActivity class.
+     */
+    @Generated
+    public ValidationActivity() {
+    }
+
+    /**
+     * Get the type property: Type of activity.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the timeout property: Specifies the timeout for the activity to run. If there is no value specified, it takes
      * the value of TimeSpan.FromDays(7) which is 1 week as default. Type: string (or Expression with resultType
      * string), pattern: ((\d+)\.)?(\d\d):(60|([0-5][0-9])):(60|([0-5][0-9])).
-     *
+     * 
      * @return the timeout value.
      */
+    @Generated
     public Object getTimeout() {
         return this.timeout;
     }
@@ -70,10 +94,11 @@ public class ValidationActivity extends ControlActivity {
      * Set the timeout property: Specifies the timeout for the activity to run. If there is no value specified, it takes
      * the value of TimeSpan.FromDays(7) which is 1 week as default. Type: string (or Expression with resultType
      * string), pattern: ((\d+)\.)?(\d\d):(60|([0-5][0-9])):(60|([0-5][0-9])).
-     *
+     * 
      * @param timeout the timeout value to set.
      * @return the ValidationActivity object itself.
      */
+    @Generated
     public ValidationActivity setTimeout(Object timeout) {
         this.timeout = timeout;
         return this;
@@ -82,9 +107,10 @@ public class ValidationActivity extends ControlActivity {
     /**
      * Get the sleep property: A delay in seconds between validation attempts. If no value is specified, 10 seconds will
      * be used as the default. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @return the sleep value.
      */
+    @Generated
     public Object getSleep() {
         return this.sleep;
     }
@@ -92,10 +118,11 @@ public class ValidationActivity extends ControlActivity {
     /**
      * Set the sleep property: A delay in seconds between validation attempts. If no value is specified, 10 seconds will
      * be used as the default. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @param sleep the sleep value to set.
      * @return the ValidationActivity object itself.
      */
+    @Generated
     public ValidationActivity setSleep(Object sleep) {
         this.sleep = sleep;
         return this;
@@ -104,9 +131,10 @@ public class ValidationActivity extends ControlActivity {
     /**
      * Get the minimumSize property: Can be used if dataset points to a file. The file must be greater than or equal in
      * size to the value specified. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @return the minimumSize value.
      */
+    @Generated
     public Object getMinimumSize() {
         return this.minimumSize;
     }
@@ -114,10 +142,11 @@ public class ValidationActivity extends ControlActivity {
     /**
      * Set the minimumSize property: Can be used if dataset points to a file. The file must be greater than or equal in
      * size to the value specified. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @param minimumSize the minimumSize value to set.
      * @return the ValidationActivity object itself.
      */
+    @Generated
     public ValidationActivity setMinimumSize(Object minimumSize) {
         this.minimumSize = minimumSize;
         return this;
@@ -126,9 +155,10 @@ public class ValidationActivity extends ControlActivity {
     /**
      * Get the childItems property: Can be used if dataset points to a folder. If set to true, the folder must have at
      * least one file. If set to false, the folder must be empty. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the childItems value.
      */
+    @Generated
     public Object getChildItems() {
         return this.childItems;
     }
@@ -136,10 +166,11 @@ public class ValidationActivity extends ControlActivity {
     /**
      * Set the childItems property: Can be used if dataset points to a folder. If set to true, the folder must have at
      * least one file. If set to false, the folder must be empty. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param childItems the childItems value to set.
      * @return the ValidationActivity object itself.
      */
+    @Generated
     public ValidationActivity setChildItems(Object childItems) {
         this.childItems = childItems;
         return this;
@@ -147,63 +178,193 @@ public class ValidationActivity extends ControlActivity {
 
     /**
      * Get the dataset property: Validation activity dataset reference.
-     *
+     * 
      * @return the dataset value.
      */
+    @Generated
     public DatasetReference getDataset() {
         return this.dataset;
     }
 
     /**
      * Set the dataset property: Validation activity dataset reference.
-     *
+     * 
      * @param dataset the dataset value to set.
      * @return the ValidationActivity object itself.
      */
+    @Generated
     public ValidationActivity setDataset(DatasetReference dataset) {
         this.dataset = dataset;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ValidationActivity setName(String name) {
         super.setName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ValidationActivity setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ValidationActivity setState(ActivityState state) {
         super.setState(state);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ValidationActivity setOnInactiveMarkAs(ActivityOnInactiveMarkAs onInactiveMarkAs) {
         super.setOnInactiveMarkAs(onInactiveMarkAs);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ValidationActivity setDependsOn(List<ActivityDependency> dependsOn) {
         super.setDependsOn(dependsOn);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ValidationActivity setUserProperties(List<UserProperty> userProperties) {
         super.setUserProperties(userProperties);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("name", getName());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeStringField("state", getState() == null ? null : getState().toString());
+        jsonWriter.writeStringField("onInactiveMarkAs",
+            getOnInactiveMarkAs() == null ? null : getOnInactiveMarkAs().toString());
+        jsonWriter.writeArrayField("dependsOn", getDependsOn(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("userProperties", getUserProperties(),
+            (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (timeout != null || sleep != null || minimumSize != null || childItems != null || dataset != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            if (this.timeout != null) {
+                jsonWriter.writeUntypedField("timeout", this.timeout);
+            }
+            if (this.sleep != null) {
+                jsonWriter.writeUntypedField("sleep", this.sleep);
+            }
+            if (this.minimumSize != null) {
+                jsonWriter.writeUntypedField("minimumSize", this.minimumSize);
+            }
+            if (this.childItems != null) {
+                jsonWriter.writeUntypedField("childItems", this.childItems);
+            }
+            jsonWriter.writeJsonField("dataset", this.dataset);
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ValidationActivity from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ValidationActivity if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ValidationActivity.
+     */
+    @Generated
+    public static ValidationActivity fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ValidationActivity deserializedValidationActivity = new ValidationActivity();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedValidationActivity.setName(reader.getString());
+                } else if ("description".equals(fieldName)) {
+                    deserializedValidationActivity.setDescription(reader.getString());
+                } else if ("state".equals(fieldName)) {
+                    deserializedValidationActivity.setState(ActivityState.fromString(reader.getString()));
+                } else if ("onInactiveMarkAs".equals(fieldName)) {
+                    deserializedValidationActivity
+                        .setOnInactiveMarkAs(ActivityOnInactiveMarkAs.fromString(reader.getString()));
+                } else if ("dependsOn".equals(fieldName)) {
+                    List<ActivityDependency> dependsOn
+                        = reader.readArray(reader1 -> ActivityDependency.fromJson(reader1));
+                    deserializedValidationActivity.setDependsOn(dependsOn);
+                } else if ("userProperties".equals(fieldName)) {
+                    List<UserProperty> userProperties = reader.readArray(reader1 -> UserProperty.fromJson(reader1));
+                    deserializedValidationActivity.setUserProperties(userProperties);
+                } else if ("type".equals(fieldName)) {
+                    deserializedValidationActivity.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("timeout".equals(fieldName)) {
+                            deserializedValidationActivity.timeout = reader.readUntyped();
+                        } else if ("sleep".equals(fieldName)) {
+                            deserializedValidationActivity.sleep = reader.readUntyped();
+                        } else if ("minimumSize".equals(fieldName)) {
+                            deserializedValidationActivity.minimumSize = reader.readUntyped();
+                        } else if ("childItems".equals(fieldName)) {
+                            deserializedValidationActivity.childItems = reader.readUntyped();
+                        } else if ("dataset".equals(fieldName)) {
+                            deserializedValidationActivity.dataset = DatasetReference.fromJson(reader);
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedValidationActivity.setAdditionalProperties(additionalProperties);
+
+            return deserializedValidationActivity;
+        });
     }
 }

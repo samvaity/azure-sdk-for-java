@@ -27,29 +27,35 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
+import com.azure.core.util.logging.ClientLogger;
 import com.azure.resourcemanager.appcontainers.fluent.ContainerAppsAuthConfigsClient;
 import com.azure.resourcemanager.appcontainers.fluent.models.AuthConfigInner;
 import com.azure.resourcemanager.appcontainers.models.AuthConfigCollection;
 import com.azure.resourcemanager.appcontainers.models.DefaultErrorResponseErrorException;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ContainerAppsAuthConfigsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ContainerAppsAuthConfigsClient.
+ */
 public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAuthConfigsClient {
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ContainerAppsAuthConfigsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final ContainerAppsApiClientImpl client;
 
     /**
      * Initializes an instance of ContainerAppsAuthConfigsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ContainerAppsAuthConfigsClientImpl(ContainerAppsApiClientImpl client) {
-        this.service =
-            RestProxy
-                .create(ContainerAppsAuthConfigsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service = RestProxy.create(ContainerAppsAuthConfigsService.class, client.getHttpPipeline(),
+            client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -58,104 +64,130 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      * proxy service to perform REST calls.
      */
     @Host("{$host}")
-    @ServiceInterface(name = "ContainerAppsApiClie")
+    @ServiceInterface(name = "ContainerAppsApiClientContainerAppsAuthConfigs")
     public interface ContainerAppsAuthConfigsService {
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(DefaultErrorResponseErrorException.class)
-        Mono<Response<AuthConfigCollection>> listByContainerApp(
-            @HostParam("$host") String endpoint,
+        Mono<Response<AuthConfigCollection>> listByContainerApp(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("containerAppName") String containerAppName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("containerAppName") String containerAppName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs/{authConfigName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(DefaultErrorResponseErrorException.class)
-        Mono<Response<AuthConfigInner>> get(
-            @HostParam("$host") String endpoint,
+        Response<AuthConfigCollection> listByContainerAppSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("containerAppName") String containerAppName,
-            @PathParam("authConfigName") String authConfigName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("containerAppName") String containerAppName, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs/{authConfigName}")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs/{authConfigName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(DefaultErrorResponseErrorException.class)
-        Mono<Response<AuthConfigInner>> createOrUpdate(
-            @HostParam("$host") String endpoint,
+        Mono<Response<AuthConfigInner>> get(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("containerAppName") String containerAppName,
-            @PathParam("authConfigName") String authConfigName,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") AuthConfigInner authConfigEnvelope,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam("containerAppName") String containerAppName, @PathParam("authConfigName") String authConfigName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Delete(
-            "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs/{authConfigName}")
-        @ExpectedResponses({200, 204})
+        @Headers({ "Content-Type: application/json" })
+        @Get("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs/{authConfigName}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(DefaultErrorResponseErrorException.class)
-        Mono<Response<Void>> delete(
-            @HostParam("$host") String endpoint,
+        Response<AuthConfigInner> getSync(@HostParam("$host") String endpoint,
             @PathParam("subscriptionId") String subscriptionId,
             @PathParam("resourceGroupName") String resourceGroupName,
-            @PathParam("containerAppName") String containerAppName,
-            @PathParam("authConfigName") String authConfigName,
+            @PathParam("containerAppName") String containerAppName, @PathParam("authConfigName") String authConfigName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs/{authConfigName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(DefaultErrorResponseErrorException.class)
+        Mono<Response<AuthConfigInner>> createOrUpdate(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("containerAppName") String containerAppName, @PathParam("authConfigName") String authConfigName,
             @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+            @BodyParam("application/json") AuthConfigInner authConfigEnvelope, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs/{authConfigName}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(DefaultErrorResponseErrorException.class)
+        Response<AuthConfigInner> createOrUpdateSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("containerAppName") String containerAppName, @PathParam("authConfigName") String authConfigName,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") AuthConfigInner authConfigEnvelope, @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs/{authConfigName}")
+        @ExpectedResponses({ 200, 204 })
+        @UnexpectedResponseExceptionType(DefaultErrorResponseErrorException.class)
+        Mono<Response<Void>> delete(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("containerAppName") String containerAppName, @PathParam("authConfigName") String authConfigName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/containerApps/{containerAppName}/authConfigs/{authConfigName}")
+        @ExpectedResponses({ 200, 204 })
+        @UnexpectedResponseExceptionType(DefaultErrorResponseErrorException.class)
+        Response<Void> deleteSync(@HostParam("$host") String endpoint,
+            @PathParam("subscriptionId") String subscriptionId,
+            @PathParam("resourceGroupName") String resourceGroupName,
+            @PathParam("containerAppName") String containerAppName, @PathParam("authConfigName") String authConfigName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
         @Get("{nextLink}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(DefaultErrorResponseErrorException.class)
         Mono<Response<AuthConfigCollection>> listByContainerAppNext(
-            @PathParam(value = "nextLink", encoded = true) String nextLink,
-            @HostParam("$host") String endpoint,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("{nextLink}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(DefaultErrorResponseErrorException.class)
+        Response<AuthConfigCollection> listByContainerAppNextSync(
+            @PathParam(value = "nextLink", encoded = true) String nextLink, @HostParam("$host") String endpoint,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Get the Container App AuthConfigs in a given resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the Container App AuthConfigs in a given resource group along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AuthConfigInner>> listByContainerAppSinglePageAsync(
-        String resourceGroupName, String containerAppName) {
+    private Mono<PagedResponse<AuthConfigInner>> listByContainerAppSinglePageAsync(String resourceGroupName,
+        String containerAppName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -168,88 +200,16 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .listByContainerApp(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            containerAppName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
-            .<PagedResponse<AuthConfigInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+                context -> service.listByContainerApp(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                    resourceGroupName, containerAppName, this.client.getApiVersion(), accept, context))
+            .<PagedResponse<AuthConfigInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get the Container App AuthConfigs in a given resource group.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param containerAppName Name of the Container App.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the Container App AuthConfigs in a given resource group along with {@link PagedResponse} on successful
-     *     completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AuthConfigInner>> listByContainerAppSinglePageAsync(
-        String resourceGroupName, String containerAppName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (containerAppName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter containerAppName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByContainerApp(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                containerAppName,
-                this.client.getApiVersion(),
-                accept,
-                context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
-    }
-
-    /**
-     * Get the Container App AuthConfigs in a given resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -259,33 +219,92 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     private PagedFlux<AuthConfigInner> listByContainerAppAsync(String resourceGroupName, String containerAppName) {
-        return new PagedFlux<>(
-            () -> listByContainerAppSinglePageAsync(resourceGroupName, containerAppName),
+        return new PagedFlux<>(() -> listByContainerAppSinglePageAsync(resourceGroupName, containerAppName),
             nextLink -> listByContainerAppNextSinglePageAsync(nextLink));
     }
 
     /**
      * Get the Container App AuthConfigs in a given resource group.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param containerAppName Name of the Container App.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the Container App AuthConfigs in a given resource group along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AuthConfigInner> listByContainerAppSinglePage(String resourceGroupName,
+        String containerAppName) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (containerAppName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter containerAppName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<AuthConfigCollection> res
+            = service.listByContainerAppSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, containerAppName, this.client.getApiVersion(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the Container App AuthConfigs in a given resource group.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the Container App AuthConfigs in a given resource group as paginated response with {@link PagedFlux}.
+     * @return the Container App AuthConfigs in a given resource group along with {@link PagedResponse}.
      */
-    @ServiceMethod(returns = ReturnType.COLLECTION)
-    private PagedFlux<AuthConfigInner> listByContainerAppAsync(
-        String resourceGroupName, String containerAppName, Context context) {
-        return new PagedFlux<>(
-            () -> listByContainerAppSinglePageAsync(resourceGroupName, containerAppName, context),
-            nextLink -> listByContainerAppNextSinglePageAsync(nextLink, context));
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AuthConfigInner> listByContainerAppSinglePage(String resourceGroupName,
+        String containerAppName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (containerAppName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter containerAppName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<AuthConfigCollection> res
+            = service.listByContainerAppSync(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, containerAppName, this.client.getApiVersion(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
 
     /**
      * Get the Container App AuthConfigs in a given resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -295,12 +314,13 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<AuthConfigInner> listByContainerApp(String resourceGroupName, String containerAppName) {
-        return new PagedIterable<>(listByContainerAppAsync(resourceGroupName, containerAppName));
+        return new PagedIterable<>(() -> listByContainerAppSinglePage(resourceGroupName, containerAppName),
+            nextLink -> listByContainerAppNextSinglePage(nextLink));
     }
 
     /**
      * Get the Container App AuthConfigs in a given resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param context The context to associate with this operation.
@@ -310,14 +330,15 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      * @return the Container App AuthConfigs in a given resource group as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<AuthConfigInner> listByContainerApp(
-        String resourceGroupName, String containerAppName, Context context) {
-        return new PagedIterable<>(listByContainerAppAsync(resourceGroupName, containerAppName, context));
+    public PagedIterable<AuthConfigInner> listByContainerApp(String resourceGroupName, String containerAppName,
+        Context context) {
+        return new PagedIterable<>(() -> listByContainerAppSinglePage(resourceGroupName, containerAppName, context),
+            nextLink -> listByContainerAppNextSinglePage(nextLink, context));
     }
 
     /**
      * Get a AuthConfig of a Container App.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -327,19 +348,15 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      * @return a AuthConfig of a Container App along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AuthConfigInner>> getWithResponseAsync(
-        String resourceGroupName, String containerAppName, String authConfigName) {
+    private Mono<Response<AuthConfigInner>> getWithResponseAsync(String resourceGroupName, String containerAppName,
+        String authConfigName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -354,76 +371,14 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            containerAppName,
-                            authConfigName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, containerAppName, authConfigName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get a AuthConfig of a Container App.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param containerAppName Name of the Container App.
-     * @param authConfigName Name of the Container App AuthConfig.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a AuthConfig of a Container App along with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AuthConfigInner>> getWithResponseAsync(
-        String resourceGroupName, String containerAppName, String authConfigName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (containerAppName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter containerAppName is required and cannot be null."));
-        }
-        if (authConfigName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter authConfigName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                containerAppName,
-                authConfigName,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Get a AuthConfig of a Container App.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -440,7 +395,7 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
 
     /**
      * Get a AuthConfig of a Container App.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -451,14 +406,38 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      * @return a AuthConfig of a Container App along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<AuthConfigInner> getWithResponse(
-        String resourceGroupName, String containerAppName, String authConfigName, Context context) {
-        return getWithResponseAsync(resourceGroupName, containerAppName, authConfigName, context).block();
+    public Response<AuthConfigInner> getWithResponse(String resourceGroupName, String containerAppName,
+        String authConfigName, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (containerAppName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter containerAppName is required and cannot be null."));
+        }
+        if (authConfigName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter authConfigName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.getSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            containerAppName, authConfigName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Get a AuthConfig of a Container App.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -474,7 +453,7 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
 
     /**
      * Create or update the AuthConfig for a Container App.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -483,22 +462,18 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return configuration settings for the Azure ContainerApp Service Authentication / Authorization feature along
-     *     with {@link Response} on successful completion of {@link Mono}.
+     * with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AuthConfigInner>> createOrUpdateWithResponseAsync(
-        String resourceGroupName, String containerAppName, String authConfigName, AuthConfigInner authConfigEnvelope) {
+    private Mono<Response<AuthConfigInner>> createOrUpdateWithResponseAsync(String resourceGroupName,
+        String containerAppName, String authConfigName, AuthConfigInner authConfigEnvelope) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -519,90 +494,15 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .createOrUpdate(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            containerAppName,
-                            authConfigName,
-                            this.client.getApiVersion(),
-                            authConfigEnvelope,
-                            accept,
-                            context))
+            .withContext(context -> service.createOrUpdate(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, containerAppName, authConfigName, this.client.getApiVersion(), authConfigEnvelope,
+                accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Create or update the AuthConfig for a Container App.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param containerAppName Name of the Container App.
-     * @param authConfigName Name of the Container App AuthConfig.
-     * @param authConfigEnvelope Properties used to create a Container App AuthConfig.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return configuration settings for the Azure ContainerApp Service Authentication / Authorization feature along
-     *     with {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<AuthConfigInner>> createOrUpdateWithResponseAsync(
-        String resourceGroupName,
-        String containerAppName,
-        String authConfigName,
-        AuthConfigInner authConfigEnvelope,
-        Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (containerAppName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter containerAppName is required and cannot be null."));
-        }
-        if (authConfigName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter authConfigName is required and cannot be null."));
-        }
-        if (authConfigEnvelope == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter authConfigEnvelope is required and cannot be null."));
-        } else {
-            authConfigEnvelope.validate();
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .createOrUpdate(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                containerAppName,
-                authConfigName,
-                this.client.getApiVersion(),
-                authConfigEnvelope,
-                accept,
-                context);
-    }
-
-    /**
-     * Create or update the AuthConfig for a Container App.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -611,18 +511,18 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return configuration settings for the Azure ContainerApp Service Authentication / Authorization feature on
-     *     successful completion of {@link Mono}.
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<AuthConfigInner> createOrUpdateAsync(
-        String resourceGroupName, String containerAppName, String authConfigName, AuthConfigInner authConfigEnvelope) {
+    private Mono<AuthConfigInner> createOrUpdateAsync(String resourceGroupName, String containerAppName,
+        String authConfigName, AuthConfigInner authConfigEnvelope) {
         return createOrUpdateWithResponseAsync(resourceGroupName, containerAppName, authConfigName, authConfigEnvelope)
             .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Create or update the AuthConfig for a Container App.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -632,23 +532,47 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return configuration settings for the Azure ContainerApp Service Authentication / Authorization feature along
-     *     with {@link Response}.
+     * with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<AuthConfigInner> createOrUpdateWithResponse(
-        String resourceGroupName,
-        String containerAppName,
-        String authConfigName,
-        AuthConfigInner authConfigEnvelope,
-        Context context) {
-        return createOrUpdateWithResponseAsync(
-                resourceGroupName, containerAppName, authConfigName, authConfigEnvelope, context)
-            .block();
+    public Response<AuthConfigInner> createOrUpdateWithResponse(String resourceGroupName, String containerAppName,
+        String authConfigName, AuthConfigInner authConfigEnvelope, Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (containerAppName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter containerAppName is required and cannot be null."));
+        }
+        if (authConfigName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter authConfigName is required and cannot be null."));
+        }
+        if (authConfigEnvelope == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter authConfigEnvelope is required and cannot be null."));
+        } else {
+            authConfigEnvelope.validate();
+        }
+        final String accept = "application/json";
+        return service.createOrUpdateSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            containerAppName, authConfigName, this.client.getApiVersion(), authConfigEnvelope, accept, context);
     }
 
     /**
      * Create or update the AuthConfig for a Container App.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -659,16 +583,15 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      * @return configuration settings for the Azure ContainerApp Service Authentication / Authorization feature.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public AuthConfigInner createOrUpdate(
-        String resourceGroupName, String containerAppName, String authConfigName, AuthConfigInner authConfigEnvelope) {
-        return createOrUpdateWithResponse(
-                resourceGroupName, containerAppName, authConfigName, authConfigEnvelope, Context.NONE)
-            .getValue();
+    public AuthConfigInner createOrUpdate(String resourceGroupName, String containerAppName, String authConfigName,
+        AuthConfigInner authConfigEnvelope) {
+        return createOrUpdateWithResponse(resourceGroupName, containerAppName, authConfigName, authConfigEnvelope,
+            Context.NONE).getValue();
     }
 
     /**
      * Delete a Container App AuthConfig.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -678,19 +601,15 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> deleteWithResponseAsync(
-        String resourceGroupName, String containerAppName, String authConfigName) {
+    private Mono<Response<Void>> deleteWithResponseAsync(String resourceGroupName, String containerAppName,
+        String authConfigName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+            return Mono.error(new IllegalArgumentException(
+                "Parameter this.client.getSubscriptionId() is required and cannot be null."));
         }
         if (resourceGroupName == null) {
             return Mono
@@ -705,76 +624,14 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
         }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .delete(
-                            this.client.getEndpoint(),
-                            this.client.getSubscriptionId(),
-                            resourceGroupName,
-                            containerAppName,
-                            authConfigName,
-                            this.client.getApiVersion(),
-                            accept,
-                            context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), this.client.getSubscriptionId(),
+                resourceGroupName, containerAppName, authConfigName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Delete a Container App AuthConfig.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param containerAppName Name of the Container App.
-     * @param authConfigName Name of the Container App AuthConfig.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response} on successful completion of {@link Mono}.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> deleteWithResponseAsync(
-        String resourceGroupName, String containerAppName, String authConfigName, Context context) {
-        if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
-        }
-        if (this.client.getSubscriptionId() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getSubscriptionId() is required and cannot be null."));
-        }
-        if (resourceGroupName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
-        }
-        if (containerAppName == null) {
-            return Mono
-                .error(new IllegalArgumentException("Parameter containerAppName is required and cannot be null."));
-        }
-        if (authConfigName == null) {
-            return Mono.error(new IllegalArgumentException("Parameter authConfigName is required and cannot be null."));
-        }
-        final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .delete(
-                this.client.getEndpoint(),
-                this.client.getSubscriptionId(),
-                resourceGroupName,
-                containerAppName,
-                authConfigName,
-                this.client.getApiVersion(),
-                accept,
-                context);
-    }
-
-    /**
-     * Delete a Container App AuthConfig.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -791,7 +648,7 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
 
     /**
      * Delete a Container App AuthConfig.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -802,14 +659,38 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
      * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> deleteWithResponse(
-        String resourceGroupName, String containerAppName, String authConfigName, Context context) {
-        return deleteWithResponseAsync(resourceGroupName, containerAppName, authConfigName, context).block();
+    public Response<Void> deleteWithResponse(String resourceGroupName, String containerAppName, String authConfigName,
+        Context context) {
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (this.client.getSubscriptionId() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getSubscriptionId() is required and cannot be null."));
+        }
+        if (resourceGroupName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null."));
+        }
+        if (containerAppName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter containerAppName is required and cannot be null."));
+        }
+        if (authConfigName == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter authConfigName is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        return service.deleteSync(this.client.getEndpoint(), this.client.getSubscriptionId(), resourceGroupName,
+            containerAppName, authConfigName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Delete a Container App AuthConfig.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param containerAppName Name of the Container App.
      * @param authConfigName Name of the Container App AuthConfig.
@@ -823,15 +704,16 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
     }
 
     /**
+     * Get the Container App AuthConfigs in a given resource group.
+     * 
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return authConfig collection ARM resource along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return the Container App AuthConfigs in a given resource group along with {@link PagedResponse} on successful
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PagedResponse<AuthConfigInner>> listByContainerAppNextSinglePageAsync(String nextLink) {
@@ -839,63 +721,76 @@ public final class ContainerAppsAuthConfigsClientImpl implements ContainerAppsAu
             return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
         return FluxUtil
             .withContext(
                 context -> service.listByContainerAppNext(nextLink, this.client.getEndpoint(), accept, context))
-            .<PagedResponse<AuthConfigInner>>map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null))
+            .<PagedResponse<AuthConfigInner>>map(res -> new PagedResponseBase<>(res.getRequest(), res.getStatusCode(),
+                res.getHeaders(), res.getValue().value(), res.getValue().nextLink(), null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
+     * Get the Container App AuthConfigs in a given resource group.
+     * 
      * Get the next page of items.
-     *
-     * @param nextLink The URL to get the next list of items
-     *     <p>The nextLink parameter.
+     * 
+     * @param nextLink The URL to get the next list of items.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the Container App AuthConfigs in a given resource group along with {@link PagedResponse}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private PagedResponse<AuthConfigInner> listByContainerAppNextSinglePage(String nextLink) {
+        if (nextLink == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+        }
+        if (this.client.getEndpoint() == null) {
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        final String accept = "application/json";
+        Response<AuthConfigCollection> res
+            = service.listByContainerAppNextSync(nextLink, this.client.getEndpoint(), accept, Context.NONE);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
+    }
+
+    /**
+     * Get the Container App AuthConfigs in a given resource group.
+     * 
+     * Get the next page of items.
+     * 
+     * @param nextLink The URL to get the next list of items.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws DefaultErrorResponseErrorException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return authConfig collection ARM resource along with {@link PagedResponse} on successful completion of {@link
-     *     Mono}.
+     * @return the Container App AuthConfigs in a given resource group along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PagedResponse<AuthConfigInner>> listByContainerAppNextSinglePageAsync(
-        String nextLink, Context context) {
+    private PagedResponse<AuthConfigInner> listByContainerAppNextSinglePage(String nextLink, Context context) {
         if (nextLink == null) {
-            return Mono.error(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException("Parameter nextLink is required and cannot be null."));
         }
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            throw LOGGER.atError()
+                .log(new IllegalArgumentException(
+                    "Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         final String accept = "application/json";
-        context = this.client.mergeContext(context);
-        return service
-            .listByContainerAppNext(nextLink, this.client.getEndpoint(), accept, context)
-            .map(
-                res ->
-                    new PagedResponseBase<>(
-                        res.getRequest(),
-                        res.getStatusCode(),
-                        res.getHeaders(),
-                        res.getValue().value(),
-                        res.getValue().nextLink(),
-                        null));
+        Response<AuthConfigCollection> res
+            = service.listByContainerAppNextSync(nextLink, this.client.getEndpoint(), accept, context);
+        return new PagedResponseBase<>(res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(),
+            res.getValue().nextLink(), null);
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(ContainerAppsAuthConfigsClientImpl.class);
 }

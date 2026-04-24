@@ -5,6 +5,7 @@
 package com.azure.data.appconfiguration.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.json.JsonReader;
 import com.azure.json.JsonSerializable;
 import com.azure.json.JsonToken;
@@ -13,35 +14,42 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/** The details of an error. */
+/**
+ * The details of an error.
+ */
 @Fluent
 public final class ErrorDetail implements JsonSerializable<ErrorDetail> {
     /*
      * One of a server-defined set of error codes.
      */
+    @Generated
     private final String code;
 
     /*
      * A human-readable representation of the error.
      */
+    @Generated
     private final String message;
 
     /*
      * An array of details about specific errors that led to this reported error.
      */
+    @Generated
     private List<ErrorDetail> details;
 
     /*
      * An object containing more specific information than the current object about the error.
      */
+    @Generated
     private InnerError innererror;
 
     /**
      * Creates an instance of ErrorDetail class.
-     *
+     * 
      * @param code the code value to set.
      * @param message the message value to set.
      */
+    @Generated
     public ErrorDetail(String code, String message) {
         this.code = code;
         this.message = message;
@@ -49,37 +57,41 @@ public final class ErrorDetail implements JsonSerializable<ErrorDetail> {
 
     /**
      * Get the code property: One of a server-defined set of error codes.
-     *
+     * 
      * @return the code value.
      */
+    @Generated
     public String getCode() {
         return this.code;
     }
 
     /**
      * Get the message property: A human-readable representation of the error.
-     *
+     * 
      * @return the message value.
      */
+    @Generated
     public String getMessage() {
         return this.message;
     }
 
     /**
      * Get the details property: An array of details about specific errors that led to this reported error.
-     *
+     * 
      * @return the details value.
      */
+    @Generated
     public List<ErrorDetail> getDetails() {
         return this.details;
     }
 
     /**
      * Set the details property: An array of details about specific errors that led to this reported error.
-     *
+     * 
      * @param details the details value to set.
      * @return the ErrorDetail object itself.
      */
+    @Generated
     public ErrorDetail setDetails(List<ErrorDetail> details) {
         this.details = details;
         return this;
@@ -88,9 +100,10 @@ public final class ErrorDetail implements JsonSerializable<ErrorDetail> {
     /**
      * Get the innererror property: An object containing more specific information than the current object about the
      * error.
-     *
+     * 
      * @return the innererror value.
      */
+    @Generated
     public InnerError getInnererror() {
         return this.innererror;
     }
@@ -98,15 +111,20 @@ public final class ErrorDetail implements JsonSerializable<ErrorDetail> {
     /**
      * Set the innererror property: An object containing more specific information than the current object about the
      * error.
-     *
+     * 
      * @param innererror the innererror value to set.
      * @return the ErrorDetail object itself.
      */
+    @Generated
     public ErrorDetail setInnererror(InnerError innererror) {
         this.innererror = innererror;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
         jsonWriter.writeStartObject();
@@ -119,57 +137,57 @@ public final class ErrorDetail implements JsonSerializable<ErrorDetail> {
 
     /**
      * Reads an instance of ErrorDetail from the JsonReader.
-     *
+     * 
      * @param jsonReader The JsonReader being read.
      * @return An instance of ErrorDetail if the JsonReader was pointing to an instance of it, or null if it was
-     *     pointing to JSON null.
+     * pointing to JSON null.
      * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
      * @throws IOException If an error occurs while reading the ErrorDetail.
      */
+    @Generated
     public static ErrorDetail fromJson(JsonReader jsonReader) throws IOException {
-        return jsonReader.readObject(
-                reader -> {
-                    boolean codeFound = false;
-                    String code = null;
-                    boolean messageFound = false;
-                    String message = null;
-                    List<ErrorDetail> details = null;
-                    InnerError innererror = null;
-                    while (reader.nextToken() != JsonToken.END_OBJECT) {
-                        String fieldName = reader.getFieldName();
-                        reader.nextToken();
+        return jsonReader.readObject(reader -> {
+            boolean codeFound = false;
+            String code = null;
+            boolean messageFound = false;
+            String message = null;
+            List<ErrorDetail> details = null;
+            InnerError innererror = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
 
-                        if ("code".equals(fieldName)) {
-                            code = reader.getString();
-                            codeFound = true;
-                        } else if ("message".equals(fieldName)) {
-                            message = reader.getString();
-                            messageFound = true;
-                        } else if ("details".equals(fieldName)) {
-                            details = reader.readArray(reader1 -> ErrorDetail.fromJson(reader1));
-                        } else if ("innererror".equals(fieldName)) {
-                            innererror = InnerError.fromJson(reader);
-                        } else {
-                            reader.skipChildren();
-                        }
-                    }
-                    if (codeFound && messageFound) {
-                        ErrorDetail deserializedErrorDetail = new ErrorDetail(code, message);
-                        deserializedErrorDetail.details = details;
-                        deserializedErrorDetail.innererror = innererror;
+                if ("code".equals(fieldName)) {
+                    code = reader.getString();
+                    codeFound = true;
+                } else if ("message".equals(fieldName)) {
+                    message = reader.getString();
+                    messageFound = true;
+                } else if ("details".equals(fieldName)) {
+                    details = reader.readArray(reader1 -> ErrorDetail.fromJson(reader1));
+                } else if ("innererror".equals(fieldName)) {
+                    innererror = InnerError.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (codeFound && messageFound) {
+                ErrorDetail deserializedErrorDetail = new ErrorDetail(code, message);
+                deserializedErrorDetail.details = details;
+                deserializedErrorDetail.innererror = innererror;
 
-                        return deserializedErrorDetail;
-                    }
-                    List<String> missingProperties = new ArrayList<>();
-                    if (!codeFound) {
-                        missingProperties.add("code");
-                    }
-                    if (!messageFound) {
-                        missingProperties.add("message");
-                    }
+                return deserializedErrorDetail;
+            }
+            List<String> missingProperties = new ArrayList<>();
+            if (!codeFound) {
+                missingProperties.add("code");
+            }
+            if (!messageFound) {
+                missingProperties.add("message");
+            }
 
-                    throw new IllegalStateException(
-                            "Missing required property/properties: " + String.join(", ", missingProperties));
-                });
+            throw new IllegalStateException(
+                "Missing required property/properties: " + String.join(", ", missingProperties));
+        });
     }
 }

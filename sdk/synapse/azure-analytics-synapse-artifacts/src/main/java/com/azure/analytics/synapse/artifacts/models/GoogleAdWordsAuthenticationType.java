@@ -4,8 +4,8 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
 /**
@@ -13,36 +13,45 @@ import java.util.Collection;
  * IR.
  */
 public final class GoogleAdWordsAuthenticationType extends ExpandableStringEnum<GoogleAdWordsAuthenticationType> {
-    /** Static value ServiceAuthentication for GoogleAdWordsAuthenticationType. */
+    /**
+     * Static value ServiceAuthentication for GoogleAdWordsAuthenticationType.
+     */
+    @Generated
     public static final GoogleAdWordsAuthenticationType SERVICE_AUTHENTICATION = fromString("ServiceAuthentication");
 
-    /** Static value UserAuthentication for GoogleAdWordsAuthenticationType. */
+    /**
+     * Static value UserAuthentication for GoogleAdWordsAuthenticationType.
+     */
+    @Generated
     public static final GoogleAdWordsAuthenticationType USER_AUTHENTICATION = fromString("UserAuthentication");
 
     /**
      * Creates a new instance of GoogleAdWordsAuthenticationType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public GoogleAdWordsAuthenticationType() {}
+    public GoogleAdWordsAuthenticationType() {
+    }
 
     /**
      * Creates or finds a GoogleAdWordsAuthenticationType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding GoogleAdWordsAuthenticationType.
      */
-    @JsonCreator
+    @Generated
     public static GoogleAdWordsAuthenticationType fromString(String name) {
         return fromString(name, GoogleAdWordsAuthenticationType.class);
     }
 
     /**
      * Gets known GoogleAdWordsAuthenticationType values.
-     *
+     * 
      * @return known GoogleAdWordsAuthenticationType values.
      */
+    @Generated
     public static Collection<GoogleAdWordsAuthenticationType> values() {
         return values(GoogleAdWordsAuthenticationType.class);
     }

@@ -1,9 +1,17 @@
+> [!WARNING]  
+> [Spring Cloud Azure 4.20.0](https://github.com/Azure/azure-sdk-for-java/tree/spring-cloud-azure_4.20.0) is the final release in the 4.x series. We will continue to provide support for this version until June 2025. After June 2025 we will stop all support for Spring Cloud Azure 4.x
+
+
+> [!NOTE]  
+> Spring Cloud Azure 5.x is fully aligned with Spring Boot 3.x, version 6.x supports Spring Boot 3.5.x, and version 7.x is designed for Spring Boot 4. To take advantage of the latest features, performance improvements, and security updates, we strongly recommend upgrading. For more information, please refer to [Which Version of Spring Cloud Azure Should I Use](https://github.com/Azure/azure-sdk-for-java/wiki/Spring-Versions-Mapping#which-version-of-spring-cloud-azure-should-i-use).
+
 # Spring Cloud Azure
 
 Spring Cloud Azure offers a convenient way to interact with **Azure** provided services using well-known Spring idioms and APIs for Spring developers. 
 
  - [Reference doc](https://aka.ms/spring/docs).
  - [Migration guide for 4.0](https://aka.ms/spring/docs#migration-guide-for-4-0).
+ - [Spring Boot Support Status](https://aka.ms/spring/versions)
 
 ## Build from Source
 
@@ -54,7 +62,7 @@ mvn clean install `
 
 ## Modules
 
-There're several modules in Spring Cloud Azure. Here is a quick review:
+There are several modules in Spring Cloud Azure. Here is a quick review:
 
 ### spring-cloud-azure-autoconfigure
 
@@ -64,14 +72,14 @@ This module contains the auto-configuration code for Azure services.
 
 ### spring-cloud-azure-starters
 
-Spring Cloud Azure Starters are a set of convenient dependency descriptors to include in your application. It boosts your Spring Boot application developement with Azure services. For example, if you want to get started using Spring and Azure Cosmos DB for data persistence, include the `spring-cloud-azure-starter-cosmos` dependency in your project. 
+Spring Cloud Azure Starters are a set of convenient dependency descriptors to include in your application. It boosts your Spring Boot application development with Azure services. For example, if you want to get started using Spring and Azure Cosmos DB for data persistence, include the `spring-cloud-azure-starter-cosmos` dependency in your project. 
 
 The following application starters are provided by Spring Cloud Azure under the `com.azure.spring` group:
 
 | Name                                                 | Description                                                        |
 |------------------------------------------------------|--------------------------------------------------------------------|
 | spring-cloud-azure-starter                           | Core starter, including auto-configuration support                 |
-| spring-cloud-azure-starter-active-directory          | Starter for using Azure Active Directory with Spring Security      |
+| spring-cloud-azure-starter-active-directory          | Starter for using Microsoft Entra ID with Spring Security          |
 | spring-cloud-azure-starter-active-directory-b2c      | Starter for using Azure Active Directory B2C with Spring Security  |
 | spring-cloud-azure-starter-appconfiguration          | Starter for using Azure App Configuration                          |
 | spring-cloud-azure-starter-cosmos                    | Starter for using Azure Cosmos DB                                  |
@@ -112,7 +120,7 @@ This provides auto-configuration for actuator endpoints based on the content of 
 
 Spring Integration Extension for Azure provides Spring Integration adapters for the various services provided by the [Azure SDK for Java](https://github.com/Azure/azure-sdk-for-java/). Below is a list of supported adapters:
 
-- spring-integration-azure-eventhbus
+- spring-integration-azure-eventhubs
 - spring-integration-azure-servicebus
 - spring-integration-azure-storage-queue
 
@@ -138,7 +146,7 @@ If you’re a Maven user, add our BOM to your pom.xml `<dependencyManagement>` s
         <dependency>
             <groupId>com.azure.spring</groupId>
             <artifactId>spring-cloud-azure-dependencies</artifactId>
-            <version>4.9.0</version>
+            <version>7.2.0</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -146,6 +154,77 @@ If you’re a Maven user, add our BOM to your pom.xml `<dependencyManagement>` s
 </dependencyManagement>
 ```
 [//]: # ({x-version-update-end})
+
+With Gradle, you can import the `spring-cloud-azure-dependencies` BOM in [two ways](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/).
+
+You can use the Gradle’s native BOM support by adding dependencies:
+
+```kotlin
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+  id("java")
+  id("org.springframework.boot") version "3.2.O"
+}
+
+dependencies {
+    implementation(platform(SpringBootPlugin.BOM_COORDINATES))
+    implementation(platform("com.azure.spring:spring-cloud-azure-dependencies:{version}"))
+}
+```
+
+You can also use the `io.spring.dependency-management` plugin and import the BOM in `dependencyManagement`:
+
+```kotlin
+plugins {
+    id("io.spring.dependency-management") version "1.1.0"
+}
+
+dependencyManagement {
+    imports { 
+        mavenBom("com.azure.spring:spring-cloud-azure-dependencies:{version}")
+    }
+}
+```
+
+## Spring Boot 3 Support
+
+[Spring Cloud Azure 6.1.0](https://repo1.maven.org/maven2/com/azure/spring/spring-cloud-azure-dependencies/6.1.0/) is the latest supported version of Spring Boot 3.x.
+
+#### Spring AOT and Spring native images
+
+Azure SDK JARs are signed. [Spring Boot 3 does not support today signed JARs](https://github.com/Azure/azure-sdk-for-java/issues/30320) when you run your application with [AOT mode on a JVM](https://docs.spring.io/spring-boot/docs/current/reference/html/deployment.html#deployment.efficient.aot) or you [build a native image](https://docs.spring.io/spring-boot/docs/current/reference/html/native-image.html).
+
+You can disable the JAR signature verification in the following way for GraalVM Native Build Tools:
+
+* Maven
+```xml
+<plugin>
+    <groupId>org.graalvm.buildtools</groupId>
+    <artifactId>native-maven-plugin</artifactId>
+    <configuration>
+        <buildArgs>
+            <arg>-Djava.security.properties=src/main/resources/custom.security</arg>
+        </buildArgs>
+    </configuration>
+</plugin>
+```
+
+* Gradle:
+```groovy
+graalvmNative {
+  binaries {
+    main {
+      buildArgs('-Djava.security.properties=' + file("$rootDir/custom.security").absolutePath)
+    }
+  }
+}
+```
+
+You have to create a `custom.security file` in `src/main/resources` with the following content:
+```
+jdk.jar.disabledAlgorithms=MD2, MD5, RSA, DSA
+```
 
 ## Contributing
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.microsoft.com.

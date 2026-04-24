@@ -6,77 +6,43 @@ package com.azure.resourcemanager.devtestlabs.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.devtestlabs.DevTestLabsManager;
 import com.azure.resourcemanager.devtestlabs.models.NotificationChannel;
-import java.nio.ByteBuffer;
+import com.azure.resourcemanager.devtestlabs.models.NotificationChannelEventType;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class NotificationChannelsListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"properties\":{\"webHookUrl\":\"wcjsqggjhffbxrq\",\"emailRecipient\":\"ijpeuql\",\"notificationLocale\":\"x\",\"description\":\"ztv\",\"events\":[{\"eventName\":\"Cost\"},{\"eventName\":\"AutoShutdown\"},{\"eventName\":\"AutoShutdown\"}],\"createdDate\":\"2021-06-21T22:46:32Z\",\"provisioningState\":\"wwa\",\"uniqueIdentifier\":\"cleqioulndhzyo\"},\"location\":\"ojhtollhs\",\"tags\":{\"lxpnovyoanf\":\"mytzln\"},\"id\":\"cswqa\",\"name\":\"ywv\",\"type\":\"xigvjrktpgaeuk\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"properties\":{\"webHookUrl\":\"huxiqhzlraymez\",\"emailRecipient\":\"skihmxrfd\",\"notificationLocale\":\"jrednwyysh\",\"description\":\"w\",\"events\":[],\"createdDate\":\"2021-08-02T10:16:43Z\",\"provisioningState\":\"fpwzyifrkgwltx\",\"uniqueIdentifier\":\"ipxgzdy\"},\"location\":\"msfayorpravk\",\"tags\":{\"aekqsykvwj\":\"eslabnsmjkwynq\",\"spxklu\":\"qpkevmyltjc\",\"ytzpo\":\"cclfgxannn\"},\"id\":\"ewxigpxvk\",\"name\":\"maupxvpi\",\"type\":\"dfaifyzyzeyuube\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        DevTestLabsManager manager = DevTestLabsManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureEnvironment.AZURE));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<NotificationChannel> response = manager.notificationChannels()
+            .list("ixmqrudjizcbf", "mcrunfhiucn", "fbcpaqktkrumzu", "dkyzbfvxov", 781078177, "xiuxqggvqrnhy",
+                com.azure.core.util.Context.NONE);
 
-        DevTestLabsManager manager =
-            DevTestLabsManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<NotificationChannel> response =
-            manager
-                .notificationChannels()
-                .list(
-                    "meottawj",
-                    "osxw",
-                    "hnhjtfvpndpmi",
-                    "jpnwynudql",
-                    1502364938,
-                    "sauzpjlx",
-                    com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("msfayorpravk", response.iterator().next().location());
-        Assertions.assertEquals("eslabnsmjkwynq", response.iterator().next().tags().get("aekqsykvwj"));
-        Assertions.assertEquals("huxiqhzlraymez", response.iterator().next().webhookUrl());
-        Assertions.assertEquals("skihmxrfd", response.iterator().next().emailRecipient());
-        Assertions.assertEquals("jrednwyysh", response.iterator().next().notificationLocale());
-        Assertions.assertEquals("w", response.iterator().next().description());
+        Assertions.assertEquals("ojhtollhs", response.iterator().next().location());
+        Assertions.assertEquals("mytzln", response.iterator().next().tags().get("lxpnovyoanf"));
+        Assertions.assertEquals("wcjsqggjhffbxrq", response.iterator().next().webhookUrl());
+        Assertions.assertEquals("ijpeuql", response.iterator().next().emailRecipient());
+        Assertions.assertEquals("x", response.iterator().next().notificationLocale());
+        Assertions.assertEquals("ztv", response.iterator().next().description());
+        Assertions.assertEquals(NotificationChannelEventType.COST,
+            response.iterator().next().events().get(0).eventName());
     }
 }

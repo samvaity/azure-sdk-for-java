@@ -6,76 +6,41 @@ package com.azure.resourcemanager.devtestlabs.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.devtestlabs.DevTestLabsManager;
 import com.azure.resourcemanager.devtestlabs.models.DtlEnvironment;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class EnvironmentsListMockTests {
     @Test
     public void testList() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"properties\":{\"deploymentProperties\":{\"armTemplateId\":\"cvgllixdg\",\"parameters\":[{\"name\":\"wewqkj\",\"value\":\"prwpxsoohu\"}]},\"armTemplateDisplayName\":\"lcsklt\",\"resourceGroupId\":\"uugggzlfbgrd\",\"createdByUser\":\"ubsrtmdylperpilt\",\"provisioningState\":\"zgczfcmfpfbode\",\"uniqueIdentifier\":\"esrgvtshuvftwai\"},\"location\":\"muqkevzgjypanhx\",\"tags\":{\"kf\":\"xxzetwwzjwotnx\",\"qwec\":\"glhrfo\",\"vppqi\":\"snhpcselqx\",\"l\":\"ukklvzrlr\"},\"id\":\"cme\",\"name\":\"jsczivfqbqnasdsy\",\"type\":\"nzsieuscplh\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"properties\":{\"deploymentProperties\":{\"armTemplateId\":\"ciduwjle\",\"parameters\":[]},\"armTemplateDisplayName\":\"lh\",\"resourceGroupId\":\"xpzruzythqkk\",\"createdByUser\":\"bg\",\"provisioningState\":\"ellv\",\"uniqueIdentifier\":\"nxdmnitmujdtv\"},\"location\":\"clyymffhmjpddn\",\"tags\":{\"qrbrpvnmdyfoeboj\":\"zuvrzmzqmz\",\"laohoqkp\":\"jpp\"},\"id\":\"t\",\"name\":\"qjilaywkdcwmqsyr\",\"type\":\"lmhxdqaolfylnk\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        DevTestLabsManager manager = DevTestLabsManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureEnvironment.AZURE));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<DtlEnvironment> response = manager.environments()
+            .list("jvavdpwwo", "tdp", "titsf", "ofw", "nmhkscauwaz", 603038180, "wdfriwgybjpoz",
+                com.azure.core.util.Context.NONE);
 
-        DevTestLabsManager manager =
-            DevTestLabsManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<DtlEnvironment> response =
-            manager
-                .environments()
-                .list(
-                    "xet",
-                    "gcwvrrmdqntycna",
-                    "thvmaxgnuyeamcmh",
-                    "dfjeceho",
-                    "wcpqtwl",
-                    802323576,
-                    "sqrggvrbnyruko",
-                    com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("clyymffhmjpddn", response.iterator().next().location());
-        Assertions.assertEquals("zuvrzmzqmz", response.iterator().next().tags().get("qrbrpvnmdyfoeboj"));
-        Assertions.assertEquals("ciduwjle", response.iterator().next().deploymentProperties().armTemplateId());
-        Assertions.assertEquals("lh", response.iterator().next().armTemplateDisplayName());
+        Assertions.assertEquals("muqkevzgjypanhx", response.iterator().next().location());
+        Assertions.assertEquals("xxzetwwzjwotnx", response.iterator().next().tags().get("kf"));
+        Assertions.assertEquals("cvgllixdg", response.iterator().next().deploymentProperties().armTemplateId());
+        Assertions.assertEquals("wewqkj", response.iterator().next().deploymentProperties().parameters().get(0).name());
+        Assertions.assertEquals("prwpxsoohu",
+            response.iterator().next().deploymentProperties().parameters().get(0).value());
+        Assertions.assertEquals("lcsklt", response.iterator().next().armTemplateDisplayName());
     }
 }

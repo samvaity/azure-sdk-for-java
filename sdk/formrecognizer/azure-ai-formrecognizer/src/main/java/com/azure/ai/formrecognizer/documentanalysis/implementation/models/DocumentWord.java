@@ -4,53 +4,55 @@
 
 package com.azure.ai.formrecognizer.documentanalysis.implementation.models;
 
-import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A word object consisting of a contiguous sequence of characters. For non-space delimited languages, such as Chinese,
  * Japanese, and Korean, each character is represented as its own word.
  */
-@Immutable
-public final class DocumentWord {
+@Fluent
+public final class DocumentWord implements JsonSerializable<DocumentWord> {
     /*
      * Text content of the word.
      */
-    @JsonProperty(value = "content", required = true)
-    private String content;
+    @Generated
+    private final String content;
 
     /*
      * Bounding polygon of the word.
      */
-    @JsonProperty(value = "polygon")
+    @Generated
     private List<Float> polygon;
 
     /*
      * Location of the word in the reading order concatenated content.
      */
-    @JsonProperty(value = "span", required = true)
-    private DocumentSpan span;
+    @Generated
+    private final DocumentSpan span;
 
     /*
      * Confidence of correctly extracting the word.
      */
-    @JsonProperty(value = "confidence", required = true)
-    private float confidence;
+    @Generated
+    private final float confidence;
 
     /**
      * Creates an instance of DocumentWord class.
-     *
+     * 
      * @param content the content value to set.
      * @param span the span value to set.
      * @param confidence the confidence value to set.
      */
-    @JsonCreator
-    private DocumentWord(
-            @JsonProperty(value = "content", required = true) String content,
-            @JsonProperty(value = "span", required = true) DocumentSpan span,
-            @JsonProperty(value = "confidence", required = true) float confidence) {
+    @Generated
+    public DocumentWord(String content, DocumentSpan span, float confidence) {
         this.content = content;
         this.span = span;
         this.confidence = confidence;
@@ -58,37 +60,127 @@ public final class DocumentWord {
 
     /**
      * Get the content property: Text content of the word.
-     *
+     * 
      * @return the content value.
      */
+    @Generated
     public String getContent() {
         return this.content;
     }
 
     /**
      * Get the polygon property: Bounding polygon of the word.
-     *
+     * 
      * @return the polygon value.
      */
+    @Generated
     public List<Float> getPolygon() {
         return this.polygon;
     }
 
     /**
+     * Set the polygon property: Bounding polygon of the word.
+     * 
+     * @param polygon the polygon value to set.
+     * @return the DocumentWord object itself.
+     */
+    @Generated
+    public DocumentWord setPolygon(List<Float> polygon) {
+        this.polygon = polygon;
+        return this;
+    }
+
+    /**
      * Get the span property: Location of the word in the reading order concatenated content.
-     *
+     * 
      * @return the span value.
      */
+    @Generated
     public DocumentSpan getSpan() {
         return this.span;
     }
 
     /**
      * Get the confidence property: Confidence of correctly extracting the word.
-     *
+     * 
      * @return the confidence value.
      */
+    @Generated
     public float getConfidence() {
         return this.confidence;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("content", this.content);
+        jsonWriter.writeJsonField("span", this.span);
+        jsonWriter.writeFloatField("confidence", this.confidence);
+        jsonWriter.writeArrayField("polygon", this.polygon, (writer, element) -> writer.writeFloat(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of DocumentWord from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of DocumentWord if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the DocumentWord.
+     */
+    @Generated
+    public static DocumentWord fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            boolean contentFound = false;
+            String content = null;
+            boolean spanFound = false;
+            DocumentSpan span = null;
+            boolean confidenceFound = false;
+            float confidence = 0.0f;
+            List<Float> polygon = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("content".equals(fieldName)) {
+                    content = reader.getString();
+                    contentFound = true;
+                } else if ("span".equals(fieldName)) {
+                    span = DocumentSpan.fromJson(reader);
+                    spanFound = true;
+                } else if ("confidence".equals(fieldName)) {
+                    confidence = reader.getFloat();
+                    confidenceFound = true;
+                } else if ("polygon".equals(fieldName)) {
+                    polygon = reader.readArray(reader1 -> reader1.getFloat());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (contentFound && spanFound && confidenceFound) {
+                DocumentWord deserializedDocumentWord = new DocumentWord(content, span, confidence);
+                deserializedDocumentWord.polygon = polygon;
+
+                return deserializedDocumentWord;
+            }
+            List<String> missingProperties = new ArrayList<>();
+            if (!contentFound) {
+                missingProperties.add("content");
+            }
+            if (!spanFound) {
+                missingProperties.add("span");
+            }
+            if (!confidenceFound) {
+                missingProperties.add("confidence");
+            }
+
+            throw new IllegalStateException(
+                "Missing required property/properties: " + String.join(", ", missingProperties));
+        });
     }
 }

@@ -1,0 +1,59 @@
+trigger: none
+
+extends:
+  template: /eng/pipelines/templates/stages/1es-redirect.yml
+  parameters:
+    stages:
+      - template: /eng/pipelines/templates/stages/archetype-sdk-tests-isolated.yml
+        parameters:
+          TestName: 'Kafka_TestContainer_Integration'
+          EnvVars:
+            ACCOUNT_TENANT_ID: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+            ACCOUNT_AAD_CLIENT_ID: $(spark-databricks-cosmos-spn-clientId)
+            ACCOUNT_AAD_CLIENT_SECRET: $(spark-databricks-cosmos-spn-clientSecret)
+            COSMOS.CLIENT_TELEMETRY_ENDPOINT: $(cosmos-client-telemetry-endpoint)
+            COSMOS.CLIENT_TELEMETRY_COSMOS_ACCOUNT: $(cosmos-client-telemetry-cosmos-account)
+            COSMOS_ACR_NAME: $(kafka-mcr-name)
+          CloudConfig:
+            Public:
+              ServiceConnection: azure-sdk-tests-cosmos
+          MatrixConfigs:
+            - Name: Kafka_TestContainer_Integration_Test
+              Path: sdk/cosmos/kafka-testcontainer-matrix.json
+              Selection: all
+              GenerateVMJobs: true
+          ServiceDirectory: cosmos
+          TestResourceDirectories:
+            - cosmos/test-resources/kafka-testcontainer/
+          Artifacts:
+            - name: azure-cosmos-kafka-connect
+              groupId: com.azure.cosmos.kafka
+              safeName: azurecosmoskafkaconnect
+          TimeoutInMinutes: 120
+          TestGoals: 'clean install'
+          TestOptions: '$(ProfileFlag) $(AdditionalArgs)'
+          AdditionalVariables:
+            - name: AdditionalArgs
+              value: ''
+          PreTestRunSteps:
+            - script: |
+                if ! command -v docker &>/dev/null; then
+                  echo "Docker not found; please install Docker or ensure it's available on the agent."
+                  exit 1
+                fi
+
+                # wait for docker daemon to be ready
+                for i in {1..30}; do
+                  if docker info >/dev/null 2>&1; then
+                    echo "Docker is running"
+                    break
+                  fi
+                  echo "Waiting for Docker to start... ($i/30)"
+                  sleep 2
+                done
+
+                if ! docker info >/dev/null 2>&1; then
+                  echo "Docker failed to start"
+                  exit 1
+                fi
+              displayName: 'Ensure Docker is installed and running'

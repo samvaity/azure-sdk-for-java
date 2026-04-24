@@ -13,12 +13,22 @@ import java.util.List;
 /**
  * Fluent credential builder for instantiating a {@link VisualStudioCodeCredential}.
  *
- * <p>It's a <a href="https://github.com/Azure/azure-sdk-for-java/issues/27364">known issue</a> that this credential
- * doesn't work with <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.azure-account">Azure
- * Account extension</a> versions newer than <strong>0.9.11</strong>. A long-term fix to this problem is in progress.
- * In the meantime, consider authenticating with {@link AzureCliCredential}.</p>
+ * Enables authentication to Microsoft Entra ID using the user account signed in through the
+ * <a href="https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureresourcegroups">
+ * Azure Resources</a> extension in Visual Studio Code.
+ *
+ * <p><b>Prerequisites:</b></p>
+ * <ol>
+ *   <li>Install the
+ *     <a href="https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureresourcegroups">
+ *     Azure Resources</a> extension in Visual Studio Code and sign in using the <b>Azure: Sign In</b> command.</li>
+ *   <li>Add the
+ *     <a href="https://central.sonatype.com/artifact/com.azure/azure-identity-broker">
+ *     azure-identity-broker</a> dependency to your project's build configuration.</li>
+ * </ol>
  *
  * @see VisualStudioCodeCredential
+ *
  */
 public class VisualStudioCodeCredentialBuilder extends CredentialBuilderBase<VisualStudioCodeCredentialBuilder> {
     private static final ClientLogger LOGGER = new ClientLogger(VisualStudioCodeCredentialBuilder.class);
@@ -26,8 +36,15 @@ public class VisualStudioCodeCredentialBuilder extends CredentialBuilderBase<Vis
     private String tenantId;
 
     /**
+     * Constructs an instance of VisualStudioCodeCredentialBuilder.
+     */
+    public VisualStudioCodeCredentialBuilder() {
+        super();
+    }
+
+    /**
      * Sets the tenant id of the user to authenticate through the {@link VisualStudioCodeCredential}. The default is
-     * the tenant the user originally authenticated to via via the Visual Studio Code Azure Account plugin.
+     * the tenant the user originally authenticated to via the Visual Studio Code Azure Account plugin.
      *
      * @param tenantId the tenant ID to set.
      * @return An updated instance of this builder with the tenant id set as specified.
@@ -48,8 +65,8 @@ public class VisualStudioCodeCredentialBuilder extends CredentialBuilderBase<Vis
      * @return An updated instance of this builder with the additional tenants configured.
      */
     public VisualStudioCodeCredentialBuilder additionallyAllowedTenants(String... additionallyAllowedTenants) {
-        identityClientOptions
-            .setAdditionallyAllowedTenants(IdentityUtil.resolveAdditionalTenants(Arrays.asList(additionallyAllowedTenants)));
+        identityClientOptions.setAdditionallyAllowedTenants(
+            IdentityUtil.resolveAdditionalTenants(Arrays.asList(additionallyAllowedTenants)));
         return this;
     }
 
@@ -63,7 +80,8 @@ public class VisualStudioCodeCredentialBuilder extends CredentialBuilderBase<Vis
      * @return An updated instance of this builder with the additional tenants configured.
      */
     public VisualStudioCodeCredentialBuilder additionallyAllowedTenants(List<String> additionallyAllowedTenants) {
-        identityClientOptions.setAdditionallyAllowedTenants(IdentityUtil.resolveAdditionalTenants(additionallyAllowedTenants));
+        identityClientOptions
+            .setAdditionallyAllowedTenants(IdentityUtil.resolveAdditionalTenants(additionallyAllowedTenants));
         return this;
     }
 

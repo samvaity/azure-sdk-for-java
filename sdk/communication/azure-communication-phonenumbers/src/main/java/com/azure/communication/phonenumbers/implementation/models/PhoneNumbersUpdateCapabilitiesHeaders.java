@@ -4,53 +4,74 @@
 
 package com.azure.communication.phonenumbers.implementation.models;
 
-import com.azure.communication.phonenumbers.CodeCoverageAnnotation.Generated;
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.http.HttpHeaderName;
+import com.azure.core.http.HttpHeaders;
 
-/** The PhoneNumbersUpdateCapabilitiesHeaders model. */
+/**
+ * The PhoneNumbersUpdateCapabilitiesHeaders model.
+ */
 @Fluent
-@Generated
 public final class PhoneNumbersUpdateCapabilitiesHeaders {
     /*
      * The capabilities-id property.
      */
-    @JsonProperty(value = "capabilities-id")
+    @Generated
     private String capabilitiesId;
 
     /*
      * The operation-id property.
      */
-    @JsonProperty(value = "operation-id")
+    @Generated
     private String operationId;
 
     /*
      * The Operation-Location property.
      */
-    @JsonProperty(value = "Operation-Location")
+    @Generated
     private String operationLocation;
 
     /*
      * The Location property.
      */
-    @JsonProperty(value = "Location")
+    @Generated
     private String location;
+
+    private static final HttpHeaderName CAPABILITIES_ID = HttpHeaderName.fromString("capabilities-id");
+
+    private static final HttpHeaderName OPERATION_ID = HttpHeaderName.fromString("operation-id");
+
+    // HttpHeaders containing the raw property values.
+    /**
+     * Creates an instance of PhoneNumbersUpdateCapabilitiesHeaders class.
+     * 
+     * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
+     */
+    public PhoneNumbersUpdateCapabilitiesHeaders(HttpHeaders rawHeaders) {
+        this.capabilitiesId = rawHeaders.getValue(CAPABILITIES_ID);
+        this.operationId = rawHeaders.getValue(OPERATION_ID);
+        this.operationLocation = rawHeaders.getValue(HttpHeaderName.OPERATION_LOCATION);
+        this.location = rawHeaders.getValue(HttpHeaderName.LOCATION);
+    }
 
     /**
      * Get the capabilitiesId property: The capabilities-id property.
-     *
+     * 
      * @return the capabilitiesId value.
      */
+    @Generated
     public String getCapabilitiesId() {
         return this.capabilitiesId;
     }
 
     /**
      * Set the capabilitiesId property: The capabilities-id property.
-     *
+     * 
      * @param capabilitiesId the capabilitiesId value to set.
      * @return the PhoneNumbersUpdateCapabilitiesHeaders object itself.
      */
+    @Generated
     public PhoneNumbersUpdateCapabilitiesHeaders setCapabilitiesId(String capabilitiesId) {
         this.capabilitiesId = capabilitiesId;
         return this;
@@ -58,19 +79,21 @@ public final class PhoneNumbersUpdateCapabilitiesHeaders {
 
     /**
      * Get the operationId property: The operation-id property.
-     *
+     * 
      * @return the operationId value.
      */
+    @Generated
     public String getOperationId() {
         return this.operationId;
     }
 
     /**
      * Set the operationId property: The operation-id property.
-     *
+     * 
      * @param operationId the operationId value to set.
      * @return the PhoneNumbersUpdateCapabilitiesHeaders object itself.
      */
+    @Generated
     public PhoneNumbersUpdateCapabilitiesHeaders setOperationId(String operationId) {
         this.operationId = operationId;
         return this;
@@ -78,19 +101,21 @@ public final class PhoneNumbersUpdateCapabilitiesHeaders {
 
     /**
      * Get the operationLocation property: The Operation-Location property.
-     *
+     * 
      * @return the operationLocation value.
      */
+    @Generated
     public String getOperationLocation() {
         return this.operationLocation;
     }
 
     /**
      * Set the operationLocation property: The Operation-Location property.
-     *
+     * 
      * @param operationLocation the operationLocation value to set.
      * @return the PhoneNumbersUpdateCapabilitiesHeaders object itself.
      */
+    @Generated
     public PhoneNumbersUpdateCapabilitiesHeaders setOperationLocation(String operationLocation) {
         this.operationLocation = operationLocation;
         return this;
@@ -98,19 +123,21 @@ public final class PhoneNumbersUpdateCapabilitiesHeaders {
 
     /**
      * Get the location property: The Location property.
-     *
+     * 
      * @return the location value.
      */
+    @Generated
     public String getLocation() {
         return this.location;
     }
 
     /**
      * Set the location property: The Location property.
-     *
+     * 
      * @param location the location value to set.
      * @return the PhoneNumbersUpdateCapabilitiesHeaders object itself.
      */
+    @Generated
     public PhoneNumbersUpdateCapabilitiesHeaders setLocation(String location) {
         this.location = location;
         return this;

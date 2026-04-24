@@ -10,7 +10,9 @@ import com.azure.cosmos.CosmosAsyncClient;
 import com.azure.cosmos.CosmosAsyncClientEncryptionKey;
 import com.azure.cosmos.CosmosAsyncContainer;
 import com.azure.cosmos.CosmosAsyncDatabase;
+import com.azure.cosmos.CosmosBridgeInternal;
 import com.azure.cosmos.CosmosException;
+import com.azure.cosmos.CosmosItemSerializer;
 import com.azure.cosmos.encryption.implementation.Constants;
 import com.azure.cosmos.encryption.implementation.EncryptionImplementationBridgeHelpers;
 import com.azure.cosmos.encryption.implementation.keyprovider.EncryptionKeyStoreProviderImpl;
@@ -46,6 +48,8 @@ public final class CosmosEncryptionAsyncClient implements Closeable {
     private final EncryptionKeyStoreProviderImpl encryptionKeyStoreProviderImpl;
     private final static ImplementationBridgeHelpers.CosmosAsyncClientEncryptionKeyHelper.CosmosAsyncClientEncryptionKeyAccessor cosmosAsyncClientEncryptionKeyAccessor = ImplementationBridgeHelpers.CosmosAsyncClientEncryptionKeyHelper.getCosmosAsyncClientEncryptionKeyAccessor();
 
+    private final static ImplementationBridgeHelpers.CosmosAsyncClientHelper.CosmosAsyncClientAccessor cosmosAsyncClientAccessor = ImplementationBridgeHelpers.CosmosAsyncClientHelper.getCosmosAsyncClientAccessor();
+
     CosmosEncryptionAsyncClient(CosmosAsyncClient cosmosAsyncClient,
                                 KeyEncryptionKeyResolver keyEncryptionKeyResolver,
                                 String keyEncryptionKeyResolverName) {
@@ -64,6 +68,7 @@ public final class CosmosEncryptionAsyncClient implements Closeable {
         this.containerPropertiesCacheByContainerId = new AsyncCache<>();
         this.keyEncryptionKeyResolverName = keyEncryptionKeyResolverName;
         this.encryptionKeyStoreProviderImpl = new EncryptionKeyStoreProviderImpl(keyEncryptionKeyResolver, keyEncryptionKeyResolverName);
+        this.appendEncryptionUserAgentSuffix();
     }
 
     /**
@@ -188,6 +193,16 @@ public final class CosmosEncryptionAsyncClient implements Closeable {
         return cosmosAsyncClient;
     }
 
+    private void appendEncryptionUserAgentSuffix() {
+        try {
+            CosmosBridgeInternal
+                .getAsyncDocumentClient(this.cosmosAsyncClient)
+                .appendUserAgentSuffix(Constants.USER_AGENT_SUFFIX);
+        } catch (Exception e) {
+            LOGGER.warn("Failed to append encryption SDK user agent suffix", e);
+        }
+    }
+
     /**
      * Gets a database with Encryption capabilities
      *
@@ -228,6 +243,15 @@ public final class CosmosEncryptionAsyncClient implements Closeable {
         }
 
         return cosmosContainerResponse.getProperties();
+    }
+
+    CosmosItemSerializer getEffectiveItemSerializer(
+        CosmosItemSerializer requestOptionsItemSerializer) {
+
+        return cosmosAsyncClientAccessor
+            .getEffectiveItemSerializer(
+                this.getCosmosAsyncClient(),
+                requestOptionsItemSerializer);
     }
 
     static {

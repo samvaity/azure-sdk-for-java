@@ -3,9 +3,11 @@
 
 package com.azure.cosmos.encryption.models;
 
+import com.azure.cosmos.CosmosItemSerializer;
 import com.azure.cosmos.encryption.CosmosEncryptionAsyncContainer;
 import com.azure.cosmos.encryption.implementation.Constants;
 import com.azure.cosmos.encryption.implementation.EncryptionImplementationBridgeHelpers;
+import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import com.azure.cosmos.encryption.implementation.EncryptionProcessor;
 import com.azure.cosmos.encryption.implementation.EncryptionUtils;
 import com.azure.cosmos.encryption.implementation.mdesrc.cryptography.EncryptionType;
@@ -27,9 +29,14 @@ import java.util.List;
  * Represents a SQL query with encryption parameters in the Azure Cosmos DB database service.
  */
 public final class SqlQuerySpecWithEncryption {
-    private SqlQuerySpec sqlQuerySpec;
-    private HashMap<String, SqlParameter> encryptionParamMap = new HashMap<>();
+    private final SqlQuerySpec sqlQuerySpec;
+    private final HashMap<String, SqlParameter> encryptionParamMap = new HashMap<>();
     private final EncryptionImplementationBridgeHelpers.CosmosEncryptionAsyncContainerHelper.CosmosEncryptionAsyncContainerAccessor cosmosEncryptionAsyncContainerAccessor = EncryptionImplementationBridgeHelpers.CosmosEncryptionAsyncContainerHelper.getCosmosEncryptionAsyncContainerAccessor();
+
+    private static CosmosItemSerializer internalDefaultSerializer() {
+        return ImplementationBridgeHelpers.CosmosItemSerializerHelper
+            .getCosmosItemSerializerAccessor().getInternalDefaultSerializer();
+    }
 
     /**
      * Creates a new instance of SQL query spec with encryption.
@@ -83,9 +90,11 @@ public final class SqlQuerySpecWithEncryption {
                                     }
                                 }
                                 byte[] valueByte =
-                                    EncryptionUtils.serializeJsonToByteArray(EncryptionUtils.getSimpleObjectMapper(),
+                                    EncryptionUtils.serializeJsonToByteArray(
+                                        internalDefaultSerializer(),
                                         sqlParameter.getValue(Object.class));
-                                JsonNode itemJObj = Utils.parse(valueByte, JsonNode.class);
+                                JsonNode itemJObj = Utils.parse(
+                                    valueByte, JsonNode.class, internalDefaultSerializer());
                                 Pair<EncryptionProcessor.TypeMarker, byte[]> typeMarkerPair =
                                     EncryptionProcessor.toByteArray(itemJObj);
                                 byte[] cipherText =

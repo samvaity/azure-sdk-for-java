@@ -11,13 +11,35 @@ import com.azure.core.exception.ResourceModifiedException;
 import com.azure.core.exception.ResourceNotFoundException;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.PagedFlux;
+import com.azure.core.http.rest.PagedResponse;
+import com.azure.core.http.rest.PagedResponseBase;
 import com.azure.core.http.rest.Response;
+import com.azure.core.http.rest.SimpleResponse;
+import com.azure.core.util.BinaryData;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.polling.LongRunningOperationStatus;
+import com.azure.core.util.polling.PollResponse;
 import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.PollingContext;
 import com.azure.security.keyvault.keys.cryptography.CryptographyAsyncClient;
 import com.azure.security.keyvault.keys.cryptography.CryptographyClientBuilder;
 import com.azure.security.keyvault.keys.implementation.KeyClientImpl;
+import com.azure.security.keyvault.keys.implementation.KeyVaultKeysUtils;
+import com.azure.security.keyvault.keys.implementation.models.BackupKeyResult;
+import com.azure.security.keyvault.keys.implementation.models.DeletedKeyBundle;
+import com.azure.security.keyvault.keys.implementation.models.DeletedKeyItem;
+import com.azure.security.keyvault.keys.implementation.models.GetRandomBytesRequest;
+import com.azure.security.keyvault.keys.implementation.models.KeyBundle;
+import com.azure.security.keyvault.keys.implementation.models.KeyCreateParameters;
+import com.azure.security.keyvault.keys.implementation.models.KeyImportParameters;
+import com.azure.security.keyvault.keys.implementation.models.KeyItem;
+import com.azure.security.keyvault.keys.implementation.models.KeyReleaseParameters;
+import com.azure.security.keyvault.keys.implementation.models.KeyRestoreParameters;
+import com.azure.security.keyvault.keys.implementation.models.KeyUpdateParameters;
+import com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils;
+import com.azure.security.keyvault.keys.implementation.models.RandomBytes;
 import com.azure.security.keyvault.keys.models.CreateEcKeyOptions;
 import com.azure.security.keyvault.keys.models.CreateKeyOptions;
 import com.azure.security.keyvault.keys.models.CreateOctKeyOptions;
@@ -26,6 +48,7 @@ import com.azure.security.keyvault.keys.models.DeletedKey;
 import com.azure.security.keyvault.keys.models.ImportKeyOptions;
 import com.azure.security.keyvault.keys.models.JsonWebKey;
 import com.azure.security.keyvault.keys.models.KeyCurveName;
+import com.azure.security.keyvault.keys.models.KeyExportEncryptionAlgorithm;
 import com.azure.security.keyvault.keys.models.KeyOperation;
 import com.azure.security.keyvault.keys.models.KeyProperties;
 import com.azure.security.keyvault.keys.models.KeyRotationPolicy;
@@ -36,18 +59,49 @@ import com.azure.security.keyvault.keys.models.ReleaseKeyResult;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.HttpURLConnection;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import static com.azure.core.util.FluxUtil.monoError;
 import static com.azure.core.util.FluxUtil.withContext;
+import static com.azure.security.keyvault.keys.implementation.KeyVaultKeysUtils.EMPTY_OPTIONS;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.createDeletedKey;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.createKeyAttributes;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.createKeyVaultKey;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.mapJsonWebKey;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.mapKeyReleasePolicy;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.mapKeyRotationPolicy;
+import static com.azure.security.keyvault.keys.implementation.models.KeyVaultKeysModelsUtils.mapKeyRotationPolicyImpl;
 
 /**
  * The {@link KeyAsyncClient} provides asynchronous methods to manage {@link KeyVaultKey keys} in the Azure Key Vault.
  * The client supports creating, retrieving, updating, deleting, purging, backing up, restoring, listing, releasing
  * and rotating the {@link KeyVaultKey keys}. The client also supports listing {@link DeletedKey deleted keys} for a
- * soft-delete enabled Azure Key Vault.
+ * soft-delete enabled key vault.
  *
- * <p><strong>Samples to construct the async client</strong></p>
+ * <h2>Getting Started</h2>
+ *
+ * <p>In order to interact with the Azure Key Vault service, you will need to create an instance of the
+ * {@link KeyAsyncClient} class, a vault url and a credential object.</p>
+ *
+ * <p>The examples shown in this document use a credential object named DefaultAzureCredential for authentication,
+ * which is appropriate for most scenarios, including local development and production environments. Additionally,
+ * we recommend using a
+ * <a href="https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/">
+ * managed identity</a> for authentication in production environments.
+ * You can find more information on different ways of authenticating and their corresponding credential types in the
+ * <a href="https://learn.microsoft.com/java/api/overview/azure/identity-readme?view=azure-java-stable">
+ * Azure Identity documentation"</a>.</p>
+ *
+ * <p><strong>Sample: Construct Asynchronous Key Client</strong></p>
+ *
+ * <p>The following code sample demonstrates the creation of a {@link KeyAsyncClient}, using the
+ * {@link KeyClientBuilder} to configure it.</p>
+ *
  * <!-- src_embed com.azure.security.keyvault.keys.KeyAsyncClient.instantiation -->
  * <pre>
  * KeyAsyncClient keyAsyncClient = new KeyClientBuilder&#40;&#41;
@@ -57,22 +111,101 @@ import static com.azure.core.util.FluxUtil.withContext;
  * </pre>
  * <!-- end com.azure.security.keyvault.keys.KeyAsyncClient.instantiation -->
  *
+ * <br>
+ *
+ * <hr>
+ *
+ * <h2>Create a Cryptographic Key</h2>
+ * The {@link KeyAsyncClient} can be used to create a key in the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to asynchronously create a cryptographic key in the key vault,
+ * using the {@link KeyAsyncClient#createKey(String, KeyType)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.keys.KeyAsyncClient.createKey#String-KeyType -->
+ * <pre>
+ * keyAsyncClient.createKey&#40;&quot;keyName&quot;, KeyType.EC&#41;
+ *     .contextWrite&#40;Context.of&#40;&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;&#41;&#41;
+ *     .subscribe&#40;key -&gt;
+ *         System.out.printf&#40;&quot;Created key with name: %s and id: %s %n&quot;, key.getName&#40;&#41;,
+ *             key.getId&#40;&#41;&#41;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.keys.KeyAsyncClient.createKey#String-KeyType -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link KeyClient}.</p>
+ *
+ * <br>
+ *
+ * <hr>
+ *
+ * <h2>Get a Cryptographic Key</h2>
+ * The {@link KeyAsyncClient} can be used to retrieve a key from the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to asynchronously retrieve a key from the key vault, using
+ * the {@link KeyAsyncClient#getKey(String)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.keys.KeyAsyncClient.getKey#String -->
+ * <pre>
+ * keyAsyncClient.getKey&#40;&quot;keyName&quot;&#41;
+ *     .contextWrite&#40;Context.of&#40;&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;&#41;&#41;
+ *     .subscribe&#40;key -&gt;
+ *         System.out.printf&#40;&quot;Created key with name: %s and: id %s%n&quot;, key.getName&#40;&#41;,
+ *             key.getId&#40;&#41;&#41;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.keys.KeyAsyncClient.getKey#String -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link KeyClient}.</p>
+ *
+ * <br>
+ *
+ * <hr>
+ *
+ * <h2>Delete a Cryptographic Key</h2>
+ * The {@link KeyAsyncClient} can be used to delete a key from the key vault.
+ *
+ * <p><strong>Code Sample:</strong></p>
+ * <p>The following code sample demonstrates how to asynchronously delete a key from the
+ * key vault, using the {@link KeyAsyncClient#beginDeleteKey(String)} API.</p>
+ *
+ * <!-- src_embed com.azure.security.keyvault.keys.KeyAsyncClient.deleteKey#String -->
+ * <pre>
+ * keyAsyncClient.beginDeleteKey&#40;&quot;keyName&quot;&#41;
+ *     .subscribe&#40;pollResponse -&gt; &#123;
+ *         System.out.printf&#40;&quot;Deletion status: %s%n&quot;, pollResponse.getStatus&#40;&#41;&#41;;
+ *         System.out.printf&#40;&quot;Key name: %s%n&quot;, pollResponse.getValue&#40;&#41;.getName&#40;&#41;&#41;;
+ *         System.out.printf&#40;&quot;Key delete date: %s%n&quot;, pollResponse.getValue&#40;&#41;.getDeletedOn&#40;&#41;&#41;;
+ *     &#125;&#41;;
+ * </pre>
+ * <!-- end com.azure.security.keyvault.keys.KeyAsyncClient.deleteKey#String -->
+ *
+ * <p><strong>Note:</strong> For the synchronous sample, refer to {@link KeyClient}.</p>
+ *
+ * @see com.azure.security.keyvault.keys
  * @see KeyClientBuilder
- * @see PagedFlux
  */
-@ServiceClient(builder = KeyClientBuilder.class, isAsync = true, serviceInterfaces = KeyClientImpl.KeyService.class)
+@ServiceClient(
+    builder = KeyClientBuilder.class,
+    isAsync = true,
+    serviceInterfaces = KeyClientImpl.KeyClientService.class)
 public final class KeyAsyncClient {
     private static final ClientLogger LOGGER = new ClientLogger(KeyAsyncClient.class);
 
     private final KeyClientImpl implClient;
+    private final String vaultUrl;
+    private final KeyServiceVersion serviceVersion;
 
     /**
      * Creates a {@link KeyAsyncClient} that uses a {@link KeyClientImpl} to service requests.
      *
      * @param implClient the impl client.
+     * @param vaultUrl the vault url.
+     * @param keyServiceVersion the service version.
      */
-    KeyAsyncClient(KeyClientImpl implClient) {
+    KeyAsyncClient(KeyClientImpl implClient, String vaultUrl, KeyServiceVersion keyServiceVersion) {
         this.implClient = implClient;
+        this.vaultUrl = vaultUrl;
+        this.serviceVersion = keyServiceVersion;
     }
 
     /**
@@ -81,7 +214,7 @@ public final class KeyAsyncClient {
      * @return The vault endpoint url
      */
     public String getVaultUrl() {
-        return implClient.getVaultUrl();
+        return vaultUrl;
     }
 
     /**
@@ -113,7 +246,7 @@ public final class KeyAsyncClient {
      * @throws IllegalArgumentException If {@code keyName} is {@code null} or empty.
      */
     public CryptographyAsyncClient getCryptographyAsyncClient(String keyName) {
-        return implClient.getCryptographyClientBuilder(keyName, null).buildAsyncClient();
+        return getCryptographyAsyncClient(keyName, null);
     }
 
     /**
@@ -128,7 +261,9 @@ public final class KeyAsyncClient {
      * @throws IllegalArgumentException If {@code keyName} is {@code null} or empty.
      */
     public CryptographyAsyncClient getCryptographyAsyncClient(String keyName, String keyVersion) {
-        return implClient.getCryptographyClientBuilder(keyName, keyVersion).buildAsyncClient();
+        return KeyVaultKeysUtils
+            .getCryptographyClientBuilder(keyName, keyVersion, vaultUrl, getHttpPipeline(), serviceVersion)
+            .buildAsyncClient();
     }
 
     /**
@@ -164,12 +299,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> createKey(String name, KeyType keyType) {
-        try {
-            return withContext(context ->
-                implClient.createKeyWithResponseAsync(name, keyType, context)).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return createKeyWithResponse(new CreateKeyOptions(name, keyType)).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -207,16 +337,37 @@ public final class KeyAsyncClient {
      * {@link KeyVaultKey created key}.
      *
      * @throws HttpResponseException If {@link CreateKeyOptions#getName()} is an empty string.
-     * @throws NullPointerException If {@code name} or {@code keyType} are {@code null}.
+     * @throws NullPointerException If {@code createKeyOptions} is null.
      * @throws ResourceModifiedException If {@code createKeyOptions} is malformed.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultKey>> createKeyWithResponse(CreateKeyOptions createKeyOptions) {
         try {
-            return withContext(context -> implClient.createKeyWithResponseAsync(createKeyOptions, context));
+            if (createKeyOptions == null) {
+                return monoError(LOGGER, new NullPointerException("'createKeyOptions' cannot be null."));
+            }
+
+            KeyCreateParameters keyCreateParameters
+                = new KeyCreateParameters(createKeyOptions.getKeyType()).setKeyOps(createKeyOptions.getKeyOperations())
+                    .setKeyAttributes(createKeyAttributes(createKeyOptions))
+                    .setTags(createKeyOptions.getTags())
+                    .setReleasePolicy(mapKeyReleasePolicy(createKeyOptions.getReleasePolicy()));
+
+            return implClient
+                .createKeyWithResponseAsync(createKeyOptions.getName(), BinaryData.fromObject(keyCreateParameters),
+                    EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, KeyAsyncClient::mapCreateKeyException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultKey(response.getValue().toObject(KeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
+    }
+
+    static HttpResponseException mapCreateKeyException(HttpResponseException e) {
+        return (e.getResponse() != null && e.getResponse().getStatusCode() == 400)
+            ? new ResourceModifiedException(e.getMessage(), e.getResponse(), e.getValue())
+            : e;
     }
 
     /**
@@ -263,11 +414,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> createKey(CreateKeyOptions createKeyOptions) {
-        try {
-            return createKeyWithResponse(createKeyOptions).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return createKeyWithResponse(createKeyOptions).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -316,11 +463,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> createRsaKey(CreateRsaKeyOptions createRsaKeyOptions) {
-        try {
-            return createRsaKeyWithResponse(createRsaKeyOptions).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return createRsaKeyWithResponse(createRsaKeyOptions).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -370,7 +513,24 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultKey>> createRsaKeyWithResponse(CreateRsaKeyOptions createRsaKeyOptions) {
         try {
-            return withContext(context -> implClient.createRsaKeyWithResponseAsync(createRsaKeyOptions, context));
+            if (createRsaKeyOptions == null) {
+                return monoError(LOGGER, new NullPointerException("'createRsaKeyOptions' cannot be null."));
+            }
+
+            KeyCreateParameters keyCreateParameters
+                = new KeyCreateParameters(createRsaKeyOptions.getKeyType()).setKeySize(createRsaKeyOptions.getKeySize())
+                    .setPublicExponent(createRsaKeyOptions.getPublicExponent())
+                    .setKeyOps(createRsaKeyOptions.getKeyOperations())
+                    .setKeyAttributes(createKeyAttributes(createRsaKeyOptions))
+                    .setTags(createRsaKeyOptions.getTags())
+                    .setReleasePolicy(mapKeyReleasePolicy(createRsaKeyOptions.getReleasePolicy()));
+
+            return implClient
+                .createKeyWithResponseAsync(createRsaKeyOptions.getName(), BinaryData.fromObject(keyCreateParameters),
+                    EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, KeyAsyncClient::mapCreateKeyException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultKey(response.getValue().toObject(KeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -422,11 +582,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> createEcKey(CreateEcKeyOptions createEcKeyOptions) {
-        try {
-            return createEcKeyWithResponse(createEcKeyOptions).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return createEcKeyWithResponse(createEcKeyOptions).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -478,7 +634,23 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultKey>> createEcKeyWithResponse(CreateEcKeyOptions createEcKeyOptions) {
         try {
-            return withContext(context -> implClient.createEcKeyWithResponseAsync(createEcKeyOptions, context));
+            if (createEcKeyOptions == null) {
+                return monoError(LOGGER, new NullPointerException("'createEcKeyOptions' cannot be null."));
+            }
+
+            KeyCreateParameters keyCreateParameters = new KeyCreateParameters(createEcKeyOptions.getKeyType())
+                .setKeyOps(createEcKeyOptions.getKeyOperations())
+                .setKeyAttributes(createKeyAttributes(createEcKeyOptions))
+                .setTags(createEcKeyOptions.getTags())
+                .setCurve(createEcKeyOptions.getCurveName())
+                .setReleasePolicy(mapKeyReleasePolicy(createEcKeyOptions.getReleasePolicy()));
+
+            return implClient
+                .createKeyWithResponseAsync(createEcKeyOptions.getName(), BinaryData.fromObject(keyCreateParameters),
+                    EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, KeyAsyncClient::mapCreateKeyException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultKey(response.getValue().toObject(KeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -526,11 +698,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> createOctKey(CreateOctKeyOptions createOctKeyOptions) {
-        try {
-            return createOctKeyWithResponse(createOctKeyOptions).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return createOctKeyWithResponse(createOctKeyOptions).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -577,7 +745,23 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultKey>> createOctKeyWithResponse(CreateOctKeyOptions createOctKeyOptions) {
         try {
-            return withContext(context -> implClient.createOctKeyWithResponseAsync(createOctKeyOptions, context));
+            if (createOctKeyOptions == null) {
+                return monoError(LOGGER, new NullPointerException("'createOctKeyOptions' cannot be null."));
+            }
+
+            KeyCreateParameters keyCreateParameters
+                = new KeyCreateParameters(createOctKeyOptions.getKeyType()).setKeySize(createOctKeyOptions.getKeySize())
+                    .setKeyOps(createOctKeyOptions.getKeyOperations())
+                    .setKeyAttributes(createKeyAttributes(createOctKeyOptions))
+                    .setTags(createOctKeyOptions.getTags())
+                    .setReleasePolicy(mapKeyReleasePolicy(createOctKeyOptions.getReleasePolicy()));
+
+            return implClient
+                .createKeyWithResponseAsync(createOctKeyOptions.getName(), BinaryData.fromObject(keyCreateParameters),
+                    EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, KeyAsyncClient::mapCreateKeyException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultKey(response.getValue().toObject(KeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -611,14 +795,8 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> importKey(String name, JsonWebKey keyMaterial) {
-        try {
-            return withContext(context ->
-                implClient.importKeyWithResponseAsync(name, keyMaterial, context)).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return importKeyWithResponse(new ImportKeyOptions(name, keyMaterial)).flatMap(FluxUtil::toMono);
     }
-
 
     /**
      * Imports an externally created {@link JsonWebKey key} and stores it in the key vault. The import key operation
@@ -657,11 +835,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> importKey(ImportKeyOptions importKeyOptions) {
-        try {
-            return importKeyWithResponse(importKeyOptions).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return importKeyWithResponse(importKeyOptions).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -704,12 +878,25 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultKey>> importKeyWithResponse(ImportKeyOptions importKeyOptions) {
         try {
-            return withContext(context -> implClient.importKeyWithResponseAsync(importKeyOptions, context));
+            if (importKeyOptions == null) {
+                return monoError(LOGGER, new RuntimeException("'importKeyOptions' cannot be null."));
+            }
+
+            KeyImportParameters keyImportParameters = new KeyImportParameters(mapJsonWebKey(importKeyOptions.getKey()))
+                .setHsm(importKeyOptions.isHardwareProtected())
+                .setKeyAttributes(createKeyAttributes(importKeyOptions))
+                .setTags(importKeyOptions.getTags())
+                .setReleasePolicy(mapKeyReleasePolicy(importKeyOptions.getReleasePolicy()));
+
+            return implClient
+                .importKeyWithResponseAsync(importKeyOptions.getName(), BinaryData.fromObject(keyImportParameters),
+                    EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultKey(response.getValue().toObject(KeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
     }
-
 
     /**
      * Gets the public part of the specified {@link KeyVaultKey key} and key version. The get key operation is
@@ -720,7 +907,7 @@ public final class KeyAsyncClient {
      * and prints out the {@link KeyVaultKey retrieved key} details when a response has been received.</p>
      * <!-- src_embed com.azure.security.keyvault.keys.KeyAsyncClient.getKey#String-String -->
      * <pre>
-     * String keyVersion = &quot;6A385B124DEF4096AF1361A85B16C204&quot;;
+     * String keyVersion = &quot;&lt;key-version&gt;&quot;;
      *
      * keyAsyncClient.getKey&#40;&quot;keyName&quot;, keyVersion&#41;
      *     .contextWrite&#40;Context.of&#40;&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;&#41;&#41;
@@ -743,11 +930,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> getKey(String name, String version) {
-        try {
-            return getKeyWithResponse(name, version).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return getKeyWithResponse(name, version).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -759,7 +942,7 @@ public final class KeyAsyncClient {
      * and prints out the {@link KeyVaultKey retrieved key} details when a response has been received.</p>
      * <!-- src_embed com.azure.security.keyvault.keys.KeyAsyncClient.getKeyWithResponse#String-String -->
      * <pre>
-     * String keyVersion = &quot;6A385B124DEF4096AF1361A85B16C204&quot;;
+     * String keyVersion = &quot;&lt;key-version&gt;&quot;;
      *
      * keyAsyncClient.getKeyWithResponse&#40;&quot;keyName&quot;, keyVersion&#41;
      *     .contextWrite&#40;Context.of&#40;&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;&#41;&#41;
@@ -784,11 +967,25 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultKey>> getKeyWithResponse(String name, String version) {
         try {
-            return withContext(context ->
-                implClient.getKeyWithResponseAsync(name, version == null ? "" : version, context));
+            return implClient.getKeyWithResponseAsync(name, version, EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, KeyAsyncClient::mapGetKeyException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultKey(response.getValue().toObject(KeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
+    }
+
+    /**
+     * Maps a {@link HttpResponseException} to an {@link HttpResponseException} for get key operations.
+     *
+     * @param e The {@link HttpResponseException} to map.
+     * @return The {@link HttpResponseException} that maps from the {@link HttpResponseException}.
+     */
+    static HttpResponseException mapGetKeyException(HttpResponseException e) {
+        return e.getResponse() != null && e.getResponse().getStatusCode() == 403
+            ? new ResourceModifiedException(e.getMessage(), e.getResponse(), e.getValue())
+            : e;
     }
 
     /**
@@ -819,11 +1016,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> getKey(String name) {
-        try {
-            return getKeyWithResponse(name, "").flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return getKeyWithResponse(name, null).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -863,16 +1056,30 @@ public final class KeyAsyncClient {
      *
      * @throws HttpResponseException If {@link KeyProperties#getName() name} or
      * {@link KeyProperties#getVersion() version} is an empty string.
-     * @throws NullPointerException If {@code key} is {@code null}.
+     * @throws NullPointerException If {@code keyProperties} is null.
      * @throws ResourceNotFoundException When a key with {@link KeyProperties#getName() name} and
      * {@link KeyProperties#getVersion() version} doesn't exist in the key vault.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultKey>> updateKeyPropertiesWithResponse(KeyProperties keyProperties,
-                                                                       KeyOperation... keyOperations) {
+        KeyOperation... keyOperations) {
+
         try {
-            return withContext(context ->
-                implClient.updateKeyPropertiesWithResponseAsync(keyProperties, context, keyOperations));
+            if (keyProperties == null) {
+                return monoError(LOGGER, new NullPointerException("'keyProperties' cannot be null."));
+            }
+
+            KeyUpdateParameters keyUpdateParameters
+                = new KeyUpdateParameters().setKeyOps(keyOperations == null ? null : Arrays.asList(keyOperations))
+                    .setKeyAttributes(createKeyAttributes(keyProperties))
+                    .setTags(keyProperties.getTags())
+                    .setReleasePolicy(mapKeyReleasePolicy(keyProperties.getReleasePolicy()));
+
+            return implClient
+                .updateKeyWithResponseAsync(keyProperties.getName(), keyProperties.getVersion(),
+                    BinaryData.fromObject(keyUpdateParameters), EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultKey(response.getValue().toObject(KeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -920,11 +1127,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> updateKeyProperties(KeyProperties keyProperties, KeyOperation... keyOperations) {
-        try {
-            return updateKeyPropertiesWithResponse(keyProperties, keyOperations).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return updateKeyPropertiesWithResponse(keyProperties, keyOperations).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -960,7 +1163,36 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<DeletedKey, Void> beginDeleteKey(String name) {
-        return implClient.beginDeleteKeyAsync(name);
+        return new PollerFlux<>(Duration.ofSeconds(1), deleteActivationOperation(name), deletePollOperation(name),
+            (context, firstResponse) -> Mono.empty(), context -> Mono.empty());
+    }
+
+    private Function<PollingContext<DeletedKey>, Mono<DeletedKey>> deleteActivationOperation(String name) {
+        return pollingContext -> implClient.deleteKeyWithResponseAsync(name, EMPTY_OPTIONS)
+            .map(response -> createDeletedKey(response.getValue().toObject(DeletedKeyBundle.class)));
+    }
+
+    private Function<PollingContext<DeletedKey>, Mono<PollResponse<DeletedKey>>> deletePollOperation(String name) {
+        return pollingContext -> implClient.getDeletedKeyWithResponseAsync(name, EMPTY_OPTIONS)
+            .map(response -> new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                createDeletedKey(response.getValue().toObject(DeletedKeyBundle.class))))
+            .onErrorResume(HttpResponseException.class, e -> {
+                if (e.getResponse() != null && e.getResponse().getStatusCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+                    return Mono.just(new PollResponse<>(LongRunningOperationStatus.IN_PROGRESS,
+                        pollingContext.getLatestResponse().getValue()));
+                } else {
+                    // This means either vault has soft-delete disabled or permission is not granted for the get deleted key
+                    // operation. In both cases deletion operation was successful when activation operation succeeded before
+                    // reaching here.
+                    return Mono.just(new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                        pollingContext.getLatestResponse().getValue()));
+                }
+            })
+            // This means either vault has soft-delete disabled or permission is not granted for the get deleted key
+            // operation. In both cases deletion operation was successful when activation operation succeeded before
+            // reaching here.
+            .onErrorReturn(new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                pollingContext.getLatestResponse().getValue()));
     }
 
     /**
@@ -988,11 +1220,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<DeletedKey> getDeletedKey(String name) {
-        try {
-            return getDeletedKeyWithResponse(name).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return getDeletedKeyWithResponse(name).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -1022,7 +1250,9 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<DeletedKey>> getDeletedKeyWithResponse(String name) {
         try {
-            return withContext(context -> implClient.getDeletedKeyWithResponseAsync(name, context));
+            return implClient.getDeletedKeyWithResponseAsync(name, EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response,
+                    createDeletedKey(response.getValue().toObject(DeletedKeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -1053,11 +1283,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Void> purgeDeletedKey(String name) {
-        try {
-            return purgeDeletedKeyWithResponse(name).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return purgeDeletedKeyWithResponse(name).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -1087,7 +1313,7 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<Void>> purgeDeletedKeyWithResponse(String name) {
         try {
-            return withContext(context -> implClient.purgeDeletedKeyWithResponseAsync(name, context));
+            return implClient.purgeDeletedKeyWithResponseAsync(name, EMPTY_OPTIONS);
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -1122,7 +1348,36 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<KeyVaultKey, Void> beginRecoverDeletedKey(String name) {
-        return implClient.beginRecoverDeletedKeyAsync(name);
+        return new PollerFlux<>(Duration.ofSeconds(1), recoverActivationOperation(name), recoverPollOperation(name),
+            (context, firstResponse) -> Mono.empty(), context -> Mono.empty());
+    }
+
+    private Function<PollingContext<KeyVaultKey>, Mono<KeyVaultKey>> recoverActivationOperation(String name) {
+        return pollingContext -> implClient.recoverDeletedKeyWithResponseAsync(name, EMPTY_OPTIONS)
+            .map(response -> KeyVaultKeysModelsUtils.createKeyVaultKey(response.getValue().toObject(KeyBundle.class)));
+    }
+
+    private Function<PollingContext<KeyVaultKey>, Mono<PollResponse<KeyVaultKey>>>
+        recoverPollOperation(String keyName) {
+
+        return pollingContext -> implClient.getKeyWithResponseAsync(keyName, null, EMPTY_OPTIONS)
+            .map(response -> new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                createKeyVaultKey(response.getValue().toObject(KeyBundle.class))))
+            .onErrorResume(HttpResponseException.class, e -> {
+                if (e.getResponse() != null && e.getResponse().getStatusCode() == 404) {
+                    return Mono.just(new PollResponse<>(LongRunningOperationStatus.IN_PROGRESS,
+                        pollingContext.getLatestResponse().getValue()));
+                } else {
+                    // This means permission is not granted for the get key operation. In both cases recovery operation
+                    // was successful when activation operation succeeded before reaching here.
+                    return Mono.just(new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                        pollingContext.getLatestResponse().getValue()));
+                }
+            })
+            // This means permission is not granted for the get deleted key operation. In both cases deletion
+            // operation was successful when activation operation succeeded before reaching here.
+            .onErrorReturn(new PollResponse<>(LongRunningOperationStatus.SUCCESSFULLY_COMPLETED,
+                pollingContext.getLatestResponse().getValue()));
     }
 
     /**
@@ -1159,11 +1414,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<byte[]> backupKey(String name) {
-        try {
-            return backupKeyWithResponse(name).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return backupKeyWithResponse(name).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -1202,7 +1453,9 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<byte[]>> backupKeyWithResponse(String name) {
         try {
-            return withContext(context -> implClient.backupKeyWithResponseAsync(name, context));
+            return implClient.backupKeyWithResponseAsync(name, EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response,
+                    response.getValue().toObject(BackupKeyResult.class).getValue()));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -1243,11 +1496,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> restoreKeyBackup(byte[] backup) {
-        try {
-            return restoreKeyBackupWithResponse(backup).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return restoreKeyBackupWithResponse(backup).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -1287,10 +1536,21 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultKey>> restoreKeyBackupWithResponse(byte[] backup) {
         try {
-            return withContext(context -> implClient.restoreKeyBackupWithResponseAsync(backup, context));
+            KeyRestoreParameters keyRestoreParameters = new KeyRestoreParameters(backup);
+
+            return implClient.restoreKeyWithResponseAsync(BinaryData.fromObject(keyRestoreParameters), EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, KeyAsyncClient::mapRestoreKeyException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultKey(response.getValue().toObject(KeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
+    }
+
+    static HttpResponseException mapRestoreKeyException(HttpResponseException e) {
+        return (e.getResponse() != null && e.getResponse().getStatusCode() == 400)
+            ? new ResourceModifiedException(e.getMessage(), e.getResponse(), e.getValue())
+            : e;
     }
 
     /**
@@ -1321,7 +1581,27 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<KeyProperties> listPropertiesOfKeys() {
-        return implClient.listPropertiesOfKeysAsync();
+        PagedFlux<BinaryData> pagedFlux = implClient.getKeysAsync(EMPTY_OPTIONS);
+
+        return PagedFlux.create(() -> (continuationTokenParam, pageSizeParam) -> {
+            Flux<PagedResponse<BinaryData>> pagedResponseFlux = (continuationTokenParam == null)
+                ? pagedFlux.byPage().take(1)
+                : pagedFlux.byPage(continuationTokenParam).take(1);
+
+            return pagedResponseFlux.map(pagedResponse -> mapPagedResponse(pagedResponse,
+                binaryData -> KeyVaultKeysModelsUtils.createKeyProperties(binaryData.toObject(KeyItem.class))));
+        });
+    }
+
+    private static <T, R> PagedResponse<R> mapPagedResponse(PagedResponse<T> page, Function<T, R> itemMapper) {
+        List<R> mappedValues = new ArrayList<>(page.getValue().size());
+
+        for (T item : page.getValue()) {
+            mappedValues.add(itemMapper.apply(item));
+        }
+
+        return new PagedResponseBase<>(page.getRequest(), page.getStatusCode(), page.getHeaders(), mappedValues,
+            page.getContinuationToken(), null);
     }
 
     /**
@@ -1346,7 +1626,16 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<DeletedKey> listDeletedKeys() {
-        return implClient.listDeletedKeysAsync();
+        PagedFlux<BinaryData> pagedFlux = implClient.getDeletedKeysAsync(EMPTY_OPTIONS);
+
+        return PagedFlux.create(() -> (continuationTokenParam, pageSizeParam) -> {
+            Flux<PagedResponse<BinaryData>> pagedResponseFlux = (continuationTokenParam == null)
+                ? pagedFlux.byPage().take(1)
+                : pagedFlux.byPage(continuationTokenParam).take(1);
+
+            return pagedResponseFlux.map(pagedResponse -> mapPagedResponse(pagedResponse,
+                binaryData -> createDeletedKey(binaryData.toObject(DeletedKeyItem.class))));
+        });
     }
 
     /**
@@ -1381,7 +1670,16 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<KeyProperties> listPropertiesOfKeyVersions(String name) {
-        return implClient.listPropertiesOfKeyVersionsAsync(name);
+        PagedFlux<BinaryData> pagedFlux = implClient.getKeyVersionsAsync(name, EMPTY_OPTIONS);
+
+        return PagedFlux.create(() -> (continuationTokenParam, pageSizeParam) -> {
+            Flux<PagedResponse<BinaryData>> pagedResponseFlux = (continuationTokenParam == null)
+                ? pagedFlux.byPage().take(1)
+                : pagedFlux.byPage(continuationTokenParam).take(1);
+
+            return pagedResponseFlux.map(pagedResponse -> mapPagedResponse(pagedResponse,
+                binaryData -> KeyVaultKeysModelsUtils.createKeyProperties(binaryData.toObject(KeyItem.class))));
+        });
     }
 
     /**
@@ -1405,12 +1703,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<byte[]> getRandomBytes(int count) {
-        try {
-            return withContext(context ->
-                implClient.getRandomBytesWithResponseAsync(count, context).flatMap(FluxUtil::toMono));
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return getRandomBytesWithResponse(count).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -1436,7 +1729,12 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<byte[]>> getRandomBytesWithResponse(int count) {
         try {
-            return withContext(context -> implClient.getRandomBytesWithResponseAsync(count, context));
+            GetRandomBytesRequest getRandomBytesRequest = new GetRandomBytesRequest(count);
+
+            return withContext(context -> implClient
+                .getRandomBytesWithResponseAsync(BinaryData.fromObject(getRandomBytesRequest), EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response,
+                    response.getValue().toObject(RandomBytes.class).getValue())));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -1470,12 +1768,8 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ReleaseKeyResult> releaseKey(String name, String targetAttestationToken) {
-        try {
-            return releaseKeyWithResponse(name, "", targetAttestationToken, new ReleaseKeyOptions())
-                .flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return releaseKeyWithResponse(name, null, targetAttestationToken, new ReleaseKeyOptions())
+            .flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -1488,7 +1782,7 @@ public final class KeyAsyncClient {
      * that contains the {@link KeyVaultKey released key} when a response has been received.</p>
      * <!-- src_embed com.azure.security.keyvault.keys.KeyAsyncClient.releaseKey#String-String-String -->
      * <pre>
-     * String myKeyVersion = &quot;6A385B124DEF4096AF1361A85B16C204&quot;;
+     * String myKeyVersion = &quot;&lt;key-version&gt;&quot;;
      * String myTargetAttestationToken = &quot;someAttestationToken&quot;;
      *
      * keyAsyncClient.releaseKey&#40;&quot;keyName&quot;, myKeyVersion, myTargetAttestationToken&#41;
@@ -1509,12 +1803,8 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ReleaseKeyResult> releaseKey(String name, String version, String targetAttestationToken) {
-        try {
-            return releaseKeyWithResponse(name, version, targetAttestationToken, new ReleaseKeyOptions())
-                .flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return releaseKeyWithResponse(name, version, targetAttestationToken, new ReleaseKeyOptions())
+            .flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -1528,7 +1818,7 @@ public final class KeyAsyncClient {
      * when a response has been received.</p>
      * <!-- src_embed com.azure.security.keyvault.keys.KeyAsyncClient.releaseKeyWithResponse#String-String-String-ReleaseKeyOptions -->
      * <pre>
-     * String releaseKeyVersion = &quot;6A385B124DEF4096AF1361A85B16C204&quot;;
+     * String releaseKeyVersion = &quot;&lt;key-version&gt;&quot;;
      * String someTargetAttestationToken = &quot;someAttestationToken&quot;;
      * ReleaseKeyOptions releaseKeyOptions = new ReleaseKeyOptions&#40;&#41;
      *     .setAlgorithm&#40;KeyExportEncryptionAlgorithm.RSA_AES_KEY_WRAP_256&#41;
@@ -1557,12 +1847,25 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<ReleaseKeyResult>> releaseKeyWithResponse(String name, String version,
-                                                                   String targetAttestationToken,
-                                                                   ReleaseKeyOptions releaseKeyOptions) {
+        String targetAttestationToken, ReleaseKeyOptions releaseKeyOptions) {
+
         try {
-            return withContext(context ->
-                implClient.releaseKeyWithResponseAsync(name, version, targetAttestationToken, releaseKeyOptions,
-                    context));
+            if (CoreUtils.isNullOrEmpty(name) || CoreUtils.isNullOrEmpty(targetAttestationToken)) {
+                return monoError(LOGGER,
+                    new IllegalArgumentException("'name' or 'targetAttestationToken' cannot be null or empty."));
+            }
+
+            String nonce = releaseKeyOptions == null ? null : releaseKeyOptions.getNonce();
+            KeyExportEncryptionAlgorithm algorithm
+                = releaseKeyOptions == null ? null : releaseKeyOptions.getAlgorithm();
+
+            KeyReleaseParameters keyReleaseParameters
+                = new KeyReleaseParameters(targetAttestationToken).setNonce(nonce).setEnc(algorithm);
+
+            return implClient
+                .releaseWithResponseAsync(name, version, BinaryData.fromObject(keyReleaseParameters), EMPTY_OPTIONS)
+                .map(binaryData -> new SimpleResponse<>(binaryData,
+                    binaryData.getValue().toObject(ReleaseKeyResult.class)));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -1593,11 +1896,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyVaultKey> rotateKey(String name) {
-        try {
-            return rotateKeyWithResponse(name).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return rotateKeyWithResponse(name).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -1629,7 +1928,9 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyVaultKey>> rotateKeyWithResponse(String name) {
         try {
-            return withContext(context -> implClient.rotateKeyWithResponseAsync(name, context));
+            return implClient.rotateKeyWithResponseAsync(name, EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultKey(response.getValue().toObject(KeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -1660,11 +1961,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyRotationPolicy> getKeyRotationPolicy(String keyName) {
-        try {
-            return getKeyRotationPolicyWithResponse(keyName).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return getKeyRotationPolicyWithResponse(keyName).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -1696,7 +1993,9 @@ public final class KeyAsyncClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyRotationPolicy>> getKeyRotationPolicyWithResponse(String keyName) {
         try {
-            return withContext(context -> implClient.getKeyRotationPolicyWithResponseAsync(keyName, context));
+            return implClient.getKeyRotationPolicyWithResponseAsync(keyName, EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response, mapKeyRotationPolicyImpl(response.getValue()
+                    .toObject(com.azure.security.keyvault.keys.implementation.models.KeyRotationPolicy.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
@@ -1741,11 +2040,7 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<KeyRotationPolicy> updateKeyRotationPolicy(String keyName, KeyRotationPolicy keyRotationPolicy) {
-        try {
-            return updateKeyRotationPolicyWithResponse(keyName, keyRotationPolicy).flatMap(FluxUtil::toMono);
-        } catch (RuntimeException e) {
-            return monoError(LOGGER, e);
-        }
+        return updateKeyRotationPolicyWithResponse(keyName, keyRotationPolicy).flatMap(FluxUtil::toMono);
     }
 
     /**
@@ -1790,13 +2085,121 @@ public final class KeyAsyncClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<KeyRotationPolicy>> updateKeyRotationPolicyWithResponse(String keyName,
-                                                                                 KeyRotationPolicy keyRotationPolicy) {
+        KeyRotationPolicy keyRotationPolicy) {
         try {
-            return withContext(context ->
-                implClient.updateKeyRotationPolicyWithResponseAsync(keyName, keyRotationPolicy, context));
+
+            return implClient
+                .updateKeyRotationPolicyWithResponseAsync(keyName,
+                    BinaryData.fromObject(mapKeyRotationPolicy(keyRotationPolicy)), EMPTY_OPTIONS)
+                .map(response -> new SimpleResponse<>(response, mapKeyRotationPolicyImpl(response.getValue()
+                    .toObject(com.azure.security.keyvault.keys.implementation.models.KeyRotationPolicy.class))));
+        } catch (RuntimeException e) {
+            return monoError(LOGGER, e);
+        }
+    }
+
+    /**
+     * Gets the public part of the latest version of the specified {@link KeyVaultKey key}, including its attestation
+     * information. The get key operation is applicable to all {@link KeyType key types} and it requires the
+     * {@code keys/get} permission.
+     *
+     * <p><strong>Code Samples</strong></p>
+     * <p>Gets the latest version of the {@link KeyVaultKey key} in the key vault, including its attestation
+     * information. Subscribes to the call asynchronously and prints out the {@link KeyVaultKey retrieved key} details
+     * when a response has been received.</p>
+     * <!-- src_embed com.azure.security.keyvault.keys.KeyAsyncClient.getKeyAttestation#String -->
+     * <pre>
+     * keyAsyncClient.getKeyAttestation&#40;&quot;keyName&quot;&#41;
+     *     .contextWrite&#40;Context.of&#40;&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;&#41;&#41;
+     *     .subscribe&#40;key -&gt; &#123;
+     *         System.out.printf&#40;&quot;Created key with name: %s and: id %s%n&quot;, key.getName&#40;&#41;, key.getId&#40;&#41;&#41;;
+     *
+     *         KeyAttestation keyAttestationInfo = key.getProperties&#40;&#41;.getKeyAttestation&#40;&#41;;
+     *
+     *         System.out.printf&#40;&quot;Attestation information details: %n&quot;
+     *                 + &quot;Certificate PEM file: %s%n&quot;
+     *                 + &quot;Private key attestation: %s%n&quot;
+     *                 + &quot;Public key attestation: %s%n&quot;
+     *                 + &quot;Version: %s&quot;,
+     *             Base64Url.encode&#40;keyAttestationInfo.getCertificatePemFile&#40;&#41;&#41;,
+     *             Base64Url.encode&#40;keyAttestationInfo.getPrivateKeyAttestation&#40;&#41;&#41;,
+     *             Base64Url.encode&#40;keyAttestationInfo.getPublicKeyAttestation&#40;&#41;&#41;,
+     *             keyAttestationInfo.getVersion&#40;&#41;&#41;;
+     *     &#125;&#41;;
+     * </pre>
+     * <!-- end com.azure.security.keyvault.keys.KeyAsyncClient.getKeyAttestation#String -->
+     *
+     * @param name The name of the {@link KeyVaultKey key}, cannot be {@code null}.
+     *
+     * @return A {@link Mono} containing the requested {@link KeyVaultKey key}. The content of the key is {@code null}
+     * if {@code name} is {@code null} or empty.
+     *
+     * @throws HttpResponseException If a valid {@code name} and a non-null/empty {@code version} is specified.
+     * @throws ResourceNotFoundException When a {@link KeyVaultKey key} with the provided {@code name} doesn't exist in
+     * the key vault or an empty/{@code null} {@code name} and a non-null/empty {@code version} is provided.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<KeyVaultKey> getKeyAttestation(String name) {
+        return getKeyAttestationWithResponse(name, null).flatMap(FluxUtil::toMono);
+    }
+
+    /**
+     * Gets the public part of the specified {@link KeyVaultKey key} and key version, including its attestation
+     * information. The get key operation is applicable to all {@link KeyType key types} and it requires the
+     * {@code keys/get} permission.
+     *
+     * <p><strong>Code Samples</strong></p>
+     * <p>Gets the latest version of the {@link KeyVaultKey key} in the key vault, including its attestation
+     * information. Subscribes to the call asynchronously and prints out the {@link KeyVaultKey retrieved key} details
+     * when a response has been received.</p>
+     * <!-- src_embed com.azure.security.keyvault.keys.KeyAsyncClient.getKeyAttestationWithResponse#String-String -->
+     * <pre>
+     * String keyVersion = &quot;&lt;key-version&gt;&quot;;
+     *
+     * keyAsyncClient.getKeyAttestationWithResponse&#40;&quot;keyName&quot;, keyVersion&#41;
+     *     .contextWrite&#40;Context.of&#40;&quot;key1&quot;, &quot;value1&quot;, &quot;key2&quot;, &quot;value2&quot;&#41;&#41;
+     *     .subscribe&#40;getKeyResponse -&gt; &#123;
+     *         KeyVaultKey keyVaultKey = getKeyResponse.getValue&#40;&#41;;
+     *
+     *         System.out.printf&#40;&quot;Created key with name: %s and: id %s%n&quot;, getKeyResponse.getValue&#40;&#41;.getName&#40;&#41;,
+     *             getKeyResponse.getValue&#40;&#41;.getId&#40;&#41;&#41;;
+     *
+     *         KeyAttestation keyAttestationInfo = keyVaultKey.getProperties&#40;&#41;.getKeyAttestation&#40;&#41;;
+     *
+     *         System.out.printf&#40;&quot;Attestation information details: %n&quot;
+     *                 + &quot;Certificate PEM file: %s%n&quot;
+     *                 + &quot;Private key attestation: %s%n&quot;
+     *                 + &quot;Public key attestation: %s%n&quot;
+     *                 + &quot;Version: %s&quot;,
+     *             Base64Url.encode&#40;keyAttestationInfo.getCertificatePemFile&#40;&#41;&#41;,
+     *             Base64Url.encode&#40;keyAttestationInfo.getPrivateKeyAttestation&#40;&#41;&#41;,
+     *             Base64Url.encode&#40;keyAttestationInfo.getPublicKeyAttestation&#40;&#41;&#41;,
+     *             keyAttestationInfo.getVersion&#40;&#41;&#41;;
+     *     &#125;&#41;;
+     * </pre>
+     * <!-- end com.azure.security.keyvault.keys.KeyAsyncClient.getKeyAttestationWithResponse#String-String -->
+     *
+     * @param name The name of the {@link KeyVaultKey key}, cannot be {@code null}.
+     * @param version The version of the key to retrieve. If this is an empty String or null, this call is
+     * equivalent to calling {@link KeyAsyncClient#getKey(String)}, with the latest version being retrieved.
+     *
+     * @return A {@link Mono} containing a {@link Response} whose {@link Response#getValue() value} contains the
+     * requested {@link KeyVaultKey key}. The content of the key is {@code null} if both {@code name} and
+     * {@code version} are {@code null} or empty.
+     *
+     * @throws HttpResponseException If a valid {@code name} and a non-null/empty {@code version} is specified.
+     * @throws ResourceNotFoundException When a {@link KeyVaultKey key} with the provided {@code name} doesn't exist in
+     * the key vault or an empty/{@code null} {@code name} and a non-null/empty {@code version} is provided.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Mono<Response<KeyVaultKey>> getKeyAttestationWithResponse(String name, String version) {
+        try {
+            return implClient.getKeyAttestationWithResponseAsync(name, version, EMPTY_OPTIONS)
+                .onErrorMap(HttpResponseException.class, KeyAsyncClient::mapGetKeyException)
+                .map(response -> new SimpleResponse<>(response,
+                    createKeyVaultKey(response.getValue().toObject(KeyBundle.class))));
         } catch (RuntimeException e) {
             return monoError(LOGGER, e);
         }
     }
 }
-

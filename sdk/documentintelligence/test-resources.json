@@ -1,0 +1,110 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "baseName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "The base resource name."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "eastus",
+      "metadata": {
+        "description": "The location of the resource. By default, this is the same as the resource group."
+      }
+    },
+    "testApplicationOid": {
+      "type": "string",
+      "metadata": {
+        "description": "The AAD Client ID of the test application service principal."
+      }
+    },
+    "blobStorageAccount": {
+      "type": "string",
+      "defaultValue": "azuresdktrainingdatatme"
+    },
+    "trainingDataContainer": {
+      "type": "string",
+      "defaultValue": "trainingdata-v3"
+    },
+    "batchTrainingDataContainer": {
+      "type": "string",
+      "defaultValue": "trainingdata-batch"
+    },
+    "batchTrainingDataResultContainer": {
+      "type": "string",
+      "defaultValue": "trainingdata-batch-result"
+    },
+    "selectionMarkTrainingDataContainer": {
+      "type": "string",
+      "defaultValue": "selectionmark-v3"
+    },
+    "multiPageTestingDataContainer": {
+      "type": "string",
+      "defaultValue": "multipage-training-data-v3"
+    },
+    "classifierTrainingDataContainer": {
+      "type": "string",
+      "defaultValue": "training-data-classifier"
+    },
+    "cognitiveServicesEndpointSuffix": {
+      "type": "string",
+      "defaultValue": ".cognitiveservices.azure.com",
+      "metadata": {
+        "description": "Endpoint suffix for the Cognitive Services resource. Defaults to '.cognitiveservices.azure.com'"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "name": "[parameters('baseName')]",
+      "apiVersion": "2023-10-01-preview",
+      "sku": {
+        "name": "S0"
+      },
+      "kind": "FormRecognizer",
+      "location": "[parameters('location')]",
+      "properties": {
+        "customSubDomainName": "[parameters('baseName')]"
+      }
+    }
+  ],
+  "outputs": {
+    "DOCUMENTINTELLIGENCE_ENDPOINT": {
+      "type": "string",
+      "value": "[concat('https://', parameters('baseName'), parameters('cognitiveServicesEndpointSuffix'), '/')]"
+    },
+    "STORAGE_ACCOUNT_NAME": {
+      "type": "string",
+      "value": "[parameters('blobStorageAccount')]"
+    },
+    "TRAINING_DATA_CONTAINER_NAME": {
+      "type": "string",
+      "value": "[parameters('trainingDataContainer')]"
+    },
+    "SELECTION_MARK_DATA_CONTAINER_NAME": {
+      "type": "string",
+      "value": "[parameters('selectionMarkTrainingDataContainer')]"
+    },
+    "CLASSIFIER_TRAINING_DATA_CONTAINER_NAME": {
+      "type": "string",
+      "value": "[parameters('classifierTrainingDataContainer')]"
+    },
+    "BATCH_TRAINING_DATA_CONTAINER_NAME": {
+      "type": "string",
+      "value": "[parameters('batchTrainingDataContainer')]"
+    },
+    "BATCH_TRAINING_DATA_RESULT_CONTAINER_NAME": {
+      "type": "string",
+      "value": "[parameters('batchTrainingDataResultContainer')]"
+    },
+    "MULTIPAGE_TRAINING_DATA_CONTAINER_NAME": {
+      "type": "string",
+      "value": "[parameters('multiPageTestingDataContainer')]"
+    }
+  }
+}

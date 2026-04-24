@@ -5,17 +5,20 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Publisher type of the namespace topic. */
+/**
+ * Publisher type of the namespace topic.
+ */
 public final class PublisherType extends ExpandableStringEnum<PublisherType> {
-    /** Static value Custom for PublisherType. */
+    /**
+     * Static value Custom for PublisherType.
+     */
     public static final PublisherType CUSTOM = fromString("Custom");
 
     /**
      * Creates a new instance of PublisherType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -24,18 +27,17 @@ public final class PublisherType extends ExpandableStringEnum<PublisherType> {
 
     /**
      * Creates or finds a PublisherType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding PublisherType.
      */
-    @JsonCreator
     public static PublisherType fromString(String name) {
         return fromString(name, PublisherType.class);
     }
 
     /**
      * Gets known PublisherType values.
-     *
+     * 
      * @return known PublisherType values.
      */
     public static Collection<PublisherType> values() {

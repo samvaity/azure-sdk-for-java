@@ -9,9 +9,9 @@ import com.azure.storage.blob.models.BlockListType;
 import com.azure.storage.blob.models.ParallelTransferOptions;
 import com.azure.storage.blob.options.BlockBlobOutputStreamOptions;
 import com.azure.storage.blob.specialized.BlockBlobClient;
+import com.azure.storage.common.test.shared.extensions.LiveOnly;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -42,8 +42,8 @@ public class NioBlobOutputStreamTests extends BlobNioTestBase {
         fs = createFS(initializeConfigMap());
         AzurePath path = ((AzurePath) fs.getPath(getNonDefaultRootDir(fs), bc.getBlobName()));
 
-        nioStream = new NioBlobOutputStream(bc.getBlobOutputStream(new ParallelTransferOptions(BLOCK_SIZE, null, null,
-            MAX_SINGLE_UPLOAD_SIZE), null, null, null, null), path);
+        nioStream = new NioBlobOutputStream(bc.getBlobOutputStream(
+            new ParallelTransferOptions(BLOCK_SIZE, null, null, MAX_SINGLE_UPLOAD_SIZE), null, null, null, null), path);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class NioBlobOutputStreamTests extends BlobNioTestBase {
         assertEquals(-1, inputStream.read());
     }
 
-    @EnabledIf("com.azure.storage.blob.nio.BlobNioTestBase#liveOnly") // Because we upload in blocks
+    @LiveOnly // Because we upload in blocks
     @Disabled("failing in ci")
     public void writeMinError() throws IOException {
         // Create an append blob at the destination to ensure writes fail. Customers should eventually be notified via
@@ -86,7 +86,7 @@ public class NioBlobOutputStreamTests extends BlobNioTestBase {
         compareInputStreams(bc.openInputStream(), new ByteArrayInputStream(data), dataSize);
     }
 
-    @EnabledIf("com.azure.storage.blob.nio.BlobNioTestBase#liveOnly") // Because we upload in blocks
+    @LiveOnly // Because we upload in blocks
     @Disabled("failing in ci")
     public void writeArrayError() throws IOException {
         // Create an append blob at the destination to ensure writes fail. Customers should eventually be notified via
@@ -106,7 +106,7 @@ public class NioBlobOutputStreamTests extends BlobNioTestBase {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"0,100", "20,80", "20,40"})
+    @CsvSource(value = { "0,100", "20,80", "20,40" })
     public void writeOffsetLen(int offset, int len) throws IOException {
         int dataSize = 100;
         byte[] data = getRandomByteArray(dataSize);
@@ -124,7 +124,7 @@ public class NioBlobOutputStreamTests extends BlobNioTestBase {
         assertThrows(IndexOutOfBoundsException.class, () -> nioStream.write(new byte[5], -1, 6));
     }
 
-    @EnabledIf("com.azure.storage.blob.nio.BlobNioTestBase#liveOnly") // Because we upload in blocks
+    @LiveOnly // Because we upload in blocks
     @Disabled("failing in ci")
     public void writeOffsetLenNetworkError() throws IOException {
         // Create an append blob at the destination to ensure writes fail. Customers should eventually be notified via
@@ -160,7 +160,7 @@ public class NioBlobOutputStreamTests extends BlobNioTestBase {
     }
 
     // Flush should at least check the stream state
-    @EnabledIf("com.azure.storage.blob.nio.BlobNioTestBase#liveOnly") // Because we upload in blocks
+    @LiveOnly // Because we upload in blocks
     @Disabled("failing in ci")
     public void flushError() throws IOException {
         // Create an append blob at the destination to ensure writes fail. Customers should eventually be notified via

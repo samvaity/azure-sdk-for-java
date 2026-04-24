@@ -3,13 +3,14 @@
 
 package com.azure.cosmos.implementation.batch;
 
-import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
+import com.azure.cosmos.implementation.Configs;
+import com.azure.cosmos.implementation.CosmosBulkExecutionOptionsImpl;
+import com.azure.cosmos.implementation.CosmosTransactionalBulkExecutionOptionsImpl;
+import com.azure.cosmos.implementation.UUIDs;
 import com.azure.cosmos.implementation.apachecommons.lang.tuple.Pair;
-import com.azure.cosmos.models.CosmosBulkExecutionOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -20,35 +21,75 @@ public class PartitionScopeThresholds {
     private final static Logger logger = LoggerFactory.getLogger(PartitionScopeThresholds.class);
 
     private final String pkRangeId;
-    private final CosmosBulkExecutionOptions options;
     private final AtomicInteger targetMicroBatchSize;
     private final AtomicLong totalOperationCount;
     private final AtomicReference<CurrentIntervalThresholds> currentThresholds;
-    private final String identifier = UUID.randomUUID().toString();
+    private final String identifier = UUIDs.nonBlockingRandomUUID().toString();
     private final double minRetryRate;
     private final double maxRetryRate;
     private final double avgRetryRate;
+    private final int maxMicroBatchSize;
+    private final int minTargetMicroBatchSize;
 
-    public PartitionScopeThresholds(String pkRangeId, CosmosBulkExecutionOptions options) {
-        checkNotNull(pkRangeId, "expected non-null pkRangeId");
+    private static CosmosBulkExecutionOptionsImpl validateOptions(CosmosBulkExecutionOptionsImpl options) {
         checkNotNull(options, "expected non-null options");
+        return options;
+    }
+
+    private static CosmosTransactionalBulkExecutionOptionsImpl validateOptions(CosmosTransactionalBulkExecutionOptionsImpl options) {
+        checkNotNull(options, "expected non-null options");
+        return options;
+    }
+
+    public PartitionScopeThresholds(String pkRangeId, CosmosBulkExecutionOptionsImpl options) {
+        this(
+            pkRangeId,
+            validateOptions(options).getMinTargetedMicroBatchRetryRate(),
+            validateOptions(options).getMaxTargetedMicroBatchRetryRate(),
+            validateOptions(options).getInitialMicroBatchSize(),
+            validateOptions(options).getMaxMicroBatchSize(),
+            validateOptions(options).getMinTargetMicroBatchSize());
+
+    }
+
+    public PartitionScopeThresholds(String pkRangeId, CosmosTransactionalBulkExecutionOptionsImpl options) {
+        this(
+            pkRangeId,
+            validateOptions(options).getMinBatchRetryRate(),
+            validateOptions(options).getMaxBatchRetryRate(),
+            1, // for transactional batch, we start with small batch size to avoid sudden RU spike
+            validateOptions(options).getMaxOperationsConcurrency(),
+            1);
+    }
+
+    PartitionScopeThresholds(
+        String pkRangeId,
+        double minRetryRate,
+        double maxRetryRate,
+        int initialMicroBatchSize,
+        int maxMicroBatchSize,
+        int minMicroBatchSize) {
+        checkNotNull(pkRangeId, "expected non-null pkRangeId");
 
         this.pkRangeId = pkRangeId;
-        this.options = options;
-        this.targetMicroBatchSize = new AtomicInteger(
-            ImplementationBridgeHelpers.CosmosBulkExecutionOptionsHelper
-                .getCosmosBulkExecutionOptionsAccessor()
-                .getInitialMicroBatchSize(options));
         this.totalOperationCount = new AtomicLong(0);
         this.currentThresholds = new AtomicReference<>(new CurrentIntervalThresholds());
 
-        this.minRetryRate = ImplementationBridgeHelpers.CosmosBulkExecutionOptionsHelper
-            .getCosmosBulkExecutionOptionsAccessor()
-            .getMinTargetedMicroBatchRetryRate(options);
-        this.maxRetryRate = ImplementationBridgeHelpers.CosmosBulkExecutionOptionsHelper
-            .getCosmosBulkExecutionOptionsAccessor()
-            .getMaxTargetedMicroBatchRetryRate(options);
+        this.minRetryRate = minRetryRate;
+        this.maxRetryRate = maxRetryRate;
         this.avgRetryRate = ((this.maxRetryRate + this.minRetryRate)/2);
+        this.maxMicroBatchSize = Math.min(
+            maxMicroBatchSize,
+            BatchRequestResponseConstants.MAX_OPERATIONS_IN_DIRECT_MODE_BATCH_REQUEST);
+        this.minTargetMicroBatchSize = Math.max(
+            minMicroBatchSize,
+            Configs.getMinTargetBulkMicroBatchSize()
+        );
+        this.targetMicroBatchSize =
+            new AtomicInteger(
+                Math.max(
+                    Math.min(initialMicroBatchSize, this.maxMicroBatchSize),
+                    Math.min(this.minTargetMicroBatchSize,  this.maxMicroBatchSize)));
     }
 
     public String getPartitionKeyRangeId() {
@@ -106,18 +147,26 @@ public class PartitionScopeThresholds {
         int microBatchSizeBefore = this.targetMicroBatchSize.get();
         int microBatchSizeAfter = microBatchSizeBefore;
 
-        if (retryRate < this.minRetryRate && microBatchSizeBefore < BatchRequestResponseConstants.MAX_OPERATIONS_IN_DIRECT_MODE_BATCH_REQUEST) {
-            int targetedNewBatchSize = Math.min(
+        if (retryRate < this.minRetryRate && microBatchSizeBefore < maxMicroBatchSize) {
+            int targetedNewBatchSize =
                 Math.min(
-                    microBatchSizeBefore * 2,
-                    microBatchSizeBefore + (int)(BatchRequestResponseConstants.MAX_OPERATIONS_IN_DIRECT_MODE_BATCH_REQUEST * this.avgRetryRate)),
-                BatchRequestResponseConstants.MAX_OPERATIONS_IN_DIRECT_MODE_BATCH_REQUEST);
+                    Math.max(
+                        Math.min(
+                            microBatchSizeBefore * 2,
+                            microBatchSizeBefore + (int)(maxMicroBatchSize * this.avgRetryRate)),
+                        this.minTargetMicroBatchSize),
+                    this.maxMicroBatchSize);
             if (this.targetMicroBatchSize.compareAndSet(microBatchSizeBefore, targetedNewBatchSize)) {
                 microBatchSizeAfter = targetedNewBatchSize;
             }
         } else if (!onlyUpscale && retryRate > this.maxRetryRate && microBatchSizeBefore > 1) {
             double deltaRate = retryRate - this.avgRetryRate;
-            int targetedNewBatchSize = Math.max(1, (int) (microBatchSizeBefore * (1 - deltaRate)));
+            int targetedNewBatchSize =
+                Math.min(
+                    Math.max(
+                        this.minTargetMicroBatchSize,
+                        (int) (microBatchSizeBefore * (1 - deltaRate))),
+                    this.maxMicroBatchSize);
             if (this.targetMicroBatchSize.compareAndSet(microBatchSizeBefore, targetedNewBatchSize)) {
                 microBatchSizeAfter = targetedNewBatchSize;
             }
@@ -149,7 +198,15 @@ public class PartitionScopeThresholds {
         return this.targetMicroBatchSize.get();
     }
 
-    private static class CurrentIntervalThresholds {
+    public CurrentIntervalThresholds getCurrentThresholds() {
+        return this.currentThresholds.get();
+    }
+
+    public long getTotalOperationCountSnapshot() {
+        return this.totalOperationCount.longValue();
+    }
+
+    static class CurrentIntervalThresholds {
         public final AtomicLong currentOperationCount = new AtomicLong(0);
         public final AtomicLong currentRetriedOperationCount = new AtomicLong(0);
     }

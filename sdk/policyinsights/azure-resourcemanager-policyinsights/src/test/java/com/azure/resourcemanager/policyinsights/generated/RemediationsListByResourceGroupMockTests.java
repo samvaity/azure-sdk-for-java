@@ -6,72 +6,43 @@ package com.azure.resourcemanager.policyinsights.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
-import com.azure.core.util.Context;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.policyinsights.PolicyInsightsManager;
 import com.azure.resourcemanager.policyinsights.models.Remediation;
 import com.azure.resourcemanager.policyinsights.models.ResourceDiscoveryMode;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class RemediationsListByResourceGroupMockTests {
     @Test
     public void testListByResourceGroup() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"properties\":{\"policyAssignmentId\":\"tygxhqfgq\",\"policyDefinitionReferenceId\":\"yejsxtlg\",\"resourceDiscoveryMode\":\"ExistingNonCompliant\",\"provisioningState\":\"gziiucijjcea\",\"createdOn\":\"2021-04-09T05:32:43Z\",\"lastUpdatedOn\":\"2021-07-09T05:11:07Z\",\"filters\":{\"locations\":[\"va\",\"caszk\",\"xk\"],\"resourceIds\":[\"xetyvku\",\"mignohikkg\",\"ogjwpindedvabbxb\",\"medeil\"]},\"deploymentStatus\":{\"totalDeployments\":277548984,\"successfulDeployments\":356284746,\"failedDeployments\":64090530},\"statusMessage\":\"irz\",\"correlationId\":\"hvwyp\",\"resourceCount\":176885524,\"parallelDeployments\":688700290,\"failureThreshold\":{\"percentage\":95.99493}},\"id\":\"wci\",\"name\":\"djsllfr\",\"type\":\"vdmvxadqa\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"properties\":{\"policyAssignmentId\":\"moxoftpi\",\"policyDefinitionReferenceId\":\"wycz\",\"resourceDiscoveryMode\":\"ExistingNonCompliant\",\"provisioningState\":\"cpqjlihhyu\",\"createdOn\":\"2021-01-11T22:34:27Z\",\"lastUpdatedOn\":\"2021-06-19T07:14:10Z\",\"filters\":{\"locations\":[]},\"deploymentStatus\":{\"totalDeployments\":2091231398,\"successfulDeployments\":363338546,\"failedDeployments\":398621398},\"statusMessage\":\"x\",\"correlationId\":\"ucvpamrs\",\"resourceCount\":856089944,\"parallelDeployments\":2029618474,\"failureThreshold\":{\"percentage\":93.603745}},\"id\":\"sjnhn\",\"name\":\"txifqj\",\"type\":\"gxmrhublwp\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        PolicyInsightsManager manager = PolicyInsightsManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<Remediation> response
+            = manager.remediations().listByResourceGroup("lmf", 952584421, "doqey", com.azure.core.util.Context.NONE);
 
-        PolicyInsightsManager manager =
-            PolicyInsightsManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<Remediation> response =
-            manager.remediations().listByResourceGroup("rymsgaojfmw", 1144839410, "otmrfhir", Context.NONE);
-
-        Assertions.assertEquals("moxoftpi", response.iterator().next().policyAssignmentId());
-        Assertions.assertEquals("wycz", response.iterator().next().policyDefinitionReferenceId());
-        Assertions
-            .assertEquals(
-                ResourceDiscoveryMode.EXISTING_NON_COMPLIANT, response.iterator().next().resourceDiscoveryMode());
-        Assertions.assertEquals(856089944, response.iterator().next().resourceCount());
-        Assertions.assertEquals(2029618474, response.iterator().next().parallelDeployments());
-        Assertions.assertEquals(93.603745F, response.iterator().next().failureThreshold().percentage());
+        Assertions.assertEquals("tygxhqfgq", response.iterator().next().policyAssignmentId());
+        Assertions.assertEquals("yejsxtlg", response.iterator().next().policyDefinitionReferenceId());
+        Assertions.assertEquals(ResourceDiscoveryMode.EXISTING_NON_COMPLIANT,
+            response.iterator().next().resourceDiscoveryMode());
+        Assertions.assertEquals("va", response.iterator().next().filters().locations().get(0));
+        Assertions.assertEquals("xetyvku", response.iterator().next().filters().resourceIds().get(0));
+        Assertions.assertEquals(176885524, response.iterator().next().resourceCount());
+        Assertions.assertEquals(688700290, response.iterator().next().parallelDeployments());
+        Assertions.assertEquals(95.99493F, response.iterator().next().failureThreshold().percentage());
     }
 }

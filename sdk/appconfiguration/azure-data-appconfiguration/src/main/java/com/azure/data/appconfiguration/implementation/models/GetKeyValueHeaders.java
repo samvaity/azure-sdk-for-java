@@ -5,20 +5,25 @@
 package com.azure.data.appconfiguration.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 
-/** The GetKeyValueHeaders model. */
+/**
+ * The GetKeyValueHeaders model.
+ */
 @Fluent
 public final class GetKeyValueHeaders {
     /*
      * The ETag property.
      */
+    @Generated
     private String eTag;
 
     /*
      * The Sync-Token property.
      */
+    @Generated
     private String syncToken;
 
     private static final HttpHeaderName SYNC_TOKEN = HttpHeaderName.fromString("Sync-Token");
@@ -26,7 +31,7 @@ public final class GetKeyValueHeaders {
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of GetKeyValueHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public GetKeyValueHeaders(HttpHeaders rawHeaders) {
@@ -36,19 +41,21 @@ public final class GetKeyValueHeaders {
 
     /**
      * Get the eTag property: The ETag property.
-     *
+     * 
      * @return the eTag value.
      */
+    @Generated
     public String getETag() {
         return this.eTag;
     }
 
     /**
      * Set the eTag property: The ETag property.
-     *
+     * 
      * @param eTag the eTag value to set.
      * @return the GetKeyValueHeaders object itself.
      */
+    @Generated
     public GetKeyValueHeaders setETag(String eTag) {
         this.eTag = eTag;
         return this;
@@ -56,19 +63,21 @@ public final class GetKeyValueHeaders {
 
     /**
      * Get the syncToken property: The Sync-Token property.
-     *
+     * 
      * @return the syncToken value.
      */
+    @Generated
     public String getSyncToken() {
         return this.syncToken;
     }
 
     /**
      * Set the syncToken property: The Sync-Token property.
-     *
+     * 
      * @param syncToken the syncToken value to set.
      * @return the GetKeyValueHeaders object itself.
      */
+    @Generated
     public GetKeyValueHeaders setSyncToken(String syncToken) {
         this.syncToken = syncToken;
         return this;

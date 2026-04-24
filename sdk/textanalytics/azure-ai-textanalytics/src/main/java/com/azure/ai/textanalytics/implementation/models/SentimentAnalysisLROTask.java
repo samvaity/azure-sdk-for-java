@@ -5,48 +5,120 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** An object representing the task definition for a Sentiment Analysis task. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "kind")
-@JsonTypeName("SentimentAnalysis")
+/**
+ * An object representing the task definition for a Sentiment Analysis task.
+ */
 @Fluent
 public final class SentimentAnalysisLROTask extends AnalyzeTextLROTask {
     /*
+     * Enumeration of supported long-running Text Analysis tasks.
+     */
+    @Generated
+    private AnalyzeTextLROTaskKind kind = AnalyzeTextLROTaskKind.SENTIMENT_ANALYSIS;
+
+    /*
      * Supported parameters for a Sentiment Analysis task.
      */
-    @JsonProperty(value = "parameters")
+    @Generated
     private SentimentAnalysisTaskParameters parameters;
 
-    /** Creates an instance of SentimentAnalysisLROTask class. */
-    public SentimentAnalysisLROTask() {}
+    /**
+     * Creates an instance of SentimentAnalysisLROTask class.
+     */
+    @Generated
+    public SentimentAnalysisLROTask() {
+    }
+
+    /**
+     * Get the kind property: Enumeration of supported long-running Text Analysis tasks.
+     * 
+     * @return the kind value.
+     */
+    @Generated
+    @Override
+    public AnalyzeTextLROTaskKind getKind() {
+        return this.kind;
+    }
 
     /**
      * Get the parameters property: Supported parameters for a Sentiment Analysis task.
-     *
+     * 
      * @return the parameters value.
      */
+    @Generated
     public SentimentAnalysisTaskParameters getParameters() {
         return this.parameters;
     }
 
     /**
      * Set the parameters property: Supported parameters for a Sentiment Analysis task.
-     *
+     * 
      * @param parameters the parameters value to set.
      * @return the SentimentAnalysisLROTask object itself.
      */
+    @Generated
     public SentimentAnalysisLROTask setParameters(SentimentAnalysisTaskParameters parameters) {
         this.parameters = parameters;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SentimentAnalysisLROTask setTaskName(String taskName) {
         super.setTaskName(taskName);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("taskName", getTaskName());
+        jsonWriter.writeStringField("kind", this.kind == null ? null : this.kind.toString());
+        jsonWriter.writeJsonField("parameters", this.parameters);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SentimentAnalysisLROTask from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SentimentAnalysisLROTask if the JsonReader was pointing to an instance of it, or null if
+     * it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the SentimentAnalysisLROTask.
+     */
+    @Generated
+    public static SentimentAnalysisLROTask fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SentimentAnalysisLROTask deserializedSentimentAnalysisLROTask = new SentimentAnalysisLROTask();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("taskName".equals(fieldName)) {
+                    deserializedSentimentAnalysisLROTask.setTaskName(reader.getString());
+                } else if ("kind".equals(fieldName)) {
+                    deserializedSentimentAnalysisLROTask.kind = AnalyzeTextLROTaskKind.fromString(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    deserializedSentimentAnalysisLROTask.parameters = SentimentAnalysisTaskParameters.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSentimentAnalysisLROTask;
+        });
     }
 }

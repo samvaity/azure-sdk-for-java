@@ -6,11 +6,9 @@ package com.azure.resourcemanager.mobilenetwork.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.mobilenetwork.MobileNetworkManager;
 import com.azure.resourcemanager.mobilenetwork.models.Ambr;
 import com.azure.resourcemanager.mobilenetwork.models.DataNetworkConfiguration;
@@ -18,7 +16,6 @@ import com.azure.resourcemanager.mobilenetwork.models.DataNetworkResourceId;
 import com.azure.resourcemanager.mobilenetwork.models.SimPolicy;
 import com.azure.resourcemanager.mobilenetwork.models.SliceConfiguration;
 import com.azure.resourcemanager.mobilenetwork.models.SliceResourceId;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -26,151 +23,91 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class SimPoliciesCreateOrUpdateMockTests {
     @Test
     public void testCreateOrUpdate() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"properties\":{\"provisioningState\":\"Succeeded\",\"siteProvisioningState\":{\"fho\":\"Updating\",\"xwklooz\":\"Updating\",\"txvcm\":\"Deleting\"},\"ueAmbr\":{\"uplink\":\"funlcpxxvi\",\"downlink\":\"yeyng\"},\"defaultSlice\":{\"id\":\"g\"},\"rfspIndex\":770458191,\"registrationTimer\":1735235828,\"sliceConfigurations\":[{\"slice\":{\"id\":\"ygg\"},\"defaultDataNetwork\":{\"id\":\"pmcrdcuelj\"},\"dataNetworkConfigurations\":[{\"dataNetwork\":{\"id\":\"ahxm\"},\"sessionAmbr\":{\"uplink\":\"q\",\"downlink\":\"yarvsxzqbglcjk\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"yspthzod\"},\"sessionAmbr\":{\"uplink\":\"btl\",\"downlink\":\"jtgblios\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"kfmkmfdjxyxgbk\"},\"sessionAmbr\":{\"uplink\":\"qvjcteoe\",\"downlink\":\"l\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"slskkz\"},\"sessionAmbr\":{\"uplink\":\"xv\",\"downlink\":\"nzdpvoco\"},\"allowedServices\":[]}]},{\"slice\":{\"id\":\"hpcnabxzfsn\"},\"defaultDataNetwork\":{\"id\":\"gyte\"},\"dataNetworkConfigurations\":[{\"dataNetwork\":{\"id\":\"zilmhivzkww\"},\"sessionAmbr\":{\"uplink\":\"ncknrzdajlsk\",\"downlink\":\"ptjxulweuc\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"rthxqlehmcg\"},\"sessionAmbr\":{\"uplink\":\"jei\",\"downlink\":\"ue\"},\"allowedServices\":[]}]},{\"slice\":{\"id\":\"oka\"},\"defaultDataNetwork\":{\"id\":\"vfejvqnttmbqda\"},\"dataNetworkConfigurations\":[{\"dataNetwork\":{\"id\":\"fiv\"},\"sessionAmbr\":{\"uplink\":\"okpysthhzagj\",\"downlink\":\"wyy\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"lhgenuzejgvkv\"},\"sessionAmbr\":{\"uplink\":\"baqszllrzlsmmd\",\"downlink\":\"gmihzpimcqr\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"nxtminklog\"},\"sessionAmbr\":{\"uplink\":\"svtzarhzv\",\"downlink\":\"nsqktc\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"bjwzzos\"},\"sessionAmbr\":{\"uplink\":\"pkybtgl\",\"downlink\":\"kzpgaj\"},\"allowedServices\":[]}]}]},\"location\":\"jcemqbmfuvqar\",\"tags\":{\"fgtdmbvx\":\"uqrebluimmbwx\",\"budbt\":\"kraokq\"},\"id\":\"aokbavlyttaaknwf\",\"name\":\"ke\",\"type\":\"sm\"}";
 
-        String responseStr =
-            "{\"properties\":{\"provisioningState\":\"Succeeded\",\"siteProvisioningState\":{\"oiqtamtyvskn\":\"Adding\",\"wzawnvsbcfhzagxn\":\"Adding\"},\"ueAmbr\":{\"uplink\":\"hycvdimwrzre\",\"downlink\":\"zgyufutrwp\"},\"defaultSlice\":{\"id\":\"eryekzkdhmeottaw\"},\"rfspIndex\":924161676,\"registrationTimer\":1538790173,\"sliceConfigurations\":[{\"slice\":{\"id\":\"whnhjtfv\"},\"defaultDataNetwork\":{\"id\":\"n\"},\"dataNetworkConfigurations\":[{\"dataNetwork\":{\"id\":\"miljpnwynud\"},\"sessionAmbr\":{\"uplink\":\"llzsauz\",\"downlink\":\"jlxeehuxiqhz\"},\"allowedServices\":[]}]},{\"slice\":{\"id\":\"raymezx\"},\"defaultDataNetwork\":{\"id\":\"skihmxrfd\"},\"dataNetworkConfigurations\":[{\"dataNetwork\":{\"id\":\"jrednwyysh\"},\"sessionAmbr\":{\"uplink\":\"uwg\",\"downlink\":\"evuafpwzyifrk\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"wltxeqipxgzdyims\"},\"sessionAmbr\":{\"uplink\":\"ayorprav\",\"downlink\":\"jogeslabnsmjkwyn\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"xa\"},\"sessionAmbr\":{\"uplink\":\"kqsykvwjtqpke\",\"downlink\":\"myltj\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"rspxklur\"},\"sessionAmbr\":{\"uplink\":\"clf\",\"downlink\":\"xa\"},\"allowedServices\":[]}]},{\"slice\":{\"id\":\"n\"},\"defaultDataNetwork\":{\"id\":\"oytzpose\"},\"dataNetworkConfigurations\":[{\"dataNetwork\":{\"id\":\"igpxvkq\"},\"sessionAmbr\":{\"uplink\":\"aupxvpi\",\"downlink\":\"dfaifyzyzeyuube\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"ds\"},\"sessionAmbr\":{\"uplink\":\"l\",\"downlink\":\"ytoithgygvfl\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"gvdihoynkrxwetwk\"},\"sessionAmbr\":{\"uplink\":\"rcyrucpcunnu\",\"downlink\":\"dqumoenodnai\"},\"allowedServices\":[]},{\"dataNetwork\":{\"id\":\"nhq\"},\"sessionAmbr\":{\"uplink\":\"skndnelqkaadlknw\",\"downlink\":\"oanniyopetxi\"},\"allowedServices\":[]}]}]},\"location\":\"nrlyxnuc\",\"tags\":{\"dtcjbctv\":\"hblkwqpatvbq\"},\"id\":\"vuzqymt\",\"name\":\"owog\",\"type\":\"gitsqh\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        MobileNetworkManager manager = MobileNetworkManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureEnvironment.AZURE));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
-
-        MobileNetworkManager manager =
-            MobileNetworkManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        SimPolicy response =
-            manager
-                .simPolicies()
-                .define("qi")
-                .withRegion("btxjeaoqaqbzg")
-                .withExistingMobileNetwork("coqra", "wugyx")
-                .withUeAmbr(new Ambr().withUplink("xzak").withDownlink("ejkm"))
-                .withDefaultSlice(new SliceResourceId().withId("bizt"))
-                .withSliceConfigurations(
-                    Arrays
-                        .asList(
-                            new SliceConfiguration()
-                                .withSlice(new SliceResourceId().withId("ovjufycsjmlbe"))
-                                .withDefaultDataNetwork(new DataNetworkResourceId().withId("yeji"))
-                                .withDataNetworkConfigurations(
-                                    Arrays
-                                        .asList(
-                                            new DataNetworkConfiguration()
-                                                .withDataNetwork(new DataNetworkResourceId().withId("uxegthortudawlpj"))
-                                                .withSessionAmbr(
-                                                    new Ambr().withUplink("elqerpp").withDownlink("cbgqnzmnhiil"))
-                                                .withAllowedServices(Arrays.asList()),
-                                            new DataNetworkConfiguration()
-                                                .withDataNetwork(new DataNetworkResourceId().withId("alwcjgckbb"))
-                                                .withSessionAmbr(
-                                                    new Ambr().withUplink("ccgzpraoxnyu").withDownlink("fa"))
-                                                .withAllowedServices(Arrays.asList()))),
-                            new SliceConfiguration()
-                                .withSlice(new SliceResourceId().withId("sgftipwc"))
-                                .withDefaultDataNetwork(new DataNetworkResourceId().withId("byubhiqdxyurnpn"))
-                                .withDataNetworkConfigurations(
-                                    Arrays
-                                        .asList(
-                                            new DataNetworkConfiguration()
-                                                .withDataNetwork(new DataNetworkResourceId().withId("zafccnuhiigb"))
-                                                .withSessionAmbr(
-                                                    new Ambr().withUplink("lbuigv").withDownlink("vatvcrkd"))
-                                                .withAllowedServices(Arrays.asList()))),
-                            new SliceConfiguration()
-                                .withSlice(new SliceResourceId().withId("b"))
-                                .withDefaultDataNetwork(new DataNetworkResourceId().withId("bqxvhcsyhzlwxae"))
-                                .withDataNetworkConfigurations(
-                                    Arrays
-                                        .asList(
-                                            new DataNetworkConfiguration()
-                                                .withDataNetwork(new DataNetworkResourceId().withId("vurex"))
-                                                .withSessionAmbr(
-                                                    new Ambr().withUplink("ndsbdw").withDownlink("aderzmw"))
-                                                .withAllowedServices(Arrays.asList()))),
-                            new SliceConfiguration()
-                                .withSlice(new SliceResourceId().withId("t"))
-                                .withDefaultDataNetwork(new DataNetworkResourceId().withId("pag"))
-                                .withDataNetworkConfigurations(
-                                    Arrays
-                                        .asList(
-                                            new DataNetworkConfiguration()
-                                                .withDataNetwork(new DataNetworkResourceId().withId("mvmmagoaqylkjz"))
-                                                .withSessionAmbr(
-                                                    new Ambr().withUplink("jiuazjc").withDownlink("mxitpfinzcpd"))
-                                                .withAllowedServices(Arrays.asList()),
-                                            new DataNetworkConfiguration()
-                                                .withDataNetwork(new DataNetworkResourceId().withId("tkrlgjmtbd"))
-                                                .withSessionAmbr(
-                                                    new Ambr().withUplink("vcqguefzh").withDownlink("mpheqdur"))
-                                                .withAllowedServices(Arrays.asList()),
-                                            new DataNetworkConfiguration()
-                                                .withDataNetwork(new DataNetworkResourceId().withId("lyujlfyoump"))
-                                                .withSessionAmbr(
-                                                    new Ambr()
-                                                        .withUplink("kyeclcdigpta")
-                                                        .withDownlink("brzmqxucycijoclx"))
-                                                .withAllowedServices(Arrays.asList()),
-                                            new DataNetworkConfiguration()
-                                                .withDataNetwork(new DataNetworkResourceId().withId("utgjcyz"))
-                                                .withSessionAmbr(new Ambr().withUplink("zjd").withDownlink("r"))
-                                                .withAllowedServices(Arrays.asList())))))
-                .withTags(mapOf("v", "w", "e", "atbwbqam", "pkcvmwf", "liys", "pmywbormcq", "uxx"))
-                .withRfspIndex(1667946932)
-                .withRegistrationTimer(25286412)
+        SimPolicy response
+            = manager.simPolicies()
+                .define("rngl")
+                .withRegion("ajq")
+                .withExistingMobileNetwork("slojfkqidnqt", "qxjhqxcsqhtkbtnq")
+                .withUeAmbr(new Ambr().withUplink("xricctkwmuqq").withDownlink("ajxeiygle"))
+                .withDefaultSlice(new SliceResourceId().withId("rwvaexhdc"))
+                .withSliceConfigurations(Arrays
+                    .asList(
+                        new SliceConfiguration().withSlice(new SliceResourceId().withId("kbrup"))
+                            .withDefaultDataNetwork(new DataNetworkResourceId().withId("behdmljzacvume"))
+                            .withDataNetworkConfigurations(Arrays.asList(new DataNetworkConfiguration()
+                                .withDataNetwork(new DataNetworkResourceId().withId("pbibn"))
+                                .withSessionAmbr(new Ambr().withUplink("pphepifexl").withDownlink("qirccj"))
+                                .withAllowedServices(Arrays.asList()))),
+                        new SliceConfiguration().withSlice(new SliceResourceId().withId("ly"))
+                            .withDefaultDataNetwork(new DataNetworkResourceId().withId("cgxvrpj"))
+                            .withDataNetworkConfigurations(
+                                Arrays
+                                    .asList(
+                                        new DataNetworkConfiguration()
+                                            .withDataNetwork(new DataNetworkResourceId().withId("czuod"))
+                                            .withSessionAmbr(
+                                                new Ambr().withUplink("cpunettepdjx").withDownlink("eskoy"))
+                                            .withAllowedServices(Arrays.asList()),
+                                        new DataNetworkConfiguration()
+                                            .withDataNetwork(new DataNetworkResourceId().withId("uiylpc"))
+                                            .withSessionAmbr(new Ambr().withUplink("aewse").withDownlink("vesk"))
+                                            .withAllowedServices(Arrays.asList()),
+                                        new DataNetworkConfiguration()
+                                            .withDataNetwork(new DataNetworkResourceId().withId("xegqphr"))
+                                            .withSessionAmbr(new Ambr().withUplink("fn").withDownlink("hctmjtsgh"))
+                                            .withAllowedServices(Arrays.asList()))),
+                        new SliceConfiguration().withSlice(new SliceResourceId().withId("bcbcpz"))
+                            .withDefaultDataNetwork(new DataNetworkResourceId().withId("rpzeqac"))
+                            .withDataNetworkConfigurations(Arrays.asList(new DataNetworkConfiguration()
+                                .withDataNetwork(new DataNetworkResourceId().withId("dtzmpype"))
+                                .withSessionAmbr(new Ambr().withUplink("cpczshnuqnd").withDownlink("izupfkhu"))
+                                .withAllowedServices(Arrays.asList()),
+                                new DataNetworkConfiguration().withDataNetwork(new DataNetworkResourceId().withId("tu"))
+                                    .withSessionAmbr(new Ambr().withUplink("zx").withDownlink("mtvtvegwqiukvzwy"))
+                                    .withAllowedServices(Arrays.asList()),
+                                new DataNetworkConfiguration()
+                                    .withDataNetwork(new DataNetworkResourceId().withId("wtthaokgksk"))
+                                    .withSessionAmbr(new Ambr().withUplink("i").withDownlink("bs"))
+                                    .withAllowedServices(Arrays.asList())))))
+                .withTags(mapOf("dexyionofninbdb", "peexpgeumilhwuit", "cw", "s", "pcbbprtugav", "qrs", "fogdrtbfcm",
+                    "zbcyksiv"))
+                .withRfspIndex(1400683190)
+                .withRegistrationTimer(1314607825)
                 .create();
 
-        Assertions.assertEquals("nrlyxnuc", response.location());
-        Assertions.assertEquals("hblkwqpatvbq", response.tags().get("dtcjbctv"));
-        Assertions.assertEquals("hycvdimwrzre", response.ueAmbr().uplink());
-        Assertions.assertEquals("zgyufutrwp", response.ueAmbr().downlink());
-        Assertions.assertEquals("eryekzkdhmeottaw", response.defaultSlice().id());
-        Assertions.assertEquals(924161676, response.rfspIndex());
-        Assertions.assertEquals(1538790173, response.registrationTimer());
-        Assertions.assertEquals("whnhjtfv", response.sliceConfigurations().get(0).slice().id());
-        Assertions.assertEquals("n", response.sliceConfigurations().get(0).defaultDataNetwork().id());
-        Assertions
-            .assertEquals(
-                "miljpnwynud",
-                response.sliceConfigurations().get(0).dataNetworkConfigurations().get(0).dataNetwork().id());
-        Assertions
-            .assertEquals(
-                "llzsauz",
-                response.sliceConfigurations().get(0).dataNetworkConfigurations().get(0).sessionAmbr().uplink());
-        Assertions
-            .assertEquals(
-                "jlxeehuxiqhz",
-                response.sliceConfigurations().get(0).dataNetworkConfigurations().get(0).sessionAmbr().downlink());
+        Assertions.assertEquals("jcemqbmfuvqar", response.location());
+        Assertions.assertEquals("uqrebluimmbwx", response.tags().get("fgtdmbvx"));
+        Assertions.assertEquals("funlcpxxvi", response.ueAmbr().uplink());
+        Assertions.assertEquals("yeyng", response.ueAmbr().downlink());
+        Assertions.assertEquals("g", response.defaultSlice().id());
+        Assertions.assertEquals(770458191, response.rfspIndex());
+        Assertions.assertEquals(1735235828, response.registrationTimer());
+        Assertions.assertEquals("ygg", response.sliceConfigurations().get(0).slice().id());
+        Assertions.assertEquals("pmcrdcuelj", response.sliceConfigurations().get(0).defaultDataNetwork().id());
+        Assertions.assertEquals("ahxm",
+            response.sliceConfigurations().get(0).dataNetworkConfigurations().get(0).dataNetwork().id());
+        Assertions.assertEquals("q",
+            response.sliceConfigurations().get(0).dataNetworkConfigurations().get(0).sessionAmbr().uplink());
+        Assertions.assertEquals("yarvsxzqbglcjk",
+            response.sliceConfigurations().get(0).dataNetworkConfigurations().get(0).sessionAmbr().downlink());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

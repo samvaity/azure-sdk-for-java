@@ -5,48 +5,57 @@
 package com.azure.storage.file.datalake.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.core.annotation.Generated;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** The BlobHierarchyListSegment model. */
-@JacksonXmlRootElement(localName = "Blobs")
+/**
+ * The BlobHierarchyListSegment model.
+ */
 @Fluent
-@JsonDeserialize(
-        using = com.azure.storage.file.datalake.implementation.util.CustomHierarchicalListingDeserializer.class)
-public final class BlobHierarchyListSegment {
+public final class BlobHierarchyListSegment implements XmlSerializable<BlobHierarchyListSegment> {
     /*
      * The BlobPrefixes property.
      */
-    @JsonProperty("BlobPrefix")
+    @Generated
     private List<BlobPrefix> blobPrefixes = new ArrayList<>();
 
     /*
      * The BlobItems property.
      */
-    @JsonProperty("Blob")
+    @Generated
     private List<BlobItemInternal> blobItems = new ArrayList<>();
 
-    /** Creates an instance of BlobHierarchyListSegment class. */
-    public BlobHierarchyListSegment() {}
+    /**
+     * Creates an instance of BlobHierarchyListSegment class.
+     */
+    @Generated
+    public BlobHierarchyListSegment() {
+    }
 
     /**
      * Get the blobPrefixes property: The BlobPrefixes property.
-     *
+     * 
      * @return the blobPrefixes value.
      */
+    @Generated
     public List<BlobPrefix> getBlobPrefixes() {
         return this.blobPrefixes;
     }
 
     /**
      * Set the blobPrefixes property: The BlobPrefixes property.
-     *
+     * 
      * @param blobPrefixes the blobPrefixes value to set.
      * @return the BlobHierarchyListSegment object itself.
      */
+    @Generated
     public BlobHierarchyListSegment setBlobPrefixes(List<BlobPrefix> blobPrefixes) {
         this.blobPrefixes = blobPrefixes;
         return this;
@@ -54,21 +63,92 @@ public final class BlobHierarchyListSegment {
 
     /**
      * Get the blobItems property: The BlobItems property.
-     *
+     * 
      * @return the blobItems value.
      */
+    @Generated
     public List<BlobItemInternal> getBlobItems() {
         return this.blobItems;
     }
 
     /**
      * Set the blobItems property: The BlobItems property.
-     *
+     * 
      * @param blobItems the blobItems value to set.
      * @return the BlobHierarchyListSegment object itself.
      */
+    @Generated
     public BlobHierarchyListSegment setBlobItems(List<BlobItemInternal> blobItems) {
         this.blobItems = blobItems;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "Blobs" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        if (this.blobPrefixes != null) {
+            for (BlobPrefix element : this.blobPrefixes) {
+                xmlWriter.writeXml(element, "BlobPrefix");
+            }
+        }
+        if (this.blobItems != null) {
+            for (BlobItemInternal element : this.blobItems) {
+                xmlWriter.writeXml(element, "Blob");
+            }
+        }
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of BlobHierarchyListSegment from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of BlobHierarchyListSegment if the XmlReader was pointing to an instance of it, or null if it
+     * was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the BlobHierarchyListSegment.
+     */
+    @Generated
+    public static BlobHierarchyListSegment fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of BlobHierarchyListSegment from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of BlobHierarchyListSegment if the XmlReader was pointing to an instance of it, or null if it
+     * was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the BlobHierarchyListSegment.
+     */
+    @Generated
+    public static BlobHierarchyListSegment fromXml(XmlReader xmlReader, String rootElementName)
+        throws XMLStreamException {
+        String finalRootElementName = rootElementName == null || rootElementName.isEmpty() ? "Blobs" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            BlobHierarchyListSegment deserializedBlobHierarchyListSegment = new BlobHierarchyListSegment();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("BlobPrefix".equals(elementName.getLocalPart())) {
+                    deserializedBlobHierarchyListSegment.blobPrefixes.add(BlobPrefix.fromXml(reader, "BlobPrefix"));
+                } else if ("Blob".equals(elementName.getLocalPart())) {
+                    deserializedBlobHierarchyListSegment.blobItems.add(BlobItemInternal.fromXml(reader, "Blob"));
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedBlobHierarchyListSegment;
+        });
     }
 }

@@ -13,15 +13,14 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 
 public class ClassificationRulesListVersionsByClassificationRuleName {
     public static void main(String[] args) {
-        ClassificationRulesClient classificationRulesClient =
-                new PurviewScanningClientBuilder()
-                        .credential(new DefaultAzureCredentialBuilder().build())
-                        .endpoint("{Endpoint}")
-                        .buildClassificationRulesClient();
-        // BEGIN:com.azure.analytics.purview.scanning.generated.classificationruleslistversionsbyclassificationrulename.classificationruleslistversionsbyclassificationrulename
+        ClassificationRulesClient classificationRulesClient
+            = new PurviewScanningClientBuilder().credential(new DefaultAzureCredentialBuilder().build())
+                .endpoint("{Endpoint}")
+                .buildClassificationRulesClient();
+        // BEGIN:com.azure.analytics.purview.scanning.generated.classification-rules-list-versions-by-classification-rule-name.classification-rules-list-versions-by-classification-rule-name
         RequestOptions requestOptions = new RequestOptions();
-        PagedIterable<BinaryData> response =
-                classificationRulesClient.listVersionsByClassificationRuleName("ClassificationRule1", requestOptions);
-        // END:com.azure.analytics.purview.scanning.generated.classificationruleslistversionsbyclassificationrulename.classificationruleslistversionsbyclassificationrulename
+        PagedIterable<BinaryData> response
+            = classificationRulesClient.listVersionsByClassificationRuleName("ClassificationRule1", requestOptions);
+        // END:com.azure.analytics.purview.scanning.generated.classification-rules-list-versions-by-classification-rule-name.classification-rules-list-versions-by-classification-rule-name
     }
 }

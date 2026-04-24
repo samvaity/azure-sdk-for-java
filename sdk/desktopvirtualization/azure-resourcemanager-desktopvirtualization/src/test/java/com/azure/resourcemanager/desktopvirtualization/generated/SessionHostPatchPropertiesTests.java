@@ -11,25 +11,22 @@ import org.junit.jupiter.api.Assertions;
 public final class SessionHostPatchPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        SessionHostPatchProperties model =
-            BinaryData
-                .fromString("{\"allowNewSession\":false,\"assignedUser\":\"duhpk\",\"friendlyName\":\"gymare\"}")
-                .toObject(SessionHostPatchProperties.class);
-        Assertions.assertEquals(false, model.allowNewSession());
-        Assertions.assertEquals("duhpk", model.assignedUser());
-        Assertions.assertEquals("gymare", model.friendlyName());
+        SessionHostPatchProperties model = BinaryData
+            .fromString("{\"allowNewSession\":true,\"assignedUser\":\"ccbdre\",\"friendlyName\":\"hcexdrrvqa\"}")
+            .toObject(SessionHostPatchProperties.class);
+        Assertions.assertEquals(true, model.allowNewSession());
+        Assertions.assertEquals("ccbdre", model.assignedUser());
+        Assertions.assertEquals("hcexdrrvqa", model.friendlyName());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        SessionHostPatchProperties model =
-            new SessionHostPatchProperties()
-                .withAllowNewSession(false)
-                .withAssignedUser("duhpk")
-                .withFriendlyName("gymare");
+        SessionHostPatchProperties model = new SessionHostPatchProperties().withAllowNewSession(true)
+            .withAssignedUser("ccbdre")
+            .withFriendlyName("hcexdrrvqa");
         model = BinaryData.fromObject(model).toObject(SessionHostPatchProperties.class);
-        Assertions.assertEquals(false, model.allowNewSession());
-        Assertions.assertEquals("duhpk", model.assignedUser());
-        Assertions.assertEquals("gymare", model.friendlyName());
+        Assertions.assertEquals(true, model.allowNewSession());
+        Assertions.assertEquals("ccbdre", model.assignedUser());
+        Assertions.assertEquals("hcexdrrvqa", model.friendlyName());
     }
 }

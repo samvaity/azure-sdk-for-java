@@ -1,0 +1,19 @@
+{
+  "displayNames": {
+    "clean verify": ""
+  },
+  "matrix": {
+    "Agent": {
+      "ubuntu-24.04": { "OSVmImage": "env:LINUXVMIMAGE", "Pool": "env:LINUXPOOL" }
+    },
+    "EmulatorConfig": {
+      "Emulator VNext Integration Tests On Insecure Connection - Java ": {
+        "ProfileFlag": "-Pemulator-vnext",
+        "DESIRED_CONSISTENCIES": "[\"Session\"]",
+        "AdditionalArgs": "-DCOSMOS.AZURE_COSMOS_DISABLE_NON_STREAMING_ORDER_BY=true"
+      }
+    },
+    "JavaTestVersion": ["1.8", "1.17"],
+    "TestGoals": "clean verify"
+  }
+}

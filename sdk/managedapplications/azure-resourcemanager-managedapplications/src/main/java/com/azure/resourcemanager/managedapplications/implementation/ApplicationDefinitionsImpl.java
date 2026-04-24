@@ -12,6 +12,7 @@ import com.azure.core.util.logging.ClientLogger;
 import com.azure.resourcemanager.managedapplications.fluent.ApplicationDefinitionsClient;
 import com.azure.resourcemanager.managedapplications.fluent.models.ApplicationDefinitionInner;
 import com.azure.resourcemanager.managedapplications.models.ApplicationDefinition;
+import com.azure.resourcemanager.managedapplications.models.ApplicationDefinitionPatchable;
 import com.azure.resourcemanager.managedapplications.models.ApplicationDefinitions;
 
 public final class ApplicationDefinitionsImpl implements ApplicationDefinitions {
@@ -21,22 +22,18 @@ public final class ApplicationDefinitionsImpl implements ApplicationDefinitions 
 
     private final com.azure.resourcemanager.managedapplications.ApplicationManager serviceManager;
 
-    public ApplicationDefinitionsImpl(
-        ApplicationDefinitionsClient innerClient,
+    public ApplicationDefinitionsImpl(ApplicationDefinitionsClient innerClient,
         com.azure.resourcemanager.managedapplications.ApplicationManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
     }
 
-    public Response<ApplicationDefinition> getByResourceGroupWithResponse(
-        String resourceGroupName, String applicationDefinitionName, Context context) {
-        Response<ApplicationDefinitionInner> inner =
-            this.serviceClient().getByResourceGroupWithResponse(resourceGroupName, applicationDefinitionName, context);
+    public Response<ApplicationDefinition> getByResourceGroupWithResponse(String resourceGroupName,
+        String applicationDefinitionName, Context context) {
+        Response<ApplicationDefinitionInner> inner = this.serviceClient()
+            .getByResourceGroupWithResponse(resourceGroupName, applicationDefinitionName, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new ApplicationDefinitionImpl(inner.getValue(), this.manager()));
         } else {
             return null;
@@ -44,8 +41,8 @@ public final class ApplicationDefinitionsImpl implements ApplicationDefinitions 
     }
 
     public ApplicationDefinition getByResourceGroup(String resourceGroupName, String applicationDefinitionName) {
-        ApplicationDefinitionInner inner =
-            this.serviceClient().getByResourceGroup(resourceGroupName, applicationDefinitionName);
+        ApplicationDefinitionInner inner
+            = this.serviceClient().getByResourceGroup(resourceGroupName, applicationDefinitionName);
         if (inner != null) {
             return new ApplicationDefinitionImpl(inner, this.manager());
         } else {
@@ -53,34 +50,42 @@ public final class ApplicationDefinitionsImpl implements ApplicationDefinitions 
         }
     }
 
+    public Response<Void> deleteByResourceGroupWithResponse(String resourceGroupName, String applicationDefinitionName,
+        Context context) {
+        return this.serviceClient().deleteWithResponse(resourceGroupName, applicationDefinitionName, context);
+    }
+
     public void deleteByResourceGroup(String resourceGroupName, String applicationDefinitionName) {
         this.serviceClient().delete(resourceGroupName, applicationDefinitionName);
     }
 
-    public void delete(String resourceGroupName, String applicationDefinitionName, Context context) {
-        this.serviceClient().delete(resourceGroupName, applicationDefinitionName, context);
-    }
-
     public PagedIterable<ApplicationDefinition> listByResourceGroup(String resourceGroupName) {
         PagedIterable<ApplicationDefinitionInner> inner = this.serviceClient().listByResourceGroup(resourceGroupName);
-        return Utils.mapPage(inner, inner1 -> new ApplicationDefinitionImpl(inner1, this.manager()));
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new ApplicationDefinitionImpl(inner1, this.manager()));
     }
 
     public PagedIterable<ApplicationDefinition> listByResourceGroup(String resourceGroupName, Context context) {
-        PagedIterable<ApplicationDefinitionInner> inner =
-            this.serviceClient().listByResourceGroup(resourceGroupName, context);
-        return Utils.mapPage(inner, inner1 -> new ApplicationDefinitionImpl(inner1, this.manager()));
+        PagedIterable<ApplicationDefinitionInner> inner
+            = this.serviceClient().listByResourceGroup(resourceGroupName, context);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new ApplicationDefinitionImpl(inner1, this.manager()));
     }
 
-    public Response<ApplicationDefinition> getByIdWithResponse(
-        String resourceGroupName, String applicationDefinitionName, Context context) {
-        Response<ApplicationDefinitionInner> inner =
-            this.serviceClient().getByIdWithResponse(resourceGroupName, applicationDefinitionName, context);
+    public PagedIterable<ApplicationDefinition> list() {
+        PagedIterable<ApplicationDefinitionInner> inner = this.serviceClient().list();
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new ApplicationDefinitionImpl(inner1, this.manager()));
+    }
+
+    public PagedIterable<ApplicationDefinition> list(Context context) {
+        PagedIterable<ApplicationDefinitionInner> inner = this.serviceClient().list(context);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new ApplicationDefinitionImpl(inner1, this.manager()));
+    }
+
+    public Response<ApplicationDefinition> getByIdWithResponse(String resourceGroupName,
+        String applicationDefinitionName, Context context) {
+        Response<ApplicationDefinitionInner> inner
+            = this.serviceClient().getByIdWithResponse(resourceGroupName, applicationDefinitionName, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new ApplicationDefinitionImpl(inner.getValue(), this.manager()));
         } else {
             return null;
@@ -96,18 +101,31 @@ public final class ApplicationDefinitionsImpl implements ApplicationDefinitions 
         }
     }
 
+    public Response<Void> deleteByIdWithResponse(String resourceGroupName, String applicationDefinitionName,
+        Context context) {
+        return this.serviceClient().deleteByIdWithResponse(resourceGroupName, applicationDefinitionName, context);
+    }
+
     public void deleteById(String resourceGroupName, String applicationDefinitionName) {
         this.serviceClient().deleteById(resourceGroupName, applicationDefinitionName);
     }
 
-    public void deleteById(String resourceGroupName, String applicationDefinitionName, Context context) {
-        this.serviceClient().deleteById(resourceGroupName, applicationDefinitionName, context);
+    public Response<ApplicationDefinition> createOrUpdateByIdWithResponse(String resourceGroupName,
+        String applicationDefinitionName, ApplicationDefinitionInner parameters, Context context) {
+        Response<ApplicationDefinitionInner> inner = this.serviceClient()
+            .createOrUpdateByIdWithResponse(resourceGroupName, applicationDefinitionName, parameters, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new ApplicationDefinitionImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
-    public ApplicationDefinition createOrUpdateById(
-        String resourceGroupName, String applicationDefinitionName, ApplicationDefinitionInner parameters) {
-        ApplicationDefinitionInner inner =
-            this.serviceClient().createOrUpdateById(resourceGroupName, applicationDefinitionName, parameters);
+    public ApplicationDefinition createOrUpdateById(String resourceGroupName, String applicationDefinitionName,
+        ApplicationDefinitionInner parameters) {
+        ApplicationDefinitionInner inner
+            = this.serviceClient().createOrUpdateById(resourceGroupName, applicationDefinitionName, parameters);
         if (inner != null) {
             return new ApplicationDefinitionImpl(inner, this.manager());
         } else {
@@ -115,13 +133,22 @@ public final class ApplicationDefinitionsImpl implements ApplicationDefinitions 
         }
     }
 
-    public ApplicationDefinition createOrUpdateById(
-        String resourceGroupName,
-        String applicationDefinitionName,
-        ApplicationDefinitionInner parameters,
-        Context context) {
-        ApplicationDefinitionInner inner =
-            this.serviceClient().createOrUpdateById(resourceGroupName, applicationDefinitionName, parameters, context);
+    public Response<ApplicationDefinition> updateByIdWithResponse(String resourceGroupName,
+        String applicationDefinitionName, ApplicationDefinitionPatchable parameters, Context context) {
+        Response<ApplicationDefinitionInner> inner = this.serviceClient()
+            .updateByIdWithResponse(resourceGroupName, applicationDefinitionName, parameters, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new ApplicationDefinitionImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
+    }
+
+    public ApplicationDefinition updateById(String resourceGroupName, String applicationDefinitionName,
+        ApplicationDefinitionPatchable parameters) {
+        ApplicationDefinitionInner inner
+            = this.serviceClient().updateById(resourceGroupName, applicationDefinitionName, parameters);
         if (inner != null) {
             return new ApplicationDefinitionImpl(inner, this.manager());
         } else {

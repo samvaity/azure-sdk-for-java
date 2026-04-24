@@ -1,6 +1,6 @@
 # Release History
 
-## 1.12.0-beta.1 (Unreleased)
+## 1.14.0-beta.1 (Unreleased)
 
 ### Features Added
 
@@ -10,6 +10,241 @@
 
 ### Other Changes
 
+## 1.13.3 (2026-01-15)
+
+### Bugs Fixed
+
+- Fixed a bug where `OkHttpFluxRequestBody` didn't propagate the exception properly. ([#47170](https://github.com/Azure/azure-sdk-for-java/pull/47170))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.57.0` to `1.57.1`.
+- Upgraded Reactor from `3.7.11` to `3.7.14`. ([#47611](https://github.com/Azure/azure-sdk-for-java/pull/47611))
+
+## 1.13.2 (2025-10-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.1` to `1.57.0`.
+- Upgraded Reactor from `3.7.9` to `3.7.11`. ([#46894](https://github.com/Azure/azure-sdk-for-java/pull/46894))
+
+## 1.13.1 (2025-09-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.0` to `1.56.1`.
+- Upgraded Okio from `3.9.1` to `3.16.0` ([#46586](https://github.com/Azure/azure-sdk-for-java/pull/46586))
+
+## 1.13.0 (2025-08-07)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.5` to `1.56.0`.
+- Upgraded Reactor from `3.4.41` to `3.7.8`. ([#46207](https://github.com/Azure/azure-sdk-for-java/pull/46207))
+
+## 1.12.12 (2025-06-26)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.4` to `1.55.5`.
+
+## 1.12.11 (2025-06-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.3` to `1.55.4`.
+
+## 1.12.10 (2025-03-10)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.2` to `1.55.3`.
+
+## 1.12.9 (2025-02-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.1` to `1.55.2`.
+
+## 1.12.8 (2025-02-12)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.0` to `1.55.1`.
+
+## 1.12.7 (2025-02-06)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.1` to `1.55.0`.
+
+## 1.12.6 (2024-11-14)
+
+### Bugs Fixed
+
+- Fixed a bug where when using `responseTimeout` could result in an `OutOfMemoryError` due to a `Timer` retaining a
+  reference to the network call until the timeout period elapsed. ([#42887](https://github.com/Azure/azure-sdk-for-java/pull/42887))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.0` to `1.54.1`.
+
+## 1.12.5 (2024-11-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.53.0` to `1.54.0`.
+
+## 1.12.4 (2024-10-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.52.0` to `1.53.0`.
+
+## 1.12.3 (2024-09-12)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.51.0` to `1.52.0`.
+
+## 1.12.2 (2024-07-31)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.50.0` to `1.51.0`.
+
+## 1.12.1 (2024-07-12)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.1` to `1.50.0`.
+
+## 1.12.0 (2024-06-06)
+
+### Features Added
+
+- Added support for response timeout and per-request response timeout. ([#40017](https://github.com/Azure/azure-sdk-for-java/pull/40017))
+
+### Other Changes
+
+- Fixed errant warning about `okio` being included on the module path multiple times. ([#40115](https://github.com/Azure/azure-sdk-for-java/pull/40155))
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.0` to `1.49.1`.
+
+## 1.11.21 (2024-05-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.48.0` to `1.49.0`.
+
+## 1.11.20 (2024-04-05)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.47.0` to `1.48.0`.
+
+## 1.11.19 (2024-03-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.46.0` to `1.47.0`.
+
+## 1.11.18 (2024-02-02)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.45.1` to `1.46.0`.
+
+## 1.11.16 (2023-11-03)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.1` to `1.45.0`.
+- Upgraded OkHttp from `4.10.0` to `4.12.0`.
+
+## 1.11.15 (2023-10-17)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.0` to `1.44.1`.
+
+## 1.11.14 (2023-10-06)
+
+### Bugs Fixed
+
+- Fixed a bug where the network connection wasn't being explicitly closed after the response body was consumed.
+
+### Other Changes
+
+- Changed buffer read size from `4096` to `8192` when returning `Flux<ByteBuffer>` in `HttpResponse` to reduce number
+  of reads and elements emitted by the `Flux`.
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.43.0` to `1.44.0`.
+
+## 1.11.13 (2023-09-07)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.42.0` to `1.43.0`.
+
+## 1.11.12 (2023-08-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.41.0` to `1.42.0`.
+- 
 ## 1.11.11 (2023-07-06)
 
 ### Other Changes

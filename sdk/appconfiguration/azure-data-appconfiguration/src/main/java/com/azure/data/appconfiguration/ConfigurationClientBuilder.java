@@ -3,6 +3,14 @@
 
 package com.azure.data.appconfiguration;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.azure.core.annotation.ServiceClientBuilder;
 import com.azure.core.client.traits.ConfigurationTrait;
 import com.azure.core.client.traits.ConnectionStringTrait;
@@ -12,6 +20,7 @@ import com.azure.core.client.traits.TokenCredentialTrait;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpHeader;
+import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
@@ -32,27 +41,21 @@ import com.azure.core.http.policy.UserAgentPolicy;
 import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
+import static com.azure.core.util.CoreUtils.getApplicationId;
 import com.azure.core.util.HttpClientOptions;
 import com.azure.core.util.TracingOptions;
 import com.azure.core.util.builder.ClientBuilderUtil;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.tracing.Tracer;
 import com.azure.core.util.tracing.TracerProvider;
+import com.azure.data.appconfiguration.implementation.AudiencePolicy;
 import com.azure.data.appconfiguration.implementation.AzureAppConfigurationImpl;
+import static com.azure.data.appconfiguration.implementation.ClientConstants.APP_CONFIG_TRACING_NAMESPACE_VALUE;
 import com.azure.data.appconfiguration.implementation.ConfigurationClientCredentials;
 import com.azure.data.appconfiguration.implementation.ConfigurationCredentialsPolicy;
+import com.azure.data.appconfiguration.implementation.QueryParamPolicy;
 import com.azure.data.appconfiguration.implementation.SyncTokenPolicy;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import static com.azure.core.util.CoreUtils.getApplicationId;
-import static com.azure.data.appconfiguration.implementation.ClientConstants.APP_CONFIG_TRACING_NAMESPACE_VALUE;
+import com.azure.data.appconfiguration.models.ConfigurationAudience;
 
 /**
  * This class provides a fluent builder API to help aid the configuration and instantiation of
@@ -98,7 +101,7 @@ import static com.azure.data.appconfiguration.implementation.ClientConstants.APP
  *
  * ConfigurationClient configurationClient = new ConfigurationClientBuilder&#40;&#41;
  *     .pipeline&#40;pipeline&#41;
- *     .endpoint&#40;&quot;https:&#47;&#47;myconfig.azure.net&#47;&quot;&#41;
+ *     .endpoint&#40;&quot;https:&#47;&#47;dummy.azure.net&#47;&quot;&#41;
  *     .connectionString&#40;connectionString&#41;
  *     .buildClient&#40;&#41;;
  * </pre>
@@ -107,26 +110,23 @@ import static com.azure.data.appconfiguration.implementation.ClientConstants.APP
  * @see ConfigurationAsyncClient
  * @see ConfigurationClient
  */
-@ServiceClientBuilder(serviceClients = {ConfigurationAsyncClient.class, ConfigurationClient.class})
-public final class ConfigurationClientBuilder implements
-    TokenCredentialTrait<ConfigurationClientBuilder>,
-    ConnectionStringTrait<ConfigurationClientBuilder>,
-    HttpTrait<ConfigurationClientBuilder>,
-    ConfigurationTrait<ConfigurationClientBuilder>,
-    EndpointTrait<ConfigurationClientBuilder> {
+@ServiceClientBuilder(serviceClients = { ConfigurationAsyncClient.class, ConfigurationClient.class })
+public final class ConfigurationClientBuilder implements TokenCredentialTrait<ConfigurationClientBuilder>,
+    ConnectionStringTrait<ConfigurationClientBuilder>, HttpTrait<ConfigurationClientBuilder>,
+    ConfigurationTrait<ConfigurationClientBuilder>, EndpointTrait<ConfigurationClientBuilder> {
 
     private static final String CLIENT_NAME;
     private static final String CLIENT_VERSION;
     private static final HttpPipelinePolicy ADD_HEADERS_POLICY;
+    private static final ClientOptions DEFAULT_CLIENT_OPTIONS = new ClientOptions();
 
     static {
         Map<String, String> properties = CoreUtils.getProperties("azure-data-appconfiguration.properties");
         CLIENT_NAME = properties.getOrDefault("name", "UnknownName");
         CLIENT_VERSION = properties.getOrDefault("version", "UnknownVersion");
-        ADD_HEADERS_POLICY = new AddHeadersPolicy(new HttpHeaders()
-            .set("x-ms-return-client-request-id", "true")
-            .set("Content-Type", "application/json")
-            .set("Accept", "application/vnd.microsoft.azconfig.kv+json"));
+        ADD_HEADERS_POLICY = new AddHeadersPolicy(new HttpHeaders().set("x-ms-return-client-request-id", "true")
+            .set(HttpHeaderName.CONTENT_TYPE, "application/json")
+            .set(HttpHeaderName.ACCEPT, "application/vnd.microsoft.azconfig.kv+json"));
     }
 
     private static final ClientLogger LOGGER = new ClientLogger(ConfigurationClientBuilder.class);
@@ -145,6 +145,8 @@ public final class ConfigurationClientBuilder implements
     private RetryOptions retryOptions;
     private Configuration configuration;
     private ConfigurationServiceVersion version;
+
+    private ConfigurationAudience audience;
 
     /**
      * Constructs a new builder used to configure and build {@link ConfigurationClient ConfigurationClients} and
@@ -219,8 +221,8 @@ public final class ConfigurationClientBuilder implements
                 + "TokenCredential should be null if using connection string, vice versa."));
         } else if (tokenCredential == null) {
             if (connectionString.isEmpty()) {
-                throw LOGGER.logExceptionAsError(
-                    new IllegalArgumentException("'connectionString' cannot be an empty string."));
+                throw LOGGER
+                    .logExceptionAsError(new IllegalArgumentException("'connectionString' cannot be an empty string."));
             }
             credentialsLocal = new ConfigurationClientCredentials(connectionString);
             endpointLocal = credentialsLocal.getBaseUri();
@@ -229,9 +231,8 @@ public final class ConfigurationClientBuilder implements
         }
 
         // Service version
-        ConfigurationServiceVersion serviceVersion = (version != null)
-            ? version
-            : ConfigurationServiceVersion.getLatest();
+        ConfigurationServiceVersion serviceVersion
+            = (version != null) ? version : ConfigurationServiceVersion.getLatest();
         // Don't share the default auto-created pipeline between App Configuration client instances.
         HttpPipeline buildPipeline = (pipeline == null)
             ? createDefaultHttpPipeline(syncTokenPolicy, credentialsLocal, tokenCredentialLocal)
@@ -243,9 +244,8 @@ public final class ConfigurationClientBuilder implements
     private HttpPipeline createDefaultHttpPipeline(SyncTokenPolicy syncTokenPolicy,
         ConfigurationClientCredentials credentials, TokenCredential tokenCredential) {
         // Global Env configuration store
-        Configuration buildConfiguration = (configuration == null)
-            ? Configuration.getGlobalConfiguration()
-            : configuration;
+        Configuration buildConfiguration
+            = (configuration == null) ? Configuration.getGlobalConfiguration() : configuration;
 
         // Endpoint
         String buildEndpoint = endpoint;
@@ -255,13 +255,17 @@ public final class ConfigurationClientBuilder implements
         // endpoint cannot be null, which is required in request authentication
         Objects.requireNonNull(buildEndpoint, "'Endpoint' is required and can not be null.");
 
+        ClientOptions localClientOptions = clientOptions != null ? clientOptions : DEFAULT_CLIENT_OPTIONS;
         // Closest to API goes first, closest to wire goes last.
         final List<HttpPipelinePolicy> policies = new ArrayList<>();
-        policies.add(new UserAgentPolicy(
-            getApplicationId(clientOptions, httpLogOptions), CLIENT_NAME, CLIENT_VERSION, buildConfiguration));
+        policies.add(new UserAgentPolicy(getApplicationId(localClientOptions, httpLogOptions), CLIENT_NAME,
+            CLIENT_VERSION, buildConfiguration));
         policies.add(new RequestIdPolicy());
         policies.add(new AddHeadersFromContextPolicy());
         policies.add(ADD_HEADERS_POLICY);
+
+        // Add query parameter reordering policy
+        policies.add(new QueryParamPolicy());
 
         policies.addAll(perCallPolicies);
         HttpPolicyProviders.addBeforeRetryPolicies(policies);
@@ -273,8 +277,7 @@ public final class ConfigurationClientBuilder implements
 
         if (tokenCredential != null) {
             // User token based policy
-            policies.add(
-                new BearerTokenAuthenticationPolicy(tokenCredential, String.format("%s/.default", endpoint)));
+            policies.add(new BearerTokenAuthenticationPolicy(tokenCredential, getDefaultScope(endpoint)));
         } else if (credentials != null) {
             // Use credentialS based policy
             policies.add(new ConfigurationCredentialsPolicy(credentials));
@@ -286,21 +289,22 @@ public final class ConfigurationClientBuilder implements
         policies.add(syncTokenPolicy);
         policies.addAll(perRetryPolicies);
 
-        if (clientOptions != null) {
-            List<HttpHeader> httpHeaderList = new ArrayList<>();
-            clientOptions.getHeaders().forEach(
-                header -> httpHeaderList.add(new HttpHeader(header.getName(), header.getValue())));
-            policies.add(new AddHeadersPolicy(new HttpHeaders(httpHeaderList)));
-        }
+        // Add policy to provide better error messages for AAD audience authentication failures
+        policies.add(new AudiencePolicy(audience));
+
+        List<HttpHeader> httpHeaderList = new ArrayList<>();
+        localClientOptions.getHeaders()
+            .forEach(header -> httpHeaderList.add(new HttpHeader(header.getName(), header.getValue())));
+        policies.add(new AddHeadersPolicy(new HttpHeaders(httpHeaderList)));
 
         HttpPolicyProviders.addAfterRetryPolicies(policies);
         policies.add(new HttpLoggingPolicy(httpLogOptions));
 
         // customized pipeline
-        return new HttpPipelineBuilder()
-            .policies(policies.toArray(new HttpPipelinePolicy[0]))
+        return new HttpPipelineBuilder().policies(policies.toArray(new HttpPipelinePolicy[0]))
             .httpClient(httpClient)
             .tracer(createTracer(clientOptions))
+            .clientOptions(localClientOptions)
             .build();
     }
 
@@ -543,5 +547,36 @@ public final class ConfigurationClientBuilder implements
         this.version = version;
         return this;
     }
-}
 
+    /**
+     * Sets the {@link ConfigurationAudience} to use for authentication with Microsoft Entra. The audience is not
+     * considered when using a shared key.
+     *
+     * @param audience {@link ConfigurationAudience} of the service to be used when making requests.
+     * @return The updated ConfigurationClientBuilder object.
+     */
+    public ConfigurationClientBuilder audience(ConfigurationAudience audience) {
+        this.audience = audience;
+        return this;
+    }
+
+    /**
+     * Gets the default scope for the given endpoint.
+     *
+     * @param endpoint The endpoint to get the default scope for.
+     * @return The default scope for the given endpoint.
+     */
+    private String getDefaultScope(String endpoint) {
+        String defaultValue = "/.default";
+        if (audience == null || audience.toString().isEmpty()) {
+            if (endpoint.endsWith("azconfig.azure.us") || endpoint.endsWith("appconfig.azure.us")) {
+                return ConfigurationAudience.AZURE_GOVERNMENT + defaultValue;
+            } else if (endpoint.endsWith("azconfig.azure.cn") || endpoint.endsWith("appconfig.azure.cn")) {
+                return ConfigurationAudience.AZURE_CHINA + defaultValue;
+            } else {
+                return ConfigurationAudience.AZURE_PUBLIC_CLOUD + defaultValue;
+            }
+        }
+        return audience + defaultValue;
+    }
+}

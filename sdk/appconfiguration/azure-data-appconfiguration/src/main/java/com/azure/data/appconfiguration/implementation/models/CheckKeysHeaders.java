@@ -5,15 +5,19 @@
 package com.azure.data.appconfiguration.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 
-/** The CheckKeysHeaders model. */
+/**
+ * The CheckKeysHeaders model.
+ */
 @Fluent
 public final class CheckKeysHeaders {
     /*
      * The Sync-Token property.
      */
+    @Generated
     private String syncToken;
 
     private static final HttpHeaderName SYNC_TOKEN = HttpHeaderName.fromString("Sync-Token");
@@ -21,7 +25,7 @@ public final class CheckKeysHeaders {
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of CheckKeysHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public CheckKeysHeaders(HttpHeaders rawHeaders) {
@@ -30,19 +34,21 @@ public final class CheckKeysHeaders {
 
     /**
      * Get the syncToken property: The Sync-Token property.
-     *
+     * 
      * @return the syncToken value.
      */
+    @Generated
     public String getSyncToken() {
         return this.syncToken;
     }
 
     /**
      * Set the syncToken property: The Sync-Token property.
-     *
+     * 
      * @param syncToken the syncToken value to set.
      * @return the CheckKeysHeaders object itself.
      */
+    @Generated
     public CheckKeysHeaders setSyncToken(String syncToken) {
         this.syncToken = syncToken;
         return this;

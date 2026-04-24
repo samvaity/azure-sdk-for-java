@@ -5,20 +5,30 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** A copy activity source for a Cassandra database. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("CassandraSource")
+/**
+ * A copy activity source for a Cassandra database.
+ */
 @Fluent
 public final class CassandraSource extends TabularSource {
+    /*
+     * Copy source type.
+     */
+    @Generated
+    private String type = "CassandraSource";
+
     /*
      * Database query. Should be a SQL-92 query expression or Cassandra Query Language (CQL) command. Type: string (or
      * Expression with resultType string).
      */
-    @JsonProperty(value = "query")
+    @Generated
     private Object query;
 
     /*
@@ -27,18 +37,34 @@ public final class CassandraSource extends TabularSource {
      * read request. Must be one of cassandraSourceReadConsistencyLevels. The default value is 'ONE'. It is
      * case-insensitive.
      */
-    @JsonProperty(value = "consistencyLevel")
+    @Generated
     private CassandraSourceReadConsistencyLevels consistencyLevel;
 
-    /** Creates an instance of CassandraSource class. */
-    public CassandraSource() {}
+    /**
+     * Creates an instance of CassandraSource class.
+     */
+    @Generated
+    public CassandraSource() {
+    }
+
+    /**
+     * Get the type property: Copy source type.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the query property: Database query. Should be a SQL-92 query expression or Cassandra Query Language (CQL)
      * command. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the query value.
      */
+    @Generated
     public Object getQuery() {
         return this.query;
     }
@@ -46,10 +72,11 @@ public final class CassandraSource extends TabularSource {
     /**
      * Set the query property: Database query. Should be a SQL-92 query expression or Cassandra Query Language (CQL)
      * command. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param query the query value to set.
      * @return the CassandraSource object itself.
      */
+    @Generated
     public CassandraSource setQuery(Object query) {
         this.query = query;
         return this;
@@ -60,9 +87,10 @@ public final class CassandraSource extends TabularSource {
      * read request before returning data to the client application. Cassandra checks the specified number of Cassandra
      * servers for data to satisfy the read request. Must be one of cassandraSourceReadConsistencyLevels. The default
      * value is 'ONE'. It is case-insensitive.
-     *
+     * 
      * @return the consistencyLevel value.
      */
+    @Generated
     public CassandraSourceReadConsistencyLevels getConsistencyLevel() {
         return this.consistencyLevel;
     }
@@ -72,47 +100,147 @@ public final class CassandraSource extends TabularSource {
      * read request before returning data to the client application. Cassandra checks the specified number of Cassandra
      * servers for data to satisfy the read request. Must be one of cassandraSourceReadConsistencyLevels. The default
      * value is 'ONE'. It is case-insensitive.
-     *
+     * 
      * @param consistencyLevel the consistencyLevel value to set.
      * @return the CassandraSource object itself.
      */
+    @Generated
     public CassandraSource setConsistencyLevel(CassandraSourceReadConsistencyLevels consistencyLevel) {
         this.consistencyLevel = consistencyLevel;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CassandraSource setQueryTimeout(Object queryTimeout) {
         super.setQueryTimeout(queryTimeout);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CassandraSource setAdditionalColumns(Object additionalColumns) {
         super.setAdditionalColumns(additionalColumns);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CassandraSource setSourceRetryCount(Object sourceRetryCount) {
         super.setSourceRetryCount(sourceRetryCount);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CassandraSource setSourceRetryWait(Object sourceRetryWait) {
         super.setSourceRetryWait(sourceRetryWait);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public CassandraSource setMaxConcurrentConnections(Object maxConcurrentConnections) {
         super.setMaxConcurrentConnections(maxConcurrentConnections);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getSourceRetryCount() != null) {
+            jsonWriter.writeUntypedField("sourceRetryCount", getSourceRetryCount());
+        }
+        if (getSourceRetryWait() != null) {
+            jsonWriter.writeUntypedField("sourceRetryWait", getSourceRetryWait());
+        }
+        if (getMaxConcurrentConnections() != null) {
+            jsonWriter.writeUntypedField("maxConcurrentConnections", getMaxConcurrentConnections());
+        }
+        if (getQueryTimeout() != null) {
+            jsonWriter.writeUntypedField("queryTimeout", getQueryTimeout());
+        }
+        if (getAdditionalColumns() != null) {
+            jsonWriter.writeUntypedField("additionalColumns", getAdditionalColumns());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.query != null) {
+            jsonWriter.writeUntypedField("query", this.query);
+        }
+        jsonWriter.writeStringField("consistencyLevel",
+            this.consistencyLevel == null ? null : this.consistencyLevel.toString());
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CassandraSource from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CassandraSource if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the CassandraSource.
+     */
+    @Generated
+    public static CassandraSource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CassandraSource deserializedCassandraSource = new CassandraSource();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("sourceRetryCount".equals(fieldName)) {
+                    deserializedCassandraSource.setSourceRetryCount(reader.readUntyped());
+                } else if ("sourceRetryWait".equals(fieldName)) {
+                    deserializedCassandraSource.setSourceRetryWait(reader.readUntyped());
+                } else if ("maxConcurrentConnections".equals(fieldName)) {
+                    deserializedCassandraSource.setMaxConcurrentConnections(reader.readUntyped());
+                } else if ("queryTimeout".equals(fieldName)) {
+                    deserializedCassandraSource.setQueryTimeout(reader.readUntyped());
+                } else if ("additionalColumns".equals(fieldName)) {
+                    deserializedCassandraSource.setAdditionalColumns(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedCassandraSource.type = reader.getString();
+                } else if ("query".equals(fieldName)) {
+                    deserializedCassandraSource.query = reader.readUntyped();
+                } else if ("consistencyLevel".equals(fieldName)) {
+                    deserializedCassandraSource.consistencyLevel
+                        = CassandraSourceReadConsistencyLevels.fromString(reader.getString());
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedCassandraSource.setAdditionalProperties(additionalProperties);
+
+            return deserializedCassandraSource;
+        });
     }
 }

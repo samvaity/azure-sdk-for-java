@@ -9,6 +9,8 @@ import com.azure.core.http.netty.implementation.AzureNettyHttpClientContext;
 import com.azure.core.http.netty.implementation.AzureSdkHandler;
 import com.azure.core.http.netty.implementation.ChallengeHolder;
 import com.azure.core.http.netty.implementation.HttpProxyHandler;
+import com.azure.core.http.netty.implementation.NettyUtility;
+import com.azure.core.http.netty.implementation.NonProxyHostAddressResolverGroup;
 import com.azure.core.util.AuthorizationChallengeHandler;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.Context;
@@ -17,11 +19,12 @@ import com.azure.core.util.logging.ClientLogger;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.resolver.AddressResolverGroup;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.resolver.DefaultAddressResolverGroup;
 import io.netty.resolver.NoopAddressResolverGroup;
 import reactor.netty.Connection;
 import reactor.netty.NettyPipeline;
+import reactor.netty.http.HttpDecoderSpec;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.http.client.HttpClientRequest;
 import reactor.netty.http.client.HttpResponseDecoderSpec;
@@ -34,56 +37,86 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
-import static com.azure.core.util.Configuration.PROPERTY_AZURE_REQUEST_CONNECT_TIMEOUT;
-import static com.azure.core.util.Configuration.PROPERTY_AZURE_REQUEST_READ_TIMEOUT;
-import static com.azure.core.util.Configuration.PROPERTY_AZURE_REQUEST_RESPONSE_TIMEOUT;
-import static com.azure.core.util.Configuration.PROPERTY_AZURE_REQUEST_WRITE_TIMEOUT;
-import static com.azure.core.util.CoreUtils.getDefaultTimeoutFromEnvironment;
+import static com.azure.core.implementation.util.HttpUtils.getDefaultConnectTimeout;
+import static com.azure.core.implementation.util.HttpUtils.getDefaultReadTimeout;
+import static com.azure.core.implementation.util.HttpUtils.getDefaultResponseTimeout;
+import static com.azure.core.implementation.util.HttpUtils.getDefaultWriteTimeout;
+import static com.azure.core.implementation.util.HttpUtils.getTimeout;
 
 /**
+ * <p>
  * Builder class responsible for creating instances of {@link com.azure.core.http.HttpClient} backed by Reactor Netty.
- * Please be aware that client built from this builder can support synchronously and asynchronously call of sending
- * request. Use {@link com.azure.core.http.HttpClient#sendSync(HttpRequest, Context)} to send the provided request
+ * The client built from this builder can support sending requests synchronously and asynchronously.
+ * Use {@link com.azure.core.http.HttpClient#sendSync(HttpRequest, Context)} to send the provided request
  * synchronously with contextual information.
+ * </p>
  *
- * <p><strong>Building a new HttpClient instance</strong></p>
+ * <p>
+ * <strong>Building a new HttpClient instance</strong>
+ * </p>
  *
  * <!-- src_embed com.azure.core.http.netty.instantiation-simple -->
  * <pre>
  * HttpClient client = new NettyAsyncHttpClientBuilder&#40;&#41;
  *     .port&#40;8080&#41;
- *     .wiretap&#40;true&#41;
  *     .build&#40;&#41;;
  * </pre>
  * <!-- end com.azure.core.http.netty.instantiation-simple -->
  *
+ * <p>
+ * <strong>Building a new HttpClient instance using http proxy.</strong>
+ * </p>
+ *
+ * <p>
+ * Configuring the Netty client with a proxy is relevant when your application needs to communicate with Azure
+ * services through a proxy server.
+ * </p>
+ *
+ * <!-- src_embed com.azure.core.http.netty.instantiation-simple -->
+ * <pre>
+ * HttpClient client = new NettyAsyncHttpClientBuilder&#40;&#41;
+ *     .port&#40;8080&#41;
+ *     .build&#40;&#41;;
+ * </pre>
+ * <!-- end com.azure.core.http.netty.instantiation-simple -->
+ *
+ * <p>
+ * <strong>Building a new HttpClient instance with HTTP/2 Support.</strong>
+ * </p>
+ *
+ * <!-- src_embed com.azure.core.http.netty.instantiation-simple -->
+ * <pre>
+ * HttpClient client = new NettyAsyncHttpClientBuilder&#40;&#41;
+ *     .port&#40;8080&#41;
+ *     .build&#40;&#41;;
+ * </pre>
+ * <!-- end com.azure.core.http.netty.instantiation-simple -->
+ *
+ * <p>
+ * It is also possible to create a Netty HttpClient that only supports HTTP/2.
+ * </p>
+ *
+ * <!-- src_embed readme-sample-useHttp2OnlyWithConfiguredNettyClient -->
+ * <pre>
+ * &#47;&#47; Constructs an HttpClient that only supports HTTP&#47;2.
+ * HttpClient client = new NettyAsyncHttpClientBuilder&#40;reactor.netty.http.client.HttpClient.create&#40;&#41;
+ *     .protocol&#40;HttpProtocol.H2&#41;&#41;
+ *     .build&#40;&#41;;
+ * </pre>
+ * <!-- end readme-sample-useHttp2OnlyWithConfiguredNettyClient -->
+ *
  * @see HttpClient
+ * @see NettyAsyncHttpClient
  */
 public class NettyAsyncHttpClientBuilder {
-    private static final long MINIMUM_TIMEOUT = TimeUnit.MILLISECONDS.toMillis(1);
-    private static final long DEFAULT_CONNECT_TIMEOUT;
-    private static final long DEFAULT_WRITE_TIMEOUT;
-    private static final long DEFAULT_RESPONSE_TIMEOUT;
-    private static final long DEFAULT_READ_TIMEOUT;
-
     // NettyAsyncHttpClientBuilder may be instantiated many times, use a static logger.
     private static final ClientLogger LOGGER = new ClientLogger(NettyAsyncHttpClientBuilder.class);
 
     static {
-        Configuration configuration = Configuration.getGlobalConfiguration();
-
-        DEFAULT_CONNECT_TIMEOUT = getDefaultTimeoutFromEnvironment(configuration,
-            PROPERTY_AZURE_REQUEST_CONNECT_TIMEOUT, Duration.ofSeconds(10), LOGGER).toMillis();
-        DEFAULT_WRITE_TIMEOUT = getDefaultTimeoutFromEnvironment(configuration, PROPERTY_AZURE_REQUEST_WRITE_TIMEOUT,
-            Duration.ofSeconds(60), LOGGER).toMillis();
-        DEFAULT_RESPONSE_TIMEOUT = getDefaultTimeoutFromEnvironment(configuration,
-            PROPERTY_AZURE_REQUEST_RESPONSE_TIMEOUT, Duration.ofSeconds(60), LOGGER).toMillis();
-        DEFAULT_READ_TIMEOUT = getDefaultTimeoutFromEnvironment(configuration, PROPERTY_AZURE_REQUEST_READ_TIMEOUT,
-            Duration.ofSeconds(60), LOGGER).toMillis();
+        NettyUtility.validateNettyVersions();
     }
 
     private final HttpClient baseHttpClient;
@@ -142,45 +175,11 @@ public class NettyAsyncHttpClientBuilder {
     public com.azure.core.http.HttpClient build() {
         HttpClient nettyHttpClient;
 
-        // Used to track if the builder set the DefaultAddressResolverGroup. If it did, when proxying it allows the
-        // no-op address resolver to be set.
-        boolean addressResolverWasSetByBuilder = false;
-        if (this.baseHttpClient != null) {
-            nettyHttpClient = baseHttpClient;
-        } else if (this.connectionProvider != null) {
-            nettyHttpClient = HttpClient.create(this.connectionProvider).resolver(DefaultAddressResolverGroup.INSTANCE);
-            addressResolverWasSetByBuilder = true;
-        } else {
-            nettyHttpClient = HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE);
-            addressResolverWasSetByBuilder = true;
-        }
+        Configuration buildConfiguration
+            = (configuration == null) ? Configuration.getGlobalConfiguration() : configuration;
 
-        long writeTimeout = getTimeoutMillis(this.writeTimeout, DEFAULT_WRITE_TIMEOUT);
-        long responseTimeout = getTimeoutMillis(this.responseTimeout, DEFAULT_RESPONSE_TIMEOUT);
-        long readTimeout = getTimeoutMillis(this.readTimeout, DEFAULT_READ_TIMEOUT);
-
-        // Get the initial HttpResponseDecoderSpec and update it.
-        // .httpResponseDecoder passes a new HttpResponseDecoderSpec and any existing configuration should be updated
-        // instead of overwritten.
-        HttpResponseDecoderSpec initialSpec = nettyHttpClient.configuration().decoder();
-        nettyHttpClient = nettyHttpClient
-            .port(port)
-            .wiretap(enableWiretap)
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int) getTimeoutMillis(connectTimeout,
-                DEFAULT_CONNECT_TIMEOUT))
-            // TODO (alzimmer): What does validating HTTP response headers get us?
-            .httpResponseDecoder(httpResponseDecoderSpec -> initialSpec.validateHeaders(false))
-            .doOnRequest((request, connection) -> addHandler(request, connection, writeTimeout, responseTimeout,
-                readTimeout))
-            .doAfterResponseSuccess((ignored, connection) -> removeHandler(connection));
-
-        Configuration buildConfiguration = (configuration == null)
-            ? Configuration.getGlobalConfiguration()
-            : configuration;
-
-        ProxyOptions buildProxyOptions = proxyOptions == null
-            ? ProxyOptions.fromConfiguration(buildConfiguration, true)
-            : proxyOptions;
+        ProxyOptions buildProxyOptions
+            = proxyOptions == null ? ProxyOptions.fromConfiguration(buildConfiguration, true) : proxyOptions;
 
         /*
          * Only configure the custom authorization challenge handler and challenge holder when using an authenticated
@@ -192,6 +191,59 @@ public class NettyAsyncHttpClientBuilder {
             : null;
         AtomicReference<ChallengeHolder> proxyChallengeHolder = useCustomProxyHandler ? new AtomicReference<>() : null;
 
+        // Used to track if the builder set the DefaultAddressResolverGroup. If it did, when proxying it allows the
+        // no-op address resolver to be set.
+        boolean setDefaultAddressResolverGroup = false;
+        if (this.baseHttpClient != null) {
+            nettyHttpClient = baseHttpClient;
+        } else if (this.connectionProvider != null) {
+            nettyHttpClient = HttpClient.create(this.connectionProvider);
+        } else {
+            nettyHttpClient = HttpClient.create();
+        }
+
+        // If a resolver hasn't been set, set the default one.
+        if (nettyHttpClient.configuration().resolver() == null) {
+            nettyHttpClient = nettyHttpClient.resolver(DefaultAddressResolverGroup.INSTANCE);
+            setDefaultAddressResolverGroup = true;
+        }
+
+        long writeTimeout = getTimeout(this.writeTimeout, getDefaultWriteTimeout()).toMillis();
+        long responseTimeout = getTimeout(this.responseTimeout, getDefaultResponseTimeout()).toMillis();
+        long readTimeout = getTimeout(this.readTimeout, getDefaultReadTimeout()).toMillis();
+
+        // Get the initial HttpResponseDecoderSpec and update it.
+        // .httpResponseDecoder passes a new HttpResponseDecoderSpec and any existing configuration should be updated
+        // instead of overwritten.
+        HttpResponseDecoderSpec initialSpec = nettyHttpClient.configuration().decoder();
+        long connectTimeoutMillis = getTimeout(connectTimeout, getDefaultConnectTimeout()).toMillis();
+        nettyHttpClient = nettyHttpClient.port(port)
+            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int) connectTimeoutMillis)
+            .httpResponseDecoder(httpResponseDecoderSpec -> {
+                int maxHeaderSize = initialSpec.maxHeaderSize();
+                if (maxHeaderSize == HttpDecoderSpec.DEFAULT_MAX_HEADER_SIZE) {
+                    // Only change the max header size if it is the default value. If it's set, this was done external
+                    // to the SDK and we should respect that.
+                    // For now, set the max header size to 256 KB. Follow up to see if this should be configurable.
+                    maxHeaderSize = 256 * 1024;
+                }
+
+                // TODO (alzimmer): What does validating HTTP response headers get us?
+                return initialSpec.validateHeaders(false).maxHeaderSize(maxHeaderSize);
+            })
+            .doOnRequest(
+                (request, connection) -> addHandler(request, connection, writeTimeout, responseTimeout, readTimeout))
+            .doAfterResponseSuccess((ignored, connection) -> removeHandler(connection));
+
+        LoggingHandler loggingHandler = nettyHttpClient.configuration().loggingHandler();
+        if (loggingHandler == null) {
+            // Only enable wiretap if the LoggingHandler is null. If the LoggingHandler isn't null this means that a
+            // base client was passed with logging enabled. 'wiretap(boolean)' is a basic API that doesn't allow for
+            // in-depth settings to be done on how logging works, so setting it always can replace a customized logger
+            // with a basic one that isn't as useful in troubleshooting scenarios.
+            nettyHttpClient.wiretap(enableWiretap);
+        }
+
         boolean addProxyHandler = false;
 
         if (eventLoopGroup != null) {
@@ -200,6 +252,10 @@ public class NettyAsyncHttpClientBuilder {
 
         // Proxy configurations are present, set up a proxy in Netty.
         if (buildProxyOptions != null) {
+            Pattern nonProxyHostsPattern = CoreUtils.isNullOrEmpty(buildProxyOptions.getNonProxyHosts())
+                ? null
+                : Pattern.compile(buildProxyOptions.getNonProxyHosts(), Pattern.CASE_INSENSITIVE);
+
             // Determine if custom handling will be used, otherwise use Netty's built-in handlers.
             if (handler != null) {
                 /*
@@ -208,31 +264,36 @@ public class NettyAsyncHttpClientBuilder {
                  * before any request data is sent.
                  */
                 addProxyHandler = true;
-                Pattern nonProxyHostsPattern = CoreUtils.isNullOrEmpty(buildProxyOptions.getNonProxyHosts())
-                    ? null
-                    : Pattern.compile(buildProxyOptions.getNonProxyHosts(), Pattern.CASE_INSENSITIVE);
-
                 nettyHttpClient = nettyHttpClient.doOnChannelInit((connectionObserver, channel, socketAddress) -> {
                     if (shouldApplyProxy(socketAddress, nonProxyHostsPattern)) {
-                        channel.pipeline()
-                            .addFirst(NettyPipeline.ProxyHandler, new HttpProxyHandler(
-                                AddressUtils.replaceWithResolved(buildProxyOptions.getAddress()),
-                                handler, proxyChallengeHolder));
+                        HttpProxyHandler httpProxyHandler
+                            = new HttpProxyHandler(AddressUtils.replaceWithResolved(buildProxyOptions.getAddress()),
+                                handler, proxyChallengeHolder);
+                        httpProxyHandler.setConnectTimeoutMillis(connectTimeoutMillis);
+                        channel.pipeline().addFirst(NettyPipeline.ProxyHandler, httpProxyHandler);
                     }
                 });
             } else {
-                nettyHttpClient = nettyHttpClient.proxy(proxy ->
-                    proxy.type(toReactorNettyProxyType(buildProxyOptions.getType()))
-                        .address(buildProxyOptions.getAddress())
+                nettyHttpClient
+                    = nettyHttpClient.proxy(proxy -> proxy.type(toReactorNettyProxyType(buildProxyOptions.getType()))
+                        .socketAddress(buildProxyOptions.getAddress())
+                        .connectTimeoutMillis(connectTimeoutMillis)
                         .username(buildProxyOptions.getUsername())
                         .password(ignored -> buildProxyOptions.getPassword())
                         .nonProxyHosts(buildProxyOptions.getNonProxyHosts()));
             }
 
-            AddressResolverGroup<?> resolver = nettyHttpClient.configuration().resolver();
-            if (resolver == null || addressResolverWasSetByBuilder) {
-                // This mimics behaviors seen when Reactor Netty proxying is used.
-                nettyHttpClient = nettyHttpClient.resolver(NoopAddressResolverGroup.INSTANCE);
+            if (setDefaultAddressResolverGroup) {
+                if (nonProxyHostsPattern != null) {
+                    // Special handling for proxy configurations with non-proxy hosts to use a resolver that can
+                    // alternate between the no-op resolver for proxying situations and the default resolve for
+                    // non-proxy situation.
+                    nettyHttpClient
+                        = nettyHttpClient.resolver(new NonProxyHostAddressResolverGroup(nonProxyHostsPattern));
+                } else {
+                    // This mimics behaviors seen when Reactor Netty proxying is used.
+                    nettyHttpClient = nettyHttpClient.resolver(NoopAddressResolverGroup.INSTANCE);
+                }
             }
         }
 
@@ -300,7 +361,11 @@ public class NettyAsyncHttpClientBuilder {
      *
      * @param enableWiretap Flag indicating wiretap status
      * @return the updated NettyAsyncHttpClientBuilder object.
+     * @deprecated If logging should be enabled as the Reactor Netty level, construct the builder using
+     * {@link #NettyAsyncHttpClientBuilder(HttpClient)} where the passed Reactor Netty HttpClient has logging
+     * configured.
      */
+    @Deprecated
     public NettyAsyncHttpClientBuilder wiretap(boolean enableWiretap) {
         this.enableWiretap = enableWiretap;
         return this;
@@ -490,35 +555,17 @@ public class NettyAsyncHttpClientBuilder {
         switch (azureProxyType) {
             case HTTP:
                 return ProxyProvider.Proxy.HTTP;
+
             case SOCKS4:
                 return ProxyProvider.Proxy.SOCKS4;
+
             case SOCKS5:
                 return ProxyProvider.Proxy.SOCKS5;
+
             default:
-                throw LOGGER.logExceptionAsError(
-                    new IllegalArgumentException("Unknown 'ProxyOptions.Type' enum value"));
+                throw LOGGER
+                    .logExceptionAsError(new IllegalArgumentException("Unknown 'ProxyOptions.Type' enum value"));
         }
-    }
-
-    /*
-     * Returns the timeout in milliseconds to use based on the passed Duration and default timeout.
-     *
-     * If the timeout is {@code null} the default timeout will be used. If the timeout is less than or equal to zero
-     * no timeout will be used. If the timeout is less than one millisecond a timeout of one millisecond will be used.
-     */
-    static long getTimeoutMillis(Duration configuredTimeout, long defaultTimeout) {
-        // Timeout is null, use the default timeout.
-        if (configuredTimeout == null) {
-            return defaultTimeout;
-        }
-
-        // Timeout is less than or equal to zero, return no timeout.
-        if (configuredTimeout.isZero() || configuredTimeout.isNegative()) {
-            return 0;
-        }
-
-        // Return the maximum of the timeout period and the minimum allowed timeout period.
-        return Math.max(configuredTimeout.toMillis(), MINIMUM_TIMEOUT);
     }
 
     private static boolean shouldApplyProxy(SocketAddress socketAddress, Pattern nonProxyHostsPattern) {
@@ -540,11 +587,11 @@ public class NettyAsyncHttpClientBuilder {
      */
     private static void addHandler(HttpClientRequest request, Connection connection, long writeTimeout,
         long responseTimeout, long readTimeout) {
-        AzureNettyHttpClientContext attr = request.currentContextView().getOrDefault(
-            AzureNettyHttpClientContext.KEY, null);
+        AzureNettyHttpClientContext attr
+            = request.currentContextView().getOrDefault(AzureNettyHttpClientContext.KEY, null);
 
-        connection.addHandlerLast(AzureSdkHandler.HANDLER_NAME, new AzureSdkHandler(attr, writeTimeout, responseTimeout,
-            readTimeout));
+        connection.addHandlerLast(AzureSdkHandler.HANDLER_NAME,
+            new AzureSdkHandler(attr, writeTimeout, responseTimeout, readTimeout));
     }
 
     /*

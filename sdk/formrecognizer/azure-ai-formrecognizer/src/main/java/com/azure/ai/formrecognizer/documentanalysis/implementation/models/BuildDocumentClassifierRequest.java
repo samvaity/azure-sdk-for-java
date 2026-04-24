@@ -5,69 +5,78 @@
 package com.azure.ai.formrecognizer.documentanalysis.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-/** Request body to build a new custom document classifier. */
+/**
+ * Request body to build a new custom document classifier.
+ */
 @Fluent
-public final class BuildDocumentClassifierRequest {
+public final class BuildDocumentClassifierRequest implements JsonSerializable<BuildDocumentClassifierRequest> {
     /*
      * Unique document classifier name.
      */
-    @JsonProperty(value = "classifierId", required = true)
-    private String classifierId;
+    @Generated
+    private final String classifierId;
 
     /*
      * Document classifier description.
      */
-    @JsonProperty(value = "description")
+    @Generated
     private String description;
 
     /*
      * List of document types to classify against.
      */
-    @JsonProperty(value = "docTypes", required = true)
-    private Map<String, ClassifierDocumentTypeDetails> docTypes;
+    @Generated
+    private final Map<String, ClassifierDocumentTypeDetails> docTypes;
 
     /**
      * Creates an instance of BuildDocumentClassifierRequest class.
-     *
+     * 
      * @param classifierId the classifierId value to set.
      * @param docTypes the docTypes value to set.
      */
-    @JsonCreator
-    public BuildDocumentClassifierRequest(
-            @JsonProperty(value = "classifierId", required = true) String classifierId,
-            @JsonProperty(value = "docTypes", required = true) Map<String, ClassifierDocumentTypeDetails> docTypes) {
+    @Generated
+    public BuildDocumentClassifierRequest(String classifierId, Map<String, ClassifierDocumentTypeDetails> docTypes) {
         this.classifierId = classifierId;
         this.docTypes = docTypes;
     }
 
     /**
      * Get the classifierId property: Unique document classifier name.
-     *
+     * 
      * @return the classifierId value.
      */
+    @Generated
     public String getClassifierId() {
         return this.classifierId;
     }
 
     /**
      * Get the description property: Document classifier description.
-     *
+     * 
      * @return the description value.
      */
+    @Generated
     public String getDescription() {
         return this.description;
     }
 
     /**
      * Set the description property: Document classifier description.
-     *
+     * 
      * @param description the description value to set.
      * @return the BuildDocumentClassifierRequest object itself.
      */
+    @Generated
     public BuildDocumentClassifierRequest setDescription(String description) {
         this.description = description;
         return this;
@@ -75,10 +84,77 @@ public final class BuildDocumentClassifierRequest {
 
     /**
      * Get the docTypes property: List of document types to classify against.
-     *
+     * 
      * @return the docTypes value.
      */
+    @Generated
     public Map<String, ClassifierDocumentTypeDetails> getDocTypes() {
         return this.docTypes;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("classifierId", this.classifierId);
+        jsonWriter.writeMapField("docTypes", this.docTypes, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeStringField("description", this.description);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of BuildDocumentClassifierRequest from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of BuildDocumentClassifierRequest if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the BuildDocumentClassifierRequest.
+     */
+    @Generated
+    public static BuildDocumentClassifierRequest fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            boolean classifierIdFound = false;
+            String classifierId = null;
+            boolean docTypesFound = false;
+            Map<String, ClassifierDocumentTypeDetails> docTypes = null;
+            String description = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("classifierId".equals(fieldName)) {
+                    classifierId = reader.getString();
+                    classifierIdFound = true;
+                } else if ("docTypes".equals(fieldName)) {
+                    docTypes = reader.readMap(reader1 -> ClassifierDocumentTypeDetails.fromJson(reader1));
+                    docTypesFound = true;
+                } else if ("description".equals(fieldName)) {
+                    description = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (classifierIdFound && docTypesFound) {
+                BuildDocumentClassifierRequest deserializedBuildDocumentClassifierRequest
+                    = new BuildDocumentClassifierRequest(classifierId, docTypes);
+                deserializedBuildDocumentClassifierRequest.description = description;
+
+                return deserializedBuildDocumentClassifierRequest;
+            }
+            List<String> missingProperties = new ArrayList<>();
+            if (!classifierIdFound) {
+                missingProperties.add("classifierId");
+            }
+            if (!docTypesFound) {
+                missingProperties.add("docTypes");
+            }
+
+            throw new IllegalStateException(
+                "Missing required property/properties: " + String.join(", ", missingProperties));
+        });
     }
 }

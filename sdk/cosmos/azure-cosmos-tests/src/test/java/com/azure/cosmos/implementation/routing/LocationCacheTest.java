@@ -3,6 +3,7 @@
 
 package com.azure.cosmos.implementation.routing;
 
+import com.azure.cosmos.CosmosExcludedRegions;
 import com.azure.cosmos.DirectConnectionConfig;
 import com.azure.cosmos.implementation.ConnectionPolicy;
 import com.azure.cosmos.implementation.LifeCycleUtils;
@@ -16,6 +17,7 @@ import com.azure.cosmos.implementation.OperationType;
 import com.azure.cosmos.implementation.ResourceType;
 import com.azure.cosmos.implementation.RxDocumentServiceRequest;
 import com.azure.cosmos.implementation.Utils;
+import com.azure.cosmos.implementation.directconnectivity.ReflectionUtils;
 import com.azure.cosmos.models.ModelBridgeUtils;
 import com.azure.cosmos.implementation.guava25.collect.ImmutableList;
 import com.azure.cosmos.implementation.guava25.collect.Iterables;
@@ -27,26 +29,32 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import static com.azure.cosmos.implementation.TestUtils.mockDiagnosticsClientContext;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Tests for {@link LocationCache}
  */
 public class LocationCacheTest {
     private final static URI DefaultEndpoint = createUrl("https://default.documents.azure.com");
+    private final static URI DefaultRegionalEndpoint = createUrl("https://location1.documents.azure.com");
     private final static URI Location1Endpoint = createUrl("https://location1.documents.azure.com");
     private final static URI Location2Endpoint = createUrl("https://location2.documents.azure.com");
     private final static URI Location3Endpoint = createUrl("https://location3.documents.azure.com");
@@ -89,21 +97,450 @@ public class LocationCacheTest {
         return list.toArray(new Object[][]{});
     }
 
+    // The purpose of validateExcludedRegions is the following:
+    //  1. Test with various combinations of excludedRegions such as:
+    //      a) list with excludedRegions which is a sub-list of preferredRegions
+    //      b) list with excludedRegions which is a sub-list of preferredRegions and has duplicates
+    //      c) list with excludedRegions which is not a sub-list of preferredRegions and has no duplicates
+    //      d) list with excludedRegions which is not a sub-list of preferredRegions and has duplicates
+    //      e) list which is null
+    //      f) list which is empty
+    //      g) whether exclude region works well when preferred region list is empty - in such a case, region exclusion
+    //         should apply to account-level regions
+    //  2. todo: the dataProvider hard codes the list of available read and available write regions - this can be avoided
+    //        a) according to the hardcoding - available read regions: location1, location2; available write regions: location1, location2, location3
+    @DataProvider(name = "excludedRegionsTestConfigs")
+    public Object[][] excludedRegionsTestConfigs() {
+        // Parameters passed:
+        //      1. List of regions to exclude on the client / ConnectionPolicy
+        //      2. List of regions to exclude on the request
+        //      3. The request itself
+        //      4. Expected applicable regions for request
+        //      6. Is preferred region list empty
+        return new Object[][] {
+            {
+                new HashSet<>(Arrays.asList("location1", "location2")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location3Endpoint)),
+                false
+            },
+            {
+                new HashSet<>(Arrays.asList("location1", "location2")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location3Endpoint, Location4Endpoint)),
+                true
+            },
+            {
+                new HashSet<>(Arrays.asList("location1", "location2", "location7")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location3Endpoint)),
+                false
+            },
+            {
+                new HashSet<>(Arrays.asList("location1", "location2", "location7")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location3Endpoint, Location4Endpoint)),
+                true
+            },
+            {
+                null,
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                false
+            },
+            {
+                null,
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint, Location4Endpoint)),
+                true
+            },
+            {
+                new HashSet<>(),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                false
+            },
+            {
+                new HashSet<>(),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint, Location4Endpoint)),
+                true
+            },
+            {
+                new HashSet<>(Arrays.asList("location5, location10, location10")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                false
+            },
+            {
+                new HashSet<>(Arrays.asList("location5, location10, location10")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint, Location4Endpoint)),
+                true
+            },
+            {
+                new HashSet<>(Arrays.asList("location1, location2, location10")),
+                Arrays.asList("location2"),
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location3Endpoint)),
+                false
+            },
+            {
+                new HashSet<>(Arrays.asList("location1, location2, location10")),
+                Arrays.asList("location2"),
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location3Endpoint, Location4Endpoint)),
+                true
+            },
+            {
+                new HashSet<>(Arrays.asList("location1", "location2")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location3Endpoint)),
+                false
+            },
+            {
+                new HashSet<>(Arrays.asList("location1", "location2")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location3Endpoint)),
+                true
+            },
+            {
+                new HashSet<>(Arrays.asList("location1", "location2", "location7")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location3Endpoint)),
+                false
+            },
+            {
+                new HashSet<>(Arrays.asList("location1", "location2", "location7")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location3Endpoint)),
+                true
+            },
+            {
+                null,
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                false
+            },
+            {
+                null,
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                true
+            },
+            {
+                new HashSet<>(),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                false
+            },
+            {
+                new HashSet<>(),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                true
+            },
+            {
+                new HashSet<>(Arrays.asList("location5, location10, location10")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                false
+            },
+            {
+                new HashSet<>(Arrays.asList("location5, location10, location10")),
+                null,
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                true
+            },
+            {
+                new HashSet<>(Arrays.asList("location1, location2, location10")),
+                Arrays.asList("location2"),
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location3Endpoint)),
+                false
+            },
+            {
+                new HashSet<>(Arrays.asList("location1, location2, location10")),
+                Arrays.asList("location2"),
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location3Endpoint)),
+                true
+            }
+        };
+    }
+
+    @DataProvider(name = "effectivePreferredRegionTestConfigs")
+    public Object[][] effectivePreferredRegionTestConfigs() {
+        // Parameters passed:
+        //      1. The request itself
+        //      2. Expected applicable read regions
+        //      3. Expected applicable write regions
+        //      4. Is preferred region list empty
+        //      5. Is default endpoint also a regional endpoint
+        return new Object[][] {
+            {
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint, Location4Endpoint)),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                true,
+                false
+            },
+            {
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint, Location4Endpoint)),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                true,
+                false
+            },
+            {
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(DefaultRegionalEndpoint)),
+                new HashSet<>(Arrays.asList(DefaultRegionalEndpoint)),
+                true,
+                true
+            },
+            {
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(DefaultRegionalEndpoint)),
+                new HashSet<>(Arrays.asList(DefaultRegionalEndpoint)),
+                true,
+                true
+            },
+            {
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                false,
+                false
+            },
+            {
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                false,
+                false
+            },
+            {
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Read,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                false,
+                true
+            },
+            {
+                RxDocumentServiceRequest.create(
+                    mockDiagnosticsClientContext(),
+                    OperationType.Create,
+                    ResourceType.Document),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                new HashSet<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint)),
+                false,
+                true
+            }
+        };
+    }
+
     @Test(groups = "long", dataProvider = "paramsProvider")
     public void validateAsync(boolean useMultipleWriteEndpoints,
                               boolean endpointDiscoveryEnabled,
                               boolean isPreferredListEmpty) throws Exception {
+
+        List<URI> accountLevelWriteEndpoints
+            = new ArrayList<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint));
+        List<URI> accountLevelReadEndpoints
+            = new ArrayList<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint, Location4Endpoint));
+        List<URI> preferredWriteRegionsIfPreferredLocationsIsntEmpty
+            = new ArrayList<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint));
+        List<URI> preferredReadRegionsIfPreferredLocationsIsntEmpty
+            = new ArrayList<>(Arrays.asList(Location1Endpoint, Location2Endpoint, Location3Endpoint));
+
         validateLocationCacheAsync(useMultipleWriteEndpoints,
-                endpointDiscoveryEnabled,
-                isPreferredListEmpty);
+            endpointDiscoveryEnabled,
+            isPreferredListEmpty,
+            preferredReadRegionsIfPreferredLocationsIsntEmpty,
+            preferredWriteRegionsIfPreferredLocationsIsntEmpty,
+            accountLevelReadEndpoints,
+            accountLevelWriteEndpoints);
     }
 
     @Test(groups = "long")
     public void validateWriteEndpointOrderWithClientSideDisableMultipleWriteLocation()  throws Exception {
         this.initialize(false, true, false);
-        assertThat(this.cache.getWriteEndpoints().get(0)).isEqualTo(LocationCacheTest.Location1Endpoint);
-        assertThat(this.cache.getWriteEndpoints().get(1)).isEqualTo(LocationCacheTest.Location2Endpoint);
-        assertThat(this.cache.getWriteEndpoints().get(2)).isEqualTo(LocationCacheTest.Location3Endpoint);
+        assertThat(this.cache.getWriteEndpoints().get(0)).isEqualTo(new RegionalRoutingContext(LocationCacheTest.Location1Endpoint));
+        assertThat(this.cache.getWriteEndpoints().get(1)).isEqualTo(new RegionalRoutingContext(LocationCacheTest.Location2Endpoint));
+        assertThat(this.cache.getWriteEndpoints().get(2)).isEqualTo(new RegionalRoutingContext(LocationCacheTest.Location3Endpoint));
+    }
+
+    @Test(groups = "unit", dataProvider = "excludedRegionsTestConfigs")
+    public void validateExcludedRegions(
+        Set<String> excludedRegionsOnClient,
+        List<String> excludedRegionsOnRequest,
+        RxDocumentServiceRequest request,
+        Set<URI> expectedApplicableEndpoints,
+        boolean isPreferredLocationListEmpty) {
+
+        this.initialize(true, true, isPreferredLocationListEmpty);
+        AtomicReference<CosmosExcludedRegions> cosmosExcludedRegionsAtomicReference = new AtomicReference<>(
+            new CosmosExcludedRegions(new HashSet<>()));
+        Supplier<CosmosExcludedRegions> excludedRegionsSupplier = () -> cosmosExcludedRegionsAtomicReference.get();
+
+        ConnectionPolicy connectionPolicy = ReflectionUtils.getConnectionPolicy(this.cache);
+
+        connectionPolicy.setExcludedRegionsSupplier(excludedRegionsSupplier);
+
+        if (excludedRegionsOnClient == null) {
+            assertThatThrownBy(() -> cosmosExcludedRegionsAtomicReference.set(new CosmosExcludedRegions(excludedRegionsOnClient)))
+                .isInstanceOf(IllegalArgumentException.class);
+        } else {
+
+            cosmosExcludedRegionsAtomicReference.set(new CosmosExcludedRegions(excludedRegionsOnClient));
+
+            request.requestContext.setExcludeRegions(excludedRegionsOnRequest);
+
+            if (request.isReadOnlyRequest()) {
+                List<RegionalRoutingContext> applicableReadEndpoints = cache.getApplicableReadRegionRoutingContexts(request);
+                assertThat(applicableReadEndpoints.size()).isEqualTo(expectedApplicableEndpoints.size());
+                expectedApplicableEndpoints.forEach(endpoint -> assertThat(expectedApplicableEndpoints.contains(endpoint)).isTrue());
+            } else {
+                List<RegionalRoutingContext> applicableWriteEndpoints = cache.getApplicableWriteRegionRoutingContexts(request);
+                assertThat(applicableWriteEndpoints.size()).isEqualTo(expectedApplicableEndpoints.size());
+                expectedApplicableEndpoints.forEach(endpoint -> assertThat(expectedApplicableEndpoints.contains(endpoint)).isTrue());
+            }
+        }
+    }
+
+    @Test(groups = "unit", dataProvider = "effectivePreferredRegionTestConfigs")
+    public void validateEffectivePreferredRegions(
+        RxDocumentServiceRequest request,
+        Set<URI> expectedApplicableReadEndpoints,
+        Set<URI> expectedApplicableWriteEndpoints,
+        boolean isPreferredLocationsListEmpty,
+        boolean isDefaultEndpointAlsoRegionalEndpoint) {
+
+        this.initialize(true, true, isPreferredLocationsListEmpty, isDefaultEndpointAlsoRegionalEndpoint);
+        List<RegionalRoutingContext> applicableReadEndpoints = cache.getApplicableReadRegionRoutingContexts(request);
+        List<RegionalRoutingContext> applicableWriteEndpoints = cache.getApplicableWriteRegionRoutingContexts(request);
+
+        if (request.isReadOnlyRequest()) {
+            assertThat(applicableReadEndpoints.size()).isEqualTo(expectedApplicableReadEndpoints.size());
+            expectedApplicableReadEndpoints.forEach(endpoint -> assertThat(expectedApplicableReadEndpoints.contains(endpoint)).isTrue());
+        } else {
+            assertThat(applicableWriteEndpoints.size()).isEqualTo(expectedApplicableWriteEndpoints.size());
+            expectedApplicableWriteEndpoints.forEach(endpoint -> assertThat(expectedApplicableWriteEndpoints.contains(endpoint)).isTrue());
+        }
     }
 
     @AfterClass()
@@ -117,6 +554,7 @@ public class LocationCacheTest {
                 ImmutableList.of(
                         createDatabaseAccountLocation("location1", LocationCacheTest.Location1Endpoint.toString()),
                         createDatabaseAccountLocation("location2", LocationCacheTest.Location2Endpoint.toString()),
+                        createDatabaseAccountLocation("location3", LocationCacheTest.Location3Endpoint.toString()),
                         createDatabaseAccountLocation("location4", LocationCacheTest.Location4Endpoint.toString())),
 
                 // write endpoints
@@ -133,29 +571,42 @@ public class LocationCacheTest {
     private void initialize(
             boolean useMultipleWriteLocations,
             boolean enableEndpointDiscovery,
-            boolean isPreferredLocationsListEmpty) throws Exception {
+            boolean isPreferredLocationsListEmpty) {
+
+        this.initialize(useMultipleWriteLocations, enableEndpointDiscovery, isPreferredLocationsListEmpty, false);
+    }
+
+    private void initialize(boolean useMultipleWriteLocations,
+                            boolean enableEndpointDiscovery,
+                            boolean isPreferredLocationsListEmpty,
+                            boolean isDefaultEndpointAlsoRegionalEndpoint) {
+
+        ConnectionPolicy connectionPolicy = new ConnectionPolicy(DirectConnectionConfig.getDefaultConfig());
+        connectionPolicy.setEndpointDiscoveryEnabled(enableEndpointDiscovery);
+        connectionPolicy.setMultipleWriteRegionsEnabled(useMultipleWriteLocations);
 
         this.mockedClient = new DatabaseAccountManagerInternalMock();
         this.databaseAccount = LocationCacheTest.createDatabaseAccount(useMultipleWriteLocations);
 
         this.preferredLocations = isPreferredLocationsListEmpty ?
-                new UnmodifiableList<>(Collections.emptyList()) :
-                new UnmodifiableList<>(ImmutableList.of("location1", "location2", "location3"));
+            new UnmodifiableList<>(Collections.emptyList()) :
+            new UnmodifiableList<>(ImmutableList.of("location1", "location2", "location3"));
 
-        this.cache = new LocationCache(
-                this.preferredLocations,
-                LocationCacheTest.DefaultEndpoint,
-                enableEndpointDiscovery,
-                useMultipleWriteLocations,
-                configs);
-
-        this.cache.onDatabaseAccountRead(this.databaseAccount);
-
-        ConnectionPolicy connectionPolicy = new ConnectionPolicy(DirectConnectionConfig.getDefaultConfig());
-        connectionPolicy.setEndpointDiscoveryEnabled(enableEndpointDiscovery);
-        connectionPolicy.setMultipleWriteRegionsEnabled(useMultipleWriteLocations);
         connectionPolicy.setPreferredRegions(this.preferredLocations);
 
+        if (isDefaultEndpointAlsoRegionalEndpoint) {
+            this.cache = new LocationCache(
+                connectionPolicy,
+                LocationCacheTest.DefaultRegionalEndpoint,
+                configs);
+        } else {
+            this.cache = new LocationCache(
+                connectionPolicy,
+                LocationCacheTest.DefaultEndpoint,
+                configs);
+        }
+
+        this.cache.onDatabaseAccountRead(this.databaseAccount);
         this.endpointManager = new GlobalEndpointManager(mockedClient, connectionPolicy, configs);
     }
 
@@ -197,16 +648,26 @@ public class LocationCacheTest {
     private void validateLocationCacheAsync(
             boolean useMultipleWriteLocations,
             boolean endpointDiscoveryEnabled,
-            boolean isPreferredListEmpty) throws Exception {
-        for (int writeLocationIndex = 0; writeLocationIndex < 3; writeLocationIndex++) {
-            for (int readLocationIndex = 0; readLocationIndex < 2; readLocationIndex++) {
+            boolean isPreferredListEmpty,
+            List<URI> preferredReadEndpointsIfPreferredRegionsSetOnClient,
+            List<URI> preferredWriteEndpointsIfPreferredRegionsSetOnClient,
+            List<URI> accountLevelReadEndpoints,
+            List<URI> accountLevelWriteEndpoints) throws Exception {
+
+        int maxReadLocationIndex = isPreferredListEmpty ?
+            accountLevelReadEndpoints.size() : preferredReadEndpointsIfPreferredRegionsSetOnClient.size();
+        int maxWriteLocationIndex = isPreferredListEmpty ?
+            accountLevelWriteEndpoints.size() : preferredWriteEndpointsIfPreferredRegionsSetOnClient.size();
+
+        for (int writeLocationIndex = 0; writeLocationIndex < maxWriteLocationIndex; writeLocationIndex++) {
+            for (int readLocationIndex = 0; readLocationIndex < maxReadLocationIndex; readLocationIndex++) {
                 this.initialize(
                         useMultipleWriteLocations,
                         endpointDiscoveryEnabled,
                         isPreferredListEmpty);
 
-                UnmodifiableList<URI> currentWriteEndpoints = this.cache.getWriteEndpoints();
-                UnmodifiableList<URI> currentReadEndpoints = this.cache.getReadEndpoints();
+                UnmodifiableList<RegionalRoutingContext> currentWriteEndpoints = this.cache.getWriteEndpoints();
+                UnmodifiableList<RegionalRoutingContext> currentReadEndpoints = this.cache.getReadEndpoints();
                 for (int i = 0; i < readLocationIndex; i++) {
                     this.cache.markEndpointUnavailableForRead(createUrl(Iterables.get(this.databaseAccount.getReadableLocations(), i).getEndpoint()));
                     this.endpointManager.markEndpointUnavailableForRead(createUrl(Iterables.get(this.databaseAccount.getReadableLocations(), i).getEndpoint()));;
@@ -218,25 +679,54 @@ public class LocationCacheTest {
 
                 Map<String, URI> writeEndpointByLocation = toStream(this.databaseAccount.getWritableLocations())
                         .collect(Collectors.toMap(i -> i.getName(), i -> createUrl(i.getEndpoint())));
-
                 Map<String, URI> readEndpointByLocation = toStream(this.databaseAccount.getReadableLocations())
                         .collect(Collectors.toMap(i -> i.getName(), i -> createUrl(i.getEndpoint())));
 
-                URI[] preferredAvailableWriteEndpoints = toStream(this.preferredLocations).skip(writeLocationIndex)
+                accountLevelWriteEndpoints = toStream(this.databaseAccount.getWritableLocations())
+                    .map(databaseAccountLocation -> writeEndpointByLocation.get(databaseAccountLocation.getName()))
+                    .collect(Collectors.toList());
+
+                accountLevelReadEndpoints = toStream(this.databaseAccount.getReadableLocations())
+                    .map(databaseAccountLocation -> readEndpointByLocation.get(databaseAccountLocation.getName()))
+                    .collect(Collectors.toList());
+
+                List<String> preferredRegionsWhenClientLevelPreferredRegionsIsEmpty = this.cache.getEffectivePreferredLocations();
+
+                URI[] preferredAvailableWriteEndpoints, preferredAvailableReadEndpoints;
+
+                if (isPreferredListEmpty) {
+                    preferredAvailableWriteEndpoints = toStream(preferredRegionsWhenClientLevelPreferredRegionsIsEmpty).skip(writeLocationIndex)
                         .filter(location -> writeEndpointByLocation.containsKey(location))
                         .map(location -> writeEndpointByLocation.get(location))
                         .collect(Collectors.toList()).toArray(new URI[0]);
 
-                URI[] preferredAvailableReadEndpoints = toStream(this.preferredLocations).skip(readLocationIndex)
+                    preferredAvailableReadEndpoints = toStream(preferredRegionsWhenClientLevelPreferredRegionsIsEmpty).skip(readLocationIndex)
                         .filter(location -> readEndpointByLocation.containsKey(location))
                         .map(location -> readEndpointByLocation.get(location))
                         .collect(Collectors.toList()).toArray(new URI[0]);
 
+                } else {
+                    preferredAvailableWriteEndpoints = toStream(this.preferredLocations).skip(writeLocationIndex)
+                        .filter(location -> writeEndpointByLocation.containsKey(location))
+                        .map(location -> writeEndpointByLocation.get(location))
+                        .collect(Collectors.toList()).toArray(new URI[0]);
+
+                    preferredAvailableReadEndpoints = toStream(this.preferredLocations).skip(readLocationIndex)
+                        .filter(location -> readEndpointByLocation.containsKey(location))
+                        .map(location -> readEndpointByLocation.get(location))
+                        .collect(Collectors.toList()).toArray(new URI[0]);
+                }
+
                 this.validateEndpointRefresh(
                         useMultipleWriteLocations,
                         endpointDiscoveryEnabled,
+                        isPreferredListEmpty,
                         preferredAvailableWriteEndpoints,
                         preferredAvailableReadEndpoints,
+                        preferredRegionsWhenClientLevelPreferredRegionsIsEmpty,
+                        preferredRegionsWhenClientLevelPreferredRegionsIsEmpty,
+                        accountLevelWriteEndpoints,
+                        accountLevelReadEndpoints,
                         readLocationIndex > 0 && !currentReadEndpoints.get(0).equals(DefaultEndpoint),
                         writeLocationIndex > 0,
                         currentReadEndpoints.size() > 1,
@@ -264,8 +754,13 @@ public class LocationCacheTest {
     private void validateEndpointRefresh(
             boolean useMultipleWriteLocations,
             boolean endpointDiscoveryEnabled,
-            URI[] preferredAvailableWriteEndpoints,
-            URI[] preferredAvailableReadEndpoints,
+            boolean isPreferredListEmpty,
+            URI[] preferredAvailableWriteEndpointsOrAccountLevelWriteEndpoints,
+            URI[] preferredAvailableReadEndpointsOrAccountLevelReadEndpoints,
+            List<String> preferredAvailableWriteRegionsOrAccountLevelWriteEndpoints,
+            List<String> preferredAvailableReadRegionsOrAccountLevelReadEndpoints,
+            List<URI> accountLevelWriteEndpoints,
+            List<URI> accountLevelReadEndpoints,
             boolean isFirstReadEndpointUnavailable,
             boolean isFirstWriteEndpointUnavailable,
             boolean hasMoreThanOneReadEndpoints,
@@ -279,17 +774,22 @@ public class LocationCacheTest {
         boolean isMostPreferredLocationUnavailableForRead = isFirstReadEndpointUnavailable;
         boolean isMostPreferredLocationUnavailableForWrite = useMultipleWriteLocations ?
                 false : isFirstWriteEndpointUnavailable;
-        if (this.preferredLocations.size() > 0) {
-            String mostPreferredReadLocationName = this.preferredLocations.stream()
+        if (!this.preferredLocations.isEmpty() || isPreferredListEmpty) {
+            String mostPreferredReadLocationName = (isPreferredListEmpty && endpointDiscoveryEnabled) ? preferredAvailableReadRegionsOrAccountLevelReadEndpoints.get(0) :
+                this.preferredLocations.stream()
                     .filter(location -> toStream(databaseAccount.getReadableLocations())
                             .anyMatch(readLocation -> readLocation.getName().equals(location)))
                     .findFirst().orElse(null);
 
             URI mostPreferredReadEndpoint = LocationCacheTest.EndpointByLocation.get(mostPreferredReadLocationName);
-            isMostPreferredLocationUnavailableForRead = preferredAvailableReadEndpoints.length == 0 ?
-                    true : (!areEqual(preferredAvailableReadEndpoints[0], mostPreferredReadEndpoint));
+            isMostPreferredLocationUnavailableForRead = preferredAvailableReadEndpointsOrAccountLevelReadEndpoints.length == 0 ?
+                    true : (!areEqual(preferredAvailableReadEndpointsOrAccountLevelReadEndpoints[0], mostPreferredReadEndpoint));
 
-            String mostPreferredWriteLocationName = this.preferredLocations.stream()
+            if (isPreferredListEmpty && endpointDiscoveryEnabled) {
+                isMostPreferredLocationUnavailableForRead = !areEqual(preferredAvailableReadEndpointsOrAccountLevelReadEndpoints[0], accountLevelReadEndpoints.get(0));
+            }
+
+            String mostPreferredWriteLocationName = (isPreferredListEmpty && endpointDiscoveryEnabled) ? preferredAvailableWriteRegionsOrAccountLevelWriteEndpoints.get(0) :this.preferredLocations.stream()
                     .filter(location -> toStream(databaseAccount.getWritableLocations())
                             .anyMatch(writeLocation -> writeLocation.getName().equals(location)))
                     .findFirst().orElse(null);
@@ -297,8 +797,12 @@ public class LocationCacheTest {
             URI mostPreferredWriteEndpoint = LocationCacheTest.EndpointByLocation.get(mostPreferredWriteLocationName);
 
             if (useMultipleWriteLocations) {
-                isMostPreferredLocationUnavailableForWrite = preferredAvailableWriteEndpoints.length == 0 ?
-                        true : (!areEqual(preferredAvailableWriteEndpoints[0], mostPreferredWriteEndpoint));
+                isMostPreferredLocationUnavailableForWrite = preferredAvailableWriteEndpointsOrAccountLevelWriteEndpoints.length == 0 ?
+                        true : (!areEqual(preferredAvailableWriteEndpointsOrAccountLevelWriteEndpoints[0], mostPreferredWriteEndpoint));
+
+                if (isPreferredListEmpty && endpointDiscoveryEnabled) {
+                    isMostPreferredLocationUnavailableForWrite = !areEqual(preferredAvailableWriteEndpointsOrAccountLevelWriteEndpoints[0], accountLevelWriteEndpoints.get(0));
+                }
             }
         }
 
@@ -377,8 +881,6 @@ public class LocationCacheTest {
 
         if (!endpointDiscoveryEnabled) {
             firstAvailableReadEndpoint = LocationCacheTest.DefaultEndpoint;
-        } else if (this.preferredLocations.size() == 0) {
-            firstAvailableReadEndpoint = firstAvailableWriteEndpoint;
         } else if (availableReadEndpoints.length > 0) {
             firstAvailableReadEndpoint = availableReadEndpoints[0];
         } else {
@@ -395,28 +897,28 @@ public class LocationCacheTest {
 
         // If current write endpoint is unavailable, write endpoints order doesn't change
         // ALL write requests flip-flop between current write and alternate write endpoint
-        UnmodifiableList<URI> writeEndpoints = this.cache.getWriteEndpoints();
+        UnmodifiableList<RegionalRoutingContext> writeEndpoints = this.cache.getWriteEndpoints();
 
-        assertThat(firstAvailableWriteEndpoint).isEqualTo(writeEndpoints.get(0));
-        assertThat(secondAvailableWriteEndpoint).isEqualTo(this.resolveEndpointForWriteRequest(ResourceType.Document, true));
-        assertThat(firstAvailableWriteEndpoint).isEqualTo(this.resolveEndpointForWriteRequest(ResourceType.Document, false));
+        assertThat(new RegionalRoutingContext(firstAvailableWriteEndpoint)).isEqualTo(writeEndpoints.get(0));
+        assertThat(new RegionalRoutingContext(secondAvailableWriteEndpoint)).isEqualTo(this.resolveEndpointForWriteRequest(ResourceType.Document, true));
+        assertThat(new RegionalRoutingContext(firstAvailableWriteEndpoint)).isEqualTo(this.resolveEndpointForWriteRequest(ResourceType.Document, false));
 
         // Writes to other resource types should be directed to first/second write getEndpoint
-        assertThat(firstWriteEnpoint).isEqualTo(this.resolveEndpointForWriteRequest(ResourceType.Database, false));
-        assertThat(secondWriteEnpoint).isEqualTo(this.resolveEndpointForWriteRequest(ResourceType.Database, true));
+        assertThat(new RegionalRoutingContext(firstWriteEnpoint)).isEqualTo(this.resolveEndpointForWriteRequest(ResourceType.Database, false));
+        assertThat(new RegionalRoutingContext(secondWriteEnpoint)).isEqualTo(this.resolveEndpointForWriteRequest(ResourceType.Database, true));
 
         // Reads should be directed to available read endpoints regardless of resource type
-        assertThat(firstAvailableReadEndpoint).isEqualTo(this.resolveEndpointForReadRequest(true));
-        assertThat(firstAvailableReadEndpoint).isEqualTo(this.resolveEndpointForReadRequest(false));
+        assertThat(new RegionalRoutingContext(firstAvailableReadEndpoint)).isEqualTo(this.resolveEndpointForReadRequest(true));
+        assertThat(new RegionalRoutingContext(firstAvailableReadEndpoint)).isEqualTo(this.resolveEndpointForReadRequest(false));
     }
 
-    private URI resolveEndpointForReadRequest(boolean masterResourceType) {
+    private RegionalRoutingContext resolveEndpointForReadRequest(boolean masterResourceType) {
         RxDocumentServiceRequest request = RxDocumentServiceRequest.create(mockDiagnosticsClientContext(), OperationType.Read,
                 masterResourceType ? ResourceType.Database : ResourceType.Document);
         return this.cache.resolveServiceEndpoint(request);
     }
 
-    private URI resolveEndpointForWriteRequest(ResourceType resourceType, boolean useAlternateWriteEndpoint) {
+    private RegionalRoutingContext resolveEndpointForWriteRequest(ResourceType resourceType, boolean useAlternateWriteEndpoint) {
         RxDocumentServiceRequest request = RxDocumentServiceRequest.create(mockDiagnosticsClientContext(), OperationType.Create, resourceType);
         request.requestContext.routeToLocation(useAlternateWriteEndpoint ? 1 : 0, resourceType.isCollectionChild());
         return this.cache.resolveServiceEndpoint(request);
@@ -430,6 +932,7 @@ public class LocationCacheTest {
             return RxDocumentServiceRequest.create(mockDiagnosticsClientContext(), OperationType.Create, isMasterResourceType ? ResourceType.Database : ResourceType.Document);
         }
     }
+
     private static URI createUrl(String url) {
         try {
             return new URI(url);

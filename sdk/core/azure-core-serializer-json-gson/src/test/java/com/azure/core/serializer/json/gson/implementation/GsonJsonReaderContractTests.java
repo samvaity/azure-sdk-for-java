@@ -17,8 +17,8 @@ public class GsonJsonReaderContractTests extends JsonReaderContractTests {
     private JsonReader reader;
 
     @Override
-    public JsonReader getJsonReader(String json) throws IOException {
-        this.reader = AzureJsonUtils.createReader(json, new JsonOptions());
+    public JsonReader getJsonReader(String json, JsonOptions options) throws IOException {
+        this.reader = AzureJsonUtils.createReader(json, options);
         return reader;
     }
 

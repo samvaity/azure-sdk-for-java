@@ -5,38 +5,55 @@
 package com.azure.resourcemanager.servicefabric.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The local certificate store location. */
+/**
+ * The local certificate store location.
+ */
 public final class StoreName extends ExpandableStringEnum<StoreName> {
-    /** Static value AddressBook for StoreName. */
+    /**
+     * Static value AddressBook for StoreName.
+     */
     public static final StoreName ADDRESS_BOOK = fromString("AddressBook");
 
-    /** Static value AuthRoot for StoreName. */
+    /**
+     * Static value AuthRoot for StoreName.
+     */
     public static final StoreName AUTH_ROOT = fromString("AuthRoot");
 
-    /** Static value CertificateAuthority for StoreName. */
+    /**
+     * Static value CertificateAuthority for StoreName.
+     */
     public static final StoreName CERTIFICATE_AUTHORITY = fromString("CertificateAuthority");
 
-    /** Static value Disallowed for StoreName. */
+    /**
+     * Static value Disallowed for StoreName.
+     */
     public static final StoreName DISALLOWED = fromString("Disallowed");
 
-    /** Static value My for StoreName. */
+    /**
+     * Static value My for StoreName.
+     */
     public static final StoreName MY = fromString("My");
 
-    /** Static value Root for StoreName. */
+    /**
+     * Static value Root for StoreName.
+     */
     public static final StoreName ROOT = fromString("Root");
 
-    /** Static value TrustedPeople for StoreName. */
+    /**
+     * Static value TrustedPeople for StoreName.
+     */
     public static final StoreName TRUSTED_PEOPLE = fromString("TrustedPeople");
 
-    /** Static value TrustedPublisher for StoreName. */
+    /**
+     * Static value TrustedPublisher for StoreName.
+     */
     public static final StoreName TRUSTED_PUBLISHER = fromString("TrustedPublisher");
 
     /**
      * Creates a new instance of StoreName value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -45,18 +62,17 @@ public final class StoreName extends ExpandableStringEnum<StoreName> {
 
     /**
      * Creates or finds a StoreName from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding StoreName.
      */
-    @JsonCreator
     public static StoreName fromString(String name) {
         return fromString(name, StoreName.class);
     }
 
     /**
      * Gets known StoreName values.
-     *
+     * 
      * @return known StoreName values.
      */
     public static Collection<StoreName> values() {

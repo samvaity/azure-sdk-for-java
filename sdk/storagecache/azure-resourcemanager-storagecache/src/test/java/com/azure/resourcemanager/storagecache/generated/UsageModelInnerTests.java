@@ -12,26 +12,23 @@ import org.junit.jupiter.api.Assertions;
 public final class UsageModelInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        UsageModelInner model =
-            BinaryData
-                .fromString(
-                    "{\"display\":{\"description\":\"yp\"},\"modelName\":\"bpizcdrqjsdpydn\",\"targetType\":\"hxdeoejz\"}")
-                .toObject(UsageModelInner.class);
-        Assertions.assertEquals("yp", model.display().description());
-        Assertions.assertEquals("bpizcdrqjsdpydn", model.modelName());
-        Assertions.assertEquals("hxdeoejz", model.targetType());
+        UsageModelInner model = BinaryData
+            .fromString(
+                "{\"display\":{\"description\":\"zxctobgb\"},\"modelName\":\"moizpos\",\"targetType\":\"grcfb\"}")
+            .toObject(UsageModelInner.class);
+        Assertions.assertEquals("zxctobgb", model.display().description());
+        Assertions.assertEquals("moizpos", model.modelName());
+        Assertions.assertEquals("grcfb", model.targetType());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        UsageModelInner model =
-            new UsageModelInner()
-                .withDisplay(new UsageModelDisplay().withDescription("yp"))
-                .withModelName("bpizcdrqjsdpydn")
-                .withTargetType("hxdeoejz");
+        UsageModelInner model = new UsageModelInner().withDisplay(new UsageModelDisplay().withDescription("zxctobgb"))
+            .withModelName("moizpos")
+            .withTargetType("grcfb");
         model = BinaryData.fromObject(model).toObject(UsageModelInner.class);
-        Assertions.assertEquals("yp", model.display().description());
-        Assertions.assertEquals("bpizcdrqjsdpydn", model.modelName());
-        Assertions.assertEquals("hxdeoejz", model.targetType());
+        Assertions.assertEquals("zxctobgb", model.display().description());
+        Assertions.assertEquals("moizpos", model.modelName());
+        Assertions.assertEquals("grcfb", model.targetType());
     }
 }

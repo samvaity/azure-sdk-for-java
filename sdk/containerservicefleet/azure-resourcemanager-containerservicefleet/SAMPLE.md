@@ -1,23 +1,55 @@
 # Code snippets and samples
 
 
+## AutoUpgradeProfileOperations
+
+- [GenerateUpdateRun](#autoupgradeprofileoperations_generateupdaterun)
+
+## AutoUpgradeProfiles
+
+- [CreateOrUpdate](#autoupgradeprofiles_createorupdate)
+- [Delete](#autoupgradeprofiles_delete)
+- [Get](#autoupgradeprofiles_get)
+- [ListByFleet](#autoupgradeprofiles_listbyfleet)
+
+## FleetManagedNamespaces
+
+- [CreateOrUpdate](#fleetmanagednamespaces_createorupdate)
+- [Delete](#fleetmanagednamespaces_delete)
+- [Get](#fleetmanagednamespaces_get)
+- [ListByFleet](#fleetmanagednamespaces_listbyfleet)
+- [Update](#fleetmanagednamespaces_update)
+
 ## FleetMembers
 
 - [Create](#fleetmembers_create)
 - [Delete](#fleetmembers_delete)
 - [Get](#fleetmembers_get)
 - [ListByFleet](#fleetmembers_listbyfleet)
-- [Update](#fleetmembers_update)
+- [UpdateAsync](#fleetmembers_updateasync)
+
+## FleetUpdateStrategies
+
+- [CreateOrUpdate](#fleetupdatestrategies_createorupdate)
+- [Delete](#fleetupdatestrategies_delete)
+- [Get](#fleetupdatestrategies_get)
+- [ListByFleet](#fleetupdatestrategies_listbyfleet)
 
 ## Fleets
 
-- [CreateOrUpdate](#fleets_createorupdate)
+- [Create](#fleets_create)
 - [Delete](#fleets_delete)
 - [GetByResourceGroup](#fleets_getbyresourcegroup)
 - [List](#fleets_list)
 - [ListByResourceGroup](#fleets_listbyresourcegroup)
 - [ListCredentials](#fleets_listcredentials)
-- [Update](#fleets_update)
+- [UpdateAsync](#fleets_updateasync)
+
+## Gates
+
+- [Get](#gates_get)
+- [ListByFleet](#gates_listbyfleet)
+- [Update](#gates_update)
 
 ## Operations
 
@@ -29,25 +61,356 @@
 - [Delete](#updateruns_delete)
 - [Get](#updateruns_get)
 - [ListByFleet](#updateruns_listbyfleet)
+- [Skip](#updateruns_skip)
 - [Start](#updateruns_start)
 - [Stop](#updateruns_stop)
+### AutoUpgradeProfileOperations_GenerateUpdateRun
+
+```java
+/**
+ * Samples for AutoUpgradeProfileOperations GenerateUpdateRun.
+ */
+public final class AutoUpgradeProfileOperationsGenerateUpdateRunSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/AutoUpgradeProfileOperations_GenerateUpdateRun.json
+     */
+    /**
+     * Sample code: AutoUpgradeProfileOperations_GenerateUpdateRun.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void autoUpgradeProfileOperationsGenerateUpdateRun(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.autoUpgradeProfileOperations()
+            .generateUpdateRun("rgfleets", "fleet1", "aup1", com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### AutoUpgradeProfiles_CreateOrUpdate
+
+```java
+import com.azure.resourcemanager.containerservicefleet.models.AutoUpgradeNodeImageSelection;
+import com.azure.resourcemanager.containerservicefleet.models.AutoUpgradeNodeImageSelectionType;
+import com.azure.resourcemanager.containerservicefleet.models.UpgradeChannel;
+
+/**
+ * Samples for AutoUpgradeProfiles CreateOrUpdate.
+ */
+public final class AutoUpgradeProfilesCreateOrUpdateSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/AutoUpgradeProfiles_CreateOrUpdate.json
+     */
+    /**
+     * Sample code: Create an AutoUpgradeProfile.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void createAnAutoUpgradeProfile(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.autoUpgradeProfiles()
+            .define("autoupgradeprofile1")
+            .withExistingFleet("rgfleets", "fleet1")
+            .withUpdateStrategyId(
+                "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rgfleets/providers/Microsoft.ContainerService/fleets/fleet1/updateStrategies/strategy1")
+            .withChannel(UpgradeChannel.STABLE)
+            .withNodeImageSelection(
+                new AutoUpgradeNodeImageSelection().withType(AutoUpgradeNodeImageSelectionType.LATEST))
+            .withDisabled(true)
+            .withIfMatch("uktvayathbu")
+            .withIfNoneMatch("vdjolwxnefqamimybcvxxva")
+            .create();
+    }
+}
+```
+
+### AutoUpgradeProfiles_Delete
+
+```java
+/**
+ * Samples for AutoUpgradeProfiles Delete.
+ */
+public final class AutoUpgradeProfilesDeleteSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/AutoUpgradeProfiles_Delete.json
+     */
+    /**
+     * Sample code: Delete an AutoUpgradeProfile resource.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void deleteAnAutoUpgradeProfileResource(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.autoUpgradeProfiles()
+            .delete("rg1", "fleet1", "autoupgradeprofile1", null, com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### AutoUpgradeProfiles_Get
+
+```java
+/**
+ * Samples for AutoUpgradeProfiles Get.
+ */
+public final class AutoUpgradeProfilesGetSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/AutoUpgradeProfiles_Get.json
+     */
+    /**
+     * Sample code: Gets an AutoUpgradeProfile resource.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void getsAnAutoUpgradeProfileResource(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.autoUpgradeProfiles()
+            .getWithResponse("rgfleets", "fleet1", "autoupgradeprofile1", com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### AutoUpgradeProfiles_ListByFleet
+
+```java
+/**
+ * Samples for AutoUpgradeProfiles ListByFleet.
+ */
+public final class AutoUpgradeProfilesListByFleetSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/AutoUpgradeProfiles_ListByFleet.json
+     */
+    /**
+     * Sample code: Lists the AutoUpgradeProfile resources by fleet.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void listsTheAutoUpgradeProfileResourcesByFleet(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.autoUpgradeProfiles().listByFleet("rgfleets", "fleet1", null, null, com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### FleetManagedNamespaces_CreateOrUpdate
+
+```java
+import com.azure.resourcemanager.containerservicefleet.models.AdoptionPolicy;
+import com.azure.resourcemanager.containerservicefleet.models.Affinity;
+import com.azure.resourcemanager.containerservicefleet.models.ClusterAffinity;
+import com.azure.resourcemanager.containerservicefleet.models.ClusterResourcePlacementSpec;
+import com.azure.resourcemanager.containerservicefleet.models.ClusterSelector;
+import com.azure.resourcemanager.containerservicefleet.models.ClusterSelectorTerm;
+import com.azure.resourcemanager.containerservicefleet.models.DeletePolicy;
+import com.azure.resourcemanager.containerservicefleet.models.LabelSelector;
+import com.azure.resourcemanager.containerservicefleet.models.LabelSelectorOperator;
+import com.azure.resourcemanager.containerservicefleet.models.LabelSelectorRequirement;
+import com.azure.resourcemanager.containerservicefleet.models.ManagedNamespaceProperties;
+import com.azure.resourcemanager.containerservicefleet.models.NetworkPolicy;
+import com.azure.resourcemanager.containerservicefleet.models.PlacementPolicy;
+import com.azure.resourcemanager.containerservicefleet.models.PlacementProfile;
+import com.azure.resourcemanager.containerservicefleet.models.PlacementType;
+import com.azure.resourcemanager.containerservicefleet.models.PolicyRule;
+import com.azure.resourcemanager.containerservicefleet.models.PropagationPolicy;
+import com.azure.resourcemanager.containerservicefleet.models.PropagationType;
+import com.azure.resourcemanager.containerservicefleet.models.PropertySelector;
+import com.azure.resourcemanager.containerservicefleet.models.PropertySelectorOperator;
+import com.azure.resourcemanager.containerservicefleet.models.PropertySelectorRequirement;
+import com.azure.resourcemanager.containerservicefleet.models.ResourceQuota;
+import com.azure.resourcemanager.containerservicefleet.models.TaintEffect;
+import com.azure.resourcemanager.containerservicefleet.models.Toleration;
+import com.azure.resourcemanager.containerservicefleet.models.TolerationOperator;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Samples for FleetManagedNamespaces CreateOrUpdate.
+ */
+public final class FleetManagedNamespacesCreateOrUpdateSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/FleetManagedNamespaces_CreateOrUpdate.json
+     */
+    /**
+     * Sample code: FleetManagedNamespaces_CreateOrUpdate.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void fleetManagedNamespacesCreateOrUpdate(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleetManagedNamespaces()
+            .define("namespace1")
+            .withRegion("eastus")
+            .withExistingFleet("rgfleets", "fleet1")
+            .withManagedNamespaceProperties(new ManagedNamespaceProperties()
+                .withLabels(mapOf("key1", "fakeTokenPlaceholder"))
+                .withAnnotations(mapOf("key2", "fakeTokenPlaceholder"))
+                .withDefaultResourceQuota(new ResourceQuota().withCpuRequest("1")
+                    .withCpuLimit("1")
+                    .withMemoryRequest("10Gi")
+                    .withMemoryLimit("32Gi"))
+                .withDefaultNetworkPolicy(
+                    new NetworkPolicy().withIngress(PolicyRule.ALLOW_SAME_NAMESPACE).withEgress(PolicyRule.ALLOW_ALL)))
+            .withAdoptionPolicy(AdoptionPolicy.NEVER)
+            .withDeletePolicy(DeletePolicy.KEEP)
+            .withPropagationPolicy(
+                new PropagationPolicy().withType(PropagationType.PLACEMENT)
+                    .withPlacementProfile(
+                        new PlacementProfile()
+                            .withDefaultClusterResourcePlacement(
+                                new ClusterResourcePlacementSpec()
+                                    .withPolicy(new PlacementPolicy().withPlacementType(PlacementType.PICK_ALL)
+                                        .withAffinity(new Affinity().withClusterAffinity(
+                                            new ClusterAffinity().withRequiredDuringSchedulingIgnoredDuringExecution(
+                                                new ClusterSelector()
+                                                    .withClusterSelectorTerms(Arrays.asList(new ClusterSelectorTerm()
+                                                        .withLabelSelector(
+                                                            new LabelSelector().withMatchLabels(mapOf("gpu", "true"))
+                                                                .withMatchExpressions(
+                                                                    Arrays.asList(new LabelSelectorRequirement()
+                                                                        .withKey("fakeTokenPlaceholder")
+                                                                        .withOperator(LabelSelectorOperator.IN)
+                                                                        .withValues(Arrays.asList("production1",
+                                                                            "production2")))))
+                                                        .withPropertySelector(
+                                                            new PropertySelector().withMatchExpressions(Arrays.asList(
+                                                                new PropertySelectorRequirement().withName("zones")
+                                                                    .withOperator(PropertySelectorOperator.GT)
+                                                                    .withValues(Arrays.asList("1"))))))))))
+                                        .withTolerations(Arrays.asList(new Toleration().withKey("fakeTokenPlaceholder")
+                                            .withOperator(TolerationOperator.EXISTS)
+                                            .withValue("true")
+                                            .withEffect(TaintEffect.NO_SCHEDULE)))))))
+            .create();
+    }
+
+    // Use "Map.of" if available
+    @SuppressWarnings("unchecked")
+    private static <T> Map<String, T> mapOf(Object... inputs) {
+        Map<String, T> map = new HashMap<>();
+        for (int i = 0; i < inputs.length; i += 2) {
+            String key = (String) inputs[i];
+            T value = (T) inputs[i + 1];
+            map.put(key, value);
+        }
+        return map;
+    }
+}
+```
+
+### FleetManagedNamespaces_Delete
+
+```java
+/**
+ * Samples for FleetManagedNamespaces Delete.
+ */
+public final class FleetManagedNamespacesDeleteSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/FleetManagedNamespaces_Delete.json
+     */
+    /**
+     * Sample code: FleetManagedNamespaces_Delete.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void fleetManagedNamespacesDelete(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleetManagedNamespaces()
+            .delete("rgfleets", "fleet1", "namespace1", null, com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### FleetManagedNamespaces_Get
+
+```java
+/**
+ * Samples for FleetManagedNamespaces Get.
+ */
+public final class FleetManagedNamespacesGetSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/FleetManagedNamespaces_Get.json
+     */
+    /**
+     * Sample code: FleetManagedNamespaces_Get.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void fleetManagedNamespacesGet(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleetManagedNamespaces()
+            .getWithResponse("rgfleets", "fleet1", "namespace1", com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### FleetManagedNamespaces_ListByFleet
+
+```java
+/**
+ * Samples for FleetManagedNamespaces ListByFleet.
+ */
+public final class FleetManagedNamespacesListByFleetSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/FleetManagedNamespaces_ListByFleet.json
+     */
+    /**
+     * Sample code: FleetManagedNamespaces_ListByFleet.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void fleetManagedNamespacesListByFleet(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleetManagedNamespaces().listByFleet("rgfleets", "fleet1", com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### FleetManagedNamespaces_Update
+
+```java
+import com.azure.resourcemanager.containerservicefleet.models.FleetManagedNamespace;
+
+/**
+ * Samples for FleetManagedNamespaces Update.
+ */
+public final class FleetManagedNamespacesUpdateSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/FleetManagedNamespaces_Update.json
+     */
+    /**
+     * Sample code: FleetManagedNamespaces_Update.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void fleetManagedNamespacesUpdate(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        FleetManagedNamespace resource = manager.fleetManagedNamespaces()
+            .getWithResponse("rgfleets", "fleet1", "namespace1", com.azure.core.util.Context.NONE)
+            .getValue();
+        resource.update().apply();
+    }
+}
+```
+
 ### FleetMembers_Create
 
 ```java
-/** Samples for FleetMembers Create. */
+/**
+ * Samples for FleetMembers Create.
+ */
 public final class FleetMembersCreateSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/FleetMembers_Create.json
+     * x-ms-original-file: 2026-02-01-preview/FleetMembers_Create.json
      */
     /**
      * Sample code: Creates a FleetMember resource with a long running operation.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void createsAFleetMemberResourceWithALongRunningOperation(
         com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        manager
-            .fleetMembers()
+        manager.fleetMembers()
             .define("member-1")
             .withExistingFleet("rg1", "fleet1")
             .withClusterResourceId(
@@ -60,14 +423,16 @@ public final class FleetMembersCreateSamples {
 ### FleetMembers_Delete
 
 ```java
-/** Samples for FleetMembers Delete. */
+/**
+ * Samples for FleetMembers Delete.
+ */
 public final class FleetMembersDeleteSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/FleetMembers_Delete.json
+     * x-ms-original-file: 2026-02-01-preview/FleetMembers_Delete.json
      */
     /**
      * Sample code: Deletes a FleetMember resource asynchronously with a long running operation.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void deletesAFleetMemberResourceAsynchronouslyWithALongRunningOperation(
@@ -80,19 +445,21 @@ public final class FleetMembersDeleteSamples {
 ### FleetMembers_Get
 
 ```java
-/** Samples for FleetMembers Get. */
+/**
+ * Samples for FleetMembers Get.
+ */
 public final class FleetMembersGetSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/FleetMembers_Get.json
+     * x-ms-original-file: 2026-02-01-preview/FleetMembers_Get.json
      */
     /**
      * Sample code: Gets a FleetMember resource.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
-    public static void getsAFleetMemberResource(
-        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        manager.fleetMembers().getWithResponse("rg1", "fleet1", "member-1", com.azure.core.util.Context.NONE);
+    public static void
+        getsAFleetMemberResource(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleetMembers().getWithResponse("rgfleets", "fleet1", "fleet1", com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -100,79 +467,210 @@ public final class FleetMembersGetSamples {
 ### FleetMembers_ListByFleet
 
 ```java
-/** Samples for FleetMembers ListByFleet. */
+/**
+ * Samples for FleetMembers ListByFleet.
+ */
 public final class FleetMembersListByFleetSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/FleetMembers_ListByFleet.json
+     * x-ms-original-file: 2026-02-01-preview/FleetMembers_ListByFleet.json
      */
     /**
      * Sample code: Lists the members of a Fleet.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
-    public static void listsTheMembersOfAFleet(
-        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        manager.fleetMembers().listByFleet("rg1", "fleet1", com.azure.core.util.Context.NONE);
+    public static void
+        listsTheMembersOfAFleet(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleetMembers().listByFleet("rg1", "fleet1", null, null, null, com.azure.core.util.Context.NONE);
     }
 }
 ```
 
-### FleetMembers_Update
+### FleetMembers_UpdateAsync
 
 ```java
 import com.azure.resourcemanager.containerservicefleet.models.FleetMember;
 
-/** Samples for FleetMembers Update. */
-public final class FleetMembersUpdateSamples {
+/**
+ * Samples for FleetMembers UpdateAsync.
+ */
+public final class FleetMembersUpdateAsyncSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/FleetMembers_Update.json
+     * x-ms-original-file: 2026-02-01-preview/FleetMembers_Update.json
      */
     /**
      * Sample code: Updates a FleetMember resource synchronously.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void updatesAFleetMemberResourceSynchronously(
         com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        FleetMember resource =
-            manager
-                .fleetMembers()
-                .getWithResponse("rg1", "fleet1", "member-1", com.azure.core.util.Context.NONE)
-                .getValue();
+        FleetMember resource = manager.fleetMembers()
+            .getWithResponse("rg1", "fleet1", "member-1", com.azure.core.util.Context.NONE)
+            .getValue();
         resource.update().withGroup("staging").apply();
     }
 }
 ```
 
-### Fleets_CreateOrUpdate
+### FleetUpdateStrategies_CreateOrUpdate
 
 ```java
+import com.azure.resourcemanager.containerservicefleet.models.GateConfiguration;
+import com.azure.resourcemanager.containerservicefleet.models.GateType;
+import com.azure.resourcemanager.containerservicefleet.models.UpdateGroup;
+import com.azure.resourcemanager.containerservicefleet.models.UpdateRunStrategy;
+import com.azure.resourcemanager.containerservicefleet.models.UpdateStage;
+import java.util.Arrays;
+
+/**
+ * Samples for FleetUpdateStrategies CreateOrUpdate.
+ */
+public final class FleetUpdateStrategiesCreateOrUpdateSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/UpdateStrategies_CreateOrUpdate.json
+     */
+    /**
+     * Sample code: Create a FleetUpdateStrategy.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void createAFleetUpdateStrategy(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleetUpdateStrategies()
+            .define("strategy1")
+            .withExistingFleet("rg1", "fleet1")
+            .withStrategy(new UpdateRunStrategy().withStages(Arrays.asList(new UpdateStage().withName("stage1")
+                .withGroups(Arrays.asList(new UpdateGroup().withName("group-a")
+                    .withMaxConcurrency("5")
+                    .withBeforeGates(Arrays.asList(
+                        new GateConfiguration().withDisplayName("gate before group-a").withType(GateType.APPROVAL)))
+                    .withAfterGates(Arrays.asList(
+                        new GateConfiguration().withDisplayName("gate after group-a").withType(GateType.APPROVAL)))))
+                .withAfterStageWaitInSeconds(3600)
+                .withMaxConcurrency("20%")
+                .withBeforeGates(Arrays
+                    .asList(new GateConfiguration().withDisplayName("gate before stage1").withType(GateType.APPROVAL)))
+                .withAfterGates(Arrays.asList(
+                    new GateConfiguration().withDisplayName("gate after stage1").withType(GateType.APPROVAL))))))
+            .create();
+    }
+}
+```
+
+### FleetUpdateStrategies_Delete
+
+```java
+/**
+ * Samples for FleetUpdateStrategies Delete.
+ */
+public final class FleetUpdateStrategiesDeleteSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/UpdateStrategies_Delete.json
+     */
+    /**
+     * Sample code: Delete a FleetUpdateStrategy resource.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void deleteAFleetUpdateStrategyResource(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleetUpdateStrategies().delete("rg1", "fleet1", "strategy1", null, com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### FleetUpdateStrategies_Get
+
+```java
+/**
+ * Samples for FleetUpdateStrategies Get.
+ */
+public final class FleetUpdateStrategiesGetSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/UpdateStrategies_Get.json
+     */
+    /**
+     * Sample code: Get a FleetUpdateStrategy resource.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void getAFleetUpdateStrategyResource(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleetUpdateStrategies().getWithResponse("rg1", "fleet1", "strategy1", com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### FleetUpdateStrategies_ListByFleet
+
+```java
+/**
+ * Samples for FleetUpdateStrategies ListByFleet.
+ */
+public final class FleetUpdateStrategiesListByFleetSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/UpdateStrategies_ListByFleet.json
+     */
+    /**
+     * Sample code: List the FleetUpdateStrategy resources by fleet.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void listTheFleetUpdateStrategyResourcesByFleet(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleetUpdateStrategies().listByFleet("rg1", "fleet1", null, null, com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### Fleets_Create
+
+```java
+import com.azure.resourcemanager.containerservicefleet.models.AgentProfile;
+import com.azure.resourcemanager.containerservicefleet.models.ApiServerAccessProfile;
 import com.azure.resourcemanager.containerservicefleet.models.FleetHubProfile;
+import com.azure.resourcemanager.containerservicefleet.models.ManagedServiceIdentity;
+import com.azure.resourcemanager.containerservicefleet.models.ManagedServiceIdentityType;
+import com.azure.resourcemanager.containerservicefleet.models.UserAssignedIdentity;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for Fleets CreateOrUpdate. */
-public final class FleetsCreateOrUpdateSamples {
+/**
+ * Samples for Fleets Create.
+ */
+public final class FleetsCreateSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/Fleets_CreateOrUpdate.json
+     * x-ms-original-file: 2026-02-01-preview/Fleets_CreateOrUpdate.json
      */
     /**
      * Sample code: Creates a Fleet resource with a long running operation.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void createsAFleetResourceWithALongRunningOperation(
         com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        manager
-            .fleets()
+        manager.fleets()
             .define("fleet1")
             .withRegion("East US")
-            .withExistingResourceGroup("rg1")
-            .withTags(mapOf("archv2", "", "tier", "production"))
-            .withHubProfile(new FleetHubProfile().withDnsPrefix("dnsprefix1"))
+            .withExistingResourceGroup("rgfleets")
+            .withTags(mapOf())
+            .withIdentity(new ManagedServiceIdentity().withType(ManagedServiceIdentityType.NONE)
+                .withUserAssignedIdentities(mapOf("key126", new UserAssignedIdentity())))
+            .withHubProfile(new FleetHubProfile().withDnsPrefix("dnsprefix1")
+                .withApiServerAccessProfile(new ApiServerAccessProfile().withEnablePrivateCluster(true)
+                    .withEnableVnetIntegration(true)
+                    .withSubnetId(
+                        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rgfleets/providers/Microsoft.Network/virtualNetwork/myvnet/subnets/mysubnet1"))
+                .withAgentProfile(new AgentProfile().withSubnetId(
+                    "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rgfleets/providers/Microsoft.Network/virtualNetwork/myvnet/subnets/mysubnet1")
+                    .withVmSize("Standard_DS1")))
+            .withIfMatch("jzlrwaylijhsnzp")
+            .withIfNoneMatch("cqpzdjshmggwolagomzxfy")
             .create();
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();
@@ -189,14 +687,16 @@ public final class FleetsCreateOrUpdateSamples {
 ### Fleets_Delete
 
 ```java
-/** Samples for Fleets Delete. */
+/**
+ * Samples for Fleets Delete.
+ */
 public final class FleetsDeleteSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/Fleets_Delete.json
+     * x-ms-original-file: 2026-02-01-preview/Fleets_Delete.json
      */
     /**
      * Sample code: Deletes a Fleet resource asynchronously with a long running operation.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void deletesAFleetResourceAsynchronouslyWithALongRunningOperation(
@@ -209,19 +709,21 @@ public final class FleetsDeleteSamples {
 ### Fleets_GetByResourceGroup
 
 ```java
-/** Samples for Fleets GetByResourceGroup. */
+/**
+ * Samples for Fleets GetByResourceGroup.
+ */
 public final class FleetsGetByResourceGroupSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/Fleets_Get.json
+     * x-ms-original-file: 2026-02-01-preview/Fleets_Get.json
      */
     /**
      * Sample code: Gets a Fleet resource.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
-    public static void getsAFleetResource(
-        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        manager.fleets().getByResourceGroupWithResponse("rg1", "fleet1", com.azure.core.util.Context.NONE);
+    public static void
+        getsAFleetResource(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.fleets().getByResourceGroupWithResponse("rgfleets", "fleet1", com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -229,19 +731,21 @@ public final class FleetsGetByResourceGroupSamples {
 ### Fleets_List
 
 ```java
-/** Samples for Fleets List. */
+/**
+ * Samples for Fleets List.
+ */
 public final class FleetsListSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/Fleets_ListBySub.json
+     * x-ms-original-file: 2026-02-01-preview/Fleets_ListBySub.json
      */
     /**
      * Sample code: Lists the Fleet resources in a subscription.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void listsTheFleetResourcesInASubscription(
         com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        manager.fleets().list(com.azure.core.util.Context.NONE);
+        manager.fleets().list(null, null, com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -249,19 +753,21 @@ public final class FleetsListSamples {
 ### Fleets_ListByResourceGroup
 
 ```java
-/** Samples for Fleets ListByResourceGroup. */
+/**
+ * Samples for Fleets ListByResourceGroup.
+ */
 public final class FleetsListByResourceGroupSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/Fleets_ListByResourceGroup.json
+     * x-ms-original-file: 2026-02-01-preview/Fleets_ListByResourceGroup.json
      */
     /**
      * Sample code: Lists the Fleet resources in a resource group.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void listsTheFleetResourcesInAResourceGroup(
         com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        manager.fleets().listByResourceGroup("rg1", com.azure.core.util.Context.NONE);
+        manager.fleets().listByResourceGroup("rgfleets", com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -269,14 +775,16 @@ public final class FleetsListByResourceGroupSamples {
 ### Fleets_ListCredentials
 
 ```java
-/** Samples for Fleets ListCredentials. */
+/**
+ * Samples for Fleets ListCredentials.
+ */
 public final class FleetsListCredentialsSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/Fleets_ListCredentialsResult.json
+     * x-ms-original-file: 2026-02-01-preview/Fleets_ListCredentialsResult.json
      */
     /**
      * Sample code: Lists the user credentials of a Fleet.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void listsTheUserCredentialsOfAFleet(
@@ -286,33 +794,58 @@ public final class FleetsListCredentialsSamples {
 }
 ```
 
-### Fleets_Update
+### Fleets_UpdateAsync
 
 ```java
 import com.azure.resourcemanager.containerservicefleet.models.Fleet;
+import com.azure.resourcemanager.containerservicefleet.models.ManagedServiceIdentity;
+import com.azure.resourcemanager.containerservicefleet.models.ManagedServiceIdentityType;
+import com.azure.resourcemanager.containerservicefleet.models.UserAssignedIdentity;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Samples for Fleets Update. */
-public final class FleetsUpdateSamples {
+/**
+ * Samples for Fleets UpdateAsync.
+ */
+public final class FleetsUpdateAsyncSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/Fleets_PatchTags.json
+     * x-ms-original-file: 2026-02-01-preview/Fleets_Update.json
      */
     /**
      * Sample code: Update a Fleet.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
-    public static void updateAFleet(
-        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        Fleet resource =
-            manager
-                .fleets()
-                .getByResourceGroupWithResponse("rg1", "fleet1", com.azure.core.util.Context.NONE)
-                .getValue();
-        resource.update().withTags(mapOf("env", "prod", "tier", "secure")).withIfMatch("dfjkwelr7384").apply();
+    public static void
+        updateAFleet(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        Fleet resource = manager.fleets()
+            .getByResourceGroupWithResponse("rgfleets", "fleet1", com.azure.core.util.Context.NONE)
+            .getValue();
+        resource.update()
+            .withTags(mapOf())
+            .withIdentity(new ManagedServiceIdentity().withType(ManagedServiceIdentityType.NONE)
+                .withUserAssignedIdentities(mapOf("key126", new UserAssignedIdentity())))
+            .withIfMatch("lgoeir")
+            .apply();
     }
 
+    /*
+     * x-ms-original-file: 2026-02-01-preview/Fleets_PatchTags.json
+     */
+    /**
+     * Sample code: Patch tags of a Fleet during Update.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void patchTagsOfAFleetDuringUpdate(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        Fleet resource = manager.fleets()
+            .getByResourceGroupWithResponse("rg1", "fleet1", com.azure.core.util.Context.NONE)
+            .getValue();
+        resource.update().withTags(mapOf("tier", "secure", "env", "prod")).withIfMatch("dfjkwelr7384").apply();
+    }
+
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();
@@ -326,17 +859,93 @@ public final class FleetsUpdateSamples {
 }
 ```
 
+### Gates_Get
+
+```java
+/**
+ * Samples for Gates Get.
+ */
+public final class GatesGetSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/Gates_Get.json
+     */
+    /**
+     * Sample code: Gets a Gate resource.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void
+        getsAGateResource(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.gates()
+            .getWithResponse("rg1", "fleet1", "12345678-910a-bcde-f000-000000000000", com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### Gates_ListByFleet
+
+```java
+/**
+ * Samples for Gates ListByFleet.
+ */
+public final class GatesListByFleetSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/Gates_ListByFleet.json
+     */
+    /**
+     * Sample code: Lists the Gates of a Fleet.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void
+        listsTheGatesOfAFleet(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.gates().listByFleet("rg1", "fleet1", null, null, null, com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### Gates_Update
+
+```java
+import com.azure.resourcemanager.containerservicefleet.models.GatePatch;
+import com.azure.resourcemanager.containerservicefleet.models.GatePatchProperties;
+import com.azure.resourcemanager.containerservicefleet.models.GateState;
+
+/**
+ * Samples for Gates Update.
+ */
+public final class GatesUpdateSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/Gates_Update.json
+     */
+    /**
+     * Sample code: Updates a Gate resource.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void
+        updatesAGateResource(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.gates()
+            .update("rg1", "fleet1", "12345678-910a-bcde-f000-000000000000",
+                new GatePatch().withProperties(new GatePatchProperties().withState(GateState.COMPLETED)), null, null,
+                com.azure.core.util.Context.NONE);
+    }
+}
+```
+
 ### Operations_List
 
 ```java
-/** Samples for Operations List. */
+/**
+ * Samples for Operations List.
+ */
 public final class OperationsListSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/Operations_List.json
+     * x-ms-original-file: 2026-02-01-preview/Operations_List.json
      */
     /**
      * Sample code: List the operations for the provider.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void listTheOperationsForTheProvider(
@@ -349,45 +958,54 @@ public final class OperationsListSamples {
 ### UpdateRuns_CreateOrUpdate
 
 ```java
+import com.azure.resourcemanager.containerservicefleet.models.GateConfiguration;
+import com.azure.resourcemanager.containerservicefleet.models.GateType;
 import com.azure.resourcemanager.containerservicefleet.models.ManagedClusterUpdate;
 import com.azure.resourcemanager.containerservicefleet.models.ManagedClusterUpgradeSpec;
 import com.azure.resourcemanager.containerservicefleet.models.ManagedClusterUpgradeType;
+import com.azure.resourcemanager.containerservicefleet.models.NodeImageSelection;
+import com.azure.resourcemanager.containerservicefleet.models.NodeImageSelectionType;
 import com.azure.resourcemanager.containerservicefleet.models.UpdateGroup;
 import com.azure.resourcemanager.containerservicefleet.models.UpdateRunStrategy;
 import com.azure.resourcemanager.containerservicefleet.models.UpdateStage;
 import java.util.Arrays;
 
-/** Samples for UpdateRuns CreateOrUpdate. */
+/**
+ * Samples for UpdateRuns CreateOrUpdate.
+ */
 public final class UpdateRunsCreateOrUpdateSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/UpdateRuns_CreateOrUpdate.json
+     * x-ms-original-file: 2026-02-01-preview/UpdateRuns_CreateOrUpdate.json
      */
     /**
      * Sample code: Create an UpdateRun.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
-    public static void createAnUpdateRun(
-        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        manager
-            .updateRuns()
+    public static void
+        createAnUpdateRun(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.updateRuns()
             .define("run1")
             .withExistingFleet("rg1", "fleet1")
-            .withStrategy(
-                new UpdateRunStrategy()
-                    .withStages(
-                        Arrays
-                            .asList(
-                                new UpdateStage()
-                                    .withName("stage1")
-                                    .withGroups(Arrays.asList(new UpdateGroup().withName("group-a")))
-                                    .withAfterStageWaitInSeconds(3600))))
-            .withManagedClusterUpdate(
-                new ManagedClusterUpdate()
-                    .withUpgrade(
-                        new ManagedClusterUpgradeSpec()
-                            .withType(ManagedClusterUpgradeType.FULL)
-                            .withKubernetesVersion("1.26.1")))
+            .withUpdateStrategyId(
+                "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.ContainerService/fleets/myFleet/updateStrategies/strategy1")
+            .withStrategy(new UpdateRunStrategy().withStages(Arrays.asList(new UpdateStage().withName("stage1")
+                .withGroups(Arrays.asList(new UpdateGroup().withName("group-a")
+                    .withMaxConcurrency("2")
+                    .withBeforeGates(Arrays.asList(
+                        new GateConfiguration().withDisplayName("gate before group-a").withType(GateType.APPROVAL)))
+                    .withAfterGates(Arrays.asList(
+                        new GateConfiguration().withDisplayName("gate after group-a").withType(GateType.APPROVAL)))))
+                .withAfterStageWaitInSeconds(3600)
+                .withMaxConcurrency("10")
+                .withBeforeGates(Arrays
+                    .asList(new GateConfiguration().withDisplayName("gate before stage1").withType(GateType.APPROVAL)))
+                .withAfterGates(Arrays.asList(
+                    new GateConfiguration().withDisplayName("gate after stage1").withType(GateType.APPROVAL))))))
+            .withManagedClusterUpdate(new ManagedClusterUpdate()
+                .withUpgrade(new ManagedClusterUpgradeSpec().withType(ManagedClusterUpgradeType.FULL)
+                    .withKubernetesVersion("1.26.1"))
+                .withNodeImageSelection(new NodeImageSelection().withType(NodeImageSelectionType.LATEST)))
             .create();
     }
 }
@@ -396,14 +1014,16 @@ public final class UpdateRunsCreateOrUpdateSamples {
 ### UpdateRuns_Delete
 
 ```java
-/** Samples for UpdateRuns Delete. */
+/**
+ * Samples for UpdateRuns Delete.
+ */
 public final class UpdateRunsDeleteSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/UpdateRuns_Delete.json
+     * x-ms-original-file: 2026-02-01-preview/UpdateRuns_Delete.json
      */
     /**
      * Sample code: Delete an updateRun resource.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void deleteAnUpdateRunResource(
@@ -416,18 +1036,20 @@ public final class UpdateRunsDeleteSamples {
 ### UpdateRuns_Get
 
 ```java
-/** Samples for UpdateRuns Get. */
+/**
+ * Samples for UpdateRuns Get.
+ */
 public final class UpdateRunsGetSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/UpdateRuns_Get.json
+     * x-ms-original-file: 2026-02-01-preview/UpdateRuns_Get.json
      */
     /**
      * Sample code: Gets an UpdateRun resource.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
-    public static void getsAnUpdateRunResource(
-        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+    public static void
+        getsAnUpdateRunResource(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
         manager.updateRuns().getWithResponse("rg1", "fleet1", "run1", com.azure.core.util.Context.NONE);
     }
 }
@@ -436,19 +1058,53 @@ public final class UpdateRunsGetSamples {
 ### UpdateRuns_ListByFleet
 
 ```java
-/** Samples for UpdateRuns ListByFleet. */
+/**
+ * Samples for UpdateRuns ListByFleet.
+ */
 public final class UpdateRunsListByFleetSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/UpdateRuns_ListByFleet.json
+     * x-ms-original-file: 2026-02-01-preview/UpdateRuns_ListByFleet.json
      */
     /**
      * Sample code: Lists the UpdateRun resources by fleet.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
     public static void listsTheUpdateRunResourcesByFleet(
         com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
-        manager.updateRuns().listByFleet("rg1", "fleet1", com.azure.core.util.Context.NONE);
+        manager.updateRuns().listByFleet("rg1", "fleet1", null, null, com.azure.core.util.Context.NONE);
+    }
+}
+```
+
+### UpdateRuns_Skip
+
+```java
+import com.azure.resourcemanager.containerservicefleet.models.SkipProperties;
+import com.azure.resourcemanager.containerservicefleet.models.SkipTarget;
+import com.azure.resourcemanager.containerservicefleet.models.TargetType;
+import java.util.Arrays;
+
+/**
+ * Samples for UpdateRuns Skip.
+ */
+public final class UpdateRunsSkipSamples {
+    /*
+     * x-ms-original-file: 2026-02-01-preview/UpdateRuns_Skip.json
+     */
+    /**
+     * Sample code: Skips one or more member/group/stage/afterStageWait(s) of an UpdateRun.
+     * 
+     * @param manager Entry point to ContainerServiceFleetManager.
+     */
+    public static void skipsOneOrMoreMemberGroupStageAfterStageWaitSOfAnUpdateRun(
+        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+        manager.updateRuns()
+            .skip("rg1", "fleet1", "run1",
+                new SkipProperties()
+                    .withTargets(Arrays.asList(new SkipTarget().withType(TargetType.MEMBER).withName("member-one"),
+                        new SkipTarget().withType(TargetType.AFTER_STAGE_WAIT).withName("stage1"))),
+                null, com.azure.core.util.Context.NONE);
     }
 }
 ```
@@ -456,18 +1112,20 @@ public final class UpdateRunsListByFleetSamples {
 ### UpdateRuns_Start
 
 ```java
-/** Samples for UpdateRuns Start. */
+/**
+ * Samples for UpdateRuns Start.
+ */
 public final class UpdateRunsStartSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/UpdateRuns_Start.json
+     * x-ms-original-file: 2026-02-01-preview/UpdateRuns_Start.json
      */
     /**
      * Sample code: Starts an UpdateRun.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
-    public static void startsAnUpdateRun(
-        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+    public static void
+        startsAnUpdateRun(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
         manager.updateRuns().start("rg1", "fleet1", "run1", null, com.azure.core.util.Context.NONE);
     }
 }
@@ -476,18 +1134,20 @@ public final class UpdateRunsStartSamples {
 ### UpdateRuns_Stop
 
 ```java
-/** Samples for UpdateRuns Stop. */
+/**
+ * Samples for UpdateRuns Stop.
+ */
 public final class UpdateRunsStopSamples {
     /*
-     * x-ms-original-file: specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/preview/2023-03-15-preview/examples/UpdateRuns_Stop.json
+     * x-ms-original-file: 2026-02-01-preview/UpdateRuns_Stop.json
      */
     /**
      * Sample code: Stops an UpdateRun.
-     *
+     * 
      * @param manager Entry point to ContainerServiceFleetManager.
      */
-    public static void stopsAnUpdateRun(
-        com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
+    public static void
+        stopsAnUpdateRun(com.azure.resourcemanager.containerservicefleet.ContainerServiceFleetManager manager) {
         manager.updateRuns().stop("rg1", "fleet1", "run1", null, com.azure.core.util.Context.NONE);
     }
 }

@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.MigrateSqlServerSqlMITaskO
 public final class MigrateSqlServerSqlMITaskOutputAgentJobLevelTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        MigrateSqlServerSqlMITaskOutputAgentJobLevel model =
-            BinaryData
-                .fromString(
-                    "{\"resultType\":\"AgentJobLevelOutput\",\"name\":\"cdmxzrpoaiml\",\"isEnabled\":true,\"state\":\"Skipped\",\"startedOn\":\"2021-12-05T18:05:26Z\",\"endedOn\":\"2021-10-04T07:14:54Z\",\"message\":\"eazulcs\",\"exceptionsAndWarnings\":[{\"message\":\"wnpjhlfzswpchwa\",\"actionableMessage\":\"bousn\",\"filePath\":\"pgfewetwlyx\",\"lineNumber\":\"cxy\",\"hResult\":705057675,\"stackTrace\":\"jhlimmbcxfhbcpo\"}],\"id\":\"vxcjzhqizxfpxtgq\"}")
-                .toObject(MigrateSqlServerSqlMITaskOutputAgentJobLevel.class);
+        MigrateSqlServerSqlMITaskOutputAgentJobLevel model = BinaryData.fromString(
+            "{\"resultType\":\"AgentJobLevelOutput\",\"name\":\"zdyi\",\"isEnabled\":true,\"state\":\"None\",\"startedOn\":\"2021-01-03T10:11:10Z\",\"endedOn\":\"2021-10-18T02:33:49Z\",\"message\":\"vk\",\"exceptionsAndWarnings\":[{\"message\":\"sl\",\"actionableMessage\":\"nsmjkwynqxaekqs\",\"filePath\":\"vwjtqpkevmyltjc\",\"lineNumber\":\"pxklurccl\",\"hResult\":281270405,\"stackTrace\":\"nnnoytz\"},{\"message\":\"sewxigpxvkqm\",\"actionableMessage\":\"pxvpifdfaif\",\"filePath\":\"yzeyuubeid\",\"lineNumber\":\"l\",\"hResult\":709707696,\"stackTrace\":\"ith\"},{\"message\":\"gvfltgvdihoynkr\",\"actionableMessage\":\"etwkdrcyrucpc\",\"filePath\":\"nuzdqumo\",\"lineNumber\":\"odnaienhqhskndn\",\"hResult\":167330018,\"stackTrace\":\"aadl\"}],\"id\":\"wf\"}")
+            .toObject(MigrateSqlServerSqlMITaskOutputAgentJobLevel.class);
     }
 
     @org.junit.jupiter.api.Test

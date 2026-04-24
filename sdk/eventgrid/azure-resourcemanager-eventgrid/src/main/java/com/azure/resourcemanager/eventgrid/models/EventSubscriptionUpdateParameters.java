@@ -5,19 +5,26 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/** Properties of the Event Subscription update. */
+/**
+ * Properties of the Event Subscription update.
+ */
 @Fluent
-public final class EventSubscriptionUpdateParameters {
+public final class EventSubscriptionUpdateParameters implements JsonSerializable<EventSubscriptionUpdateParameters> {
     /*
      * Information about the destination where events have to be delivered for the event subscription.
      * Uses Azure Event Grid's identity to acquire the authentication tokens being used during delivery /
      * dead-lettering.
      */
-    @JsonProperty(value = "destination")
     private EventSubscriptionDestination destination;
 
     /*
@@ -25,38 +32,32 @@ public final class EventSubscriptionUpdateParameters {
      * Uses the managed identity setup on the parent resource (topic / domain) to acquire the authentication tokens
      * being used during delivery / dead-lettering.
      */
-    @JsonProperty(value = "deliveryWithResourceIdentity")
     private DeliveryWithResourceIdentity deliveryWithResourceIdentity;
 
     /*
      * Information about the filter for the event subscription.
      */
-    @JsonProperty(value = "filter")
     private EventSubscriptionFilter filter;
 
     /*
      * List of user defined labels.
      */
-    @JsonProperty(value = "labels")
     private List<String> labels;
 
     /*
      * Information about the expiration time for the event subscription.
      */
-    @JsonProperty(value = "expirationTimeUtc")
     private OffsetDateTime expirationTimeUtc;
 
     /*
      * The event delivery schema for the event subscription.
      */
-    @JsonProperty(value = "eventDeliverySchema")
     private EventDeliverySchema eventDeliverySchema;
 
     /*
      * The retry policy for events. This can be used to configure maximum number of delivery attempts and time to live
      * for events.
      */
-    @JsonProperty(value = "retryPolicy")
     private RetryPolicy retryPolicy;
 
     /*
@@ -65,7 +66,6 @@ public final class EventSubscriptionUpdateParameters {
      * Uses Azure Event Grid's identity to acquire the authentication tokens being used during delivery /
      * dead-lettering.
      */
-    @JsonProperty(value = "deadLetterDestination")
     private DeadLetterDestination deadLetterDestination;
 
     /*
@@ -74,18 +74,20 @@ public final class EventSubscriptionUpdateParameters {
      * Uses the managed identity setup on the parent resource (topic / domain) to acquire the authentication tokens
      * being used during delivery / dead-lettering.
      */
-    @JsonProperty(value = "deadLetterWithResourceIdentity")
     private DeadLetterWithResourceIdentity deadLetterWithResourceIdentity;
 
-    /** Creates an instance of EventSubscriptionUpdateParameters class. */
+    /**
+     * Creates an instance of EventSubscriptionUpdateParameters class.
+     */
     public EventSubscriptionUpdateParameters() {
     }
 
     /**
      * Get the destination property: Information about the destination where events have to be delivered for the event
-     * subscription. Uses Azure Event Grid's identity to acquire the authentication tokens being used during delivery /
+     * subscription.
+     * Uses Azure Event Grid's identity to acquire the authentication tokens being used during delivery /
      * dead-lettering.
-     *
+     * 
      * @return the destination value.
      */
     public EventSubscriptionDestination destination() {
@@ -94,9 +96,10 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Set the destination property: Information about the destination where events have to be delivered for the event
-     * subscription. Uses Azure Event Grid's identity to acquire the authentication tokens being used during delivery /
+     * subscription.
+     * Uses Azure Event Grid's identity to acquire the authentication tokens being used during delivery /
      * dead-lettering.
-     *
+     * 
      * @param destination the destination value to set.
      * @return the EventSubscriptionUpdateParameters object itself.
      */
@@ -107,9 +110,10 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Get the deliveryWithResourceIdentity property: Information about the destination where events have to be
-     * delivered for the event subscription. Uses the managed identity setup on the parent resource (topic / domain) to
-     * acquire the authentication tokens being used during delivery / dead-lettering.
-     *
+     * delivered for the event subscription.
+     * Uses the managed identity setup on the parent resource (topic / domain) to acquire the authentication tokens
+     * being used during delivery / dead-lettering.
+     * 
      * @return the deliveryWithResourceIdentity value.
      */
     public DeliveryWithResourceIdentity deliveryWithResourceIdentity() {
@@ -118,21 +122,22 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Set the deliveryWithResourceIdentity property: Information about the destination where events have to be
-     * delivered for the event subscription. Uses the managed identity setup on the parent resource (topic / domain) to
-     * acquire the authentication tokens being used during delivery / dead-lettering.
-     *
+     * delivered for the event subscription.
+     * Uses the managed identity setup on the parent resource (topic / domain) to acquire the authentication tokens
+     * being used during delivery / dead-lettering.
+     * 
      * @param deliveryWithResourceIdentity the deliveryWithResourceIdentity value to set.
      * @return the EventSubscriptionUpdateParameters object itself.
      */
-    public EventSubscriptionUpdateParameters withDeliveryWithResourceIdentity(
-        DeliveryWithResourceIdentity deliveryWithResourceIdentity) {
+    public EventSubscriptionUpdateParameters
+        withDeliveryWithResourceIdentity(DeliveryWithResourceIdentity deliveryWithResourceIdentity) {
         this.deliveryWithResourceIdentity = deliveryWithResourceIdentity;
         return this;
     }
 
     /**
      * Get the filter property: Information about the filter for the event subscription.
-     *
+     * 
      * @return the filter value.
      */
     public EventSubscriptionFilter filter() {
@@ -141,7 +146,7 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Set the filter property: Information about the filter for the event subscription.
-     *
+     * 
      * @param filter the filter value to set.
      * @return the EventSubscriptionUpdateParameters object itself.
      */
@@ -152,7 +157,7 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Get the labels property: List of user defined labels.
-     *
+     * 
      * @return the labels value.
      */
     public List<String> labels() {
@@ -161,7 +166,7 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Set the labels property: List of user defined labels.
-     *
+     * 
      * @param labels the labels value to set.
      * @return the EventSubscriptionUpdateParameters object itself.
      */
@@ -172,7 +177,7 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Get the expirationTimeUtc property: Information about the expiration time for the event subscription.
-     *
+     * 
      * @return the expirationTimeUtc value.
      */
     public OffsetDateTime expirationTimeUtc() {
@@ -181,7 +186,7 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Set the expirationTimeUtc property: Information about the expiration time for the event subscription.
-     *
+     * 
      * @param expirationTimeUtc the expirationTimeUtc value to set.
      * @return the EventSubscriptionUpdateParameters object itself.
      */
@@ -192,7 +197,7 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Get the eventDeliverySchema property: The event delivery schema for the event subscription.
-     *
+     * 
      * @return the eventDeliverySchema value.
      */
     public EventDeliverySchema eventDeliverySchema() {
@@ -201,7 +206,7 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Set the eventDeliverySchema property: The event delivery schema for the event subscription.
-     *
+     * 
      * @param eventDeliverySchema the eventDeliverySchema value to set.
      * @return the EventSubscriptionUpdateParameters object itself.
      */
@@ -213,7 +218,7 @@ public final class EventSubscriptionUpdateParameters {
     /**
      * Get the retryPolicy property: The retry policy for events. This can be used to configure maximum number of
      * delivery attempts and time to live for events.
-     *
+     * 
      * @return the retryPolicy value.
      */
     public RetryPolicy retryPolicy() {
@@ -223,7 +228,7 @@ public final class EventSubscriptionUpdateParameters {
     /**
      * Set the retryPolicy property: The retry policy for events. This can be used to configure maximum number of
      * delivery attempts and time to live for events.
-     *
+     * 
      * @param retryPolicy the retryPolicy value to set.
      * @return the EventSubscriptionUpdateParameters object itself.
      */
@@ -234,9 +239,10 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Get the deadLetterDestination property: The dead letter destination of the event subscription. Any event that
-     * cannot be delivered to its' destination is sent to the dead letter destination. Uses Azure Event Grid's identity
-     * to acquire the authentication tokens being used during delivery / dead-lettering.
-     *
+     * cannot be delivered to its' destination is sent to the dead letter destination.
+     * Uses Azure Event Grid's identity to acquire the authentication tokens being used during delivery /
+     * dead-lettering.
+     * 
      * @return the deadLetterDestination value.
      */
     public DeadLetterDestination deadLetterDestination() {
@@ -245,9 +251,10 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Set the deadLetterDestination property: The dead letter destination of the event subscription. Any event that
-     * cannot be delivered to its' destination is sent to the dead letter destination. Uses Azure Event Grid's identity
-     * to acquire the authentication tokens being used during delivery / dead-lettering.
-     *
+     * cannot be delivered to its' destination is sent to the dead letter destination.
+     * Uses Azure Event Grid's identity to acquire the authentication tokens being used during delivery /
+     * dead-lettering.
+     * 
      * @param deadLetterDestination the deadLetterDestination value to set.
      * @return the EventSubscriptionUpdateParameters object itself.
      */
@@ -258,10 +265,10 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Get the deadLetterWithResourceIdentity property: The dead letter destination of the event subscription. Any event
-     * that cannot be delivered to its' destination is sent to the dead letter destination. Uses the managed identity
-     * setup on the parent resource (topic / domain) to acquire the authentication tokens being used during delivery /
-     * dead-lettering.
-     *
+     * that cannot be delivered to its' destination is sent to the dead letter destination.
+     * Uses the managed identity setup on the parent resource (topic / domain) to acquire the authentication tokens
+     * being used during delivery / dead-lettering.
+     * 
      * @return the deadLetterWithResourceIdentity value.
      */
     public DeadLetterWithResourceIdentity deadLetterWithResourceIdentity() {
@@ -270,22 +277,22 @@ public final class EventSubscriptionUpdateParameters {
 
     /**
      * Set the deadLetterWithResourceIdentity property: The dead letter destination of the event subscription. Any event
-     * that cannot be delivered to its' destination is sent to the dead letter destination. Uses the managed identity
-     * setup on the parent resource (topic / domain) to acquire the authentication tokens being used during delivery /
-     * dead-lettering.
-     *
+     * that cannot be delivered to its' destination is sent to the dead letter destination.
+     * Uses the managed identity setup on the parent resource (topic / domain) to acquire the authentication tokens
+     * being used during delivery / dead-lettering.
+     * 
      * @param deadLetterWithResourceIdentity the deadLetterWithResourceIdentity value to set.
      * @return the EventSubscriptionUpdateParameters object itself.
      */
-    public EventSubscriptionUpdateParameters withDeadLetterWithResourceIdentity(
-        DeadLetterWithResourceIdentity deadLetterWithResourceIdentity) {
+    public EventSubscriptionUpdateParameters
+        withDeadLetterWithResourceIdentity(DeadLetterWithResourceIdentity deadLetterWithResourceIdentity) {
         this.deadLetterWithResourceIdentity = deadLetterWithResourceIdentity;
         return this;
     }
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -307,5 +314,77 @@ public final class EventSubscriptionUpdateParameters {
         if (deadLetterWithResourceIdentity() != null) {
             deadLetterWithResourceIdentity().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("destination", this.destination);
+        jsonWriter.writeJsonField("deliveryWithResourceIdentity", this.deliveryWithResourceIdentity);
+        jsonWriter.writeJsonField("filter", this.filter);
+        jsonWriter.writeArrayField("labels", this.labels, (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("expirationTimeUtc",
+            this.expirationTimeUtc == null
+                ? null
+                : DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(this.expirationTimeUtc));
+        jsonWriter.writeStringField("eventDeliverySchema",
+            this.eventDeliverySchema == null ? null : this.eventDeliverySchema.toString());
+        jsonWriter.writeJsonField("retryPolicy", this.retryPolicy);
+        jsonWriter.writeJsonField("deadLetterDestination", this.deadLetterDestination);
+        jsonWriter.writeJsonField("deadLetterWithResourceIdentity", this.deadLetterWithResourceIdentity);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of EventSubscriptionUpdateParameters from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of EventSubscriptionUpdateParameters if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the EventSubscriptionUpdateParameters.
+     */
+    public static EventSubscriptionUpdateParameters fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            EventSubscriptionUpdateParameters deserializedEventSubscriptionUpdateParameters
+                = new EventSubscriptionUpdateParameters();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("destination".equals(fieldName)) {
+                    deserializedEventSubscriptionUpdateParameters.destination
+                        = EventSubscriptionDestination.fromJson(reader);
+                } else if ("deliveryWithResourceIdentity".equals(fieldName)) {
+                    deserializedEventSubscriptionUpdateParameters.deliveryWithResourceIdentity
+                        = DeliveryWithResourceIdentity.fromJson(reader);
+                } else if ("filter".equals(fieldName)) {
+                    deserializedEventSubscriptionUpdateParameters.filter = EventSubscriptionFilter.fromJson(reader);
+                } else if ("labels".equals(fieldName)) {
+                    List<String> labels = reader.readArray(reader1 -> reader1.getString());
+                    deserializedEventSubscriptionUpdateParameters.labels = labels;
+                } else if ("expirationTimeUtc".equals(fieldName)) {
+                    deserializedEventSubscriptionUpdateParameters.expirationTimeUtc = reader
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString()));
+                } else if ("eventDeliverySchema".equals(fieldName)) {
+                    deserializedEventSubscriptionUpdateParameters.eventDeliverySchema
+                        = EventDeliverySchema.fromString(reader.getString());
+                } else if ("retryPolicy".equals(fieldName)) {
+                    deserializedEventSubscriptionUpdateParameters.retryPolicy = RetryPolicy.fromJson(reader);
+                } else if ("deadLetterDestination".equals(fieldName)) {
+                    deserializedEventSubscriptionUpdateParameters.deadLetterDestination
+                        = DeadLetterDestination.fromJson(reader);
+                } else if ("deadLetterWithResourceIdentity".equals(fieldName)) {
+                    deserializedEventSubscriptionUpdateParameters.deadLetterWithResourceIdentity
+                        = DeadLetterWithResourceIdentity.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedEventSubscriptionUpdateParameters;
+        });
     }
 }

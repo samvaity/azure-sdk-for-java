@@ -5,35 +5,50 @@
 package com.azure.resourcemanager.eventgrid.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Provisioning state of the TopicSpace resource. */
+/**
+ * Provisioning state of the TopicSpace resource.
+ */
 public final class TopicSpaceProvisioningState extends ExpandableStringEnum<TopicSpaceProvisioningState> {
-    /** Static value Creating for TopicSpaceProvisioningState. */
+    /**
+     * Static value Creating for TopicSpaceProvisioningState.
+     */
     public static final TopicSpaceProvisioningState CREATING = fromString("Creating");
 
-    /** Static value Updating for TopicSpaceProvisioningState. */
+    /**
+     * Static value Updating for TopicSpaceProvisioningState.
+     */
     public static final TopicSpaceProvisioningState UPDATING = fromString("Updating");
 
-    /** Static value Deleting for TopicSpaceProvisioningState. */
+    /**
+     * Static value Deleting for TopicSpaceProvisioningState.
+     */
     public static final TopicSpaceProvisioningState DELETING = fromString("Deleting");
 
-    /** Static value Succeeded for TopicSpaceProvisioningState. */
+    /**
+     * Static value Succeeded for TopicSpaceProvisioningState.
+     */
     public static final TopicSpaceProvisioningState SUCCEEDED = fromString("Succeeded");
 
-    /** Static value Canceled for TopicSpaceProvisioningState. */
+    /**
+     * Static value Canceled for TopicSpaceProvisioningState.
+     */
     public static final TopicSpaceProvisioningState CANCELED = fromString("Canceled");
 
-    /** Static value Failed for TopicSpaceProvisioningState. */
+    /**
+     * Static value Failed for TopicSpaceProvisioningState.
+     */
     public static final TopicSpaceProvisioningState FAILED = fromString("Failed");
 
-    /** Static value Deleted for TopicSpaceProvisioningState. */
+    /**
+     * Static value Deleted for TopicSpaceProvisioningState.
+     */
     public static final TopicSpaceProvisioningState DELETED = fromString("Deleted");
 
     /**
      * Creates a new instance of TopicSpaceProvisioningState value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -42,18 +57,17 @@ public final class TopicSpaceProvisioningState extends ExpandableStringEnum<Topi
 
     /**
      * Creates or finds a TopicSpaceProvisioningState from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding TopicSpaceProvisioningState.
      */
-    @JsonCreator
     public static TopicSpaceProvisioningState fromString(String name) {
         return fromString(name, TopicSpaceProvisioningState.class);
     }
 
     /**
      * Gets known TopicSpaceProvisioningState values.
-     *
+     * 
      * @return known TopicSpaceProvisioningState values.
      */
     public static Collection<TopicSpaceProvisioningState> values() {

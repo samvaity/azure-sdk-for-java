@@ -4,43 +4,59 @@
 
 package com.azure.containers.containerregistry.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
 import java.util.Collection;
 
-/** Sort options for ordering manifests in a collection. */
+/**
+ * Sort options for ordering manifests in a collection.
+ */
 public final class ArtifactManifestOrder extends ExpandableStringEnum<ArtifactManifestOrder> {
-    /** Do not provide an orderby value in the request. */
+    /**
+     * Do not provide an orderby value in the request.
+     */
+    @Generated
     public static final ArtifactManifestOrder NONE = fromString("none");
 
-    /** Order manifests by LastUpdatedOn field, from most recently updated to least recently updated. */
+    /**
+     * Order manifests by LastUpdatedOn field, from most recently updated to least recently updated.
+     */
+    @Generated
     public static final ArtifactManifestOrder LAST_UPDATED_ON_DESCENDING = fromString("timedesc");
 
-    /** Order manifest by LastUpdatedOn field, from least recently updated to most recently updated. */
+    /**
+     * Order manifest by LastUpdatedOn field, from least recently updated to most recently updated.
+     */
+    @Generated
     public static final ArtifactManifestOrder LAST_UPDATED_ON_ASCENDING = fromString("timeasc");
 
     /**
      * Creates a new instance of ArtifactManifestOrder value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public ArtifactManifestOrder() {}
+    public ArtifactManifestOrder() {
+    }
 
     /**
      * Creates or finds a ArtifactManifestOrder from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ArtifactManifestOrder.
      */
+    @Generated
     public static ArtifactManifestOrder fromString(String name) {
         return fromString(name, ArtifactManifestOrder.class);
     }
 
     /**
      * Gets known ArtifactManifestOrder values.
-     *
+     * 
      * @return known ArtifactManifestOrder values.
      */
+    @Generated
     public static Collection<ArtifactManifestOrder> values() {
         return values(ArtifactManifestOrder.class);
     }

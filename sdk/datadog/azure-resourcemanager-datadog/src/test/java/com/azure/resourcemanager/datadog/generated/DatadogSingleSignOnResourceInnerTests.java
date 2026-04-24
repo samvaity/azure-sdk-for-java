@@ -13,25 +13,20 @@ import org.junit.jupiter.api.Assertions;
 public final class DatadogSingleSignOnResourceInnerTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        DatadogSingleSignOnResourceInner model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"provisioningState\":\"Failed\",\"singleSignOnState\":\"Initial\",\"enterpriseAppId\":\"zlfbxzpuzycispnq\",\"singleSignOnUrl\":\"hmgkbrpyy\"},\"id\":\"ibnuqqkpik\",\"name\":\"drgvtqagn\",\"type\":\"uynhijg\"}")
-                .toObject(DatadogSingleSignOnResourceInner.class);
-        Assertions.assertEquals(SingleSignOnStates.INITIAL, model.properties().singleSignOnState());
-        Assertions.assertEquals("zlfbxzpuzycispnq", model.properties().enterpriseAppId());
+        DatadogSingleSignOnResourceInner model = BinaryData.fromString(
+            "{\"properties\":{\"provisioningState\":\"Canceled\",\"singleSignOnState\":\"Existing\",\"enterpriseAppId\":\"jmflbvvnch\",\"singleSignOnUrl\":\"cciw\"},\"id\":\"juqk\",\"name\":\"rsa\",\"type\":\"iwkuofos\"}")
+            .toObject(DatadogSingleSignOnResourceInner.class);
+        Assertions.assertEquals(SingleSignOnStates.EXISTING, model.properties().singleSignOnState());
+        Assertions.assertEquals("jmflbvvnch", model.properties().enterpriseAppId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        DatadogSingleSignOnResourceInner model =
-            new DatadogSingleSignOnResourceInner()
-                .withProperties(
-                    new DatadogSingleSignOnProperties()
-                        .withSingleSignOnState(SingleSignOnStates.INITIAL)
-                        .withEnterpriseAppId("zlfbxzpuzycispnq"));
+        DatadogSingleSignOnResourceInner model = new DatadogSingleSignOnResourceInner()
+            .withProperties(new DatadogSingleSignOnProperties().withSingleSignOnState(SingleSignOnStates.EXISTING)
+                .withEnterpriseAppId("jmflbvvnch"));
         model = BinaryData.fromObject(model).toObject(DatadogSingleSignOnResourceInner.class);
-        Assertions.assertEquals(SingleSignOnStates.INITIAL, model.properties().singleSignOnState());
-        Assertions.assertEquals("zlfbxzpuzycispnq", model.properties().enterpriseAppId());
+        Assertions.assertEquals(SingleSignOnStates.EXISTING, model.properties().singleSignOnState());
+        Assertions.assertEquals("jmflbvvnch", model.properties().enterpriseAppId());
     }
 }

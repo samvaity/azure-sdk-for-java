@@ -10,11 +10,9 @@ import com.azure.resourcemanager.datamigration.models.ConnectToTargetSqlMITaskOu
 public final class ConnectToTargetSqlMITaskOutputTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ConnectToTargetSqlMITaskOutput model =
-            BinaryData
-                .fromString(
-                    "{\"id\":\"aljutiiswac\",\"targetServerVersion\":\"gdkz\",\"targetServerBrandVersion\":\"wkfvhqcrailvp\",\"logins\":[\"fuflrwdmhdlx\",\"jrxs\"],\"agentJobs\":[\"fcnihgwq\",\"pnedgf\"],\"validationErrors\":[{\"message\":\"cvqvpkeqdcv\",\"actionableMessage\":\"hvoodsotbobzd\",\"filePath\":\"cjwvn\",\"lineNumber\":\"ld\",\"hResult\":481946424,\"stackTrace\":\"cxrslpmutwuoe\"},{\"message\":\"pkhjwni\",\"actionableMessage\":\"sluicpdggkzz\",\"filePath\":\"mbmpaxmodfvuefy\",\"lineNumber\":\"bpfvm\",\"hResult\":1299993392,\"stackTrace\":\"fouyf\"},{\"message\":\"akcp\",\"actionableMessage\":\"yzvqt\",\"filePath\":\"ubex\",\"lineNumber\":\"zksmondj\",\"hResult\":1598005613,\"stackTrace\":\"vypomgkopkwho\"}]}")
-                .toObject(ConnectToTargetSqlMITaskOutput.class);
+        ConnectToTargetSqlMITaskOutput model = BinaryData.fromString(
+            "{\"id\":\"hvjhhnakzyb\",\"targetServerVersion\":\"jid\",\"targetServerBrandVersion\":\"syxkyxvxevblb\",\"logins\":[\"nljlageuaulx\"],\"agentJobs\":[\"mjbnk\",\"pxynenlsvxeizzg\",\"klnsrmffey\"],\"validationErrors\":[{\"message\":\"tpiymerteea\",\"actionableMessage\":\"xqiekkkzddrtk\",\"filePath\":\"ojbmxv\",\"lineNumber\":\"refdee\",\"hResult\":506699302,\"stackTrace\":\"uij\"}]}")
+            .toObject(ConnectToTargetSqlMITaskOutput.class);
     }
 
     @org.junit.jupiter.api.Test

@@ -4,43 +4,71 @@
 
 package com.azure.ai.personalizer.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for PolicySource. */
+/**
+ * The source of the Learning Settings.
+ */
 public final class PolicySource extends ExpandableStringEnum<PolicySource> {
-    /** Static value Online for PolicySource. */
+    /**
+     * Static value Online for PolicySource.
+     */
+    @Generated
     public static final PolicySource ONLINE = fromString("Online");
 
-    /** Static value Baseline for PolicySource. */
+    /**
+     * Static value Baseline for PolicySource.
+     */
+    @Generated
     public static final PolicySource BASELINE = fromString("Baseline");
 
-    /** Static value Random for PolicySource. */
+    /**
+     * Static value Random for PolicySource.
+     */
+    @Generated
     public static final PolicySource RANDOM = fromString("Random");
 
-    /** Static value Custom for PolicySource. */
+    /**
+     * Static value Custom for PolicySource.
+     */
+    @Generated
     public static final PolicySource CUSTOM = fromString("Custom");
 
-    /** Static value OfflineExperimentation for PolicySource. */
+    /**
+     * Static value OfflineExperimentation for PolicySource.
+     */
+    @Generated
     public static final PolicySource OFFLINE_EXPERIMENTATION = fromString("OfflineExperimentation");
 
     /**
+     * Creates a new instance of PolicySource value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public PolicySource() {
+    }
+
+    /**
      * Creates or finds a PolicySource from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding PolicySource.
      */
-    @JsonCreator
+    @Generated
     public static PolicySource fromString(String name) {
         return fromString(name, PolicySource.class);
     }
 
     /**
      * Gets known PolicySource values.
-     *
+     * 
      * @return known PolicySource values.
      */
+    @Generated
     public static Collection<PolicySource> values() {
         return values(PolicySource.class);
     }

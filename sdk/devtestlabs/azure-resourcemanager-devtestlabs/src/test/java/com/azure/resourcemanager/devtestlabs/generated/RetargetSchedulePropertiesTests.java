@@ -11,20 +11,19 @@ import org.junit.jupiter.api.Assertions;
 public final class RetargetSchedulePropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        RetargetScheduleProperties model =
-            BinaryData
-                .fromString("{\"currentResourceId\":\"ousxauzlwvsgmw\",\"targetResourceId\":\"qf\"}")
+        RetargetScheduleProperties model
+            = BinaryData.fromString("{\"currentResourceId\":\"azisgyk\",\"targetResourceId\":\"emv\"}")
                 .toObject(RetargetScheduleProperties.class);
-        Assertions.assertEquals("ousxauzlwvsgmw", model.currentResourceId());
-        Assertions.assertEquals("qf", model.targetResourceId());
+        Assertions.assertEquals("azisgyk", model.currentResourceId());
+        Assertions.assertEquals("emv", model.targetResourceId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        RetargetScheduleProperties model =
-            new RetargetScheduleProperties().withCurrentResourceId("ousxauzlwvsgmw").withTargetResourceId("qf");
+        RetargetScheduleProperties model
+            = new RetargetScheduleProperties().withCurrentResourceId("azisgyk").withTargetResourceId("emv");
         model = BinaryData.fromObject(model).toObject(RetargetScheduleProperties.class);
-        Assertions.assertEquals("ousxauzlwvsgmw", model.currentResourceId());
-        Assertions.assertEquals("qf", model.targetResourceId());
+        Assertions.assertEquals("azisgyk", model.currentResourceId());
+        Assertions.assertEquals("emv", model.targetResourceId());
     }
 }

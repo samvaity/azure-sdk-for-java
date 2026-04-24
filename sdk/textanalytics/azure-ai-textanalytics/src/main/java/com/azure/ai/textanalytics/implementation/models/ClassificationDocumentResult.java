@@ -5,59 +5,131 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.util.List;
 
-/** The ClassificationDocumentResult model. */
+/**
+ * The ClassificationDocumentResult model.
+ */
 @Fluent
 public class ClassificationDocumentResult extends DocumentResult {
     /*
      * The class property.
      */
-    @JsonProperty(value = "class", required = true)
+    @Generated
     private List<ClassificationResult> classProperty;
 
-    /** Creates an instance of ClassificationDocumentResult class. */
-    public ClassificationDocumentResult() {}
+    /**
+     * Creates an instance of ClassificationDocumentResult class.
+     */
+    @Generated
+    public ClassificationDocumentResult() {
+    }
 
     /**
      * Get the classProperty property: The class property.
-     *
+     * 
      * @return the classProperty value.
      */
+    @Generated
     public List<ClassificationResult> getClassProperty() {
         return this.classProperty;
     }
 
     /**
      * Set the classProperty property: The class property.
-     *
+     * 
      * @param classProperty the classProperty value to set.
      * @return the ClassificationDocumentResult object itself.
      */
+    @Generated
     public ClassificationDocumentResult setClassProperty(List<ClassificationResult> classProperty) {
         this.classProperty = classProperty;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ClassificationDocumentResult setId(String id) {
         super.setId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ClassificationDocumentResult setWarnings(List<DocumentWarning> warnings) {
         super.setWarnings(warnings);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ClassificationDocumentResult setStatistics(DocumentStatistics statistics) {
         super.setStatistics(statistics);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("id", getId());
+        jsonWriter.writeArrayField("warnings", getWarnings(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("statistics", getStatistics());
+        jsonWriter.writeArrayField("class", this.classProperty, (writer, element) -> writer.writeJson(element));
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ClassificationDocumentResult from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ClassificationDocumentResult if the JsonReader was pointing to an instance of it, or null
+     * if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ClassificationDocumentResult.
+     */
+    @Generated
+    public static ClassificationDocumentResult fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ClassificationDocumentResult deserializedClassificationDocumentResult = new ClassificationDocumentResult();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedClassificationDocumentResult.setId(reader.getString());
+                } else if ("warnings".equals(fieldName)) {
+                    List<DocumentWarning> warnings = reader.readArray(reader1 -> DocumentWarning.fromJson(reader1));
+                    deserializedClassificationDocumentResult.setWarnings(warnings);
+                } else if ("statistics".equals(fieldName)) {
+                    deserializedClassificationDocumentResult.setStatistics(DocumentStatistics.fromJson(reader));
+                } else if ("class".equals(fieldName)) {
+                    List<ClassificationResult> classProperty
+                        = reader.readArray(reader1 -> ClassificationResult.fromJson(reader1));
+                    deserializedClassificationDocumentResult.classProperty = classProperty;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedClassificationDocumentResult;
+        });
     }
 }

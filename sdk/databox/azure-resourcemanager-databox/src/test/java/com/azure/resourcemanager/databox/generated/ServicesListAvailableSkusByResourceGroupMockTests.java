@@ -6,80 +6,41 @@ package com.azure.resourcemanager.databox.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.databox.DataBoxManager;
 import com.azure.resourcemanager.databox.models.AvailableSkuRequest;
 import com.azure.resourcemanager.databox.models.SkuInformation;
 import com.azure.resourcemanager.databox.models.SkuName;
 import com.azure.resourcemanager.databox.models.TransferType;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class ServicesListAvailableSkusByResourceGroupMockTests {
     @Test
     public void testListAvailableSkusByResourceGroup() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"sku\":{\"name\":\"DataBoxDisk\",\"displayName\":\"oqkag\",\"family\":\"sxtta\",\"model\":\"DataBoxHeavy\"},\"enabled\":true,\"properties\":{\"dataLocationToServiceLocationMap\":[{\"dataLocation\":\"pxdtnkdmkq\",\"serviceLocation\":\"lwuenvrkp\"},{\"dataLocation\":\"uaibrebqaaysj\",\"serviceLocation\":\"xqtnq\"},{\"dataLocation\":\"ezl\",\"serviceLocation\":\"ffiakp\"},{\"dataLocation\":\"qqmtedltmmji\",\"serviceLocation\":\"eozphv\"}],\"capacity\":{\"usable\":\"y\",\"maximum\":\"c\",\"individualSkuUsable\":\"upkvipmdsc\"},\"costs\":[{\"meterId\":\"pevzhfst\",\"meterType\":\"xhojuj\",\"multiplier\":93.60903040035382},{\"meterId\":\"mc\",\"meterType\":\"hixbjxyfwnyl\",\"multiplier\":16.99641354040682}],\"apiVersions\":[\"ttpkiwkkbnujrywv\"],\"disabledReason\":\"Region\",\"disabledReasonMessage\":\"fpncurdo\",\"requiredFeature\":\"iithtywu\",\"countriesWithinCommerceBoundary\":[\"bihwqknfdnt\",\"jchrdgoihxumw\"]}}]}";
 
-        String responseStr =
-            "{\"value\":[{\"sku\":{\"name\":\"DataBoxDisk\",\"displayName\":\"bw\",\"family\":\"nkbykutwpfhp\"},\"enabled\":false,\"properties\":{\"dataLocationToServiceLocationMap\":[],\"capacity\":{\"usable\":\"snfdsdoakgtdl\",\"maximum\":\"kzevdlhewpusds\"},\"costs\":[],\"apiVersions\":[\"gvbbejdcng\",\"qmoa\",\"ufgmjzrwrdg\"],\"disabledReason\":\"Country\",\"disabledReasonMessage\":\"enuuzkopbm\",\"requiredFeature\":\"rfdwoyu\",\"countriesWithinCommerceBoundary\":[\"iuiefozbhdmsm\",\"mzqhoftrmaequi\",\"hxicslfaoqz\"]}}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        DataBoxManager manager = DataBoxManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<SkuInformation> response = manager.services()
+            .listAvailableSkusByResourceGroup("lcrpw", "xeznoi",
+                new AvailableSkuRequest().withTransferType(TransferType.IMPORT_TO_AZURE)
+                    .withCountry("rnjwmw")
+                    .withLocation("pn")
+                    .withSkuNames(Arrays.asList(SkuName.DATA_BOX_DISK)),
+                com.azure.core.util.Context.NONE);
 
-        DataBoxManager manager =
-            DataBoxManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<SkuInformation> response =
-            manager
-                .services()
-                .listAvailableSkusByResourceGroup(
-                    "mrv",
-                    "xztvbtqgsfraoyzk",
-                    new AvailableSkuRequest()
-                        .withTransferType(TransferType.EXPORT_FROM_AZURE)
-                        .withCountry("wtl")
-                        .withLocation("nguxawqaldsy")
-                        .withSkuNames(
-                            Arrays
-                                .asList(
-                                    SkuName.DATA_BOX_CUSTOMER_DISK,
-                                    SkuName.DATA_BOX_CUSTOMER_DISK,
-                                    SkuName.DATA_BOX,
-                                    SkuName.DATA_BOX)),
-                    com.azure.core.util.Context.NONE);
     }
 }

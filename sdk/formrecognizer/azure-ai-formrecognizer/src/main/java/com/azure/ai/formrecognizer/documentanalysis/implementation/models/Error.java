@@ -4,100 +4,221 @@
 
 package com.azure.ai.formrecognizer.documentanalysis.implementation.models;
 
-import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-/** Error info. */
-@Immutable
-public final class Error {
+/**
+ * Error info.
+ */
+@Fluent
+public final class Error implements JsonSerializable<Error> {
     /*
      * Error code.
      */
-    @JsonProperty(value = "code", required = true)
-    private String code;
+    @Generated
+    private final String code;
 
     /*
      * Error message.
      */
-    @JsonProperty(value = "message", required = true)
-    private String message;
+    @Generated
+    private final String message;
 
     /*
      * Target of the error.
      */
-    @JsonProperty(value = "target")
+    @Generated
     private String target;
 
     /*
      * List of detailed errors.
      */
-    @JsonProperty(value = "details")
+    @Generated
     private List<Error> details;
 
     /*
      * Detailed error.
      */
-    @JsonProperty(value = "innererror")
+    @Generated
     private InnerError innererror;
 
     /**
      * Creates an instance of Error class.
-     *
+     * 
      * @param code the code value to set.
      * @param message the message value to set.
      */
-    @JsonCreator
-    private Error(
-            @JsonProperty(value = "code", required = true) String code,
-            @JsonProperty(value = "message", required = true) String message) {
+    @Generated
+    public Error(String code, String message) {
         this.code = code;
         this.message = message;
     }
 
     /**
      * Get the code property: Error code.
-     *
+     * 
      * @return the code value.
      */
+    @Generated
     public String getCode() {
         return this.code;
     }
 
     /**
      * Get the message property: Error message.
-     *
+     * 
      * @return the message value.
      */
+    @Generated
     public String getMessage() {
         return this.message;
     }
 
     /**
      * Get the target property: Target of the error.
-     *
+     * 
      * @return the target value.
      */
+    @Generated
     public String getTarget() {
         return this.target;
     }
 
     /**
+     * Set the target property: Target of the error.
+     * 
+     * @param target the target value to set.
+     * @return the Error object itself.
+     */
+    @Generated
+    public Error setTarget(String target) {
+        this.target = target;
+        return this;
+    }
+
+    /**
      * Get the details property: List of detailed errors.
-     *
+     * 
      * @return the details value.
      */
+    @Generated
     public List<Error> getDetails() {
         return this.details;
     }
 
     /**
+     * Set the details property: List of detailed errors.
+     * 
+     * @param details the details value to set.
+     * @return the Error object itself.
+     */
+    @Generated
+    public Error setDetails(List<Error> details) {
+        this.details = details;
+        return this;
+    }
+
+    /**
      * Get the innererror property: Detailed error.
-     *
+     * 
      * @return the innererror value.
      */
+    @Generated
     public InnerError getInnererror() {
         return this.innererror;
+    }
+
+    /**
+     * Set the innererror property: Detailed error.
+     * 
+     * @param innererror the innererror value to set.
+     * @return the Error object itself.
+     */
+    @Generated
+    public Error setInnererror(InnerError innererror) {
+        this.innererror = innererror;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("code", this.code);
+        jsonWriter.writeStringField("message", this.message);
+        jsonWriter.writeStringField("target", this.target);
+        jsonWriter.writeArrayField("details", this.details, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeJsonField("innererror", this.innererror);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of Error from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of Error if the JsonReader was pointing to an instance of it, or null if it was pointing to
+     * JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the Error.
+     */
+    @Generated
+    public static Error fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            boolean codeFound = false;
+            String code = null;
+            boolean messageFound = false;
+            String message = null;
+            String target = null;
+            List<Error> details = null;
+            InnerError innererror = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("code".equals(fieldName)) {
+                    code = reader.getString();
+                    codeFound = true;
+                } else if ("message".equals(fieldName)) {
+                    message = reader.getString();
+                    messageFound = true;
+                } else if ("target".equals(fieldName)) {
+                    target = reader.getString();
+                } else if ("details".equals(fieldName)) {
+                    details = reader.readArray(reader1 -> Error.fromJson(reader1));
+                } else if ("innererror".equals(fieldName)) {
+                    innererror = InnerError.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (codeFound && messageFound) {
+                Error deserializedError = new Error(code, message);
+                deserializedError.target = target;
+                deserializedError.details = details;
+                deserializedError.innererror = innererror;
+
+                return deserializedError;
+            }
+            List<String> missingProperties = new ArrayList<>();
+            if (!codeFound) {
+                missingProperties.add("code");
+            }
+            if (!messageFound) {
+                missingProperties.add("message");
+            }
+
+            throw new IllegalStateException(
+                "Missing required property/properties: " + String.join(", ", missingProperties));
+        });
     }
 }

@@ -21,7 +21,7 @@ There are two libraries that can be used spring-cloud-azure-appconfiguration-con
 <dependency>
     <groupId>com.azure.spring</groupId>
     <artifactId>spring-cloud-azure-appconfiguration-config</artifactId>
-    <version>4.9.0</version>
+    <version>7.2.0</version>
 </dependency>
 ```
 [//]: # ({x-version-update-end})
@@ -33,7 +33,7 @@ or
 <dependency>
     <groupId>com.azure.spring</groupId>
     <artifactId>spring-cloud-azure-appconfiguration-config-web</artifactId>
-    <version>4.9.0</version>
+    <version>7.2.0</version>
 </dependency>
 ```
 [//]: # ({x-version-update-end})
@@ -50,25 +50,40 @@ Please use this `sample` as a reference for how to use this starter.
 
 Name | Description | Required | Default
 ---|---|---|---
-spring.cloud.azure.appconfiguration.stores | List of configuration stores from which to load configuration properties | Yes | true
-spring.cloud.azure.appconfiguration.enabled | Whether enable spring-cloud-azure-appconfiguration-config or not | No | true
-spring.cloud.azure.appconfiguration.refresh-interval | Amount of time, of type Duration, configurations are stored before a check can occur. | No | null
+spring.config.import | The Spring property that triggers the loading of Azure App Configuration properties. It need to contain the value `azureAppConfiguration` | yes | None
+
+Name | Description | Required | Default
+---|---|---|---
+spring.cloud.azure.appconfiguration.stores | List of configuration stores from which to load configuration properties | Yes | Empty List
+spring.cloud.azure.appconfiguration.enabled | Whether to enable spring-cloud-azure-appconfiguration-config or not | No | true
+spring.cloud.azure.appconfiguration.refresh-interval | Amount of time, of type Duration, configurations are stored before a check can occur. | No | null
+spring.cloud.azure.appconfiguration.startup-timeout | Maximum time to retry loading configuration during application startup when transient failures occur. | No | 100s
 
 `spring.cloud.azure.appconfiguration.stores` is a list of stores, where each store follows the following format:
 
 Name | Description | Required | Default
 ---|---|---|---
-spring.cloud.azure.appconfiguration.stores[0].enabled | Whether the store will be loaded. | No | true
+spring.cloud.azure.appconfiguration.stores[0].enabled | Whether the store will be loaded. Requires either `spring.config.import= optional:azureAppConfiguration` or another config store to be loaded. | No | true
 spring.cloud.azure.appconfiguration.stores[0].fail-fast | Whether to throw a `RuntimeException` or not when failing to read from App Configuration during application start-up. If an exception does occur during startup when set to false the store is skipped. | No |  true
 spring.cloud.azure.appconfiguration.stores[0].selects[0].key-filter | The key pattern used to indicate which configuration(s) will be loaded.  | No | /application/*
 spring.cloud.azure.appconfiguration.stores[0].selects[0].label-filter | The label used to indicate which configuration(s) will be loaded. | No | `${spring.profiles.active}` or if null `\0`
+spring.cloud.azure.appconfiguration.stores[0].selects[0].snapshot-name | The snapshot name used to indicate which configuration(s) will be loaded. | No | null
+spring.cloud.azure.appconfiguration.stores[0].trim-key-prefix[0] | The prefix that will be trimmed from the key when the configuration is loaded. | No | null, unless using key-filter, then it is the key-filter
+spring.cloud.azure.appconfiguration.stores[0].replicaDiscoveryEnabled | Enables periodic checking if new replicas of the store have been created. And found stores will be added to the bottom of the list of endpoints used in cases where the store can't be reached. | No | true
 
 Configuration Store Authentication
+
+By default when connecting to Azure App Configuration, if no credential is provided, the `DefaultAzureCredential` will be used.
 
 Name | Description | Required | Default
 ---|---|---|---
 spring.cloud.azure.appconfiguration.stores[0].endpoint | When the endpoint of an App Configuration store is specified, a managed identity or a token credential provided using `AppConfigCredentialProvider` will be used to connect to the App Configuration service. An `IllegalArgumentException` will be thrown if the endpoint and connection-string are specified at the same time. | Conditional | null
 spring.cloud.azure.appconfiguration.stores[0].endpoints | When multiple replica endpoints of an App Configuration store are specified, a managed identity or a token credential provided using `AppConfigCredentialProvider` will be used to connect to the App Configuration service. Replica endpoints should be listed in priority order of connection. An `IllegalArgumentException` will be thrown if multiple authentication methods are provided. | Conditional | null
+
+Additionally, you can connect to Azure App Configuration using a connection string. But this method is not recommended.
+
+Name | Description | Required | Default
+---|---|---|---
 spring.cloud.azure.appconfiguration.stores[0].connection-string | When the connection-string of an App Configuration store is specified, HMAC authentication will be used to connect to the App Configuration service. An `IllegalArgumentException` will be thrown if the endpoint and connection-string are specified at the same time. | Conditional | null
 spring.cloud.azure.appconfiguration.stores[0].connection-strings | When the connection-strings of an App Configuration store is specified, HMAC authentication will be used to connect to the App Configuration service.  Replica stores should be listed in priority order of connection. An `IllegalArgumentException` will be thrown if the endpoint and connection-string are specified at the same time. | Conditional | null
 
@@ -81,6 +96,11 @@ spring.cloud.azure.appconfiguration.stores[0].monitoring.refresh-interval | Amou
 spring.cloud.azure.appconfiguration.stores[0].monitoring.feature-flag-refresh-interval | Amount of time, of type Duration, feature flags are stored before a check can occur. | No | 30s
 spring.cloud.azure.appconfiguration.stores[0].monitoring.triggers[0].key | A key that is watched for change via etag. If a change is detected on the key then a refresh of all configurations will be triggered. | Yes (If monitoring enabled) | null
 spring.cloud.azure.appconfiguration.stores[0].monitoring.triggers[0].label | The label of the key that is being watched for etag changes. | No | \0
+
+These properties enable push-based notifications for configuration changes. But this method of refresh is no-longer recommended, but is currently still supported.
+
+Name | Description | Required | Default
+---|---|---|---
 spring.cloud.azure.appconfiguration.stores[0].monitoring.push-notification.primary-token.name | The name of a token used with Event Hub to trigger push based refresh. | No | null
 spring.cloud.azure.appconfiguration.stores[0].monitoring.push-notification.primary-token.secret | The secret value of a token used with Event Hub to trigger push based refresh. | No | null
 spring.cloud.azure.appconfiguration.stores[0].monitoring.push-notification.secondary-token.name | The name of a token used with Event Hub to trigger push based refresh. | No | null
@@ -93,6 +113,17 @@ Name | Description | Required | Default
 spring.cloud.azure.appconfiguration.stores[0].feature-flags.enabled | Whether feature flags are loaded from the config store.  | No | false
 spring.cloud.azure.appconfiguration.stores[0].feature-flags.selects[0].key-filter | The key pattern used to indicate which feature flags will be loaded. | No | \0
 spring.cloud.azure.appconfiguration.stores[0].feature-flags.selects[0].label-filter | The label used to indicate which feature flags will be loaded. | No | \0
+
+### Basic usage
+
+Enabling the Azure App Configuration integration is as simple as adding the necessary dependencies, listed above, and the following configuration properties.
+
+```properties
+spring.config.import=azureAppConfiguration
+spring.cloud.azure.appconfiguration.stores[0].endpoint=[your-endpoint]
+```
+
+With these settings in place, your application will be able to connect to Azure App Configuration and retrieve configuration values. The default values loaded with these properties are all configuration that start with the value `/application/` and have no label.
 
 ### Advanced usage
 
@@ -116,7 +147,7 @@ The failover won't happen for client errors like authentication failures.
 
 #### Load from multiple configuration stores
 
-If the application needs to load configuration properties from multiple stores, following configuration sample describes how the bootstrap.properties(or .yaml) can be configured.
+If the application needs to load configuration properties from multiple stores, following configuration sample describes how the application.properties(or .yaml) can be configured.
 
 ```properties
 spring.cloud.azure.appconfiguration.stores[0].connection-string=[first-store-connection-string]
@@ -168,6 +199,75 @@ spring:
               label-filter: ',${spring.profiles.active}'
 ```
 
+#### Snapshots
+
+App Configuration snapshots allow you to freeze a moment in time of your configuration store. Snapshots are immutable. Snapshots are stored in the same configuration store as the rest of your configuration data. Snapshots are identified by a unique snapshot name. The snapshot name is a string that can contain any combination of alphanumeric characters, hyphens, and underscores. The snapshot name is case sensitive and must be unique within the configuration store.
+
+To load configuration from a snapshot, use the following configuration:
+
+```yaml
+spring:
+  cloud:
+    azure:
+      appconfiguration:
+        stores:
+         -
+           connection-string: <connection-string>
+           selects:
+             -
+              snapshot-name: <snapshot-name>
+           trim-key-prefix:
+             - /application/
+```
+
+NOTE: Snapshots have to be of the composition type KEY in order to be loaded, this is to stop configuration name conflicts inside of a snapshot.
+
+NOTE 2: If keys start with a prefix such as `/application/` a trim value is needed otherwise `/` will be converted to `.` and your key will not be mapped to `@ConfigurationProperties`
+
+When using snapshots, key-filters and label filters aren't used. The snapshot is loaded as is. You can load multiple snapshots by adding multiple selects, even adding key and label filters to other selects.
+
+```yaml
+spring:
+  cloud:
+    azure:
+      appconfiguration:
+        stores:
+         -
+           connection-string: <connection-string>
+           selects:
+             -
+              snapshot-name: <snapshot-name>
+             -
+              key-filter: <key-filter>
+              label-filter: <label-filter>
+```
+
+In this case, the snapshot is loaded first then keys from the filter are loaded. If there are duplicate keys, the last key loaded has the highest priority.
+
+If previously you used these keys in your application outside of a snapshot than they will most likely contain a prefix like `/application/`, when using a key filter the prefix was automatically removed, but it isn't with a snapshot, which means you have to trim your key names.
+
+```yaml
+spring:
+  cloud:
+    azure:
+      appconfiguration:
+        stores:
+         -
+           connection-string: <connection-string>
+           selects:
+             -
+              snapshot-name: <snapshot-name>
+           trim:
+             - /application/
+```
+
+This will trim the prefix from all keys in the snapshot, and will also trim any other keys selected if they begin with the prefix. This has also been added to the key filter, so you can use it there as well, though it overrides the key-filter name trim.
+
+
+NOTE: If you are only using snapshots, you don't have to monitor the configuration store, as snapshots are immutable. But if you are using snapshots and other configuration data, you can still monitor the configuration store.
+
+NOTE: If your snapshot includes feature flags they will automatically be loaded even if feature flags are disabled. If feature flags are enabled, the feature flags will be loaded, any feature flags loaded this way take priority of feature flags loaded from snapshots.
+
 #### Configuration Refresh
 
 Configuration Refresh feature allows the application to load the latest property value from configuration store automatically, without restarting the application.
@@ -193,6 +293,8 @@ When using the web library, applications will attempt a refresh whenever a servl
 In the console library calling refreshConfiguration on `AppConfigurationRefresh` will result in a refresh if the watch interval has passed. The web library can also use this method along with servlet request method.
 
 ##### Push Based Refresh
+
+NOTE: This method of refresh is no longer recommended, but is still supported.
 
 The Web Provider can be connect to your Azure App Configuration store via an Azure Event Grid Web Hook to trigger a refresh event. By adding the Spring Actuator as a dependency you can add App Configuration Refresh as an exposed endpoint. There are two options appconfiguration-refresh and appconfiguration-refresh-bus. These endpoints work just like there counterparts refresh and refresh-bus, but have the required web hook authorization to work with Azure Event Grid. When needing to refresh multiple application instances `azure-servicebus-jms-spring-boot-starter` needs to be setup to have the refresh triggered in all instances.
 
@@ -238,7 +340,7 @@ The values in App Configuration are filtered through the existing Environment wh
 
 #### Use Managed Identity to access App Configuration
 
-[Managed identity][azure_managed_identity] allows application to access [Azure Active Directory][azure_active_directory] protected resource on [Azure][azure].
+[Managed identity][azure_managed_identity] allows application to access [Microsoft Entra ID][microsoft_entra_id] protected resource on [Azure][azure].
 
 In this library, [Azure Identity SDK][azure_identity_sdk] is used to access Azure App Configuration and optionally Azure Key Vault, for secrets. Only one method of authentication can be set at one time. When not using the AppConfigCredentialProvider and/or KeyVaultCredentialProvider the same authentication method is used for both App Configuration and Key Vault.
 
@@ -248,11 +350,11 @@ Follow the below steps to enable accessing App Configuration with managed identi
 
 1. Configure the [Azure RBAC][azure_rbac] of your App Configuration store to grant access to the Azure service where your application is running. Select the App Configuration Data Reader. The App Configuration Data Owner role is not required but can be used if needed.
 
-1. Configure bootstrap.properties(or .yaml) in the Spring Boot application.
+1. Configure application.properties(or .yaml) in the Spring Boot application.
 
 The configuration store endpoint must be configured when `connection-string` is empty. When using a User Assigned Id the value `spring.cloud.azure.appconfiguration.managed-identity.client-id=[client-id]` must be set.
 
-##### bootstrap.application
+##### application.application
 
 ```application
 spring.cloud.azure.appconfiguration.stores[0].endpoint=[config-store-endpoint]
@@ -332,21 +434,21 @@ Please follow [instructions here][contributing_md] to build from source or contr
 
 <!-- Link -->
 [package]: https://mvnrepository.com/artifact/com.microsoft.azure/spring-cloud-azure-appconfiguration-config
-[app_configuration_sample]: https://github.com/Azure-Samples/azure-spring-boot-samples/tree/spring-cloud-azure_v4.3.0/appconfiguration/azure-spring-cloud-appconfiguration-config/azure-spring-cloud-appconfiguration-config-sample
-[app_configuration_conversation_complete_sample]: https://github.com/Azure-Samples/azure-spring-boot-samples/tree/spring-cloud-azure_v4.3.0/appconfiguration/azure-spring-cloud-appconfiguration-config/azure-spring-cloud-appconfiguration-config-convert-sample/azure-spring-cloud-appconfiguration-config-convert-sample-complete
-[app_configuration_conversation_initail_sample]: https://github.com/Azure-Samples/azure-spring-boot-samples/tree/spring-cloud-azure_v4.3.0/appconfiguration/azure-spring-cloud-appconfiguration-config/azure-spring-cloud-appconfiguration-config-convert-sample/azure-spring-cloud-appconfiguration-config-convert-sample-initial
+[app_configuration_sample]: https://github.com/Azure-Samples/azure-spring-boot-samples/tree/main/appconfiguration/spring-cloud-azure-appconfiguration-config/spring-cloud-azure-appconfiguration-config-sample
+[app_configuration_conversation_complete_sample]: https://github.com/Azure-Samples/azure-spring-boot-samples/tree/main/appconfiguration/spring-cloud-azure-appconfiguration-config/spring-cloud-azure-appconfiguration-config-convert-sample/spring-cloud-azure-appconfiguration-config-convert-sample-complete
+[app_configuration_conversation_initail_sample]: https://github.com/Azure-Samples/azure-spring-boot-samples/tree/main/appconfiguration/spring-cloud-azure-appconfiguration-config/spring-cloud-azure-appconfiguration-config-convert-sample/spring-cloud-azure-appconfiguration-config-convert-sample-initial
 [azure_subscription]: https://azure.microsoft.com/free
 [spring logging document]: https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#boot-features-logging
 [contributing_md]: https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/spring/CONTRIBUTING.md
 [maven]: https://maven.apache.org/
 [spring_conversion_duration]: https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.typesafe-configuration-properties.conversion.durations
-[azure_managed_identity]: https://docs.microsoft.com/azure/active-directory/managed-identities-azure-resources/overview
-[enable_managed_identities]: https://docs.microsoft.com/azure/active-directory/managed-identities-azure-resources/overview#how-can-i-use-managed-identities-for-azure-resources
-[support_azure_services]: https://docs.microsoft.com/azure/active-directory/managed-identities-azure-resources/services-support-managed-identities
+[azure_managed_identity]: https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/overview
+[enable_managed_identities]: https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/overview#how-can-i-use-managed-identities-for-azure-resources
+[support_azure_services]: https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/services-support-managed-identities
 [azure]: https://azure.microsoft.com
-[azure_active_directory]: https://azure.microsoft.com/services/active-directory/
+[microsoft_entra_id]: https://microsoft.com/security/business/identity-access/microsoft-entra-id
 [azure_identity_sdk]: https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/identity/azure-identity
-[azure_rbac]: https://docs.microsoft.com/azure/role-based-access-control/role-assignments-portal
+[azure_rbac]: https://learn.microsoft.com/azure/role-based-access-control/role-assignments-portal
 [app_configuration_SDK]: https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/appconfiguration/azure-data-appconfiguration#key-concepts
 [key_vault_SDK]: https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/keyvault/azure-security-keyvault-secrets#key-concepts
 [reference_docs]: https://microsoft.github.io/spring-cloud-azure/docs/azure-app-configuration/index.html

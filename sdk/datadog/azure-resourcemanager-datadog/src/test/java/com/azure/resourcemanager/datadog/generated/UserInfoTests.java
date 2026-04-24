@@ -11,21 +11,21 @@ import org.junit.jupiter.api.Assertions;
 public final class UserInfoTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        UserInfo model =
-            BinaryData
-                .fromString("{\"name\":\"czsqpjhvm\",\"emailAddress\":\"jvnysounqe\",\"phoneNumber\":\"noae\"}")
-                .toObject(UserInfo.class);
-        Assertions.assertEquals("czsqpjhvm", model.name());
-        Assertions.assertEquals("jvnysounqe", model.emailAddress());
-        Assertions.assertEquals("noae", model.phoneNumber());
+        UserInfo model = BinaryData
+            .fromString("{\"name\":\"ktzlcuiywg\",\"emailAddress\":\"wgndrvynhzgpp\",\"phoneNumber\":\"cgyncocpecf\"}")
+            .toObject(UserInfo.class);
+        Assertions.assertEquals("ktzlcuiywg", model.name());
+        Assertions.assertEquals("wgndrvynhzgpp", model.emailAddress());
+        Assertions.assertEquals("cgyncocpecf", model.phoneNumber());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        UserInfo model = new UserInfo().withName("czsqpjhvm").withEmailAddress("jvnysounqe").withPhoneNumber("noae");
+        UserInfo model
+            = new UserInfo().withName("ktzlcuiywg").withEmailAddress("wgndrvynhzgpp").withPhoneNumber("cgyncocpecf");
         model = BinaryData.fromObject(model).toObject(UserInfo.class);
-        Assertions.assertEquals("czsqpjhvm", model.name());
-        Assertions.assertEquals("jvnysounqe", model.emailAddress());
-        Assertions.assertEquals("noae", model.phoneNumber());
+        Assertions.assertEquals("ktzlcuiywg", model.name());
+        Assertions.assertEquals("wgndrvynhzgpp", model.emailAddress());
+        Assertions.assertEquals("cgyncocpecf", model.phoneNumber());
     }
 }

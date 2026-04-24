@@ -20,14 +20,17 @@ import com.azure.storage.common.sas.SasIpRange;
 import com.azure.storage.common.sas.SasProtocol;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static com.azure.storage.common.implementation.SasImplUtils.formatQueryParameterDate;
+import static com.azure.storage.common.implementation.SasImplUtils.formatRequestHeaders;
+import static com.azure.storage.common.implementation.SasImplUtils.formatRequestQueryParameters;
 import static com.azure.storage.common.implementation.SasImplUtils.tryAppendQueryParameter;
 
 /**
  * This class provides helper methods for common blob service sas patterns.
- *
  * RESERVED FOR INTERNAL USE.
  */
 public class BlobSasImplUtil {
@@ -51,48 +54,40 @@ public class BlobSasImplUtil {
      */
     private static final String SAS_CONTAINER_CONSTANT = "c";
 
+    /**
+     * The SAS blob directory constant.
+     */
+    private static final String SAS_BLOB_DIRECTORY_CONSTANT = "d";
+
     private static final ClientLogger LOGGER = new ClientLogger(BlobSasImplUtil.class);
 
     private static final String VERSION = Configuration.getGlobalConfiguration()
         .get(Constants.PROPERTY_AZURE_STORAGE_SAS_SERVICE_VERSION, BlobServiceVersion.getLatest().getVersion());
 
     private SasProtocol protocol;
-
     private OffsetDateTime startTime;
-
     private OffsetDateTime expiryTime;
-
     private String permissions;
-
     private SasIpRange sasIpRange;
-
     private String containerName;
-
     private String blobName;
-
     private String resource;
-
     private String snapshotId;
-
     private String versionId;
-
     private String identifier;
-
     private String cacheControl;
-
     private String contentDisposition;
-
     private String contentEncoding;
-
     private String contentLanguage;
-
     private String contentType;
-
     private String authorizedAadObjectId;
-
     private String correlationId;
-
     private String encryptionScope;
+    private String delegatedUserObjectId;
+    private Map<String, String> requestHeaders;
+    private Map<String, String> requestQueryParameters;
+    private Boolean isDirectory;
+    private Integer directoryDepth;
 
     /**
      * Creates a new {@link BlobSasImplUtil} with the specified parameters
@@ -139,6 +134,10 @@ public class BlobSasImplUtil {
         this.authorizedAadObjectId = sasValues.getPreauthorizedAgentObjectId();
         this.correlationId = sasValues.getCorrelationId();
         this.encryptionScope = encryptionScope;
+        this.delegatedUserObjectId = sasValues.getDelegatedUserObjectId();
+        this.requestHeaders = sasValues.getRequestHeaders();
+        this.requestQueryParameters = sasValues.getRequestQueryParameters();
+        this.isDirectory = sasValues.isDirectory();
     }
 
     /**
@@ -149,6 +148,20 @@ public class BlobSasImplUtil {
      * @return A String representing the Sas
      */
     public String generateSas(StorageSharedKeyCredential storageSharedKeyCredentials, Context context) {
+        return generateSas(storageSharedKeyCredentials, null, context);
+    }
+
+    /**
+     * Generates a Sas signed with a {@link StorageSharedKeyCredential}
+     *
+     * @param storageSharedKeyCredentials {@link StorageSharedKeyCredential}
+     * @param stringToSignHandler For debugging purposes only. Returns the string to sign that was used to generate the
+     * signature.
+     * @param context Additional context that is passed through the code when generating a SAS.
+     * @return The string to sign that will be used to generate the signature for the SAS URL.
+     */
+    public String generateSas(StorageSharedKeyCredential storageSharedKeyCredentials,
+        Consumer<String> stringToSignHandler, Context context) {
         StorageImplUtils.assertNotNull("storageSharedKeyCredentials", storageSharedKeyCredentials);
 
         ensureState();
@@ -158,6 +171,10 @@ public class BlobSasImplUtil {
         final String stringToSign = stringToSign(canonicalName);
         StorageImplUtils.logStringToSign(LOGGER, stringToSign, context);
         final String signature = storageSharedKeyCredentials.computeHmac256(stringToSign);
+
+        if (stringToSignHandler != null) {
+            stringToSignHandler.accept(stringToSign);
+        }
 
         return encode(null /* userDelegationKey */, signature);
     }
@@ -171,6 +188,21 @@ public class BlobSasImplUtil {
      * @return A String representing the Sas
      */
     public String generateUserDelegationSas(UserDelegationKey delegationKey, String accountName, Context context) {
+        return generateUserDelegationSas(delegationKey, accountName, null, context);
+    }
+
+    /**
+     * Generates a Sas signed with a {@link UserDelegationKey}
+     *
+     * @param delegationKey {@link UserDelegationKey}
+     * @param accountName The account name
+     * @param stringToSignHandler For debugging purposes only. Returns the string to sign that was used to generate the
+     * signature.
+     * @param context Additional context that is passed through the code when generating a SAS.
+     * @return A String representing the Sas
+     */
+    public String generateUserDelegationSas(UserDelegationKey delegationKey, String accountName,
+        Consumer<String> stringToSignHandler, Context context) {
         StorageImplUtils.assertNotNull("delegationKey", delegationKey);
         StorageImplUtils.assertNotNull("accountName", accountName);
 
@@ -181,6 +213,10 @@ public class BlobSasImplUtil {
         final String stringToSign = stringToSign(delegationKey, canonicalName);
         StorageImplUtils.logStringToSign(LOGGER, stringToSign, context);
         String signature = StorageImplUtils.computeHMac256(delegationKey.getValue(), stringToSign);
+
+        if (stringToSignHandler != null) {
+            stringToSignHandler.accept(stringToSign);
+        }
 
         return encode(delegationKey, signature);
     }
@@ -200,10 +236,10 @@ public class BlobSasImplUtil {
 
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SERVICE_VERSION, VERSION);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_PROTOCOL, this.protocol);
-        tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_START_TIME, formatQueryParameterDate(
-            new TimeAndFormat(this.startTime, null)));
-        tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_EXPIRY_TIME, formatQueryParameterDate(
-            new TimeAndFormat(this.expiryTime, null)));
+        tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_START_TIME,
+            formatQueryParameterDate(new TimeAndFormat(this.startTime, null)));
+        tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_EXPIRY_TIME,
+            formatQueryParameterDate(new TimeAndFormat(this.expiryTime, null)));
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_IP_RANGE, this.sasIpRange);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_IDENTIFIER, this.identifier);
         if (userDelegationKey != null) {
@@ -219,15 +255,28 @@ public class BlobSasImplUtil {
                 userDelegationKey.getSignedService());
             tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_KEY_VERSION,
                 userDelegationKey.getSignedVersion());
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_KEY_DELEGATED_USER_TENANT_ID,
+                userDelegationKey.getSignedDelegatedUserTenantId());
 
-            /* Only parameters relevant for user delegation SAS. */
-            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_PREAUTHORIZED_AGENT_OBJECT_ID, this.authorizedAadObjectId);
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_PREAUTHORIZED_AGENT_OBJECT_ID,
+                this.authorizedAadObjectId);
             tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_CORRELATION_ID, this.correlationId);
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_DELEGATED_USER_OBJECT_ID,
+                this.delegatedUserObjectId);
         }
+
+        if (this.isDirectory != null && this.isDirectory) {
+            tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_DIRECTORY_DEPTH, this.directoryDepth);
+        }
+
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_RESOURCE, this.resource);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNED_PERMISSIONS, this.permissions);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_SIGNATURE, signature);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_ENCRYPTION_SCOPE, this.encryptionScope);
+        tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_REQUEST_HEADERS,
+            formatRequestHeaders(this.requestHeaders, false));
+        tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_REQUEST_QUERY_PARAMETERS,
+            formatRequestQueryParameters(this.requestQueryParameters, false));
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_CACHE_CONTROL, this.cacheControl);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_CONTENT_DISPOSITION, this.contentDisposition);
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_CONTENT_ENCODING, this.contentEncoding);
@@ -235,30 +284,30 @@ public class BlobSasImplUtil {
         tryAppendQueryParameter(sb, Constants.UrlConstants.SAS_CONTENT_TYPE, this.contentType);
 
         return sb.toString();
-
     }
 
     /**
      * Ensures that the builder's properties are in a consistent state.
-
-     * 1. If there is no version, use latest.
+     *
+     * <p> 1. If there is no version, use latest.
      * 2. If there is no identifier set, ensure expiryTime and permissions are set.
      * 3. Resource name is chosen by:
      *    a. If "BlobName" is _not_ set, it is a container resource.
      *    b. Otherwise, if "SnapshotId" is set, it is a blob snapshot resource.
      *    c. Otherwise, if "VersionId" is set, it is a blob version resource.
-     *    d. Otherwise, it is a blob resource.
-     * 4. Reparse permissions depending on what the resource is. If it is an unrecognized resource, do nothing.
+     *    d. Otherwise, if "IsDirectory" is set to true, it is a blob directory resource.
+     *    e. Otherwise, it is a blob resource.
+     * 4. Reparse permissions depending on what the resource is. If it is an unrecognized resource, do nothing. </p>
      *
      * Taken from:
-     * https://github.com/Azure/azure-storage-blob-go/blob/master/azblob/sas_service.go#L33
-     * https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/storage/Azure.Storage.Blobs/src/Sas/BlobSasBuilder.cs
+     * <a href="https://github.com/Azure/azure-storage-blob-go/blob/master/azblob/sas_service.go#L33">sas_service.go</a>
+     * <a href="https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/storage/Azure.Storage.Blobs/src/Sas/BlobSasBuilder.cs">BlobSasBuilder.cs</a>
      */
-    private void ensureState() {
+    public void ensureState() {
         if (identifier == null) {
             if (expiryTime == null || permissions == null) {
-                throw LOGGER.logExceptionAsError(new IllegalStateException("If identifier is not set, expiry time "
-                    + "and permissions must be set"));
+                throw LOGGER.logExceptionAsError(new IllegalStateException(
+                    "If identifier is not set, expiry time " + "and permissions must be set"));
             }
         }
 
@@ -268,6 +317,8 @@ public class BlobSasImplUtil {
             resource = SAS_BLOB_SNAPSHOT_CONSTANT;
         } else if (versionId != null) {
             resource = SAS_BLOB_VERSION_CONSTANT;
+        } else if (isDirectory != null && isDirectory) {
+            resource = SAS_BLOB_DIRECTORY_CONSTANT;
         } else {
             resource = SAS_BLOB_CONSTANT;
         }
@@ -279,9 +330,22 @@ public class BlobSasImplUtil {
                 case SAS_BLOB_VERSION_CONSTANT:
                     permissions = BlobSasPermission.parse(permissions).toString();
                     break;
+
                 case SAS_CONTAINER_CONSTANT:
                     permissions = BlobContainerSasPermission.parse(permissions).toString();
                     break;
+
+                case SAS_BLOB_DIRECTORY_CONSTANT:
+                    // Normalize backslashes to forward slashes to align directory depth with canonical name computation.
+                    String normalizedBlobName = blobName.replace('\\', '/');
+                    if (!"/".equalsIgnoreCase(normalizedBlobName)) {
+                        directoryDepth = normalizedBlobName.trim().replaceAll("^/+|/+$", "").split("/").length;
+                    } else {
+                        directoryDepth = 0;
+                    }
+                    permissions = BlobSasPermission.parse(permissions).toString();
+                    break;
+
                 default:
                     // We won't reparse the permissions if we don't know the type.
                     LOGGER.info("Not re-parsing permissions. Resource type '{}' is unknown.", resource);
@@ -304,123 +368,174 @@ public class BlobSasImplUtil {
     private String stringToSign(String canonicalName) {
         String versionSegment = this.snapshotId == null ? this.versionId : this.snapshotId;
         if (VERSION.compareTo(BlobServiceVersion.V2020_10_02.getVersion()) <= 0) {
-            return String.join("\n",
-                this.permissions == null ? "" : permissions,
+            return String.join("\n", this.permissions == null ? "" : permissions,
                 this.startTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.startTime),
                 this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime),
-                canonicalName,
-                this.identifier == null ? "" : this.identifier,
+                canonicalName, this.identifier == null ? "" : this.identifier,
                 this.sasIpRange == null ? "" : this.sasIpRange.toString(),
-                this.protocol == null ? "" : this.protocol.toString(),
-                VERSION,
-                resource,
-                versionSegment == null ? "" : versionSegment,
-                this.cacheControl == null ? "" : this.cacheControl,
+                this.protocol == null ? "" : this.protocol.toString(), VERSION, resource,
+                versionSegment == null ? "" : versionSegment, this.cacheControl == null ? "" : this.cacheControl,
                 this.contentDisposition == null ? "" : this.contentDisposition,
                 this.contentEncoding == null ? "" : this.contentEncoding,
                 this.contentLanguage == null ? "" : this.contentLanguage,
-                this.contentType == null ? "" : this.contentType
-            );
+                this.contentType == null ? "" : this.contentType);
         } else {
-            return String.join("\n",
-                this.permissions == null ? "" : permissions,
+            return String.join("\n", this.permissions == null ? "" : permissions,
                 this.startTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.startTime),
                 this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime),
-                canonicalName,
-                this.identifier == null ? "" : this.identifier,
+                canonicalName, this.identifier == null ? "" : this.identifier,
                 this.sasIpRange == null ? "" : this.sasIpRange.toString(),
-                this.protocol == null ? "" : this.protocol.toString(),
-                VERSION,
-                resource,
-                versionSegment == null ? "" : versionSegment,
-                this.encryptionScope == null ? "" : this.encryptionScope,
+                this.protocol == null ? "" : this.protocol.toString(), VERSION, resource,
+                versionSegment == null ? "" : versionSegment, this.encryptionScope == null ? "" : this.encryptionScope,
                 this.cacheControl == null ? "" : this.cacheControl,
                 this.contentDisposition == null ? "" : this.contentDisposition,
                 this.contentEncoding == null ? "" : this.contentEncoding,
                 this.contentLanguage == null ? "" : this.contentLanguage,
-                this.contentType == null ? "" : this.contentType
-            );
+                this.contentType == null ? "" : this.contentType);
         }
     }
 
     private String stringToSign(final UserDelegationKey key, String canonicalName) {
         String versionSegment = this.snapshotId == null ? this.versionId : this.snapshotId;
         if (VERSION.compareTo(BlobServiceVersion.V2019_12_12.getVersion()) <= 0) {
-            return String.join("\n",
-                this.permissions == null ? "" : this.permissions,
+            return String.join("\n", this.permissions == null ? "" : this.permissions,
                 this.startTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.startTime),
                 this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime),
-                canonicalName,
-                key.getSignedObjectId() == null ? "" : key.getSignedObjectId(),
+                canonicalName, key.getSignedObjectId() == null ? "" : key.getSignedObjectId(),
                 key.getSignedTenantId() == null ? "" : key.getSignedTenantId(),
                 key.getSignedStart() == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedStart()),
-                key.getSignedExpiry() == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedExpiry()),
+                key.getSignedExpiry() == null
+                    ? ""
+                    : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedExpiry()),
                 key.getSignedService() == null ? "" : key.getSignedService(),
                 key.getSignedVersion() == null ? "" : key.getSignedVersion(),
                 this.sasIpRange == null ? "" : this.sasIpRange.toString(),
-                this.protocol == null ? "" : this.protocol.toString(),
-                VERSION,
-                resource,
-                versionSegment == null ? "" : versionSegment,
-                this.cacheControl == null ? "" : this.cacheControl,
+                this.protocol == null ? "" : this.protocol.toString(), VERSION, resource,
+                versionSegment == null ? "" : versionSegment, this.cacheControl == null ? "" : this.cacheControl,
                 this.contentDisposition == null ? "" : this.contentDisposition,
                 this.contentEncoding == null ? "" : this.contentEncoding,
                 this.contentLanguage == null ? "" : this.contentLanguage,
-                this.contentType == null ? "" : this.contentType
-            );
+                this.contentType == null ? "" : this.contentType);
         } else if (VERSION.compareTo(BlobServiceVersion.V2020_10_02.getVersion()) <= 0) {
-            return String.join("\n",
-                this.permissions == null ? "" : this.permissions,
+            return String.join("\n", this.permissions == null ? "" : this.permissions,
                 this.startTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.startTime),
                 this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime),
-                canonicalName,
-                key.getSignedObjectId() == null ? "" : key.getSignedObjectId(),
+                canonicalName, key.getSignedObjectId() == null ? "" : key.getSignedObjectId(),
                 key.getSignedTenantId() == null ? "" : key.getSignedTenantId(),
                 key.getSignedStart() == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedStart()),
-                key.getSignedExpiry() == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedExpiry()),
+                key.getSignedExpiry() == null
+                    ? ""
+                    : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedExpiry()),
                 key.getSignedService() == null ? "" : key.getSignedService(),
                 key.getSignedVersion() == null ? "" : key.getSignedVersion(),
                 this.authorizedAadObjectId == null ? "" : this.authorizedAadObjectId,
                 "", /* suoid - empty since this applies to HNS only accounts. */
                 this.correlationId == null ? "" : this.correlationId,
                 this.sasIpRange == null ? "" : this.sasIpRange.toString(),
-                this.protocol == null ? "" : this.protocol.toString(),
-                VERSION,
-                resource,
-                versionSegment == null ? "" : versionSegment,
+                this.protocol == null ? "" : this.protocol.toString(), VERSION, resource,
+                versionSegment == null ? "" : versionSegment, this.cacheControl == null ? "" : this.cacheControl,
+                this.contentDisposition == null ? "" : this.contentDisposition,
+                this.contentEncoding == null ? "" : this.contentEncoding,
+                this.contentLanguage == null ? "" : this.contentLanguage,
+                this.contentType == null ? "" : this.contentType);
+        } else if (VERSION.compareTo(BlobServiceVersion.V2025_05_05.getVersion()) <= 0) {
+            return String.join("\n", this.permissions == null ? "" : this.permissions,
+                this.startTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.startTime),
+                this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime),
+                canonicalName, key.getSignedObjectId() == null ? "" : key.getSignedObjectId(),
+                key.getSignedTenantId() == null ? "" : key.getSignedTenantId(),
+                key.getSignedStart() == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedStart()),
+                key.getSignedExpiry() == null
+                    ? ""
+                    : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedExpiry()),
+                key.getSignedService() == null ? "" : key.getSignedService(),
+                key.getSignedVersion() == null ? "" : key.getSignedVersion(),
+                this.authorizedAadObjectId == null ? "" : this.authorizedAadObjectId,
+                "", /* suoid - empty since this applies to HNS only accounts. */
+                this.correlationId == null ? "" : this.correlationId,
+                this.sasIpRange == null ? "" : this.sasIpRange.toString(),
+                this.protocol == null ? "" : this.protocol.toString(), VERSION, resource,
+                versionSegment == null ? "" : versionSegment, this.encryptionScope == null ? "" : this.encryptionScope,
                 this.cacheControl == null ? "" : this.cacheControl,
                 this.contentDisposition == null ? "" : this.contentDisposition,
                 this.contentEncoding == null ? "" : this.contentEncoding,
                 this.contentLanguage == null ? "" : this.contentLanguage,
-                this.contentType == null ? "" : this.contentType
-            );
+                this.contentType == null ? "" : this.contentType);
+        } else if (VERSION.compareTo(BlobServiceVersion.V2026_02_06.getVersion()) <= 0) {
+            return String.join("\n", this.permissions == null ? "" : this.permissions,
+                this.startTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.startTime),
+                this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime),
+                canonicalName, key.getSignedObjectId() == null ? "" : key.getSignedObjectId(),
+                key.getSignedTenantId() == null ? "" : key.getSignedTenantId(),
+                key.getSignedStart() == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedStart()),
+                key.getSignedExpiry() == null
+                    ? ""
+                    : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedExpiry()),
+                key.getSignedService() == null ? "" : key.getSignedService(),
+                key.getSignedVersion() == null ? "" : key.getSignedVersion(),
+                this.authorizedAadObjectId == null ? "" : this.authorizedAadObjectId,
+                "", /* suoid - empty since this applies to HNS only accounts. */
+                this.correlationId == null ? "" : this.correlationId,
+                key.getSignedDelegatedUserTenantId() == null ? "" : key.getSignedDelegatedUserTenantId(),
+                this.delegatedUserObjectId == null ? "" : this.delegatedUserObjectId,
+                this.sasIpRange == null ? "" : this.sasIpRange.toString(),
+                this.protocol == null ? "" : this.protocol.toString(), VERSION, resource,
+                versionSegment == null ? "" : versionSegment, this.encryptionScope == null ? "" : this.encryptionScope,
+                this.cacheControl == null ? "" : this.cacheControl,
+                this.contentDisposition == null ? "" : this.contentDisposition,
+                this.contentEncoding == null ? "" : this.contentEncoding,
+                this.contentLanguage == null ? "" : this.contentLanguage,
+                this.contentType == null ? "" : this.contentType);
         } else {
-            return String.join("\n",
-                this.permissions == null ? "" : this.permissions,
+            return String.join("\n", this.permissions == null ? "" : this.permissions,
                 this.startTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.startTime),
                 this.expiryTime == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(this.expiryTime),
-                canonicalName,
-                key.getSignedObjectId() == null ? "" : key.getSignedObjectId(),
+                canonicalName, key.getSignedObjectId() == null ? "" : key.getSignedObjectId(),
                 key.getSignedTenantId() == null ? "" : key.getSignedTenantId(),
                 key.getSignedStart() == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedStart()),
-                key.getSignedExpiry() == null ? "" : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedExpiry()),
+                key.getSignedExpiry() == null
+                    ? ""
+                    : Constants.ISO_8601_UTC_DATE_FORMATTER.format(key.getSignedExpiry()),
                 key.getSignedService() == null ? "" : key.getSignedService(),
                 key.getSignedVersion() == null ? "" : key.getSignedVersion(),
                 this.authorizedAadObjectId == null ? "" : this.authorizedAadObjectId,
                 "", /* suoid - empty since this applies to HNS only accounts. */
                 this.correlationId == null ? "" : this.correlationId,
+                key.getSignedDelegatedUserTenantId() == null ? "" : key.getSignedDelegatedUserTenantId(),
+                this.delegatedUserObjectId == null ? "" : this.delegatedUserObjectId,
                 this.sasIpRange == null ? "" : this.sasIpRange.toString(),
-                this.protocol == null ? "" : this.protocol.toString(),
-                VERSION,
-                resource,
-                versionSegment == null ? "" : versionSegment,
-                this.encryptionScope == null ? "" : this.encryptionScope,
+                this.protocol == null ? "" : this.protocol.toString(), VERSION, resource,
+                versionSegment == null ? "" : versionSegment, this.encryptionScope == null ? "" : this.encryptionScope,
+                this.requestHeaders == null ? "" : formatRequestHeaders(this.requestHeaders, true),
+                this.requestQueryParameters == null
+                    ? ""
+                    : formatRequestQueryParameters(this.requestQueryParameters, true),
                 this.cacheControl == null ? "" : this.cacheControl,
                 this.contentDisposition == null ? "" : this.contentDisposition,
                 this.contentEncoding == null ? "" : this.contentEncoding,
                 this.contentLanguage == null ? "" : this.contentLanguage,
-                this.contentType == null ? "" : this.contentType
-            );
+                this.contentType == null ? "" : this.contentType);
         }
+    }
+
+    /**
+     * Gets the resource string for SAS token signing.
+     *
+     * @return The resource string.
+     */
+    public String getResource() {
+        return this.resource;
+    }
+
+    /**
+     * Gets the permissions string for SAS token signing.
+     * @return The permissions string.
+     */
+    public String getPermissions() {
+        return this.permissions;
+    }
+
+    public Integer getDirectoryDepth() {
+        return directoryDepth;
     }
 }

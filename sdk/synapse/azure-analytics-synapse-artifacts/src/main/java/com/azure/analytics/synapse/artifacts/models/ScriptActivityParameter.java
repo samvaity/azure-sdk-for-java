@@ -5,59 +5,72 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Parameters of a script block. */
+/**
+ * Parameters of a script block.
+ */
 @Fluent
-public final class ScriptActivityParameter {
+public final class ScriptActivityParameter implements JsonSerializable<ScriptActivityParameter> {
     /*
      * The name of the parameter. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "name")
+    @Generated
     private Object name;
 
     /*
      * The type of the parameter.
      */
-    @JsonProperty(value = "type")
+    @Generated
     private ScriptActivityParameterType type;
 
     /*
      * The value of the parameter.
      */
-    @JsonProperty(value = "value")
+    @Generated
     private Object value;
 
     /*
      * The direction of the parameter.
      */
-    @JsonProperty(value = "direction")
+    @Generated
     private ScriptActivityParameterDirection direction;
 
     /*
      * The size of the output direction parameter.
      */
-    @JsonProperty(value = "size")
+    @Generated
     private Integer size;
 
-    /** Creates an instance of ScriptActivityParameter class. */
-    public ScriptActivityParameter() {}
+    /**
+     * Creates an instance of ScriptActivityParameter class.
+     */
+    @Generated
+    public ScriptActivityParameter() {
+    }
 
     /**
      * Get the name property: The name of the parameter. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public Object getName() {
         return this.name;
     }
 
     /**
      * Set the name property: The name of the parameter. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param name the name value to set.
      * @return the ScriptActivityParameter object itself.
      */
+    @Generated
     public ScriptActivityParameter setName(Object name) {
         this.name = name;
         return this;
@@ -65,19 +78,21 @@ public final class ScriptActivityParameter {
 
     /**
      * Get the type property: The type of the parameter.
-     *
+     * 
      * @return the type value.
      */
+    @Generated
     public ScriptActivityParameterType getType() {
         return this.type;
     }
 
     /**
      * Set the type property: The type of the parameter.
-     *
+     * 
      * @param type the type value to set.
      * @return the ScriptActivityParameter object itself.
      */
+    @Generated
     public ScriptActivityParameter setType(ScriptActivityParameterType type) {
         this.type = type;
         return this;
@@ -85,19 +100,21 @@ public final class ScriptActivityParameter {
 
     /**
      * Get the value property: The value of the parameter.
-     *
+     * 
      * @return the value value.
      */
+    @Generated
     public Object getValue() {
         return this.value;
     }
 
     /**
      * Set the value property: The value of the parameter.
-     *
+     * 
      * @param value the value value to set.
      * @return the ScriptActivityParameter object itself.
      */
+    @Generated
     public ScriptActivityParameter setValue(Object value) {
         this.value = value;
         return this;
@@ -105,19 +122,21 @@ public final class ScriptActivityParameter {
 
     /**
      * Get the direction property: The direction of the parameter.
-     *
+     * 
      * @return the direction value.
      */
+    @Generated
     public ScriptActivityParameterDirection getDirection() {
         return this.direction;
     }
 
     /**
      * Set the direction property: The direction of the parameter.
-     *
+     * 
      * @param direction the direction value to set.
      * @return the ScriptActivityParameter object itself.
      */
+    @Generated
     public ScriptActivityParameter setDirection(ScriptActivityParameterDirection direction) {
         this.direction = direction;
         return this;
@@ -125,21 +144,79 @@ public final class ScriptActivityParameter {
 
     /**
      * Get the size property: The size of the output direction parameter.
-     *
+     * 
      * @return the size value.
      */
+    @Generated
     public Integer getSize() {
         return this.size;
     }
 
     /**
      * Set the size property: The size of the output direction parameter.
-     *
+     * 
      * @param size the size value to set.
      * @return the ScriptActivityParameter object itself.
      */
+    @Generated
     public ScriptActivityParameter setSize(Integer size) {
         this.size = size;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (this.name != null) {
+            jsonWriter.writeUntypedField("name", this.name);
+        }
+        jsonWriter.writeStringField("type", this.type == null ? null : this.type.toString());
+        if (this.value != null) {
+            jsonWriter.writeUntypedField("value", this.value);
+        }
+        jsonWriter.writeStringField("direction", this.direction == null ? null : this.direction.toString());
+        jsonWriter.writeNumberField("size", this.size);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ScriptActivityParameter from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ScriptActivityParameter if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the ScriptActivityParameter.
+     */
+    @Generated
+    public static ScriptActivityParameter fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ScriptActivityParameter deserializedScriptActivityParameter = new ScriptActivityParameter();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("name".equals(fieldName)) {
+                    deserializedScriptActivityParameter.name = reader.readUntyped();
+                } else if ("type".equals(fieldName)) {
+                    deserializedScriptActivityParameter.type
+                        = ScriptActivityParameterType.fromString(reader.getString());
+                } else if ("value".equals(fieldName)) {
+                    deserializedScriptActivityParameter.value = reader.readUntyped();
+                } else if ("direction".equals(fieldName)) {
+                    deserializedScriptActivityParameter.direction
+                        = ScriptActivityParameterDirection.fromString(reader.getString());
+                } else if ("size".equals(fieldName)) {
+                    deserializedScriptActivityParameter.size = reader.getNullable(JsonReader::getInt);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedScriptActivityParameter;
+        });
     }
 }

@@ -4,6 +4,7 @@
 
 package com.azure.analytics.purview.sharing;
 
+import com.azure.analytics.purview.sharing.implementation.ReceivedSharesImpl;
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -18,35 +19,40 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.polling.SyncPoller;
 
-/** Initializes a new instance of the synchronous PurviewShareClient type. */
+/**
+ * Initializes a new instance of the synchronous PurviewShareClient type.
+ */
 @ServiceClient(builder = ReceivedSharesClientBuilder.class)
 public final class ReceivedSharesClient {
-    @Generated private final ReceivedSharesAsyncClient client;
+    @Generated
+    private final ReceivedSharesImpl serviceClient;
 
     /**
      * Initializes an instance of ReceivedSharesClient class.
-     *
-     * @param client the async client.
+     * 
+     * @param serviceClient the service client implementation.
      */
     @Generated
-    ReceivedSharesClient(ReceivedSharesAsyncClient client) {
-        this.client = client;
+    ReceivedSharesClient(ReceivedSharesImpl serviceClient) {
+        this.serviceClient = serviceClient;
     }
 
     /**
      * Get a received share by unique id.
-     *
-     * <p>Get a received share.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Get a received share.
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -58,32 +64,37 @@ public final class ReceivedSharesClient {
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<BinaryData> getReceivedShareWithResponse(String receivedShareId, RequestOptions requestOptions) {
-        return this.client.getReceivedShareWithResponse(receivedShareId, requestOptions).block();
+        return this.serviceClient.getReceivedShareWithResponse(receivedShareId, requestOptions);
     }
 
     /**
      * Create or replace a received share.
-     *
-     * <p>Update changes to a received share.
-     *
-     * <p><strong>Request Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Update changes to a received share.
+     * <p><strong>Request Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * }
+     * </pre>
+     * 
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param receivedShare The received share to create or replace.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
@@ -95,21 +106,19 @@ public final class ReceivedSharesClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<BinaryData, BinaryData> beginCreateOrReplaceReceivedShare(
-            String receivedShareId, BinaryData receivedShare, RequestOptions requestOptions) {
-        return this.client
-                .beginCreateOrReplaceReceivedShare(receivedShareId, receivedShare, requestOptions)
-                .getSyncPoller();
+    public SyncPoller<BinaryData, BinaryData> beginCreateOrReplaceReceivedShare(String receivedShareId,
+        BinaryData receivedShare, RequestOptions requestOptions) {
+        return this.serviceClient.beginCreateOrReplaceReceivedShare(receivedShareId, receivedShare, requestOptions);
     }
 
     /**
      * Deletes a received share
-     *
-     * <p>Delete a received share.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Delete a received share.
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     endTime: OffsetDateTime (Optional)
      *     error (Optional): {
@@ -124,8 +133,9 @@ public final class ReceivedSharesClient {
      *     startTime: OffsetDateTime (Optional)
      *     status: String(Running/TransientFailure/Succeeded/Failed/NotStarted) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param receivedShareId Id of the received share.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -136,36 +146,35 @@ public final class ReceivedSharesClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<BinaryData, Void> beginDeleteReceivedShare(
-            String receivedShareId, RequestOptions requestOptions) {
-        return this.client.beginDeleteReceivedShare(receivedShareId, requestOptions).getSyncPoller();
+    public SyncPoller<BinaryData, Void> beginDeleteReceivedShare(String receivedShareId,
+        RequestOptions requestOptions) {
+        return this.serviceClient.beginDeleteReceivedShare(receivedShareId, requestOptions);
     }
 
     /**
      * Get a list of attached received shares.
-     *
-     * <p>List attached received shares.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
+     * 
+     * List attached received shares.
+     * <p><strong>Query Parameters</strong></p>
      * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
-     *     <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
+     * <caption>Query Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
+     * <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
      * </table>
-     *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param referenceName A name that references a data store.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -177,34 +186,33 @@ public final class ReceivedSharesClient {
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<BinaryData> listAttachedReceivedShares(String referenceName, RequestOptions requestOptions) {
-        return new PagedIterable<>(this.client.listAttachedReceivedShares(referenceName, requestOptions));
+        return this.serviceClient.listAttachedReceivedShares(referenceName, requestOptions);
     }
 
     /**
      * Get a list of detached received shares.
-     *
-     * <p>List detached received shares.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
+     * 
+     * List detached received shares.
+     * <p><strong>Query Parameters</strong></p>
      * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
-     *     <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
+     * <caption>Query Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>filter</td><td>String</td><td>No</td><td>Filters the results using OData syntax</td></tr>
+     * <tr><td>orderby</td><td>String</td><td>No</td><td>Sorts the results using OData syntax</td></tr>
      * </table>
-     *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
+     *     shareKind: String(InPlace) (Required)
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -215,17 +223,26 @@ public final class ReceivedSharesClient {
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<BinaryData> listDetachedReceivedShares(RequestOptions requestOptions) {
-        return new PagedIterable<>(this.client.listDetachedReceivedShares(requestOptions));
+        return this.serviceClient.listDetachedReceivedShares(requestOptions);
     }
 
     /**
      * Activates the tenant and email combination using the activation code received.
-     *
-     * <p>Activates the email registration for current tenant.
-     *
-     * <p><strong>Request Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Activates the email registration for current tenant.
+     * <p><strong>Header Parameters</strong></p>
+     * <table border="1">
+     * <caption>Header Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>repeatability-request-id</td><td>String</td><td>No</td><td>Repeatability request ID header</td></tr>
+     * <tr><td>repeatability-first-sent</td><td>String</td><td>No</td><td>Repeatability first sent header as
+     * HTTP-date</td></tr>
+     * </table>
+     * You can add these to a request with {@link RequestOptions#addHeader}
+     * <p><strong>Request Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
@@ -238,11 +255,13 @@ public final class ReceivedSharesClient {
      *         tenantId: String (Optional)
      *     }
      * }
-     * }</pre>
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * }
+     * </pre>
+     * 
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
@@ -255,8 +274,9 @@ public final class ReceivedSharesClient {
      *         tenantId: String (Optional)
      *     }
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param tenantEmailRegistration The tenant email registration payload.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -267,19 +287,28 @@ public final class ReceivedSharesClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BinaryData> activateTenantEmailRegistrationWithResponse(
-            BinaryData tenantEmailRegistration, RequestOptions requestOptions) {
-        return this.client.activateTenantEmailRegistrationWithResponse(tenantEmailRegistration, requestOptions).block();
+    public Response<BinaryData> activateTenantEmailRegistrationWithResponse(BinaryData tenantEmailRegistration,
+        RequestOptions requestOptions) {
+        return this.serviceClient.activateTenantEmailRegistrationWithResponse(tenantEmailRegistration, requestOptions);
     }
 
     /**
      * Registers the tenant and email combination for activation.
-     *
-     * <p>Register an email for the current tenant.
-     *
-     * <p><strong>Response Body Schema</strong>
-     *
-     * <pre>{@code
+     * 
+     * Register an email for the current tenant.
+     * <p><strong>Header Parameters</strong></p>
+     * <table border="1">
+     * <caption>Header Parameters</caption>
+     * <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+     * <tr><td>repeatability-request-id</td><td>String</td><td>No</td><td>Repeatability request ID header</td></tr>
+     * <tr><td>repeatability-first-sent</td><td>String</td><td>No</td><td>Repeatability first sent header as
+     * HTTP-date</td></tr>
+     * </table>
+     * You can add these to a request with {@link RequestOptions#addHeader}
+     * <p><strong>Response Body Schema</strong></p>
+     * 
+     * <pre>
+     * {@code
      * {
      *     id: String (Optional)
      *     type: String (Optional)
@@ -292,8 +321,9 @@ public final class ReceivedSharesClient {
      *         tenantId: String (Optional)
      *     }
      * }
-     * }</pre>
-     *
+     * }
+     * </pre>
+     * 
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -304,6 +334,6 @@ public final class ReceivedSharesClient {
     @Generated
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<BinaryData> registerTenantEmailRegistrationWithResponse(RequestOptions requestOptions) {
-        return this.client.registerTenantEmailRegistrationWithResponse(requestOptions).block();
+        return this.serviceClient.registerTenantEmailRegistrationWithResponse(requestOptions);
     }
 }

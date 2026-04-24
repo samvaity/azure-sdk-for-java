@@ -4,8 +4,7 @@
 package com.azure.core.tracing.opentelemetry;
 
 import com.azure.core.util.Context;
-import com.azure.core.util.tracing.SpanKind;
-import com.azure.core.util.tracing.StartSpanOptions;
+import com.azure.core.util.LibraryTelemetryOptions;
 import com.azure.core.util.tracing.Tracer;
 import com.azure.core.util.tracing.TracerProvider;
 import io.opentelemetry.api.OpenTelemetry;
@@ -28,49 +27,48 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreateTracerTests {
-    private final SdkTracerProvider tracerProvider = SdkTracerProvider.builder().addSpanProcessor(SimpleSpanProcessor.create(InMemorySpanExporter.create()))
+    private final SdkTracerProvider tracerProvider = SdkTracerProvider.builder()
+        .addSpanProcessor(SimpleSpanProcessor.create(InMemorySpanExporter.create()))
         .build();
 
+    private static final AttributeKey<String> AZ_NAMESPACE = AttributeKey.stringKey("az.namespace");
+    private static final AttributeKey<String> AZURE_RESOURCE_PROVIDER_NAMESPACE
+        = AttributeKey.stringKey("azure.resource_provider.namespace");
+
     private final OpenTelemetry openTelemetry = OpenTelemetrySdk.builder().setTracerProvider(tracerProvider).build();
+
     @Test
     public void createTracerNoOptions() {
-        Tracer tracer = TracerProvider.getDefaultProvider()
-            .createTracer("test", null, null, null);
+        Tracer tracer = TracerProvider.getDefaultProvider().createTracer("test", null, null, null);
 
         assertFalse(tracer.isEnabled());
     }
 
     @Test
     public void createTracerEnabled() {
-        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions()
-            .setOpenTelemetry(openTelemetry);
+        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions().setOpenTelemetry(openTelemetry);
 
-        Tracer tracer = TracerProvider.getDefaultProvider()
-            .createTracer("test", null, null, options);
+        Tracer tracer = TracerProvider.getDefaultProvider().createTracer("test", null, null, options);
 
         assertTrue(tracer.isEnabled());
     }
 
     @Test
     public void createTracerDisabled() {
-        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions()
-            .setOpenTelemetry(openTelemetry);
+        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions().setOpenTelemetry(openTelemetry);
 
         options.setEnabled(false);
 
-        Tracer tracer = TracerProvider.getDefaultProvider()
-            .createTracer("test", null, null, options);
+        Tracer tracer = TracerProvider.getDefaultProvider().createTracer("test", null, null, options);
 
         assertFalse(tracer.isEnabled());
     }
 
     @Test
     public void createTracerNoAzNamespace() {
-        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions()
-            .setOpenTelemetry(openTelemetry);
+        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions().setOpenTelemetry(openTelemetry);
 
-        Tracer tracer = TracerProvider.getDefaultProvider()
-            .createTracer("test", null, null, options);
+        Tracer tracer = TracerProvider.getDefaultProvider().createTracer("test", null, null, options);
 
         Context span = tracer.start("test", Context.NONE);
         SpanData data = getSpanData(span);
@@ -79,82 +77,89 @@ public class CreateTracerTests {
 
     @Test
     public void createTracerWithAzNamespace() {
-        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions()
-            .setOpenTelemetry(openTelemetry);
+        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions().setOpenTelemetry(openTelemetry);
 
-        Tracer tracer = TracerProvider.getDefaultProvider()
-            .createTracer("test", null, "namespace", options);
+        Tracer tracer = TracerProvider.getDefaultProvider().createTracer("test", null, "namespace", options);
 
         Context span = tracer.start("test", Context.NONE);
         SpanData data = getSpanData(span);
-        assertEquals(1, data.getAttributes().size());
-        assertEquals("namespace", data.getAttributes().get(AttributeKey.stringKey("az.namespace")));
+        assertEquals(2, data.getAttributes().size());
+        assertEquals("namespace", data.getAttributes().get(AZ_NAMESPACE));
+        assertEquals("namespace", data.getAttributes().get(AZURE_RESOURCE_PROVIDER_NAMESPACE));
     }
 
     @Test
     public void createTracerWithAzNamespaceInContext() {
-        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions()
-            .setOpenTelemetry(openTelemetry);
+        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions().setOpenTelemetry(openTelemetry);
 
-        Tracer tracer = TracerProvider.getDefaultProvider()
-            .createTracer("test", null, "namespace", options);
+        Tracer tracer = TracerProvider.getDefaultProvider().createTracer("test", null, "namespace", options);
 
-        Context span = tracer.start("test", new Context("az.namespace", "another"));
+        Context span = tracer.start("test", new Context(AZ_NAMESPACE.getKey(), "another")
+            .addData(AZURE_RESOURCE_PROVIDER_NAMESPACE.getKey(), "andAnother"));
         SpanData data = getSpanData(span);
-        assertEquals(1, data.getAttributes().size());
-        assertEquals("namespace", data.getAttributes().get(AttributeKey.stringKey("az.namespace")));
+        assertEquals(2, data.getAttributes().size());
+        assertEquals("namespace", data.getAttributes().get(AZ_NAMESPACE));
+        assertEquals("namespace", data.getAttributes().get(AZURE_RESOURCE_PROVIDER_NAMESPACE));
     }
 
     @Test
     public void defaultSchemaVersion() {
-        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions()
-            .setOpenTelemetry(openTelemetry);
+        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions().setOpenTelemetry(openTelemetry);
 
-        Tracer tracer = TracerProvider.getDefaultProvider()
-            .createTracer("test", null, null, options);
+        Tracer tracer = TracerProvider.getDefaultProvider().createTracer(new LibraryTelemetryOptions("test"), options);
 
-        StartSpanOptions startSpanOptions = new StartSpanOptions(SpanKind.PRODUCER)
-            .setAttribute("hostname", "addr")
-            .setAttribute("not-mapped", 42);
+        Context span = tracer.start("test", Context.NONE);
+        tracer.end(null, null, span);
 
-        Context span = tracer.start("test", startSpanOptions, Context.NONE);
-        tracer.setAttribute("entity-path", "foo", span);
-
-        SpanData data = getSpanData(span);
-        assertEquals(3, data.getAttributes().size());
-        assertEquals("foo", data.getAttributes().get(AttributeKey.stringKey("messaging.destination.name")));
-        assertEquals("addr", data.getAttributes().get(AttributeKey.stringKey("net.peer.name")));
-        assertEquals(42, data.getAttributes().get(AttributeKey.longKey("not-mapped")));
+        assertEquals("https://opentelemetry.io/schemas/1.23.1",
+            getSpanData(span).getInstrumentationScopeInfo().getSchemaUrl());
     }
 
     @Test
     public void instrumentationScopeNameOnly() {
-        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions()
-            .setOpenTelemetry(openTelemetry);
+        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions().setOpenTelemetry(openTelemetry);
 
-        Tracer tracer = TracerProvider.getDefaultProvider()
-            .createTracer("test", null, null, options);
+        Tracer tracer = TracerProvider.getDefaultProvider().createTracer("test", null, null, options);
 
         Context span = tracer.start("test", Context.NONE);
         ReadableSpan readableSpan = getReadableSpan(span);
         assertEquals("test", readableSpan.getInstrumentationScopeInfo().getName());
-        assertEquals("https://opentelemetry.io/schemas/1.17.0", readableSpan.getInstrumentationScopeInfo().getSchemaUrl());
+        assertEquals("https://opentelemetry.io/schemas/1.23.1",
+            readableSpan.getInstrumentationScopeInfo().getSchemaUrl());
         assertNull(readableSpan.getInstrumentationScopeInfo().getVersion());
     }
 
     @Test
     public void instrumentationScopeVersion() {
-        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions()
-            .setOpenTelemetry(openTelemetry);
+        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions().setOpenTelemetry(openTelemetry);
 
-        Tracer tracer = TracerProvider.getDefaultProvider()
-            .createTracer("test", "1.2.3-beta.45", null, options);
+        Tracer tracer = TracerProvider.getDefaultProvider().createTracer("test", "1.2.3-beta.45", null, options);
 
         Context span = tracer.start("test", Context.NONE);
         ReadableSpan readableSpan = getReadableSpan(span);
         assertEquals("test", readableSpan.getInstrumentationScopeInfo().getName());
-        assertEquals("https://opentelemetry.io/schemas/1.17.0", readableSpan.getInstrumentationScopeInfo().getSchemaUrl());
+        assertEquals("https://opentelemetry.io/schemas/1.23.1",
+            readableSpan.getInstrumentationScopeInfo().getSchemaUrl());
         assertEquals("1.2.3-beta.45", readableSpan.getInstrumentationScopeInfo().getVersion());
+    }
+
+    @Test
+    public void testSdkOptions() {
+        OpenTelemetryTracingOptions options = new OpenTelemetryTracingOptions().setOpenTelemetry(openTelemetry);
+
+        LibraryTelemetryOptions libraryOptions = new LibraryTelemetryOptions("test").setLibraryVersion("1.2.3-beta.45")
+            .setResourceProviderNamespace("namespace")
+            .setSchemaUrl("https://aka.ms/az/sdk/schema:1.42.0");
+
+        Tracer tracer = TracerProvider.getDefaultProvider().createTracer(libraryOptions, options);
+
+        Context span = tracer.start("test", Context.NONE);
+        ReadableSpan readableSpan = getReadableSpan(span);
+        assertEquals("test", readableSpan.getInstrumentationScopeInfo().getName());
+        assertEquals("https://aka.ms/az/sdk/schema:1.42.0", readableSpan.getInstrumentationScopeInfo().getSchemaUrl());
+        assertEquals("1.2.3-beta.45", readableSpan.getInstrumentationScopeInfo().getVersion());
+        assertEquals("namespace", readableSpan.getAttributes().get(AZ_NAMESPACE));
+        assertEquals("namespace", readableSpan.getAttributes().get(AZURE_RESOURCE_PROVIDER_NAMESPACE));
     }
 
     private static SpanData getSpanData(Context context) {

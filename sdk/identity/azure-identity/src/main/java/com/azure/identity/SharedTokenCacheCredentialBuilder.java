@@ -3,19 +3,30 @@
 
 package com.azure.identity;
 
-
 /**
  * Fluent credential builder for instantiating a {@link SharedTokenCacheCredential}.
  *
- * <p>This credential is a legacy mechanism for authenticating clients using credentials provided to Visual Studio Code.
- * This mechanism for Visual Studio authentication has been replaced by the {@link VisualStudioCodeCredential}/>.</p>
+ * <p>This credential is a legacy mechanism for authenticating clients using credentials provided to Visual Studio.</p>
  *
  * @see SharedTokenCacheCredential
+ * @deprecated This credential was originally created to support authentication with Visual Studio. Since Visual Studio
+ * was the only application that wrote to this token cache, this credential has been deprecated in favor of other
+ * developer credentials like {@link AzureCliCredential}, {@link AzureDeveloperCliCredential}, 
+ * {@link AzurePowerShellCredential}, or {@link IntelliJCredential} for local development scenarios.
  */
+@Deprecated
 public class SharedTokenCacheCredentialBuilder extends AadCredentialBuilderBase<SharedTokenCacheCredentialBuilder> {
     private String username;
-    private TokenCachePersistenceOptions tokenCachePersistenceOptions = new TokenCachePersistenceOptions()
-        .setUnencryptedStorageAllowed(true);
+
+    /**
+     * Constructs an instance of SharedTokenCacheCredentialBuilder.
+     */
+    public SharedTokenCacheCredentialBuilder() {
+        super();
+    }
+
+    private TokenCachePersistenceOptions tokenCachePersistenceOptions
+        = new TokenCachePersistenceOptions().setUnencryptedStorageAllowed(true);
 
     /**
      * Sets the username for the account.
@@ -48,8 +59,8 @@ public class SharedTokenCacheCredentialBuilder extends AadCredentialBuilderBase<
      * @param tokenCachePersistenceOptions the token cache configuration options
      * @return An updated instance of this builder with the token cache options configured.
      */
-    public SharedTokenCacheCredentialBuilder tokenCachePersistenceOptions(TokenCachePersistenceOptions
-                                                                              tokenCachePersistenceOptions) {
+    public SharedTokenCacheCredentialBuilder
+        tokenCachePersistenceOptions(TokenCachePersistenceOptions tokenCachePersistenceOptions) {
         this.tokenCachePersistenceOptions = tokenCachePersistenceOptions;
         return this;
     }
@@ -74,6 +85,6 @@ public class SharedTokenCacheCredentialBuilder extends AadCredentialBuilderBase<
     public SharedTokenCacheCredential build() {
         identityClientOptions.setTokenCacheOptions(tokenCachePersistenceOptions);
         return new SharedTokenCacheCredential(username, clientId, tenantId,
-                identityClientOptions.enablePersistentCache().setAllowUnencryptedCache(true));
+            identityClientOptions.enablePersistentCache().setAllowUnencryptedCache(true));
     }
 }

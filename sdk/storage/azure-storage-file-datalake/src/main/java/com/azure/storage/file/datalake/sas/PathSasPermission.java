@@ -14,27 +14,17 @@ import java.util.Locale;
  * this class guarantees correctness.
  */
 public final class PathSasPermission {
-
     private boolean readPermission;
-
     private boolean addPermission;
-
     private boolean createPermission;
-
     private boolean writePermission;
-
     private boolean deletePermission;
-
     private boolean listPermission;
-
     private boolean movePermission;
-
     private boolean executePermission;
-
     private boolean manageOwnershipPermission;
-
     private boolean manageAccessControlPermission;
-
+    private boolean tagsPermission;
 
     /**
      * Initializes a {@code PathSasPermission} object with all fields set to false.
@@ -49,7 +39,7 @@ public final class PathSasPermission {
      * @param permissionString A {@code String} which represents the {@code PathSasPermission}.
      * @return A {@code PathSasPermission} generated from the given {@code String}.
      * @throws IllegalArgumentException If {@code permissionString} contains a character other than r, a, c, w, d, l, m, e,
-     * o, or p.
+     * o, t, or p.
      */
     public static PathSasPermission parse(String permissionString) {
         PathSasPermission permissions = new PathSasPermission();
@@ -60,43 +50,58 @@ public final class PathSasPermission {
                 case 'r':
                     permissions.readPermission = true;
                     break;
+
                 case 'a':
                     permissions.addPermission = true;
                     break;
+
                 case 'c':
                     permissions.createPermission = true;
                     break;
+
                 case 'w':
                     permissions.writePermission = true;
                     break;
+
                 case 'd':
                     permissions.deletePermission = true;
                     break;
+
                 case 'l':
                     permissions.listPermission = true;
                     break;
+
                 case 'm':
                     permissions.movePermission = true;
                     break;
+
                 case 'e':
                     permissions.executePermission = true;
                     break;
+
                 case 'o':
                     permissions.manageOwnershipPermission = true;
                     break;
+
                 case 'p':
                     permissions.manageAccessControlPermission = true;
                     break;
+
+                case 't':
+                    permissions.tagsPermission = true;
+                    break;
+
                 default:
-                    throw new IllegalArgumentException(
-                        String.format(Locale.ROOT, Constants.ENUM_COULD_NOT_BE_PARSED_INVALID_VALUE,
-                            "Permissions", permissionString, c));
+                    throw new IllegalArgumentException(String.format(Locale.ROOT,
+                        Constants.ENUM_COULD_NOT_BE_PARSED_INVALID_VALUE, "Permissions", permissionString, c));
             }
         }
         return permissions;
     }
 
     /**
+     * Gets the read permission status.
+     *
      * @return the read permission status.
      */
     public boolean hasReadPermission() {
@@ -115,6 +120,8 @@ public final class PathSasPermission {
     }
 
     /**
+     * Gets the add permission status.
+     *
      * @return the add permission status.
      */
     public boolean hasAddPermission() {
@@ -133,6 +140,8 @@ public final class PathSasPermission {
     }
 
     /**
+     * Gets the create permission status.
+     *
      * @return the create permission status.
      */
     public boolean hasCreatePermission() {
@@ -151,6 +160,8 @@ public final class PathSasPermission {
     }
 
     /**
+     * Gets the write permission status.
+     *
      * @return the write permission status.
      */
     public boolean hasWritePermission() {
@@ -169,6 +180,8 @@ public final class PathSasPermission {
     }
 
     /**
+     * Gets the delete permission status.
+     *
      * @return the delete permission status.
      */
     public boolean hasDeletePermission() {
@@ -187,6 +200,8 @@ public final class PathSasPermission {
     }
 
     /**
+     * Gets the list permission status.
+     *
      * @return the list permission status.
      */
     public boolean hasListPermission() {
@@ -205,6 +220,8 @@ public final class PathSasPermission {
     }
 
     /**
+     * Gets the move permission status.
+     *
      * @return the move permission status.
      */
     public boolean hasMovePermission() {
@@ -223,6 +240,8 @@ public final class PathSasPermission {
     }
 
     /**
+     * Gets the execute permission status.
+     *
      * @return the execute permission status.
      */
     public boolean hasExecutePermission() {
@@ -241,6 +260,8 @@ public final class PathSasPermission {
     }
 
     /**
+     * Gets the manage ownership permission status.
+     *
      * @return the manage ownership permission status.
      */
     public boolean hasManageOwnershipPermission() {
@@ -259,6 +280,8 @@ public final class PathSasPermission {
     }
 
     /**
+     * Gets the manage access control permission status.
+     *
      * @return the manage access control permission status.
      */
     public boolean hasManageAccessControlPermission() {
@@ -273,6 +296,26 @@ public final class PathSasPermission {
      */
     public PathSasPermission setManageAccessControlPermission(boolean hasManageAccessControlPermission) {
         this.manageAccessControlPermission = hasManageAccessControlPermission;
+        return this;
+    }
+
+    /**
+     * Gets the tags permission status.
+     *
+     * @return the tags permission status.
+     */
+    public boolean hasTagsPermission() {
+        return tagsPermission;
+    }
+
+    /**
+     * Sets the tags permission status.
+     *
+     * @param hasTagsPermission Permission status to set
+     * @return the updated PathSasPermission object.
+     */
+    public PathSasPermission setTagsPermission(boolean hasTagsPermission) {
+        this.tagsPermission = hasTagsPermission;
         return this;
     }
 
@@ -327,6 +370,10 @@ public final class PathSasPermission {
 
         if (this.manageAccessControlPermission) {
             builder.append('p');
+        }
+
+        if (this.tagsPermission) {
+            builder.append('t');
         }
 
         return builder.toString();

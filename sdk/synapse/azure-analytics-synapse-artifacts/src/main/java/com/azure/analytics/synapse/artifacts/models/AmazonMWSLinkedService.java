@@ -5,100 +5,124 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Amazon Marketplace Web Service linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("AmazonMWS")
-@JsonFlatten
+/**
+ * Amazon Marketplace Web Service linked service.
+ */
 @Fluent
 public class AmazonMWSLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "AmazonMWS";
+
+    /*
      * The endpoint of the Amazon MWS server, (i.e. mws.amazonservices.com)
      */
-    @JsonProperty(value = "typeProperties.endpoint", required = true)
+    @Generated
     private Object endpoint;
 
     /*
      * The Amazon Marketplace ID you want to retrieve data from. To retrieve data from multiple Marketplace IDs,
      * separate them with a comma (,). (i.e. A2EUQ1WTGCTBG2)
      */
-    @JsonProperty(value = "typeProperties.marketplaceID", required = true)
+    @Generated
     private Object marketplaceID;
 
     /*
      * The Amazon seller ID.
      */
-    @JsonProperty(value = "typeProperties.sellerID", required = true)
+    @Generated
     private Object sellerID;
 
     /*
      * The Amazon MWS authentication token.
      */
-    @JsonProperty(value = "typeProperties.mwsAuthToken")
+    @Generated
     private SecretBase mwsAuthToken;
 
     /*
      * The access key id used to access data.
      */
-    @JsonProperty(value = "typeProperties.accessKeyId", required = true)
+    @Generated
     private Object accessKeyId;
 
     /*
      * The secret key used to access data.
      */
-    @JsonProperty(value = "typeProperties.secretKey")
+    @Generated
     private SecretBase secretKey;
 
     /*
      * Specifies whether the data source endpoints are encrypted using HTTPS. The default value is true.
      */
-    @JsonProperty(value = "typeProperties.useEncryptedEndpoints")
+    @Generated
     private Object useEncryptedEndpoints;
 
     /*
      * Specifies whether to require the host name in the server's certificate to match the host name of the server when
      * connecting over SSL. The default value is true.
      */
-    @JsonProperty(value = "typeProperties.useHostVerification")
+    @Generated
     private Object useHostVerification;
 
     /*
      * Specifies whether to verify the identity of the server when connecting over SSL. The default value is true.
      */
-    @JsonProperty(value = "typeProperties.usePeerVerification")
+    @Generated
     private Object usePeerVerification;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of AmazonMWSLinkedService class. */
-    public AmazonMWSLinkedService() {}
+    /**
+     * Creates an instance of AmazonMWSLinkedService class.
+     */
+    @Generated
+    public AmazonMWSLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the endpoint property: The endpoint of the Amazon MWS server, (i.e. mws.amazonservices.com).
-     *
+     * 
      * @return the endpoint value.
      */
+    @Generated
     public Object getEndpoint() {
         return this.endpoint;
     }
 
     /**
      * Set the endpoint property: The endpoint of the Amazon MWS server, (i.e. mws.amazonservices.com).
-     *
+     * 
      * @param endpoint the endpoint value to set.
      * @return the AmazonMWSLinkedService object itself.
      */
+    @Generated
     public AmazonMWSLinkedService setEndpoint(Object endpoint) {
         this.endpoint = endpoint;
         return this;
@@ -107,9 +131,10 @@ public class AmazonMWSLinkedService extends LinkedService {
     /**
      * Get the marketplaceID property: The Amazon Marketplace ID you want to retrieve data from. To retrieve data from
      * multiple Marketplace IDs, separate them with a comma (,). (i.e. A2EUQ1WTGCTBG2).
-     *
+     * 
      * @return the marketplaceID value.
      */
+    @Generated
     public Object getMarketplaceID() {
         return this.marketplaceID;
     }
@@ -117,10 +142,11 @@ public class AmazonMWSLinkedService extends LinkedService {
     /**
      * Set the marketplaceID property: The Amazon Marketplace ID you want to retrieve data from. To retrieve data from
      * multiple Marketplace IDs, separate them with a comma (,). (i.e. A2EUQ1WTGCTBG2).
-     *
+     * 
      * @param marketplaceID the marketplaceID value to set.
      * @return the AmazonMWSLinkedService object itself.
      */
+    @Generated
     public AmazonMWSLinkedService setMarketplaceID(Object marketplaceID) {
         this.marketplaceID = marketplaceID;
         return this;
@@ -128,19 +154,21 @@ public class AmazonMWSLinkedService extends LinkedService {
 
     /**
      * Get the sellerID property: The Amazon seller ID.
-     *
+     * 
      * @return the sellerID value.
      */
+    @Generated
     public Object getSellerID() {
         return this.sellerID;
     }
 
     /**
      * Set the sellerID property: The Amazon seller ID.
-     *
+     * 
      * @param sellerID the sellerID value to set.
      * @return the AmazonMWSLinkedService object itself.
      */
+    @Generated
     public AmazonMWSLinkedService setSellerID(Object sellerID) {
         this.sellerID = sellerID;
         return this;
@@ -148,19 +176,21 @@ public class AmazonMWSLinkedService extends LinkedService {
 
     /**
      * Get the mwsAuthToken property: The Amazon MWS authentication token.
-     *
+     * 
      * @return the mwsAuthToken value.
      */
+    @Generated
     public SecretBase getMwsAuthToken() {
         return this.mwsAuthToken;
     }
 
     /**
      * Set the mwsAuthToken property: The Amazon MWS authentication token.
-     *
+     * 
      * @param mwsAuthToken the mwsAuthToken value to set.
      * @return the AmazonMWSLinkedService object itself.
      */
+    @Generated
     public AmazonMWSLinkedService setMwsAuthToken(SecretBase mwsAuthToken) {
         this.mwsAuthToken = mwsAuthToken;
         return this;
@@ -168,19 +198,21 @@ public class AmazonMWSLinkedService extends LinkedService {
 
     /**
      * Get the accessKeyId property: The access key id used to access data.
-     *
+     * 
      * @return the accessKeyId value.
      */
+    @Generated
     public Object getAccessKeyId() {
         return this.accessKeyId;
     }
 
     /**
      * Set the accessKeyId property: The access key id used to access data.
-     *
+     * 
      * @param accessKeyId the accessKeyId value to set.
      * @return the AmazonMWSLinkedService object itself.
      */
+    @Generated
     public AmazonMWSLinkedService setAccessKeyId(Object accessKeyId) {
         this.accessKeyId = accessKeyId;
         return this;
@@ -188,19 +220,21 @@ public class AmazonMWSLinkedService extends LinkedService {
 
     /**
      * Get the secretKey property: The secret key used to access data.
-     *
+     * 
      * @return the secretKey value.
      */
+    @Generated
     public SecretBase getSecretKey() {
         return this.secretKey;
     }
 
     /**
      * Set the secretKey property: The secret key used to access data.
-     *
+     * 
      * @param secretKey the secretKey value to set.
      * @return the AmazonMWSLinkedService object itself.
      */
+    @Generated
     public AmazonMWSLinkedService setSecretKey(SecretBase secretKey) {
         this.secretKey = secretKey;
         return this;
@@ -209,9 +243,10 @@ public class AmazonMWSLinkedService extends LinkedService {
     /**
      * Get the useEncryptedEndpoints property: Specifies whether the data source endpoints are encrypted using HTTPS.
      * The default value is true.
-     *
+     * 
      * @return the useEncryptedEndpoints value.
      */
+    @Generated
     public Object getUseEncryptedEndpoints() {
         return this.useEncryptedEndpoints;
     }
@@ -219,10 +254,11 @@ public class AmazonMWSLinkedService extends LinkedService {
     /**
      * Set the useEncryptedEndpoints property: Specifies whether the data source endpoints are encrypted using HTTPS.
      * The default value is true.
-     *
+     * 
      * @param useEncryptedEndpoints the useEncryptedEndpoints value to set.
      * @return the AmazonMWSLinkedService object itself.
      */
+    @Generated
     public AmazonMWSLinkedService setUseEncryptedEndpoints(Object useEncryptedEndpoints) {
         this.useEncryptedEndpoints = useEncryptedEndpoints;
         return this;
@@ -231,9 +267,10 @@ public class AmazonMWSLinkedService extends LinkedService {
     /**
      * Get the useHostVerification property: Specifies whether to require the host name in the server's certificate to
      * match the host name of the server when connecting over SSL. The default value is true.
-     *
+     * 
      * @return the useHostVerification value.
      */
+    @Generated
     public Object getUseHostVerification() {
         return this.useHostVerification;
     }
@@ -241,10 +278,11 @@ public class AmazonMWSLinkedService extends LinkedService {
     /**
      * Set the useHostVerification property: Specifies whether to require the host name in the server's certificate to
      * match the host name of the server when connecting over SSL. The default value is true.
-     *
+     * 
      * @param useHostVerification the useHostVerification value to set.
      * @return the AmazonMWSLinkedService object itself.
      */
+    @Generated
     public AmazonMWSLinkedService setUseHostVerification(Object useHostVerification) {
         this.useHostVerification = useHostVerification;
         return this;
@@ -253,9 +291,10 @@ public class AmazonMWSLinkedService extends LinkedService {
     /**
      * Get the usePeerVerification property: Specifies whether to verify the identity of the server when connecting over
      * SSL. The default value is true.
-     *
+     * 
      * @return the usePeerVerification value.
      */
+    @Generated
     public Object getUsePeerVerification() {
         return this.usePeerVerification;
     }
@@ -263,10 +302,11 @@ public class AmazonMWSLinkedService extends LinkedService {
     /**
      * Set the usePeerVerification property: Specifies whether to verify the identity of the server when connecting over
      * SSL. The default value is true.
-     *
+     * 
      * @param usePeerVerification the usePeerVerification value to set.
      * @return the AmazonMWSLinkedService object itself.
      */
+    @Generated
     public AmazonMWSLinkedService setUsePeerVerification(Object usePeerVerification) {
         this.usePeerVerification = usePeerVerification;
         return this;
@@ -275,9 +315,10 @@ public class AmazonMWSLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -285,40 +326,191 @@ public class AmazonMWSLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the AmazonMWSLinkedService object itself.
      */
+    @Generated
     public AmazonMWSLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public AmazonMWSLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonMWSLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonMWSLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonMWSLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public AmazonMWSLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (endpoint != null
+            || marketplaceID != null
+            || sellerID != null
+            || mwsAuthToken != null
+            || accessKeyId != null
+            || secretKey != null
+            || useEncryptedEndpoints != null
+            || useHostVerification != null
+            || usePeerVerification != null
+            || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("endpoint", this.endpoint);
+            jsonWriter.writeUntypedField("marketplaceID", this.marketplaceID);
+            jsonWriter.writeUntypedField("sellerID", this.sellerID);
+            jsonWriter.writeJsonField("mwsAuthToken", this.mwsAuthToken);
+            jsonWriter.writeUntypedField("accessKeyId", this.accessKeyId);
+            jsonWriter.writeJsonField("secretKey", this.secretKey);
+            if (this.useEncryptedEndpoints != null) {
+                jsonWriter.writeUntypedField("useEncryptedEndpoints", this.useEncryptedEndpoints);
+            }
+            if (this.useHostVerification != null) {
+                jsonWriter.writeUntypedField("useHostVerification", this.useHostVerification);
+            }
+            if (this.usePeerVerification != null) {
+                jsonWriter.writeUntypedField("usePeerVerification", this.usePeerVerification);
+            }
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AmazonMWSLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AmazonMWSLinkedService if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the AmazonMWSLinkedService.
+     */
+    @Generated
+    public static AmazonMWSLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AmazonMWSLinkedService deserializedAmazonMWSLinkedService = new AmazonMWSLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedAmazonMWSLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedAmazonMWSLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedAmazonMWSLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedAmazonMWSLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedAmazonMWSLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedAmazonMWSLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("endpoint".equals(fieldName)) {
+                            deserializedAmazonMWSLinkedService.endpoint = reader.readUntyped();
+                        } else if ("marketplaceID".equals(fieldName)) {
+                            deserializedAmazonMWSLinkedService.marketplaceID = reader.readUntyped();
+                        } else if ("sellerID".equals(fieldName)) {
+                            deserializedAmazonMWSLinkedService.sellerID = reader.readUntyped();
+                        } else if ("mwsAuthToken".equals(fieldName)) {
+                            deserializedAmazonMWSLinkedService.mwsAuthToken = SecretBase.fromJson(reader);
+                        } else if ("accessKeyId".equals(fieldName)) {
+                            deserializedAmazonMWSLinkedService.accessKeyId = reader.readUntyped();
+                        } else if ("secretKey".equals(fieldName)) {
+                            deserializedAmazonMWSLinkedService.secretKey = SecretBase.fromJson(reader);
+                        } else if ("useEncryptedEndpoints".equals(fieldName)) {
+                            deserializedAmazonMWSLinkedService.useEncryptedEndpoints = reader.readUntyped();
+                        } else if ("useHostVerification".equals(fieldName)) {
+                            deserializedAmazonMWSLinkedService.useHostVerification = reader.readUntyped();
+                        } else if ("usePeerVerification".equals(fieldName)) {
+                            deserializedAmazonMWSLinkedService.usePeerVerification = reader.readUntyped();
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedAmazonMWSLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedAmazonMWSLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedAmazonMWSLinkedService;
+        });
     }
 }

@@ -5,6 +5,7 @@
 package com.azure.storage.blob.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.DateTimeRfc1123;
 import com.azure.storage.blob.models.AccessTier;
@@ -16,263 +17,280 @@ import com.azure.storage.blob.models.LeaseDurationType;
 import com.azure.storage.blob.models.LeaseStateType;
 import com.azure.storage.blob.models.LeaseStatusType;
 import com.azure.storage.blob.models.RehydratePriority;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.azure.xml.XmlReader;
+import com.azure.xml.XmlSerializable;
+import com.azure.xml.XmlToken;
+import com.azure.xml.XmlWriter;
 import java.time.OffsetDateTime;
+import java.util.Objects;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
-/** Properties of a blob. */
-@JacksonXmlRootElement(localName = "Properties")
+/**
+ * Properties of a blob.
+ */
 @Fluent
-public final class BlobItemPropertiesInternal {
+public final class BlobItemPropertiesInternal implements XmlSerializable<BlobItemPropertiesInternal> {
     /*
      * The Creation-Time property.
      */
-    @JsonProperty(value = "Creation-Time")
+    @Generated
     private DateTimeRfc1123 creationTime;
 
     /*
      * The Last-Modified property.
      */
-    @JsonProperty(value = "Last-Modified", required = true)
+    @Generated
     private DateTimeRfc1123 lastModified;
 
     /*
      * The Etag property.
      */
-    @JsonProperty(value = "Etag", required = true)
+    @Generated
     private String eTag;
 
     /*
      * Size in bytes
      */
-    @JsonProperty(value = "Content-Length")
+    @Generated
     private Long contentLength;
 
     /*
      * The Content-Type property.
      */
-    @JsonProperty(value = "Content-Type")
+    @Generated
     private String contentType;
 
     /*
      * The Content-Encoding property.
      */
-    @JsonProperty(value = "Content-Encoding")
+    @Generated
     private String contentEncoding;
 
     /*
      * The Content-Language property.
      */
-    @JsonProperty(value = "Content-Language")
+    @Generated
     private String contentLanguage;
 
     /*
      * The Content-MD5 property.
      */
-    @JsonProperty(value = "Content-MD5")
+    @Generated
     private byte[] contentMd5;
 
     /*
      * The Content-Disposition property.
      */
-    @JsonProperty(value = "Content-Disposition")
+    @Generated
     private String contentDisposition;
 
     /*
      * The Cache-Control property.
      */
-    @JsonProperty(value = "Cache-Control")
+    @Generated
     private String cacheControl;
 
     /*
      * The x-ms-blob-sequence-number property.
      */
-    @JsonProperty(value = "x-ms-blob-sequence-number")
+    @Generated
     private Long blobSequenceNumber;
 
     /*
      * The BlobType property.
      */
-    @JsonProperty(value = "BlobType")
+    @Generated
     private BlobType blobType;
 
     /*
      * The LeaseStatus property.
      */
-    @JsonProperty(value = "LeaseStatus")
+    @Generated
     private LeaseStatusType leaseStatus;
 
     /*
      * The LeaseState property.
      */
-    @JsonProperty(value = "LeaseState")
+    @Generated
     private LeaseStateType leaseState;
 
     /*
      * The LeaseDuration property.
      */
-    @JsonProperty(value = "LeaseDuration")
+    @Generated
     private LeaseDurationType leaseDuration;
 
     /*
      * The CopyId property.
      */
-    @JsonProperty(value = "CopyId")
+    @Generated
     private String copyId;
 
     /*
      * The CopyStatus property.
      */
-    @JsonProperty(value = "CopyStatus")
+    @Generated
     private CopyStatusType copyStatus;
 
     /*
      * The CopySource property.
      */
-    @JsonProperty(value = "CopySource")
+    @Generated
     private String copySource;
 
     /*
      * The CopyProgress property.
      */
-    @JsonProperty(value = "CopyProgress")
+    @Generated
     private String copyProgress;
 
     /*
      * The CopyCompletionTime property.
      */
-    @JsonProperty(value = "CopyCompletionTime")
+    @Generated
     private DateTimeRfc1123 copyCompletionTime;
 
     /*
      * The CopyStatusDescription property.
      */
-    @JsonProperty(value = "CopyStatusDescription")
+    @Generated
     private String copyStatusDescription;
 
     /*
      * The ServerEncrypted property.
      */
-    @JsonProperty(value = "ServerEncrypted")
+    @Generated
     private Boolean serverEncrypted;
 
     /*
      * The IncrementalCopy property.
      */
-    @JsonProperty(value = "IncrementalCopy")
+    @Generated
     private Boolean incrementalCopy;
 
     /*
      * The DestinationSnapshot property.
      */
-    @JsonProperty(value = "DestinationSnapshot")
+    @Generated
     private String destinationSnapshot;
 
     /*
      * The DeletedTime property.
      */
-    @JsonProperty(value = "DeletedTime")
+    @Generated
     private DateTimeRfc1123 deletedTime;
 
     /*
      * The RemainingRetentionDays property.
      */
-    @JsonProperty(value = "RemainingRetentionDays")
+    @Generated
     private Integer remainingRetentionDays;
 
     /*
      * The AccessTier property.
      */
-    @JsonProperty(value = "AccessTier")
+    @Generated
     private AccessTier accessTier;
 
     /*
      * The AccessTierInferred property.
      */
-    @JsonProperty(value = "AccessTierInferred")
+    @Generated
     private Boolean accessTierInferred;
 
     /*
      * The ArchiveStatus property.
      */
-    @JsonProperty(value = "ArchiveStatus")
+    @Generated
     private ArchiveStatus archiveStatus;
+
+    /*
+     * The SmartAccessTier property.
+     */
+    @Generated
+    private AccessTier smartAccessTier;
 
     /*
      * The CustomerProvidedKeySha256 property.
      */
-    @JsonProperty(value = "CustomerProvidedKeySha256")
+    @Generated
     private String customerProvidedKeySha256;
 
     /*
      * The name of the encryption scope under which the blob is encrypted.
      */
-    @JsonProperty(value = "EncryptionScope")
+    @Generated
     private String encryptionScope;
 
     /*
      * The AccessTierChangeTime property.
      */
-    @JsonProperty(value = "AccessTierChangeTime")
+    @Generated
     private DateTimeRfc1123 accessTierChangeTime;
 
     /*
      * The TagCount property.
      */
-    @JsonProperty(value = "TagCount")
+    @Generated
     private Integer tagCount;
 
     /*
      * The Expiry-Time property.
      */
-    @JsonProperty(value = "Expiry-Time")
+    @Generated
     private DateTimeRfc1123 expiresOn;
 
     /*
      * The Sealed property.
      */
-    @JsonProperty(value = "Sealed")
+    @Generated
     private Boolean isSealed;
 
     /*
      * If an object is in rehydrate pending state then this header is returned with priority of rehydrate. Valid values
      * are High and Standard.
      */
-    @JsonProperty(value = "RehydratePriority")
+    @Generated
     private RehydratePriority rehydratePriority;
 
     /*
      * The LastAccessTime property.
      */
-    @JsonProperty(value = "LastAccessTime")
+    @Generated
     private DateTimeRfc1123 lastAccessedOn;
 
     /*
      * The ImmutabilityPolicyUntilDate property.
      */
-    @JsonProperty(value = "ImmutabilityPolicyUntilDate")
+    @Generated
     private DateTimeRfc1123 immutabilityPolicyExpiresOn;
 
     /*
      * The ImmutabilityPolicyMode property.
      */
-    @JsonProperty(value = "ImmutabilityPolicyMode")
+    @Generated
     private BlobImmutabilityPolicyMode immutabilityPolicyMode;
 
     /*
      * The LegalHold property.
      */
-    @JsonProperty(value = "LegalHold")
+    @Generated
     private Boolean legalHold;
 
-    /** Creates an instance of BlobItemPropertiesInternal class. */
-    public BlobItemPropertiesInternal() {}
+    /**
+     * Creates an instance of BlobItemPropertiesInternal class.
+     */
+    @Generated
+    public BlobItemPropertiesInternal() {
+    }
 
     /**
      * Get the creationTime property: The Creation-Time property.
-     *
+     * 
      * @return the creationTime value.
      */
+    @Generated
     public OffsetDateTime getCreationTime() {
         if (this.creationTime == null) {
             return null;
@@ -282,10 +300,11 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Set the creationTime property: The Creation-Time property.
-     *
+     * 
      * @param creationTime the creationTime value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setCreationTime(OffsetDateTime creationTime) {
         if (creationTime == null) {
             this.creationTime = null;
@@ -297,9 +316,10 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the lastModified property: The Last-Modified property.
-     *
+     * 
      * @return the lastModified value.
      */
+    @Generated
     public OffsetDateTime getLastModified() {
         if (this.lastModified == null) {
             return null;
@@ -309,10 +329,11 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Set the lastModified property: The Last-Modified property.
-     *
+     * 
      * @param lastModified the lastModified value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setLastModified(OffsetDateTime lastModified) {
         if (lastModified == null) {
             this.lastModified = null;
@@ -324,19 +345,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the eTag property: The Etag property.
-     *
+     * 
      * @return the eTag value.
      */
+    @Generated
     public String getETag() {
         return this.eTag;
     }
 
     /**
      * Set the eTag property: The Etag property.
-     *
+     * 
      * @param eTag the eTag value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setETag(String eTag) {
         this.eTag = eTag;
         return this;
@@ -344,19 +367,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the contentLength property: Size in bytes.
-     *
+     * 
      * @return the contentLength value.
      */
+    @Generated
     public Long getContentLength() {
         return this.contentLength;
     }
 
     /**
      * Set the contentLength property: Size in bytes.
-     *
+     * 
      * @param contentLength the contentLength value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setContentLength(Long contentLength) {
         this.contentLength = contentLength;
         return this;
@@ -364,19 +389,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the contentType property: The Content-Type property.
-     *
+     * 
      * @return the contentType value.
      */
+    @Generated
     public String getContentType() {
         return this.contentType;
     }
 
     /**
      * Set the contentType property: The Content-Type property.
-     *
+     * 
      * @param contentType the contentType value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setContentType(String contentType) {
         this.contentType = contentType;
         return this;
@@ -384,19 +411,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the contentEncoding property: The Content-Encoding property.
-     *
+     * 
      * @return the contentEncoding value.
      */
+    @Generated
     public String getContentEncoding() {
         return this.contentEncoding;
     }
 
     /**
      * Set the contentEncoding property: The Content-Encoding property.
-     *
+     * 
      * @param contentEncoding the contentEncoding value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setContentEncoding(String contentEncoding) {
         this.contentEncoding = contentEncoding;
         return this;
@@ -404,19 +433,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the contentLanguage property: The Content-Language property.
-     *
+     * 
      * @return the contentLanguage value.
      */
+    @Generated
     public String getContentLanguage() {
         return this.contentLanguage;
     }
 
     /**
      * Set the contentLanguage property: The Content-Language property.
-     *
+     * 
      * @param contentLanguage the contentLanguage value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setContentLanguage(String contentLanguage) {
         this.contentLanguage = contentLanguage;
         return this;
@@ -424,19 +455,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the contentMd5 property: The Content-MD5 property.
-     *
+     * 
      * @return the contentMd5 value.
      */
+    @Generated
     public byte[] getContentMd5() {
         return CoreUtils.clone(this.contentMd5);
     }
 
     /**
      * Set the contentMd5 property: The Content-MD5 property.
-     *
+     * 
      * @param contentMd5 the contentMd5 value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setContentMd5(byte[] contentMd5) {
         this.contentMd5 = CoreUtils.clone(contentMd5);
         return this;
@@ -444,19 +477,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the contentDisposition property: The Content-Disposition property.
-     *
+     * 
      * @return the contentDisposition value.
      */
+    @Generated
     public String getContentDisposition() {
         return this.contentDisposition;
     }
 
     /**
      * Set the contentDisposition property: The Content-Disposition property.
-     *
+     * 
      * @param contentDisposition the contentDisposition value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setContentDisposition(String contentDisposition) {
         this.contentDisposition = contentDisposition;
         return this;
@@ -464,19 +499,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the cacheControl property: The Cache-Control property.
-     *
+     * 
      * @return the cacheControl value.
      */
+    @Generated
     public String getCacheControl() {
         return this.cacheControl;
     }
 
     /**
      * Set the cacheControl property: The Cache-Control property.
-     *
+     * 
      * @param cacheControl the cacheControl value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setCacheControl(String cacheControl) {
         this.cacheControl = cacheControl;
         return this;
@@ -484,19 +521,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the blobSequenceNumber property: The x-ms-blob-sequence-number property.
-     *
+     * 
      * @return the blobSequenceNumber value.
      */
+    @Generated
     public Long getBlobSequenceNumber() {
         return this.blobSequenceNumber;
     }
 
     /**
      * Set the blobSequenceNumber property: The x-ms-blob-sequence-number property.
-     *
+     * 
      * @param blobSequenceNumber the blobSequenceNumber value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setBlobSequenceNumber(Long blobSequenceNumber) {
         this.blobSequenceNumber = blobSequenceNumber;
         return this;
@@ -504,19 +543,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the blobType property: The BlobType property.
-     *
+     * 
      * @return the blobType value.
      */
+    @Generated
     public BlobType getBlobType() {
         return this.blobType;
     }
 
     /**
      * Set the blobType property: The BlobType property.
-     *
+     * 
      * @param blobType the blobType value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setBlobType(BlobType blobType) {
         this.blobType = blobType;
         return this;
@@ -524,19 +565,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the leaseStatus property: The LeaseStatus property.
-     *
+     * 
      * @return the leaseStatus value.
      */
+    @Generated
     public LeaseStatusType getLeaseStatus() {
         return this.leaseStatus;
     }
 
     /**
      * Set the leaseStatus property: The LeaseStatus property.
-     *
+     * 
      * @param leaseStatus the leaseStatus value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setLeaseStatus(LeaseStatusType leaseStatus) {
         this.leaseStatus = leaseStatus;
         return this;
@@ -544,19 +587,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the leaseState property: The LeaseState property.
-     *
+     * 
      * @return the leaseState value.
      */
+    @Generated
     public LeaseStateType getLeaseState() {
         return this.leaseState;
     }
 
     /**
      * Set the leaseState property: The LeaseState property.
-     *
+     * 
      * @param leaseState the leaseState value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setLeaseState(LeaseStateType leaseState) {
         this.leaseState = leaseState;
         return this;
@@ -564,19 +609,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the leaseDuration property: The LeaseDuration property.
-     *
+     * 
      * @return the leaseDuration value.
      */
+    @Generated
     public LeaseDurationType getLeaseDuration() {
         return this.leaseDuration;
     }
 
     /**
      * Set the leaseDuration property: The LeaseDuration property.
-     *
+     * 
      * @param leaseDuration the leaseDuration value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setLeaseDuration(LeaseDurationType leaseDuration) {
         this.leaseDuration = leaseDuration;
         return this;
@@ -584,19 +631,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the copyId property: The CopyId property.
-     *
+     * 
      * @return the copyId value.
      */
+    @Generated
     public String getCopyId() {
         return this.copyId;
     }
 
     /**
      * Set the copyId property: The CopyId property.
-     *
+     * 
      * @param copyId the copyId value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setCopyId(String copyId) {
         this.copyId = copyId;
         return this;
@@ -604,19 +653,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the copyStatus property: The CopyStatus property.
-     *
+     * 
      * @return the copyStatus value.
      */
+    @Generated
     public CopyStatusType getCopyStatus() {
         return this.copyStatus;
     }
 
     /**
      * Set the copyStatus property: The CopyStatus property.
-     *
+     * 
      * @param copyStatus the copyStatus value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setCopyStatus(CopyStatusType copyStatus) {
         this.copyStatus = copyStatus;
         return this;
@@ -624,19 +675,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the copySource property: The CopySource property.
-     *
+     * 
      * @return the copySource value.
      */
+    @Generated
     public String getCopySource() {
         return this.copySource;
     }
 
     /**
      * Set the copySource property: The CopySource property.
-     *
+     * 
      * @param copySource the copySource value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setCopySource(String copySource) {
         this.copySource = copySource;
         return this;
@@ -644,19 +697,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the copyProgress property: The CopyProgress property.
-     *
+     * 
      * @return the copyProgress value.
      */
+    @Generated
     public String getCopyProgress() {
         return this.copyProgress;
     }
 
     /**
      * Set the copyProgress property: The CopyProgress property.
-     *
+     * 
      * @param copyProgress the copyProgress value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setCopyProgress(String copyProgress) {
         this.copyProgress = copyProgress;
         return this;
@@ -664,9 +719,10 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the copyCompletionTime property: The CopyCompletionTime property.
-     *
+     * 
      * @return the copyCompletionTime value.
      */
+    @Generated
     public OffsetDateTime getCopyCompletionTime() {
         if (this.copyCompletionTime == null) {
             return null;
@@ -676,10 +732,11 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Set the copyCompletionTime property: The CopyCompletionTime property.
-     *
+     * 
      * @param copyCompletionTime the copyCompletionTime value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setCopyCompletionTime(OffsetDateTime copyCompletionTime) {
         if (copyCompletionTime == null) {
             this.copyCompletionTime = null;
@@ -691,19 +748,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the copyStatusDescription property: The CopyStatusDescription property.
-     *
+     * 
      * @return the copyStatusDescription value.
      */
+    @Generated
     public String getCopyStatusDescription() {
         return this.copyStatusDescription;
     }
 
     /**
      * Set the copyStatusDescription property: The CopyStatusDescription property.
-     *
+     * 
      * @param copyStatusDescription the copyStatusDescription value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setCopyStatusDescription(String copyStatusDescription) {
         this.copyStatusDescription = copyStatusDescription;
         return this;
@@ -711,19 +770,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the serverEncrypted property: The ServerEncrypted property.
-     *
+     * 
      * @return the serverEncrypted value.
      */
+    @Generated
     public Boolean isServerEncrypted() {
         return this.serverEncrypted;
     }
 
     /**
      * Set the serverEncrypted property: The ServerEncrypted property.
-     *
+     * 
      * @param serverEncrypted the serverEncrypted value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setServerEncrypted(Boolean serverEncrypted) {
         this.serverEncrypted = serverEncrypted;
         return this;
@@ -731,19 +792,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the incrementalCopy property: The IncrementalCopy property.
-     *
+     * 
      * @return the incrementalCopy value.
      */
+    @Generated
     public Boolean isIncrementalCopy() {
         return this.incrementalCopy;
     }
 
     /**
      * Set the incrementalCopy property: The IncrementalCopy property.
-     *
+     * 
      * @param incrementalCopy the incrementalCopy value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setIncrementalCopy(Boolean incrementalCopy) {
         this.incrementalCopy = incrementalCopy;
         return this;
@@ -751,19 +814,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the destinationSnapshot property: The DestinationSnapshot property.
-     *
+     * 
      * @return the destinationSnapshot value.
      */
+    @Generated
     public String getDestinationSnapshot() {
         return this.destinationSnapshot;
     }
 
     /**
      * Set the destinationSnapshot property: The DestinationSnapshot property.
-     *
+     * 
      * @param destinationSnapshot the destinationSnapshot value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setDestinationSnapshot(String destinationSnapshot) {
         this.destinationSnapshot = destinationSnapshot;
         return this;
@@ -771,9 +836,10 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the deletedTime property: The DeletedTime property.
-     *
+     * 
      * @return the deletedTime value.
      */
+    @Generated
     public OffsetDateTime getDeletedTime() {
         if (this.deletedTime == null) {
             return null;
@@ -783,10 +849,11 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Set the deletedTime property: The DeletedTime property.
-     *
+     * 
      * @param deletedTime the deletedTime value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setDeletedTime(OffsetDateTime deletedTime) {
         if (deletedTime == null) {
             this.deletedTime = null;
@@ -798,19 +865,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the remainingRetentionDays property: The RemainingRetentionDays property.
-     *
+     * 
      * @return the remainingRetentionDays value.
      */
+    @Generated
     public Integer getRemainingRetentionDays() {
         return this.remainingRetentionDays;
     }
 
     /**
      * Set the remainingRetentionDays property: The RemainingRetentionDays property.
-     *
+     * 
      * @param remainingRetentionDays the remainingRetentionDays value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setRemainingRetentionDays(Integer remainingRetentionDays) {
         this.remainingRetentionDays = remainingRetentionDays;
         return this;
@@ -818,19 +887,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the accessTier property: The AccessTier property.
-     *
+     * 
      * @return the accessTier value.
      */
+    @Generated
     public AccessTier getAccessTier() {
         return this.accessTier;
     }
 
     /**
      * Set the accessTier property: The AccessTier property.
-     *
+     * 
      * @param accessTier the accessTier value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setAccessTier(AccessTier accessTier) {
         this.accessTier = accessTier;
         return this;
@@ -838,19 +909,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the accessTierInferred property: The AccessTierInferred property.
-     *
+     * 
      * @return the accessTierInferred value.
      */
+    @Generated
     public Boolean isAccessTierInferred() {
         return this.accessTierInferred;
     }
 
     /**
      * Set the accessTierInferred property: The AccessTierInferred property.
-     *
+     * 
      * @param accessTierInferred the accessTierInferred value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setAccessTierInferred(Boolean accessTierInferred) {
         this.accessTierInferred = accessTierInferred;
         return this;
@@ -858,39 +931,65 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the archiveStatus property: The ArchiveStatus property.
-     *
+     * 
      * @return the archiveStatus value.
      */
+    @Generated
     public ArchiveStatus getArchiveStatus() {
         return this.archiveStatus;
     }
 
     /**
      * Set the archiveStatus property: The ArchiveStatus property.
-     *
+     * 
      * @param archiveStatus the archiveStatus value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setArchiveStatus(ArchiveStatus archiveStatus) {
         this.archiveStatus = archiveStatus;
         return this;
     }
 
     /**
+     * Get the smartAccessTier property: The SmartAccessTier property.
+     * 
+     * @return the smartAccessTier value.
+     */
+    @Generated
+    public AccessTier getSmartAccessTier() {
+        return this.smartAccessTier;
+    }
+
+    /**
+     * Set the smartAccessTier property: The SmartAccessTier property.
+     * 
+     * @param smartAccessTier the smartAccessTier value to set.
+     * @return the BlobItemPropertiesInternal object itself.
+     */
+    @Generated
+    public BlobItemPropertiesInternal setSmartAccessTier(AccessTier smartAccessTier) {
+        this.smartAccessTier = smartAccessTier;
+        return this;
+    }
+
+    /**
      * Get the customerProvidedKeySha256 property: The CustomerProvidedKeySha256 property.
-     *
+     * 
      * @return the customerProvidedKeySha256 value.
      */
+    @Generated
     public String getCustomerProvidedKeySha256() {
         return this.customerProvidedKeySha256;
     }
 
     /**
      * Set the customerProvidedKeySha256 property: The CustomerProvidedKeySha256 property.
-     *
+     * 
      * @param customerProvidedKeySha256 the customerProvidedKeySha256 value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setCustomerProvidedKeySha256(String customerProvidedKeySha256) {
         this.customerProvidedKeySha256 = customerProvidedKeySha256;
         return this;
@@ -898,19 +997,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the encryptionScope property: The name of the encryption scope under which the blob is encrypted.
-     *
+     * 
      * @return the encryptionScope value.
      */
+    @Generated
     public String getEncryptionScope() {
         return this.encryptionScope;
     }
 
     /**
      * Set the encryptionScope property: The name of the encryption scope under which the blob is encrypted.
-     *
+     * 
      * @param encryptionScope the encryptionScope value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setEncryptionScope(String encryptionScope) {
         this.encryptionScope = encryptionScope;
         return this;
@@ -918,9 +1019,10 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the accessTierChangeTime property: The AccessTierChangeTime property.
-     *
+     * 
      * @return the accessTierChangeTime value.
      */
+    @Generated
     public OffsetDateTime getAccessTierChangeTime() {
         if (this.accessTierChangeTime == null) {
             return null;
@@ -930,10 +1032,11 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Set the accessTierChangeTime property: The AccessTierChangeTime property.
-     *
+     * 
      * @param accessTierChangeTime the accessTierChangeTime value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setAccessTierChangeTime(OffsetDateTime accessTierChangeTime) {
         if (accessTierChangeTime == null) {
             this.accessTierChangeTime = null;
@@ -945,19 +1048,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the tagCount property: The TagCount property.
-     *
+     * 
      * @return the tagCount value.
      */
+    @Generated
     public Integer getTagCount() {
         return this.tagCount;
     }
 
     /**
      * Set the tagCount property: The TagCount property.
-     *
+     * 
      * @param tagCount the tagCount value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setTagCount(Integer tagCount) {
         this.tagCount = tagCount;
         return this;
@@ -965,9 +1070,10 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the expiresOn property: The Expiry-Time property.
-     *
+     * 
      * @return the expiresOn value.
      */
+    @Generated
     public OffsetDateTime getExpiresOn() {
         if (this.expiresOn == null) {
             return null;
@@ -977,10 +1083,11 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Set the expiresOn property: The Expiry-Time property.
-     *
+     * 
      * @param expiresOn the expiresOn value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setExpiresOn(OffsetDateTime expiresOn) {
         if (expiresOn == null) {
             this.expiresOn = null;
@@ -992,19 +1099,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the isSealed property: The Sealed property.
-     *
+     * 
      * @return the isSealed value.
      */
+    @Generated
     public Boolean isSealed() {
         return this.isSealed;
     }
 
     /**
      * Set the isSealed property: The Sealed property.
-     *
+     * 
      * @param isSealed the isSealed value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setIsSealed(Boolean isSealed) {
         this.isSealed = isSealed;
         return this;
@@ -1013,9 +1122,10 @@ public final class BlobItemPropertiesInternal {
     /**
      * Get the rehydratePriority property: If an object is in rehydrate pending state then this header is returned with
      * priority of rehydrate. Valid values are High and Standard.
-     *
+     * 
      * @return the rehydratePriority value.
      */
+    @Generated
     public RehydratePriority getRehydratePriority() {
         return this.rehydratePriority;
     }
@@ -1023,10 +1133,11 @@ public final class BlobItemPropertiesInternal {
     /**
      * Set the rehydratePriority property: If an object is in rehydrate pending state then this header is returned with
      * priority of rehydrate. Valid values are High and Standard.
-     *
+     * 
      * @param rehydratePriority the rehydratePriority value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setRehydratePriority(RehydratePriority rehydratePriority) {
         this.rehydratePriority = rehydratePriority;
         return this;
@@ -1034,9 +1145,10 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the lastAccessedOn property: The LastAccessTime property.
-     *
+     * 
      * @return the lastAccessedOn value.
      */
+    @Generated
     public OffsetDateTime getLastAccessedOn() {
         if (this.lastAccessedOn == null) {
             return null;
@@ -1046,10 +1158,11 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Set the lastAccessedOn property: The LastAccessTime property.
-     *
+     * 
      * @param lastAccessedOn the lastAccessedOn value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setLastAccessedOn(OffsetDateTime lastAccessedOn) {
         if (lastAccessedOn == null) {
             this.lastAccessedOn = null;
@@ -1061,9 +1174,10 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the immutabilityPolicyExpiresOn property: The ImmutabilityPolicyUntilDate property.
-     *
+     * 
      * @return the immutabilityPolicyExpiresOn value.
      */
+    @Generated
     public OffsetDateTime getImmutabilityPolicyExpiresOn() {
         if (this.immutabilityPolicyExpiresOn == null) {
             return null;
@@ -1073,10 +1187,11 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Set the immutabilityPolicyExpiresOn property: The ImmutabilityPolicyUntilDate property.
-     *
+     * 
      * @param immutabilityPolicyExpiresOn the immutabilityPolicyExpiresOn value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setImmutabilityPolicyExpiresOn(OffsetDateTime immutabilityPolicyExpiresOn) {
         if (immutabilityPolicyExpiresOn == null) {
             this.immutabilityPolicyExpiresOn = null;
@@ -1088,19 +1203,21 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the immutabilityPolicyMode property: The ImmutabilityPolicyMode property.
-     *
+     * 
      * @return the immutabilityPolicyMode value.
      */
+    @Generated
     public BlobImmutabilityPolicyMode getImmutabilityPolicyMode() {
         return this.immutabilityPolicyMode;
     }
 
     /**
      * Set the immutabilityPolicyMode property: The ImmutabilityPolicyMode property.
-     *
+     * 
      * @param immutabilityPolicyMode the immutabilityPolicyMode value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setImmutabilityPolicyMode(BlobImmutabilityPolicyMode immutabilityPolicyMode) {
         this.immutabilityPolicyMode = immutabilityPolicyMode;
         return this;
@@ -1108,21 +1225,229 @@ public final class BlobItemPropertiesInternal {
 
     /**
      * Get the legalHold property: The LegalHold property.
-     *
+     * 
      * @return the legalHold value.
      */
+    @Generated
     public Boolean isLegalHold() {
         return this.legalHold;
     }
 
     /**
      * Set the legalHold property: The LegalHold property.
-     *
+     * 
      * @param legalHold the legalHold value to set.
      * @return the BlobItemPropertiesInternal object itself.
      */
+    @Generated
     public BlobItemPropertiesInternal setLegalHold(Boolean legalHold) {
         this.legalHold = legalHold;
         return this;
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter) throws XMLStreamException {
+        return toXml(xmlWriter, null);
+    }
+
+    @Generated
+    @Override
+    public XmlWriter toXml(XmlWriter xmlWriter, String rootElementName) throws XMLStreamException {
+        rootElementName = rootElementName == null || rootElementName.isEmpty() ? "Properties" : rootElementName;
+        xmlWriter.writeStartElement(rootElementName);
+        xmlWriter.writeStringElement("Creation-Time", Objects.toString(this.creationTime, null));
+        xmlWriter.writeStringElement("Last-Modified", Objects.toString(this.lastModified, null));
+        xmlWriter.writeStringElement("Etag", this.eTag);
+        xmlWriter.writeNumberElement("Content-Length", this.contentLength);
+        xmlWriter.writeStringElement("Content-Type", this.contentType);
+        xmlWriter.writeStringElement("Content-Encoding", this.contentEncoding);
+        xmlWriter.writeStringElement("Content-Language", this.contentLanguage);
+        xmlWriter.writeBinaryElement("Content-MD5", this.contentMd5);
+        xmlWriter.writeStringElement("Content-Disposition", this.contentDisposition);
+        xmlWriter.writeStringElement("Cache-Control", this.cacheControl);
+        xmlWriter.writeNumberElement("x-ms-blob-sequence-number", this.blobSequenceNumber);
+        xmlWriter.writeStringElement("BlobType", this.blobType == null ? null : this.blobType.toString());
+        xmlWriter.writeStringElement("LeaseStatus", this.leaseStatus == null ? null : this.leaseStatus.toString());
+        xmlWriter.writeStringElement("LeaseState", this.leaseState == null ? null : this.leaseState.toString());
+        xmlWriter.writeStringElement("LeaseDuration",
+            this.leaseDuration == null ? null : this.leaseDuration.toString());
+        xmlWriter.writeStringElement("CopyId", this.copyId);
+        xmlWriter.writeStringElement("CopyStatus", this.copyStatus == null ? null : this.copyStatus.toString());
+        xmlWriter.writeStringElement("CopySource", this.copySource);
+        xmlWriter.writeStringElement("CopyProgress", this.copyProgress);
+        xmlWriter.writeStringElement("CopyCompletionTime", Objects.toString(this.copyCompletionTime, null));
+        xmlWriter.writeStringElement("CopyStatusDescription", this.copyStatusDescription);
+        xmlWriter.writeBooleanElement("ServerEncrypted", this.serverEncrypted);
+        xmlWriter.writeBooleanElement("IncrementalCopy", this.incrementalCopy);
+        xmlWriter.writeStringElement("DestinationSnapshot", this.destinationSnapshot);
+        xmlWriter.writeStringElement("DeletedTime", Objects.toString(this.deletedTime, null));
+        xmlWriter.writeNumberElement("RemainingRetentionDays", this.remainingRetentionDays);
+        xmlWriter.writeStringElement("AccessTier", this.accessTier == null ? null : this.accessTier.toString());
+        xmlWriter.writeBooleanElement("AccessTierInferred", this.accessTierInferred);
+        xmlWriter.writeStringElement("ArchiveStatus",
+            this.archiveStatus == null ? null : this.archiveStatus.toString());
+        xmlWriter.writeStringElement("SmartAccessTier",
+            this.smartAccessTier == null ? null : this.smartAccessTier.toString());
+        xmlWriter.writeStringElement("CustomerProvidedKeySha256", this.customerProvidedKeySha256);
+        xmlWriter.writeStringElement("EncryptionScope", this.encryptionScope);
+        xmlWriter.writeStringElement("AccessTierChangeTime", Objects.toString(this.accessTierChangeTime, null));
+        xmlWriter.writeNumberElement("TagCount", this.tagCount);
+        xmlWriter.writeStringElement("Expiry-Time", Objects.toString(this.expiresOn, null));
+        xmlWriter.writeBooleanElement("Sealed", this.isSealed);
+        xmlWriter.writeStringElement("RehydratePriority",
+            this.rehydratePriority == null ? null : this.rehydratePriority.toString());
+        xmlWriter.writeStringElement("LastAccessTime", Objects.toString(this.lastAccessedOn, null));
+        xmlWriter.writeStringElement("ImmutabilityPolicyUntilDate",
+            Objects.toString(this.immutabilityPolicyExpiresOn, null));
+        xmlWriter.writeStringElement("ImmutabilityPolicyMode",
+            this.immutabilityPolicyMode == null ? null : this.immutabilityPolicyMode.toString());
+        xmlWriter.writeBooleanElement("LegalHold", this.legalHold);
+        return xmlWriter.writeEndElement();
+    }
+
+    /**
+     * Reads an instance of BlobItemPropertiesInternal from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @return An instance of BlobItemPropertiesInternal if the XmlReader was pointing to an instance of it, or null if
+     * it was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the BlobItemPropertiesInternal.
+     */
+    @Generated
+    public static BlobItemPropertiesInternal fromXml(XmlReader xmlReader) throws XMLStreamException {
+        return fromXml(xmlReader, null);
+    }
+
+    /**
+     * Reads an instance of BlobItemPropertiesInternal from the XmlReader.
+     * 
+     * @param xmlReader The XmlReader being read.
+     * @param rootElementName Optional root element name to override the default defined by the model. Used to support
+     * cases where the model can deserialize from different root element names.
+     * @return An instance of BlobItemPropertiesInternal if the XmlReader was pointing to an instance of it, or null if
+     * it was pointing to XML null.
+     * @throws XMLStreamException If an error occurs while reading the BlobItemPropertiesInternal.
+     */
+    @Generated
+    public static BlobItemPropertiesInternal fromXml(XmlReader xmlReader, String rootElementName)
+        throws XMLStreamException {
+        String finalRootElementName
+            = rootElementName == null || rootElementName.isEmpty() ? "Properties" : rootElementName;
+        return xmlReader.readObject(finalRootElementName, reader -> {
+            BlobItemPropertiesInternal deserializedBlobItemPropertiesInternal = new BlobItemPropertiesInternal();
+            while (reader.nextElement() != XmlToken.END_ELEMENT) {
+                QName elementName = reader.getElementName();
+
+                if ("Creation-Time".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.creationTime
+                        = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("Last-Modified".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.lastModified
+                        = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("Etag".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.eTag = reader.getStringElement();
+                } else if ("Content-Length".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.contentLength = reader.getNullableElement(Long::parseLong);
+                } else if ("Content-Type".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.contentType = reader.getStringElement();
+                } else if ("Content-Encoding".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.contentEncoding = reader.getStringElement();
+                } else if ("Content-Language".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.contentLanguage = reader.getStringElement();
+                } else if ("Content-MD5".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.contentMd5 = reader.getBinaryElement();
+                } else if ("Content-Disposition".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.contentDisposition = reader.getStringElement();
+                } else if ("Cache-Control".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.cacheControl = reader.getStringElement();
+                } else if ("x-ms-blob-sequence-number".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.blobSequenceNumber
+                        = reader.getNullableElement(Long::parseLong);
+                } else if ("BlobType".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.blobType = BlobType.fromString(reader.getStringElement());
+                } else if ("LeaseStatus".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.leaseStatus
+                        = LeaseStatusType.fromString(reader.getStringElement());
+                } else if ("LeaseState".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.leaseState
+                        = LeaseStateType.fromString(reader.getStringElement());
+                } else if ("LeaseDuration".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.leaseDuration
+                        = LeaseDurationType.fromString(reader.getStringElement());
+                } else if ("CopyId".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.copyId = reader.getStringElement();
+                } else if ("CopyStatus".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.copyStatus
+                        = CopyStatusType.fromString(reader.getStringElement());
+                } else if ("CopySource".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.copySource = reader.getStringElement();
+                } else if ("CopyProgress".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.copyProgress = reader.getStringElement();
+                } else if ("CopyCompletionTime".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.copyCompletionTime
+                        = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("CopyStatusDescription".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.copyStatusDescription = reader.getStringElement();
+                } else if ("ServerEncrypted".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.serverEncrypted
+                        = reader.getNullableElement(Boolean::parseBoolean);
+                } else if ("IncrementalCopy".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.incrementalCopy
+                        = reader.getNullableElement(Boolean::parseBoolean);
+                } else if ("DestinationSnapshot".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.destinationSnapshot = reader.getStringElement();
+                } else if ("DeletedTime".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.deletedTime
+                        = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("RemainingRetentionDays".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.remainingRetentionDays
+                        = reader.getNullableElement(Integer::parseInt);
+                } else if ("AccessTier".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.accessTier
+                        = AccessTier.fromString(reader.getStringElement());
+                } else if ("AccessTierInferred".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.accessTierInferred
+                        = reader.getNullableElement(Boolean::parseBoolean);
+                } else if ("ArchiveStatus".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.archiveStatus
+                        = ArchiveStatus.fromString(reader.getStringElement());
+                } else if ("SmartAccessTier".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.smartAccessTier
+                        = AccessTier.fromString(reader.getStringElement());
+                } else if ("CustomerProvidedKeySha256".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.customerProvidedKeySha256 = reader.getStringElement();
+                } else if ("EncryptionScope".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.encryptionScope = reader.getStringElement();
+                } else if ("AccessTierChangeTime".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.accessTierChangeTime
+                        = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("TagCount".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.tagCount = reader.getNullableElement(Integer::parseInt);
+                } else if ("Expiry-Time".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.expiresOn = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("Sealed".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.isSealed = reader.getNullableElement(Boolean::parseBoolean);
+                } else if ("RehydratePriority".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.rehydratePriority
+                        = RehydratePriority.fromString(reader.getStringElement());
+                } else if ("LastAccessTime".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.lastAccessedOn
+                        = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("ImmutabilityPolicyUntilDate".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.immutabilityPolicyExpiresOn
+                        = reader.getNullableElement(DateTimeRfc1123::new);
+                } else if ("ImmutabilityPolicyMode".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.immutabilityPolicyMode
+                        = BlobImmutabilityPolicyMode.fromString(reader.getStringElement());
+                } else if ("LegalHold".equals(elementName.getLocalPart())) {
+                    deserializedBlobItemPropertiesInternal.legalHold = reader.getNullableElement(Boolean::parseBoolean);
+                } else {
+                    reader.skipElement();
+                }
+            }
+
+            return deserializedBlobItemPropertiesInternal;
+        });
     }
 }

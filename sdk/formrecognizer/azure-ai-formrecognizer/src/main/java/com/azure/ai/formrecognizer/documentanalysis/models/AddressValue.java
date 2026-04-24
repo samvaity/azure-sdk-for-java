@@ -12,6 +12,12 @@ import com.azure.core.annotation.Immutable;
 @Immutable
 public final class AddressValue {
 
+    /**
+     * Creates a new instance of AddressValue.
+     */
+    public AddressValue() {
+    }
+
     /*
      * Building number.
      */
@@ -217,6 +223,7 @@ public final class AddressValue {
     public String getStreetAddress() {
         return this.streetAddress;
     }
+
     /**
      * Get the unit property: Apartment or office number.
      *
@@ -225,7 +232,8 @@ public final class AddressValue {
     public String getUnit() {
         return this.unit;
     }
- /**
+
+    /**
      * Get the cityDistrict property: Districts or boroughs within a city, such as Brooklyn in New York City or City of
      * Westminster in London.
      *
@@ -279,6 +287,7 @@ public final class AddressValue {
     private void setStreetAddress(String streetAddress) {
         this.streetAddress = streetAddress;
     }
+
     private void setCityDistrict(String city) {
         this.cityDistrict = city;
     }

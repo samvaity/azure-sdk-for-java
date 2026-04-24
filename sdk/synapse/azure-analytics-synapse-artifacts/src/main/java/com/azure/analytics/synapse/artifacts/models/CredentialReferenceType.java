@@ -4,39 +4,47 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Credential reference type. */
+/**
+ * Credential reference type.
+ */
 public final class CredentialReferenceType extends ExpandableStringEnum<CredentialReferenceType> {
-    /** Static value CredentialReference for CredentialReferenceType. */
+    /**
+     * Static value CredentialReference for CredentialReferenceType.
+     */
+    @Generated
     public static final CredentialReferenceType CREDENTIAL_REFERENCE = fromString("CredentialReference");
 
     /**
      * Creates a new instance of CredentialReferenceType value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public CredentialReferenceType() {}
+    public CredentialReferenceType() {
+    }
 
     /**
      * Creates or finds a CredentialReferenceType from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding CredentialReferenceType.
      */
-    @JsonCreator
+    @Generated
     public static CredentialReferenceType fromString(String name) {
         return fromString(name, CredentialReferenceType.class);
     }
 
     /**
      * Gets known CredentialReferenceType values.
-     *
+     * 
      * @return known CredentialReferenceType values.
      */
+    @Generated
     public static Collection<CredentialReferenceType> values() {
         return values(CredentialReferenceType.class);
     }

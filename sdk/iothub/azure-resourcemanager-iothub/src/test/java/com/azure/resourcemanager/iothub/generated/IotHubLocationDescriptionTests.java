@@ -12,20 +12,18 @@ import org.junit.jupiter.api.Assertions;
 public final class IotHubLocationDescriptionTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        IotHubLocationDescription model =
-            BinaryData
-                .fromString("{\"location\":\"ijhtxf\",\"role\":\"primary\"}")
-                .toObject(IotHubLocationDescription.class);
-        Assertions.assertEquals("ijhtxf", model.location());
-        Assertions.assertEquals(IotHubReplicaRoleType.PRIMARY, model.role());
+        IotHubLocationDescription model = BinaryData.fromString("{\"location\":\"klbb\",\"role\":\"secondary\"}")
+            .toObject(IotHubLocationDescription.class);
+        Assertions.assertEquals("klbb", model.location());
+        Assertions.assertEquals(IotHubReplicaRoleType.SECONDARY, model.role());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        IotHubLocationDescription model =
-            new IotHubLocationDescription().withLocation("ijhtxf").withRole(IotHubReplicaRoleType.PRIMARY);
+        IotHubLocationDescription model
+            = new IotHubLocationDescription().withLocation("klbb").withRole(IotHubReplicaRoleType.SECONDARY);
         model = BinaryData.fromObject(model).toObject(IotHubLocationDescription.class);
-        Assertions.assertEquals("ijhtxf", model.location());
-        Assertions.assertEquals(IotHubReplicaRoleType.PRIMARY, model.role());
+        Assertions.assertEquals("klbb", model.location());
+        Assertions.assertEquals(IotHubReplicaRoleType.SECONDARY, model.role());
     }
 }

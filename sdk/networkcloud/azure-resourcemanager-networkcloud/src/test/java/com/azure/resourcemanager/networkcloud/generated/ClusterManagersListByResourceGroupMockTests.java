@@ -6,70 +6,45 @@ package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.networkcloud.NetworkCloudManager;
 import com.azure.resourcemanager.networkcloud.models.ClusterManager;
-import java.nio.ByteBuffer;
+import com.azure.resourcemanager.networkcloud.models.ManagedServiceIdentityType;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class ClusterManagersListByResourceGroupMockTests {
     @Test
     public void testListByResourceGroup() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"value\":[{\"etag\":\"ubtlmjtg\",\"identity\":{\"principalId\":\"ef734fe1-0ead-46b3-b9f4-00689c2ec19e\",\"tenantId\":\"62a37feb-7db1-4240-9e96-dc716543bedc\",\"type\":\"SystemAssigned\",\"userAssignedIdentities\":{\"kmfd\":{\"principalId\":\"648e932f-03cd-4984-a43d-cdf585d45a56\",\"clientId\":\"df332ecf-287b-4324-82c7-e0bc4e5ea1aa\"},\"xgbkkqvjcteo\":{\"principalId\":\"4096a918-3bdb-4aad-8030-9b598b0f7aa9\",\"clientId\":\"d6e25a60-9e60-443b-87d9-ee08f203a6d3\"},\"rslskkzp\":{\"principalId\":\"a806e390-dc43-422d-b01b-131c81f65639\",\"clientId\":\"d2662aa6-ca85-4633-9735-a9678ec404e1\"},\"nzdpvoco\":{\"principalId\":\"c5c3f6db-110c-4b54-91a3-3907b7efdaac\",\"clientId\":\"b29ae816-237a-4ad9-b275-293673b72cc1\"}}},\"properties\":{\"analyticsWorkspaceId\":\"pcnab\",\"availabilityZones\":[\"snggytexvzilmhiv\",\"kwwwnckn\",\"zdajlskzptjxu\",\"weucyrth\"],\"clusterVersions\":[{\"supportExpiryDate\":\"h\",\"targetClusterVersion\":\"gcj\"},{\"supportExpiryDate\":\"n\",\"targetClusterVersion\":\"hokamvfej\"},{\"supportExpiryDate\":\"nttmbq\",\"targetClusterVersion\":\"bzfivfok\"},{\"supportExpiryDate\":\"sthhzagjfwy\",\"targetClusterVersion\":\"lhgenuzejgvkv\"}],\"detailedStatus\":\"UpdateFailed\",\"detailedStatusMessage\":\"szllrzlsmmdqgmi\",\"fabricControllerId\":\"zpimcqrhn\",\"managedResourceGroupConfiguration\":{\"location\":\"inklogxs\",\"name\":\"zarhzvqnsqktcmbj\"},\"managerExtendedLocation\":{\"name\":\"zoslpkybtgl\",\"type\":\"kzpgaj\"},\"provisioningState\":\"Succeeded\",\"vmSize\":\"emqbmfuvqarwzxuq\"},\"location\":\"bluimmbw\",\"tags\":{\"kraokq\":\"gtdmbvx\",\"aokbavlyttaaknwf\":\"budbt\"},\"id\":\"ke\",\"name\":\"sm\",\"type\":\"p\"}]}";
 
-        String responseStr =
-            "{\"value\":[{\"properties\":{\"analyticsWorkspaceId\":\"ptjgwdt\",\"availabilityZones\":[\"ranblwphqlkccu\",\"gygqwah\",\"iul\",\"gniiprglvaw\"],\"clusterVersions\":[],\"detailedStatus\":\"ProvisioningFailed\",\"detailedStatusMessage\":\"ypivlsbb\",\"fabricControllerId\":\"pmcubkmifoxxkub\",\"managedResourceGroupConfiguration\":{\"location\":\"avp\",\"name\":\"brbqgvgovp\"},\"managerExtendedLocation\":{\"name\":\"ttefjoknssq\",\"type\":\"zqedikdfrdbi\"},\"provisioningState\":\"Canceled\",\"vmSize\":\"geihfql\"},\"location\":\"wfiwzcxmj\",\"tags\":{\"pgxh\":\"ephmgtvljvrcmyfq\",\"yaswlpaugmr\":\"pomyqwcabvnuile\",\"fkvcisi\":\"fjlrxwtoauk\",\"uivedwcgyeewxeiq\":\"moaedsxj\"},\"id\":\"psmgo\",\"name\":\"guamlj\",\"type\":\"l\"}]}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        NetworkCloudManager manager = NetworkCloudManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        PagedIterable<ClusterManager> response = manager.clusterManagers()
+            .listByResourceGroup("zqbglcjkays", 1856331055, "hz", com.azure.core.util.Context.NONE);
 
-        NetworkCloudManager manager =
-            NetworkCloudManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        PagedIterable<ClusterManager> response =
-            manager.clusterManagers().listByResourceGroup("e", com.azure.core.util.Context.NONE);
-
-        Assertions.assertEquals("wfiwzcxmj", response.iterator().next().location());
-        Assertions.assertEquals("ephmgtvljvrcmyfq", response.iterator().next().tags().get("pgxh"));
-        Assertions.assertEquals("ptjgwdt", response.iterator().next().analyticsWorkspaceId());
-        Assertions.assertEquals("ranblwphqlkccu", response.iterator().next().availabilityZones().get(0));
-        Assertions.assertEquals("pmcubkmifoxxkub", response.iterator().next().fabricControllerId());
-        Assertions.assertEquals("avp", response.iterator().next().managedResourceGroupConfiguration().location());
-        Assertions.assertEquals("brbqgvgovp", response.iterator().next().managedResourceGroupConfiguration().name());
-        Assertions.assertEquals("geihfql", response.iterator().next().vmSize());
+        Assertions.assertEquals("bluimmbw", response.iterator().next().location());
+        Assertions.assertEquals("gtdmbvx", response.iterator().next().tags().get("kraokq"));
+        Assertions.assertEquals(ManagedServiceIdentityType.SYSTEM_ASSIGNED,
+            response.iterator().next().identity().type());
+        Assertions.assertEquals("pcnab", response.iterator().next().analyticsWorkspaceId());
+        Assertions.assertEquals("snggytexvzilmhiv", response.iterator().next().availabilityZones().get(0));
+        Assertions.assertEquals("zpimcqrhn", response.iterator().next().fabricControllerId());
+        Assertions.assertEquals("inklogxs", response.iterator().next().managedResourceGroupConfiguration().location());
+        Assertions.assertEquals("zarhzvqnsqktcmbj",
+            response.iterator().next().managedResourceGroupConfiguration().name());
+        Assertions.assertEquals("emqbmfuvqarwzxuq", response.iterator().next().vmSize());
     }
 }

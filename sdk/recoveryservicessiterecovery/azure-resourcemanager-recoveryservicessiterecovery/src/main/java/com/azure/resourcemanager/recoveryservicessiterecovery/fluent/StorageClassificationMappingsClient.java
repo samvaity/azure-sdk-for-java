@@ -14,15 +14,17 @@ import com.azure.core.util.polling.SyncPoller;
 import com.azure.resourcemanager.recoveryservicessiterecovery.fluent.models.StorageClassificationMappingInner;
 import com.azure.resourcemanager.recoveryservicessiterecovery.models.StorageClassificationMappingInput;
 
-/** An instance of this class provides access to all the operations defined in StorageClassificationMappingsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in StorageClassificationMappingsClient.
+ */
 public interface StorageClassificationMappingsClient {
     /**
      * Gets the list of storage classification mappings objects under a storage.
-     *
-     * <p>Lists the storage classification mappings for the fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the storage classification mappings for the fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -31,16 +33,16 @@ public interface StorageClassificationMappingsClient {
      * @return collection of storage mapping details as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<StorageClassificationMappingInner> listByReplicationStorageClassifications(
-        String resourceName, String resourceGroupName, String fabricName, String storageClassificationName);
+    PagedIterable<StorageClassificationMappingInner> listByReplicationStorageClassifications(String resourceGroupName,
+        String resourceName, String fabricName, String storageClassificationName);
 
     /**
      * Gets the list of storage classification mappings objects under a storage.
-     *
-     * <p>Lists the storage classification mappings for the fabric.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the storage classification mappings for the fabric.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param context The context to associate with this operation.
@@ -50,20 +52,16 @@ public interface StorageClassificationMappingsClient {
      * @return collection of storage mapping details as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<StorageClassificationMappingInner> listByReplicationStorageClassifications(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
-        Context context);
+    PagedIterable<StorageClassificationMappingInner> listByReplicationStorageClassifications(String resourceGroupName,
+        String resourceName, String fabricName, String storageClassificationName, Context context);
 
     /**
      * Gets the details of a storage classification mapping.
-     *
-     * <p>Gets the details of the specified storage classification mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of the specified storage classification mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param storageClassificationMappingName Storage classification mapping name.
@@ -74,21 +72,16 @@ public interface StorageClassificationMappingsClient {
      * @return the details of the specified storage classification mapping along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<StorageClassificationMappingInner> getWithResponse(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
-        String storageClassificationMappingName,
-        Context context);
+    Response<StorageClassificationMappingInner> getWithResponse(String resourceGroupName, String resourceName,
+        String fabricName, String storageClassificationName, String storageClassificationMappingName, Context context);
 
     /**
      * Gets the details of a storage classification mapping.
-     *
-     * <p>Gets the details of the specified storage classification mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Gets the details of the specified storage classification mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param storageClassificationMappingName Storage classification mapping name.
@@ -98,20 +91,16 @@ public interface StorageClassificationMappingsClient {
      * @return the details of the specified storage classification mapping.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    StorageClassificationMappingInner get(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
-        String storageClassificationMappingName);
+    StorageClassificationMappingInner get(String resourceGroupName, String resourceName, String fabricName,
+        String storageClassificationName, String storageClassificationMappingName);
 
     /**
      * Create storage classification mapping.
-     *
-     * <p>The operation to create a storage classification mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a storage classification mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param storageClassificationMappingName Storage classification mapping name.
@@ -123,20 +112,16 @@ public interface StorageClassificationMappingsClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     SyncPoller<PollResult<StorageClassificationMappingInner>, StorageClassificationMappingInner> beginCreate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
-        String storageClassificationMappingName,
-        StorageClassificationMappingInput pairingInput);
+        String resourceGroupName, String resourceName, String fabricName, String storageClassificationName,
+        String storageClassificationMappingName, StorageClassificationMappingInput pairingInput);
 
     /**
      * Create storage classification mapping.
-     *
-     * <p>The operation to create a storage classification mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a storage classification mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param storageClassificationMappingName Storage classification mapping name.
@@ -149,21 +134,16 @@ public interface StorageClassificationMappingsClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     SyncPoller<PollResult<StorageClassificationMappingInner>, StorageClassificationMappingInner> beginCreate(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
-        String storageClassificationMappingName,
-        StorageClassificationMappingInput pairingInput,
-        Context context);
+        String resourceGroupName, String resourceName, String fabricName, String storageClassificationName,
+        String storageClassificationMappingName, StorageClassificationMappingInput pairingInput, Context context);
 
     /**
      * Create storage classification mapping.
-     *
-     * <p>The operation to create a storage classification mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a storage classification mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param storageClassificationMappingName Storage classification mapping name.
@@ -174,21 +154,17 @@ public interface StorageClassificationMappingsClient {
      * @return storage mapping object.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    StorageClassificationMappingInner create(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
-        String storageClassificationMappingName,
+    StorageClassificationMappingInner create(String resourceGroupName, String resourceName, String fabricName,
+        String storageClassificationName, String storageClassificationMappingName,
         StorageClassificationMappingInput pairingInput);
 
     /**
      * Create storage classification mapping.
-     *
-     * <p>The operation to create a storage classification mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to create a storage classification mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param storageClassificationMappingName Storage classification mapping name.
@@ -200,22 +176,17 @@ public interface StorageClassificationMappingsClient {
      * @return storage mapping object.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    StorageClassificationMappingInner create(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
-        String storageClassificationMappingName,
-        StorageClassificationMappingInput pairingInput,
-        Context context);
+    StorageClassificationMappingInner create(String resourceGroupName, String resourceName, String fabricName,
+        String storageClassificationName, String storageClassificationMappingName,
+        StorageClassificationMappingInput pairingInput, Context context);
 
     /**
      * Delete a storage classification mapping.
-     *
-     * <p>The operation to delete a storage classification mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete a storage classification mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param storageClassificationMappingName Storage classification mapping name.
@@ -225,20 +196,16 @@ public interface StorageClassificationMappingsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
-        String storageClassificationMappingName);
+    SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String resourceName, String fabricName,
+        String storageClassificationName, String storageClassificationMappingName);
 
     /**
      * Delete a storage classification mapping.
-     *
-     * <p>The operation to delete a storage classification mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete a storage classification mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param storageClassificationMappingName Storage classification mapping name.
@@ -249,21 +216,16 @@ public interface StorageClassificationMappingsClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
-        String storageClassificationMappingName,
-        Context context);
+    SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String resourceName, String fabricName,
+        String storageClassificationName, String storageClassificationMappingName, Context context);
 
     /**
      * Delete a storage classification mapping.
-     *
-     * <p>The operation to delete a storage classification mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete a storage classification mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param storageClassificationMappingName Storage classification mapping name.
@@ -272,20 +234,16 @@ public interface StorageClassificationMappingsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
+    void delete(String resourceGroupName, String resourceName, String fabricName, String storageClassificationName,
         String storageClassificationMappingName);
 
     /**
      * Delete a storage classification mapping.
-     *
-     * <p>The operation to delete a storage classification mapping.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * The operation to delete a storage classification mapping.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param fabricName Fabric name.
      * @param storageClassificationName Storage classification name.
      * @param storageClassificationMappingName Storage classification mapping name.
@@ -295,36 +253,31 @@ public interface StorageClassificationMappingsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    void delete(
-        String resourceName,
-        String resourceGroupName,
-        String fabricName,
-        String storageClassificationName,
-        String storageClassificationMappingName,
-        Context context);
+    void delete(String resourceGroupName, String resourceName, String fabricName, String storageClassificationName,
+        String storageClassificationMappingName, Context context);
 
     /**
      * Gets the list of storage classification mappings objects under a vault.
-     *
-     * <p>Lists the storage classification mappings in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the storage classification mappings in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return collection of storage mapping details as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<StorageClassificationMappingInner> list(String resourceName, String resourceGroupName);
+    PagedIterable<StorageClassificationMappingInner> list(String resourceGroupName, String resourceName);
 
     /**
      * Gets the list of storage classification mappings objects under a vault.
-     *
-     * <p>Lists the storage classification mappings in the vault.
-     *
-     * @param resourceName The name of the recovery services vault.
+     * 
+     * Lists the storage classification mappings in the vault.
+     * 
      * @param resourceGroupName The name of the resource group where the recovery services vault is present.
+     * @param resourceName The name of the recovery services vault.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -332,6 +285,6 @@ public interface StorageClassificationMappingsClient {
      * @return collection of storage mapping details as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<StorageClassificationMappingInner> list(
-        String resourceName, String resourceGroupName, Context context);
+    PagedIterable<StorageClassificationMappingInner> list(String resourceGroupName, String resourceName,
+        Context context);
 }

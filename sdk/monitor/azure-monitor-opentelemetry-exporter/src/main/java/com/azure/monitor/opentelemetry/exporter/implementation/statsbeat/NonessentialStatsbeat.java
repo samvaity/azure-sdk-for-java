@@ -16,8 +16,8 @@ public class NonessentialStatsbeat extends BaseStatsbeat implements LocalStorage
     // kinds of non-essential statsbeat into different classes.
 
     // Track local storage IO success and failure
-    private static final String READ_FAILURE_COUNT = "Read Failure Count";
-    private static final String WRITE_FAILURE_COUNT = "Write Failure Count";
+    private static final String READ_FAILURE_COUNT = "Read_Failure_Count";
+    private static final String WRITE_FAILURE_COUNT = "Write_Failure_Count";
     private final AtomicLong readFailureCount = new AtomicLong();
     private final AtomicLong writeFailureCount = new AtomicLong();
 
@@ -34,15 +34,15 @@ public class NonessentialStatsbeat extends BaseStatsbeat implements LocalStorage
     protected void send(TelemetryItemExporter telemetryItemExporter) {
         long readFailures = readFailureCount.getAndSet(0);
         if (readFailures != 0) {
-            StatsbeatTelemetryBuilder telemetryItem =
-                createStatsbeatTelemetry(READ_FAILURE_COUNT, (double) readFailureCount.get());
+            StatsbeatTelemetryBuilder telemetryItem
+                = createStatsbeatTelemetry(READ_FAILURE_COUNT, (double) readFailureCount.get());
             telemetryItemExporter.send(Collections.singletonList(telemetryItem.build()));
         }
 
         long writeFailures = readFailureCount.getAndSet(0);
         if (writeFailures != 0) {
-            StatsbeatTelemetryBuilder telemetryItem =
-                createStatsbeatTelemetry(WRITE_FAILURE_COUNT, (double) writeFailureCount.get());
+            StatsbeatTelemetryBuilder telemetryItem
+                = createStatsbeatTelemetry(WRITE_FAILURE_COUNT, (double) writeFailureCount.get());
             telemetryItemExporter.send(Collections.singletonList(telemetryItem.build()));
         }
     }

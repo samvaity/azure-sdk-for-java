@@ -7,7 +7,7 @@ import com.azure.ai.textanalytics.implementation.AbstractiveSummaryContextProper
 import com.azure.core.annotation.Immutable;
 
 /**
- * {@link AbstractiveSummaryContext} model.
+ * The {@code AbstractiveSummaryContext} model.
  */
 @Immutable
 public final class AbstractiveSummaryContext {
@@ -22,8 +22,8 @@ public final class AbstractiveSummaryContext {
     private int length;
 
     static {
-        AbstractiveSummaryContextPropertiesHelper.setAccessor(
-            new AbstractiveSummaryContextPropertiesHelper.AbstractiveSummaryContextAccessor() {
+        AbstractiveSummaryContextPropertiesHelper
+            .setAccessor(new AbstractiveSummaryContextPropertiesHelper.AbstractiveSummaryContextAccessor() {
                 @Override
                 public void setOffset(AbstractiveSummaryContext abstractiveSummaryContext, int offset) {
                     abstractiveSummaryContext.setOffset(offset);
@@ -33,8 +33,13 @@ public final class AbstractiveSummaryContext {
                 public void setLength(AbstractiveSummaryContext abstractiveSummaryContext, int length) {
                     abstractiveSummaryContext.setLength(length);
                 }
-            }
-        );
+            });
+    }
+
+    /**
+     * Constructs a {@code AbstractiveSummaryContext} model.
+     */
+    public AbstractiveSummaryContext() {
     }
 
     /**

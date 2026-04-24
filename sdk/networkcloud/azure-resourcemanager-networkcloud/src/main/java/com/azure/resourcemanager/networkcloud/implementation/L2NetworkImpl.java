@@ -48,6 +48,10 @@ public final class L2NetworkImpl implements L2Network, L2Network.Definition, L2N
         }
     }
 
+    public String etag() {
+        return this.innerModel().etag();
+    }
+
     public ExtendedLocation extendedLocation() {
         return this.innerModel().extendedLocation();
     }
@@ -135,6 +139,14 @@ public final class L2NetworkImpl implements L2Network, L2Network.Definition, L2N
 
     private String l2NetworkName;
 
+    private String createIfMatch;
+
+    private String createIfNoneMatch;
+
+    private String updateIfMatch;
+
+    private String updateIfNoneMatch;
+
     private L2NetworkPatchParameters updateL2NetworkUpdateParameters;
 
     public L2NetworkImpl withExistingResourceGroup(String resourceGroupName) {
@@ -143,20 +155,18 @@ public final class L2NetworkImpl implements L2Network, L2Network.Definition, L2N
     }
 
     public L2Network create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL2Networks()
-                .createOrUpdate(resourceGroupName, l2NetworkName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getL2Networks()
+            .createOrUpdate(resourceGroupName, l2NetworkName, this.innerModel(), createIfMatch, createIfNoneMatch,
+                Context.NONE);
         return this;
     }
 
     public L2Network create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL2Networks()
-                .createOrUpdate(resourceGroupName, l2NetworkName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getL2Networks()
+            .createOrUpdate(resourceGroupName, l2NetworkName, this.innerModel(), createIfMatch, createIfNoneMatch,
+                context);
         return this;
     }
 
@@ -164,58 +174,56 @@ public final class L2NetworkImpl implements L2Network, L2Network.Definition, L2N
         this.innerObject = new L2NetworkInner();
         this.serviceManager = serviceManager;
         this.l2NetworkName = name;
+        this.createIfMatch = null;
+        this.createIfNoneMatch = null;
     }
 
     public L2NetworkImpl update() {
+        this.updateIfMatch = null;
+        this.updateIfNoneMatch = null;
         this.updateL2NetworkUpdateParameters = new L2NetworkPatchParameters();
         return this;
     }
 
     public L2Network apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL2Networks()
-                .updateWithResponse(resourceGroupName, l2NetworkName, updateL2NetworkUpdateParameters, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getL2Networks()
+            .updateWithResponse(resourceGroupName, l2NetworkName, updateIfMatch, updateIfNoneMatch,
+                updateL2NetworkUpdateParameters, Context.NONE)
+            .getValue();
         return this;
     }
 
     public L2Network apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL2Networks()
-                .updateWithResponse(resourceGroupName, l2NetworkName, updateL2NetworkUpdateParameters, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getL2Networks()
+            .updateWithResponse(resourceGroupName, l2NetworkName, updateIfMatch, updateIfNoneMatch,
+                updateL2NetworkUpdateParameters, context)
+            .getValue();
         return this;
     }
 
-    L2NetworkImpl(
-        L2NetworkInner innerObject, com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
+    L2NetworkImpl(L2NetworkInner innerObject,
+        com.azure.resourcemanager.networkcloud.NetworkCloudManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.l2NetworkName = Utils.getValueFromIdByName(innerObject.id(), "l2Networks");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.l2NetworkName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "l2Networks");
     }
 
     public L2Network refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL2Networks()
-                .getByResourceGroupWithResponse(resourceGroupName, l2NetworkName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getL2Networks()
+            .getByResourceGroupWithResponse(resourceGroupName, l2NetworkName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public L2Network refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getL2Networks()
-                .getByResourceGroupWithResponse(resourceGroupName, l2NetworkName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getL2Networks()
+            .getByResourceGroupWithResponse(resourceGroupName, l2NetworkName, context)
+            .getValue();
         return this;
     }
 
@@ -259,7 +267,27 @@ public final class L2NetworkImpl implements L2Network, L2Network.Definition, L2N
         return this;
     }
 
+    public L2NetworkImpl withIfMatch(String ifMatch) {
+        if (isInCreateMode()) {
+            this.createIfMatch = ifMatch;
+            return this;
+        } else {
+            this.updateIfMatch = ifMatch;
+            return this;
+        }
+    }
+
+    public L2NetworkImpl withIfNoneMatch(String ifNoneMatch) {
+        if (isInCreateMode()) {
+            this.createIfNoneMatch = ifNoneMatch;
+            return this;
+        } else {
+            this.updateIfNoneMatch = ifNoneMatch;
+            return this;
+        }
+    }
+
     private boolean isInCreateMode() {
-        return this.innerModel().id() == null;
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

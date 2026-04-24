@@ -4,21 +4,24 @@
 
 package com.azure.resourcemanager.appcontainers.generated;
 
-/** Samples for ContainerAppsRevisions DeactivateRevision. */
+/**
+ * Samples for ContainerAppsRevisions DeactivateRevision.
+ */
 public final class ContainerAppsRevisionsDeactivateRevisionSamples {
     /*
-     * x-ms-original-file: specification/app/resource-manager/Microsoft.App/preview/2022-11-01-preview/examples/Revisions_Deactivate.json
+     * x-ms-original-file:
+     * specification/app/resource-manager/Microsoft.App/ContainerApps/stable/2025-07-01/examples/Revisions_Deactivate.
+     * json
      */
     /**
      * Sample code: Deactivate Container App's revision.
-     *
+     * 
      * @param manager Entry point to ContainerAppsApiManager.
      */
-    public static void deactivateContainerAppSRevision(
-        com.azure.resourcemanager.appcontainers.ContainerAppsApiManager manager) {
-        manager
-            .containerAppsRevisions()
-            .deactivateRevisionWithResponse(
-                "rg", "testcontainerApp0", "testcontainerApp0-pjxhsye", com.azure.core.util.Context.NONE);
+    public static void
+        deactivateContainerAppSRevision(com.azure.resourcemanager.appcontainers.ContainerAppsApiManager manager) {
+        manager.containerAppsRevisions()
+            .deactivateRevisionWithResponse("rg", "testcontainerApp0", "testcontainerApp0-pjxhsye",
+                com.azure.core.util.Context.NONE);
     }
 }

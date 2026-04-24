@@ -5,94 +5,120 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/** The data stored in text format. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("TextFormat")
+/**
+ * The data stored in text format.
+ */
 @Fluent
 public final class TextFormat extends DatasetStorageFormat {
     /*
+     * Type of dataset storage format.
+     */
+    @Generated
+    private String type = "TextFormat";
+
+    /*
      * The column delimiter. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "columnDelimiter")
+    @Generated
     private Object columnDelimiter;
 
     /*
      * The row delimiter. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "rowDelimiter")
+    @Generated
     private Object rowDelimiter;
 
     /*
      * The escape character. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "escapeChar")
+    @Generated
     private Object escapeChar;
 
     /*
      * The quote character. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "quoteChar")
+    @Generated
     private Object quoteChar;
 
     /*
      * The null value string. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "nullValue")
+    @Generated
     private Object nullValue;
 
     /*
      * The code page name of the preferred encoding. If miss, the default value is ΓÇ£utf-8ΓÇ¥, unless BOM denotes
      * another Unicode encoding. Refer to the ΓÇ£NameΓÇ¥ column of the table in the following link to set supported
-     * values: https://msdn.microsoft.com/library/system.text.encoding.aspx. Type: string (or Expression with
-     * resultType string).
+     * values: https://msdn.microsoft.com/library/system.text.encoding.aspx. Type: string (or Expression with resultType
+     * string).
      */
-    @JsonProperty(value = "encodingName")
+    @Generated
     private Object encodingName;
 
     /*
      * Treat empty column values in the text file as null. The default value is true. Type: boolean (or Expression with
      * resultType boolean).
      */
-    @JsonProperty(value = "treatEmptyAsNull")
+    @Generated
     private Object treatEmptyAsNull;
 
     /*
      * The number of lines/rows to be skipped when parsing text files. The default value is 0. Type: integer (or
      * Expression with resultType integer).
      */
-    @JsonProperty(value = "skipLineCount")
+    @Generated
     private Object skipLineCount;
 
     /*
-     * When used as input, treat the first row of data as headers. When used as output,write the headers into the
-     * output as the first row of data. The default value is false. Type: boolean (or Expression with resultType
-     * boolean).
+     * When used as input, treat the first row of data as headers. When used as output,write the headers into the output
+     * as the first row of data. The default value is false. Type: boolean (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "firstRowAsHeader")
+    @Generated
     private Object firstRowAsHeader;
 
-    /** Creates an instance of TextFormat class. */
-    public TextFormat() {}
+    /**
+     * Creates an instance of TextFormat class.
+     */
+    @Generated
+    public TextFormat() {
+    }
+
+    /**
+     * Get the type property: Type of dataset storage format.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the columnDelimiter property: The column delimiter. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the columnDelimiter value.
      */
+    @Generated
     public Object getColumnDelimiter() {
         return this.columnDelimiter;
     }
 
     /**
      * Set the columnDelimiter property: The column delimiter. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param columnDelimiter the columnDelimiter value to set.
      * @return the TextFormat object itself.
      */
+    @Generated
     public TextFormat setColumnDelimiter(Object columnDelimiter) {
         this.columnDelimiter = columnDelimiter;
         return this;
@@ -100,19 +126,21 @@ public final class TextFormat extends DatasetStorageFormat {
 
     /**
      * Get the rowDelimiter property: The row delimiter. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the rowDelimiter value.
      */
+    @Generated
     public Object getRowDelimiter() {
         return this.rowDelimiter;
     }
 
     /**
      * Set the rowDelimiter property: The row delimiter. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param rowDelimiter the rowDelimiter value to set.
      * @return the TextFormat object itself.
      */
+    @Generated
     public TextFormat setRowDelimiter(Object rowDelimiter) {
         this.rowDelimiter = rowDelimiter;
         return this;
@@ -120,19 +148,21 @@ public final class TextFormat extends DatasetStorageFormat {
 
     /**
      * Get the escapeChar property: The escape character. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the escapeChar value.
      */
+    @Generated
     public Object getEscapeChar() {
         return this.escapeChar;
     }
 
     /**
      * Set the escapeChar property: The escape character. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param escapeChar the escapeChar value to set.
      * @return the TextFormat object itself.
      */
+    @Generated
     public TextFormat setEscapeChar(Object escapeChar) {
         this.escapeChar = escapeChar;
         return this;
@@ -140,19 +170,21 @@ public final class TextFormat extends DatasetStorageFormat {
 
     /**
      * Get the quoteChar property: The quote character. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the quoteChar value.
      */
+    @Generated
     public Object getQuoteChar() {
         return this.quoteChar;
     }
 
     /**
      * Set the quoteChar property: The quote character. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param quoteChar the quoteChar value to set.
      * @return the TextFormat object itself.
      */
+    @Generated
     public TextFormat setQuoteChar(Object quoteChar) {
         this.quoteChar = quoteChar;
         return this;
@@ -160,19 +192,21 @@ public final class TextFormat extends DatasetStorageFormat {
 
     /**
      * Get the nullValue property: The null value string. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the nullValue value.
      */
+    @Generated
     public Object getNullValue() {
         return this.nullValue;
     }
 
     /**
      * Set the nullValue property: The null value string. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param nullValue the nullValue value to set.
      * @return the TextFormat object itself.
      */
+    @Generated
     public TextFormat setNullValue(Object nullValue) {
         this.nullValue = nullValue;
         return this;
@@ -183,9 +217,10 @@ public final class TextFormat extends DatasetStorageFormat {
      * ΓÇ£utf-8ΓÇ¥, unless BOM denotes another Unicode encoding. Refer to the ΓÇ£NameΓÇ¥ column of the table in the
      * following link to set supported values: https://msdn.microsoft.com/library/system.text.encoding.aspx. Type:
      * string (or Expression with resultType string).
-     *
+     * 
      * @return the encodingName value.
      */
+    @Generated
     public Object getEncodingName() {
         return this.encodingName;
     }
@@ -195,10 +230,11 @@ public final class TextFormat extends DatasetStorageFormat {
      * ΓÇ£utf-8ΓÇ¥, unless BOM denotes another Unicode encoding. Refer to the ΓÇ£NameΓÇ¥ column of the table in the
      * following link to set supported values: https://msdn.microsoft.com/library/system.text.encoding.aspx. Type:
      * string (or Expression with resultType string).
-     *
+     * 
      * @param encodingName the encodingName value to set.
      * @return the TextFormat object itself.
      */
+    @Generated
     public TextFormat setEncodingName(Object encodingName) {
         this.encodingName = encodingName;
         return this;
@@ -207,9 +243,10 @@ public final class TextFormat extends DatasetStorageFormat {
     /**
      * Get the treatEmptyAsNull property: Treat empty column values in the text file as null. The default value is true.
      * Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the treatEmptyAsNull value.
      */
+    @Generated
     public Object getTreatEmptyAsNull() {
         return this.treatEmptyAsNull;
     }
@@ -217,10 +254,11 @@ public final class TextFormat extends DatasetStorageFormat {
     /**
      * Set the treatEmptyAsNull property: Treat empty column values in the text file as null. The default value is true.
      * Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param treatEmptyAsNull the treatEmptyAsNull value to set.
      * @return the TextFormat object itself.
      */
+    @Generated
     public TextFormat setTreatEmptyAsNull(Object treatEmptyAsNull) {
         this.treatEmptyAsNull = treatEmptyAsNull;
         return this;
@@ -229,9 +267,10 @@ public final class TextFormat extends DatasetStorageFormat {
     /**
      * Get the skipLineCount property: The number of lines/rows to be skipped when parsing text files. The default value
      * is 0. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @return the skipLineCount value.
      */
+    @Generated
     public Object getSkipLineCount() {
         return this.skipLineCount;
     }
@@ -239,10 +278,11 @@ public final class TextFormat extends DatasetStorageFormat {
     /**
      * Set the skipLineCount property: The number of lines/rows to be skipped when parsing text files. The default value
      * is 0. Type: integer (or Expression with resultType integer).
-     *
+     * 
      * @param skipLineCount the skipLineCount value to set.
      * @return the TextFormat object itself.
      */
+    @Generated
     public TextFormat setSkipLineCount(Object skipLineCount) {
         this.skipLineCount = skipLineCount;
         return this;
@@ -252,9 +292,10 @@ public final class TextFormat extends DatasetStorageFormat {
      * Get the firstRowAsHeader property: When used as input, treat the first row of data as headers. When used as
      * output,write the headers into the output as the first row of data. The default value is false. Type: boolean (or
      * Expression with resultType boolean).
-     *
+     * 
      * @return the firstRowAsHeader value.
      */
+    @Generated
     public Object getFirstRowAsHeader() {
         return this.firstRowAsHeader;
     }
@@ -263,26 +304,137 @@ public final class TextFormat extends DatasetStorageFormat {
      * Set the firstRowAsHeader property: When used as input, treat the first row of data as headers. When used as
      * output,write the headers into the output as the first row of data. The default value is false. Type: boolean (or
      * Expression with resultType boolean).
-     *
+     * 
      * @param firstRowAsHeader the firstRowAsHeader value to set.
      * @return the TextFormat object itself.
      */
+    @Generated
     public TextFormat setFirstRowAsHeader(Object firstRowAsHeader) {
         this.firstRowAsHeader = firstRowAsHeader;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public TextFormat setSerializer(Object serializer) {
         super.setSerializer(serializer);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public TextFormat setDeserializer(Object deserializer) {
         super.setDeserializer(deserializer);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        if (getSerializer() != null) {
+            jsonWriter.writeUntypedField("serializer", getSerializer());
+        }
+        if (getDeserializer() != null) {
+            jsonWriter.writeUntypedField("deserializer", getDeserializer());
+        }
+        jsonWriter.writeStringField("type", this.type);
+        if (this.columnDelimiter != null) {
+            jsonWriter.writeUntypedField("columnDelimiter", this.columnDelimiter);
+        }
+        if (this.rowDelimiter != null) {
+            jsonWriter.writeUntypedField("rowDelimiter", this.rowDelimiter);
+        }
+        if (this.escapeChar != null) {
+            jsonWriter.writeUntypedField("escapeChar", this.escapeChar);
+        }
+        if (this.quoteChar != null) {
+            jsonWriter.writeUntypedField("quoteChar", this.quoteChar);
+        }
+        if (this.nullValue != null) {
+            jsonWriter.writeUntypedField("nullValue", this.nullValue);
+        }
+        if (this.encodingName != null) {
+            jsonWriter.writeUntypedField("encodingName", this.encodingName);
+        }
+        if (this.treatEmptyAsNull != null) {
+            jsonWriter.writeUntypedField("treatEmptyAsNull", this.treatEmptyAsNull);
+        }
+        if (this.skipLineCount != null) {
+            jsonWriter.writeUntypedField("skipLineCount", this.skipLineCount);
+        }
+        if (this.firstRowAsHeader != null) {
+            jsonWriter.writeUntypedField("firstRowAsHeader", this.firstRowAsHeader);
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of TextFormat from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of TextFormat if the JsonReader was pointing to an instance of it, or null if it was pointing
+     * to JSON null.
+     * @throws IOException If an error occurs while reading the TextFormat.
+     */
+    @Generated
+    public static TextFormat fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            TextFormat deserializedTextFormat = new TextFormat();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("serializer".equals(fieldName)) {
+                    deserializedTextFormat.setSerializer(reader.readUntyped());
+                } else if ("deserializer".equals(fieldName)) {
+                    deserializedTextFormat.setDeserializer(reader.readUntyped());
+                } else if ("type".equals(fieldName)) {
+                    deserializedTextFormat.type = reader.getString();
+                } else if ("columnDelimiter".equals(fieldName)) {
+                    deserializedTextFormat.columnDelimiter = reader.readUntyped();
+                } else if ("rowDelimiter".equals(fieldName)) {
+                    deserializedTextFormat.rowDelimiter = reader.readUntyped();
+                } else if ("escapeChar".equals(fieldName)) {
+                    deserializedTextFormat.escapeChar = reader.readUntyped();
+                } else if ("quoteChar".equals(fieldName)) {
+                    deserializedTextFormat.quoteChar = reader.readUntyped();
+                } else if ("nullValue".equals(fieldName)) {
+                    deserializedTextFormat.nullValue = reader.readUntyped();
+                } else if ("encodingName".equals(fieldName)) {
+                    deserializedTextFormat.encodingName = reader.readUntyped();
+                } else if ("treatEmptyAsNull".equals(fieldName)) {
+                    deserializedTextFormat.treatEmptyAsNull = reader.readUntyped();
+                } else if ("skipLineCount".equals(fieldName)) {
+                    deserializedTextFormat.skipLineCount = reader.readUntyped();
+                } else if ("firstRowAsHeader".equals(fieldName)) {
+                    deserializedTextFormat.firstRowAsHeader = reader.readUntyped();
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedTextFormat.setAdditionalProperties(additionalProperties);
+
+            return deserializedTextFormat;
+        });
     }
 }

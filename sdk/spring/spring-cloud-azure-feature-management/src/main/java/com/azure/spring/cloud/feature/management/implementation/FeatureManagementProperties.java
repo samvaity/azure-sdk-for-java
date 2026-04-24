@@ -2,121 +2,66 @@
 // Licensed under the MIT License.
 package com.azure.spring.cloud.feature.management.implementation;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import com.azure.spring.cloud.feature.management.implementation.models.Feature;
+import com.azure.spring.cloud.feature.management.models.FeatureDefinition;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
 /**
  * Configuration Properties for Feature Management. Processes the configurations to be usable by Feature Management.
  */
 @ConfigurationProperties(prefix = "feature-management")
-public class FeatureManagementProperties extends HashMap<String, Object> {
+public class FeatureManagementProperties {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FeatureManagementProperties.class);
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private static final ObjectMapper MAPPER = new ObjectMapper()
-        .setPropertyNamingStrategy(PropertyNamingStrategies.KEBAB_CASE);
+    @JsonProperty("feature-flags")
+    private List<FeatureDefinition> featureFlags;
 
-    private static final long serialVersionUID = -1642032123104805346L;
+    //private List<Feature> convertedFeatureFlags;
 
-    /**
-     * Map of all Feature Flags that use Feature Filters.
-     */
-    private transient Map<String, Feature> featureManagement;
-
-    /**
-     * Map of all Feature Flags that are just enabled/disabled.
-     */
-    private Map<String, Boolean> onOff;
-
-    public FeatureManagementProperties() {
-        featureManagement = new HashMap<>();
-        onOff = new HashMap<>();
+    public List<FeatureDefinition> getFeatureFlags() {
+        return featureFlags;
     }
 
-    @Override
-    public void putAll(Map<? extends String, ? extends Object> m) {
-        if (m == null) {
+    /**
+     * Sets the feature flags from the configuration. This method handles conversion from various input formats.
+     *
+     * @param featureFlags the feature flags to set
+     */
+    public void setFeatureFlags(List<FeatureDefinition> featureFlags) {
+        if (featureFlags == null || featureFlags.isEmpty()) {
+            this.featureFlags = List.of();
             return;
         }
-
-        // Need to reset or switch between on/off to conditional doesn't work
-        featureManagement = new HashMap<>();
-        onOff = new HashMap<>();
-
-        Map<? extends String, ? extends Object> features = removePrefixes(m, "featureManagement");
-
-        if (!features.isEmpty()) {
-            m = features;
-        }
-
-        for (String key : m.keySet()) {
-            addToFeatures(m, key, "");
-        }
-
-    }
-
-    @SuppressWarnings("unchecked")
-    private Map<? extends String, ? extends Object> removePrefixes(Map<? extends String, ? extends Object> m,
-        String prefix) {
-        Map<? extends String, ? extends Object> removedPrefix = new HashMap<>();
-        if (m.containsKey(prefix)) {
-            removedPrefix = (Map<? extends String, ? extends Object>) m.get(prefix);
-        }
-        return removedPrefix;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void addToFeatures(Map<? extends String, ? extends Object> features, String key, String combined) {
-        Object featureValue = features.get(key);
-        if (!combined.isEmpty() && !combined.endsWith(".")) {
-            combined += ".";
-        }
-        if (featureValue instanceof Boolean) {
-            onOff.put(combined + key, (Boolean) featureValue);
-        } else {
-            Feature feature = null;
-            try {
-                feature = MAPPER.convertValue(featureValue, Feature.class);
-            } catch (IllegalArgumentException e) {
-                LOGGER.error("Found invalid feature {} with value {}.", combined + key, featureValue.toString());
-            }
-            // When coming from a file "feature.flag" is not a possible flag name
-            if (feature != null && feature.getEnabledFor() == null && feature.getKey() == null) {
-                if (Map.class.isAssignableFrom(featureValue.getClass())) {
-                    features = (Map<String, Object>) featureValue;
-                    for (String fKey : features.keySet()) {
-                        addToFeatures(features, fKey, combined + key);
-                    }
-                }
-            } else {
-                if (feature != null) {
-                    feature.setKey(key);
-                    featureManagement.put(key, feature);
+        
+        // Check if the first element is a Feature instance to determine if we need conversion
+        if (featureFlags.get(0) instanceof FeatureDefinition) {
+            List<FeatureDefinition> features = new ArrayList<>();
+            for (Object flag : featureFlags) {
+                // This should always be true based on our check, but we verify each element to be safe
+                if (flag instanceof FeatureDefinition) {
+                    features.add((FeatureDefinition) flag);
                 }
             }
+
+            if (!features.isEmpty()) {
+                this.featureFlags = features;
+                return;
+            }
         }
-    }
 
-    /**
-     * @return the featureManagement
-     */
-    public Map<String, Feature> getFeatureManagement() {
-        return featureManagement;
-    }
-
-    /**
-     * @return the onOff
-     */
-    public Map<String, Boolean> getOnOff() {
-        return onOff;
+        // Convert the feature flags to the correct type
+        List<FeatureDefinition> convertedFlags = new ArrayList<>();
+        for (Object feature : featureFlags) {
+            FeatureDefinition convertedFeature = OBJECT_MAPPER.convertValue(feature, FeatureDefinition.class);
+            convertedFlags.add(convertedFeature);
+        }
+        this.featureFlags = convertedFlags;
     }
 
 }

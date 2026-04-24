@@ -17,6 +17,7 @@ import com.azure.core.util.ClientOptions;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.HttpClientOptions;
 import com.azure.core.util.logging.ClientLogger;
+import com.azure.identity.implementation.CredentialBuilderBaseHelper;
 import com.azure.identity.implementation.IdentityClientOptions;
 
 import java.time.Duration;
@@ -29,6 +30,17 @@ import java.util.function.Function;
  */
 public abstract class CredentialBuilderBase<T extends CredentialBuilderBase<T>> implements HttpTrait<T> {
     private static final ClientLogger LOGGER = new ClientLogger(CredentialBuilderBase.class);
+    static {
+        CredentialBuilderBaseHelper.setAccessor(new CredentialBuilderBaseHelper.CredentialBuilderBaseAccessor() {
+            @Override
+            public IdentityClientOptions getClientOptions(CredentialBuilderBase<?> builder) {
+                return builder.identityClientOptions;
+            }
+        });
+    }
+    /**
+     * The options for configuring the identity client.
+     */
     IdentityClientOptions identityClientOptions;
 
     CredentialBuilderBase() {
@@ -58,7 +70,6 @@ public abstract class CredentialBuilderBase<T extends CredentialBuilderBase<T>> 
         this.identityClientOptions.setRetryTimeout(retryTimeout);
         return (T) this;
     }
-
 
     /**
      * Specifies the options for proxy configuration.
@@ -270,9 +281,7 @@ public abstract class CredentialBuilderBase<T extends CredentialBuilderBase<T>> 
      */
     @SuppressWarnings("unchecked")
     public T enableAccountIdentifierLogging() {
-        identityClientOptions
-            .getIdentityLogOptionsImpl()
-            .setLoggingAccountIdentifiersAllowed(true);
+        identityClientOptions.getIdentityLogOptionsImpl().setLoggingAccountIdentifiersAllowed(true);
         return (T) this;
     }
 }

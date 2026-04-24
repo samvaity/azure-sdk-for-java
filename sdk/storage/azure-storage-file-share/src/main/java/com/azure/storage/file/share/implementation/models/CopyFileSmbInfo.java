@@ -5,71 +5,76 @@
 package com.azure.storage.file.share.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.storage.file.share.models.PermissionCopyModeType;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
-/** Parameter group. */
-@JacksonXmlRootElement(localName = "CopyFileSmbInfo")
+/**
+ * Parameter group.
+ */
 @Fluent
 public final class CopyFileSmbInfo {
     /*
      * Specifies either the option to copy file attributes from a source file(source) to a target file or a list of
      * attributes to set on a target file.
      */
-    @JsonProperty(value = "fileAttributes")
+    @Generated
     private String fileAttributes;
 
     /*
      * Specifies either the option to copy file creation time from a source file(source) to a target file or a time
      * value in ISO 8601 format to set as creation time on a target file.
      */
-    @JsonProperty(value = "fileCreationTime")
+    @Generated
     private String fileCreationTime;
 
     /*
      * Specifies either the option to copy file last write time from a source file(source) to a target file or a time
      * value in ISO 8601 format to set as last write time on a target file.
      */
-    @JsonProperty(value = "fileLastWriteTime")
+    @Generated
     private String fileLastWriteTime;
 
     /*
      * Specifies either the option to copy file last write time from a source file(source) to a target file or a time
      * value in ISO 8601 format to set as last write time on a target file.
      */
-    @JsonProperty(value = "fileChangeTime")
+    @Generated
     private String fileChangeTime;
 
     /*
      * Specifies the option to copy file security descriptor from source file or to set it using the value which is
      * defined by the header value of x-ms-file-permission or x-ms-file-permission-key.
      */
-    @JsonProperty(value = "filePermissionCopyMode")
+    @Generated
     private PermissionCopyModeType filePermissionCopyMode;
 
     /*
      * Specifies the option to overwrite the target file if it already exists and has read-only attribute set.
      */
-    @JsonProperty(value = "ignoreReadOnly")
+    @Generated
     private Boolean ignoreReadOnly;
 
     /*
      * Specifies the option to set archive attribute on a target file. True means archive attribute will be set on a
      * target file despite attribute overrides or a source file state.
      */
-    @JsonProperty(value = "setArchiveAttribute")
+    @Generated
     private Boolean setArchiveAttribute;
 
-    /** Creates an instance of CopyFileSmbInfo class. */
-    public CopyFileSmbInfo() {}
+    /**
+     * Creates an instance of CopyFileSmbInfo class.
+     */
+    @Generated
+    public CopyFileSmbInfo() {
+    }
 
     /**
      * Get the fileAttributes property: Specifies either the option to copy file attributes from a source file(source)
      * to a target file or a list of attributes to set on a target file.
-     *
+     * 
      * @return the fileAttributes value.
      */
+    @Generated
     public String getFileAttributes() {
         return this.fileAttributes;
     }
@@ -77,10 +82,11 @@ public final class CopyFileSmbInfo {
     /**
      * Set the fileAttributes property: Specifies either the option to copy file attributes from a source file(source)
      * to a target file or a list of attributes to set on a target file.
-     *
+     * 
      * @param fileAttributes the fileAttributes value to set.
      * @return the CopyFileSmbInfo object itself.
      */
+    @Generated
     public CopyFileSmbInfo setFileAttributes(String fileAttributes) {
         this.fileAttributes = fileAttributes;
         return this;
@@ -89,9 +95,10 @@ public final class CopyFileSmbInfo {
     /**
      * Get the fileCreationTime property: Specifies either the option to copy file creation time from a source
      * file(source) to a target file or a time value in ISO 8601 format to set as creation time on a target file.
-     *
+     * 
      * @return the fileCreationTime value.
      */
+    @Generated
     public String getFileCreationTime() {
         return this.fileCreationTime;
     }
@@ -99,10 +106,11 @@ public final class CopyFileSmbInfo {
     /**
      * Set the fileCreationTime property: Specifies either the option to copy file creation time from a source
      * file(source) to a target file or a time value in ISO 8601 format to set as creation time on a target file.
-     *
+     * 
      * @param fileCreationTime the fileCreationTime value to set.
      * @return the CopyFileSmbInfo object itself.
      */
+    @Generated
     public CopyFileSmbInfo setFileCreationTime(String fileCreationTime) {
         this.fileCreationTime = fileCreationTime;
         return this;
@@ -111,9 +119,10 @@ public final class CopyFileSmbInfo {
     /**
      * Get the fileLastWriteTime property: Specifies either the option to copy file last write time from a source
      * file(source) to a target file or a time value in ISO 8601 format to set as last write time on a target file.
-     *
+     * 
      * @return the fileLastWriteTime value.
      */
+    @Generated
     public String getFileLastWriteTime() {
         return this.fileLastWriteTime;
     }
@@ -121,10 +130,11 @@ public final class CopyFileSmbInfo {
     /**
      * Set the fileLastWriteTime property: Specifies either the option to copy file last write time from a source
      * file(source) to a target file or a time value in ISO 8601 format to set as last write time on a target file.
-     *
+     * 
      * @param fileLastWriteTime the fileLastWriteTime value to set.
      * @return the CopyFileSmbInfo object itself.
      */
+    @Generated
     public CopyFileSmbInfo setFileLastWriteTime(String fileLastWriteTime) {
         this.fileLastWriteTime = fileLastWriteTime;
         return this;
@@ -133,9 +143,10 @@ public final class CopyFileSmbInfo {
     /**
      * Get the fileChangeTime property: Specifies either the option to copy file last write time from a source
      * file(source) to a target file or a time value in ISO 8601 format to set as last write time on a target file.
-     *
+     * 
      * @return the fileChangeTime value.
      */
+    @Generated
     public String getFileChangeTime() {
         return this.fileChangeTime;
     }
@@ -143,10 +154,11 @@ public final class CopyFileSmbInfo {
     /**
      * Set the fileChangeTime property: Specifies either the option to copy file last write time from a source
      * file(source) to a target file or a time value in ISO 8601 format to set as last write time on a target file.
-     *
+     * 
      * @param fileChangeTime the fileChangeTime value to set.
      * @return the CopyFileSmbInfo object itself.
      */
+    @Generated
     public CopyFileSmbInfo setFileChangeTime(String fileChangeTime) {
         this.fileChangeTime = fileChangeTime;
         return this;
@@ -156,9 +168,10 @@ public final class CopyFileSmbInfo {
      * Get the filePermissionCopyMode property: Specifies the option to copy file security descriptor from source file
      * or to set it using the value which is defined by the header value of x-ms-file-permission or
      * x-ms-file-permission-key.
-     *
+     * 
      * @return the filePermissionCopyMode value.
      */
+    @Generated
     public PermissionCopyModeType getFilePermissionCopyMode() {
         return this.filePermissionCopyMode;
     }
@@ -167,10 +180,11 @@ public final class CopyFileSmbInfo {
      * Set the filePermissionCopyMode property: Specifies the option to copy file security descriptor from source file
      * or to set it using the value which is defined by the header value of x-ms-file-permission or
      * x-ms-file-permission-key.
-     *
+     * 
      * @param filePermissionCopyMode the filePermissionCopyMode value to set.
      * @return the CopyFileSmbInfo object itself.
      */
+    @Generated
     public CopyFileSmbInfo setFilePermissionCopyMode(PermissionCopyModeType filePermissionCopyMode) {
         this.filePermissionCopyMode = filePermissionCopyMode;
         return this;
@@ -179,9 +193,10 @@ public final class CopyFileSmbInfo {
     /**
      * Get the ignoreReadOnly property: Specifies the option to overwrite the target file if it already exists and has
      * read-only attribute set.
-     *
+     * 
      * @return the ignoreReadOnly value.
      */
+    @Generated
     public Boolean isIgnoreReadOnly() {
         return this.ignoreReadOnly;
     }
@@ -189,10 +204,11 @@ public final class CopyFileSmbInfo {
     /**
      * Set the ignoreReadOnly property: Specifies the option to overwrite the target file if it already exists and has
      * read-only attribute set.
-     *
+     * 
      * @param ignoreReadOnly the ignoreReadOnly value to set.
      * @return the CopyFileSmbInfo object itself.
      */
+    @Generated
     public CopyFileSmbInfo setIgnoreReadOnly(Boolean ignoreReadOnly) {
         this.ignoreReadOnly = ignoreReadOnly;
         return this;
@@ -201,9 +217,10 @@ public final class CopyFileSmbInfo {
     /**
      * Get the setArchiveAttribute property: Specifies the option to set archive attribute on a target file. True means
      * archive attribute will be set on a target file despite attribute overrides or a source file state.
-     *
+     * 
      * @return the setArchiveAttribute value.
      */
+    @Generated
     public Boolean isSetArchiveAttribute() {
         return this.setArchiveAttribute;
     }
@@ -211,10 +228,11 @@ public final class CopyFileSmbInfo {
     /**
      * Set the setArchiveAttribute property: Specifies the option to set archive attribute on a target file. True means
      * archive attribute will be set on a target file despite attribute overrides or a source file state.
-     *
+     * 
      * @param setArchiveAttribute the setArchiveAttribute value to set.
      * @return the CopyFileSmbInfo object itself.
      */
+    @Generated
     public CopyFileSmbInfo setSetArchiveAttribute(Boolean setArchiveAttribute) {
         this.setArchiveAttribute = setArchiveAttribute;
         return this;

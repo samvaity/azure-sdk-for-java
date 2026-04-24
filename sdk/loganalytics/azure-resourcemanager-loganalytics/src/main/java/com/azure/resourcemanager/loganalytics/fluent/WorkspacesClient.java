@@ -11,14 +11,17 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.management.polling.PollResult;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
+import com.azure.resourcemanager.loganalytics.fluent.models.NetworkSecurityPerimeterConfigurationInner;
 import com.azure.resourcemanager.loganalytics.fluent.models.WorkspaceInner;
 import com.azure.resourcemanager.loganalytics.models.WorkspacePatch;
 
-/** An instance of this class provides access to all the operations defined in WorkspacesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in WorkspacesClient.
+ */
 public interface WorkspacesClient {
     /**
      * Gets the workspaces in a subscription.
-     *
+     * 
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the workspaces in a subscription as paginated response with {@link PagedIterable}.
@@ -28,7 +31,7 @@ public interface WorkspacesClient {
 
     /**
      * Gets the workspaces in a subscription.
-     *
+     * 
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -40,7 +43,7 @@ public interface WorkspacesClient {
 
     /**
      * Gets workspaces in a resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -52,7 +55,7 @@ public interface WorkspacesClient {
 
     /**
      * Gets workspaces in a resource group.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -65,7 +68,7 @@ public interface WorkspacesClient {
 
     /**
      * Create or update a workspace.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
      * @param parameters The parameters required to create or update a workspace.
@@ -75,12 +78,12 @@ public interface WorkspacesClient {
      * @return the {@link SyncPoller} for polling of the top level Workspace resource container.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<WorkspaceInner>, WorkspaceInner> beginCreateOrUpdate(
-        String resourceGroupName, String workspaceName, WorkspaceInner parameters);
+    SyncPoller<PollResult<WorkspaceInner>, WorkspaceInner> beginCreateOrUpdate(String resourceGroupName,
+        String workspaceName, WorkspaceInner parameters);
 
     /**
      * Create or update a workspace.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
      * @param parameters The parameters required to create or update a workspace.
@@ -91,12 +94,12 @@ public interface WorkspacesClient {
      * @return the {@link SyncPoller} for polling of the top level Workspace resource container.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<WorkspaceInner>, WorkspaceInner> beginCreateOrUpdate(
-        String resourceGroupName, String workspaceName, WorkspaceInner parameters, Context context);
+    SyncPoller<PollResult<WorkspaceInner>, WorkspaceInner> beginCreateOrUpdate(String resourceGroupName,
+        String workspaceName, WorkspaceInner parameters, Context context);
 
     /**
      * Create or update a workspace.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
      * @param parameters The parameters required to create or update a workspace.
@@ -110,7 +113,7 @@ public interface WorkspacesClient {
 
     /**
      * Create or update a workspace.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
      * @param parameters The parameters required to create or update a workspace.
@@ -121,35 +124,33 @@ public interface WorkspacesClient {
      * @return the top level Workspace resource container.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    WorkspaceInner createOrUpdate(
-        String resourceGroupName, String workspaceName, WorkspaceInner parameters, Context context);
+    WorkspaceInner createOrUpdate(String resourceGroupName, String workspaceName, WorkspaceInner parameters,
+        Context context);
 
     /**
      * Deletes a workspace resource. To recover the workspace, create it again with the same name, in the same
      * subscription, resource group and location. The name is kept for 14 days and cannot be used for another workspace.
      * To remove the workspace completely and release the name, use the force flag.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
-     * @param force Deletes the workspace without the recovery option. A workspace that was deleted with this flag
-     *     cannot be recovered.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String workspaceName, Boolean force);
+    SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String workspaceName);
 
     /**
      * Deletes a workspace resource. To recover the workspace, create it again with the same name, in the same
      * subscription, resource group and location. The name is kept for 14 days and cannot be used for another workspace.
      * To remove the workspace completely and release the name, use the force flag.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
      * @param force Deletes the workspace without the recovery option. A workspace that was deleted with this flag
-     *     cannot be recovered.
+     * cannot be recovered.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -157,30 +158,14 @@ public interface WorkspacesClient {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    SyncPoller<PollResult<Void>, Void> beginDelete(
-        String resourceGroupName, String workspaceName, Boolean force, Context context);
+    SyncPoller<PollResult<Void>, Void> beginDelete(String resourceGroupName, String workspaceName, Boolean force,
+        Context context);
 
     /**
      * Deletes a workspace resource. To recover the workspace, create it again with the same name, in the same
      * subscription, resource group and location. The name is kept for 14 days and cannot be used for another workspace.
      * To remove the workspace completely and release the name, use the force flag.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param workspaceName The name of the workspace.
-     * @param force Deletes the workspace without the recovery option. A workspace that was deleted with this flag
-     *     cannot be recovered.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    void delete(String resourceGroupName, String workspaceName, Boolean force);
-
-    /**
-     * Deletes a workspace resource. To recover the workspace, create it again with the same name, in the same
-     * subscription, resource group and location. The name is kept for 14 days and cannot be used for another workspace.
-     * To remove the workspace completely and release the name, use the force flag.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -194,11 +179,11 @@ public interface WorkspacesClient {
      * Deletes a workspace resource. To recover the workspace, create it again with the same name, in the same
      * subscription, resource group and location. The name is kept for 14 days and cannot be used for another workspace.
      * To remove the workspace completely and release the name, use the force flag.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
      * @param force Deletes the workspace without the recovery option. A workspace that was deleted with this flag
-     *     cannot be recovered.
+     * cannot be recovered.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -209,7 +194,22 @@ public interface WorkspacesClient {
 
     /**
      * Gets a workspace instance.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a workspace instance along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<WorkspaceInner> getByResourceGroupWithResponse(String resourceGroupName, String workspaceName,
+        Context context);
+
+    /**
+     * Gets a workspace instance.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -221,23 +221,24 @@ public interface WorkspacesClient {
     WorkspaceInner getByResourceGroup(String resourceGroupName, String workspaceName);
 
     /**
-     * Gets a workspace instance.
-     *
+     * Updates a workspace.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
+     * @param parameters The parameters required to patch a workspace.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a workspace instance along with {@link Response}.
+     * @return the top level Workspace resource container along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<WorkspaceInner> getByResourceGroupWithResponse(
-        String resourceGroupName, String workspaceName, Context context);
+    Response<WorkspaceInner> updateWithResponse(String resourceGroupName, String workspaceName,
+        WorkspacePatch parameters, Context context);
 
     /**
      * Updates a workspace.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param workspaceName The name of the workspace.
      * @param parameters The parameters required to patch a workspace.
@@ -250,18 +251,257 @@ public interface WorkspacesClient {
     WorkspaceInner update(String resourceGroupName, String workspaceName, WorkspacePatch parameters);
 
     /**
-     * Updates a workspace.
-     *
+     * Activates failover for the specified workspace.
+     * 
+     * The specified replication location must match the location of the enabled replication for this workspace. The
+     * failover operation is asynchronous and can take up to 30 minutes to complete. The status of the operation can be
+     * checked using the operationId returned in the response.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param location The name of the Azure region.
      * @param workspaceName The name of the workspace.
-     * @param parameters The parameters required to patch a workspace.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of long-running operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<Void>, Void> beginFailover(String resourceGroupName, String location, String workspaceName);
+
+    /**
+     * Activates failover for the specified workspace.
+     * 
+     * The specified replication location must match the location of the enabled replication for this workspace. The
+     * failover operation is asynchronous and can take up to 30 minutes to complete. The status of the operation can be
+     * checked using the operationId returned in the response.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param location The name of the Azure region.
+     * @param workspaceName The name of the workspace.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the top level Workspace resource container along with {@link Response}.
+     * @return the {@link SyncPoller} for polling of long-running operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<Void>, Void> beginFailover(String resourceGroupName, String location, String workspaceName,
+        Context context);
+
+    /**
+     * Activates failover for the specified workspace.
+     * 
+     * The specified replication location must match the location of the enabled replication for this workspace. The
+     * failover operation is asynchronous and can take up to 30 minutes to complete. The status of the operation can be
+     * checked using the operationId returned in the response.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param location The name of the Azure region.
+     * @param workspaceName The name of the workspace.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<WorkspaceInner> updateWithResponse(
-        String resourceGroupName, String workspaceName, WorkspacePatch parameters, Context context);
+    void failover(String resourceGroupName, String location, String workspaceName);
+
+    /**
+     * Activates failover for the specified workspace.
+     * 
+     * The specified replication location must match the location of the enabled replication for this workspace. The
+     * failover operation is asynchronous and can take up to 30 minutes to complete. The status of the operation can be
+     * checked using the operationId returned in the response.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param location The name of the Azure region.
+     * @param workspaceName The name of the workspace.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    void failover(String resourceGroupName, String location, String workspaceName, Context context);
+
+    /**
+     * Deactivates failover for the specified workspace.
+     * 
+     * The failback operation is asynchronous and can take up to 30 minutes to complete. The status of the operation can
+     * be checked using the operationId returned in the response.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of long-running operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<Void>, Void> beginFailback(String resourceGroupName, String workspaceName);
+
+    /**
+     * Deactivates failover for the specified workspace.
+     * 
+     * The failback operation is asynchronous and can take up to 30 minutes to complete. The status of the operation can
+     * be checked using the operationId returned in the response.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of long-running operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<Void>, Void> beginFailback(String resourceGroupName, String workspaceName, Context context);
+
+    /**
+     * Deactivates failover for the specified workspace.
+     * 
+     * The failback operation is asynchronous and can take up to 30 minutes to complete. The status of the operation can
+     * be checked using the operationId returned in the response.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    void failback(String resourceGroupName, String workspaceName);
+
+    /**
+     * Deactivates failover for the specified workspace.
+     * 
+     * The failback operation is asynchronous and can take up to 30 minutes to complete. The status of the operation can
+     * be checked using the operationId returned in the response.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    void failback(String resourceGroupName, String workspaceName, Context context);
+
+    /**
+     * Gets a list of NSP configurations for specified workspace.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of NSP configurations for specified workspace as paginated response with {@link PagedIterable}.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    PagedIterable<NetworkSecurityPerimeterConfigurationInner> listNsp(String resourceGroupName, String workspaceName);
+
+    /**
+     * Gets a list of NSP configurations for specified workspace.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of NSP configurations for specified workspace as paginated response with {@link PagedIterable}.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    PagedIterable<NetworkSecurityPerimeterConfigurationInner> listNsp(String resourceGroupName, String workspaceName,
+        Context context);
+
+    /**
+     * Gets a network security perimeter configuration.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @param networkSecurityPerimeterConfigurationName The name for a network security perimeter configuration.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a network security perimeter configuration along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<NetworkSecurityPerimeterConfigurationInner> getNspWithResponse(String resourceGroupName,
+        String workspaceName, String networkSecurityPerimeterConfigurationName, Context context);
+
+    /**
+     * Gets a network security perimeter configuration.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @param networkSecurityPerimeterConfigurationName The name for a network security perimeter configuration.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a network security perimeter configuration.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    NetworkSecurityPerimeterConfigurationInner getNsp(String resourceGroupName, String workspaceName,
+        String networkSecurityPerimeterConfigurationName);
+
+    /**
+     * Reconcile network security perimeter configuration for Workspace resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @param networkSecurityPerimeterConfigurationName The name for a network security perimeter configuration.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of long-running operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<Void>, Void> beginReconcileNsp(String resourceGroupName, String workspaceName,
+        String networkSecurityPerimeterConfigurationName);
+
+    /**
+     * Reconcile network security perimeter configuration for Workspace resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @param networkSecurityPerimeterConfigurationName The name for a network security perimeter configuration.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link SyncPoller} for polling of long-running operation.
+     */
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    SyncPoller<PollResult<Void>, Void> beginReconcileNsp(String resourceGroupName, String workspaceName,
+        String networkSecurityPerimeterConfigurationName, Context context);
+
+    /**
+     * Reconcile network security perimeter configuration for Workspace resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @param networkSecurityPerimeterConfigurationName The name for a network security perimeter configuration.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    void reconcileNsp(String resourceGroupName, String workspaceName, String networkSecurityPerimeterConfigurationName);
+
+    /**
+     * Reconcile network security perimeter configuration for Workspace resource.
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param workspaceName The name of the workspace.
+     * @param networkSecurityPerimeterConfigurationName The name for a network security perimeter configuration.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    void reconcileNsp(String resourceGroupName, String workspaceName, String networkSecurityPerimeterConfigurationName,
+        Context context);
 }

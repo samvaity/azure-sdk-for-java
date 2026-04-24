@@ -4,14 +4,12 @@
 package com.azure.messaging.webpubsub.client;
 
 import com.azure.core.util.Configuration;
-import com.azure.messaging.webpubsub.WebPubSubServiceAsyncClient;
+import com.azure.messaging.webpubsub.WebPubSubServiceClient;
 import com.azure.messaging.webpubsub.WebPubSubServiceClientBuilder;
 import com.azure.messaging.webpubsub.client.models.GroupMessageEvent;
 import com.azure.messaging.webpubsub.client.models.WebPubSubClientCredential;
-import com.azure.messaging.webpubsub.client.models.WebPubSubDataType;
+import com.azure.messaging.webpubsub.client.models.WebPubSubDataFormat;
 import com.azure.messaging.webpubsub.models.GetClientAccessTokenOptions;
-import com.azure.messaging.webpubsub.models.WebPubSubClientAccessToken;
-import reactor.core.publisher.Mono;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -26,16 +24,16 @@ public final class EchoSample {
         final String userName = "bot1";
 
         // prepare the clientCredential
-        WebPubSubServiceAsyncClient serverClient = new WebPubSubServiceClientBuilder()
+        WebPubSubServiceClient serverClient = new WebPubSubServiceClientBuilder()
             .connectionString(Configuration.getGlobalConfiguration().get("CONNECTION_STRING"))
             .hub(hubName)
-            .buildAsyncClient();
-        WebPubSubClientCredential clientCredential = new WebPubSubClientCredential(Mono.defer(() ->
-            serverClient.getClientAccessToken(new GetClientAccessTokenOptions()
+            .buildClient();
+        WebPubSubClientCredential clientCredential = new WebPubSubClientCredential(
+            () -> serverClient.getClientAccessToken(new GetClientAccessTokenOptions()
                     .setUserId(userName)
                     .addRole("webpubsub.joinLeaveGroup")
                     .addRole("webpubsub.sendToGroup"))
-                .map(WebPubSubClientAccessToken::getUrl)));
+                .getUrl());
 
         CompletableFuture<Void> clientStopped = new CompletableFuture<>();
 
@@ -48,8 +46,7 @@ public final class EchoSample {
         client.addOnGroupMessageEventHandler(event -> {
             String group = event.getGroup();
             if (groupName.equals(event.getGroup())
-                && !userName.equals(event.getFromUserId())
-                && (event.getDataType() == WebPubSubDataType.TEXT || event.getDataType() == WebPubSubDataType.JSON)) {
+                && (event.getDataFormat() == WebPubSubDataFormat.TEXT || event.getDataFormat() == WebPubSubDataFormat.JSON)) {
 
                 String text = parseMessageEvent(event);
                 if ("exit".equals(text)) {
@@ -58,7 +55,7 @@ public final class EchoSample {
                     client.stop();
                 } else {
                     // echo the message text
-                    client.sendToGroup(group, "Received: " + text);
+                    System.out.println("Received: " + text);
                 }
             }
         });
@@ -74,8 +71,13 @@ public final class EchoSample {
     }
 
     private static String parseMessageEvent(GroupMessageEvent event) {
-        return event.getDataType() == WebPubSubDataType.TEXT
-            ? event.getData().toString()
-            : event.getData().toObject(String.class);
+        if (event.getDataFormat() == WebPubSubDataFormat.TEXT) {
+            return event.getData().toString();
+        }
+        if (event.getDataFormat() == WebPubSubDataFormat.JSON) {
+            return event.getData().toString();
+        }
+
+        return "unknown format: " + event.getDataFormat();
     }
 }

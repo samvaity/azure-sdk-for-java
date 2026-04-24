@@ -4,42 +4,53 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Activity state. This is an optional property and if not provided, the state will be Active by default. */
+/**
+ * Activity state. This is an optional property and if not provided, the state will be Active by default.
+ */
 public final class ActivityState extends ExpandableStringEnum<ActivityState> {
-    /** Static value Active for ActivityState. */
+    /**
+     * Static value Active for ActivityState.
+     */
+    @Generated
     public static final ActivityState ACTIVE = fromString("Active");
 
-    /** Static value Inactive for ActivityState. */
+    /**
+     * Static value Inactive for ActivityState.
+     */
+    @Generated
     public static final ActivityState INACTIVE = fromString("Inactive");
 
     /**
      * Creates a new instance of ActivityState value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public ActivityState() {}
+    public ActivityState() {
+    }
 
     /**
      * Creates or finds a ActivityState from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ActivityState.
      */
-    @JsonCreator
+    @Generated
     public static ActivityState fromString(String name) {
         return fromString(name, ActivityState.class);
     }
 
     /**
      * Gets known ActivityState values.
-     *
+     * 
      * @return known ActivityState values.
      */
+    @Generated
     public static Collection<ActivityState> values() {
         return values(ActivityState.class);
     }

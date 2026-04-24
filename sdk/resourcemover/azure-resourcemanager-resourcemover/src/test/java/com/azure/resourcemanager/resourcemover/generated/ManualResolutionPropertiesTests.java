@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Assertions;
 public final class ManualResolutionPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ManualResolutionProperties model =
-            BinaryData.fromString("{\"targetId\":\"ajrmvdjwzrlovmc\"}").toObject(ManualResolutionProperties.class);
-        Assertions.assertEquals("ajrmvdjwzrlovmc", model.targetId());
+        ManualResolutionProperties model
+            = BinaryData.fromString("{\"targetId\":\"nfnbacfionlebxe\"}").toObject(ManualResolutionProperties.class);
+        Assertions.assertEquals("nfnbacfionlebxe", model.targetId());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ManualResolutionProperties model = new ManualResolutionProperties().withTargetId("ajrmvdjwzrlovmc");
+        ManualResolutionProperties model = new ManualResolutionProperties().withTargetId("nfnbacfionlebxe");
         model = BinaryData.fromObject(model).toObject(ManualResolutionProperties.class);
-        Assertions.assertEquals("ajrmvdjwzrlovmc", model.targetId());
+        Assertions.assertEquals("nfnbacfionlebxe", model.targetId());
     }
 }

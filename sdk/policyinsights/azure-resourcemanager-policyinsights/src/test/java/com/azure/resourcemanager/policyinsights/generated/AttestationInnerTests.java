@@ -11,49 +11,46 @@ import com.azure.resourcemanager.policyinsights.models.ComplianceState;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public final class AttestationInnerTests {
-    @Test
-    public void testDeserialize() {
-        AttestationInner model =
-            BinaryData
-                .fromString(
-                    "{\"properties\":{\"policyAssignmentId\":\"ygqukyhejh\",\"policyDefinitionReferenceId\":\"sx\",\"complianceState\":\"Compliant\",\"expiresOn\":\"2021-09-01T11:17:58Z\",\"owner\":\"lppvksrpq\",\"comments\":\"jzraehtwdwrf\",\"evidence\":[{\"description\":\"byrcdlbhshfwp\",\"sourceUri\":\"cstwity\"}],\"provisioningState\":\"evxccedcp\",\"lastComplianceStateChangeAt\":\"2021-05-27T10:40:38Z\",\"assessmentDate\":\"2021-02-03T02:01:52Z\"},\"id\":\"wzxltjc\",\"name\":\"nhltiugcxn\",\"type\":\"vvwxqi\"}")
-                .toObject(AttestationInner.class);
-        Assertions.assertEquals("ygqukyhejh", model.policyAssignmentId());
-        Assertions.assertEquals("sx", model.policyDefinitionReferenceId());
+    @org.junit.jupiter.api.Test
+    public void testDeserialize() throws Exception {
+        AttestationInner model = BinaryData.fromString(
+            "{\"properties\":{\"policyAssignmentId\":\"iyfjjkbajbuscg\",\"policyDefinitionReferenceId\":\"u\",\"complianceState\":\"Compliant\",\"expiresOn\":\"2021-07-25T21:28:26Z\",\"owner\":\"lev\",\"comments\":\"clujyx\",\"evidence\":[{\"description\":\"zgsjgkzzlta\",\"sourceUri\":\"bzf\"},{\"description\":\"vwmbjlzqsczpg\",\"sourceUri\":\"wnapfdq\"},{\"description\":\"wf\",\"sourceUri\":\"tnuwjtkschgc\"}],\"provisioningState\":\"y\",\"lastComplianceStateChangeAt\":\"2021-09-07T14:18:39Z\",\"assessmentDate\":\"2021-04-28T02:09:32Z\",\"metadata\":\"dataq\"},\"id\":\"vyeldot\",\"name\":\"v\",\"type\":\"kwiswskukjtas\"}")
+            .toObject(AttestationInner.class);
+        Assertions.assertEquals("iyfjjkbajbuscg", model.policyAssignmentId());
+        Assertions.assertEquals("u", model.policyDefinitionReferenceId());
         Assertions.assertEquals(ComplianceState.COMPLIANT, model.complianceState());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-09-01T11:17:58Z"), model.expiresOn());
-        Assertions.assertEquals("lppvksrpq", model.owner());
-        Assertions.assertEquals("jzraehtwdwrf", model.comments());
-        Assertions.assertEquals("byrcdlbhshfwp", model.evidence().get(0).description());
-        Assertions.assertEquals("cstwity", model.evidence().get(0).sourceUri());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-02-03T02:01:52Z"), model.assessmentDate());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-07-25T21:28:26Z"), model.expiresOn());
+        Assertions.assertEquals("lev", model.owner());
+        Assertions.assertEquals("clujyx", model.comments());
+        Assertions.assertEquals("zgsjgkzzlta", model.evidence().get(0).description());
+        Assertions.assertEquals("bzf", model.evidence().get(0).sourceUri());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-04-28T02:09:32Z"), model.assessmentDate());
     }
 
-    @Test
-    public void testSerialize() {
-        AttestationInner model =
-            new AttestationInner()
-                .withPolicyAssignmentId("ygqukyhejh")
-                .withPolicyDefinitionReferenceId("sx")
-                .withComplianceState(ComplianceState.COMPLIANT)
-                .withExpiresOn(OffsetDateTime.parse("2021-09-01T11:17:58Z"))
-                .withOwner("lppvksrpq")
-                .withComments("jzraehtwdwrf")
-                .withEvidence(
-                    Arrays.asList(new AttestationEvidence().withDescription("byrcdlbhshfwp").withSourceUri("cstwity")))
-                .withAssessmentDate(OffsetDateTime.parse("2021-02-03T02:01:52Z"));
+    @org.junit.jupiter.api.Test
+    public void testSerialize() throws Exception {
+        AttestationInner model = new AttestationInner().withPolicyAssignmentId("iyfjjkbajbuscg")
+            .withPolicyDefinitionReferenceId("u")
+            .withComplianceState(ComplianceState.COMPLIANT)
+            .withExpiresOn(OffsetDateTime.parse("2021-07-25T21:28:26Z"))
+            .withOwner("lev")
+            .withComments("clujyx")
+            .withEvidence(Arrays.asList(new AttestationEvidence().withDescription("zgsjgkzzlta").withSourceUri("bzf"),
+                new AttestationEvidence().withDescription("vwmbjlzqsczpg").withSourceUri("wnapfdq"),
+                new AttestationEvidence().withDescription("wf").withSourceUri("tnuwjtkschgc")))
+            .withAssessmentDate(OffsetDateTime.parse("2021-04-28T02:09:32Z"))
+            .withMetadata("dataq");
         model = BinaryData.fromObject(model).toObject(AttestationInner.class);
-        Assertions.assertEquals("ygqukyhejh", model.policyAssignmentId());
-        Assertions.assertEquals("sx", model.policyDefinitionReferenceId());
+        Assertions.assertEquals("iyfjjkbajbuscg", model.policyAssignmentId());
+        Assertions.assertEquals("u", model.policyDefinitionReferenceId());
         Assertions.assertEquals(ComplianceState.COMPLIANT, model.complianceState());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-09-01T11:17:58Z"), model.expiresOn());
-        Assertions.assertEquals("lppvksrpq", model.owner());
-        Assertions.assertEquals("jzraehtwdwrf", model.comments());
-        Assertions.assertEquals("byrcdlbhshfwp", model.evidence().get(0).description());
-        Assertions.assertEquals("cstwity", model.evidence().get(0).sourceUri());
-        Assertions.assertEquals(OffsetDateTime.parse("2021-02-03T02:01:52Z"), model.assessmentDate());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-07-25T21:28:26Z"), model.expiresOn());
+        Assertions.assertEquals("lev", model.owner());
+        Assertions.assertEquals("clujyx", model.comments());
+        Assertions.assertEquals("zgsjgkzzlta", model.evidence().get(0).description());
+        Assertions.assertEquals("bzf", model.evidence().get(0).sourceUri());
+        Assertions.assertEquals(OffsetDateTime.parse("2021-04-28T02:09:32Z"), model.assessmentDate());
     }
 }

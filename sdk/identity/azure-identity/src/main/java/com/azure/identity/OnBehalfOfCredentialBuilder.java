@@ -6,6 +6,8 @@ package com.azure.identity;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.identity.implementation.util.ValidationUtil;
 
+import java.util.function.Supplier;
+
 /**
  * Fluent credential builder for instantiating a {@link OnBehalfOfCredential}.
  *
@@ -17,7 +19,7 @@ import com.azure.identity.implementation.util.ValidationUtil;
  * credentials. The identity provider then issues a security token that contains information about the user and their
  * permissions. This security token is then passed to Azure, which uses it to authenticate the user or application and
  * grant them access to the requested resource.
- * The OnBehalfOfCredential acquires a token with a client secret/certificate and user assertion for an AAD application
+ * The OnBehalfOfCredential acquires a token with a client secret/certificate and user assertion for a Microsoft Entra application
  * on behalf of a user principal.</p>
  *
  * <p>The following code sample demonstrates the creation of a {@link com.azure.identity.OnBehalfOfCredential},
@@ -29,9 +31,9 @@ import com.azure.identity.implementation.util.ValidationUtil;
  *
  * <!-- src_embed com.azure.identity.credential.obocredential.construct -->
  * <pre>
- * TokenCredential onBehalfOfCredential = new OnBehalfOfCredentialBuilder&#40;&#41;
- *     .clientId&#40;&quot;&lt;app-client-ID&gt;&quot;&#41;
+ * TokenCredential onBehalfOfCredential = new OnBehalfOfCredentialBuilder&#40;&#41;.clientId&#40;&quot;&lt;app-client-ID&gt;&quot;&#41;
  *     .clientSecret&#40;&quot;&lt;app-Client-Secret&gt;&quot;&#41;
+ *     .tenantId&#40;&quot;&lt;app-tenant-ID&gt;&quot;&#41;
  *     .userAssertion&#40;&quot;&lt;user-assertion&gt;&quot;&#41;
  *     .build&#40;&#41;;
  * </pre>
@@ -46,10 +48,18 @@ public class OnBehalfOfCredentialBuilder extends AadCredentialBuilderBase<OnBeha
     private String clientSecret;
     private String clientCertificatePath;
     private String clientCertificatePassword;
+    private Supplier<String> clientAssertionSupplier;
+
+    /**
+     * Constructs an instance of OnBehalfOfCredentialBuilder.
+     */
+    public OnBehalfOfCredentialBuilder() {
+        super();
+    }
 
     /**
      * Sets the client secret for the authentication.
-     * @param clientSecret the secret value of the AAD application.
+     * @param clientSecret the secret value of the Microsoft Entra application.
      * @return An updated instance of this builder.
      */
     public OnBehalfOfCredentialBuilder clientSecret(String clientSecret) {
@@ -65,14 +75,14 @@ public class OnBehalfOfCredentialBuilder extends AadCredentialBuilderBase<OnBeha
      * @param tokenCachePersistenceOptions the token cache configuration options
      * @return An updated instance of this builder with the token cache options configured.
      */
-    public OnBehalfOfCredentialBuilder tokenCachePersistenceOptions(TokenCachePersistenceOptions
-                                                                          tokenCachePersistenceOptions) {
+    public OnBehalfOfCredentialBuilder
+        tokenCachePersistenceOptions(TokenCachePersistenceOptions tokenCachePersistenceOptions) {
         this.identityClientOptions.setTokenCacheOptions(tokenCachePersistenceOptions);
         return this;
     }
 
     /**
-     * Sets the path of the PEM certificate for authenticating to AAD.
+     * Sets the path of the PEM certificate for authenticating to Microsoft Entra ID.
      *
      * @param pemCertificatePath the PEM file containing the certificate
      * @return An updated instance of this builder.
@@ -83,7 +93,7 @@ public class OnBehalfOfCredentialBuilder extends AadCredentialBuilderBase<OnBeha
     }
 
     /**
-     * Sets the path and password of the PFX certificate for authenticating to AAD.
+     * Sets the path and password of the PFX certificate for authenticating to Microsoft Entra ID.
      *
      * @param pfxCertificatePath the password protected PFX file containing the certificate
      * @return An updated instance of this builder.
@@ -94,7 +104,7 @@ public class OnBehalfOfCredentialBuilder extends AadCredentialBuilderBase<OnBeha
     }
 
     /**
-     * Sets the password of the client certificate for authenticating to AAD.
+     * Sets the password of the client certificate for authenticating to Microsoft Entra ID.
      *
      * @param clientCertificatePassword the password protecting the certificate
      * @return An updated instance of this builder.
@@ -129,6 +139,17 @@ public class OnBehalfOfCredentialBuilder extends AadCredentialBuilderBase<OnBeha
     }
 
     /**
+     * Sets the supplier containing the logic to supply the client assertion when invoked.
+     *
+     * @param clientAssertionSupplier the supplier supplying client assertion.
+     * @return An updated instance of this builder.
+     */
+    public OnBehalfOfCredentialBuilder clientAssertion(Supplier<String> clientAssertionSupplier) {
+        this.clientAssertionSupplier = clientAssertionSupplier;
+        return this;
+    }
+
+    /**
      * Creates a new {@link OnBehalfOfCredential} with the current configurations.
      *
      * @return a {@link OnBehalfOfCredential} with the current configurations.
@@ -138,19 +159,16 @@ public class OnBehalfOfCredentialBuilder extends AadCredentialBuilderBase<OnBeha
     public OnBehalfOfCredential build() {
         ValidationUtil.validate(CLASS_NAME, LOGGER, "clientId", clientId, "tenantId", tenantId);
 
-        if (clientSecret == null && clientCertificatePath == null) {
-            throw LOGGER.logExceptionAsWarning(new IllegalArgumentException("At least client secret or certificate "
-                + "path should provided in OnBehalfOfCredentialBuilder. Only one of them should "
-                + "be provided."));
-        }
-
-        if (clientCertificatePath != null && clientSecret != null) {
-            throw LOGGER.logExceptionAsWarning(new IllegalArgumentException("Both client secret and certificate "
-                + "path are provided in OnBehalfCredentialBuilder. Only one of them should "
-                + "be provided."));
+        if ((clientSecret == null && clientCertificatePath == null && clientAssertionSupplier == null)
+            || (clientSecret != null && clientCertificatePath != null)
+            || (clientSecret != null && clientAssertionSupplier != null)
+            || (clientCertificatePath != null && clientAssertionSupplier != null)) {
+            throw LOGGER.logExceptionAsWarning(new IllegalArgumentException("Exactly one of client secret, "
+                + "client certificate path, or client assertion supplier must be provided "
+                + "in OnBehalfOfCredentialBuilder."));
         }
 
         return new OnBehalfOfCredential(clientId, tenantId, clientSecret, clientCertificatePath,
-            clientCertificatePassword, identityClientOptions);
+            clientCertificatePassword, clientAssertionSupplier, identityClientOptions);
     }
 }

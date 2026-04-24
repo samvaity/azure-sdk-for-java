@@ -5,25 +5,45 @@
 package com.azure.resourcemanager.communication.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import com.azure.resourcemanager.communication.models.PublicNetworkAccess;
+import java.io.IOException;
 import java.util.List;
 
-/** A class that describes the properties that can be updated for CommunicationService resource. */
+/**
+ * A class that describes the properties that can be updated for CommunicationService resource.
+ */
 @Fluent
-public final class CommunicationServiceUpdateProperties {
+public final class CommunicationServiceUpdateProperties
+    implements JsonSerializable<CommunicationServiceUpdateProperties> {
     /*
      * List of email Domain resource Ids.
      */
-    @JsonProperty(value = "linkedDomains")
     private List<String> linkedDomains;
 
-    /** Creates an instance of CommunicationServiceUpdateProperties class. */
+    /*
+     * Allow, disallow, or let network security perimeter configuration control public network access to the protected
+     * resource. Value is optional but if passed in, it must be 'Enabled', 'Disabled' or 'SecuredByPerimeter'.
+     */
+    private PublicNetworkAccess publicNetworkAccess;
+
+    /*
+     * Disable local authentication for the CommunicationService.
+     */
+    private Boolean disableLocalAuth;
+
+    /**
+     * Creates an instance of CommunicationServiceUpdateProperties class.
+     */
     public CommunicationServiceUpdateProperties() {
     }
 
     /**
      * Get the linkedDomains property: List of email Domain resource Ids.
-     *
+     * 
      * @return the linkedDomains value.
      */
     public List<String> linkedDomains() {
@@ -32,7 +52,7 @@ public final class CommunicationServiceUpdateProperties {
 
     /**
      * Set the linkedDomains property: List of email Domain resource Ids.
-     *
+     * 
      * @param linkedDomains the linkedDomains value to set.
      * @return the CommunicationServiceUpdateProperties object itself.
      */
@@ -42,10 +62,102 @@ public final class CommunicationServiceUpdateProperties {
     }
 
     /**
+     * Get the publicNetworkAccess property: Allow, disallow, or let network security perimeter configuration control
+     * public network access to the protected resource. Value is optional but if passed in, it must be 'Enabled',
+     * 'Disabled' or 'SecuredByPerimeter'.
+     * 
+     * @return the publicNetworkAccess value.
+     */
+    public PublicNetworkAccess publicNetworkAccess() {
+        return this.publicNetworkAccess;
+    }
+
+    /**
+     * Set the publicNetworkAccess property: Allow, disallow, or let network security perimeter configuration control
+     * public network access to the protected resource. Value is optional but if passed in, it must be 'Enabled',
+     * 'Disabled' or 'SecuredByPerimeter'.
+     * 
+     * @param publicNetworkAccess the publicNetworkAccess value to set.
+     * @return the CommunicationServiceUpdateProperties object itself.
+     */
+    public CommunicationServiceUpdateProperties withPublicNetworkAccess(PublicNetworkAccess publicNetworkAccess) {
+        this.publicNetworkAccess = publicNetworkAccess;
+        return this;
+    }
+
+    /**
+     * Get the disableLocalAuth property: Disable local authentication for the CommunicationService.
+     * 
+     * @return the disableLocalAuth value.
+     */
+    public Boolean disableLocalAuth() {
+        return this.disableLocalAuth;
+    }
+
+    /**
+     * Set the disableLocalAuth property: Disable local authentication for the CommunicationService.
+     * 
+     * @param disableLocalAuth the disableLocalAuth value to set.
+     * @return the CommunicationServiceUpdateProperties object itself.
+     */
+    public CommunicationServiceUpdateProperties withDisableLocalAuth(Boolean disableLocalAuth) {
+        this.disableLocalAuth = disableLocalAuth;
+        return this;
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeArrayField("linkedDomains", this.linkedDomains,
+            (writer, element) -> writer.writeString(element));
+        jsonWriter.writeStringField("publicNetworkAccess",
+            this.publicNetworkAccess == null ? null : this.publicNetworkAccess.toString());
+        jsonWriter.writeBooleanField("disableLocalAuth", this.disableLocalAuth);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of CommunicationServiceUpdateProperties from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of CommunicationServiceUpdateProperties if the JsonReader was pointing to an instance of it,
+     * or null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the CommunicationServiceUpdateProperties.
+     */
+    public static CommunicationServiceUpdateProperties fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            CommunicationServiceUpdateProperties deserializedCommunicationServiceUpdateProperties
+                = new CommunicationServiceUpdateProperties();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("linkedDomains".equals(fieldName)) {
+                    List<String> linkedDomains = reader.readArray(reader1 -> reader1.getString());
+                    deserializedCommunicationServiceUpdateProperties.linkedDomains = linkedDomains;
+                } else if ("publicNetworkAccess".equals(fieldName)) {
+                    deserializedCommunicationServiceUpdateProperties.publicNetworkAccess
+                        = PublicNetworkAccess.fromString(reader.getString());
+                } else if ("disableLocalAuth".equals(fieldName)) {
+                    deserializedCommunicationServiceUpdateProperties.disableLocalAuth
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedCommunicationServiceUpdateProperties;
+        });
     }
 }

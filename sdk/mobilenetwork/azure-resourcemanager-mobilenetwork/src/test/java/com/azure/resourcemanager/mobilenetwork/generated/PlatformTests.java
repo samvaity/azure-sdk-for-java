@@ -10,40 +10,40 @@ import com.azure.resourcemanager.mobilenetwork.models.Platform;
 import com.azure.resourcemanager.mobilenetwork.models.PlatformType;
 import com.azure.resourcemanager.mobilenetwork.models.RecommendedVersion;
 import com.azure.resourcemanager.mobilenetwork.models.VersionState;
+import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 
 public final class PlatformTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        Platform model =
-            BinaryData
-                .fromString(
-                    "{\"platformType\":\"3P-AZURE-STACK-HCI\",\"versionState\":\"Deprecated\",\"minimumPlatformSoftwareVersion\":\"pvjzbe\",\"maximumPlatformSoftwareVersion\":\"l\",\"recommendedVersion\":\"Recommended\",\"obsoleteVersion\":\"Obsolete\"}")
-                .toObject(Platform.class);
+        Platform model = BinaryData.fromString(
+            "{\"platformType\":\"3P-AZURE-STACK-HCI\",\"versionState\":\"Validating\",\"minimumPlatformSoftwareVersion\":\"ijfqkacewiipfp\",\"maximumPlatformSoftwareVersion\":\"ji\",\"recommendedVersion\":\"Recommended\",\"obsoleteVersion\":\"Obsolete\",\"haUpgradesAvailable\":[\"hqkvpuvksgplsak\",\"ynfs\",\"n\",\"jphuopxodlqi\"]}")
+            .toObject(Platform.class);
         Assertions.assertEquals(PlatformType.THREE_P_AZURE_STACK_HCI, model.platformType());
-        Assertions.assertEquals(VersionState.DEPRECATED, model.versionState());
-        Assertions.assertEquals("pvjzbe", model.minimumPlatformSoftwareVersion());
-        Assertions.assertEquals("l", model.maximumPlatformSoftwareVersion());
+        Assertions.assertEquals(VersionState.VALIDATING, model.versionState());
+        Assertions.assertEquals("ijfqkacewiipfp", model.minimumPlatformSoftwareVersion());
+        Assertions.assertEquals("ji", model.maximumPlatformSoftwareVersion());
         Assertions.assertEquals(RecommendedVersion.RECOMMENDED, model.recommendedVersion());
         Assertions.assertEquals(ObsoleteVersion.OBSOLETE, model.obsoleteVersion());
+        Assertions.assertEquals("hqkvpuvksgplsak", model.haUpgradesAvailable().get(0));
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        Platform model =
-            new Platform()
-                .withPlatformType(PlatformType.THREE_P_AZURE_STACK_HCI)
-                .withVersionState(VersionState.DEPRECATED)
-                .withMinimumPlatformSoftwareVersion("pvjzbe")
-                .withMaximumPlatformSoftwareVersion("l")
-                .withRecommendedVersion(RecommendedVersion.RECOMMENDED)
-                .withObsoleteVersion(ObsoleteVersion.OBSOLETE);
+        Platform model = new Platform().withPlatformType(PlatformType.THREE_P_AZURE_STACK_HCI)
+            .withVersionState(VersionState.VALIDATING)
+            .withMinimumPlatformSoftwareVersion("ijfqkacewiipfp")
+            .withMaximumPlatformSoftwareVersion("ji")
+            .withRecommendedVersion(RecommendedVersion.RECOMMENDED)
+            .withObsoleteVersion(ObsoleteVersion.OBSOLETE)
+            .withHaUpgradesAvailable(Arrays.asList("hqkvpuvksgplsak", "ynfs", "n", "jphuopxodlqi"));
         model = BinaryData.fromObject(model).toObject(Platform.class);
         Assertions.assertEquals(PlatformType.THREE_P_AZURE_STACK_HCI, model.platformType());
-        Assertions.assertEquals(VersionState.DEPRECATED, model.versionState());
-        Assertions.assertEquals("pvjzbe", model.minimumPlatformSoftwareVersion());
-        Assertions.assertEquals("l", model.maximumPlatformSoftwareVersion());
+        Assertions.assertEquals(VersionState.VALIDATING, model.versionState());
+        Assertions.assertEquals("ijfqkacewiipfp", model.minimumPlatformSoftwareVersion());
+        Assertions.assertEquals("ji", model.maximumPlatformSoftwareVersion());
         Assertions.assertEquals(RecommendedVersion.RECOMMENDED, model.recommendedVersion());
         Assertions.assertEquals(ObsoleteVersion.OBSOLETE, model.obsoleteVersion());
+        Assertions.assertEquals("hqkvpuvksgplsak", model.haUpgradesAvailable().get(0));
     }
 }

@@ -3,7 +3,6 @@
 
 package com.azure.resourcemanager.samples;
 
-
 import com.azure.core.test.annotation.DoNotRecord;
 import com.azure.resourcemanager.storage.samples.ManageStorageAccount;
 import com.azure.resourcemanager.storage.samples.ManageStorageAccountAsync;
@@ -19,6 +18,7 @@ public class StorageSampleTests extends SamplesTestBase {
     }
 
     @Test
+    @DoNotRecord(skipInPlayback = true)
     public void testManageStorageAccountAsync() {
         Assertions.assertTrue(ManageStorageAccountAsync.runSample(azureResourceManager));
     }
@@ -31,6 +31,7 @@ public class StorageSampleTests extends SamplesTestBase {
     @Test
     @DoNotRecord(skipInPlayback = true) // requires generate a key
     public void testManageStorageAccountCustomerManagedKey() {
-        Assertions.assertTrue(ManageStorageAccountCustomerManagedKey.runSample(azureResourceManager, clientIdFromFile()));
+        Assertions
+            .assertTrue(ManageStorageAccountCustomerManagedKey.runSample(azureResourceManager, clientIdFromFile()));
     }
 }

@@ -5,20 +5,25 @@
 package com.azure.resourcemanager.servicefabric.models;
 
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** The upgrade mode of the cluster when new Service Fabric runtime version is available. */
+/**
+ * The upgrade mode of the cluster when new Service Fabric runtime version is available.
+ */
 public final class UpgradeMode extends ExpandableStringEnum<UpgradeMode> {
-    /** Static value Automatic for UpgradeMode. */
+    /**
+     * Static value Automatic for UpgradeMode.
+     */
     public static final UpgradeMode AUTOMATIC = fromString("Automatic");
 
-    /** Static value Manual for UpgradeMode. */
+    /**
+     * Static value Manual for UpgradeMode.
+     */
     public static final UpgradeMode MANUAL = fromString("Manual");
 
     /**
      * Creates a new instance of UpgradeMode value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
     @Deprecated
@@ -27,18 +32,17 @@ public final class UpgradeMode extends ExpandableStringEnum<UpgradeMode> {
 
     /**
      * Creates or finds a UpgradeMode from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding UpgradeMode.
      */
-    @JsonCreator
     public static UpgradeMode fromString(String name) {
         return fromString(name, UpgradeMode.class);
     }
 
     /**
      * Gets known UpgradeMode values.
-     *
+     * 
      * @return known UpgradeMode values.
      */
     public static Collection<UpgradeMode> values() {

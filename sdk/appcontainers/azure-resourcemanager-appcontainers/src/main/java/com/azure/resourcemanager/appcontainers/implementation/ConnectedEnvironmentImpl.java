@@ -12,6 +12,7 @@ import com.azure.resourcemanager.appcontainers.fluent.models.ConnectedEnvironmen
 import com.azure.resourcemanager.appcontainers.models.CheckNameAvailabilityRequest;
 import com.azure.resourcemanager.appcontainers.models.CheckNameAvailabilityResponse;
 import com.azure.resourcemanager.appcontainers.models.ConnectedEnvironment;
+import com.azure.resourcemanager.appcontainers.models.ConnectedEnvironmentPatchResource;
 import com.azure.resourcemanager.appcontainers.models.ConnectedEnvironmentProvisioningState;
 import com.azure.resourcemanager.appcontainers.models.CustomDomainConfiguration;
 import com.azure.resourcemanager.appcontainers.models.ExtendedLocation;
@@ -105,99 +106,90 @@ public final class ConnectedEnvironmentImpl
 
     private String connectedEnvironmentName;
 
+    private ConnectedEnvironmentPatchResource updateEnvironmentEnvelope;
+
     public ConnectedEnvironmentImpl withExistingResourceGroup(String resourceGroupName) {
         this.resourceGroupName = resourceGroupName;
         return this;
     }
 
     public ConnectedEnvironment create() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getConnectedEnvironments()
-                .createOrUpdate(resourceGroupName, connectedEnvironmentName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getConnectedEnvironments()
+            .createOrUpdate(resourceGroupName, connectedEnvironmentName, this.innerModel(), Context.NONE);
         return this;
     }
 
     public ConnectedEnvironment create(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getConnectedEnvironments()
-                .createOrUpdate(resourceGroupName, connectedEnvironmentName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getConnectedEnvironments()
+            .createOrUpdate(resourceGroupName, connectedEnvironmentName, this.innerModel(), context);
         return this;
     }
 
-    ConnectedEnvironmentImpl(
-        String name, com.azure.resourcemanager.appcontainers.ContainerAppsApiManager serviceManager) {
+    ConnectedEnvironmentImpl(String name,
+        com.azure.resourcemanager.appcontainers.ContainerAppsApiManager serviceManager) {
         this.innerObject = new ConnectedEnvironmentInner();
         this.serviceManager = serviceManager;
         this.connectedEnvironmentName = name;
     }
 
     public ConnectedEnvironmentImpl update() {
+        this.updateEnvironmentEnvelope = new ConnectedEnvironmentPatchResource();
         return this;
     }
 
     public ConnectedEnvironment apply() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getConnectedEnvironments()
-                .createOrUpdate(resourceGroupName, connectedEnvironmentName, this.innerModel(), Context.NONE);
+        this.innerObject = serviceManager.serviceClient()
+            .getConnectedEnvironments()
+            .updateWithResponse(resourceGroupName, connectedEnvironmentName, updateEnvironmentEnvelope, Context.NONE)
+            .getValue();
         return this;
     }
 
     public ConnectedEnvironment apply(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getConnectedEnvironments()
-                .createOrUpdate(resourceGroupName, connectedEnvironmentName, this.innerModel(), context);
+        this.innerObject = serviceManager.serviceClient()
+            .getConnectedEnvironments()
+            .updateWithResponse(resourceGroupName, connectedEnvironmentName, updateEnvironmentEnvelope, context)
+            .getValue();
         return this;
     }
 
-    ConnectedEnvironmentImpl(
-        ConnectedEnvironmentInner innerObject,
+    ConnectedEnvironmentImpl(ConnectedEnvironmentInner innerObject,
         com.azure.resourcemanager.appcontainers.ContainerAppsApiManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
-        this.resourceGroupName = Utils.getValueFromIdByName(innerObject.id(), "resourceGroups");
-        this.connectedEnvironmentName = Utils.getValueFromIdByName(innerObject.id(), "connectedEnvironments");
+        this.resourceGroupName = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "resourceGroups");
+        this.connectedEnvironmentName
+            = ResourceManagerUtils.getValueFromIdByName(innerObject.id(), "connectedEnvironments");
     }
 
     public ConnectedEnvironment refresh() {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getConnectedEnvironments()
-                .getByResourceGroupWithResponse(resourceGroupName, connectedEnvironmentName, Context.NONE)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getConnectedEnvironments()
+            .getByResourceGroupWithResponse(resourceGroupName, connectedEnvironmentName, Context.NONE)
+            .getValue();
         return this;
     }
 
     public ConnectedEnvironment refresh(Context context) {
-        this.innerObject =
-            serviceManager
-                .serviceClient()
-                .getConnectedEnvironments()
-                .getByResourceGroupWithResponse(resourceGroupName, connectedEnvironmentName, context)
-                .getValue();
+        this.innerObject = serviceManager.serviceClient()
+            .getConnectedEnvironments()
+            .getByResourceGroupWithResponse(resourceGroupName, connectedEnvironmentName, context)
+            .getValue();
         return this;
     }
 
-    public Response<CheckNameAvailabilityResponse> checkNameAvailabilityWithResponse(
-        CheckNameAvailabilityRequest checkNameAvailabilityRequest, Context context) {
-        return serviceManager
-            .connectedEnvironments()
-            .checkNameAvailabilityWithResponse(
-                resourceGroupName, connectedEnvironmentName, checkNameAvailabilityRequest, context);
+    public Response<CheckNameAvailabilityResponse>
+        checkNameAvailabilityWithResponse(CheckNameAvailabilityRequest checkNameAvailabilityRequest, Context context) {
+        return serviceManager.connectedEnvironments()
+            .checkNameAvailabilityWithResponse(resourceGroupName, connectedEnvironmentName,
+                checkNameAvailabilityRequest, context);
     }
 
-    public CheckNameAvailabilityResponse checkNameAvailability(
-        CheckNameAvailabilityRequest checkNameAvailabilityRequest) {
-        return serviceManager
-            .connectedEnvironments()
+    public CheckNameAvailabilityResponse
+        checkNameAvailability(CheckNameAvailabilityRequest checkNameAvailabilityRequest) {
+        return serviceManager.connectedEnvironments()
             .checkNameAvailability(resourceGroupName, connectedEnvironmentName, checkNameAvailabilityRequest);
     }
 
@@ -212,8 +204,13 @@ public final class ConnectedEnvironmentImpl
     }
 
     public ConnectedEnvironmentImpl withTags(Map<String, String> tags) {
-        this.innerModel().withTags(tags);
-        return this;
+        if (isInCreateMode()) {
+            this.innerModel().withTags(tags);
+            return this;
+        } else {
+            this.updateEnvironmentEnvelope.withTags(tags);
+            return this;
+        }
     }
 
     public ConnectedEnvironmentImpl withExtendedLocation(ExtendedLocation extendedLocation) {
@@ -234,5 +231,9 @@ public final class ConnectedEnvironmentImpl
     public ConnectedEnvironmentImpl withCustomDomainConfiguration(CustomDomainConfiguration customDomainConfiguration) {
         this.innerModel().withCustomDomainConfiguration(customDomainConfiguration);
         return this;
+    }
+
+    private boolean isInCreateMode() {
+        return this.innerModel() == null || this.innerModel().id() == null;
     }
 }

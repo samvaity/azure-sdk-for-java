@@ -5,81 +5,92 @@
 package com.azure.monitor.query.implementation.metrics.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
-/** The response to a metrics query. */
+/**
+ * The response to a metrics query.
+ */
 @Fluent
-public final class MetricsResponse {
+public final class MetricsResponse implements JsonSerializable<MetricsResponse> {
     /*
      * The integer value representing the relative cost of the query.
      */
-    @JsonProperty(value = "cost")
+    @Generated
     private Integer cost;
 
     /*
      * The timespan for which the data was retrieved. Its value consists of two datetimes concatenated, separated by
-     * '/'.  This may be adjusted in the future and returned back from what was originally requested.
+     * '/'. This may be adjusted in the future and returned back from what was originally requested.
      */
-    @JsonProperty(value = "timespan", required = true)
-    private String timespan;
+    @Generated
+    private final String timespan;
 
     /*
-     * The interval (window size) for which the metric data was returned in.  This may be adjusted in the future and
-     * returned back from what was originally requested.  This is not present if a metadata request was made.
+     * The interval (window size) for which the metric data was returned in ISO 8601 duration format with a special case
+     * for 'FULL' value that returns single datapoint for entire time span requested (*Examples: PT15M, PT1H, P1D,
+     * FULL*).
+     * This may be adjusted and different from what was originally requested if AutoAdjustTimegrain=true is specified.
+     * This is not present if a metadata request was made.
      */
-    @JsonProperty(value = "interval")
+    @Generated
     private Duration interval;
 
     /*
      * The namespace of the metrics being queried
      */
-    @JsonProperty(value = "namespace")
+    @Generated
     private String namespace;
 
     /*
      * The region of the resource being queried for metrics.
      */
-    @JsonProperty(value = "resourceregion")
+    @Generated
     private String resourceregion;
 
     /*
-     * the value of the collection.
+     * The value of the collection.
      */
-    @JsonProperty(value = "value", required = true)
-    private List<Metric> value;
+    @Generated
+    private final List<Metric> value;
 
     /**
      * Creates an instance of MetricsResponse class.
-     *
+     * 
      * @param timespan the timespan value to set.
      * @param value the value value to set.
      */
-    @JsonCreator
-    public MetricsResponse(
-            @JsonProperty(value = "timespan", required = true) String timespan,
-            @JsonProperty(value = "value", required = true) List<Metric> value) {
+    @Generated
+    public MetricsResponse(String timespan, List<Metric> value) {
         this.timespan = timespan;
         this.value = value;
     }
 
     /**
      * Get the cost property: The integer value representing the relative cost of the query.
-     *
+     * 
      * @return the cost value.
      */
+    @Generated
     public Integer getCost() {
         return this.cost;
     }
 
     /**
      * Set the cost property: The integer value representing the relative cost of the query.
-     *
+     * 
      * @param cost the cost value to set.
      * @return the MetricsResponse object itself.
      */
+    @Generated
     public MetricsResponse setCost(Integer cost) {
         this.cost = cost;
         return this;
@@ -89,32 +100,39 @@ public final class MetricsResponse {
      * Get the timespan property: The timespan for which the data was retrieved. Its value consists of two datetimes
      * concatenated, separated by '/'. This may be adjusted in the future and returned back from what was originally
      * requested.
-     *
+     * 
      * @return the timespan value.
      */
+    @Generated
     public String getTimespan() {
         return this.timespan;
     }
 
     /**
-     * Get the interval property: The interval (window size) for which the metric data was returned in. This may be
-     * adjusted in the future and returned back from what was originally requested. This is not present if a metadata
-     * request was made.
-     *
+     * Get the interval property: The interval (window size) for which the metric data was returned in ISO 8601 duration
+     * format with a special case for 'FULL' value that returns single datapoint for entire time span requested
+     * (*Examples: PT15M, PT1H, P1D, FULL*).
+     * This may be adjusted and different from what was originally requested if AutoAdjustTimegrain=true is specified.
+     * This is not present if a metadata request was made.
+     * 
      * @return the interval value.
      */
+    @Generated
     public Duration getInterval() {
         return this.interval;
     }
 
     /**
-     * Set the interval property: The interval (window size) for which the metric data was returned in. This may be
-     * adjusted in the future and returned back from what was originally requested. This is not present if a metadata
-     * request was made.
-     *
+     * Set the interval property: The interval (window size) for which the metric data was returned in ISO 8601 duration
+     * format with a special case for 'FULL' value that returns single datapoint for entire time span requested
+     * (*Examples: PT15M, PT1H, P1D, FULL*).
+     * This may be adjusted and different from what was originally requested if AutoAdjustTimegrain=true is specified.
+     * This is not present if a metadata request was made.
+     * 
      * @param interval the interval value to set.
      * @return the MetricsResponse object itself.
      */
+    @Generated
     public MetricsResponse setInterval(Duration interval) {
         this.interval = interval;
         return this;
@@ -122,19 +140,21 @@ public final class MetricsResponse {
 
     /**
      * Get the namespace property: The namespace of the metrics being queried.
-     *
+     * 
      * @return the namespace value.
      */
+    @Generated
     public String getNamespace() {
         return this.namespace;
     }
 
     /**
      * Set the namespace property: The namespace of the metrics being queried.
-     *
+     * 
      * @param namespace the namespace value to set.
      * @return the MetricsResponse object itself.
      */
+    @Generated
     public MetricsResponse setNamespace(String namespace) {
         this.namespace = namespace;
         return this;
@@ -142,46 +162,113 @@ public final class MetricsResponse {
 
     /**
      * Get the resourceregion property: The region of the resource being queried for metrics.
-     *
+     * 
      * @return the resourceregion value.
      */
+    @Generated
     public String getResourceregion() {
         return this.resourceregion;
     }
 
     /**
      * Set the resourceregion property: The region of the resource being queried for metrics.
-     *
+     * 
      * @param resourceregion the resourceregion value to set.
      * @return the MetricsResponse object itself.
      */
+    @Generated
     public MetricsResponse setResourceregion(String resourceregion) {
         this.resourceregion = resourceregion;
         return this;
     }
 
     /**
-     * Get the value property: the value of the collection.
-     *
+     * Get the value property: The value of the collection.
+     * 
      * @return the value value.
      */
+    @Generated
     public List<Metric> getValue() {
         return this.value;
     }
 
     /**
-     * Validates the instance.
-     *
-     * @throws IllegalArgumentException thrown if the instance is not valid.
+     * {@inheritDoc}
      */
-    public void validate() {
-        if (getTimespan() == null) {
-            throw new IllegalArgumentException("Missing required property timespan in model MetricsResponse");
-        }
-        if (getValue() == null) {
-            throw new IllegalArgumentException("Missing required property value in model MetricsResponse");
-        } else {
-            getValue().forEach(e -> e.validate());
-        }
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("timespan", this.timespan);
+        jsonWriter.writeArrayField("value", this.value, (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeNumberField("cost", this.cost);
+        jsonWriter.writeStringField("interval", CoreUtils.durationToStringWithDays(this.interval));
+        jsonWriter.writeStringField("namespace", this.namespace);
+        jsonWriter.writeStringField("resourceregion", this.resourceregion);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of MetricsResponse from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of MetricsResponse if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the MetricsResponse.
+     */
+    @Generated
+    public static MetricsResponse fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            boolean timespanFound = false;
+            String timespan = null;
+            boolean valueFound = false;
+            List<Metric> value = null;
+            Integer cost = null;
+            Duration interval = null;
+            String namespace = null;
+            String resourceregion = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("timespan".equals(fieldName)) {
+                    timespan = reader.getString();
+                    timespanFound = true;
+                } else if ("value".equals(fieldName)) {
+                    value = reader.readArray(reader1 -> Metric.fromJson(reader1));
+                    valueFound = true;
+                } else if ("cost".equals(fieldName)) {
+                    cost = reader.getNullable(JsonReader::getInt);
+                } else if ("interval".equals(fieldName)) {
+                    interval = reader.getNullable(nonNullReader -> Duration.parse(nonNullReader.getString()));
+                } else if ("namespace".equals(fieldName)) {
+                    namespace = reader.getString();
+                } else if ("resourceregion".equals(fieldName)) {
+                    resourceregion = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            if (timespanFound && valueFound) {
+                MetricsResponse deserializedMetricsResponse = new MetricsResponse(timespan, value);
+                deserializedMetricsResponse.cost = cost;
+                deserializedMetricsResponse.interval = interval;
+                deserializedMetricsResponse.namespace = namespace;
+                deserializedMetricsResponse.resourceregion = resourceregion;
+
+                return deserializedMetricsResponse;
+            }
+            List<String> missingProperties = new ArrayList<>();
+            if (!timespanFound) {
+                missingProperties.add("timespan");
+            }
+            if (!valueFound) {
+                missingProperties.add("value");
+            }
+
+            throw new IllegalStateException(
+                "Missing required property/properties: " + String.join(", ", missingProperties));
+        });
     }
 }

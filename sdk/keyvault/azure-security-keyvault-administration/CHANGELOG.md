@@ -1,6 +1,6 @@
 # Release History
 
-## 4.4.0-beta.1 (Unreleased)
+## 4.8.0-beta.1 (Unreleased)
 
 ### Features Added
 
@@ -9,7 +9,290 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 4.7.6 (2026-03-23)
+
+### Bugs Fixed
+
+- Fixed an issue where certain `HttpResponseException.getResponse()` calls could cause a `NullPointerException`. ([#47801](https://github.com/Azure/azure-sdk-for-java/issues/47801))
+
+## 4.7.5 (2026-01-29)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core-http-netty` from `1.16.2` to version `1.16.3`.
+- Upgraded `azure-json` from `1.5.0` to version `1.5.1`.
+- Upgraded `azure-core` from `1.57.0` to version `1.57.1`.
+
+## 4.7.4 (2025-10-27)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.56.1` to version `1.57.0`.
+- Upgraded `azure-core-http-netty` from `1.16.1` to version `1.16.2`.
+
+## 4.7.3 (2025-09-25)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core-http-netty` from `1.16.0` to version `1.16.1`.
+- Upgraded `azure-core` from `1.56.0` to version `1.56.1`.
+
+## 4.7.2 (2025-08-21)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.5` to version `1.56.0`.
+- Upgraded `azure-core-http-netty` from `1.15.13` to version `1.16.0`.
+
+## 4.7.1 (2025-08-01)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.4` to version `1.55.5`.
+- Upgraded `azure-core-http-netty` from `1.15.12` to version `1.15.13`.
+
+## 4.7.0 (2025-06-13)
+
+### Features Added
+
+> Compared to the last stable release - `4.6.4`
+- Added support for service version `7.6`.
+- Added support for pre-backup and pre-restore operations in `KeyVaultBackupClient` and `KeyVaultBackupAsyncClient`. These are long-running operations that check whether it is possible to perform a full key backup or a full key restore from a backup. ([#39878](https://github.com/Azure/azure-sdk-for-java/pull/39878))
+
+### Breaking Changes
+
+> Compared to the latest release - `4.7.0-beta.1`
+- Removed support for service version `7.6-preview.2`.
+- Changed final result types in pollers returned by methods in `KeyVaultBackupClient` and `KeyVaultBackupAsyncClient`:
+  - `beginPreBackup()` now returns `Void` instead of `String`.
+  - `beginPreRestore()` now returns `Void` instead of `KeyVaultRestoreResult`.
+
+### Other Changes
+
+#### Dependency Updates
+
+> Compared to the latest release - `4.7.0-beta.1`
+- Upgraded `azure-core` from `1.55.3` to version `1.55.4`.
+- Upgraded `azure-core-http-netty` from `1.15.11` to version `1.15.12`.
+
+## 4.7.0-beta.1 (2025-04-10)
+
+### Features Added
+- Added support for pre-backup and pre-restore operations in `KeyVaultBackupClient` and `KeyVaultBackupAsyncClient`. These are long-running operations that check whether it is possible to perform a full key backup or a full key restore from a backup. ([#39878](https://github.com/Azure/azure-sdk-for-java/pull/39878))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.55.2` to version `1.55.3`.
+- Upgraded `azure-json` from `1.4.0` to version `1.5.0`.
+- Upgraded `azure-core-http-netty` from `1.15.10` to version `1.15.11`.
+
+## 4.6.4 (2025-03-24)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-json` from `1.4.0` to version `1.5.0`.
+- Upgraded `azure-core-http-netty` from `1.15.10` to version `1.15.11`.
+- Upgraded `azure-core` from `1.55.2` to version `1.55.3`.
+
+## 4.6.3 (2025-03-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.54.1` to version `1.55.2`.
+- Upgraded `azure-json` from `1.3.0` to version `1.4.0`.
+- Upgraded `azure-core-http-netty` from `1.15.7` to version `1.15.10`.
+
+## 4.6.2 (2025-01-14)
+
+### Bugs Fixed
+- Fixed issue where certain `toString()` calls could cause a `NullPointerException`. ([#43776](https://github.com/Azure/azure-sdk-for-java/pull/43776))
+
+## 4.6.1 (2024-12-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.53.0` to version `1.54.1`.
+- Upgraded `azure-core-http-netty` from `1.15.5` to version `1.15.7`.
+
+## 4.6.0 (2024-10-15)
+
+## Features Added
+- Added support for Continuous Access Evaluation (CAE). ([#41814](https://github.com/Azure/azure-sdk-for-java/pull/41814))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.52.0` to version `1.53.0`.
+- Upgraded `azure-core-http-netty` from `1.15.4` to version `1.15.5`.
+
+## 4.5.8 (2024-09-27)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-json` from `1.2.0` to version `1.3.0`.
+- Upgraded `azure-core-http-netty` from `1.15.3` to version `1.15.4`.
+- Upgraded `azure-core` from `1.51.0` to version `1.52.0`.
+
+## 4.5.7 (2024-08-24)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.50.0` to version `1.51.0`.
+- Upgraded `azure-core-http-netty` from `1.15.2` to version `1.15.3`.
+
+## 4.5.6 (2024-07-29)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.1` to version `1.50.0`.
+- Upgraded `azure-json` from `1.1.0` to version `1.2.0`. 
+- Upgraded `azure-core-http-netty` from `1.15.1` to version `1.15.2`.
+
+## 4.5.5 (2024-06-27)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.49.0` to version `1.49.1`.
+- Upgraded `azure-core-http-netty` from `1.15.0` to version `1.15.1`.
+
+## 4.5.4 (2024-05-13)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.48.0` to version `1.49.0`.
+- Upgraded `azure-core-http-netty` from `1.14.2` to version `1.15.0`.
+
+## 4.5.3 (2024-04-30)
+
+### Other Changes
+
+- No changes but only upgrade version to fix Microsoft Doc.
+
+## 4.5.2 (2024-04-23)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.47.0` to version `1.48.0`.
+- Upgraded `azure-core-http-netty` from `1.14.1` to version `1.14.2`.
+
+## 4.5.1 (2024-03-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.46.0` to version `1.47.0`.
+- Upgraded `azure-core-http-netty` from `1.14.0` to version `1.14.1`.
+
+## 4.5.0 (2024-02-22)
+Changes when compared to the last stable release (`4.4.3`) include:
+
+### Features Added
+- Added support for service version `7.5`.
+- Managed Identity can now be used in place of a SAS token to access the blob storage resource when performing backup and restore operations using a `KeyVaultBackupClient` or `KeyVaultBackupAsyncClient`. This is now the default behavior if a `null` SAS token is provided to the `beginBackup()`, `beginRestore()` or `beginSelectiveRestore()` methods.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.45.1` to version `1.46.0`.
+- Upgraded `azure-core-http-netty` from `1.13.11` to version `1.14.0`.
+
+## 4.4.3 (2023-12-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core-http-netty` from `1.13.10` to version `1.13.11`.
+- Upgraded `azure-core` from `1.45.0` to version `1.45.1`.
+
+## 4.4.2 (2023-11-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.44.1` to version `1.45.0`.
+- Upgraded `azure-core-http-netty` from `1.13.9` to version `1.13.10`.
+
+## 4.5.0-beta.1 (2023-11-09)
+
+### Features Added
+- Added support for service version `7.5-preview.1`.
+- Managed Identity can now be used in place of a SAS token to access the blob storage resource when performing backup and restore operations using a `KeyVaultBackupClient` or `KeyVaultBackupAsyncClient`. This is now the default behavior if a `null` SAS token is provided to the `beginBackup()`, `beginRestore()` or `beginSelectiveRestore()` methods.
+
+#### Dependency Updates
+- Upgraded `azure-core` from `1.44.1` to version `1.45.0`.
+- Upgraded `azure-core-http-netty` from `1.13.9` to version `1.13.10`.
+
+## 4.4.1 (2023-10-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core-http-netty` from `1.13.7` to version `1.13.9`.
+- Upgraded `azure-core` from `1.43.0` to version `1.44.1`.
+
+## 4.4.0 (2023-09-25)
+
+### Other Changes
+- Explicitly added a `values()` method to all `ExpandableStringEnum` models:
+    - `KeyVaultDataAction`
+    - `KeyVaultRoleDefinitionType`
+    - `KeyVaultRoleScope`
+    - `KeyVaultRoleType`
+    - `KeyVaultSettingType`
+  Functionality remains the same as the aforementioned method simply calls the implementation in the parent class.
 - Migrate test recordings to assets repo.
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.42.0` to version `1.43.0`.
+- Upgraded `azure-core-http-netty` from `1.13.6` to version `1.13.7`.
+- Upgraded `azure-json` from `1.0.1` to version `1.1.0`.
+
+## 4.3.5 (2023-08-21)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-core` from `1.41.0` to version `1.42.0`.
+- Upgraded `azure-core-http-netty` from `1.13.5` to version `1.13.6`.
 
 ## 4.3.4 (2023-07-25)
 
@@ -19,7 +302,6 @@
 
 - Upgraded `azure-core` from `1.40.0` to version `1.41.0`.
 - Upgraded `azure-core-http-netty` from `1.13.4` to version `1.13.5`.
-
 
 ## 4.3.3 (2023-06-20)
 

@@ -4,40 +4,65 @@
 
 package com.azure.maps.timezone.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for TimezoneOptions. */
+/**
+ * Defines values for TimeZoneOptions.
+ */
 public final class TimeZoneOptions extends ExpandableStringEnum<TimeZoneOptions> {
-    /** Static value none for TimezoneOptions. */
+    /**
+     * Do not include zoneinfo or transitions in the result.
+     */
+    @Generated
     public static final TimeZoneOptions NONE = fromString("none");
 
-    /** Static value zoneInfo for TimezoneOptions. */
+    /**
+     * Include additional time zone info in the result.
+     */
+    @Generated
     public static final TimeZoneOptions ZONE_INFO = fromString("zoneInfo");
 
-    /** Static value transitions for TimezoneOptions. */
+    /**
+     * Include transition information in the result (The number of transitions is currently capped at 250).
+     */
+    @Generated
     public static final TimeZoneOptions TRANSITIONS = fromString("transitions");
 
-    /** Static value all for TimezoneOptions. */
+    /**
+     * Include both zoneinfo and transitions in the result.
+     */
+    @Generated
     public static final TimeZoneOptions ALL = fromString("all");
 
     /**
-     * Creates or finds a TimezoneOptions from its string representation.
-     *
-     * @param name a name to look for.
-     * @return the corresponding TimezoneOptions.
+     * Creates a new instance of TimeZoneOptions value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
      */
-    @JsonCreator
+    @Generated
+    @Deprecated
+    public TimeZoneOptions() {
+    }
+
+    /**
+     * Creates or finds a TimeZoneOptions from its string representation.
+     * 
+     * @param name a name to look for.
+     * @return the corresponding TimeZoneOptions.
+     */
+    @Generated
     public static TimeZoneOptions fromString(String name) {
         return fromString(name, TimeZoneOptions.class);
     }
 
     /**
-     * Gets known TimezoneOptions values.
-     *
-     * @return known TimezoneOptions values.
+     * Gets known TimeZoneOptions values.
+     * 
+     * @return known TimeZoneOptions values.
      */
+    @Generated
     public static Collection<TimeZoneOptions> values() {
         return values(TimeZoneOptions.class);
     }

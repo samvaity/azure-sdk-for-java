@@ -3,8 +3,15 @@
 
 package com.azure.identity;
 
+import com.azure.core.util.Configuration;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
+import com.azure.identity.implementation.customtokenproxy.CustomTokenProxyConfiguration;
+import com.azure.identity.implementation.customtokenproxy.CustomTokenProxyHttpClient;
+import com.azure.identity.implementation.customtokenproxy.ProxyConfig;
 import com.azure.identity.implementation.util.ValidationUtil;
+
+import static com.azure.identity.ManagedIdentityCredential.AZURE_FEDERATED_TOKEN_FILE;
 
 /**
  * Fluent credential builder for instantiating a {@link WorkloadIdentityCredential}.
@@ -19,8 +26,8 @@ import com.azure.identity.implementation.util.ValidationUtil;
  * need to worry about storing and securing sensitive credentials themselves.
  * The WorkloadIdentityCredential supports Azure workload identity authentication on Azure Kubernetes and acquires
  * a token using the service account credentials available in the Azure Kubernetes environment.
- * Refer to <a href="https://learn.microsoft.com/azure/aks/workload-identity-overview">Azure Active Directory
- * Workload Identity</a> for more information.</p>
+ * Refer to <a href="https://learn.microsoft.com/azure/aks/workload-identity-overview">Microsoft Entra Workload ID</a>
+ * for more information.</p>
  *
  * <p><strong>Sample: Construct WorkloadIdentityCredential</strong></p>
  *
@@ -31,8 +38,7 @@ import com.azure.identity.implementation.util.ValidationUtil;
  *
  * <!-- src_embed com.azure.identity.credential.workloadidentitycredential.construct -->
  * <pre>
- * TokenCredential workloadIdentityCredential = new WorkloadIdentityCredentialBuilder&#40;&#41;
- *     .clientId&#40;&quot;&lt;clientID&gt;&quot;&#41;
+ * TokenCredential workloadIdentityCredential = new WorkloadIdentityCredentialBuilder&#40;&#41;.clientId&#40;&quot;&lt;clientID&gt;&quot;&#41;
  *     .tenantId&#40;&quot;&lt;tenantID&gt;&quot;&#41;
  *     .tokenFilePath&#40;&quot;&lt;token-file-path&gt;&quot;&#41;
  *     .build&#40;&#41;;
@@ -44,12 +50,13 @@ import com.azure.identity.implementation.util.ValidationUtil;
 public class WorkloadIdentityCredentialBuilder extends AadCredentialBuilderBase<WorkloadIdentityCredentialBuilder> {
     private static final ClientLogger LOGGER = new ClientLogger(WorkloadIdentityCredentialBuilder.class);
     private String tokenFilePath;
+    private boolean enableAzureProxy;
 
     /**
      * Creates an instance of a WorkloadIdentityCredentialBuilder.
      */
-    public WorkloadIdentityCredentialBuilder() { }
-
+    public WorkloadIdentityCredentialBuilder() {
+    }
 
     /**
      * Configure the path to a file containing a Kubernetes service account token that authenticates the identity.
@@ -64,14 +71,48 @@ public class WorkloadIdentityCredentialBuilder extends AadCredentialBuilderBase<
     }
 
     /**
+     * Enables the custom token proxy feature for clusters running in Azure.
+     * When enabled, the credential will attempt to use a custom token proxy configured through
+     * environment variables (AZURE_KUBERNETES_TOKEN_PROXY, AZURE_KUBERNETES_CA_FILE,
+     * AZURE_KUBERNETES_CA_DATA, AZURE_KUBERNETES_SNI_NAME).
+     *
+     * @return An updated instance of this builder with Azure proxy enabled.
+     */
+    public WorkloadIdentityCredentialBuilder enableAzureProxy() {
+        this.enableAzureProxy = true;
+        return this;
+    }
+
+    /**
      * Creates new {@link WorkloadIdentityCredential} with the configured options set.
      *
      * @return a {@link WorkloadIdentityCredential} with the current configurations.
      */
     public WorkloadIdentityCredential build() {
-        ValidationUtil.validate(this.getClass().getSimpleName(), LOGGER, "Client ID", clientId,
-            "Tenant ID", tenantId, "Service Token File Path", tokenFilePath);
+        Configuration configuration = identityClientOptions.getConfiguration() == null
+            ? Configuration.getGlobalConfiguration().clone()
+            : identityClientOptions.getConfiguration();
 
-        return new WorkloadIdentityCredential(tenantId, clientId, tokenFilePath, identityClientOptions.clone());
+        String tenantIdInput
+            = CoreUtils.isNullOrEmpty(tenantId) ? configuration.get(Configuration.PROPERTY_AZURE_TENANT_ID) : tenantId;
+
+        String federatedTokenFilePathInput
+            = CoreUtils.isNullOrEmpty(tokenFilePath) ? configuration.get(AZURE_FEDERATED_TOKEN_FILE) : tokenFilePath;
+
+        String clientIdInput
+            = CoreUtils.isNullOrEmpty(clientId) ? configuration.get(Configuration.PROPERTY_AZURE_CLIENT_ID) : clientId;
+
+        ValidationUtil.validate(this.getClass().getSimpleName(), LOGGER, "Client ID", clientIdInput, "Tenant ID",
+            tenantIdInput, "Service Token File Path", federatedTokenFilePathInput);
+
+        if (enableAzureProxy) {
+            ProxyConfig proxyConfig = CustomTokenProxyConfiguration.parseAndValidate(configuration);
+            if (proxyConfig != null) {
+                identityClientOptions.setHttpClient(new CustomTokenProxyHttpClient(proxyConfig));
+            }
+        }
+
+        return new WorkloadIdentityCredential(tenantIdInput, clientIdInput, federatedTokenFilePathInput,
+            identityClientOptions.clone());
     }
 }

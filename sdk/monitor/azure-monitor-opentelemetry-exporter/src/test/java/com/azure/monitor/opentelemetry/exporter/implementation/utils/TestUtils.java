@@ -4,41 +4,42 @@
 package com.azure.monitor.opentelemetry.exporter.implementation.utils;
 
 import com.azure.core.http.HttpPipeline;
-import com.azure.core.util.Configuration;
-import com.azure.monitor.opentelemetry.exporter.AzureMonitorExporterBuilder;
+import com.azure.json.JsonProviders;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.monitor.opentelemetry.exporter.AzureMonitorExporter;
+import com.azure.monitor.opentelemetry.exporter.AzureMonitorExporterOptions;
+import com.azure.monitor.opentelemetry.exporter.implementation.models.MessageData;
 import com.azure.monitor.opentelemetry.exporter.implementation.models.MetricDataPoint;
 import com.azure.monitor.opentelemetry.exporter.implementation.models.MetricsData;
 import com.azure.monitor.opentelemetry.exporter.implementation.models.MonitorBase;
+import com.azure.monitor.opentelemetry.exporter.implementation.models.MonitorDomain;
+import com.azure.monitor.opentelemetry.exporter.implementation.models.RemoteDependencyData;
 import com.azure.monitor.opentelemetry.exporter.implementation.models.TelemetryItem;
-import io.opentelemetry.api.OpenTelemetry;
-import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
-import io.opentelemetry.sdk.OpenTelemetrySdkBuilder;
-import io.opentelemetry.sdk.logs.SdkLoggerProvider;
-import io.opentelemetry.sdk.logs.export.LogRecordExporter;
-import io.opentelemetry.sdk.logs.export.SimpleLogRecordProcessor;
-import io.opentelemetry.sdk.metrics.SdkMeterProvider;
-import io.opentelemetry.sdk.metrics.export.MetricExporter;
-import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
-import io.opentelemetry.sdk.trace.SdkTracerProvider;
-import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
-import io.opentelemetry.sdk.trace.export.SpanExporter;
+import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
+import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdkBuilder;
+import io.opentelemetry.sdk.resources.Resource;
 
-import java.time.Duration;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class TestUtils {
 
-    private static final String TRACE_CONNECTION_STRING =
-        "InstrumentationKey=00000000-0000-0000-0000-000000000000;"
-            + "IngestionEndpoint=https://test.in.applicationinsights.azure.com/;"
-            + "LiveEndpoint=https://test.livediagnostics.monitor.azure.com/";
+    private static final String TRACE_CONNECTION_STRING = "InstrumentationKey=00000000-0000-0000-0000-000000000000;"
+        + "IngestionEndpoint=https://test.in.applicationinsights.azure.com/;"
+        + "LiveEndpoint=https://test.livediagnostics.monitor.azure.com/";
 
-    public static TelemetryItem createMetricTelemetry(
-        String name, int value, String connectionString) {
+    public static TelemetryItem createMetricTelemetry(String name, int value, String connectionString) {
+        return createMetricTelemetry(name, value, connectionString, "state", "blocked");
+    }
+
+    public static TelemetryItem createMetricTelemetry(String name, int value, String connectionString,
+        String propertyKey, String propertyValue) {
         TelemetryItem telemetry = new TelemetryItem();
         telemetry.setVersion(1);
         telemetry.setName("Metric");
@@ -58,7 +59,7 @@ public final class TestUtils {
         dataPoints.add(dataPoint);
 
         Map<String, String> properties = new HashMap<>();
-        properties.put("state", "blocked");
+        properties.put(propertyKey, propertyValue);
 
         data.setMetrics(dataPoints);
         data.setProperties(properties);
@@ -69,71 +70,75 @@ public final class TestUtils {
         telemetry.setData(monitorBase);
         telemetry.setTime(FormattedTime.offSetDateTimeFromNow());
 
+        telemetry.setResource(Resource.empty());
+
         return telemetry;
     }
 
-    public static Tracer configureAzureMonitorTraceExporter(HttpPipeline httpPipeline) {
-        return createOpenTelemetrySdk(httpPipeline).getTracer("Sample");
+    public static OpenTelemetrySdk createOpenTelemetrySdk(HttpPipeline httpPipeline) {
+        return createOpenTelemetrySdk(httpPipeline, Collections.emptyMap());
     }
 
-    public static OpenTelemetry createOpenTelemetrySdk(HttpPipeline httpPipeline) {
-        return createOpenTelemetrySdk(httpPipeline, Configuration.NONE);
+    public static OpenTelemetrySdk createOpenTelemetrySdk(HttpPipeline httpPipeline,
+        Map<String, String> configuration) {
+        return createOpenTelemetrySdk(httpPipeline, configuration, TRACE_CONNECTION_STRING);
+
     }
 
-    public static OpenTelemetry createOpenTelemetrySdk(
-        HttpPipeline httpPipeline, Configuration configuration) {
-        return createOpenTelemetrySdkDeprecated(httpPipeline, configuration);
+    public static OpenTelemetrySdk createOpenTelemetrySdk(HttpPipeline httpPipeline, Map<String, String> configuration,
+        String connectionString) {
+        AutoConfiguredOpenTelemetrySdkBuilder sdkBuilder = AutoConfiguredOpenTelemetrySdk.builder();
+
+        AzureMonitorExporterOptions exporterOptions
+            = new AzureMonitorExporterOptions().connectionString(connectionString).pipeline(httpPipeline);
+        AzureMonitorExporter.customize(sdkBuilder, exporterOptions);
+
+        return sdkBuilder.addPropertiesSupplier(() -> configuration).build().getOpenTelemetrySdk();
     }
 
-    // remove this after Log API is public and can be retrieved from the OpenTelemetry object
-    public static OpenTelemetrySdk createOpenTelemetrySdkDeprecated(
-        HttpPipeline httpPipeline, Configuration configuration) {
+    // azure-json doesn't deserialize subtypes yet, so need to convert the abstract MonitorDomain to RemoteDependencyData
+    public static RemoteDependencyData toRemoteDependencyData(MonitorDomain baseData) {
+        try (JsonReader jsonReader = JsonProviders.createReader(baseData.toJsonString())) {
+            return RemoteDependencyData.fromJson(jsonReader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        OpenTelemetrySdkBuilder builder = OpenTelemetrySdk.builder();
+    // azure-json doesn't deserialize subtypes yet, so need to convert the abstract MonitorDomain to MetricsData
+    public static MetricsData toMetricsData(MonitorDomain baseData) {
+        try (JsonReader jsonReader = JsonProviders.createReader(baseData.toJsonString())) {
+            return MetricsData.fromJson(jsonReader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        SpanExporter spanExporter =
-            new AzureMonitorExporterBuilder()
-                .configuration(configuration)
-                .connectionString(TRACE_CONNECTION_STRING)
-                .httpPipeline(httpPipeline)
-                .buildTraceExporter();
+    // azure-json doesn't deserialize subtypes yet, so need to convert the abstract MonitorDomain to MessageData
+    public static MessageData toMessageData(MonitorDomain baseData) {
+        try (JsonReader jsonReader = JsonProviders.createReader(baseData.toJsonString())) {
+            return MessageData.fromJson(jsonReader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        SdkTracerProvider tracerProvider =
-            SdkTracerProvider.builder()
-                .addSpanProcessor(SimpleSpanProcessor.create(spanExporter))
-                .build();
+    // deserialize multiple TelemetryItem raw bytes with newline delimiters to a list of TelemetryItems
+    public static List<TelemetryItem> deserialize(byte[] rawBytes) {
+        try (JsonReader jsonReader = JsonProviders.createReader(rawBytes)) {
+            JsonToken token = jsonReader.currentToken();
+            if (token == null) {
+                token = jsonReader.nextToken();
+            }
 
-        builder.setTracerProvider(tracerProvider);
-
-        MetricExporter metricExporter =
-            new AzureMonitorExporterBuilder()
-                .configuration(configuration)
-                .connectionString(TRACE_CONNECTION_STRING)
-                .httpPipeline(httpPipeline)
-                .buildMetricExporter();
-
-        PeriodicMetricReader metricReader =
-            PeriodicMetricReader.builder(metricExporter).setInterval(Duration.ofMillis(10)).build();
-        SdkMeterProvider meterProvider =
-            SdkMeterProvider.builder().registerMetricReader(metricReader).build();
-
-        builder.setMeterProvider(meterProvider);
-
-        LogRecordExporter logRecordExporter =
-            new AzureMonitorExporterBuilder()
-                .configuration(configuration)
-                .connectionString(TRACE_CONNECTION_STRING)
-                .httpPipeline(httpPipeline)
-                .buildLogRecordExporter();
-
-        SdkLoggerProvider loggerProvider =
-            SdkLoggerProvider.builder()
-                .addLogRecordProcessor(SimpleLogRecordProcessor.create(logRecordExporter))
-                .build();
-
-        builder.setLoggerProvider(loggerProvider);
-
-        return builder.build();
+            List<TelemetryItem> result = new ArrayList<>();
+            do {
+                result.add(TelemetryItem.fromJson(jsonReader));
+            } while (jsonReader.nextToken() == JsonToken.START_OBJECT);
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private TestUtils() {

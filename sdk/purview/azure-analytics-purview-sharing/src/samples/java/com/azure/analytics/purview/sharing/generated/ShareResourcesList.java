@@ -13,14 +13,13 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 
 public class ShareResourcesList {
     public static void main(String[] args) {
-        ShareResourcesClient shareResourcesClient =
-                new ShareResourcesClientBuilder()
-                        .credential(new DefaultAzureCredentialBuilder().build())
-                        .endpoint("accountName.purview.azure.com/share")
-                        .buildClient();
-        // BEGIN:com.azure.analytics.purview.sharing.generated.shareresourceslistshareresources.shareresourceslist
+        ShareResourcesClient shareResourcesClient
+            = new ShareResourcesClientBuilder().credential(new DefaultAzureCredentialBuilder().build())
+                .endpoint("accountName.purview.azure.com/share")
+                .buildClient();
+        // BEGIN:com.azure.analytics.purview.sharing.generated.share-resources-list-share-resources.share-resources-list
         RequestOptions requestOptions = new RequestOptions();
         PagedIterable<BinaryData> response = shareResourcesClient.listShareResources(requestOptions);
-        // END:com.azure.analytics.purview.sharing.generated.shareresourceslistshareresources.shareresourceslist
+        // END:com.azure.analytics.purview.sharing.generated.share-resources-list-share-resources.share-resources-list
     }
 }

@@ -6,24 +6,23 @@ package com.azure.resourcemanager.iothub.generated;
 
 import com.azure.resourcemanager.iothub.models.CertificateVerificationDescription;
 
-/** Samples for Certificates Verify. */
+/**
+ * Samples for Certificates Verify.
+ */
 public final class CertificatesVerifySamples {
     /*
-     * x-ms-original-file: specification/iothub/resource-manager/Microsoft.Devices/preview/2022-11-15-preview/examples/iothub_certverify.json
+     * x-ms-original-file:
+     * specification/iothub/resource-manager/Microsoft.Devices/IoTHub/preview/2025-08-01-preview/examples/
+     * iothub_certverify.json
      */
     /**
      * Sample code: Certificates_Verify.
-     *
+     * 
      * @param manager Entry point to IotHubManager.
      */
     public static void certificatesVerify(com.azure.resourcemanager.iothub.IotHubManager manager) {
-        manager
-            .certificates()
-            .verifyWithResponse(
-                "myResourceGroup",
-                "myFirstProvisioningService",
-                "cert",
-                "AAAAAAAADGk=",
+        manager.certificates()
+            .verifyWithResponse("myResourceGroup", "myFirstProvisioningService", "cert", "AAAAAAAADGk=",
                 new CertificateVerificationDescription().withCertificate("#####################################"),
                 com.azure.core.util.Context.NONE);
     }

@@ -13,35 +13,31 @@ import org.junit.jupiter.api.Assertions;
 public final class ClusterManagerPropertiesTests {
     @org.junit.jupiter.api.Test
     public void testDeserialize() throws Exception {
-        ClusterManagerProperties model =
-            BinaryData
-                .fromString(
-                    "{\"analyticsWorkspaceId\":\"lyaxuc\",\"availabilityZones\":[\"qszf\",\"beypewrmjmw\"],\"clusterVersions\":[{\"supportExpiryDate\":\"kt\",\"targetClusterVersion\":\"senhwlrs\"},{\"supportExpiryDate\":\"rzpwvlqdqgbiq\",\"targetClusterVersion\":\"ihkaetcktvfc\"},{\"supportExpiryDate\":\"fsnkymuctq\",\"targetClusterVersion\":\"fbebrjcxer\"}],\"detailedStatus\":\"Updating\",\"detailedStatusMessage\":\"tttxfvjrb\",\"fabricControllerId\":\"rp\",\"managedResourceGroupConfiguration\":{\"location\":\"pcyvahfnljkyqx\",\"name\":\"uujqgidokgjljyo\"},\"managerExtendedLocation\":{\"name\":\"vcltbgsncgh\",\"type\":\"jeszzhbijhtxfv\"},\"provisioningState\":\"Provisioning\",\"vmSize\":\"smx\"}")
-                .toObject(ClusterManagerProperties.class);
-        Assertions.assertEquals("lyaxuc", model.analyticsWorkspaceId());
-        Assertions.assertEquals("qszf", model.availabilityZones().get(0));
-        Assertions.assertEquals("rp", model.fabricControllerId());
-        Assertions.assertEquals("pcyvahfnljkyqx", model.managedResourceGroupConfiguration().location());
-        Assertions.assertEquals("uujqgidokgjljyo", model.managedResourceGroupConfiguration().name());
-        Assertions.assertEquals("smx", model.vmSize());
+        ClusterManagerProperties model = BinaryData.fromString(
+            "{\"analyticsWorkspaceId\":\"bahwfl\",\"availabilityZones\":[\"dtmhrkwofyyvoqa\",\"piexpbtgiw\",\"wo\"],\"clusterVersions\":[{\"supportExpiryDate\":\"shrtdtkcnqxwb\",\"targetClusterVersion\":\"kulpiujwaasi\"},{\"supportExpiryDate\":\"i\",\"targetClusterVersion\":\"byuqerpqlp\"}],\"detailedStatus\":\"Provisioning\",\"detailedStatusMessage\":\"iuqgbdbutauv\",\"fabricControllerId\":\"btkuwhh\",\"managedResourceGroupConfiguration\":{\"location\":\"k\",\"name\":\"oxafn\"},\"managerExtendedLocation\":{\"name\":\"lpichk\",\"type\":\"ymkcdyhb\"},\"provisioningState\":\"Canceled\",\"vmSize\":\"wdreqnovvqfovl\"}")
+            .toObject(ClusterManagerProperties.class);
+        Assertions.assertEquals("bahwfl", model.analyticsWorkspaceId());
+        Assertions.assertEquals("dtmhrkwofyyvoqa", model.availabilityZones().get(0));
+        Assertions.assertEquals("btkuwhh", model.fabricControllerId());
+        Assertions.assertEquals("k", model.managedResourceGroupConfiguration().location());
+        Assertions.assertEquals("oxafn", model.managedResourceGroupConfiguration().name());
+        Assertions.assertEquals("wdreqnovvqfovl", model.vmSize());
     }
 
     @org.junit.jupiter.api.Test
     public void testSerialize() throws Exception {
-        ClusterManagerProperties model =
-            new ClusterManagerProperties()
-                .withAnalyticsWorkspaceId("lyaxuc")
-                .withAvailabilityZones(Arrays.asList("qszf", "beypewrmjmw"))
-                .withFabricControllerId("rp")
-                .withManagedResourceGroupConfiguration(
-                    new ManagedResourceGroupConfiguration().withLocation("pcyvahfnljkyqx").withName("uujqgidokgjljyo"))
-                .withVmSize("smx");
+        ClusterManagerProperties model = new ClusterManagerProperties().withAnalyticsWorkspaceId("bahwfl")
+            .withAvailabilityZones(Arrays.asList("dtmhrkwofyyvoqa", "piexpbtgiw", "wo"))
+            .withFabricControllerId("btkuwhh")
+            .withManagedResourceGroupConfiguration(
+                new ManagedResourceGroupConfiguration().withLocation("k").withName("oxafn"))
+            .withVmSize("wdreqnovvqfovl");
         model = BinaryData.fromObject(model).toObject(ClusterManagerProperties.class);
-        Assertions.assertEquals("lyaxuc", model.analyticsWorkspaceId());
-        Assertions.assertEquals("qszf", model.availabilityZones().get(0));
-        Assertions.assertEquals("rp", model.fabricControllerId());
-        Assertions.assertEquals("pcyvahfnljkyqx", model.managedResourceGroupConfiguration().location());
-        Assertions.assertEquals("uujqgidokgjljyo", model.managedResourceGroupConfiguration().name());
-        Assertions.assertEquals("smx", model.vmSize());
+        Assertions.assertEquals("bahwfl", model.analyticsWorkspaceId());
+        Assertions.assertEquals("dtmhrkwofyyvoqa", model.availabilityZones().get(0));
+        Assertions.assertEquals("btkuwhh", model.fabricControllerId());
+        Assertions.assertEquals("k", model.managedResourceGroupConfiguration().location());
+        Assertions.assertEquals("oxafn", model.managedResourceGroupConfiguration().name());
+        Assertions.assertEquals("wdreqnovvqfovl", model.vmSize());
     }
 }

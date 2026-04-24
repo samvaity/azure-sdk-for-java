@@ -6,41 +6,54 @@ package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.ai.metricsadvisor.models.PeriodType;
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** The PeriodFeedbackValue model. */
+/**
+ * The PeriodFeedbackValue model.
+ */
 @Fluent
-public final class PeriodFeedbackValue {
+public final class PeriodFeedbackValue implements JsonSerializable<PeriodFeedbackValue> {
     /*
      * the type of setting period
      */
-    @JsonProperty(value = "periodType", required = true)
+    @Generated
     private PeriodType periodType;
 
     /*
      * the number of intervals a period contains, when no period set to 0
      */
-    @JsonProperty(value = "periodValue", required = true)
+    @Generated
     private int periodValue;
 
-    /** Creates an instance of PeriodFeedbackValue class. */
-    public PeriodFeedbackValue() {}
+    /**
+     * Creates an instance of PeriodFeedbackValue class.
+     */
+    @Generated
+    public PeriodFeedbackValue() {
+    }
 
     /**
      * Get the periodType property: the type of setting period.
-     *
+     * 
      * @return the periodType value.
      */
+    @Generated
     public PeriodType getPeriodType() {
         return this.periodType;
     }
 
     /**
      * Set the periodType property: the type of setting period.
-     *
+     * 
      * @param periodType the periodType value to set.
      * @return the PeriodFeedbackValue object itself.
      */
+    @Generated
     public PeriodFeedbackValue setPeriodType(PeriodType periodType) {
         this.periodType = periodType;
         return this;
@@ -48,21 +61,65 @@ public final class PeriodFeedbackValue {
 
     /**
      * Get the periodValue property: the number of intervals a period contains, when no period set to 0.
-     *
+     * 
      * @return the periodValue value.
      */
+    @Generated
     public int getPeriodValue() {
         return this.periodValue;
     }
 
     /**
      * Set the periodValue property: the number of intervals a period contains, when no period set to 0.
-     *
+     * 
      * @param periodValue the periodValue value to set.
      * @return the PeriodFeedbackValue object itself.
      */
+    @Generated
     public PeriodFeedbackValue setPeriodValue(int periodValue) {
         this.periodValue = periodValue;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("periodType", this.periodType == null ? null : this.periodType.toString());
+        jsonWriter.writeIntField("periodValue", this.periodValue);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of PeriodFeedbackValue from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of PeriodFeedbackValue if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the PeriodFeedbackValue.
+     */
+    @Generated
+    public static PeriodFeedbackValue fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            PeriodFeedbackValue deserializedPeriodFeedbackValue = new PeriodFeedbackValue();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("periodType".equals(fieldName)) {
+                    deserializedPeriodFeedbackValue.periodType = PeriodType.fromString(reader.getString());
+                } else if ("periodValue".equals(fieldName)) {
+                    deserializedPeriodFeedbackValue.periodValue = reader.getInt();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedPeriodFeedbackValue;
+        });
     }
 }

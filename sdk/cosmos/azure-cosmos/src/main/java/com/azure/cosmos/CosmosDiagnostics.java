@@ -6,9 +6,13 @@ import com.azure.cosmos.implementation.ClientSideRequestStatistics;
 import com.azure.cosmos.implementation.DiagnosticsClientContext;
 import com.azure.cosmos.implementation.FeedResponseDiagnostics;
 import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
+import com.azure.cosmos.implementation.MetadataDiagnosticsContext;
 import com.azure.cosmos.implementation.RxDocumentServiceRequest;
+import com.azure.cosmos.implementation.SerializationDiagnosticsContext;
 import com.azure.cosmos.implementation.guava25.collect.ImmutableList;
+import com.azure.cosmos.implementation.routing.RegionalRoutingContext;
 import com.azure.cosmos.util.Beta;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -91,12 +95,13 @@ public final class CosmosDiagnostics {
      * Returns the associated CosmosDiagnosticsContext or null if not associated with any context yet.
      * @return the associated CosmosDiagnosticsContext or null if not associated with any context yet.
      */
+    @JsonIgnore
     public CosmosDiagnosticsContext getDiagnosticsContext() {
         return this.diagnosticsContext;
     }
 
     void setDiagnosticsContext(CosmosDiagnosticsContext ctx) {
-        checkNotNull("ctx", "Argument 'ctx' must not be null.");
+        checkNotNull(ctx, "Argument 'ctx' must not be null.");
         this.diagnosticsContext = ctx;
     }
 
@@ -282,7 +287,6 @@ public final class CosmosDiagnostics {
             }
 
             if (stringBuilder != null) {
-                stringBuilder.append(USER_AGENT_KEY + "=").append(this.feedResponseDiagnostics.getUserAgent()).append(System.lineSeparator());
                 stringBuilder.append(feedResponseDiagnostics);
             }
         } else {
@@ -321,6 +325,14 @@ public final class CosmosDiagnostics {
     CosmosDiagnostics setSamplingRateSnapshot(double samplingRate) {
         this.samplingRateSnapshot = samplingRate;
         return this;
+    }
+
+    String getFirstContactedRegion() {
+        return this.clientSideRequestStatistics.getFirstContactedRegion();
+    }
+
+    RegionalRoutingContext getFirstContactedLocationEndpoint() {
+        return this.clientSideRequestStatistics.getFirstContactedLocationEndpoint();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -435,6 +447,73 @@ public final class CosmosDiagnostics {
                             errorMessage,
                             request.faultInjectionRequestContext.getFaultInjectionRuleId(transportRequestId),
                             request.faultInjectionRequestContext.getFaultInjectionRuleEvaluationResults(transportRequestId));
+                }
+
+                @Override
+                public boolean isNotEmpty(CosmosDiagnostics cosmosDiagnostics) {
+                    if (cosmosDiagnostics == null) {
+                        return false;
+                    }
+
+                    if (cosmosDiagnostics.feedResponseDiagnostics != null) {
+                        return true;
+                    }
+
+                    if (!cosmosDiagnostics.clientSideRequestStatistics.getResponseStatisticsList().isEmpty() ||
+                        !cosmosDiagnostics.clientSideRequestStatistics.getAddressResolutionStatistics().isEmpty() ||
+                        !cosmosDiagnostics.clientSideRequestStatistics.getGatewayStatisticsList().isEmpty() ||
+                        !cosmosDiagnostics.clientSideRequestStatistics.getMetadataDiagnosticsContext().isEmpty()) {
+
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                @Override
+                public void setDiagnosticsContext(CosmosDiagnostics cosmosDiagnostics, CosmosDiagnosticsContext ctx) {
+                    if (cosmosDiagnostics == null) {
+                        return;
+                    }
+
+                    cosmosDiagnostics.setDiagnosticsContext(ctx);
+                }
+
+                @Override
+                public RegionalRoutingContext getFirstContactedLocationEndpoint(CosmosDiagnostics cosmosDiagnostics) {
+
+                    if (cosmosDiagnostics == null) {
+                        return null;
+                    }
+
+                    return cosmosDiagnostics.getFirstContactedLocationEndpoint();
+                }
+
+                @Override
+                public void mergeMetadataDiagnosticContext(CosmosDiagnostics cosmosDiagnostics, MetadataDiagnosticsContext otherMetadataDiagnosticsContext) {
+
+                    if (cosmosDiagnostics == null) {
+                        return;
+                    }
+
+                    ClientSideRequestStatistics clientSideRequestStatistics = cosmosDiagnostics.clientSideRequestStatistics;
+
+                    if (clientSideRequestStatistics != null) {
+                        clientSideRequestStatistics.mergeMetadataDiagnosticsContext(otherMetadataDiagnosticsContext);
+                    }
+                }
+
+                @Override
+                public void mergeSerializationDiagnosticContext(CosmosDiagnostics cosmosDiagnostics, SerializationDiagnosticsContext otherSerializationDiagnosticsContext) {
+                    if (cosmosDiagnostics == null) {
+                        return;
+                    }
+
+                    ClientSideRequestStatistics clientSideRequestStatistics = cosmosDiagnostics.clientSideRequestStatistics;
+
+                    if (clientSideRequestStatistics != null) {
+                        clientSideRequestStatistics.mergeSerializationDiagnosticsContext(otherSerializationDiagnosticsContext);
+                    }
                 }
             });
     }

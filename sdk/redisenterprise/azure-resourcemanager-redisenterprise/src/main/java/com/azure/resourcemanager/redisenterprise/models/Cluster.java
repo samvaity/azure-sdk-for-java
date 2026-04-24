@@ -4,174 +4,209 @@
 
 package com.azure.resourcemanager.redisenterprise.models;
 
+import com.azure.core.http.rest.Response;
 import com.azure.core.management.Region;
-import com.azure.core.management.SystemData;
 import com.azure.core.util.Context;
 import com.azure.resourcemanager.redisenterprise.fluent.models.ClusterInner;
 import java.util.List;
 import java.util.Map;
 
-/** An immutable client-side representation of Cluster. */
+/**
+ * An immutable client-side representation of Cluster.
+ */
 public interface Cluster {
     /**
      * Gets the id property: Fully qualified resource Id for the resource.
-     *
+     * 
      * @return the id value.
      */
     String id();
 
     /**
      * Gets the name property: The name of the resource.
-     *
+     * 
      * @return the name value.
      */
     String name();
 
     /**
      * Gets the type property: The type of the resource.
-     *
+     * 
      * @return the type value.
      */
     String type();
 
     /**
      * Gets the location property: The geo-location where the resource lives.
-     *
+     * 
      * @return the location value.
      */
     String location();
 
     /**
      * Gets the tags property: Resource tags.
-     *
+     * 
      * @return the tags value.
      */
     Map<String, String> tags();
 
     /**
+     * Gets the kind property: Distinguishes the kind of cluster. Read-only.
+     * 
+     * @return the kind value.
+     */
+    Kind kind();
+
+    /**
      * Gets the sku property: The SKU to create, which affects price, performance, and features.
-     *
+     * 
      * @return the sku value.
      */
     Sku sku();
 
     /**
      * Gets the zones property: The Availability Zones where this cluster will be deployed.
-     *
+     * 
      * @return the zones value.
      */
     List<String> zones();
 
     /**
      * Gets the identity property: The identity of the resource.
-     *
+     * 
      * @return the identity value.
      */
     ManagedServiceIdentity identity();
 
     /**
-     * Gets the systemData property: Azure Resource Manager metadata containing createdBy and modifiedBy information.
-     *
-     * @return the systemData value.
+     * Gets the publicNetworkAccess property: Whether or not public network traffic can access the Redis cluster. Only
+     * 'Enabled' or 'Disabled' can be set. null is returned only for clusters created using an old API version which do
+     * not have this property and cannot be set.
+     * 
+     * @return the publicNetworkAccess value.
      */
-    SystemData systemData();
+    PublicNetworkAccess publicNetworkAccess();
 
     /**
-     * Gets the minimumTlsVersion property: The minimum TLS version for the cluster to support, e.g. '1.2'.
-     *
+     * Gets the highAvailability property: Enabled by default. If highAvailability is disabled, the data set is not
+     * replicated. This affects the availability SLA, and increases the risk of data loss.
+     * 
+     * @return the highAvailability value.
+     */
+    HighAvailability highAvailability();
+
+    /**
+     * Gets the minimumTlsVersion property: The minimum TLS version for the cluster to support, e.g. '1.2'. Newer
+     * versions can be added in the future. Note that TLS 1.0 and TLS 1.1 are now completely obsolete -- you cannot use
+     * them. They are mentioned only for the sake of consistency with old API versions.
+     * 
      * @return the minimumTlsVersion value.
      */
     TlsVersion minimumTlsVersion();
 
     /**
      * Gets the encryption property: Encryption-at-rest configuration for the cluster.
-     *
+     * 
      * @return the encryption value.
      */
     ClusterPropertiesEncryption encryption();
 
     /**
      * Gets the hostname property: DNS name of the cluster endpoint.
-     *
+     * 
      * @return the hostname value.
      */
     String hostname();
 
     /**
      * Gets the provisioningState property: Current provisioning status of the cluster.
-     *
+     * 
      * @return the provisioningState value.
      */
     ProvisioningState provisioningState();
 
     /**
+     * Gets the redundancyMode property: Explains the current redundancy strategy of the cluster, which affects the
+     * expected SLA.
+     * 
+     * @return the redundancyMode value.
+     */
+    RedundancyMode redundancyMode();
+
+    /**
      * Gets the resourceState property: Current resource status of the cluster.
-     *
+     * 
      * @return the resourceState value.
      */
     ResourceState resourceState();
 
     /**
      * Gets the redisVersion property: Version of redis the cluster supports, e.g. '6'.
-     *
+     * 
      * @return the redisVersion value.
      */
     String redisVersion();
 
     /**
      * Gets the privateEndpointConnections property: List of private endpoint connections associated with the specified
-     * RedisEnterprise cluster.
-     *
+     * Redis Enterprise cluster.
+     * 
      * @return the privateEndpointConnections value.
      */
     List<PrivateEndpointConnection> privateEndpointConnections();
 
     /**
      * Gets the region of the resource.
-     *
+     * 
      * @return the region of the resource.
      */
     Region region();
 
     /**
      * Gets the name of the resource region.
-     *
+     * 
      * @return the name of the resource region.
      */
     String regionName();
 
     /**
      * Gets the name of the resource group.
-     *
+     * 
      * @return the name of the resource group.
      */
     String resourceGroupName();
 
     /**
      * Gets the inner com.azure.resourcemanager.redisenterprise.fluent.models.ClusterInner object.
-     *
+     * 
      * @return the inner object.
      */
     ClusterInner innerModel();
 
-    /** The entirety of the Cluster definition. */
-    interface Definition
-        extends DefinitionStages.Blank,
-            DefinitionStages.WithLocation,
-            DefinitionStages.WithResourceGroup,
-            DefinitionStages.WithSku,
-            DefinitionStages.WithCreate {
+    /**
+     * The entirety of the Cluster definition.
+     */
+    interface Definition extends DefinitionStages.Blank, DefinitionStages.WithLocation,
+        DefinitionStages.WithResourceGroup, DefinitionStages.WithSku, DefinitionStages.WithCreate {
     }
-    /** The Cluster definition stages. */
+
+    /**
+     * The Cluster definition stages.
+     */
     interface DefinitionStages {
-        /** The first stage of the Cluster definition. */
+        /**
+         * The first stage of the Cluster definition.
+         */
         interface Blank extends WithLocation {
         }
-        /** The stage of the Cluster definition allowing to specify location. */
+
+        /**
+         * The stage of the Cluster definition allowing to specify location.
+         */
         interface WithLocation {
             /**
              * Specifies the region for the resource.
-             *
+             * 
              * @param location The geo-location where the resource lives.
              * @return the next definition stage.
              */
@@ -179,202 +214,332 @@ public interface Cluster {
 
             /**
              * Specifies the region for the resource.
-             *
+             * 
              * @param location The geo-location where the resource lives.
              * @return the next definition stage.
              */
             WithResourceGroup withRegion(String location);
         }
-        /** The stage of the Cluster definition allowing to specify parent resource. */
+
+        /**
+         * The stage of the Cluster definition allowing to specify parent resource.
+         */
         interface WithResourceGroup {
             /**
              * Specifies resourceGroupName.
-             *
+             * 
              * @param resourceGroupName The name of the resource group. The name is case insensitive.
              * @return the next definition stage.
              */
             WithSku withExistingResourceGroup(String resourceGroupName);
         }
-        /** The stage of the Cluster definition allowing to specify sku. */
+
+        /**
+         * The stage of the Cluster definition allowing to specify sku.
+         */
         interface WithSku {
             /**
              * Specifies the sku property: The SKU to create, which affects price, performance, and features..
-             *
+             * 
              * @param sku The SKU to create, which affects price, performance, and features.
              * @return the next definition stage.
              */
             WithCreate withSku(Sku sku);
         }
+
         /**
          * The stage of the Cluster definition which contains all the minimum required properties for the resource to be
          * created, but also allows for any other optional properties to be specified.
          */
         interface WithCreate
-            extends DefinitionStages.WithTags,
-                DefinitionStages.WithZones,
-                DefinitionStages.WithIdentity,
-                DefinitionStages.WithMinimumTlsVersion,
-                DefinitionStages.WithEncryption {
+            extends DefinitionStages.WithTags, DefinitionStages.WithZones, DefinitionStages.WithIdentity,
+            DefinitionStages.WithPublicNetworkAccess, DefinitionStages.WithHighAvailability,
+            DefinitionStages.WithMinimumTlsVersion, DefinitionStages.WithEncryption {
             /**
              * Executes the create request.
-             *
+             * 
              * @return the created resource.
              */
             Cluster create();
 
             /**
              * Executes the create request.
-             *
+             * 
              * @param context The context to associate with this operation.
              * @return the created resource.
              */
             Cluster create(Context context);
         }
-        /** The stage of the Cluster definition allowing to specify tags. */
+
+        /**
+         * The stage of the Cluster definition allowing to specify tags.
+         */
         interface WithTags {
             /**
              * Specifies the tags property: Resource tags..
-             *
+             * 
              * @param tags Resource tags.
              * @return the next definition stage.
              */
             WithCreate withTags(Map<String, String> tags);
         }
-        /** The stage of the Cluster definition allowing to specify zones. */
+
+        /**
+         * The stage of the Cluster definition allowing to specify zones.
+         */
         interface WithZones {
             /**
              * Specifies the zones property: The Availability Zones where this cluster will be deployed..
-             *
+             * 
              * @param zones The Availability Zones where this cluster will be deployed.
              * @return the next definition stage.
              */
             WithCreate withZones(List<String> zones);
         }
-        /** The stage of the Cluster definition allowing to specify identity. */
+
+        /**
+         * The stage of the Cluster definition allowing to specify identity.
+         */
         interface WithIdentity {
             /**
              * Specifies the identity property: The identity of the resource..
-             *
+             * 
              * @param identity The identity of the resource.
              * @return the next definition stage.
              */
             WithCreate withIdentity(ManagedServiceIdentity identity);
         }
-        /** The stage of the Cluster definition allowing to specify minimumTlsVersion. */
+
+        /**
+         * The stage of the Cluster definition allowing to specify publicNetworkAccess.
+         */
+        interface WithPublicNetworkAccess {
+            /**
+             * Specifies the publicNetworkAccess property: Whether or not public network traffic can access the Redis
+             * cluster. Only 'Enabled' or 'Disabled' can be set. null is returned only for clusters created using an old
+             * API version which do not have this property and cannot be set..
+             * 
+             * @param publicNetworkAccess Whether or not public network traffic can access the Redis cluster. Only
+             * 'Enabled' or 'Disabled' can be set. null is returned only for clusters created using an old API version
+             * which do not have this property and cannot be set.
+             * @return the next definition stage.
+             */
+            WithCreate withPublicNetworkAccess(PublicNetworkAccess publicNetworkAccess);
+        }
+
+        /**
+         * The stage of the Cluster definition allowing to specify highAvailability.
+         */
+        interface WithHighAvailability {
+            /**
+             * Specifies the highAvailability property: Enabled by default. If highAvailability is disabled, the data
+             * set is not replicated. This affects the availability SLA, and increases the risk of data loss..
+             * 
+             * @param highAvailability Enabled by default. If highAvailability is disabled, the data set is not
+             * replicated. This affects the availability SLA, and increases the risk of data loss.
+             * @return the next definition stage.
+             */
+            WithCreate withHighAvailability(HighAvailability highAvailability);
+        }
+
+        /**
+         * The stage of the Cluster definition allowing to specify minimumTlsVersion.
+         */
         interface WithMinimumTlsVersion {
             /**
              * Specifies the minimumTlsVersion property: The minimum TLS version for the cluster to support, e.g. '1.2'.
-             *
-             * @param minimumTlsVersion The minimum TLS version for the cluster to support, e.g. '1.2'.
+             * Newer versions can be added in the future. Note that TLS 1.0 and TLS 1.1 are now completely obsolete --
+             * you cannot use them. They are mentioned only for the sake of consistency with old API versions..
+             * 
+             * @param minimumTlsVersion The minimum TLS version for the cluster to support, e.g. '1.2'. Newer versions
+             * can be added in the future. Note that TLS 1.0 and TLS 1.1 are now completely obsolete -- you cannot use
+             * them. They are mentioned only for the sake of consistency with old API versions.
              * @return the next definition stage.
              */
             WithCreate withMinimumTlsVersion(TlsVersion minimumTlsVersion);
         }
-        /** The stage of the Cluster definition allowing to specify encryption. */
+
+        /**
+         * The stage of the Cluster definition allowing to specify encryption.
+         */
         interface WithEncryption {
             /**
              * Specifies the encryption property: Encryption-at-rest configuration for the cluster..
-             *
+             * 
              * @param encryption Encryption-at-rest configuration for the cluster.
              * @return the next definition stage.
              */
             WithCreate withEncryption(ClusterPropertiesEncryption encryption);
         }
     }
+
     /**
      * Begins update for the Cluster resource.
-     *
+     * 
      * @return the stage of resource update.
      */
     Cluster.Update update();
 
-    /** The template for Cluster update. */
-    interface Update
-        extends UpdateStages.WithTags,
-            UpdateStages.WithSku,
-            UpdateStages.WithIdentity,
-            UpdateStages.WithMinimumTlsVersion,
-            UpdateStages.WithEncryption {
+    /**
+     * The template for Cluster update.
+     */
+    interface Update extends UpdateStages.WithTags, UpdateStages.WithSku, UpdateStages.WithIdentity,
+        UpdateStages.WithPublicNetworkAccess, UpdateStages.WithHighAvailability, UpdateStages.WithMinimumTlsVersion,
+        UpdateStages.WithEncryption {
         /**
          * Executes the update request.
-         *
+         * 
          * @return the updated resource.
          */
         Cluster apply();
 
         /**
          * Executes the update request.
-         *
+         * 
          * @param context The context to associate with this operation.
          * @return the updated resource.
          */
         Cluster apply(Context context);
     }
-    /** The Cluster update stages. */
+
+    /**
+     * The Cluster update stages.
+     */
     interface UpdateStages {
-        /** The stage of the Cluster update allowing to specify tags. */
+        /**
+         * The stage of the Cluster update allowing to specify tags.
+         */
         interface WithTags {
             /**
              * Specifies the tags property: Resource tags..
-             *
+             * 
              * @param tags Resource tags.
              * @return the next definition stage.
              */
             Update withTags(Map<String, String> tags);
         }
-        /** The stage of the Cluster update allowing to specify sku. */
+
+        /**
+         * The stage of the Cluster update allowing to specify sku.
+         */
         interface WithSku {
             /**
              * Specifies the sku property: The SKU to create, which affects price, performance, and features..
-             *
+             * 
              * @param sku The SKU to create, which affects price, performance, and features.
              * @return the next definition stage.
              */
             Update withSku(Sku sku);
         }
-        /** The stage of the Cluster update allowing to specify identity. */
+
+        /**
+         * The stage of the Cluster update allowing to specify identity.
+         */
         interface WithIdentity {
             /**
              * Specifies the identity property: The identity of the resource..
-             *
+             * 
              * @param identity The identity of the resource.
              * @return the next definition stage.
              */
             Update withIdentity(ManagedServiceIdentity identity);
         }
-        /** The stage of the Cluster update allowing to specify minimumTlsVersion. */
+
+        /**
+         * The stage of the Cluster update allowing to specify publicNetworkAccess.
+         */
+        interface WithPublicNetworkAccess {
+            /**
+             * Specifies the publicNetworkAccess property: Whether or not public network traffic can access the Redis
+             * cluster. Only 'Enabled' or 'Disabled' can be set. null is returned only for clusters created using an old
+             * API version which do not have this property and cannot be set..
+             * 
+             * @param publicNetworkAccess Whether or not public network traffic can access the Redis cluster. Only
+             * 'Enabled' or 'Disabled' can be set. null is returned only for clusters created using an old API version
+             * which do not have this property and cannot be set.
+             * @return the next definition stage.
+             */
+            Update withPublicNetworkAccess(PublicNetworkAccess publicNetworkAccess);
+        }
+
+        /**
+         * The stage of the Cluster update allowing to specify highAvailability.
+         */
+        interface WithHighAvailability {
+            /**
+             * Specifies the highAvailability property: Enabled by default. If highAvailability is disabled, the data
+             * set is not replicated. This affects the availability SLA, and increases the risk of data loss..
+             * 
+             * @param highAvailability Enabled by default. If highAvailability is disabled, the data set is not
+             * replicated. This affects the availability SLA, and increases the risk of data loss.
+             * @return the next definition stage.
+             */
+            Update withHighAvailability(HighAvailability highAvailability);
+        }
+
+        /**
+         * The stage of the Cluster update allowing to specify minimumTlsVersion.
+         */
         interface WithMinimumTlsVersion {
             /**
              * Specifies the minimumTlsVersion property: The minimum TLS version for the cluster to support, e.g. '1.2'.
-             *
-             * @param minimumTlsVersion The minimum TLS version for the cluster to support, e.g. '1.2'.
+             * Newer versions can be added in the future. Note that TLS 1.0 and TLS 1.1 are now completely obsolete --
+             * you cannot use them. They are mentioned only for the sake of consistency with old API versions..
+             * 
+             * @param minimumTlsVersion The minimum TLS version for the cluster to support, e.g. '1.2'. Newer versions
+             * can be added in the future. Note that TLS 1.0 and TLS 1.1 are now completely obsolete -- you cannot use
+             * them. They are mentioned only for the sake of consistency with old API versions.
              * @return the next definition stage.
              */
             Update withMinimumTlsVersion(TlsVersion minimumTlsVersion);
         }
-        /** The stage of the Cluster update allowing to specify encryption. */
+
+        /**
+         * The stage of the Cluster update allowing to specify encryption.
+         */
         interface WithEncryption {
             /**
              * Specifies the encryption property: Encryption-at-rest configuration for the cluster..
-             *
+             * 
              * @param encryption Encryption-at-rest configuration for the cluster.
              * @return the next definition stage.
              */
             Update withEncryption(ClusterPropertiesEncryption encryption);
         }
     }
+
     /**
      * Refreshes the resource to sync with Azure.
-     *
+     * 
      * @return the refreshed resource.
      */
     Cluster refresh();
 
     /**
      * Refreshes the resource to sync with Azure.
-     *
+     * 
      * @param context The context to associate with this operation.
      * @return the refreshed resource.
      */
     Cluster refresh(Context context);
+
+    /**
+     * Lists the available SKUs for scaling the Redis Enterprise cluster.
+     * 
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response of a listSkusForScaling operation along with {@link Response}.
+     */
+    Response<SkuDetailsList> listSkusForScalingWithResponse(Context context);
+
+    /**
+     * Lists the available SKUs for scaling the Redis Enterprise cluster.
+     * 
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response of a listSkusForScaling operation.
+     */
+    SkuDetailsList listSkusForScaling();
 }

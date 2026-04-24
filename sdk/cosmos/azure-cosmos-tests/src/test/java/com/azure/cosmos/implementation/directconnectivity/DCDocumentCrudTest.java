@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 package com.azure.cosmos.implementation.directconnectivity;
+import com.azure.cosmos.rx.TestSuiteBase;
 
-import com.azure.cosmos.BridgeInternal;
 import com.azure.cosmos.ConsistencyLevel;
 import com.azure.cosmos.DirectConnectionConfig;
 import com.azure.cosmos.implementation.AsyncDocumentClient.Builder;
-import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
+import com.azure.cosmos.implementation.QueryFeedOperationState;
+import com.azure.cosmos.implementation.TestUtils;
 import com.azure.cosmos.implementation.clienttelemetry.ClientTelemetry;
 import com.azure.cosmos.models.CosmosClientTelemetryConfig;
 import com.azure.cosmos.implementation.Configs;
@@ -26,7 +27,6 @@ import com.azure.cosmos.implementation.SpyClientUnderTestFactory;
 import com.azure.cosmos.implementation.StoredProcedure;
 import com.azure.cosmos.implementation.StoredProcedureResponse;
 import com.azure.cosmos.implementation.TestConfigurations;
-import com.azure.cosmos.implementation.TestSuiteBase;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.FeedResponse;
 import com.azure.cosmos.models.ModelBridgeInternal;
@@ -196,7 +196,7 @@ public class DCDocumentCrudTest extends TestSuiteBase {
 
         String propName = "newProp";
         String propValue = "hello";
-        BridgeInternal.setProperty(document, propName, propValue);
+        document.set(propName, propValue);
 
         ResourceResponseValidator<Document> validator = ResourceResponseValidator.<Document>builder()
             .withProperty(propName, propValue)
@@ -229,17 +229,27 @@ public class DCDocumentCrudTest extends TestSuiteBase {
         options.setMaxDegreeOfParallelism(-1);
         ModelBridgeInternal.setQueryRequestOptionsMaxItemCount(options, 100);
 
-        Flux<FeedResponse<Document>> results = client.queryDocuments(
-            getCollectionLink(), "SELECT * FROM r", options, Document.class);
+        QueryFeedOperationState dummyState =
+            TestUtils.createDummyQueryFeedOperationState(ResourceType.Document, OperationType.Query, options, client);
+        try {
+            Flux<FeedResponse<Document>> results = client.queryDocuments(
+                getCollectionLink(),
+                "SELECT * FROM r",
+                dummyState,
+                Document.class);
 
-        FeedResponseListValidator<Document> validator = new FeedResponseListValidator.Builder<Document>()
+            FeedResponseListValidator<Document> validator = new FeedResponseListValidator.Builder<Document>()
                 .totalSize(documentList.size())
                 .exactlyContainsInAnyOrder(documentList.stream().map(Document::getResourceId).collect(Collectors.toList())).build();
 
-        validateQuerySuccess(results, validator, QUERY_TIMEOUT);
-        validateNoDocumentQueryOperationThroughGateway();
-        // validates only the first query for fetching query plan goes to gateway.
-        assertThat(client.getCapturedRequests().stream().filter(r -> r.getResourceType() == ResourceType.Document)).hasSize(1);
+            validateQuerySuccess(results, validator, QUERY_TIMEOUT);
+            validateNoDocumentQueryOperationThroughGateway();
+
+            // validates only the first query for fetching query plan goes to gateway.
+            assertThat(client.getCapturedRequests().stream().filter(r -> r.getResourceType() == ResourceType.Document)).hasSize(1);
+        } finally {
+            safeClose(dummyState);
+        }
     }
 
     private void validateNoStoredProcExecutionOperationThroughGateway() {
@@ -300,8 +310,8 @@ public class DCDocumentCrudTest extends TestSuiteBase {
 
         RequestOptions options = new RequestOptions();
         options.setOfferThroughput(10100);
-        createdDatabase = SHARED_DATABASE;
-        createdCollection = createCollection(createdDatabase.getId(), getCollectionDefinition(), options);
+        createdDatabase = SHARED_DATABASE_INTERNAL;
+        createdCollection = createCollection(createdDatabase.getId(), getInternalCollectionDefinition(), options);
         client = SpyClientUnderTestFactory.createClientWithGatewaySpy(clientBuilder());
 
         assertThat(client.getCapturedRequests()).isNotEmpty();
@@ -324,8 +334,8 @@ public class DCDocumentCrudTest extends TestSuiteBase {
     private Document getDocumentDefinition() {
         Document doc = new Document();
         doc.setId(UUID.randomUUID().toString());
-        BridgeInternal.setProperty(doc, PARTITION_KEY_FIELD_NAME, UUID.randomUUID().toString());
-        BridgeInternal.setProperty(doc, "name", "Hafez");
+        doc.set(PARTITION_KEY_FIELD_NAME, UUID.randomUUID().toString());
+        doc.set("name", "Hafez");
         return doc;
     }
 

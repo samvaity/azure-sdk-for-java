@@ -5,84 +5,107 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Responsys linked service. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("Responsys")
-@JsonFlatten
+/**
+ * Responsys linked service.
+ */
 @Fluent
 public class ResponsysLinkedService extends LinkedService {
     /*
+     * Type of linked service.
+     */
+    @Generated
+    private String type = "Responsys";
+
+    /*
      * The endpoint of the Responsys server.
      */
-    @JsonProperty(value = "typeProperties.endpoint", required = true)
+    @Generated
     private Object endpoint;
 
     /*
      * The client ID associated with the Responsys application. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.clientId", required = true)
+    @Generated
     private Object clientId;
 
     /*
-     * The client secret associated with the Responsys application. Type: string (or Expression with resultType
-     * string).
+     * The client secret associated with the Responsys application. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.clientSecret")
+    @Generated
     private SecretBase clientSecret;
 
     /*
      * Specifies whether the data source endpoints are encrypted using HTTPS. The default value is true. Type: boolean
      * (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "typeProperties.useEncryptedEndpoints")
+    @Generated
     private Object useEncryptedEndpoints;
 
     /*
      * Specifies whether to require the host name in the server's certificate to match the host name of the server when
      * connecting over SSL. The default value is true. Type: boolean (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "typeProperties.useHostVerification")
+    @Generated
     private Object useHostVerification;
 
     /*
-     * Specifies whether to verify the identity of the server when connecting over SSL. The default value is true.
-     * Type: boolean (or Expression with resultType boolean).
+     * Specifies whether to verify the identity of the server when connecting over SSL. The default value is true. Type:
+     * boolean (or Expression with resultType boolean).
      */
-    @JsonProperty(value = "typeProperties.usePeerVerification")
+    @Generated
     private Object usePeerVerification;
 
     /*
      * The encrypted credential used for authentication. Credentials are encrypted using the integration runtime
      * credential manager. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.encryptedCredential")
+    @Generated
     private Object encryptedCredential;
 
-    /** Creates an instance of ResponsysLinkedService class. */
-    public ResponsysLinkedService() {}
+    /**
+     * Creates an instance of ResponsysLinkedService class.
+     */
+    @Generated
+    public ResponsysLinkedService() {
+    }
+
+    /**
+     * Get the type property: Type of linked service.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the endpoint property: The endpoint of the Responsys server.
-     *
+     * 
      * @return the endpoint value.
      */
+    @Generated
     public Object getEndpoint() {
         return this.endpoint;
     }
 
     /**
      * Set the endpoint property: The endpoint of the Responsys server.
-     *
+     * 
      * @param endpoint the endpoint value to set.
      * @return the ResponsysLinkedService object itself.
      */
+    @Generated
     public ResponsysLinkedService setEndpoint(Object endpoint) {
         this.endpoint = endpoint;
         return this;
@@ -91,9 +114,10 @@ public class ResponsysLinkedService extends LinkedService {
     /**
      * Get the clientId property: The client ID associated with the Responsys application. Type: string (or Expression
      * with resultType string).
-     *
+     * 
      * @return the clientId value.
      */
+    @Generated
     public Object getClientId() {
         return this.clientId;
     }
@@ -101,10 +125,11 @@ public class ResponsysLinkedService extends LinkedService {
     /**
      * Set the clientId property: The client ID associated with the Responsys application. Type: string (or Expression
      * with resultType string).
-     *
+     * 
      * @param clientId the clientId value to set.
      * @return the ResponsysLinkedService object itself.
      */
+    @Generated
     public ResponsysLinkedService setClientId(Object clientId) {
         this.clientId = clientId;
         return this;
@@ -113,9 +138,10 @@ public class ResponsysLinkedService extends LinkedService {
     /**
      * Get the clientSecret property: The client secret associated with the Responsys application. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @return the clientSecret value.
      */
+    @Generated
     public SecretBase getClientSecret() {
         return this.clientSecret;
     }
@@ -123,10 +149,11 @@ public class ResponsysLinkedService extends LinkedService {
     /**
      * Set the clientSecret property: The client secret associated with the Responsys application. Type: string (or
      * Expression with resultType string).
-     *
+     * 
      * @param clientSecret the clientSecret value to set.
      * @return the ResponsysLinkedService object itself.
      */
+    @Generated
     public ResponsysLinkedService setClientSecret(SecretBase clientSecret) {
         this.clientSecret = clientSecret;
         return this;
@@ -135,9 +162,10 @@ public class ResponsysLinkedService extends LinkedService {
     /**
      * Get the useEncryptedEndpoints property: Specifies whether the data source endpoints are encrypted using HTTPS.
      * The default value is true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the useEncryptedEndpoints value.
      */
+    @Generated
     public Object getUseEncryptedEndpoints() {
         return this.useEncryptedEndpoints;
     }
@@ -145,10 +173,11 @@ public class ResponsysLinkedService extends LinkedService {
     /**
      * Set the useEncryptedEndpoints property: Specifies whether the data source endpoints are encrypted using HTTPS.
      * The default value is true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param useEncryptedEndpoints the useEncryptedEndpoints value to set.
      * @return the ResponsysLinkedService object itself.
      */
+    @Generated
     public ResponsysLinkedService setUseEncryptedEndpoints(Object useEncryptedEndpoints) {
         this.useEncryptedEndpoints = useEncryptedEndpoints;
         return this;
@@ -158,9 +187,10 @@ public class ResponsysLinkedService extends LinkedService {
      * Get the useHostVerification property: Specifies whether to require the host name in the server's certificate to
      * match the host name of the server when connecting over SSL. The default value is true. Type: boolean (or
      * Expression with resultType boolean).
-     *
+     * 
      * @return the useHostVerification value.
      */
+    @Generated
     public Object getUseHostVerification() {
         return this.useHostVerification;
     }
@@ -169,10 +199,11 @@ public class ResponsysLinkedService extends LinkedService {
      * Set the useHostVerification property: Specifies whether to require the host name in the server's certificate to
      * match the host name of the server when connecting over SSL. The default value is true. Type: boolean (or
      * Expression with resultType boolean).
-     *
+     * 
      * @param useHostVerification the useHostVerification value to set.
      * @return the ResponsysLinkedService object itself.
      */
+    @Generated
     public ResponsysLinkedService setUseHostVerification(Object useHostVerification) {
         this.useHostVerification = useHostVerification;
         return this;
@@ -181,9 +212,10 @@ public class ResponsysLinkedService extends LinkedService {
     /**
      * Get the usePeerVerification property: Specifies whether to verify the identity of the server when connecting over
      * SSL. The default value is true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @return the usePeerVerification value.
      */
+    @Generated
     public Object getUsePeerVerification() {
         return this.usePeerVerification;
     }
@@ -191,10 +223,11 @@ public class ResponsysLinkedService extends LinkedService {
     /**
      * Set the usePeerVerification property: Specifies whether to verify the identity of the server when connecting over
      * SSL. The default value is true. Type: boolean (or Expression with resultType boolean).
-     *
+     * 
      * @param usePeerVerification the usePeerVerification value to set.
      * @return the ResponsysLinkedService object itself.
      */
+    @Generated
     public ResponsysLinkedService setUsePeerVerification(Object usePeerVerification) {
         this.usePeerVerification = usePeerVerification;
         return this;
@@ -203,9 +236,10 @@ public class ResponsysLinkedService extends LinkedService {
     /**
      * Get the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @return the encryptedCredential value.
      */
+    @Generated
     public Object getEncryptedCredential() {
         return this.encryptedCredential;
     }
@@ -213,40 +247,179 @@ public class ResponsysLinkedService extends LinkedService {
     /**
      * Set the encryptedCredential property: The encrypted credential used for authentication. Credentials are encrypted
      * using the integration runtime credential manager. Type: string (or Expression with resultType string).
-     *
+     * 
      * @param encryptedCredential the encryptedCredential value to set.
      * @return the ResponsysLinkedService object itself.
      */
+    @Generated
     public ResponsysLinkedService setEncryptedCredential(Object encryptedCredential) {
         this.encryptedCredential = encryptedCredential;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public ResponsysLinkedService setVersion(String version) {
+        super.setVersion(version);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ResponsysLinkedService setConnectVia(IntegrationRuntimeReference connectVia) {
         super.setConnectVia(connectVia);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ResponsysLinkedService setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ResponsysLinkedService setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public ResponsysLinkedService setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("version", getVersion());
+        jsonWriter.writeJsonField("connectVia", getConnectVia());
+        jsonWriter.writeStringField("description", getDescription());
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeStringField("type", this.type);
+        if (endpoint != null
+            || clientId != null
+            || clientSecret != null
+            || useEncryptedEndpoints != null
+            || useHostVerification != null
+            || usePeerVerification != null
+            || encryptedCredential != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("endpoint", this.endpoint);
+            jsonWriter.writeUntypedField("clientId", this.clientId);
+            jsonWriter.writeJsonField("clientSecret", this.clientSecret);
+            if (this.useEncryptedEndpoints != null) {
+                jsonWriter.writeUntypedField("useEncryptedEndpoints", this.useEncryptedEndpoints);
+            }
+            if (this.useHostVerification != null) {
+                jsonWriter.writeUntypedField("useHostVerification", this.useHostVerification);
+            }
+            if (this.usePeerVerification != null) {
+                jsonWriter.writeUntypedField("usePeerVerification", this.usePeerVerification);
+            }
+            if (this.encryptedCredential != null) {
+                jsonWriter.writeUntypedField("encryptedCredential", this.encryptedCredential);
+            }
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ResponsysLinkedService from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ResponsysLinkedService if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ResponsysLinkedService.
+     */
+    @Generated
+    public static ResponsysLinkedService fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ResponsysLinkedService deserializedResponsysLinkedService = new ResponsysLinkedService();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("version".equals(fieldName)) {
+                    deserializedResponsysLinkedService.setVersion(reader.getString());
+                } else if ("connectVia".equals(fieldName)) {
+                    deserializedResponsysLinkedService.setConnectVia(IntegrationRuntimeReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedResponsysLinkedService.setDescription(reader.getString());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedResponsysLinkedService.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedResponsysLinkedService.setAnnotations(annotations);
+                } else if ("type".equals(fieldName)) {
+                    deserializedResponsysLinkedService.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("endpoint".equals(fieldName)) {
+                            deserializedResponsysLinkedService.endpoint = reader.readUntyped();
+                        } else if ("clientId".equals(fieldName)) {
+                            deserializedResponsysLinkedService.clientId = reader.readUntyped();
+                        } else if ("clientSecret".equals(fieldName)) {
+                            deserializedResponsysLinkedService.clientSecret = SecretBase.fromJson(reader);
+                        } else if ("useEncryptedEndpoints".equals(fieldName)) {
+                            deserializedResponsysLinkedService.useEncryptedEndpoints = reader.readUntyped();
+                        } else if ("useHostVerification".equals(fieldName)) {
+                            deserializedResponsysLinkedService.useHostVerification = reader.readUntyped();
+                        } else if ("usePeerVerification".equals(fieldName)) {
+                            deserializedResponsysLinkedService.usePeerVerification = reader.readUntyped();
+                        } else if ("encryptedCredential".equals(fieldName)) {
+                            deserializedResponsysLinkedService.encryptedCredential = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedResponsysLinkedService.setAdditionalProperties(additionalProperties);
+
+            return deserializedResponsysLinkedService;
+        });
     }
 }

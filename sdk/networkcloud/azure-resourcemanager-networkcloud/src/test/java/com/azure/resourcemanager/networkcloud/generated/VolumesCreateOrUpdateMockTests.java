@@ -6,80 +6,54 @@ package com.azure.resourcemanager.networkcloud.generated;
 
 import com.azure.core.credential.AccessToken;
 import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
+import com.azure.core.models.AzureCloud;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.resourcemanager.networkcloud.NetworkCloudManager;
 import com.azure.resourcemanager.networkcloud.models.ExtendedLocation;
 import com.azure.resourcemanager.networkcloud.models.Volume;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public final class VolumesCreateOrUpdateMockTests {
     @Test
     public void testCreateOrUpdate() throws Exception {
-        HttpClient httpClient = Mockito.mock(HttpClient.class);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
-        ArgumentCaptor<HttpRequest> httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        String responseStr
+            = "{\"etag\":\"sozjvxdzciggbnv\",\"extendedLocation\":{\"name\":\"xofwalzy\",\"type\":\"whoea\"},\"properties\":{\"allocatedSizeMiB\":1090560148574517969,\"attachedTo\":[\"oeysfp\"],\"detailedStatus\":\"Provisioning\",\"detailedStatusMessage\":\"wuuhauegnkwmnfe\",\"provisioningState\":\"Succeeded\",\"serialNumber\":\"jyrkwfug\",\"sizeMiB\":9221982839205722630,\"storageApplianceId\":\"rkuumn\"},\"location\":\"urhzzf\",\"tags\":{\"svwlujop\":\"eoq\",\"fmwc\":\"nibittoztjdqumq\",\"rbelfnzz\":\"ddtgctxegtvgwy\"},\"id\":\"yizwbxgdebxla\",\"name\":\"unomir\",\"type\":\"p\"}";
 
-        String responseStr =
-            "{\"extendedLocation\":{\"name\":\"aqzi\",\"type\":\"mqimiymqru\"},\"properties\":{\"attachedTo\":[\"hfupetasvvoqsbpk\"],\"detailedStatus\":\"Error\",\"detailedStatusMessage\":\"fkg\",\"provisioningState\":\"Succeeded\",\"serialNumber\":\"owuz\",\"sizeMiB\":1254235972970834440},\"location\":\"ohdkcprgukx\",\"tags\":{\"hlutixmqrudjizc\":\"io\",\"mcrunfhiucn\":\"f\",\"dkyzbfvxov\":\"fbcpaqktkrumzu\",\"hyhlwcjsqg\":\"kxiuxqggvqr\"},\"id\":\"jhffbxrqrkij\",\"name\":\"euqlsdxeqztv\",\"type\":\"wmwwmjswen\"}";
+        HttpClient httpClient
+            = response -> Mono.just(new MockHttpResponse(response, 200, responseStr.getBytes(StandardCharsets.UTF_8)));
+        NetworkCloudManager manager = NetworkCloudManager.configure()
+            .withHttpClient(httpClient)
+            .authenticate(tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
+                new AzureProfile("", "", AzureCloud.AZURE_PUBLIC_CLOUD));
 
-        Mockito.when(httpResponse.getStatusCode()).thenReturn(200);
-        Mockito.when(httpResponse.getHeaders()).thenReturn(new HttpHeaders());
-        Mockito
-            .when(httpResponse.getBody())
-            .thenReturn(Flux.just(ByteBuffer.wrap(responseStr.getBytes(StandardCharsets.UTF_8))));
-        Mockito
-            .when(httpResponse.getBodyAsByteArray())
-            .thenReturn(Mono.just(responseStr.getBytes(StandardCharsets.UTF_8)));
-        Mockito
-            .when(httpClient.send(httpRequest.capture(), Mockito.any()))
-            .thenReturn(
-                Mono
-                    .defer(
-                        () -> {
-                            Mockito.when(httpResponse.getRequest()).thenReturn(httpRequest.getValue());
-                            return Mono.just(httpResponse);
-                        }));
+        Volume response = manager.volumes()
+            .define("hnxlzbuwodmachb")
+            .withRegion("jwayhi")
+            .withExistingResourceGroup("sqc")
+            .withExtendedLocation(new ExtendedLocation().withName("rmvgoqplehmumkz").withType("llcz"))
+            .withSizeMiB(8672131710381210963L)
+            .withTags(mapOf("kslvlizedvb", "wwvg", "srgekzyqxadyfhb", "abv", "aqjsgyzstujr", "wkhojqttbspvkhg"))
+            .withStorageApplianceId("nhczbutoucgjt")
+            .withIfMatch("qwrldaxur")
+            .withIfNoneMatch("qa")
+            .create();
 
-        NetworkCloudManager manager =
-            NetworkCloudManager
-                .configure()
-                .withHttpClient(httpClient)
-                .authenticate(
-                    tokenRequestContext -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)),
-                    new AzureProfile("", "", AzureEnvironment.AZURE));
-
-        Volume response =
-            manager
-                .volumes()
-                .define("obsmf")
-                .withRegion("dndoabhjxw")
-                .withExistingResourceGroup("ikcdrdaasax")
-                .withExtendedLocation(new ExtendedLocation().withName("wiyjvzuko").withType("r"))
-                .withSizeMiB(2392325715602900901L)
-                .withTags(mapOf("tltcl", "euipmpvksmitnsq", "frakkldgrc", "rdpqgfhy", "jajqmatxjt", "fcmfcn"))
-                .create();
-
-        Assertions.assertEquals("ohdkcprgukx", response.location());
-        Assertions.assertEquals("io", response.tags().get("hlutixmqrudjizc"));
-        Assertions.assertEquals("aqzi", response.extendedLocation().name());
-        Assertions.assertEquals("mqimiymqru", response.extendedLocation().type());
-        Assertions.assertEquals(1254235972970834440L, response.sizeMiB());
+        Assertions.assertEquals("urhzzf", response.location());
+        Assertions.assertEquals("eoq", response.tags().get("svwlujop"));
+        Assertions.assertEquals("xofwalzy", response.extendedLocation().name());
+        Assertions.assertEquals("whoea", response.extendedLocation().type());
+        Assertions.assertEquals(9221982839205722630L, response.sizeMiB());
+        Assertions.assertEquals("rkuumn", response.storageApplianceId());
     }
 
+    // Use "Map.of" if available
     @SuppressWarnings("unchecked")
     private static <T> Map<String, T> mapOf(Object... inputs) {
         Map<String, T> map = new HashMap<>();

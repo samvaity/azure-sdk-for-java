@@ -5,34 +5,57 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.annotation.JsonFlatten;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** The path of the SAP Cloud for Customer OData entity. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("SapCloudForCustomerResource")
-@JsonFlatten
+/**
+ * The path of the SAP Cloud for Customer OData entity.
+ */
 @Fluent
 public class SapCloudForCustomerResourceDataset extends Dataset {
     /*
+     * Type of dataset.
+     */
+    @Generated
+    private String type = "SapCloudForCustomerResource";
+
+    /*
      * The path of the SAP Cloud for Customer OData entity. Type: string (or Expression with resultType string).
      */
-    @JsonProperty(value = "typeProperties.path", required = true)
+    @Generated
     private Object path;
 
-    /** Creates an instance of SapCloudForCustomerResourceDataset class. */
-    public SapCloudForCustomerResourceDataset() {}
+    /**
+     * Creates an instance of SapCloudForCustomerResourceDataset class.
+     */
+    @Generated
+    public SapCloudForCustomerResourceDataset() {
+    }
+
+    /**
+     * Get the type property: Type of dataset.
+     * 
+     * @return the type value.
+     */
+    @Generated
+    @Override
+    public String getType() {
+        return this.type;
+    }
 
     /**
      * Get the path property: The path of the SAP Cloud for Customer OData entity. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @return the path value.
      */
+    @Generated
     public Object getPath() {
         return this.path;
     }
@@ -40,61 +63,179 @@ public class SapCloudForCustomerResourceDataset extends Dataset {
     /**
      * Set the path property: The path of the SAP Cloud for Customer OData entity. Type: string (or Expression with
      * resultType string).
-     *
+     * 
      * @param path the path value to set.
      * @return the SapCloudForCustomerResourceDataset object itself.
      */
+    @Generated
     public SapCloudForCustomerResourceDataset setPath(Object path) {
         this.path = path;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerResourceDataset setDescription(String description) {
         super.setDescription(description);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerResourceDataset setStructure(Object structure) {
         super.setStructure(structure);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerResourceDataset setSchema(Object schema) {
         super.setSchema(schema);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerResourceDataset setLinkedServiceName(LinkedServiceReference linkedServiceName) {
         super.setLinkedServiceName(linkedServiceName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerResourceDataset setParameters(Map<String, ParameterSpecification> parameters) {
         super.setParameters(parameters);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerResourceDataset setAnnotations(List<Object> annotations) {
         super.setAnnotations(annotations);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SapCloudForCustomerResourceDataset setFolder(DatasetFolder folder) {
         super.setFolder(folder);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("linkedServiceName", getLinkedServiceName());
+        jsonWriter.writeStringField("description", getDescription());
+        if (getStructure() != null) {
+            jsonWriter.writeUntypedField("structure", getStructure());
+        }
+        if (getSchema() != null) {
+            jsonWriter.writeUntypedField("schema", getSchema());
+        }
+        jsonWriter.writeMapField("parameters", getParameters(), (writer, element) -> writer.writeJson(element));
+        jsonWriter.writeArrayField("annotations", getAnnotations(), (writer, element) -> writer.writeUntyped(element));
+        jsonWriter.writeJsonField("folder", getFolder());
+        jsonWriter.writeStringField("type", this.type);
+        if (path != null) {
+            jsonWriter.writeStartObject("typeProperties");
+            jsonWriter.writeUntypedField("path", this.path);
+            jsonWriter.writeEndObject();
+        }
+        if (getAdditionalProperties() != null) {
+            for (Map.Entry<String, Object> additionalProperty : getAdditionalProperties().entrySet()) {
+                jsonWriter.writeUntypedField(additionalProperty.getKey(), additionalProperty.getValue());
+            }
+        }
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SapCloudForCustomerResourceDataset from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SapCloudForCustomerResourceDataset if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the SapCloudForCustomerResourceDataset.
+     */
+    @Generated
+    public static SapCloudForCustomerResourceDataset fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SapCloudForCustomerResourceDataset deserializedSapCloudForCustomerResourceDataset
+                = new SapCloudForCustomerResourceDataset();
+            Map<String, Object> additionalProperties = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("linkedServiceName".equals(fieldName)) {
+                    deserializedSapCloudForCustomerResourceDataset
+                        .setLinkedServiceName(LinkedServiceReference.fromJson(reader));
+                } else if ("description".equals(fieldName)) {
+                    deserializedSapCloudForCustomerResourceDataset.setDescription(reader.getString());
+                } else if ("structure".equals(fieldName)) {
+                    deserializedSapCloudForCustomerResourceDataset.setStructure(reader.readUntyped());
+                } else if ("schema".equals(fieldName)) {
+                    deserializedSapCloudForCustomerResourceDataset.setSchema(reader.readUntyped());
+                } else if ("parameters".equals(fieldName)) {
+                    Map<String, ParameterSpecification> parameters
+                        = reader.readMap(reader1 -> ParameterSpecification.fromJson(reader1));
+                    deserializedSapCloudForCustomerResourceDataset.setParameters(parameters);
+                } else if ("annotations".equals(fieldName)) {
+                    List<Object> annotations = reader.readArray(reader1 -> reader1.readUntyped());
+                    deserializedSapCloudForCustomerResourceDataset.setAnnotations(annotations);
+                } else if ("folder".equals(fieldName)) {
+                    deserializedSapCloudForCustomerResourceDataset.setFolder(DatasetFolder.fromJson(reader));
+                } else if ("type".equals(fieldName)) {
+                    deserializedSapCloudForCustomerResourceDataset.type = reader.getString();
+                } else if ("typeProperties".equals(fieldName) && reader.currentToken() == JsonToken.START_OBJECT) {
+                    while (reader.nextToken() != JsonToken.END_OBJECT) {
+                        fieldName = reader.getFieldName();
+                        reader.nextToken();
+
+                        if ("path".equals(fieldName)) {
+                            deserializedSapCloudForCustomerResourceDataset.path = reader.readUntyped();
+                        } else {
+                            reader.skipChildren();
+                        }
+                    }
+                } else {
+                    if (additionalProperties == null) {
+                        additionalProperties = new LinkedHashMap<>();
+                    }
+
+                    additionalProperties.put(fieldName, reader.readUntyped());
+                }
+            }
+            deserializedSapCloudForCustomerResourceDataset.setAdditionalProperties(additionalProperties);
+
+            return deserializedSapCloudForCustomerResourceDataset;
+        });
     }
 }

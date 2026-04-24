@@ -4,20 +4,22 @@
 
 package com.azure.resourcemanager.appcontainers.generated;
 
-/** Samples for ContainerApps ListCustomHostnameAnalysis. */
+/**
+ * Samples for ContainerApps ListCustomHostnameAnalysis.
+ */
 public final class ContainerAppsListCustomHostnameAnalysisSamples {
     /*
-     * x-ms-original-file: specification/app/resource-manager/Microsoft.App/preview/2022-11-01-preview/examples/ContainerApps_ListCustomHostNameAnalysis.json
+     * x-ms-original-file: specification/app/resource-manager/Microsoft.App/ContainerApps/stable/2025-07-01/examples/
+     * ContainerApps_ListCustomHostNameAnalysis.json
      */
     /**
      * Sample code: Analyze Custom Hostname.
-     *
+     * 
      * @param manager Entry point to ContainerAppsApiManager.
      */
     public static void analyzeCustomHostname(com.azure.resourcemanager.appcontainers.ContainerAppsApiManager manager) {
-        manager
-            .containerApps()
-            .listCustomHostnameAnalysisWithResponse(
-                "rg", "testcontainerApp0", "my.name.corp", com.azure.core.util.Context.NONE);
+        manager.containerApps()
+            .listCustomHostnameAnalysisWithResponse("rg", "testcontainerapp0", "my.name.corp",
+                com.azure.core.util.Context.NONE);
     }
 }

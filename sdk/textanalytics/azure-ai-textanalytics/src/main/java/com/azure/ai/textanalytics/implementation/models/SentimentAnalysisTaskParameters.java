@@ -5,42 +5,54 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Supported parameters for a Sentiment Analysis task. */
+/**
+ * Supported parameters for a Sentiment Analysis task.
+ */
 @Fluent
 public final class SentimentAnalysisTaskParameters extends PreBuiltTaskParameters {
     /*
      * The opinionMining property.
      */
-    @JsonProperty(value = "opinionMining")
+    @Generated
     private Boolean opinionMining;
 
     /*
-     * Specifies the method used to interpret string offsets.  Defaults to Text Elements (Graphemes) according to
-     * Unicode v8.0.0. For additional information see https://aka.ms/text-analytics-offsets.
+     * Specifies the method used to interpret string offsets. Defaults to Text Elements (Graphemes) according to Unicode
+     * v8.0.0. For additional information see https://aka.ms/text-analytics-offsets.
      */
-    @JsonProperty(value = "stringIndexType")
+    @Generated
     private StringIndexType stringIndexType;
 
-    /** Creates an instance of SentimentAnalysisTaskParameters class. */
-    public SentimentAnalysisTaskParameters() {}
+    /**
+     * Creates an instance of SentimentAnalysisTaskParameters class.
+     */
+    @Generated
+    public SentimentAnalysisTaskParameters() {
+    }
 
     /**
      * Get the opinionMining property: The opinionMining property.
-     *
+     * 
      * @return the opinionMining value.
      */
+    @Generated
     public Boolean isOpinionMining() {
         return this.opinionMining;
     }
 
     /**
      * Set the opinionMining property: The opinionMining property.
-     *
+     * 
      * @param opinionMining the opinionMining value to set.
      * @return the SentimentAnalysisTaskParameters object itself.
      */
+    @Generated
     public SentimentAnalysisTaskParameters setOpinionMining(Boolean opinionMining) {
         this.opinionMining = opinionMining;
         return this;
@@ -50,9 +62,10 @@ public final class SentimentAnalysisTaskParameters extends PreBuiltTaskParameter
      * Get the stringIndexType property: Specifies the method used to interpret string offsets. Defaults to Text
      * Elements (Graphemes) according to Unicode v8.0.0. For additional information see
      * https://aka.ms/text-analytics-offsets.
-     *
+     * 
      * @return the stringIndexType value.
      */
+    @Generated
     public StringIndexType getStringIndexType() {
         return this.stringIndexType;
     }
@@ -61,26 +74,85 @@ public final class SentimentAnalysisTaskParameters extends PreBuiltTaskParameter
      * Set the stringIndexType property: Specifies the method used to interpret string offsets. Defaults to Text
      * Elements (Graphemes) according to Unicode v8.0.0. For additional information see
      * https://aka.ms/text-analytics-offsets.
-     *
+     * 
      * @param stringIndexType the stringIndexType value to set.
      * @return the SentimentAnalysisTaskParameters object itself.
      */
+    @Generated
     public SentimentAnalysisTaskParameters setStringIndexType(StringIndexType stringIndexType) {
         this.stringIndexType = stringIndexType;
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SentimentAnalysisTaskParameters setModelVersion(String modelVersion) {
         super.setModelVersion(modelVersion);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public SentimentAnalysisTaskParameters setLoggingOptOut(Boolean loggingOptOut) {
         super.setLoggingOptOut(loggingOptOut);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeBooleanField("loggingOptOut", isLoggingOptOut());
+        jsonWriter.writeStringField("modelVersion", getModelVersion());
+        jsonWriter.writeBooleanField("opinionMining", this.opinionMining);
+        jsonWriter.writeStringField("stringIndexType",
+            this.stringIndexType == null ? null : this.stringIndexType.toString());
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of SentimentAnalysisTaskParameters from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of SentimentAnalysisTaskParameters if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IOException If an error occurs while reading the SentimentAnalysisTaskParameters.
+     */
+    @Generated
+    public static SentimentAnalysisTaskParameters fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            SentimentAnalysisTaskParameters deserializedSentimentAnalysisTaskParameters
+                = new SentimentAnalysisTaskParameters();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("loggingOptOut".equals(fieldName)) {
+                    deserializedSentimentAnalysisTaskParameters
+                        .setLoggingOptOut(reader.getNullable(JsonReader::getBoolean));
+                } else if ("modelVersion".equals(fieldName)) {
+                    deserializedSentimentAnalysisTaskParameters.setModelVersion(reader.getString());
+                } else if ("opinionMining".equals(fieldName)) {
+                    deserializedSentimentAnalysisTaskParameters.opinionMining
+                        = reader.getNullable(JsonReader::getBoolean);
+                } else if ("stringIndexType".equals(fieldName)) {
+                    deserializedSentimentAnalysisTaskParameters.stringIndexType
+                        = StringIndexType.fromString(reader.getString());
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedSentimentAnalysisTaskParameters;
+        });
     }
 }

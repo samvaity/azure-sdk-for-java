@@ -4,42 +4,53 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for DatasetCompressionLevel. */
+/**
+ * Defines values for DatasetCompressionLevel.
+ */
 public final class DatasetCompressionLevel extends ExpandableStringEnum<DatasetCompressionLevel> {
-    /** Static value Optimal for DatasetCompressionLevel. */
+    /**
+     * Static value Optimal for DatasetCompressionLevel.
+     */
+    @Generated
     public static final DatasetCompressionLevel OPTIMAL = fromString("Optimal");
 
-    /** Static value Fastest for DatasetCompressionLevel. */
+    /**
+     * Static value Fastest for DatasetCompressionLevel.
+     */
+    @Generated
     public static final DatasetCompressionLevel FASTEST = fromString("Fastest");
 
     /**
      * Creates a new instance of DatasetCompressionLevel value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public DatasetCompressionLevel() {}
+    public DatasetCompressionLevel() {
+    }
 
     /**
      * Creates or finds a DatasetCompressionLevel from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding DatasetCompressionLevel.
      */
-    @JsonCreator
+    @Generated
     public static DatasetCompressionLevel fromString(String name) {
         return fromString(name, DatasetCompressionLevel.class);
     }
 
     /**
      * Gets known DatasetCompressionLevel values.
-     *
+     * 
      * @return known DatasetCompressionLevel values.
      */
+    @Generated
     public static Collection<DatasetCompressionLevel> values() {
         return values(DatasetCompressionLevel.class);
     }

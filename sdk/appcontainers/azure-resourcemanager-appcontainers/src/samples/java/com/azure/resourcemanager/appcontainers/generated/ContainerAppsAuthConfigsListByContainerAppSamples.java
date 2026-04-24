@@ -4,20 +4,22 @@
 
 package com.azure.resourcemanager.appcontainers.generated;
 
-/** Samples for ContainerAppsAuthConfigs ListByContainerApp. */
+/**
+ * Samples for ContainerAppsAuthConfigs ListByContainerApp.
+ */
 public final class ContainerAppsAuthConfigsListByContainerAppSamples {
     /*
-     * x-ms-original-file: specification/app/resource-manager/Microsoft.App/preview/2022-11-01-preview/examples/AuthConfigs_ListByContainer.json
+     * x-ms-original-file: specification/app/resource-manager/Microsoft.App/ContainerApps/stable/2025-07-01/examples/
+     * AuthConfigs_ListByContainer.json
      */
     /**
      * Sample code: List Auth Configs by Container Apps.
-     *
+     * 
      * @param manager Entry point to ContainerAppsApiManager.
      */
-    public static void listAuthConfigsByContainerApps(
-        com.azure.resourcemanager.appcontainers.ContainerAppsApiManager manager) {
-        manager
-            .containerAppsAuthConfigs()
+    public static void
+        listAuthConfigsByContainerApps(com.azure.resourcemanager.appcontainers.ContainerAppsApiManager manager) {
+        manager.containerAppsAuthConfigs()
             .listByContainerApp("workerapps-rg-xj", "testcanadacentral", com.azure.core.util.Context.NONE);
     }
 }

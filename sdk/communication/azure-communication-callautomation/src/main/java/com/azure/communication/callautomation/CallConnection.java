@@ -4,18 +4,18 @@
 package com.azure.communication.callautomation;
 
 import com.azure.communication.callautomation.models.CallParticipant;
+import com.azure.communication.callautomation.models.CancelAddParticipantOperationOptions;
+import com.azure.communication.callautomation.models.CancelAddParticipantOperationResult;
 import com.azure.communication.callautomation.models.AddParticipantOptions;
 import com.azure.communication.callautomation.models.AddParticipantResult;
 import com.azure.communication.callautomation.models.CallConnectionProperties;
 import com.azure.communication.callautomation.models.CallInvite;
-import com.azure.communication.callautomation.models.MuteParticipantsOptions;
-import com.azure.communication.callautomation.models.MuteParticipantsResult;
+import com.azure.communication.callautomation.models.MuteParticipantOptions;
+import com.azure.communication.callautomation.models.MuteParticipantResult;
 import com.azure.communication.callautomation.models.RemoveParticipantOptions;
 import com.azure.communication.callautomation.models.RemoveParticipantResult;
 import com.azure.communication.callautomation.models.TransferCallResult;
 import com.azure.communication.callautomation.models.TransferCallToParticipantOptions;
-import com.azure.communication.callautomation.models.UnmuteParticipantsOptions;
-import com.azure.communication.callautomation.models.UnmuteParticipantsResult;
 import com.azure.communication.common.CommunicationIdentifier;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceMethod;
@@ -108,7 +108,8 @@ public final class CallConnection {
      * @return Response with the desired call participant.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<CallParticipant> getParticipantWithResponse(CommunicationIdentifier targetParticipant, Context context) {
+    public Response<CallParticipant> getParticipantWithResponse(CommunicationIdentifier targetParticipant,
+        Context context) {
         return callConnectionAsync.getParticipantWithResponseInternal(targetParticipant, context).block();
     }
 
@@ -162,7 +163,9 @@ public final class CallConnection {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<TransferCallResult> transferCallToParticipantWithResponse(
         TransferCallToParticipantOptions transferCallToParticipantOptions, Context context) {
-        return callConnectionAsync.transferCallToParticipantWithResponseInternal(transferCallToParticipantOptions, context).block();
+        return callConnectionAsync
+            .transferCallToParticipantWithResponseInternal(transferCallToParticipantOptions, context)
+            .block();
     }
 
     /**
@@ -189,7 +192,7 @@ public final class CallConnection {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<AddParticipantResult> addParticipantWithResponse(AddParticipantOptions addParticipantOptions,
-                                                                       Context context) {
+        Context context) {
         return callConnectionAsync.addParticipantWithResponseInternal(addParticipantOptions, context).block();
     }
 
@@ -216,51 +219,63 @@ public final class CallConnection {
      * @return Response with result of removing a participant from the call.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<RemoveParticipantResult> removeParticipantWithResponse(RemoveParticipantOptions removeParticipantOptions, Context context) {
+    public Response<RemoveParticipantResult>
+        removeParticipantWithResponse(RemoveParticipantOptions removeParticipantOptions, Context context) {
         return callConnectionAsync.removeParticipantWithResponseInternal(removeParticipantOptions, context).block();
     }
 
     /**
-     * Mutes participants in the call.
+     * Mutes a participant in the call.
      *
      * @param targetParticipant - Participant to be muted. Only ACS Users are currently supported.
-     * @return A MuteParticipantsResult object.
+     * @return A MuteParticipantResult object.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public MuteParticipantsResult muteParticipants(CommunicationIdentifier targetParticipant) {
-        return callConnectionAsync.muteParticipantsAsync(targetParticipant).block();
+    public MuteParticipantResult muteParticipant(CommunicationIdentifier targetParticipant) {
+        return callConnectionAsync.muteParticipant(targetParticipant).block();
     }
 
     /**
-     * Mute participants in the call.
-     * @param muteParticipantsOptions - Options for the request.
+     * Mutes a participant in the call.
+     *
+     * @param options - Options for the request.
      * @param context A {@link Context} representing the request context.
-     * @return a Response containing the MuteParticipantsResult object.
+     * @return a Response containing the MuteParticipantResult object.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<MuteParticipantsResult> muteParticipantsWithResponse(MuteParticipantsOptions muteParticipantsOptions, Context context) {
-        return callConnectionAsync.muteParticipantWithResponseInternal(muteParticipantsOptions, context).block();
+    public Response<MuteParticipantResult> muteParticipantWithResponse(MuteParticipantOptions options,
+        Context context) {
+        return callConnectionAsync.muteParticipantWithResponseInternal(options, context).block();
     }
 
     /**
-     * Unmutes participants in the call.
-     * @param targetParticipant - Participant to be unmuted. Only ACS Users are currently supported.
-     * @return An UnmuteParticipantsResult object.
+     * Cancel add participant operation request.
+     *
+     * @param invitationId invitation ID used to add participant.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return Result of cancelling add participant request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public UnmuteParticipantsResult unmuteParticipants(CommunicationIdentifier targetParticipant) {
-        return callConnectionAsync.unmuteParticipantsAsync(targetParticipant).block();
+    public CancelAddParticipantOperationResult cancelAddParticipantOperation(String invitationId) {
+        return callConnectionAsync.cancelAddParticipantOperation(invitationId).block();
     }
 
     /**
-     * Unmutes participants in the call.
-     * @param unmuteParticipantsOptions - Options for the request.
+     * Cancel add participant operation request.
+     *
+     * @param cancelAddParticipantOperationOptions The options for cancelling add participant operation request.
      * @param context A {@link Context} representing the request context.
-     * @return a Response containing the UnmuteParticipantsResult object.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return Response with result of cancelling add participant request.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<UnmuteParticipantsResult> unmuteParticipantsWithResponse(UnmuteParticipantsOptions unmuteParticipantsOptions, Context context) {
-        return callConnectionAsync.unmuteParticipantWithResponseInternal(unmuteParticipantsOptions, context).block();
+    public Response<CancelAddParticipantOperationResult> cancelAddParticipantOperationWithResponse(
+        CancelAddParticipantOperationOptions cancelAddParticipantOperationOptions, Context context) {
+        return callConnectionAsync
+            .cancelAddParticipantOperationWithResponseInternal(cancelAddParticipantOperationOptions, context)
+            .block();
     }
 
     //region Content management Actions
@@ -273,6 +288,5 @@ public final class CallConnection {
     public CallMedia getCallMedia() {
         return new CallMedia(callConnectionAsync.getCallMediaAsync());
     }
-
     //endregion
 }

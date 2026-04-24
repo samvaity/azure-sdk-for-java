@@ -5,77 +5,90 @@
 package com.azure.analytics.synapse.artifacts.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** Result of run notebook. */
+/**
+ * Result of run notebook.
+ */
 @Fluent
-public final class RunNotebookResult {
+public final class RunNotebookResult implements JsonSerializable<RunNotebookResult> {
     /*
      * Run id.
      */
-    @JsonProperty(value = "runId")
+    @Generated
     private String runId;
 
     /*
      * Status of the run notebook.
      */
-    @JsonProperty(value = "runStatus")
+    @Generated
     private String runStatus;
 
     /*
      * Timestamp of last update.
      */
-    @JsonProperty(value = "lastCheckedOn")
+    @Generated
     private String lastCheckedOn;
 
     /*
      * Livy session id.
      */
-    @JsonProperty(value = "sessionId")
-    private Long sessionId;
+    @Generated
+    private String sessionId;
 
     /*
      * SparkPool name.
      */
-    @JsonProperty(value = "sparkPool")
+    @Generated
     private String sparkPool;
 
     /*
      * Run notebook session details.
      */
-    @JsonProperty(value = "sessionDetail")
+    @Generated
     private Object sessionDetail;
 
     /*
      * Output of exit command.
      */
-    @JsonProperty(value = "exitValue")
+    @Generated
     private String exitValue;
 
     /*
      * Run notebook error.
      */
-    @JsonProperty(value = "error")
+    @Generated
     private RunNotebookError error;
 
-    /** Creates an instance of RunNotebookResult class. */
-    public RunNotebookResult() {}
+    /**
+     * Creates an instance of RunNotebookResult class.
+     */
+    @Generated
+    public RunNotebookResult() {
+    }
 
     /**
      * Get the runId property: Run id.
-     *
+     * 
      * @return the runId value.
      */
+    @Generated
     public String getRunId() {
         return this.runId;
     }
 
     /**
      * Set the runId property: Run id.
-     *
+     * 
      * @param runId the runId value to set.
      * @return the RunNotebookResult object itself.
      */
+    @Generated
     public RunNotebookResult setRunId(String runId) {
         this.runId = runId;
         return this;
@@ -83,19 +96,21 @@ public final class RunNotebookResult {
 
     /**
      * Get the runStatus property: Status of the run notebook.
-     *
+     * 
      * @return the runStatus value.
      */
+    @Generated
     public String getRunStatus() {
         return this.runStatus;
     }
 
     /**
      * Set the runStatus property: Status of the run notebook.
-     *
+     * 
      * @param runStatus the runStatus value to set.
      * @return the RunNotebookResult object itself.
      */
+    @Generated
     public RunNotebookResult setRunStatus(String runStatus) {
         this.runStatus = runStatus;
         return this;
@@ -103,19 +118,21 @@ public final class RunNotebookResult {
 
     /**
      * Get the lastCheckedOn property: Timestamp of last update.
-     *
+     * 
      * @return the lastCheckedOn value.
      */
+    @Generated
     public String getLastCheckedOn() {
         return this.lastCheckedOn;
     }
 
     /**
      * Set the lastCheckedOn property: Timestamp of last update.
-     *
+     * 
      * @param lastCheckedOn the lastCheckedOn value to set.
      * @return the RunNotebookResult object itself.
      */
+    @Generated
     public RunNotebookResult setLastCheckedOn(String lastCheckedOn) {
         this.lastCheckedOn = lastCheckedOn;
         return this;
@@ -123,39 +140,43 @@ public final class RunNotebookResult {
 
     /**
      * Get the sessionId property: Livy session id.
-     *
+     * 
      * @return the sessionId value.
      */
-    public Long getSessionId() {
+    @Generated
+    public String getSessionId() {
         return this.sessionId;
     }
 
     /**
      * Set the sessionId property: Livy session id.
-     *
+     * 
      * @param sessionId the sessionId value to set.
      * @return the RunNotebookResult object itself.
      */
-    public RunNotebookResult setSessionId(Long sessionId) {
+    @Generated
+    public RunNotebookResult setSessionId(String sessionId) {
         this.sessionId = sessionId;
         return this;
     }
 
     /**
      * Get the sparkPool property: SparkPool name.
-     *
+     * 
      * @return the sparkPool value.
      */
+    @Generated
     public String getSparkPool() {
         return this.sparkPool;
     }
 
     /**
      * Set the sparkPool property: SparkPool name.
-     *
+     * 
      * @param sparkPool the sparkPool value to set.
      * @return the RunNotebookResult object itself.
      */
+    @Generated
     public RunNotebookResult setSparkPool(String sparkPool) {
         this.sparkPool = sparkPool;
         return this;
@@ -163,19 +184,21 @@ public final class RunNotebookResult {
 
     /**
      * Get the sessionDetail property: Run notebook session details.
-     *
+     * 
      * @return the sessionDetail value.
      */
+    @Generated
     public Object getSessionDetail() {
         return this.sessionDetail;
     }
 
     /**
      * Set the sessionDetail property: Run notebook session details.
-     *
+     * 
      * @param sessionDetail the sessionDetail value to set.
      * @return the RunNotebookResult object itself.
      */
+    @Generated
     public RunNotebookResult setSessionDetail(Object sessionDetail) {
         this.sessionDetail = sessionDetail;
         return this;
@@ -183,19 +206,21 @@ public final class RunNotebookResult {
 
     /**
      * Get the exitValue property: Output of exit command.
-     *
+     * 
      * @return the exitValue value.
      */
+    @Generated
     public String getExitValue() {
         return this.exitValue;
     }
 
     /**
      * Set the exitValue property: Output of exit command.
-     *
+     * 
      * @param exitValue the exitValue value to set.
      * @return the RunNotebookResult object itself.
      */
+    @Generated
     public RunNotebookResult setExitValue(String exitValue) {
         this.exitValue = exitValue;
         return this;
@@ -203,21 +228,84 @@ public final class RunNotebookResult {
 
     /**
      * Get the error property: Run notebook error.
-     *
+     * 
      * @return the error value.
      */
+    @Generated
     public RunNotebookError getError() {
         return this.error;
     }
 
     /**
      * Set the error property: Run notebook error.
-     *
+     * 
      * @param error the error value to set.
      * @return the RunNotebookResult object itself.
      */
+    @Generated
     public RunNotebookResult setError(RunNotebookError error) {
         this.error = error;
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("runId", this.runId);
+        jsonWriter.writeStringField("runStatus", this.runStatus);
+        jsonWriter.writeStringField("lastCheckedOn", this.lastCheckedOn);
+        jsonWriter.writeStringField("sessionId", this.sessionId);
+        jsonWriter.writeStringField("sparkPool", this.sparkPool);
+        if (this.sessionDetail != null) {
+            jsonWriter.writeUntypedField("sessionDetail", this.sessionDetail);
+        }
+        jsonWriter.writeStringField("exitValue", this.exitValue);
+        jsonWriter.writeJsonField("error", this.error);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of RunNotebookResult from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of RunNotebookResult if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the RunNotebookResult.
+     */
+    @Generated
+    public static RunNotebookResult fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            RunNotebookResult deserializedRunNotebookResult = new RunNotebookResult();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("runId".equals(fieldName)) {
+                    deserializedRunNotebookResult.runId = reader.getString();
+                } else if ("runStatus".equals(fieldName)) {
+                    deserializedRunNotebookResult.runStatus = reader.getString();
+                } else if ("lastCheckedOn".equals(fieldName)) {
+                    deserializedRunNotebookResult.lastCheckedOn = reader.getString();
+                } else if ("sessionId".equals(fieldName)) {
+                    deserializedRunNotebookResult.sessionId = reader.getString();
+                } else if ("sparkPool".equals(fieldName)) {
+                    deserializedRunNotebookResult.sparkPool = reader.getString();
+                } else if ("sessionDetail".equals(fieldName)) {
+                    deserializedRunNotebookResult.sessionDetail = reader.readUntyped();
+                } else if ("exitValue".equals(fieldName)) {
+                    deserializedRunNotebookResult.exitValue = reader.getString();
+                } else if ("error".equals(fieldName)) {
+                    deserializedRunNotebookResult.error = RunNotebookError.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedRunNotebookResult;
+        });
     }
 }

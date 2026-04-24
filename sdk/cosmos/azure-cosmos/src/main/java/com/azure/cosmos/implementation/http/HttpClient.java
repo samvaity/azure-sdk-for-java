@@ -2,7 +2,11 @@
 // Licensed under the MIT License.
 package com.azure.cosmos.implementation.http;
 
+import com.azure.cosmos.Http2ConnectionConfig;
+import com.azure.cosmos.implementation.Configs;
+import com.azure.cosmos.implementation.ImplementationBridgeHelpers;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.Http2AllocationStrategy;
 import reactor.netty.resources.ConnectionProvider;
 
 import java.time.Duration;
@@ -39,24 +43,32 @@ public interface HttpClient {
             throw new IllegalArgumentException("HttpClientConfig is null");
         }
 
-        Duration maxIdleConnectionTimeoutInMillis = httpClientConfig.getConfigs().getMaxIdleConnectionTimeout();
-        if (httpClientConfig.getMaxIdleConnectionTimeout() != null) {
-            maxIdleConnectionTimeoutInMillis = httpClientConfig.getMaxIdleConnectionTimeout();
-        }
-
-        //  Default pool size
-        Integer maxPoolSize = httpClientConfig.getConfigs().getReactorNettyMaxConnectionPoolSize();
-        if (httpClientConfig.getMaxPoolSize() != null) {
-            maxPoolSize = httpClientConfig.getMaxPoolSize();
-        }
-
-        Duration connectionAcquireTimeout = httpClientConfig.getConfigs().getConnectionAcquireTimeout();
-
         ConnectionProvider.Builder fixedConnectionProviderBuilder = ConnectionProvider
-            .builder(httpClientConfig.getConfigs().getReactorNettyConnectionPoolName());
-        fixedConnectionProviderBuilder.maxConnections(maxPoolSize);
-        fixedConnectionProviderBuilder.pendingAcquireTimeout(connectionAcquireTimeout);
-        fixedConnectionProviderBuilder.maxIdleTime(maxIdleConnectionTimeoutInMillis);
+            .builder(httpClientConfig.getConnectionPoolName());
+
+        fixedConnectionProviderBuilder.maxConnections(httpClientConfig.getMaxPoolSize());
+        Integer customPendingAcquireMaxCount = httpClientConfig.getPendingAcquireMaxCount();
+        if (customPendingAcquireMaxCount != null) {
+            fixedConnectionProviderBuilder.pendingAcquireMaxCount(customPendingAcquireMaxCount);
+        }
+        fixedConnectionProviderBuilder.pendingAcquireTimeout(httpClientConfig.getConnectionAcquireTimeout());
+        fixedConnectionProviderBuilder.maxIdleTime(httpClientConfig.getMaxIdleConnectionTimeout());
+        if (Configs.isNettyHttpClientMetricsEnabled()) {
+            fixedConnectionProviderBuilder.metrics(true);
+        }
+
+        ImplementationBridgeHelpers.Http2ConnectionConfigHelper.Http2ConnectionConfigAccessor http2CfgAccessor =
+            ImplementationBridgeHelpers.Http2ConnectionConfigHelper.getHttp2ConnectionConfigAccessor();
+        Http2ConnectionConfig http2Cfg = httpClientConfig.getHttp2ConnectionConfig();
+        if (http2CfgAccessor.isEffectivelyEnabled(http2Cfg)) {
+            fixedConnectionProviderBuilder.allocationStrategy(
+                Http2AllocationStrategy.builder()
+                    .minConnections(http2CfgAccessor.getEffectiveMinConnectionPoolSize(http2Cfg))
+                    .maxConnections(http2CfgAccessor.getEffectiveMaxConnectionPoolSize(http2Cfg))
+                    .maxConcurrentStreams(http2CfgAccessor.getEffectiveMaxConcurrentStreams(http2Cfg))
+                    .build()
+            );
+        }
 
         return ReactorNettyClient.createWithConnectionProvider(fixedConnectionProviderBuilder.build(),
             httpClientConfig);

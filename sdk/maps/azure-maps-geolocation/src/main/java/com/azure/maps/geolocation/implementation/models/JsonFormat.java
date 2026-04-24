@@ -4,31 +4,47 @@
 
 package com.azure.maps.geolocation.implementation.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Defines values for JsonFormat. */
+/**
+ * Defines values for JsonFormat.
+ */
 public final class JsonFormat extends ExpandableStringEnum<JsonFormat> {
-    /** Static value json for JsonFormat. */
+    /**
+     * [The JavaScript Object Notation Data Interchange Format](https://tools.ietf.org/html/rfc8259).
+     */
+    @Generated
     public static final JsonFormat JSON = fromString("json");
 
     /**
+     * Creates a new instance of JsonFormat value.
+     * 
+     * @deprecated Use the {@link #fromString(String)} factory method.
+     */
+    @Generated
+    @Deprecated
+    public JsonFormat() {
+    }
+
+    /**
      * Creates or finds a JsonFormat from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding JsonFormat.
      */
-    @JsonCreator
+    @Generated
     public static JsonFormat fromString(String name) {
         return fromString(name, JsonFormat.class);
     }
 
     /**
      * Gets known JsonFormat values.
-     *
+     * 
      * @return known JsonFormat values.
      */
+    @Generated
     public static Collection<JsonFormat> values() {
         return values(JsonFormat.class);
     }

@@ -5,6 +5,7 @@
 package com.azure.containers.containerregistry.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.json.JsonReader;
 import com.azure.json.JsonSerializable;
 import com.azure.json.JsonToken;
@@ -12,37 +13,47 @@ import com.azure.json.JsonWriter;
 import java.io.IOException;
 import java.util.List;
 
-/** Result of the request to list tags of the image. */
+/**
+ * Result of the request to list tags of the image.
+ */
 @Fluent
 public final class RepositoryTags implements JsonSerializable<RepositoryTags> {
     /*
      * Name of the image
      */
+    @Generated
     private String name;
 
     /*
      * List of tags
      */
+    @Generated
     private List<String> tags;
 
-    /** Creates an instance of RepositoryTags class. */
-    public RepositoryTags() {}
+    /**
+     * Creates an instance of RepositoryTags class.
+     */
+    @Generated
+    public RepositoryTags() {
+    }
 
     /**
      * Get the name property: Name of the image.
-     *
+     * 
      * @return the name value.
      */
+    @Generated
     public String getName() {
         return this.name;
     }
 
     /**
      * Set the name property: Name of the image.
-     *
+     * 
      * @param name the name value to set.
      * @return the RepositoryTags object itself.
      */
+    @Generated
     public RepositoryTags setName(String name) {
         this.name = name;
         return this;
@@ -50,24 +61,30 @@ public final class RepositoryTags implements JsonSerializable<RepositoryTags> {
 
     /**
      * Get the tags property: List of tags.
-     *
+     * 
      * @return the tags value.
      */
+    @Generated
     public List<String> getTags() {
         return this.tags;
     }
 
     /**
      * Set the tags property: List of tags.
-     *
+     * 
      * @param tags the tags value to set.
      * @return the RepositoryTags object itself.
      */
+    @Generated
     public RepositoryTags setTags(List<String> tags) {
         this.tags = tags;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
     @Override
     public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
         jsonWriter.writeStartObject();
@@ -78,31 +95,31 @@ public final class RepositoryTags implements JsonSerializable<RepositoryTags> {
 
     /**
      * Reads an instance of RepositoryTags from the JsonReader.
-     *
+     * 
      * @param jsonReader The JsonReader being read.
      * @return An instance of RepositoryTags if the JsonReader was pointing to an instance of it, or null if it was
-     *     pointing to JSON null.
+     * pointing to JSON null.
      * @throws IOException If an error occurs while reading the RepositoryTags.
      */
+    @Generated
     public static RepositoryTags fromJson(JsonReader jsonReader) throws IOException {
-        return jsonReader.readObject(
-                reader -> {
-                    RepositoryTags deserializedRepositoryTags = new RepositoryTags();
-                    while (reader.nextToken() != JsonToken.END_OBJECT) {
-                        String fieldName = reader.getFieldName();
-                        reader.nextToken();
+        return jsonReader.readObject(reader -> {
+            RepositoryTags deserializedRepositoryTags = new RepositoryTags();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
 
-                        if ("name".equals(fieldName)) {
-                            deserializedRepositoryTags.name = reader.getString();
-                        } else if ("tags".equals(fieldName)) {
-                            List<String> tags = reader.readArray(reader1 -> reader1.getString());
-                            deserializedRepositoryTags.tags = tags;
-                        } else {
-                            reader.skipChildren();
-                        }
-                    }
+                if ("name".equals(fieldName)) {
+                    deserializedRepositoryTags.name = reader.getString();
+                } else if ("tags".equals(fieldName)) {
+                    List<String> tags = reader.readArray(reader1 -> reader1.getString());
+                    deserializedRepositoryTags.tags = tags;
+                } else {
+                    reader.skipChildren();
+                }
+            }
 
-                    return deserializedRepositoryTags;
-                });
+            return deserializedRepositoryTags;
+        });
     }
 }

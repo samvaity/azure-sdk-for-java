@@ -6,20 +6,45 @@ package com.azure.resourcemanager.applicationinsights.fluent.models;
 
 import com.azure.core.annotation.Fluent;
 import com.azure.core.management.ProxyResource;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
-/** An Application Insights component linked storage accounts. */
+/**
+ * An Application Insights component linked storage accounts.
+ */
 @Fluent
 public final class ComponentLinkedStorageAccountsInner extends ProxyResource {
     /*
      * The properties of the linked storage accounts.
      */
-    @JsonProperty(value = "properties")
     private LinkedStorageAccountsProperties innerProperties;
+
+    /*
+     * The type of the resource.
+     */
+    private String type;
+
+    /*
+     * The name of the resource.
+     */
+    private String name;
+
+    /*
+     * Fully qualified resource Id for the resource.
+     */
+    private String id;
+
+    /**
+     * Creates an instance of ComponentLinkedStorageAccountsInner class.
+     */
+    public ComponentLinkedStorageAccountsInner() {
+    }
 
     /**
      * Get the innerProperties property: The properties of the linked storage accounts.
-     *
+     * 
      * @return the innerProperties value.
      */
     private LinkedStorageAccountsProperties innerProperties() {
@@ -27,8 +52,38 @@ public final class ComponentLinkedStorageAccountsInner extends ProxyResource {
     }
 
     /**
+     * Get the type property: The type of the resource.
+     * 
+     * @return the type value.
+     */
+    @Override
+    public String type() {
+        return this.type;
+    }
+
+    /**
+     * Get the name property: The name of the resource.
+     * 
+     * @return the name value.
+     */
+    @Override
+    public String name() {
+        return this.name;
+    }
+
+    /**
+     * Get the id property: Fully qualified resource Id for the resource.
+     * 
+     * @return the id value.
+     */
+    @Override
+    public String id() {
+        return this.id;
+    }
+
+    /**
      * Get the linkedStorageAccount property: Linked storage account resource ID.
-     *
+     * 
      * @return the linkedStorageAccount value.
      */
     public String linkedStorageAccount() {
@@ -37,7 +92,7 @@ public final class ComponentLinkedStorageAccountsInner extends ProxyResource {
 
     /**
      * Set the linkedStorageAccount property: Linked storage account resource ID.
-     *
+     * 
      * @param linkedStorageAccount the linkedStorageAccount value to set.
      * @return the ComponentLinkedStorageAccountsInner object itself.
      */
@@ -51,12 +106,57 @@ public final class ComponentLinkedStorageAccountsInner extends ProxyResource {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (innerProperties() != null) {
             innerProperties().validate();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("properties", this.innerProperties);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ComponentLinkedStorageAccountsInner from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ComponentLinkedStorageAccountsInner if the JsonReader was pointing to an instance of it,
+     * or null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties.
+     * @throws IOException If an error occurs while reading the ComponentLinkedStorageAccountsInner.
+     */
+    public static ComponentLinkedStorageAccountsInner fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ComponentLinkedStorageAccountsInner deserializedComponentLinkedStorageAccountsInner
+                = new ComponentLinkedStorageAccountsInner();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedComponentLinkedStorageAccountsInner.id = reader.getString();
+                } else if ("name".equals(fieldName)) {
+                    deserializedComponentLinkedStorageAccountsInner.name = reader.getString();
+                } else if ("type".equals(fieldName)) {
+                    deserializedComponentLinkedStorageAccountsInner.type = reader.getString();
+                } else if ("properties".equals(fieldName)) {
+                    deserializedComponentLinkedStorageAccountsInner.innerProperties
+                        = LinkedStorageAccountsProperties.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedComponentLinkedStorageAccountsInner;
+        });
     }
 }

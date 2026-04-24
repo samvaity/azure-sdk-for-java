@@ -12,21 +12,22 @@ import com.azure.spring.data.cosmos.repository.TestRepositoryConfig;
 import com.azure.spring.data.cosmos.repository.repository.AddressRepository;
 import com.azure.spring.data.cosmos.repository.repository.AuditableRepository;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -36,11 +37,11 @@ import static com.azure.spring.data.cosmos.common.TestConstants.PAGE_SIZE_1;
 import static com.azure.spring.data.cosmos.common.TestConstants.PAGE_SIZE_2;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestRepositoryConfig.class)
 public class AnnotatedQueryIT {
 
-    @ClassRule
+
     public static final IntegrationTestCollectionManager collectionManager = new IntegrationTestCollectionManager();
 
     @Autowired
@@ -52,7 +53,7 @@ public class AnnotatedQueryIT {
     @Autowired
     private AddressRepository addressRepository;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         collectionManager.ensureContainersCreatedAndEmpty(template, Address.class, AuditableEntity.class);
     }
@@ -65,6 +66,28 @@ public class AnnotatedQueryIT {
         assertThat(result).isNotNull();
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(Address.TEST_ADDRESS1_PARTITION1);
+    }
+
+    @Test
+    public void testAnnotatedQueryWithOptionalParam() {
+        addressRepository.saveAll(Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS1_PARTITION2));
+
+        Optional<String> city = Optional.ofNullable(TestConstants.CITY);
+        final List<Address> result = addressRepository.annotatedFindListByCityOptional(city);
+        assertThat(result).isNotNull();
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0)).isEqualTo(Address.TEST_ADDRESS1_PARTITION1);
+    }
+
+    @Test
+    public void testAnnotatedQueryWithOptionalParamEmpty() {
+        addressRepository.saveAll(Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS1_PARTITION2));
+
+        final List<Address> result = addressRepository.annotatedFindListByCityOptional(Optional.empty());
+        assertThat(result).isNotNull();
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0)).isEqualTo(Address.TEST_ADDRESS1_PARTITION1);
+        assertThat(result.get(1)).isEqualTo(Address.TEST_ADDRESS1_PARTITION2);
     }
 
     @Test
@@ -113,6 +136,24 @@ public class AnnotatedQueryIT {
 
         final List<Address> resultsDesc = addressRepository.annotatedFindByCity(TestConstants.CITY, Sort.by(Sort.Direction.DESC, "street"));
         assertAddressOrder(resultsDesc, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION1);
+    }
+
+    @Test
+    public void testAnnotatedQueryWithNewLinesInQuery() {
+        addressRepository.saveAll(Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2));
+
+        final List<Address> resultsAsc = addressRepository.annotatedFindByCityWithSort(TestConstants.CITY,
+            Sort.by(Sort.Direction.ASC, "postalCode"));
+        assertAddressOrder(resultsAsc, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION1);
+    }
+
+    @Test
+    public void testAnnotatedQueryWithNewLinesInQuery2() {
+        addressRepository.saveAll(Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2));
+
+        final List<Address> resultsAsc = addressRepository.annotatedFindByCityWithSort2(TestConstants.CITY,
+            Sort.by(Sort.Direction.ASC, "postalCode"));
+        assertAddressOrder(resultsAsc, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION1);
     }
 
     @Test
@@ -207,6 +248,18 @@ public class AnnotatedQueryIT {
     }
 
     @Test
+    public void testAnnotatedQueryWithSum() {
+        Address.TEST_ADDRESS1_PARTITION1.setLongId(1L);
+        Address.TEST_ADDRESS2_PARTITION1.setLongId(2L);
+        final List<Address> addresses = Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1);
+        addressRepository.saveAll(addresses);
+
+        final Long sumResult = addressRepository.annotatedSumLongIdValuesByCity(TestConstants.CITY);
+
+        assertThat(sumResult).isEqualTo(3);
+    }
+
+    @Test
     public void testAnnotatedQueryWithJsonNodeAsPage() {
         final List<Address> addresses = Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1);
         addressRepository.saveAll(addresses);
@@ -282,6 +335,68 @@ public class AnnotatedQueryIT {
     }
 
     @Test
+    public void testAnnotatedQueryWithInLongParameters() {
+        Address.TEST_ADDRESS1_PARTITION1.setLongId(TestConstants.LONG_ID_1);
+        Address.TEST_ADDRESS2_PARTITION1.setLongId(TestConstants.LONG_ID_1);
+        Address.TEST_ADDRESS1_PARTITION2.setLongId(TestConstants.LONG_ID_2);
+        Address.TEST_ADDRESS4_PARTITION3.setLongId(TestConstants.LONG_ID_3);
+
+        final List<Long> longListForIn = Arrays.asList(TestConstants.LONG_ID_1, TestConstants.LONG_ID_2);
+
+        final List<Address> addresses = Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2, Address.TEST_ADDRESS4_PARTITION3);
+        addressRepository.saveAll(addresses);
+
+        final List<Address> resultsAsc = addressRepository.annotatedFindByInLongParameters(longListForIn, Sort.by(Sort.Direction.ASC, "longId"));
+        assertAddressOrder(resultsAsc, Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2);
+    }
+
+    @Test
+    public void testAnnotatedQueryWithInIntParameters() {
+        Address.TEST_ADDRESS1_PARTITION1.setHomeNumber(TestConstants.HOME_NUMBER_1);
+        Address.TEST_ADDRESS2_PARTITION1.setHomeNumber(TestConstants.HOME_NUMBER_1);
+        Address.TEST_ADDRESS1_PARTITION2.setHomeNumber(TestConstants.HOME_NUMBER_2);
+        Address.TEST_ADDRESS4_PARTITION3.setHomeNumber(TestConstants.HOME_NUMBER_3);
+
+        final List<Integer> homeNumbersForIn = Arrays.asList(TestConstants.HOME_NUMBER_1, TestConstants.HOME_NUMBER_2);
+
+        final List<Address> addresses = Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2, Address.TEST_ADDRESS4_PARTITION3);
+        addressRepository.saveAll(addresses);
+
+        final List<Address> resultsAsc = addressRepository.annotatedFindByInHomeNumberParameters(homeNumbersForIn, Sort.by(Sort.Direction.ASC, "longId"));
+        assertAddressOrder(resultsAsc, Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2);
+    }
+
+    @Test
+    public void testAnnotatedQueryWithInDateParameters() {
+        Address.TEST_ADDRESS1_PARTITION1.setRegistrationDate(TestConstants.REGISTRATION_TIME_1D_AGO);
+        Address.TEST_ADDRESS2_PARTITION1.setRegistrationDate(TestConstants.REGISTRATION_TIME_1D_AGO);
+        Address.TEST_ADDRESS1_PARTITION2.setRegistrationDate(TestConstants.REGISTRATION_TIME_1M_AGO);
+        Address.TEST_ADDRESS4_PARTITION3.setRegistrationDate(TestConstants.REGISTRATION_TIME_1W_AGO);
+
+        final List<LocalDate> datesForIn = Arrays.asList(TestConstants.REGISTRATION_TIME_1D_AGO, TestConstants.REGISTRATION_TIME_1M_AGO);
+
+        final List<Address> addresses = Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2, Address.TEST_ADDRESS4_PARTITION3);
+        addressRepository.saveAll(addresses);
+
+        final List<Address> resultsAsc = addressRepository.annotatedFindByInRegistrationDateParameters(datesForIn, Sort.by(Sort.Direction.ASC, "longId"));
+        assertAddressOrder(resultsAsc, Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2);
+    }
+
+    @Test
+    public void testAnnotatedQueryWithInBooleanParameters() {
+        Address.TEST_ADDRESS1_PARTITION1.setIsOffice(true);
+        Address.TEST_ADDRESS4_PARTITION3.setIsOffice(true);
+
+        final List<Boolean> boolForIn = Arrays.asList(true);
+
+        final List<Address> addresses = Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2, Address.TEST_ADDRESS4_PARTITION3);
+        addressRepository.saveAll(addresses);
+
+        final List<Address> resultsAsc = addressRepository.annotatedFindByInIsOfficeParameters(boolForIn, Sort.by(Sort.Direction.ASC, "longId"));
+        assertAddressOrder(resultsAsc, Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS4_PARTITION3);
+    }
+
+    @Test
     public void testAnnotatedQueryWithArrayContains() {
         final List<Address> addresses = Arrays.asList(Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2);
         addressRepository.saveAll(addresses);
@@ -314,5 +429,25 @@ public class AnnotatedQueryIT {
         cities2.add(TestConstants.CITY_0);
         final List<Address> resultsAsc2 = addressRepository.annotatedFindByCitiesWithSort(cities2, Sort.by(Sort.Direction.ASC, "postalCode"));
         assertAddressOrder(resultsAsc2, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2, Address.TEST_ADDRESS1_PARTITION1);
+    }
+
+    @Test
+    public void testAnnotatedFindAllWithSortAsc() {
+        final List<Address> addresses = Arrays.asList(Address.TEST_ADDRESS1_PARTITION1,
+            Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2);
+        addressRepository.saveAll(addresses);
+
+        final List<Address> resultsAsc = addressRepository.annotatedFindAllWithSort(Sort.by(Sort.Direction.ASC, "postalCode"));
+        assertAddressOrder(resultsAsc, Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2, Address.TEST_ADDRESS1_PARTITION1);
+    }
+
+    @Test
+    public void testAnnotatedFindAllWithSortDesc() {
+        final List<Address> addresses = Arrays.asList(Address.TEST_ADDRESS1_PARTITION1,
+            Address.TEST_ADDRESS2_PARTITION1, Address.TEST_ADDRESS1_PARTITION2);
+        addressRepository.saveAll(addresses);
+
+        final List<Address> resultsAsc = addressRepository.annotatedFindAllWithSort(Sort.by(Sort.Direction.DESC, "postalCode"));
+        assertAddressOrder(resultsAsc, Address.TEST_ADDRESS1_PARTITION1, Address.TEST_ADDRESS1_PARTITION2, Address.TEST_ADDRESS2_PARTITION1);
     }
 }

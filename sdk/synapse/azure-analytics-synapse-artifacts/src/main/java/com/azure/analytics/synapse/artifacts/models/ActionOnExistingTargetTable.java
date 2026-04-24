@@ -4,45 +4,59 @@
 
 package com.azure.analytics.synapse.artifacts.models;
 
+import com.azure.core.annotation.Generated;
 import com.azure.core.util.ExpandableStringEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Collection;
 
-/** Action on existing target table. If not specified, 'FailOnNonEmptyTable' action is used. */
+/**
+ * Action on existing target table. If not specified, 'FailOnNonEmptyTable' action is used.
+ */
 public final class ActionOnExistingTargetTable extends ExpandableStringEnum<ActionOnExistingTargetTable> {
-    /** Same existing tables on target database will be Failed. */
+    /**
+     * Same existing tables on target database will be Failed.
+     */
+    @Generated
     public static final ActionOnExistingTargetTable FAIL_ON_NON_EMPTY_TABLE = fromString("FailOnNonEmptyTable");
 
-    /** Same existing tables on target database will be dropped and recreated. */
+    /**
+     * Same existing tables on target database will be dropped and recreated.
+     */
+    @Generated
     public static final ActionOnExistingTargetTable DROP_AND_RECREATE_TABLE = fromString("DropAndRecreateTable");
 
-    /** Same existing tables on target database will be Merged together. */
+    /**
+     * Same existing tables on target database will be Merged together.
+     */
+    @Generated
     public static final ActionOnExistingTargetTable MERGE_WITH_EXISTING_DATA = fromString("MergeWithExistingData");
 
     /**
      * Creates a new instance of ActionOnExistingTargetTable value.
-     *
+     * 
      * @deprecated Use the {@link #fromString(String)} factory method.
      */
+    @Generated
     @Deprecated
-    public ActionOnExistingTargetTable() {}
+    public ActionOnExistingTargetTable() {
+    }
 
     /**
      * Creates or finds a ActionOnExistingTargetTable from its string representation.
-     *
+     * 
      * @param name a name to look for.
      * @return the corresponding ActionOnExistingTargetTable.
      */
-    @JsonCreator
+    @Generated
     public static ActionOnExistingTargetTable fromString(String name) {
         return fromString(name, ActionOnExistingTargetTable.class);
     }
 
     /**
      * Gets known ActionOnExistingTargetTable values.
-     *
+     * 
      * @return known ActionOnExistingTargetTable values.
      */
+    @Generated
     public static Collection<ActionOnExistingTargetTable> values() {
         return values(ActionOnExistingTargetTable.class);
     }

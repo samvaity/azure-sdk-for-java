@@ -41,8 +41,8 @@ public class EventBatchContext {
      * {@code null}.
      * @throws NullPointerException If {@code partitionContext}, {@code events}, or {@code checkpointStore} is null.
      */
-    public EventBatchContext(PartitionContext partitionContext, List<EventData> events,
-        CheckpointStore checkpointStore, LastEnqueuedEventProperties lastEnqueuedEventProperties) {
+    public EventBatchContext(PartitionContext partitionContext, List<EventData> events, CheckpointStore checkpointStore,
+        LastEnqueuedEventProperties lastEnqueuedEventProperties) {
         this.checkpointStore = Objects.requireNonNull(checkpointStore, "'checkpointStore' cannot be null.");
         this.events = Objects.requireNonNull(events, "'events' cannot be null.");
         this.partitionContext = Objects.requireNonNull(partitionContext, "'partitionContext' cannot be null.");
@@ -96,14 +96,17 @@ public class EventBatchContext {
             return Mono.empty();
         }
 
+        final EventData lastEvent = events.get(this.events.size() - 1);
+
         // update checkpoint of the last event in the batch
-        Checkpoint checkpoint = new Checkpoint()
-            .setFullyQualifiedNamespace(partitionContext.getFullyQualifiedNamespace())
-            .setEventHubName(partitionContext.getEventHubName())
-            .setConsumerGroup(partitionContext.getConsumerGroup())
-            .setPartitionId(partitionContext.getPartitionId())
-            .setSequenceNumber(events.get(events.size() - 1).getSequenceNumber())
-            .setOffset(events.get(events.size() - 1).getOffset());
+        final Checkpoint checkpoint
+            = new Checkpoint().setFullyQualifiedNamespace(partitionContext.getFullyQualifiedNamespace())
+                .setEventHubName(partitionContext.getEventHubName())
+                .setConsumerGroup(partitionContext.getConsumerGroup())
+                .setPartitionId(partitionContext.getPartitionId())
+                .setSequenceNumber(lastEvent.getSequenceNumber())
+                .setOffset(lastEvent.getOffset())
+                .setOffsetString(lastEvent.getOffsetString());
         return this.checkpointStore.updateCheckpoint(checkpoint);
     }
 

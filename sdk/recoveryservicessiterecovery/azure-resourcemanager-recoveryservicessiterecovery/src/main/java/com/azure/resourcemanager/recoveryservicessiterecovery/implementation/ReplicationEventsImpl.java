@@ -21,40 +21,36 @@ public final class ReplicationEventsImpl implements ReplicationEvents {
 
     private final com.azure.resourcemanager.recoveryservicessiterecovery.SiteRecoveryManager serviceManager;
 
-    public ReplicationEventsImpl(
-        ReplicationEventsClient innerClient,
+    public ReplicationEventsImpl(ReplicationEventsClient innerClient,
         com.azure.resourcemanager.recoveryservicessiterecovery.SiteRecoveryManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
     }
 
-    public PagedIterable<Event> list(String resourceName, String resourceGroupName) {
-        PagedIterable<EventInner> inner = this.serviceClient().list(resourceName, resourceGroupName);
-        return Utils.mapPage(inner, inner1 -> new EventImpl(inner1, this.manager()));
+    public PagedIterable<Event> list(String resourceGroupName, String resourceName) {
+        PagedIterable<EventInner> inner = this.serviceClient().list(resourceGroupName, resourceName);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new EventImpl(inner1, this.manager()));
     }
 
-    public PagedIterable<Event> list(String resourceName, String resourceGroupName, String filter, Context context) {
-        PagedIterable<EventInner> inner = this.serviceClient().list(resourceName, resourceGroupName, filter, context);
-        return Utils.mapPage(inner, inner1 -> new EventImpl(inner1, this.manager()));
+    public PagedIterable<Event> list(String resourceGroupName, String resourceName, String filter, Context context) {
+        PagedIterable<EventInner> inner = this.serviceClient().list(resourceGroupName, resourceName, filter, context);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new EventImpl(inner1, this.manager()));
     }
 
-    public Response<Event> getWithResponse(
-        String resourceName, String resourceGroupName, String eventName, Context context) {
-        Response<EventInner> inner =
-            this.serviceClient().getWithResponse(resourceName, resourceGroupName, eventName, context);
+    public Response<Event> getWithResponse(String resourceGroupName, String resourceName, String eventName,
+        Context context) {
+        Response<EventInner> inner
+            = this.serviceClient().getWithResponse(resourceGroupName, resourceName, eventName, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new EventImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public Event get(String resourceName, String resourceGroupName, String eventName) {
-        EventInner inner = this.serviceClient().get(resourceName, resourceGroupName, eventName);
+    public Event get(String resourceGroupName, String resourceName, String eventName) {
+        EventInner inner = this.serviceClient().get(resourceGroupName, resourceName, eventName);
         if (inner != null) {
             return new EventImpl(inner, this.manager());
         } else {

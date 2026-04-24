@@ -7,11 +7,28 @@ package com.azure.resourcemanager.applicationinsights.models;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of ComponentLinkedStorageAccountsOperations. */
+/**
+ * Resource collection API of ComponentLinkedStorageAccountsOperations.
+ */
 public interface ComponentLinkedStorageAccountsOperations {
     /**
      * Returns the current linked storage settings for an Application Insights component.
-     *
+     * 
+     * @param resourceGroupName The name of the resource group. The name is case insensitive.
+     * @param resourceName The name of the Application Insights component resource.
+     * @param storageType The type of the Application Insights component data source for the linked storage account.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return an Application Insights component linked storage accounts along with {@link Response}.
+     */
+    Response<ComponentLinkedStorageAccounts> getWithResponse(String resourceGroupName, String resourceName,
+        StorageType storageType, Context context);
+
+    /**
+     * Returns the current linked storage settings for an Application Insights component.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -23,8 +40,8 @@ public interface ComponentLinkedStorageAccountsOperations {
     ComponentLinkedStorageAccounts get(String resourceGroupName, String resourceName, StorageType storageType);
 
     /**
-     * Returns the current linked storage settings for an Application Insights component.
-     *
+     * Delete linked storage accounts for an Application Insights component.
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -32,14 +49,14 @@ public interface ComponentLinkedStorageAccountsOperations {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an Application Insights component linked storage accounts along with {@link Response}.
+     * @return the {@link Response}.
      */
-    Response<ComponentLinkedStorageAccounts> getWithResponse(
-        String resourceGroupName, String resourceName, StorageType storageType, Context context);
+    Response<Void> deleteWithResponse(String resourceGroupName, String resourceName, StorageType storageType,
+        Context context);
 
     /**
      * Delete linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param resourceGroupName The name of the resource group. The name is case insensitive.
      * @param resourceName The name of the Application Insights component resource.
      * @param storageType The type of the Application Insights component data source for the linked storage account.
@@ -50,23 +67,8 @@ public interface ComponentLinkedStorageAccountsOperations {
     void delete(String resourceGroupName, String resourceName, StorageType storageType);
 
     /**
-     * Delete linked storage accounts for an Application Insights component.
-     *
-     * @param resourceGroupName The name of the resource group. The name is case insensitive.
-     * @param resourceName The name of the Application Insights component resource.
-     * @param storageType The type of the Application Insights component data source for the linked storage account.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the {@link Response}.
-     */
-    Response<Void> deleteWithResponse(
-        String resourceGroupName, String resourceName, StorageType storageType, Context context);
-
-    /**
      * Returns the current linked storage settings for an Application Insights component.
-     *
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -77,7 +79,7 @@ public interface ComponentLinkedStorageAccountsOperations {
 
     /**
      * Returns the current linked storage settings for an Application Insights component.
-     *
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -89,7 +91,7 @@ public interface ComponentLinkedStorageAccountsOperations {
 
     /**
      * Delete linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param id the resource ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -99,7 +101,7 @@ public interface ComponentLinkedStorageAccountsOperations {
 
     /**
      * Delete linked storage accounts for an Application Insights component.
-     *
+     * 
      * @param id the resource ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -111,7 +113,7 @@ public interface ComponentLinkedStorageAccountsOperations {
 
     /**
      * Begins definition for a new ComponentLinkedStorageAccounts resource.
-     *
+     * 
      * @param name resource name.
      * @return the first stage of the new ComponentLinkedStorageAccounts definition.
      */

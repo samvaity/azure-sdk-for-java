@@ -5,46 +5,48 @@
 package com.azure.ai.textanalytics.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.annotation.Generated;
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The AnalyzeTextsCancelJobHeaders model. */
+/**
+ * The AnalyzeTextsCancelJobHeaders model.
+ */
 @Fluent
 public final class AnalyzeTextsCancelJobHeaders {
     /*
      * The Operation-Location property.
      */
-    @JsonProperty(value = "Operation-Location")
+    @Generated
     private String operationLocation;
-
-    private static final HttpHeaderName OPERATION_LOCATION = HttpHeaderName.fromString("Operation-Location");
 
     // HttpHeaders containing the raw property values.
     /**
      * Creates an instance of AnalyzeTextsCancelJobHeaders class.
-     *
+     * 
      * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
      */
     public AnalyzeTextsCancelJobHeaders(HttpHeaders rawHeaders) {
-        this.operationLocation = rawHeaders.getValue(OPERATION_LOCATION);
+        this.operationLocation = rawHeaders.getValue(HttpHeaderName.OPERATION_LOCATION);
     }
 
     /**
      * Get the operationLocation property: The Operation-Location property.
-     *
+     * 
      * @return the operationLocation value.
      */
+    @Generated
     public String getOperationLocation() {
         return this.operationLocation;
     }
 
     /**
      * Set the operationLocation property: The Operation-Location property.
-     *
+     * 
      * @param operationLocation the operationLocation value to set.
      * @return the AnalyzeTextsCancelJobHeaders object itself.
      */
+    @Generated
     public AnalyzeTextsCancelJobHeaders setOperationLocation(String operationLocation) {
         this.operationLocation = operationLocation;
         return this;

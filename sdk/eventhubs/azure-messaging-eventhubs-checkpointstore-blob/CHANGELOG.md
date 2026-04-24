@@ -1,6 +1,6 @@
 # Release History
 
-## 1.17.0-beta.2 (Unreleased)
+## 1.22.0-beta.1 (Unreleased)
 
 ### Features Added
 
@@ -10,6 +10,293 @@
 
 ### Other Changes
 
+## 1.21.5 (2026-03-30)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-storage-blob` from `12.33.2` to version `12.33.3`.
+
+
+## 1.21.4 (2026-03-02)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-storage-blob` from `12.33.1` to version `12.33.2`.
+
+## 1.21.3 (2026-01-29)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-storage-blob` from `12.33.0` to version `12.33.1`.
+- Upgraded `azure-messaging-eventhubs` from `5.21.2` to version `5.21.3`.
+
+## 1.21.2 (2025-10-27)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.21.1` to version `5.21.2`.
+- Upgraded `azure-storage-blob` from `12.31.2` to version `12.32.0`.
+
+## 1.21.1 (2025-09-25)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.21.0` to version `5.21.1`.
+- Upgraded `azure-storage-blob` from `12.31.1` to version `12.31.2`.
+
+## 1.21.0 (2025-08-11)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.20.5` to version `5.21.0`.
+
+## 1.20.10 (2025-07-29)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.20.5` to version `5.21.0-beta.2`.
+
+## 1.20.9 (2025-07-24)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.20.4` to version `5.20.5`.
+
+## 1.20.8 (2025-06-19)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.20.3` to version `5.20.4`.
+
+## 1.20.7 (2025-04-16)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.20.2` to version `5.20.3`.
+- Upgraded `azure-storage-blob` from `12.29.1` to version `12.30.0`.
+
+## 1.20.6 (2025-03-24)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.20.1` to version `5.21.0-beta.2`.
+
+## 1.20.5 (2025-03-05)
+
+### Bugs Fixed
+
+- Fixed dependency conflict between `azure-storage-blob` and `azure-messaging-eventhubs`.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-storage-blob` from `12.29.0` to version `12.29.1`.
+
+## 1.20.4 (2025-02-28)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.20.0` to version `5.20.1`.
+
+## 1.21.0-beta.1 (2025-02-21)
+
+### Features Added
+
+- Use `getOffsetString()` to persist checkpoints rather than `getOffset()`, which is deprecated.  ([44272](https://github.com/Azure/azure-sdk-for-java/pull/44272))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.20.0` to version `5.21.0-beta.1`.
+
+## 1.20.3 (2025-02-11)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.19.2` to version `5.20.0`.
+
+## 1.20.2 (2024-12-04)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-storage-blob` from `12.28.1` to version `12.29.0`.
+- Upgraded `azure-messaging-eventhubs` from `5.19.1` to version `5.20.0-beta.1`.
+
+## 1.20.1 (2024-10-27)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.19.0` to version `5.19.1`.
+- Upgraded `azure-storage-blob` from `12.28.0` to version `12.28.1`.
+
+## 1.20.0 (2024-09-30)
+
+### Breaking Changes
+
+- Experimental checkpointing metrics are no longer reported by this package. They've been moved to `azure-messaging-eventhubs` package.
+  ([#38899](https://github.com/Azure/azure-sdk-for-java/pull/38899))
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.18.7` to version `5.19.0`.
+- Upgraded `azure-storage-blob` from `12.27.0` to version `12.28.0`.
+
+## 1.20.0-beta.3 (2024-09-19)
+
+### Breaking Changes
+
+- Experimental checkpointing metrics are no longer reported by this package. They've been moved to `azure-messaging-eventhubs` package.
+  ([#38899](https://github.com/Azure/azure-sdk-for-java/pull/38899))
+
+## 1.20.0-beta.2 (2024-08-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.18.6` to version `5.19.0-beta.2`.
+- Upgraded `azure-storage-blob` from `12.26.1` to version `12.27.0`.
+
+## 1.19.6 (2024-07-26)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.18.5` to version `5.18.6`.
+
+## 1.19.5 (2024-06-24)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.18.4` to version `5.18.5`.
+- Upgraded `azure-storage-blob` from `12.26.0` to version `12.26.1`.
+
+## 1.20.0-beta.1 (2024-05-21)
+
+### Features Added
+
+- Adds support for persisting replication segment in `Checkpoint`.
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.18.3` to version `5.19.0-beta.1`.
+
+## 1.19.3 (2024-04-23)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.18.2` to version `5.18.3`.
+- Upgraded `azure-storage-blob` from `12.25.2` to version `12.25.3`.
+
+## 1.19.2 (2024-03-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.18.1` to version `5.18.2`.
+- Upgraded `azure-storage-blob` from `12.25.1` to version `12.25.2`.
+
+## 1.19.1 (2024-02-16)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.18.0` to version `5.18.1`.
+
+## 1.19.0 (2024-01-19)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.17.1` to version `5.18.0`.
+
+## 1.18.1 (2023-12-07)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-storage-blob` from `12.25.0` to version `12.25.1`.
+- Upgraded `azure-messaging-eventhubs` from `5.17.0` to version `5.17.1`.
+
+## 1.18.0 (2023-11-20)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-storage-blob` from `12.24.1` to version `12.25.0`.
+- Upgraded `azure-messaging-eventhubs` from `5.16.1` to version `5.16.2`.
+
+## 1.17.1 (2023-10-25)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.16.0` to version `5.16.1`.
+- Upgraded `azure-storage-blob` from `12.24.0` to version `12.24.1`.
+
+## 1.17.0 (2023-09-22)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.15.8` to version `5.16.0`.
+
+## 1.16.9 (2023-08-18)
+
+### Other Changes
+
+#### Dependency Updates
+
+- Upgraded `azure-messaging-eventhubs` from `5.15.7` to version `5.15.8`.
+
 ## 1.16.8 (2023-07-25)
 
 ### Other Changes
@@ -18,7 +305,6 @@
 
 - Upgraded `azure-messaging-eventhubs` from `5.15.6` to version `5.15.7`.
 - Upgraded `azure-storage-blob` from `12.22.3` to version `12.23.0`.
-
 
 ## 1.16.7 (2023-06-21)
 
@@ -64,14 +350,6 @@
 
 - Update `azure-messaging-eventhubs` dependency to `5.15.2`.
 - Update `azure-storage-blob` dependency to `12.20.3`.
-
-## 1.17.0-beta.1 (2023-01-31)
-
-### Other Changes
-
-#### Dependency Updates
-
-- Update `azure-messaging-eventhubs` dependency to `5.16.0-beta.1`.
 
 ## 1.16.2 (2023-01-18)
 
@@ -366,4 +644,3 @@ store checkpoints and balance partition load among all instances of Event Proces
 - Initial offset provider for each partition is not implemented.
 - Interoperability with Event Processors of other language SDKs like Python is not supported.
 
-![Impressions](https://azure-sdk-impressions.azurewebsites.net/api/impressions/azure-sdk-for-java%2Fsdk%2Feventhubs%2Fazure-messaging-eventhubs-checkpointstore-blob%2FCHANGELOG.png)

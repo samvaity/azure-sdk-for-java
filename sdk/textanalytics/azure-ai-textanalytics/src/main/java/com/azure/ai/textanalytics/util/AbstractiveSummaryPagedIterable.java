@@ -17,11 +17,11 @@ import java.util.stream.Stream;
  * interfaces.
  */
 @Immutable
-public final class AbstractiveSummaryPagedIterable extends ContinuablePagedIterable<String,
-        AbstractiveSummaryResultCollection, PagedResponse<AbstractiveSummaryResultCollection>> {
+public final class AbstractiveSummaryPagedIterable extends
+    ContinuablePagedIterable<String, AbstractiveSummaryResultCollection, PagedResponse<AbstractiveSummaryResultCollection>> {
 
     /**
-     * Creates an instance of {@link AbstractiveSummaryPagedIterable}. The constructor takes a {@code Supplier} and
+     * Creates an instance of {@code AbstractiveSummaryPagedIterable}. The constructor takes a {@code Supplier} and
      * {@code Function}. The {@code Supplier} returns the first page of {@link AbstractiveSummaryResultCollection},
      * the {@code Function} retrieves subsequent pages of {@link AbstractiveSummaryResultCollection}.
      *

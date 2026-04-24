@@ -6,7 +6,6 @@ package com.azure.communication.callautomation.models;
 import com.azure.communication.callautomation.implementation.accesshelpers.TransferCallResponseConstructorProxy;
 import com.azure.communication.callautomation.implementation.models.TransferCallResponseInternal;
 import com.azure.core.annotation.Immutable;
-
 import java.util.Objects;
 
 /** The TransferCallResult model. */
@@ -18,8 +17,8 @@ public final class TransferCallResult {
     private final String operationContext;
 
     static {
-        TransferCallResponseConstructorProxy.setAccessor(
-            new TransferCallResponseConstructorProxy.TransferCallResponseConstructorAccessor() {
+        TransferCallResponseConstructorProxy
+            .setAccessor(new TransferCallResponseConstructorProxy.TransferCallResponseConstructorAccessor() {
                 @Override
                 public TransferCallResult create(TransferCallResponseInternal internalHeaders) {
                     return new TransferCallResult(internalHeaders);

@@ -24,6 +24,8 @@ import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.azure.cosmos.FlakyTestRetryAnalyzer;
+
 import static org.apache.commons.io.FileUtils.ONE_MB;
 
 public class VeryLargeDocumentQueryTest extends TestSuiteBase {
@@ -39,7 +41,7 @@ public class VeryLargeDocumentQueryTest extends TestSuiteBase {
         super(clientBuilder);
     }
 
-    @Test(groups = { "simple" }, timeOut = 2 * TIMEOUT)
+    @Test(groups = { "query" }, timeOut = 2 * TIMEOUT, retryAnalyzer = FlakyTestRetryAnalyzer.class)
     public void queryLargeDocuments() {
 
         int cnt = 5;
@@ -69,7 +71,7 @@ public class VeryLargeDocumentQueryTest extends TestSuiteBase {
 
         //Keep size as ~ 1.999MB to account for size of other props
         int size = (int) (ONE_MB * 1.999);
-        BridgeInternal.setProperty(docDefinition, "largeString", StringUtils.repeat("x", size));
+        docDefinition.set("largeString", StringUtils.repeat("x", size));
 
         Mono<CosmosItemResponse<InternalObjectNode>> createObservable =
             createdCollection.createItem(docDefinition, new CosmosItemRequestOptions());
@@ -80,14 +82,14 @@ public class VeryLargeDocumentQueryTest extends TestSuiteBase {
                     .verify(Duration.ofMillis(subscriberValidationTimeout));
     }
 
-    @BeforeClass(groups = { "simple" }, timeOut = 2 * SETUP_TIMEOUT)
+    @BeforeClass(groups = { "query" }, timeOut = 2 * SETUP_TIMEOUT)
     public void before_VeryLargeDocumentQueryTest() {
         client = getClientBuilder().buildAsyncClient();
         createdCollection = getSharedMultiPartitionCosmosContainer(client);
-        truncateCollection(createdCollection);
+        cleanUpContainer(createdCollection);
     }
 
-    @AfterClass(groups = { "simple" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
+    @AfterClass(groups = { "query" }, timeOut = SHUTDOWN_TIMEOUT, alwaysRun = true)
     public void afterClass() {
         safeClose(client);
     }

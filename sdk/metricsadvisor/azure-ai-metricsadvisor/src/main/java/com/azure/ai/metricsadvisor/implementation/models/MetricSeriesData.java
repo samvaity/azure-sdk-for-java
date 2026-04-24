@@ -5,49 +5,63 @@
 package com.azure.ai.metricsadvisor.implementation.models;
 
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.azure.core.annotation.Generated;
+import com.azure.core.util.CoreUtils;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-/** The MetricSeriesData model. */
+/**
+ * The MetricSeriesData model.
+ */
 @Fluent
-public final class MetricSeriesData {
+public final class MetricSeriesData implements JsonSerializable<MetricSeriesData> {
     /*
      * The id property.
      */
-    @JsonProperty(value = "id")
+    @Generated
     private MetricSeriesItem id;
 
     /*
      * timestamps of the data related to this time series
      */
-    @JsonProperty(value = "timestampList", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private List<OffsetDateTime> timestampList;
 
     /*
      * values of the data related to this time series
      */
-    @JsonProperty(value = "valueList", access = JsonProperty.Access.WRITE_ONLY)
+    @Generated
     private List<Double> valueList;
 
-    /** Creates an instance of MetricSeriesData class. */
-    public MetricSeriesData() {}
+    /**
+     * Creates an instance of MetricSeriesData class.
+     */
+    @Generated
+    public MetricSeriesData() {
+    }
 
     /**
      * Get the id property: The id property.
-     *
+     * 
      * @return the id value.
      */
+    @Generated
     public MetricSeriesItem getId() {
         return this.id;
     }
 
     /**
      * Set the id property: The id property.
-     *
+     * 
      * @param id the id value to set.
      * @return the MetricSeriesData object itself.
      */
+    @Generated
     public MetricSeriesData setId(MetricSeriesItem id) {
         this.id = id;
         return this;
@@ -55,19 +69,66 @@ public final class MetricSeriesData {
 
     /**
      * Get the timestampList property: timestamps of the data related to this time series.
-     *
+     * 
      * @return the timestampList value.
      */
+    @Generated
     public List<OffsetDateTime> getTimestampList() {
         return this.timestampList;
     }
 
     /**
      * Get the valueList property: values of the data related to this time series.
-     *
+     * 
      * @return the valueList value.
      */
+    @Generated
     public List<Double> getValueList() {
         return this.valueList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Generated
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeJsonField("id", this.id);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of MetricSeriesData from the JsonReader.
+     * 
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of MetricSeriesData if the JsonReader was pointing to an instance of it, or null if it was
+     * pointing to JSON null.
+     * @throws IOException If an error occurs while reading the MetricSeriesData.
+     */
+    @Generated
+    public static MetricSeriesData fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            MetricSeriesData deserializedMetricSeriesData = new MetricSeriesData();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+
+                if ("id".equals(fieldName)) {
+                    deserializedMetricSeriesData.id = MetricSeriesItem.fromJson(reader);
+                } else if ("timestampList".equals(fieldName)) {
+                    List<OffsetDateTime> timestampList = reader.readArray(reader1 -> reader1
+                        .getNullable(nonNullReader -> CoreUtils.parseBestOffsetDateTime(nonNullReader.getString())));
+                    deserializedMetricSeriesData.timestampList = timestampList;
+                } else if ("valueList".equals(fieldName)) {
+                    List<Double> valueList = reader.readArray(reader1 -> reader1.getDouble());
+                    deserializedMetricSeriesData.valueList = valueList;
+                } else {
+                    reader.skipChildren();
+                }
+            }
+
+            return deserializedMetricSeriesData;
+        });
     }
 }
